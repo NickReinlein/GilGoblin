@@ -40,6 +40,8 @@
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
     <Compile Include="main.cs" />
+    <Compile Include="Tests\Class1.cs" />
+    <Compile Include="WebAPI\Market.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">

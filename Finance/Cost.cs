@@ -4,6 +4,7 @@ namespace GilGoblin.Finance
 {
     internal class Cost
     {
+        private static Random random_gen = new Random();
         /// <summary>
         /// Returns the base cost based on the lower of the market price and
         /// the crafted cost of the recipe's base items, using tree traversal
@@ -22,7 +23,7 @@ namespace GilGoblin.Finance
 
             return base_cost;
         }
-
+        ///
         public static int Get_Vendor_Cost(int item_id)
         {
             //TODO: fetch vendor cost and actually return it
@@ -34,9 +35,9 @@ namespace GilGoblin.Finance
             int base_cost = 0;
 
             //TODO: fetch market price from API and/or calculate from a recipe
-            // for now we pretend to have one
+            // for now we pretend to have one and use a random number
             // base_cost = Get_Crafting_Cost();
-            base_cost = 222;
+            base_cost = random_gen.Next(200, 700);
 
             return base_cost;
         }
