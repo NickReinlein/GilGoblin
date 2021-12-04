@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace GilGoblin.WebAPI
 {
@@ -12,36 +11,38 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class Market
     {
-        //public static int Get_Market_price(int item_id)
-        //{
-        //    Task market_task = Fetch_Market_Price(item_id);
+        //private string api_key = 
+        public static int Get_Market_price(int item_id, string world_name)
+        {
+            //Task market_task = Fetch_Market_Price(item_id);
 
-        //    int market_price = 1;
-        //    return market_price;
-        //}
-        //public async static Task<Task> Fetch_Market_Price(int item_id)
-        //{
-        //    Task testTask;
-        //    Console.WriteLine("Starting to fetch");
-        //    try
-        //    {
-        //        //HttpResponseMessage req = (HttpResponseMessage) await "https://xivapi.com/Item/1675".GetAsync();
-        //        testTask = (Task) await "https://xivapi.com/Item/1675".GetAsync();
+            Fetch_Market_Price(item_id, world_name);
+            return 0;
+        }
+        public static async void Fetch_Market_Price(int item_id, string world_name)
+        {
+            int market_price = 0;
+            Console.WriteLine("Starting to fetch");
+            try
+            {
+                //https://universalis.app/api/history/Brynhildr/5114
+                string url = "https://universalis.app/api/history/" + world_name + "/" + item_id;
+                IFlurlResponse req = await url.GetJsonAsync();
 
-        //        //dynamic item = JsonConvert.DeserializeObject(
-        //        //    req.Content.ReadAsStringAsync().Result
-        //        //);
-        //        //Console.Write($"I.Lv {item.LevelItem} {item.Name_en}");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
-        //    finally
-        //    {
-        //        Console.WriteLine("Returning now");
-        //    }
-        //    return testTask;
-        //}
+
+                //dynamic item = JsonConvert.DeserializeObject(
+                //    req.Content.ReadAsStringAsync().Result
+                //);
+                //Console.Write($"I.Lv {item.LevelItem} {item.Name_en}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Console.WriteLine("Returning now");
+            }
+        }
     }
 }

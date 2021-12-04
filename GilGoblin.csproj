@@ -40,7 +40,7 @@
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
     <Compile Include="main.cs" />
-    <Compile Include="Tests\Class1.cs" />
+    <Compile Include="Tests\Dev_Tests.cs" />
     <Compile Include="WebAPI\Market.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,9 @@
     <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>packages\MySql.Data.8.0.27\lib\net452\ZstdNet.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
