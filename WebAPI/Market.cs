@@ -12,36 +12,33 @@ namespace GilGoblin.WebAPI
     internal class Market
     {
         //private string api_key = 
-        public static int Get_Market_price(int item_id, string world_name)
+        public static async Task<int> Get_Market_price(int item_id, string world_name)
         {
-            //Task market_task = Fetch_Market_Price(item_id);
+            int market_price = await Fetch_Market_Price(item_id, world_name);
 
-            Fetch_Market_Price(item_id, world_name);
-            return 0;
+            return market_price;
         }
-        public static async void Fetch_Market_Price(int item_id, string world_name)
+        public static async Task<int> Fetch_Market_Price(int item_id, string world_name)
         {
-            int market_price = 0;
             Console.WriteLine("Starting to fetch");
             try
             {
-                //https://universalis.app/api/history/Brynhildr/5114
+                HttpClient client = new HttpClient();
+                //Test url should be:
+                //https://universalis.app/api/history/Brynhildr/5114                
                 string url = "https://universalis.app/api/history/" + world_name + "/" + item_id;
-                IFlurlResponse req = await url.GetJsonAsync();
+                
 
-
-                //dynamic item = JsonConvert.DeserializeObject(
-                //    req.Content.ReadAsStringAsync().Result
-                //);
-                //Console.Write($"I.Lv {item.LevelItem} {item.Name_en}");
+                var content = await client.GetAsync(url).ConfigureAwait(false);                                
+                dynamic item = JsonConvert.DeserializeObject(
+                    content.Content.ReadAsStringAsync().Result );
+                Console.Write($"I.Lv {item.LevelItem} {item.Name_en}");
+                return item;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Console.WriteLine("Returning now");
+                return 0;
             }
         }
     }
