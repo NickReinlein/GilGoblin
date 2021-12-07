@@ -40,6 +40,7 @@
     <Compile Include="Finance\Market_Listing.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
+    <Compile Include="Functions\General_Function.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Tests\Dev_Tests.cs" />
     <Compile Include="WebAPI\Market.cs" />

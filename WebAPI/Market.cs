@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Newtonsoft.Json;
 using GilGoblin.Finance;
 
@@ -36,11 +35,7 @@ namespace GilGoblin.WebAPI
                 Market_Data market_Data = JsonConvert.DeserializeObject<Market_Data>(
                     content.Content.ReadAsStringAsync().Result );
 
-                //var obj_for_type = JObject.Parse(item);
-                //var jsonType = (String)obj_for_type["_type"];
-                //Console.Write($"I.Lv {item.LevelItem} {item.Name_en}");
-
-                return 0 ;
+                return market_Data.;
             }
             catch (Exception ex)
             {
@@ -50,3 +45,5 @@ namespace GilGoblin.WebAPI
         }
     }
 }
+
+
