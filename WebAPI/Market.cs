@@ -11,15 +11,7 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class Market
     {
-        
-
-        public static async Task<int> Get_Market_price(int item_id, string world_name)
-        {
-            int market_price = await Fetch_Market_Price(item_id, world_name);
-
-            return market_price;
-        }
-        public static async Task<int> Fetch_Market_Price(int item_id, string world_name)
+        public static async Task<int> Get_Market_Price(int item_id, string world_name)
         {
             Console.WriteLine("Starting to fetch");
             try
@@ -35,7 +27,7 @@ namespace GilGoblin.WebAPI
                 Market_Data market_Data = JsonConvert.DeserializeObject<Market_Data>(
                     content.Content.ReadAsStringAsync().Result );
 
-                return market_Data.;
+                return market_Data.get_Price();
             }
             catch (Exception ex)
             {
