@@ -1,17 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
+using GilGoblin.WebAPI;
 
 namespace GilGoblin.Finance
 {
     internal class Price
     {
         private static Random random_gen = new Random();
-        public static int Get_Market_Price(int item_id)
+        public static Task<int> Get_Market_Price(int item_id, string world_name)
         {
-            int price = 0;
-            //TODO: Use the Universalis API to pull market price data
-            //For now we generate a random price to have data available
-            price = random_gen.Next(200, 700);
-            return price;
+            return Market.Get_Market_Price(item_id, world_name);
         }
 
     }

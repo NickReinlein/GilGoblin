@@ -37,7 +37,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Finance\Market_Listing.cs" />
+    <Compile Include="WebAPI\Item_Info.cs" />
+    <Compile Include="WebAPI\Market_Listing.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
     <Compile Include="Functions\General_Function.cs" />
