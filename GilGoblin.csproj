@@ -37,6 +37,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebAPI\API_Recipe.cs" />
     <Compile Include="WebAPI\Item_Info.cs" />
     <Compile Include="WebAPI\Market_Listing.cs" />
     <Compile Include="Finance\Price.cs" />

@@ -43,10 +43,20 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                Market_Data market_Data = JsonConvert.DeserializeObject<Market_Data>(
+                Item_Info item_info = JsonConvert.DeserializeObject<Item_Info>(
                     content.Content.ReadAsStringAsync().Result );
 
-                return market_Data.get_Price();
+                Console.WriteLine("Found the item info for " + item_info.description);
+
+                Console.WriteLine("Found recipes: ");
+                item_info.recipes.ForEach(
+                    recipe => Console.WriteLine("Job: " + recipe.class_job_id + " / " +
+                                                "Level req: " + recipe.level + " / " +
+                                                "Item req: " + recipe.item_id));
+
+                Console.WriteLine("Vendor price found of: " + item_info.vendor_price);
+
+                return item_info.vendor_price;
             }
             catch (Exception ex)
             {
