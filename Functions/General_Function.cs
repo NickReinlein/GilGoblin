@@ -8,11 +8,7 @@ namespace GilGoblin.Functions
         {
             try
             {
-                DateTimeOffset dateTimeOffset =
-                    DateTimeOffset.FromUnixTimeSeconds(elapsed_time);
-                DateTime date = dateTimeOffset.LocalDateTime;
-                DateTime date2 = DateTime.FromFileTime(elapsed_time);
-
+                DateTime date = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
                 return date;
             }
             catch (Exception ex)
