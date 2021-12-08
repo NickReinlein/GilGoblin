@@ -16,8 +16,9 @@ namespace GilGoblin.Tests
         public const int item_id = 5114;
         public static void test_Fetch_Market_Price()
         {
-            int marketPrice = Market.Get_Market_Price(item_id, world_name).GetAwaiter().GetResult();
+            int marketPrice = Price.Get_Market_Price(item_id, world_name);
             Console.WriteLine("Final market price: " + marketPrice);
+            Console.ReadLine();
         }
     }
 }
