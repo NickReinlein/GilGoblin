@@ -40,4 +40,4 @@ Additional functionality that is currently considered but no immediate plans to 
 ## Special Thanks & References
 
 * XIVAPI: A FINAL FANTASY XIV: Online REST API ( https://xivapi.com/ )
-* Universalis: A crowdsourced market board aggregator for the game FINAL FANTASY XIV ( https://github.com/Universalis-FFXIV/Universalis )
+* Universalis: A crowdsourced market board aggregator for the game FFXIV ( https://github.com/Universalis-FFXIV/Universalis )
