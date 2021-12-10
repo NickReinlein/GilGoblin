@@ -36,3 +36,8 @@ Additional functionality that is currently considered but no immediate plans to 
 * Limiting the data freshness (ie: max listing time from 7 days ago)
 * Filtering by job level availability (later)
 * Including estimated profitability based on sale momentum and approximate demand (later)
+
+## Special Thanks & References
+
+* XIVAPI: A FINAL FANTASY XIV: Online REST API ( https://xivapi.com/ )
+* Universalis: A crowdsourced market board aggregator for the game FINAL FANTASY XIV ( https://github.com/Universalis-FFXIV/Universalis )
