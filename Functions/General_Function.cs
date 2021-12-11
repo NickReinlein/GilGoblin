@@ -4,7 +4,7 @@ namespace GilGoblin.Functions
 {
     internal static class General_Function
     {
-        public static DateTime Conver_Long_To_DateTime(long elapsed_time)
+        public static DateTime ConvertLongToDateTime(long elapsed_time)
         {
             try
             {

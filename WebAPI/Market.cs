@@ -11,7 +11,7 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class Market
     {
-        public static async Task<MarketData> Get_Market_Data(int item_id, string world_name)
+        public static async Task<MarketData> GetMarketData(int item_id, string world_name)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace GilGoblin.WebAPI
         }
 
 
-        public static async Task<ItemInfo> Get_Item_Info(int item_id)
+        public static async Task<ItemInfo> GetItemInfo(int item_id)
         {
             try
             {

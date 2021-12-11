@@ -75,7 +75,7 @@ namespace GilGoblin.Finance
         {
             this.item_id = itemID;
             this.world_name = worldName;
-            this.last_updated = Functions.General_Function.Conver_Long_To_DateTime(lastUploadTime);
+            this.last_updated = Functions.General_Function.ConvertLongToDateTime(lastUploadTime);
 
             this.current_listings =
                 entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();

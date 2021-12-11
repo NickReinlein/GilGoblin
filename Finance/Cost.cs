@@ -11,11 +11,11 @@ namespace GilGoblin.Finance
         /// the crafted cost of the recipe's base items, using tree traversal
         /// </summary>
         /// <returns></returns>
-        public static int Calculate_Base_Cost(int item_id, bool ignore_limited_vendor_qty = false)
+        public static int CalculateBaseCost(int item_id, bool ignore_limited_vendor_qty = false)
         {
             int base_cost = 0;
-            int crafting_cost = Get_Crafting_Cost(item_id);
-            int vendor_cost = Get_Vendor_Cost(item_id);
+            int crafting_cost = GetCraftingCost(item_id);
+            int vendor_cost = GetVendorCost(item_id);
 
             //TODO: fetch market price from API and/or calculate from a recipe
             // for now we pretend to have one and use a random number       
@@ -29,29 +29,29 @@ namespace GilGoblin.Finance
         }
         ///
 
-        public static ItemInfo Get_Item_Info(int item_id)
+        public static ItemInfo GetItemInfo(int item_id)
         {
-            return Market.Get_Item_Info(item_id).GetAwaiter().GetResult();
+            return Market.GetItemInfo(item_id).GetAwaiter().GetResult();
         }
-        public static int Get_Vendor_Cost(int item_id)
+        public static int GetVendorCost(int item_id)
         {
-            return Get_Item_Info(item_id).vendor_price;
+            return GetItemInfo(item_id).vendor_price;
 
         }
-        public static string Get_Description(int item_id)
+        public static string GetDescription(int item_id)
         {
-            return Get_Item_Info(item_id).description;
+            return GetItemInfo(item_id).description;
 
         }
-        public static int Get_Icon_ID(int item_id)
+        public static int GetIconID(int item_id)
         {
-            return Get_Item_Info(item_id).icon_id;
+            return GetItemInfo(item_id).icon_id;
 
         }
 
-        public static int Get_Base_Cost(int item_id)
+        public static int GetBaseCost(int item_id)
         {
-            int base_cost = Calculate_Base_Cost(item_id);
+            int base_cost = CalculateBaseCost(item_id);
 
             // for now we pretend to have one and use a random number                       
             if (base_cost == 0)
@@ -67,7 +67,7 @@ namespace GilGoblin.Finance
         /// calculate the total cost of crafting the item
         /// </summary>
         /// <returns></returns>
-        public static int Get_Crafting_Cost(int item_id)
+        public static int GetCraftingCost(int item_id)
         {
             return 0;
         }

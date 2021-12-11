@@ -4,7 +4,7 @@ using GilGoblin.Database;
 
 namespace GilGoblin.Tests
 {
-    internal static class test_Calcs
+    internal static class testCalcs
     {
         // Wolrd ID & Name for testing: 34 	Brynhildr
         // Item ID for Mithril Ore: 5114
@@ -15,9 +15,9 @@ namespace GilGoblin.Tests
         public const int item_id = 5057;
         public static void test_Fetch_Market_Price()
         {
-            int marketPrice = Price.Get_Market_Price(item_id, world_name);
+            int marketPrice = Price.GetMarketPrice(item_id, world_name);
             Console.WriteLine("Final market price: " + marketPrice);
-            int vendorPrice = Cost.Get_Vendor_Cost(item_id);
+            int vendorPrice = Cost.GetVendorCost(item_id);
             Console.WriteLine("Vendor price: " + vendorPrice);
             int profit = marketPrice - vendorPrice;
             Console.WriteLine("Estimated profit: " + profit);
