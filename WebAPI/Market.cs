@@ -1,8 +1,8 @@
-﻿using System;
+﻿using GilGoblin.Finance;
+using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using GilGoblin.Finance;
 
 namespace GilGoblin.WebAPI
 {
@@ -16,13 +16,13 @@ namespace GilGoblin.WebAPI
             Console.WriteLine("Starting to fetch market price");
             try
             {
-                HttpClient client = new HttpClient();       
+                HttpClient client = new HttpClient();
                 string url = "https://universalis.app/api/history/" + world_name + "/" + item_id;
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
                 Market_Data market_Data = JsonConvert.DeserializeObject<Market_Data>(
-                    content.Content.ReadAsStringAsync().Result );
+                    content.Content.ReadAsStringAsync().Result);
 
                 return market_Data.get_Price();
             }
@@ -31,20 +31,20 @@ namespace GilGoblin.WebAPI
                 Console.WriteLine(ex.Message);
                 return 0;
             }
-        }  
-        
+        }
+
         public static async Task<int> Get_Item_Info(int item_id)
         {
             Console.WriteLine("Starting to fetch cost");
             try
             {
-                HttpClient client = new HttpClient();       
+                HttpClient client = new HttpClient();
                 string url = "https://xivapi.com/Item/" + item_id;
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
                 Item_Info item_info = JsonConvert.DeserializeObject<Item_Info>(
-                    content.Content.ReadAsStringAsync().Result );
+                    content.Content.ReadAsStringAsync().Result);
 
                 Console.WriteLine("Found the item info for " + item_info.description);
 
@@ -65,7 +65,7 @@ namespace GilGoblin.WebAPI
             }
         }
 
-     
+
     }
 }
 

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GilGoblin.Finance;
-using GilGoblin.WebAPI;
+using GilGoblin.Database;
 
 namespace GilGoblin.Tests
 {
@@ -24,6 +20,16 @@ namespace GilGoblin.Tests
             int vendorPrice = Cost.Get_Vendor_Cost(item_id);
             int profit = marketPrice - vendorPrice;
             Console.WriteLine("Estimated profit: " + profit);
+
+            try
+            {
+                DatabaseAccess.Connect();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
             Console.ReadLine();
         }
     }

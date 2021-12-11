@@ -1,10 +1,4 @@
-﻿using System;
-using Flurl;
-using Flurl.Http;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using GilGoblin.Tests;
+﻿using GilGoblin.Tests;
 
 class main
 {

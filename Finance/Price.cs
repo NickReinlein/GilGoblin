@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using GilGoblin.WebAPI;
+﻿using GilGoblin.WebAPI;
+using System;
 
 namespace GilGoblin.Finance
 {

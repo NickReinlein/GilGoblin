@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GilGoblin.WebAPI
+﻿namespace GilGoblin.WebAPI
 {
     internal class API_Recipe
     {
@@ -18,6 +12,6 @@ namespace GilGoblin.WebAPI
             this.item_id = id;
             this.level = level;
         }
-            
+
     }
 }

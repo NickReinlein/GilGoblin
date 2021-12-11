@@ -16,7 +16,7 @@ namespace GilGoblin.Functions
                 Console.WriteLine(ex.Message);
                 return new DateTime();
             }
-            
+
         }
     }
 }

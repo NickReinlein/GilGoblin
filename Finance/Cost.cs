@@ -1,10 +1,10 @@
-﻿using System;
-using GilGoblin.WebAPI;
+﻿using GilGoblin.WebAPI;
+using System;
 
 namespace GilGoblin.Finance
 {
     internal class Cost
-    { 
+    {
         private static Random random_gen = new Random();
         /// <summary>
         /// Returns the base cost based on the lower of the market price and
@@ -13,7 +13,7 @@ namespace GilGoblin.Finance
         /// <returns></returns>
         public static int Calculate_Base_Cost(int item_id, bool ignore_limited_vendor_qty = false)
         {
-            int base_cost = 0;           
+            int base_cost = 0;
             int crafting_cost = Get_Crafting_Cost(item_id);
             int vendor_cost = Get_Vendor_Cost(item_id);
 

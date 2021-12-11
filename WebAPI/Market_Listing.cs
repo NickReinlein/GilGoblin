@@ -34,10 +34,10 @@ namespace GilGoblin.Finance
 
         public int get_Price(bool update = false)
         {
-            if ( update || average_Price == 0 )
+            if (update || average_Price == 0)
             {
                 //Re-calculate the price and update
-                Calculate_Average_Price( true );
+                Calculate_Average_Price(true);
             }
 
             //Return what we do have regardless of updates
