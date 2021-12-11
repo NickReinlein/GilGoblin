@@ -2,7 +2,10 @@
 
 ## Summary
 
-GilGoblin is a locally run application for FFXIV, written in C#. This is a project intended to help the author learn C# and web API calls with synchrozation. However, the project should prove useful to other players. GilGoblin calculates the most profitable items to flip or craft based on market prices, vendor prices and crafting component costs. The project has no monetization goals nor any plans for some. This is intended as a learning exercise that would also provide a useful tool to other FFXIV players. GilGoblin is currently developed & maintained by 1 developer working part-time ont he project.
+GilGoblin is a locally run application for FFXIV, written in C#. This is a project intended to help the author learn C# and web API calls with synchrozation. However, the project should prove useful to other players. GilGoblin calculates the most profitable items to flip or craft based on market prices, vendor prices and crafting component costs. 
+
+## About
+This is intended as a learning exercise that would also provide a useful tool to other FFXIV players. GilGoblin is currently developed & maintained by 1 developer working part-time ont he project.
 
 ## Soon
 
