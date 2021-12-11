@@ -32,19 +32,19 @@ namespace GilGoblin.Finance
 
         public static int listingsToRead = 20; //TODO increase for production use
 
-        public int get_Price(bool update = false)
+        public int getPrice(bool update = false)
         {
             if (update || average_Price == 0)
             {
                 //Re-calculate the price and update
-                Calculate_Average_Price(true);
+                CalculateAveragePrice(true);
             }
 
             //Return what we do have regardless of updates
             return average_Price;
         }
 
-        public int Calculate_Average_Price(bool update = false)
+        public int CalculateAveragePrice(bool update = false)
         {
             int average_Price = 0;
             uint total_Qty = 0;
@@ -80,7 +80,7 @@ namespace GilGoblin.Finance
             this.current_listings =
                 entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
 
-            this.average_Price = Calculate_Average_Price();
+            this.average_Price = CalculateAveragePrice();
         }
 
     }

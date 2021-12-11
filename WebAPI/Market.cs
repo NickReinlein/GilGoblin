@@ -11,7 +11,9 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class Market
     {
-        public static async Task<MarketData> GetMarketData(int item_id, string world_name)
+
+
+        public static async Task<MarketData> FetchMarketData(int item_id, string world_name)
         {
             try
             {
@@ -32,7 +34,7 @@ namespace GilGoblin.WebAPI
         }
 
 
-        public static async Task<ItemInfo> GetItemInfo(int item_id)
+        public static async Task<ItemInfo> FetchItemInfo(int item_id)
         {
             try
             {
@@ -51,7 +53,26 @@ namespace GilGoblin.WebAPI
                 return null;
             }
         }
-    }
+
+        public static MarketData GetMarketData(int item_id, string world_name)
+        {
+            //Try with the database first, then if it fails we use the web API
+            MarketData marketData = Database.DatabaseAccess.GetMarketDataDB(item_id);
+            if (marketData == null)
+            {
+                marketData = Market.FetchMarketData(item_id, world_name).GetAwaiter().GetResult();
+            }
+            return marketData;
+        }
+
+        public static ItemInfo GetItemInfo(int item_id)
+        {
+            //TODO: later this needs to be doneDatabase.DatabaseAccess.GetMarketDataDB
+            ItemInfo item_info = Market.FetchItemInfo(item_id).GetAwaiter().GetResult();
+            return item_info;
+            
+        }
+}
 }
 
 

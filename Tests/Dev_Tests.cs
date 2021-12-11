@@ -1,6 +1,7 @@
 ﻿using System;
 using GilGoblin.Finance;
 using GilGoblin.Database;
+using GilGoblin.WebAPI;
 
 namespace GilGoblin.Tests
 {
@@ -15,23 +16,28 @@ namespace GilGoblin.Tests
         public const int item_id = 5057;
         public static void test_Fetch_Market_Price()
         {
-            int marketPrice = Price.GetMarketPrice(item_id, world_name);
-            Console.WriteLine("Final market price: " + marketPrice);
-            int vendorPrice = Cost.GetVendorCost(item_id);
-            Console.WriteLine("Vendor price: " + vendorPrice);
-            int profit = marketPrice - vendorPrice;
-            Console.WriteLine("Estimated profit: " + profit);
-
             try
             {
-                DatabaseAccess.Connect();
+                MarketData marketData = Market.GetMarketData(item_id, world_name);
+                ItemInfo itemInfo = Market.GetItemInfo(item_id);
+
+                int marketPrice = marketData.average_Price;
+                Console.WriteLine("Final market price: " + marketPrice);
+                int vendorPrice = itemInfo.vendor_price;
+                Console.WriteLine("Vendor price: " + vendorPrice);
+                int profit = marketPrice - vendorPrice;
+                Console.WriteLine("Estimated profit: " + profit);
+
+                DatabaseAccess.SaveMarketDataDB(marketData);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-
-            Console.ReadLine();
+            finally 
+            { 
+                Console.ReadLine();
+            }
         }
     }
 }

@@ -31,7 +31,7 @@ namespace GilGoblin.Finance
 
         public static ItemInfo GetItemInfo(int item_id)
         {
-            return Market.GetItemInfo(item_id).GetAwaiter().GetResult();
+            return Market.FetchItemInfo(item_id).GetAwaiter().GetResult();
         }
         public static int GetVendorCost(int item_id)
         {
