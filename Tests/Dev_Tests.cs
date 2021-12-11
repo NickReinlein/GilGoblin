@@ -18,6 +18,7 @@ namespace GilGoblin.Tests
             int marketPrice = Price.Get_Market_Price(item_id, world_name);
             Console.WriteLine("Final market price: " + marketPrice);
             int vendorPrice = Cost.Get_Vendor_Cost(item_id);
+            Console.WriteLine("Vendor price: " + vendorPrice);
             int profit = marketPrice - vendorPrice;
             Console.WriteLine("Estimated profit: " + profit);
 

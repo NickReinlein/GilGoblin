@@ -28,9 +28,25 @@ namespace GilGoblin.Finance
             return base_cost;
         }
         ///
-        public static int Get_Vendor_Cost(int item_id)
+
+        public static ItemInfo Get_Item_Info(int item_id)
         {
             return Market.Get_Item_Info(item_id).GetAwaiter().GetResult();
+        }
+        public static int Get_Vendor_Cost(int item_id)
+        {
+            return Get_Item_Info(item_id).vendor_price;
+
+        }
+        public static string Get_Description(int item_id)
+        {
+            return Get_Item_Info(item_id).description;
+
+        }
+        public static int Get_Icon_ID(int item_id)
+        {
+            return Get_Item_Info(item_id).icon_id;
+
         }
 
         public static int Get_Base_Cost(int item_id)

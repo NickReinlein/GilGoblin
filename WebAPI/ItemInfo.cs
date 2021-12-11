@@ -2,7 +2,7 @@
 
 namespace GilGoblin.WebAPI
 {
-    internal class Item_Info
+    internal class ItemInfo
     {
         public int item_id { get; set; }
         public string description { get; set; }
@@ -12,7 +12,7 @@ namespace GilGoblin.WebAPI
 
         public int gathering_id { get; set; }
 
-        public List<API_Recipe> recipes { get; set; }
+        public List<APIRecipe> recipes { get; set; }
 
         /// <summary>
         /// Constructor for JSON de-serialization; may add more constructors later
@@ -21,7 +21,7 @@ namespace GilGoblin.WebAPI
         /// <param name="world_name">The world name</param>
         /// <param name="item_name">Optional: Item name</param>
         /// <param name="current_listings">Optional: current listings on the marketboard</param>
-        public Item_Info(int itemID, string name, int priceMid, int stackSize, List<API_Recipe> recipes)
+        public ItemInfo(int itemID, string name, int priceMid, int stackSize, List<APIRecipe> recipes)
         {
             this.item_id = itemID;
             this.description = name;

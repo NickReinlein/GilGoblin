@@ -11,9 +11,8 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class Market
     {
-        public static async Task<int> Get_Market_Price(int item_id, string world_name)
+        public static async Task<MarketData> Get_Market_Data(int item_id, string world_name)
         {
-            Console.WriteLine("Starting to fetch market price");
             try
             {
                 HttpClient client = new HttpClient();
@@ -21,21 +20,20 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                Market_Data market_Data = JsonConvert.DeserializeObject<Market_Data>(
+                MarketData market_Data = JsonConvert.DeserializeObject<MarketData>(
                     content.Content.ReadAsStringAsync().Result);
-
-                return market_Data.get_Price();
+                return market_Data;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return 0;
+                Console.WriteLine("Failed to convert market data from JSON:" + ex.Message);
+                return null;
             }
         }
 
-        public static async Task<int> Get_Item_Info(int item_id)
+
+        public static async Task<ItemInfo> Get_Item_Info(int item_id)
         {
-            Console.WriteLine("Starting to fetch cost");
             try
             {
                 HttpClient client = new HttpClient();
@@ -43,29 +41,16 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                Item_Info item_info = JsonConvert.DeserializeObject<Item_Info>(
+                ItemInfo item_info = JsonConvert.DeserializeObject<ItemInfo>(
                     content.Content.ReadAsStringAsync().Result);
-
-                Console.WriteLine("Found the item info for " + item_info.description);
-
-                Console.WriteLine("Found recipes: ");
-                item_info.recipes.ForEach(
-                    recipe => Console.WriteLine("Job: " + recipe.class_job_id + " / " +
-                                                "Level req: " + recipe.level + " / " +
-                                                "Item req: " + recipe.item_id));
-
-                Console.WriteLine("Vendor price found of: " + item_info.vendor_price);
-
-                return item_info.vendor_price;
+                return item_info;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return 0;
+                Console.WriteLine("Failed to convert item info from JSON:" + ex.Message);
+                return null;
             }
         }
-
-
     }
 }
 

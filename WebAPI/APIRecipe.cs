@@ -1,12 +1,12 @@
 ﻿namespace GilGoblin.WebAPI
 {
-    internal class API_Recipe
+    internal class APIRecipe
     {
         public int class_job_id { get; set; }
         public int item_id { get; set; }
         public int level { get; set; }
 
-        public API_Recipe(int id, int classJobID, int level)
+        public APIRecipe(int id, int classJobID, int level)
         {
             this.class_job_id = classJobID;
             this.item_id = id;

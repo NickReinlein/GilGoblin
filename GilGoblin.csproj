@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\DatabaseAccess.cs" />
-    <Compile Include="WebAPI\API_Recipe.cs" />
-    <Compile Include="WebAPI\Item_Info.cs" />
-    <Compile Include="WebAPI\Market_Listing.cs" />
+    <Compile Include="WebAPI\APIRecipe.cs" />
+    <Compile Include="WebAPI\ItemInfo.cs" />
+    <Compile Include="WebAPI\MarketListing.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
     <Compile Include="Functions\General_Function.cs" />
