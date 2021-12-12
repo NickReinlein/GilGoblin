@@ -48,6 +48,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\MarketDataDB.cs" />
     <Compile Include="Database\DatabaseAccess.cs" />
     <Compile Include="WebAPI\APIRecipe.cs" />
     <Compile Include="WebAPI\ItemInfo.cs" />

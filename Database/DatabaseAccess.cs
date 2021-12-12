@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GilGoblin.Database
@@ -17,7 +18,7 @@ namespace GilGoblin.Database
             {
                 string full_path = Path.Combine(file_path, db_name);
                 SqliteConnection conn = new SqliteConnection("Data Source=" + full_path);
-                
+
                 conn.Open();
 
                 if (conn.State == System.Data.ConnectionState.Open)
@@ -43,49 +44,48 @@ namespace GilGoblin.Database
             conn.Close();
         }
 
-        public static bool SaveMarketDataDB(MarketData marketData)
-        {
 
-            using (DbContext dbContext = new MarketDataContext()) {
+        public static void createTableMarketData(SqliteConnection conn, MarketData marketData)
+        {
+            using (SqliteCommand query = conn.CreateCommand())
+            {
                 try
                 {
-                    dbContext.Database.EnsureCreated();
-                    dbContext.Add(marketData);
-                    dbContext.SaveChanges();
-                    return true;
+                    MarketDataContext marketDataContext = new MarketDataContext();
+                    marketDataContext.Database.EnsureCreated();
+                    Disconnect(conn);
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return false;
+                    Disconnect(conn);
                 }
             }
+        }
 
-            //using (SqliteConnection conn = Connect())
-            //{
-            //    using (SqliteCommand query = conn.CreateCommand())
-            //    {
-            //        try
-            //        {
-            //            int item_id = marketData.item_id;
-            //            query.Parameters.AddWithValue("@item_id", SqliteType.Integer);
-            //            query.CommandText =
-            //               @"
-            //                    UPDATE MarketData
-            //                    WHERE item_id = $item_id
-            //                    LIMIT 1";
-            //            query.ExecuteNonQuery();
-            //            Disconnect(conn);
-            //            return true;
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Console.WriteLine(ex.Message);
-            //            Disconnect(conn);
-            //            return false;
-            //        }
-            //    }
-            //}
+        public static bool SaveMarketDataDB(MarketData marketData)
+        {
+            using (SqliteConnection conn = Connect())
+            {
+                try
+                {
+                    createTableMarketData(conn, marketData);
+                    MarketDataContext marketDataContext = new MarketDataContext();                    
+                    marketDataContext.Add<MarketDataDB>(new MarketDataDB(marketData));
+
+                    marketDataContext.SaveChanges();
+
+                    Disconnect(conn);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Disconnect(conn);
+                    return false;
+                }
+
+            }
         }
 
         // Doesn't work yet
@@ -122,9 +122,12 @@ namespace GilGoblin.Database
             }
         }
 
-        public class MarketDataContext : DbContext
+        public partial class MarketDataContext : DbContext
         {
-            public DbSet<MarketData> MarketData { get; set; }
+            public DbSet<MarketDataDB> marketDataDB { get; set; }
+
+            public MarketDataContext() : base()
+            { }
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
@@ -135,23 +138,21 @@ namespace GilGoblin.Database
             #region Required
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
-                //modelBuilder.Entity<MarketData>()
-                //    .Property(b => b.last_updated)
-                //    .IsRequired();
-
-                //modelBuilder.Entity<MarketData>()
-                //                    .Property(p => p.average_Price)
-                //                    .IsRequired();
+                modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id)
+                                                   .IsRequired();
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_name)
+                                                    .IsRequired();
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated)
+                                                    .IsRequired();
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.average_Price);
             }
             #endregion
 
-            //No suitable constructor found for entity type 'MarketData'.
-            //The following constructors had parameters that could not be bound to properties
-            //of the entity type: cannot bind 'itemID', 'worldName', 'lastUploadTime',
-            //'entries' in 'MarketData(int itemID, string worldName, long lastUploadTime,
-            //List<MarketListing> entries)'.
-
         }
     }
-
 }
+
+
+
+

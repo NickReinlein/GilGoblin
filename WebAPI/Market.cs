@@ -70,9 +70,9 @@ namespace GilGoblin.WebAPI
             //TODO: later this needs to be doneDatabase.DatabaseAccess.GetMarketDataDB
             ItemInfo item_info = Market.FetchItemInfo(item_id).GetAwaiter().GetResult();
             return item_info;
-            
+
         }
-}
+    }
 }
 
 
