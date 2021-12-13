@@ -13,7 +13,7 @@ namespace GilGoblin.Database
     internal class MarketDataDB
     {
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        //[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int item_id { get; }
         public string world_name { get; }
         public DateTime last_updated { get; set; }
@@ -29,6 +29,33 @@ namespace GilGoblin.Database
             this.world_name = marketData.world_name;
             this.last_updated = marketData.last_updated;            
             this.average_Price = marketData.average_Price;
+        }
+    }
+    internal class MarketListingDB
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int listing_id { get; }
+
+        public int item_id { get; set; }
+        public string world_name { get; }
+        public DateTime timestamp { get; set; }
+        public int price { get; set; }
+        public bool hq { get; set; }
+        public int qty { get; set; }
+
+        public MarketListingDB()
+        {
+
+        }
+        public MarketListingDB(MarketListing listing)
+        {
+            this.item_id = listing.item_id;
+            this.world_name = listing.world_name;
+            this.timestamp = listing.timestamp;
+            this.price = listing.price;
+            this.hq = listing.hq;
+            this.qty = listing.qty;
         }
     }
 }

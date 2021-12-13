@@ -11,11 +11,16 @@ namespace GilGoblin.Finance
 {
     internal class MarketListing
     {
-        public int item_id { get; }
+        public int item_id { get; private set; }
         public bool hq { get; set; }
         public int price { get; set; }
         public int qty { get; set; }
         public DateTime timestamp { get; set; }
+        
+        //World_name is set seprately as the API does not provide it
+        //but it's not an issue since we have it when we call the API 
+        [JsonIgnore]
+        public string world_name { get; set; }
 
         public MarketListing(int item_id, bool hq, int pricePerUnit, 
                              int quantity, long timestamp)
@@ -30,8 +35,8 @@ namespace GilGoblin.Finance
 
     internal class MarketData
     {
-        public int item_id { get; }
-        public string world_name { get; }
+        public int item_id { get; private set; }
+        public string world_name { get; private set; }
         public DateTime last_updated { get; set; }
         public int average_Price { get; set; }
 
@@ -99,6 +104,7 @@ namespace GilGoblin.Finance
             this.world_name = worldName;
             this.last_updated = Functions.General_Function.ConvertLongToDateTime(lastUploadTime);
 
+            //Order listings by most recent to older & take the most recent X listings to save
             this.listings =
                 entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
 

@@ -44,36 +44,25 @@ namespace GilGoblin.Database
             conn.Close();
         }
 
-
-        public static void createTableMarketData(SqliteConnection conn, MarketData marketData)
-        {
-            using (SqliteCommand query = conn.CreateCommand())
-            {
-                try
-                {
-                    MarketDataContext marketDataContext = new MarketDataContext();
-                    marketDataContext.Database.EnsureCreated();
-                    Disconnect(conn);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Disconnect(conn);
-                }
-            }
-        }
-
         public static bool SaveMarketDataDB(MarketData marketData)
         {
             using (SqliteConnection conn = Connect())
             {
                 try
                 {
-                    createTableMarketData(conn, marketData);
-                    MarketDataContext marketDataContext = new MarketDataContext();                    
-                    marketDataContext.Add<MarketDataDB>(new MarketDataDB(marketData));
-
+                    MarketDataContext marketDataContext = new MarketDataContext();
+                    marketDataContext.Database.EnsureCreated();
+                    //marketDataContext.Add<MarketDataDB>(new MarketDataDB(marketData));
+                    marketDataContext.Update<MarketDataDB>(new MarketDataDB(marketData));
                     marketDataContext.SaveChanges();
+
+                    MarketListingContext marketListingContext = new MarketListingContext();
+                    marketListingContext.Database.EnsureCreated();
+                    foreach (MarketListing marketListing in marketData.listings)
+                    {
+                        marketDataContext.Add<MarketListingDB>(new MarketListingDB(marketListing));
+                    }
+                    marketListingContext.SaveChanges();
 
                     Disconnect(conn);
                     return true;
@@ -98,19 +87,6 @@ namespace GilGoblin.Database
                     try
                     {
                         return null;
-                        //query.CommandText =
-                        //    @"
-                        //        SELECT * 
-                        //        FROM marketData
-                        //        WHERE item_id = $item_id
-                        //        LIMIT 1";
-                        //using (var reader = query.ExecuteReader())
-                        //{
-                        //    reader.Read();
-                        //    //MarketData marketData// = reader.CreateObjRef(Type.GetType("MarketData"));
-                        //    Disconnect(conn);
-                        //    return null; //TODO map this later
-                        //}
                     }
                     catch (Exception err)
                     {
@@ -135,7 +111,6 @@ namespace GilGoblin.Database
                 optionsBuilder.UseSqlite($"Data Source=" + connectionString);
             }
 
-            #region Required
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
@@ -147,7 +122,31 @@ namespace GilGoblin.Database
                                                     .IsRequired();
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.average_Price);
             }
-            #endregion
+        }
+
+        public partial class MarketListingContext : DbContext
+        {
+            public DbSet<MarketListingDB> listingDB { get; set; }
+
+            public MarketListingContext() : base()
+            { }
+
+            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            {
+                string connectionString = Path.Combine(file_path, db_name);
+                optionsBuilder.UseSqlite($"Data Source=" + connectionString);
+            }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MarketListingDB>().ToTable("MarketListings");
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_name).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
+            }
 
         }
     }
