@@ -12,9 +12,10 @@ namespace GilGoblin.Database
 {
     internal class MarketDataDB
     {
-        [Key]
-        //[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int item_id { get; }
+        [Key, Column(Order=0)]
+        //[DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        public int item_id { get; set; }
+        [Key, Column(Order = 1)]
         public string world_name { get; }
         public DateTime last_updated { get; set; }
         public int average_Price { get; set; }
@@ -35,10 +36,10 @@ namespace GilGoblin.Database
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int listing_id { get; }
+        public int id { get; set; }
 
         public int item_id { get; set; }
-        public string world_name { get; }
+        public string world_name { get; set;  }
         public DateTime timestamp { get; set; }
         public int price { get; set; }
         public bool hq { get; set; }

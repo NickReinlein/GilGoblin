@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using GilGoblin.Functions;
 
 namespace GilGoblin.Database
 {
@@ -51,16 +52,28 @@ namespace GilGoblin.Database
                 try
                 {
                     MarketDataContext marketDataContext = new MarketDataContext();
-                    marketDataContext.Database.EnsureCreated();
-                    //marketDataContext.Add<MarketDataDB>(new MarketDataDB(marketData));
-                    marketDataContext.Update<MarketDataDB>(new MarketDataDB(marketData));
+                    marketDataContext.Database.EnsureCreated();                     
+
+                    MarketDataDB exists = marketDataContext.marketDataDB
+                        .Find(marketData.item_id, marketData.world_name);
+                    if (exists == null){
+                        MarketDataDB newDBEntry = new MarketDataDB(marketData);
+                        marketDataContext.Add<MarketDataDB>(newDBEntry); 
+                    }
+                    else
+                    {
+                        exists.last_updated = marketData.last_updated;
+                        exists.average_Price = marketData.average_Price;
+                        marketDataContext.Update<MarketDataDB>(exists); 
+                    }
                     marketDataContext.SaveChanges();
+
 
                     MarketListingContext marketListingContext = new MarketListingContext();
                     marketListingContext.Database.EnsureCreated();
                     foreach (MarketListing marketListing in marketData.listings)
                     {
-                        marketDataContext.Add<MarketListingDB>(new MarketListingDB(marketListing));
+                        marketListingContext.Add<MarketListingDB>(new MarketListingDB(marketListing));
                     }
                     marketListingContext.SaveChanges();
 
@@ -69,7 +82,8 @@ namespace GilGoblin.Database
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Exception: " + ex.Message);
+                    Console.WriteLine("Inner exception: " + ex.InnerException);
                     Disconnect(conn);
                     return false;
                 }
@@ -114,12 +128,10 @@ namespace GilGoblin.Database
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id)
-                                                   .IsRequired();
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_name)
-                                                    .IsRequired();
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated)
-                                                    .IsRequired();
+                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_name });
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id).IsRequired();
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_name).IsRequired();
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated).IsRequired();
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.average_Price);
             }
         }
