@@ -14,7 +14,7 @@ namespace GilGoblin.Tests
 
         public const string world_name = "Brynhildr";
         public const int item_id = 5057;
-        public static void test_Fetch_Market_Price()
+        public static async void test_Fetch_Market_Price()
         {
             try
             {
@@ -29,12 +29,16 @@ namespace GilGoblin.Tests
                 Console.WriteLine("Estimated profit: " + profit);
 
                 string success_message = "failure.";
-                bool db_success = DatabaseAccess.SaveMarketDataDB(marketData);
-                if (db_success)
-                {
-                    success_message = "sucess.";
-                }               
-                Console.WriteLine("Database save was a : " + success_message);
+                int db_success = await DatabaseAccess.SaveMarketDataDB(marketData);
+                if (db_success > 0) { success_message = "sucess."; }
+                Console.WriteLine("Database save was a " + success_message);
+
+                //success_message = "failure.";
+                //db_success = await DatabaseAccess.SaveMarketListingsDB(marketData.listings);
+                //if (db_success){ success_message = "sucess."; }
+                //Console.WriteLine("Database save was a " + success_message);
+
+                DatabaseAccess.Disconnect();
             }
             catch (Exception ex)
             {

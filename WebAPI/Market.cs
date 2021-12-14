@@ -25,6 +25,7 @@ namespace GilGoblin.WebAPI
                 foreach( MarketListing listing in market_Data.listings)
                 {
                     listing.world_name = world_name;
+                    listing.item_id = item_id;
                 }
                 return market_Data;
             }

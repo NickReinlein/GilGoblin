@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using GilGoblin.Functions;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GilGoblin.Database
 {
@@ -12,19 +14,28 @@ namespace GilGoblin.Database
     {
         public static string file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string db_name = "GilGoblin.db";
+        public static string full_path = Path.Combine(file_path, db_name);
+
+        public static SqliteConnection conn;
 
         public static SqliteConnection Connect()
         {
             try
-            {
-                string full_path = Path.Combine(file_path, db_name);
-                SqliteConnection conn = new SqliteConnection("Data Source=" + full_path);
+            {                
+                if (conn == null)
+                {
+                    conn = new SqliteConnection("Data Source=" + full_path);
+                }
+
+                //Already open, return
+                if (conn.State == System.Data.ConnectionState.Open)
+                {                   
+                    return conn;
+                }
 
                 conn.Open();
-
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
-
                     return conn;
                 }
                 else
@@ -40,25 +51,37 @@ namespace GilGoblin.Database
             }
         }
 
-        public static void Disconnect(SqliteConnection conn)
+        public static void Disconnect()
         {
-            conn.Close();
-        }
-
-        public static bool SaveMarketDataDB(MarketData marketData)
-        {
-            using (SqliteConnection conn = Connect())
+            if (DatabaseAccess.conn != null &&
+            DatabaseAccess.conn.State != System.Data.ConnectionState.Closed)
             {
                 try
                 {
+                    conn.Close();
+                    conn.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+            }
+
+        }
+
+        public static async Task<int> SaveMarketDataDB(MarketData marketData)
+        {
+                try
+                {
                     MarketDataContext marketDataContext = new MarketDataContext();
-                    marketDataContext.Database.EnsureCreated();                     
+                    await marketDataContext.Database.EnsureCreatedAsync();
 
                     MarketDataDB exists = marketDataContext.marketDataDB
-                        .Find(marketData.item_id, marketData.world_name);
+                        .FindAsync(marketData.item_id, marketData.world_name).GetAwaiter().GetResult();
+                    
                     if (exists == null){
                         MarketDataDB newDBEntry = new MarketDataDB(marketData);
-                        marketDataContext.Add<MarketDataDB>(newDBEntry); 
+                        await marketDataContext.AddAsync<MarketDataDB>(newDBEntry); 
                     }
                     else
                     {
@@ -66,98 +89,114 @@ namespace GilGoblin.Database
                         exists.average_Price = marketData.average_Price;
                         marketDataContext.Update<MarketDataDB>(exists); 
                     }
-                    marketDataContext.SaveChanges();
-
-
-                    MarketListingContext marketListingContext = new MarketListingContext();
-                    marketListingContext.Database.EnsureCreated();
-                    foreach (MarketListing marketListing in marketData.listings)
+                    int success = await marketDataContext.SaveChangesAsync();
+                    if (success > 0)
                     {
-                        marketListingContext.Add<MarketListingDB>(new MarketListingDB(marketListing));
+                        success = await SaveMarketListingsDB(marketData.listings);
                     }
-                    marketListingContext.SaveChanges();
-
-                    Disconnect(conn);
-                    return true;
+                    return success;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Exception: " + ex.Message);
                     Console.WriteLine("Inner exception: " + ex.InnerException);
-                    Disconnect(conn);
-                    return false;
+                    Disconnect();
+                    return 0;
                 }
-
-            }
         }
 
-        // Doesn't work yet
+        public static async Task<int> SaveMarketListingsDB(List<MarketListing> listings)
+        {
+            try
+            {
+                MarketListingContext marketListingContext = new MarketListingContext();
+                await marketListingContext.Database.EnsureCreatedAsync();
+
+                MarketListing listing1 = listings[1];
+                await marketListingContext.AddAsync(listing1);
+                //await marketListingContext.AddRangeAsync(listings);
+                //foreach (MarketListing marketListing in marketData.listings)
+                //{
+                //    await marketListingContext.AddAsync<MarketListingDB>(new MarketListingDB(marketListing));
+                //}             
+                
+                return await marketListingContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Disconnect();
+                return 0;
+            }
+
+        }
+
+        // Read from DB: Doesn't work yet
         public static MarketData GetMarketDataDB(int item_id)
         {
-            using (SqliteConnection conn = Connect())
-            {
-                using (SqliteCommand query = conn.CreateCommand())
-                {
-                    try
-                    {
-                        return null;
-                    }
-                    catch (Exception err)
-                    {
-                        Console.WriteLine(err.Message);
-                        Disconnect(conn);
-                        return null;
-                    }
-                }
-            }
+            return null;
         }
 
-        public partial class MarketDataContext : DbContext
+
+        public class MarketDataContext : DbContext
         {
             public DbSet<MarketDataDB> marketDataDB { get; set; }
 
-            public MarketDataContext() : base()
-            { }
+            private SqliteConnection conn;
+
+            public MarketDataContext()
+                : base( new DbContextOptionsBuilder<MarketDataContext>().UseSqlite(Connect()).Options )
+            { 
+                conn = Connect();
+            }
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                string connectionString = Path.Combine(file_path, db_name);
-                optionsBuilder.UseSqlite($"Data Source=" + connectionString);
+                this.conn = Connect();
+                optionsBuilder.UseSqlite(this.conn);
             }
 
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            protected override async void OnModelCreating(ModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
-                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_name });
+                modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");  
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id).IsRequired();
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.world_name).IsRequired();
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated).IsRequired();
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.average_Price);
+                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_name });
+
+                modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_name).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
             }
         }
 
-        public partial class MarketListingContext : DbContext
+
+        public class MarketListingContext : DbContext
         {
             public DbSet<MarketListingDB> listingDB { get; set; }
+            private SqliteConnection conn;
 
-            public MarketListingContext() : base()
-            { }
+            public MarketListingContext() 
+                : base(new DbContextOptionsBuilder<MarketListingContext>().UseSqlite(Connect()).Options)
+            {
+                conn = Connect();
+            }
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                string connectionString = Path.Combine(file_path, db_name);
-                optionsBuilder.UseSqlite($"Data Source=" + connectionString);
+                this.conn = Connect();
+                optionsBuilder.UseSqlite(this.conn);
             }
 
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MarketListingDB>().ToTable("MarketListings");
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_name).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
             }
 
         }
