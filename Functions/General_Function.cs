@@ -4,11 +4,11 @@ namespace GilGoblin.Functions
 {
     internal static class General_Function
     {
-        public static DateTime ConvertLongToDateTime(long elapsed_time)
+        public static DateTime ConvertLongUnixSecondsToDateTime(long elapsed_time)
         {
             try
             {
-                DateTime date = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
+                DateTime date = DateTimeOffset.FromUnixTimeSeconds(elapsed_time).LocalDateTime;
                 return date;
             }
             catch (Exception ex)

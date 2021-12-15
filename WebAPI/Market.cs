@@ -22,10 +22,10 @@ namespace GilGoblin.WebAPI
                 //Deserialize & Cast from JSON to the object
                 MarketData market_Data = JsonConvert.DeserializeObject<MarketData>(
                     content.Content.ReadAsStringAsync().Result);
-                foreach( MarketListing listing in market_Data.listings)
+                foreach(MarketListing listing in market_Data.listings)
                 {
-                    listing.world_name = world_name;
                     listing.item_id = item_id;
+                    listing.world_name = world_name;
                 }
                 return market_Data;
             }

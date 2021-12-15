@@ -33,11 +33,6 @@ namespace GilGoblin.Tests
                 if (db_success > 0) { success_message = "sucess."; }
                 Console.WriteLine("Database save was a " + success_message);
 
-                //success_message = "failure.";
-                //db_success = await DatabaseAccess.SaveMarketListingsDB(marketData.listings);
-                //if (db_success){ success_message = "sucess."; }
-                //Console.WriteLine("Database save was a " + success_message);
-
                 DatabaseAccess.Disconnect();
             }
             catch (Exception ex)
