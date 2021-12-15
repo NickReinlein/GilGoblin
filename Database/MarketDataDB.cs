@@ -13,7 +13,7 @@ namespace GilGoblin.Database
     public class MarketDataDB
     {
         public int item_id { get; set; }
-        public string world_name { get; }
+        public int world_id { get; set; }
         public DateTime last_updated { get; set; }
         public int average_Price { get; set; }
 
@@ -24,7 +24,7 @@ namespace GilGoblin.Database
         public MarketDataDB(MarketData marketData)
         {
             this.item_id = marketData.item_id;
-            this.world_name = marketData.world_name;
+            this.world_id = marketData.world_id;
             this.last_updated = DateTime.Now;
             this.average_Price = marketData.average_Price;
             foreach (MarketListing listing in marketData.listings)
@@ -42,8 +42,11 @@ namespace GilGoblin.Database
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+
+        [ForeignKey("item_id")]
+        [InverseProperty("MarketData")]
         public int item_id { get; set; }
-        public string world_name { get; set;  }
+        public int world_id { get; set; }
         public DateTime timestamp { get; set; }
         public int price { get; set; }
         public bool hq { get; set; }
@@ -53,7 +56,7 @@ namespace GilGoblin.Database
         public MarketListingDB(MarketListing listing)
         {
             this.item_id = listing.item_id;
-            this.world_name = listing.world_name;
+            this.world_id = listing.world_id;
             this.timestamp = listing.timestamp;
             this.price = listing.price;
             this.hq = listing.hq;

@@ -77,7 +77,7 @@ namespace GilGoblin.Database
                 await marketDataContext.Database.EnsureCreatedAsync();
 
                 MarketDataDB exists = marketDataContext.data
-                    .FindAsync(marketData.item_id, marketData.world_name).GetAwaiter().GetResult();
+                    .FindAsync(marketData.item_id, marketData.world_id).GetAwaiter().GetResult();
 
                 if (exists == null)
                 {
@@ -129,10 +129,10 @@ namespace GilGoblin.Database
             {
                 modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_name);
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.average_Price);
-                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_name });
+                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
 
                 modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
                 //.WithOne().
@@ -164,7 +164,7 @@ namespace GilGoblin.Database
                 modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
                 modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
                 modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_name).IsRequired();
+                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_id).IsRequired();
                 modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
                 modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
                 modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();

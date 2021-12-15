@@ -18,7 +18,7 @@ namespace GilGoblin.WebAPI
         /// Constructor for JSON de-serialization; may add more constructors later
         /// </summary>
         /// <param name="item_id">The item's ID number</param>
-        /// <param name="world_name">The world name</param>
+        /// <param name="world_id">The world name</param>
         /// <param name="item_name">Optional: Item name</param>
         /// <param name="current_listings">Optional: current listings on the marketboard</param>
         public ItemInfo(int itemID, string name, int priceMid, int stackSize, List<APIRecipe> recipes)

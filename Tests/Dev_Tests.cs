@@ -13,12 +13,13 @@ namespace GilGoblin.Tests
         // Item ID for Copper Ingot: 5057
 
         public const string world_name = "Brynhildr";
+        public const int world_id = 34;
         public const int item_id = 5057;
         public static async void test_Fetch_Market_Price()
         {
             try
             {
-                MarketData marketData = Market.GetMarketData(item_id, world_name);
+                MarketData marketData = Market.GetMarketData(item_id, world_id);
                 ItemInfo itemInfo = Market.GetItemInfo(item_id);
 
                 int marketPrice = marketData.getPrice();
@@ -41,6 +42,7 @@ namespace GilGoblin.Tests
             }
             finally
             {
+                Console.WriteLine("Press any button to quit.");
                 Console.ReadLine();
             }
         }

@@ -11,12 +11,12 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class Market
     {
-        public static async Task<MarketData> FetchMarketData(int item_id, string world_name)
+        public static async Task<MarketData> FetchMarketData(int item_id, int world_id)
         {
             try
             {
                 HttpClient client = new HttpClient();
-                string url = "https://universalis.app/api/history/" + world_name + "/" + item_id;
+                string url = "https://universalis.app/api/history/" + world_id + "/" + item_id;
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
@@ -25,7 +25,7 @@ namespace GilGoblin.WebAPI
                 foreach(MarketListing listing in market_Data.listings)
                 {
                     listing.item_id = item_id;
-                    listing.world_name = world_name;
+                    listing.world_id = world_id;
                 }
                 return market_Data;
             }
@@ -57,14 +57,14 @@ namespace GilGoblin.WebAPI
             }
         }
 
-        public static MarketData GetMarketData(int item_id, string world_name)
+        public static MarketData GetMarketData(int item_id, int world_id)
         {
-            return Market.FetchMarketData(item_id, world_name).GetAwaiter().GetResult();
+            return Market.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
             //Try with the database first, then if it fails we use the web API
             //MarketData marketData = Database.DatabaseAccess.GetMarketDataDB(item_id);
             //if (marketData == null)
             //{
-            //    marketData = Market.FetchMarketData(item_id, world_name).GetAwaiter().GetResult();
+            //    marketData = Market.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
             //}
             //return marketData;
         }

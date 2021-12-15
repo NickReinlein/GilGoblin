@@ -18,8 +18,7 @@ namespace GilGoblin.Finance
         public DateTime timestamp { get; set; }
 
         [JsonIgnore]
-        public string world_name { get; set; }        
-        public int world_id { get; set; }
+        public int world_id { get; set; }        
         public int item_id { get; set; }
 
         [JsonConstructor]
@@ -30,15 +29,14 @@ namespace GilGoblin.Finance
             this.price = pricePerUnit;
             this.qty = quantity;
             this.hq = hq;
-            this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);
-            
+            this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);            
          }
     }
 
     public class MarketData
     {
         public int item_id { get; set; }
-        public string world_name { get; set; }
+        public int world_id { get; set; }
         public DateTime last_updated { get; set; }
         public int average_Price { get; set; }
 
@@ -77,29 +75,21 @@ namespace GilGoblin.Finance
         }
 
 
-        /// <summary>
-        /// Constructor for JSON de-serialization; may add more constructors later
-        /// </summary>
-        /// <param name="item_id">The item's ID number</param>
-        /// <param name="world_name">The world name</param>
-        /// <param name="item_name">Optional: Item name</param>
-        /// <param name="current_listings">Optional: current listings on the marketboard</param>
         [JsonConstructor]
-        public MarketData(int itemID, string worldName, long lastUploadTime,
+        public MarketData(int itemID, int worldId, long lastUploadTime,
                                ICollection<MarketListing> entries)
         {
             this.item_id = itemID;
-            this.world_name = worldName;
+            this.world_id = worldId;
             this.last_updated 
-                = General_Function.ConvertLongUnixSecondsToDateTime(lastUploadTime);
+                = General_Function.ConvertLongUnixMillisecondsToDateTime(lastUploadTime);
 
-            this.listings =
-                entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
+            this.listings = entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
 
             foreach (MarketListing listing in listings)
             {
                 listing.item_id=itemID;
-                listing.world_name=worldName;
+                listing.world_id=world_id;
             }
 
             this.average_Price = CalculateAveragePrice();
