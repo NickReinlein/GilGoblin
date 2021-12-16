@@ -16,6 +16,7 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class MarketDataWeb : MarketData
     {
+        public ICollection<MarketListingWeb> listings { get; set; } = new List<MarketListingWeb>();
         public static int listingsToRead = 20; //TODO increase for production use
 
         public int getPrice(bool update = false)
@@ -32,7 +33,7 @@ namespace GilGoblin.WebAPI
 
         [JsonConstructor]
         public MarketDataWeb(int itemID, int worldId, long lastUploadTime,
-                               ICollection<MarketListing> entries)
+                               ICollection<MarketListingWeb> entries)
         {
             this.item_id = itemID;
             this.world_id = worldId;
@@ -58,9 +59,8 @@ namespace GilGoblin.WebAPI
                 string url = "https://universalis.app/api/history/" + world_id + "/" + item_id;
                 var content = await client.GetAsync(url);
 
-                //Deserialize & Cast from JSON to the object
-                MarketDataWeb market_Data = JsonConvert.DeserializeObject<MarketDataWeb>(
-                    content.Content.ReadAsStringAsync().Result);
+                //Deserialize from JSON to the object
+                MarketDataWeb market_Data = JsonConvert.DeserializeObject<MarketDataWeb>(content.Content.ReadAsStringAsync().Result);
                 return market_Data;
             }
             catch (Exception ex)

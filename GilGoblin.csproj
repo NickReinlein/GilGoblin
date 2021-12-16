@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="Database\MarketDataDB.cs" />
     <Compile Include="Database\DatabaseAccess.cs" />
-    <Compile Include="Finance\MarketDataBase.cs" />
+    <Compile Include="Database\MarketListingDB.cs" />
     <Compile Include="Finance\MarketListing.cs" />
     <Compile Include="Functions\Exceptions.cs" />
     <Compile Include="WebAPI\APIRecipe.cs" />

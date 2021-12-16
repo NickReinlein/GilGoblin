@@ -17,8 +17,7 @@ namespace GilGoblin.Finance
         public int item_id { get; set; }
         public int world_id { get; set; }
         public DateTime last_updated { get; set; }
-        public int average_Price { get; set; }
-        public ICollection<MarketListing> listings { get; set; } = new List<MarketListing>();
+        public int average_Price { get; set; }        
 
         //Try with the database first, then if it fails we use the web API
         public static MarketData GetMarketData(int item_id, int world_id)
@@ -29,9 +28,9 @@ namespace GilGoblin.Finance
             {
                 marketDataDB = Database.DatabaseAccess.GetMarketDataDB(item_id, world_id);
             }
-            catch(Exception ex)
+            catch(Exception)
             {                
-                //Not found in the database
+                //Not found in the database)
                 marketDataDB = null;
             }
 
@@ -54,6 +53,11 @@ namespace GilGoblin.Finance
 
         }
 
+        /// <summary>
+        /// Given the collection of listings, calculate their average price
+        /// </summary>
+        /// <param name="listings"></param>
+        /// <returns></returns>
         public int CalculateAveragePrice(ICollection<MarketListing> listings)
         {
             int average_Price = 0;
@@ -72,15 +76,12 @@ namespace GilGoblin.Finance
             return average_Price;
         }
 
-        // TODO: This is terrible duplicate code ...
-        // will need a base class for market listing too
-        // & then we can remove this and have one method
-        public int CalculateAveragePrice(ICollection<MarketListingDB> listings)
+        internal int CalculateAveragePrice(ICollection<MarketListingWeb> listings)
         {
             int average_Price = 0;
             uint total_Qty = 0;
             ulong total_Gil = 0;
-            foreach (MarketListingDB listing in listings)
+            foreach (MarketListingWeb listing in listings)
             {
                 total_Qty += ((uint)listing.qty);
                 total_Gil += ((ulong)(listing.price * listing.qty));

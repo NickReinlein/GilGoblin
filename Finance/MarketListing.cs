@@ -11,6 +11,14 @@ namespace GilGoblin.Finance
         public bool hq { get; set; }
         public int price { get; set; }
         public int qty { get; set; }
-        public DateTime timestamp { get; set; }
+
+        public MarketListing() { }
+
+        public MarketListing(MarketListing other) 
+        { 
+            hq = other.hq;
+            price = other.price;
+            qty = other.qty;
+        }
     }
 }

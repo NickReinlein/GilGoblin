@@ -11,10 +11,9 @@ namespace GilGoblin.WebAPI
 {
     internal class MarketListingWeb : MarketListing
     {
-//        [JsonIgnore]
-        public int world_id { get; set; }
         public int item_id { get; set; }
-
+        public int world_id { get; set; }
+        public DateTime timestamp { get; set; }
         public MarketListingWeb(){}
 
         [JsonConstructor]
