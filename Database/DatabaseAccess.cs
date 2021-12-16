@@ -7,6 +7,8 @@ using System.IO;
 using GilGoblin.Functions;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using GilGoblin.WebAPI;
 
 namespace GilGoblin.Database
 {
@@ -18,10 +20,10 @@ namespace GilGoblin.Database
 
         public static SqliteConnection conn;
 
-        public static SqliteConnection Connect()
+        internal static SqliteConnection Connect()
         {
             try
-            {                
+            {
                 if (conn == null)
                 {
                     conn = new SqliteConnection("Data Source=" + _path);
@@ -29,7 +31,7 @@ namespace GilGoblin.Database
 
                 //Already open, return
                 if (conn.State == System.Data.ConnectionState.Open)
-                {                   
+                {
                     return conn;
                 }
 
@@ -69,10 +71,10 @@ namespace GilGoblin.Database
 
         }
 
-        public static async Task<int> SaveMarketDataDB(MarketData marketData)
+        internal static async Task<int> SaveMarketData(MarketData marketData)
         {
-                try
-                {
+            try
+            {
                 MarketDataContext marketDataContext = new MarketDataContext();
                 await marketDataContext.Database.EnsureCreatedAsync();
 
@@ -93,22 +95,52 @@ namespace GilGoblin.Database
                 int success = await marketDataContext.SaveChangesAsync();
                 return success;
             }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Exception: " + ex.Message);
-                    Console.WriteLine("Inner exception: " + ex.InnerException);
-                    Disconnect();
-                    return 0;
-                }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Disconnect();
+                return 0;
+            }
         }
 
-        // Read from DB: Doesn't work yet
-        public static MarketData GetMarketDataDB(int item_id)
+        /// <summary>
+        /// Searches the database for MarketData (average market price, vendor price, etc)
+        /// </summary>
+        /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
+        /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
+        /// <returns></returns>
+        public static MarketDataDB GetMarketDataDB(int item_id, int world_id)
         {
-            return null;
+            try
+            {
+                MarketDataContext marketDataContext = new MarketDataContext();
+
+                //if (marketDataContext.Database.)
+
+                MarketDataDB exists = marketDataContext.data
+                        .Where(t => (t.item_id == item_id && t.world_id == world_id))
+                        .Include(t => t.listings)
+                        .FirstOrDefault();
+
+                return exists;
+            }
+            catch(System.InvalidOperationException)
+            {
+                //Maybe the database doesn't exist yet or not found
+                //Either way, we can return null -> it is not on the database
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Disconnect();
+                return null; ;
+            }
         }
 
-        public class MarketDataContext : DbContext
+        internal class MarketDataContext : DbContext
         {
             public DbSet<MarketDataDB> data { get; set; }
             private SqliteConnection conn;
@@ -127,7 +159,7 @@ namespace GilGoblin.Database
 
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
+                modelBuilder.Entity<MarketDataDB>().ToTable("MarketDataDB");
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
@@ -135,19 +167,16 @@ namespace GilGoblin.Database
                 modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
 
                 modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
-                //.WithOne().
-
-                //modelBuilder.Entity<MarketListingDB>().Map( )
             }
 
         }
 
-        public class MarketListingContext : DbContext
+        internal class MarketListingContext : DbContext
         {
             public DbSet<MarketListingDB> listingDB { get; set; }
             private SqliteConnection conn;
 
-            public MarketListingContext() 
+            public MarketListingContext()
                 : base(new DbContextOptionsBuilder<MarketListingContext>().UseSqlite(Connect()).Options)
             {
                 conn = Connect();
@@ -173,7 +202,7 @@ namespace GilGoblin.Database
 
         }
 
-        
+
     }
 }
 

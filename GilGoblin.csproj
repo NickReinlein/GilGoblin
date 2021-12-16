@@ -50,16 +50,19 @@
   <ItemGroup>
     <Compile Include="Database\MarketDataDB.cs" />
     <Compile Include="Database\DatabaseAccess.cs" />
+    <Compile Include="Finance\MarketDataBase.cs" />
+    <Compile Include="Finance\MarketListing.cs" />
     <Compile Include="Functions\Exceptions.cs" />
     <Compile Include="WebAPI\APIRecipe.cs" />
-    <Compile Include="WebAPI\ItemInfo.cs" />
-    <Compile Include="WebAPI\MarketListing.cs" />
+    <Compile Include="Finance\ItemInfo.cs" />
+    <Compile Include="WebAPI\MarketDataWeb.cs" />
+    <Compile Include="WebAPI\MarketListingWeb.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
     <Compile Include="Functions\General_Function.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Tests\Dev_Tests.cs" />
-    <Compile Include="WebAPI\Market.cs" />
+    <Compile Include="Finance\MarketData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">

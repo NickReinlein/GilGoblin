@@ -19,10 +19,14 @@ namespace GilGoblin.Tests
         {
             try
             {
-                MarketData marketData = Market.GetMarketData(item_id, world_id);
-                ItemInfo itemInfo = Market.GetItemInfo(item_id);
+                MarketData marketData = MarketData.GetMarketData(item_id, world_id);
+                ItemInfo itemInfo = MarketData.GetItemInfo(item_id);
 
-                int marketPrice = marketData.getPrice();
+                if (marketData == null || itemInfo == null)
+                {
+                    throw new Exception("Market data or item info not found");
+                }
+                int marketPrice = marketData.average_Price;
                 Console.WriteLine("Final market price: " + marketPrice);
                 int vendorPrice = itemInfo.vendor_price;
                 Console.WriteLine("Vendor price: " + vendorPrice);
@@ -30,7 +34,7 @@ namespace GilGoblin.Tests
                 Console.WriteLine("Estimated profit: " + profit);
 
                 string success_message = "failure.";
-                int db_success = await DatabaseAccess.SaveMarketDataDB(marketData);
+                int db_success = await DatabaseAccess.SaveMarketData(marketData);
                 if (db_success > 0) { success_message = "sucess."; }
                 Console.WriteLine("Database save was a " + success_message);
 

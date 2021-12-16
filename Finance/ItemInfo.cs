@@ -15,11 +15,14 @@ namespace GilGoblin.WebAPI
         public List<APIRecipe> recipes { get; set; }
 
         /// <summary>
-        /// Constructor for JSON de-serialization; may add more constructors later
+        /// Constructor for JSON de-serialization 
         /// </summary>
         /// <param name="item_id">The item's ID number</param>
         /// <param name="world_id">The world name</param>
         /// <param name="item_name">Optional: Item name</param>
+        /// <param name="stack_size">Stack size of the sale</param>
+        /// <param name="description">In-game text description</param>
+        /// <param name="vendor_price">Price for selling to vendor</param>
         /// <param name="current_listings">Optional: current listings on the marketboard</param>
         public ItemInfo(int itemID, string name, int priceMid, int stackSize, List<APIRecipe> recipes)
         {
