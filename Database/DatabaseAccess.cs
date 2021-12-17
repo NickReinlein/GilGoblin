@@ -14,35 +14,35 @@ namespace GilGoblin.Database
 {
     internal class DatabaseAccess
     {
-        public static string file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
-        public static string db_name = "GilGoblin.db";
-        public static string _path = Path.Combine(file_path, db_name);
+        public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
+        public static string _db_name = "GilGoblin.db";
+        public static string _path = Path.Combine(_file_path, _db_name);
 
-        public static SqliteConnection conn;
+        public static SqliteConnection _conn;
 
         internal static SqliteConnection Connect()
         {
             try
             {
-                if (conn == null)
+                if (_conn == null)
                 {
-                    conn = new SqliteConnection("Data Source=" + _path);
+                    _conn = new SqliteConnection("Data Source=" + _path);
                 }
 
                 //Already open, return
-                if (conn.State == System.Data.ConnectionState.Open)
+                if (_conn.State == System.Data.ConnectionState.Open)
                 {
-                    return conn;
+                    return _conn;
                 }
 
-                conn.Open();
-                if (conn.State == System.Data.ConnectionState.Open)
+                _conn.Open();
+                if (_conn.State == System.Data.ConnectionState.Open)
                 {
-                    return conn;
+                    return _conn;
                 }
                 else
                 {
-                    Console.WriteLine("Connection not open. State is: " + conn.State.ToString());
+                    Console.WriteLine("Connection not open. State is: " + _conn.State.ToString());
                     return null;
                 }
             }
@@ -55,13 +55,13 @@ namespace GilGoblin.Database
 
         public static void Disconnect()
         {
-            if (DatabaseAccess.conn != null &&
-            DatabaseAccess.conn.State != System.Data.ConnectionState.Closed)
+            if (DatabaseAccess._conn != null &&
+            DatabaseAccess._conn.State != System.Data.ConnectionState.Closed)
             {
                 try
                 {
-                    conn.Close();
-                    conn.Dispose();
+                    _conn.Close();
+                    _conn.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -88,12 +88,17 @@ namespace GilGoblin.Database
                 }
                 else
                 {
-                    //Existing entry, update some data
-
-                    exists.last_updated = DateTime.Now;
-                    exists.average_Price = marketData.average_Price;
-                    exists.listings = marketData.listings;
-                    marketDataContext.Update<MarketDataDB>(exists);
+                    //Existing entry
+                    //Check for freshness: if old, update data
+                    TimeSpan diff = DateTime.Now - marketData.last_updated;
+                    double hoursElapsed = diff.TotalHours;
+                    if (hoursElapsed > MarketData._staleness_hours_for_refresh)
+                    {
+                        exists.last_updated = DateTime.Now;
+                        exists.average_Price = marketData.average_Price;
+                        exists.listings = marketData.listings;
+                        marketDataContext.Update<MarketDataDB>(exists);
+                    }
                 }
                 int success = await marketDataContext.SaveChangesAsync();
                 return success;

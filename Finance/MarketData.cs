@@ -17,7 +17,9 @@ namespace GilGoblin.Finance
         public int item_id { get; set; }
         public int world_id { get; set; }
         public DateTime last_updated { get; set; }
-        public int average_Price { get; set; }        
+        public int average_Price { get; set; }
+
+        public static int _staleness_hours_for_refresh = 2; //todo: increase for production
 
         //Try with the database first, then if it fails we use the web API
         public static MarketDataDB GetMarketData(int item_id, int world_id)
