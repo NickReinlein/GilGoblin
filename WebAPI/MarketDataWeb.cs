@@ -33,7 +33,7 @@ namespace GilGoblin.WebAPI
 
         [JsonConstructor]
         public MarketDataWeb(int itemID, int worldId, long lastUploadTime,
-                               ICollection<MarketListingWeb> entries)
+                               ICollection<MarketListingWeb> entries) : base()
         {
             this.item_id = itemID;
             this.world_id = worldId;

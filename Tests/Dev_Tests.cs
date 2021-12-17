@@ -19,7 +19,7 @@ namespace GilGoblin.Tests
         {
             try
             {
-                MarketData marketData = MarketData.GetMarketData(item_id, world_id);
+                MarketDataDB marketData = MarketData.GetMarketData(item_id, world_id);
                 ItemInfo itemInfo = MarketData.GetItemInfo(item_id);
 
                 if (marketData == null || itemInfo == null)

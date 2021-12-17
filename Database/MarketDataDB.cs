@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GilGoblin.Finance;
+using GilGoblin.WebAPI;
 
 namespace GilGoblin.Database
 {
@@ -20,12 +21,18 @@ namespace GilGoblin.Database
         public ICollection<MarketListingDB> listings { get; set; } 
             = new List<MarketListingDB>();
         public MarketDataDB() : base() { }
-        public MarketDataDB(MarketData data) : base() 
+        public MarketDataDB(MarketDataWeb data) : base() 
         {
+            //Convert each market listing from the web format to DB
+            foreach (MarketListingWeb web in data.listings)
+            {
+                listings.Add(web.ConvertToDB());
+            }
             this.last_updated = data.last_updated;
             this.average_Price = data.average_Price;
             this.item_id = data.item_id;
             this.world_id = data.world_id;
+
         }
     }
 }

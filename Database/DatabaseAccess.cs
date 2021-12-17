@@ -71,7 +71,7 @@ namespace GilGoblin.Database
 
         }
 
-        internal static async Task<int> SaveMarketData(MarketData marketData)
+        internal static async Task<int> SaveMarketData(MarketDataDB marketData)
         {
             try
             {
@@ -83,13 +83,16 @@ namespace GilGoblin.Database
 
                 if (exists == null)
                 {
-                    MarketDataDB newDBEntry = new MarketDataDB(marketData);
-                    await marketDataContext.AddAsync<MarketDataDB>(newDBEntry);
+                    //New entry, add to entity tracker
+                    await marketDataContext.AddAsync<MarketDataDB>(marketData);
                 }
                 else
                 {
-                    exists.last_updated = marketData.last_updated;
+                    //Existing entry, update some data
+
+                    exists.last_updated = DateTime.Now;
                     exists.average_Price = marketData.average_Price;
+                    exists.listings = marketData.listings;
                     marketDataContext.Update<MarketDataDB>(exists);
                 }
                 int success = await marketDataContext.SaveChangesAsync();
@@ -116,8 +119,6 @@ namespace GilGoblin.Database
             {
                 MarketDataContext marketDataContext = new MarketDataContext();
 
-                //if (marketDataContext.Database.)
-
                 MarketDataDB exists = marketDataContext.data
                         .Where(t => (t.item_id == item_id && t.world_id == world_id))
                         .Include(t => t.listings)
@@ -125,18 +126,23 @@ namespace GilGoblin.Database
 
                 return exists;
             }
-            catch(System.InvalidOperationException)
-            {
-                //Maybe the database doesn't exist yet or not found
-                //Either way, we can return null -> it is not on the database
-                return null;
-            }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception: " + ex.Message);
-                Console.WriteLine("Inner exception: " + ex.InnerException);
-                Disconnect();
-                return null; ;
+                if (ex is Microsoft.Data.Sqlite.SqliteException ||
+                    ex is System.InvalidOperationException)
+                {
+                    //Maybe the database doesn't exist yet or not found
+                    //Either way, we can return null -> it is not on the database
+                    return null;
+                }
+                else
+                {
+
+                    Console.WriteLine("Exception: " + ex.Message);
+                    Console.WriteLine("Inner exception: " + ex.InnerException);
+                    Disconnect();
+                    return null; ;
+                }
             }
         }
 

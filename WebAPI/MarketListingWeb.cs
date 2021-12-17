@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using GilGoblin.Functions;
 using GilGoblin.Finance;
 using GilGoblin.Database;
+using System.Collections.Generic;
 
 namespace GilGoblin.WebAPI
 {
@@ -17,7 +18,7 @@ namespace GilGoblin.WebAPI
         public MarketListingWeb(){}
 
         [JsonConstructor]
-        public MarketListingWeb(int pricePerUnit, int quantity, long timestamp, bool hq)
+        public MarketListingWeb(int pricePerUnit, int quantity, long timestamp, bool hq): base()
         {
             this.hq = hq;
             this.price = pricePerUnit;
@@ -26,14 +27,26 @@ namespace GilGoblin.WebAPI
             this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);            
          }
 
-        //public MarketListingDB ConvertToDB()
-        //{
-        //    MarketListingDB db = new MarketListingDB();
-        //    db.item_id = item_id;
-        //    db.price = price;
-        //    db.qty = qty;
-        //    db.timestamp = timestamp;
-        //    return db;
-        //}
+        public MarketListingDB ConvertToDB()
+        {
+            MarketListingDB db = new MarketListingDB();
+            db.item_id = item_id;
+            db.price = price;
+            db.qty = qty;
+            db.hq = hq;
+            db.timestamp = timestamp;
+            db.world_id = world_id;
+            return db;
+        }
+
+        public static ICollection<MarketListingDB> ConvertWebListingsToDB(ICollection<MarketListingWeb> webListings)
+        {
+            ICollection<MarketListingDB> dbListings = new List<MarketListingDB>();
+            foreach (MarketListingWeb web in webListings)
+            {
+                dbListings.Add(web.ConvertToDB());
+            }
+            return dbListings;
+        }
     }
 }

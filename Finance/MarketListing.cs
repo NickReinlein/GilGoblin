@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.Finance
 {
-    internal class MarketListing
+    internal abstract class MarketListing
     {
         public bool hq { get; set; }
         public int price { get; set; }
@@ -14,11 +14,5 @@ namespace GilGoblin.Finance
 
         public MarketListing() { }
 
-        public MarketListing(MarketListing other) 
-        { 
-            hq = other.hq;
-            price = other.price;
-            qty = other.qty;
-        }
     }
 }

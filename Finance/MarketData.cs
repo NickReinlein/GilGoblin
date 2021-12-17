@@ -20,7 +20,7 @@ namespace GilGoblin.Finance
         public int average_Price { get; set; }        
 
         //Try with the database first, then if it fails we use the web API
-        public static MarketData GetMarketData(int item_id, int world_id)
+        public static MarketDataDB GetMarketData(int item_id, int world_id)
         {
             MarketDataDB marketDataDB;
             //Does it exist in the database? Is it stale?
@@ -41,7 +41,8 @@ namespace GilGoblin.Finance
                 //fetch with the web api
                 MarketDataWeb marketDataWeb
                     = MarketDataWeb.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
-                return marketDataWeb;
+                marketDataDB = new MarketDataDB(marketDataWeb);
+                return marketDataDB;
             }
         }
 

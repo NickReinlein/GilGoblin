@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GilGoblin.Finance;
@@ -25,7 +26,7 @@ namespace GilGoblin.Database
         public int world_id { get; set; }
         public DateTime timestamp { get; set; }
 
-        public MarketListingDB() {}
+        public MarketListingDB() { }
         public MarketListingDB(MarketListingWeb listing)
         {
             this.item_id = listing.item_id;
