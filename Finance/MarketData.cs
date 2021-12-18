@@ -1,11 +1,7 @@
 ﻿using GilGoblin.Database;
-using GilGoblin.Finance;
 using GilGoblin.WebAPI;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace GilGoblin.Finance
 {
@@ -30,21 +26,46 @@ namespace GilGoblin.Finance
             {
                 marketDataDB = Database.DatabaseAccess.GetMarketDataDB(item_id, world_id);
             }
-            catch(Exception)
-            {                
+            catch (Exception)
+            {
                 //Not found in the database)
                 marketDataDB = null;
             }
 
             //If found, stop & return
-            if (marketDataDB != null){ return marketDataDB; }
-            else 
-            { 
+            if (marketDataDB != null) { return marketDataDB; }
+            else
+            {
                 //fetch with the web api
                 MarketDataWeb marketDataWeb
                     = MarketDataWeb.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
                 marketDataDB = new MarketDataDB(marketDataWeb);
                 return marketDataDB;
+            }
+        }
+
+        /// <summary>
+        /// Given a Dictionary<int,int> that represents the item_id and world_id
+        /// respectively, get the market data for each and return it as a List
+        /// This can be re-written more efficiently later if performance becomes an issue
+        /// </summary>
+        /// <param name="dict"></param>A Dictionary<int,int> that represents the item_id and world_id
+        /// <returns></returns>
+        internal static List<MarketDataDB> GetMarketDataBulk(Dictionary<int, int> dict)
+        {
+            if (dict == null || dict.Count == 0)
+            {
+                Console.WriteLine("Trying to get an empty dictionary of market data.");
+                return null;
+            }
+            else
+            {
+                List<MarketDataDB> list = new List<MarketDataDB>();
+                foreach (KeyValuePair<int, int> item_world in dict)
+                {
+                    list.Add(GetMarketData(item_world.Key, item_world.Value));
+                }
+                return list;
             }
         }
 

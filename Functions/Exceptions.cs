@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GilGoblin.Functions
 {
     [Serializable]
-    public class DBStatusException: Exception
+    public class DBStatusException : Exception
     {
         public DBStatusException() { }
 

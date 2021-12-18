@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GilGoblin.Finance;
+using GilGoblin.WebAPI;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GilGoblin.Finance;
-using GilGoblin.WebAPI;
 
 namespace GilGoblin.Database
 {

@@ -1,13 +1,12 @@
 ﻿
+using GilGoblin.Finance;
+using GilGoblin.Functions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GilGoblin.Functions;
-using System.Threading.Tasks;
 using System.Net.Http;
-using GilGoblin.WebAPI;
-using GilGoblin.Finance;
+using System.Threading.Tasks;
 
 namespace GilGoblin.WebAPI
 {
@@ -37,18 +36,18 @@ namespace GilGoblin.WebAPI
         {
             this.item_id = itemID;
             this.world_id = worldId;
-            this.last_updated 
+            this.last_updated
                 = General_Function.ConvertLongUnixMillisecondsToDateTime(lastUploadTime);
 
             this.listings = entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
 
             foreach (MarketListingWeb listing in listings)
             {
-                listing.item_id=itemID;
-                listing.world_id=worldId;
+                listing.item_id = itemID;
+                listing.world_id = worldId;
             }
 
-            this.average_Price =  CalculateAveragePrice(this.listings);
+            this.average_Price = CalculateAveragePrice(this.listings);
         }
 
         public static async Task<MarketDataWeb> FetchMarketData(int item_id, int world_id)

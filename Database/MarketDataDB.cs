@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GilGoblin.Finance;
+﻿using GilGoblin.Finance;
 using GilGoblin.WebAPI;
+using System.Collections.Generic;
 
 namespace GilGoblin.Database
 {
@@ -18,10 +14,10 @@ namespace GilGoblin.Database
     /// </summary>
     internal class MarketDataDB : MarketData
     {
-        public ICollection<MarketListingDB> listings { get; set; } 
+        public ICollection<MarketListingDB> listings { get; set; }
             = new List<MarketListingDB>();
         public MarketDataDB() : base() { }
-        public MarketDataDB(MarketDataWeb data) : base() 
+        public MarketDataDB(MarketDataWeb data) : base()
         {
             //Convert each market listing from the web format to DB
             foreach (MarketListingWeb web in data.listings)

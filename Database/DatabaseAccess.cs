@@ -4,11 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using GilGoblin.Functions;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using GilGoblin.WebAPI;
+using System.Threading.Tasks;
 
 namespace GilGoblin.Database
 {
@@ -69,6 +66,31 @@ namespace GilGoblin.Database
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Saves a list of marketDataDB items (with listings) 
+        /// This can be done in bulk much more efficiently but requires refactoring & testing
+        /// Will revisit if performance is an issue
+        /// </summary>
+        /// <param name="marketDataList"></param> a List<MarketData> that will be saved to the database
+        /// <returns></returns>
+        internal static async Task<int> SaveMarketDataBulk(List<MarketDataDB> marketDataList)
+        {
+            if (marketDataList == null || marketDataList.Count == 0)
+            {
+                Console.WriteLine("Trying to save an empty list of market data.");
+                return 0;
+            }
+            else
+            {
+                int saves = 0;
+                foreach (MarketDataDB marketData in marketDataList ?? Enumerable.Empty<MarketDataDB>())
+                {
+                    saves += await SaveMarketData(marketData);
+                }
+                return saves;
+            }
         }
 
         internal static async Task<int> SaveMarketData(MarketDataDB marketData)
