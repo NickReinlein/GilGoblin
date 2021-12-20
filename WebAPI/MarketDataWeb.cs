@@ -73,10 +73,11 @@ namespace GilGoblin.WebAPI
             }
         }
 
-        public static async Task<MarketDataWebBulk> FetchMarketDataBulk(List<int> itemIDs, int world_id)
+        public static async Task<List<MarketDataWeb>> FetchMarketDataBulk(List<int> itemIDs, int world_id)
         {
             try
             {
+                List<MarketDataWeb> list = new List<MarketDataWeb>();
                 HttpClient client = new HttpClient();
                 //https://universalis.app/api/34/5114%2C5106%2C5057
                 string url = String.Concat("https://universalis.app/api/", world_id, "/");
@@ -88,7 +89,10 @@ namespace GilGoblin.WebAPI
 
                 //Deserialize from JSON to the object
                 MarketDataWebBulk bulkData = JsonConvert.DeserializeObject<MarketDataWebBulk>(json);
-                return bulkData;
+                if (bulkData != null) { 
+                    list = bulkData.items; 
+                }
+                return list;
             }
             catch (Exception ex)
             {

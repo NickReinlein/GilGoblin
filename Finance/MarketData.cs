@@ -61,8 +61,14 @@ namespace GilGoblin.Finance
             else
             {
                 List<MarketDataDB> listDB = new List<MarketDataDB>();
-                List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
-                listWeb = MarketDataWeb.FetchMarketDataBulk(itemIDs, world_ID).GetAwaiter().GetResult();   
+                List<MarketDataWeb> listWeb = MarketDataWeb.FetchMarketDataBulk(itemIDs, world_ID).GetAwaiter().GetResult();
+                if (listWeb != null)
+                {
+                    foreach (MarketDataWeb web in listWeb)
+                    {
+                        listDB.Add(new MarketDataDB(web));
+                    }
+                }
                 return listDB;
             }
         }
