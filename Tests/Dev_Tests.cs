@@ -35,7 +35,7 @@ namespace GilGoblin.Tests
                 Console.WriteLine("Estimated profit: " + profit);
 
                 string success_message = "failure.";
-                int db_success = await DatabaseAccess.SaveMarketData(marketData);
+                int db_success = await DatabaseAccess.SaveMarketDataSingle(marketData);
                 if (db_success > 0) { success_message = "sucess."; }
                 Console.WriteLine("Database save was a " + success_message);
 
@@ -57,12 +57,10 @@ namespace GilGoblin.Tests
         {
             try
             {
-                Dictionary<int, int> fetchList = new Dictionary<int, int>();
+                List<int> fetchIDList = new List<int> { item_id, 5114, 5106 };
                 List<ItemInfo> infoList = new List<ItemInfo>();
-                fetchList.Add(item_id, world_id);
-                fetchList.Add(5114, world_id);
-                fetchList.Add(5106, world_id);
-                List<MarketDataDB> marketDataList = MarketData.GetMarketDataBulk(fetchList);
+                List<MarketDataDB> marketDataList 
+                    = MarketData.GetMarketDataBulk(fetchIDList, world_id);
                 foreach (MarketDataDB dataDb in marketDataList)
                 {
                     infoList.Add(MarketData.GetItemInfo(item_id));

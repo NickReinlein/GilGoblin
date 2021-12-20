@@ -87,13 +87,13 @@ namespace GilGoblin.Database
                 int saves = 0;
                 foreach (MarketDataDB marketData in marketDataList ?? Enumerable.Empty<MarketDataDB>())
                 {
-                    saves += await SaveMarketData(marketData);
+                    saves += await SaveMarketDataSingle(marketData);
                 }
                 return saves;
             }
         }
 
-        internal static async Task<int> SaveMarketData(MarketDataDB marketData)
+        internal static async Task<int> SaveMarketDataSingle(MarketDataDB marketData)
         {
             try
             {

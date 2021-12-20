@@ -51,21 +51,19 @@ namespace GilGoblin.Finance
         /// </summary>
         /// <param name="dict"></param>A Dictionary<int,int> that represents the item_id and world_id
         /// <returns></returns>
-        internal static List<MarketDataDB> GetMarketDataBulk(Dictionary<int, int> dict)
+        internal static List<MarketDataDB> GetMarketDataBulk(List<int> itemIDs, int world_ID)
         {
-            if (dict == null || dict.Count == 0)
+            if (world_ID == 0 || itemIDs == null || itemIDs.Count == 0)
             {
-                Console.WriteLine("Trying to get an empty dictionary of market data.");
+                Console.WriteLine("Trying to get bulk market data with missing parameters.");
                 return null;
             }
             else
             {
-                List<MarketDataDB> list = new List<MarketDataDB>();
-                foreach (KeyValuePair<int, int> item_world in dict)
-                {
-                    list.Add(GetMarketData(item_world.Key, item_world.Value));
-                }
-                return list;
+                List<MarketDataDB> listDB = new List<MarketDataDB>();
+                List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
+                listWeb = MarketDataWeb.FetchMarketDataBulk(itemIDs, world_ID).GetAwaiter().GetResult();   
+                return listDB;
             }
         }
 
@@ -118,6 +116,16 @@ namespace GilGoblin.Finance
             return average_Price;
         }
     }
+
+    internal class MarketDataBulk
+    {
+        ICollection<MarketData> bulkData = new List<MarketData>();
+
+        MarketDataBulk()
+        {
+        }
+    }
+
 }
 
 

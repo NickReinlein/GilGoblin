@@ -22,7 +22,8 @@ namespace GilGoblin.WebAPI
             this.price = pricePerUnit;
             this.qty = quantity;
             this.hq = hq;
-            this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);
+            //this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);
+            this.timestamp = General_Function.ConvertLongUnixMillisecondsToDateTime(timestamp);
         }
 
         public MarketListingDB ConvertToDB()

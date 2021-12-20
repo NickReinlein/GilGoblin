@@ -32,16 +32,20 @@ namespace GilGoblin.WebAPI
 
         [JsonConstructor]
         public MarketDataWeb(int itemID, int worldId, long lastUploadTime,
-                               ICollection<MarketListingWeb> entries) : base()
+                               ICollection<MarketListingWeb> listings) : base()
         {
+            if (itemID == 0 || worldId == 0 || lastUploadTime == 0 || listings == null || listings.Count == 0)
+            {
+                throw new ArgumentException("Incorrect/missing parameters/arguments coming from the web response.");
+            }
             this.item_id = itemID;
             this.world_id = worldId;
             this.last_updated
                 = General_Function.ConvertLongUnixMillisecondsToDateTime(lastUploadTime);
 
-            this.listings = entries.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
+            this.listings = listings.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
 
-            foreach (MarketListingWeb listing in listings)
+            foreach (MarketListingWeb listing in this.listings)
             {
                 listing.item_id = itemID;
                 listing.world_id = worldId;
@@ -61,6 +65,30 @@ namespace GilGoblin.WebAPI
                 //Deserialize from JSON to the object
                 MarketDataWeb market_Data = JsonConvert.DeserializeObject<MarketDataWeb>(content.Content.ReadAsStringAsync().Result);
                 return market_Data;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to convert market data from JSON:" + ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<MarketDataWebBulk> FetchMarketDataBulk(List<int> itemIDs, int world_id)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                //https://universalis.app/api/34/5114%2C5106%2C5057
+                string url = String.Concat("https://universalis.app/api/", world_id, "/");
+                foreach (int itemID in itemIDs) {
+                    url += String.Concat(itemID + "%2C");
+                }
+                var content = await client.GetAsync(url);
+                var json = content.Content.ReadAsStringAsync().Result;
+
+                //Deserialize from JSON to the object
+                MarketDataWebBulk bulkData = JsonConvert.DeserializeObject<MarketDataWebBulk>(json);
+                return bulkData;
             }
             catch (Exception ex)
             {
@@ -91,5 +119,18 @@ namespace GilGoblin.WebAPI
 
     }
 
+    internal class MarketDataWebBulk
+    {
+        public List<int> itemIDs { get; set; } = new List<int>();
+        public List<MarketDataWeb> items { get; set; } = new List<MarketDataWeb>();
+
+        [JsonConstructor]
+        public MarketDataWebBulk(ICollection<int> itemIDs, 
+                                 ICollection<MarketDataWeb> items): base()
+        {
+            if (itemIDs != null) { this.itemIDs = new List<int>(itemIDs); }
+            if (items != null) { this.items = new List<MarketDataWeb>(items); }
+        }
+    }
 
 }
