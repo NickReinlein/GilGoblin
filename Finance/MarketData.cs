@@ -75,12 +75,13 @@ namespace GilGoblin.Finance
                 //Trim the list of entries back from the database
                 //Return the ones that need to be fetched
                 //This should included stale data & ones new to the database
-                List<MarketDataDB> freshDataDB = filterFreshData(listDB);
+                List<MarketDataDB> freshDataDB = new List<MarketDataDB>();
+                freshDataDB = filterFreshData(listDB);
                 List<int> itemIDFetchList = itemIDs;
                 foreach (MarketDataDB success in freshDataDB)
                 {
                     listReturn.Add(success);
-                    itemIDFetchList.Remove(success.item_id);                    
+                    itemIDFetchList.Remove(success.item_id);
                 }
 
                 List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
@@ -108,18 +109,15 @@ namespace GilGoblin.Finance
         public static List<MarketDataDB> filterFreshData(List<MarketDataDB> list)
         {
             List<MarketDataDB> fresh = new List<MarketDataDB>();
-            foreach (MarketDataDB dataDB in list)
+            if (list != null)
             {
-                if (!isDataStale(dataDB))
+                foreach (MarketDataDB dataDB in list)
                 {
-                    fresh.Add(dataDB);
-                }
-                else { //do nothing?
-                //{
-                //    dataDB.last_updated = DateTime.Now;
-                //    dataDB.average_Price = marketData.average_Price;
-                //    dataDB.listings = marketData.listings;
-                //    marketDataContext.Update<MarketDataDB>(exists);
+                    if (!isDataStale(dataDB))
+                    {
+                        fresh.Add(dataDB);
+                    }
+                    else { } //do nothing                       
                 }
             }
             return fresh;

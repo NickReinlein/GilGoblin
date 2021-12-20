@@ -20,7 +20,9 @@ namespace GilGoblin.Functions
 
         public static DateTime ConvertLongUnixMillisecondsToDateTime(long elapsed_time)
         {
-            return ConvertLongUnixSecondsToDateTime(elapsed_time / 1000);
+            DateTime date
+                = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
+            return date;
         }
 
         public static DateTime ConvertLongFromBinaryToDateTime(long elapsed_time)

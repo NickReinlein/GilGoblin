@@ -84,42 +84,55 @@ namespace GilGoblin.Database
             }
             else
             {
-                int saves = 0;
-                foreach (MarketDataDB marketData in marketDataList ?? Enumerable.Empty<MarketDataDB>())
-                {
-                    saves += await SaveMarketDataSingle(marketData);
-                }
-                return saves;
-            }
-        }
 
-        internal static async Task<int> SaveMarketDataSingle(MarketDataDB marketData)
-        {
-            try
-            {
-                MarketDataContext marketDataContext = new MarketDataContext();
-                await marketDataContext.Database.EnsureCreatedAsync();
-
-                MarketDataDB exists = marketDataContext.data
-                    .FindAsync(marketData.item_id, marketData.world_id).GetAwaiter().GetResult();
-
-                if (exists == null)
+                try
                 {
-                    //New entry, add to entity tracker
-                    await marketDataContext.AddAsync<MarketDataDB>(marketData);
+                    MarketDataContext marketDataContext = new MarketDataContext();
+                    await marketDataContext.Database.EnsureCreatedAsync();
+
+                    List<MarketDataDB> exists = marketDataContext.data
+                            .Where(t => (t.world_id == t.world_id && t.item_id == t.item_id))
+                            .Include(t => t.listings)
+                            .ToList();
+
+
+                    if (exists == null)
+                    {
+                        //New entry, add to entity tracker
+                        //await marketDataContext.AddAsync<MarketDataDB>(marketData);)        
+                        await marketDataContext.AddRangeAsync(marketDataList);
+                    }
+                    else
+                    {
+                        //Existing entries get updated
+
+                        //Redundant? done in the fetch:
+                        //MarketData.filterFreshData(exists);
+
+                        foreach (MarketDataDB exist in exists)
+                        {
+                            //Existing entry
+                            exist.average_price = exist.average_price;
+                            exist.listings = exist.listings;
+                            marketDataContext.Update<MarketDataDB>(exist);
+                        }
+                        //Non-existent entries are added to the tracker
+                        foreach (MarketDataDB newData in marketDataList)
+                        {
+                            var thisExists = exists
+                                .Find(t => t.item_id == newData.item_id &&
+                                           t.world_id == newData.world_id);
+                            if (thisExists == null)
+                            {
+                                await marketDataContext.AddAsync<MarketDataDB>(newData);
+                            }
+                        }
+                    }
+
+                    return await marketDataContext.SaveChangesAsync(); ;
+
                 }
-                else
-                {
-                    //Existing entry
-                    exists.last_updated = DateTime.Now;
-                    exists.average_price = marketData.average_price;
-                    exists.listings = marketData.listings;
-                    marketDataContext.Update<MarketDataDB>(exists);
-                }
-                int success = await marketDataContext.SaveChangesAsync();
-                return success;
-            }
-            catch (Exception ex)
+                catch (Exception ex)
             {
                 Console.WriteLine("Exception: " + ex.Message);
                 Console.WriteLine("Inner exception: " + ex.InnerException);
@@ -127,148 +140,185 @@ namespace GilGoblin.Database
                 return 0;
             }
         }
+    }
 
-        /// <summary>
-        /// Searches the database for a bulk list of items given their ID & world
-        /// </summary>
-        /// <param name="item_id"></param>A List of integers to represent item ID
-        /// <param name="world_id"></param>the world ID for world-specific data (ie: market price)
-        /// <returns></returns>
-        public static List<MarketDataDB> GetMarketDataDBBulk(List<int> item_id, int world_id)
+    internal static async Task<int> SaveMarketDataSingle(MarketDataDB marketData, bool saveToDB = true)
+    {
+        try
         {
-            try
-            {
-                MarketDataContext marketDataContext = new MarketDataContext();
+            MarketDataContext marketDataContext = new MarketDataContext();
+            await marketDataContext.Database.EnsureCreatedAsync();
 
-                List<MarketDataDB> exists = marketDataContext.data
-                        .Where(t => (t.world_id == world_id && item_id.Contains(t.item_id)))
-                        .Include(t => t.listings)
-                        .ToList();
-                return exists;
+            MarketDataDB exists = marketDataContext.data
+                .FindAsync(marketData.item_id, marketData.world_id).GetAwaiter().GetResult();
+
+            if (exists == null)
+            {
+                //New entry, add to entity tracker
+                await marketDataContext.AddAsync<MarketDataDB>(marketData);
             }
-            catch (Exception ex)
+            else
             {
-                if (ex is Microsoft.Data.Sqlite.SqliteException ||
-                    ex is System.InvalidOperationException)
-                {
-                    //Maybe the database doesn't exist yet or not found
-                    //Either way, we can return null -> it is not on the database
-                    return null;
-                }
-                else
-                {
+                //Existing entry
+                exists.last_updated = DateTime.Now;
+                exists.average_price = marketData.average_price;
+                exists.listings = marketData.listings;
+                marketDataContext.Update<MarketDataDB>(exists);
+            }
+            int success = 0;
+            if (saveToDB) { success = await marketDataContext.SaveChangesAsync(); }
+            return success;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception: " + ex.Message);
+            Console.WriteLine("Inner exception: " + ex.InnerException);
+            Disconnect();
+            return 0;
+        }
+    }
 
-                    Console.WriteLine("Exception: " + ex.Message);
-                    Console.WriteLine("Inner exception: " + ex.InnerException);
-                    Disconnect();
-                    return null; ;
-                }
+    /// <summary>
+    /// Searches the database for a bulk list of items given their ID & world
+    /// </summary>
+    /// <param name="item_id"></param>A List of integers to represent item ID
+    /// <param name="world_id"></param>the world ID for world-specific data (ie: market price)
+    /// <returns></returns>
+    public static List<MarketDataDB> GetMarketDataDBBulk(List<int> item_id, int world_id)
+    {
+        try
+        {
+            MarketDataContext marketDataContext = new MarketDataContext();
+
+            List<MarketDataDB> exists = marketDataContext.data
+                    .Where(t => (t.world_id == world_id && item_id.Contains(t.item_id)))
+                    .Include(t => t.listings)
+                    .ToList();
+            return exists;
+        }
+        catch (Exception ex)
+        {
+            if (ex is Microsoft.Data.Sqlite.SqliteException ||
+                ex is System.InvalidOperationException)
+            {
+                //Maybe the database doesn't exist yet or not found
+                //Either way, we can return null -> it is not on the database
+                return null;
+            }
+            else
+            {
+
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Disconnect();
+                return null; ;
             }
         }
+    }
 
-        /// <summary>
-        /// Searches the database for MarketData (average market price, vendor price, etc)
-        /// </summary>
-        /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
-        /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
-        /// <returns></returns>
-        public static MarketDataDB GetMarketDataDB(int item_id, int world_id)
+    /// <summary>
+    /// Searches the database for MarketData (average market price, vendor price, etc)
+    /// </summary>
+    /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
+    /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
+    /// <returns></returns>
+    public static MarketDataDB GetMarketDataDB(int item_id, int world_id)
+    {
+        try
         {
-            try
+            MarketDataContext marketDataContext = new MarketDataContext();
+
+            MarketDataDB exists = marketDataContext.data
+                    .Where(t => (t.item_id == item_id && t.world_id == world_id))
+                    .Include(t => t.listings)
+                    .FirstOrDefault();
+
+            return exists;
+        }
+        catch (Exception ex)
+        {
+            if (ex is Microsoft.Data.Sqlite.SqliteException ||
+                ex is System.InvalidOperationException)
             {
-                MarketDataContext marketDataContext = new MarketDataContext();
-
-                MarketDataDB exists = marketDataContext.data
-                        .Where(t => (t.item_id == item_id && t.world_id == world_id))
-                        .Include(t => t.listings)
-                        .FirstOrDefault();
-
-                return exists;
+                //Maybe the database doesn't exist yet or not found
+                //Either way, we can return null -> it is not on the database
+                return null;
             }
-            catch (Exception ex)
+            else
             {
-                if (ex is Microsoft.Data.Sqlite.SqliteException ||
-                    ex is System.InvalidOperationException)
-                {
-                    //Maybe the database doesn't exist yet or not found
-                    //Either way, we can return null -> it is not on the database
-                    return null;
-                }
-                else
-                {
 
-                    Console.WriteLine("Exception: " + ex.Message);
-                    Console.WriteLine("Inner exception: " + ex.InnerException);
-                    Disconnect();
-                    return null; ;
-                }
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Disconnect();
+                return null; ;
             }
         }
+    }
 
-        internal class MarketDataContext : DbContext
+    internal class MarketDataContext : DbContext
+    {
+        public DbSet<MarketDataDB> data { get; set; }
+        private SqliteConnection conn;
+
+        public MarketDataContext()
+            : base(new DbContextOptionsBuilder<MarketDataContext>().UseSqlite(Connect()).Options)
         {
-            public DbSet<MarketDataDB> data { get; set; }
-            private SqliteConnection conn;
-
-            public MarketDataContext()
-                : base(new DbContextOptionsBuilder<MarketDataContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<MarketDataDB>().ToTable("MarketDataDB");
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.average_price);
-                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
-
-                modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
-            }
-
+            conn = Connect();
         }
 
-        internal class MarketListingContext : DbContext
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            public DbSet<MarketListingDB> listingDB { get; set; }
-            private SqliteConnection conn;
-
-            public MarketListingContext()
-                : base(new DbContextOptionsBuilder<MarketListingContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_id).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
-            }
-
+            this.conn = Connect();
+            optionsBuilder.UseSqlite(this.conn);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MarketDataDB>().ToTable("MarketDataDB");
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.average_price);
+            modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
+
+            modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
+        }
 
     }
+
+    internal class MarketListingContext : DbContext
+    {
+        public DbSet<MarketListingDB> listingDB { get; set; }
+        private SqliteConnection conn;
+
+        public MarketListingContext()
+            : base(new DbContextOptionsBuilder<MarketListingContext>().UseSqlite(Connect()).Options)
+        {
+            conn = Connect();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            this.conn = Connect();
+            optionsBuilder.UseSqlite(this.conn);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.world_id).IsRequired();
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
+            modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
+        }
+
+    }
+
+
+}
 }
 
 
