@@ -111,16 +111,10 @@ namespace GilGoblin.Database
                 else
                 {
                     //Existing entry
-                    //Check for freshness: if old, update data
-                    TimeSpan diff = DateTime.Now - marketData.last_updated;
-                    double hoursElapsed = diff.TotalHours;
-                    if (hoursElapsed > MarketData._staleness_hours_for_refresh)
-                    {
-                        exists.last_updated = DateTime.Now;
-                        exists.average_Price = marketData.average_Price;
-                        exists.listings = marketData.listings;
-                        marketDataContext.Update<MarketDataDB>(exists);
-                    }
+                    exists.last_updated = DateTime.Now;
+                    exists.average_price = marketData.average_price;
+                    exists.listings = marketData.listings;
+                    marketDataContext.Update<MarketDataDB>(exists);
                 }
                 int success = await marketDataContext.SaveChangesAsync();
                 return success;
@@ -131,6 +125,44 @@ namespace GilGoblin.Database
                 Console.WriteLine("Inner exception: " + ex.InnerException);
                 Disconnect();
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Searches the database for a bulk list of items given their ID & world
+        /// </summary>
+        /// <param name="item_id"></param>A List of integers to represent item ID
+        /// <param name="world_id"></param>the world ID for world-specific data (ie: market price)
+        /// <returns></returns>
+        public static List<MarketDataDB> GetMarketDataDBBulk(List<int> item_id, int world_id)
+        {
+            try
+            {
+                MarketDataContext marketDataContext = new MarketDataContext();
+
+                List<MarketDataDB> exists = marketDataContext.data
+                        .Where(t => (t.world_id == world_id && item_id.Contains(t.item_id)))
+                        .Include(t => t.listings)
+                        .ToList();
+                return exists;
+            }
+            catch (Exception ex)
+            {
+                if (ex is Microsoft.Data.Sqlite.SqliteException ||
+                    ex is System.InvalidOperationException)
+                {
+                    //Maybe the database doesn't exist yet or not found
+                    //Either way, we can return null -> it is not on the database
+                    return null;
+                }
+                else
+                {
+
+                    Console.WriteLine("Exception: " + ex.Message);
+                    Console.WriteLine("Inner exception: " + ex.InnerException);
+                    Disconnect();
+                    return null; ;
+                }
             }
         }
 
@@ -196,7 +228,7 @@ namespace GilGoblin.Database
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
                 modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.average_Price);
+                modelBuilder.Entity<MarketDataDB>().Property(t => t.average_price);
                 modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
 
                 modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);

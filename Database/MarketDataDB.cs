@@ -25,7 +25,7 @@ namespace GilGoblin.Database
                 listings.Add(web.ConvertToDB());
             }
             this.last_updated = data.last_updated;
-            this.average_Price = data.average_Price;
+            this.average_price = data.average_price;
             this.item_id = data.item_id;
             this.world_id = data.world_id;
 

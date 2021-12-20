@@ -20,14 +20,14 @@ namespace GilGoblin.WebAPI
 
         public int getPrice(bool update = false)
         {
-            if (update || average_Price == 0)
+            if (update || average_price == 0)
             {
                 //Re-calculate the price and update
                 CalculateAveragePrice(listings);
             }
 
             //Return what we do have regardless of updates
-            return average_Price;
+            return average_price;
         }
 
         [JsonConstructor]
@@ -51,7 +51,7 @@ namespace GilGoblin.WebAPI
                 listing.world_id = worldId;
             }
 
-            this.average_Price = CalculateAveragePrice(this.listings);
+            this.average_price = CalculateAveragePrice(this.listings);
         }
 
         public static async Task<MarketDataWeb> FetchMarketData(int item_id, int world_id)
@@ -59,7 +59,7 @@ namespace GilGoblin.WebAPI
             try
             {
                 HttpClient client = new HttpClient();
-                string url = "https://universalis.app/api/history/" + world_id + "/" + item_id;
+                string url = "https://universalis.app/api/" + world_id + "/" + item_id;
                 var content = await client.GetAsync(url);
 
                 //Deserialize from JSON to the object

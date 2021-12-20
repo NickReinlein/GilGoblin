@@ -27,7 +27,7 @@ namespace GilGoblin.Tests
                 {
                     throw new Exception("Market data or item info not found");
                 }
-                int marketPrice = marketData.average_Price;
+                int marketPrice = marketData.average_price;
                 Console.WriteLine("Final market price: " + marketPrice);
                 int vendorPrice = itemInfo.vendor_price;
                 Console.WriteLine("Vendor price: " + vendorPrice);
