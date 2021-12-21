@@ -1,6 +1,7 @@
 ﻿using GilGoblin.Finance;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,13 +40,13 @@ namespace GilGoblin.Database
                 }
                 else
                 {
-                    Console.WriteLine("Connection not open. State is: " + _conn.State.ToString());
+                    Log.Error("Connection not open. State is: " + _conn.State.ToString());
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("failed connection: " + ex.Message);
+                Log.Error("failed connection: " + ex.Message);
                 return null;
             }
         }
@@ -79,7 +80,7 @@ namespace GilGoblin.Database
         {
             if (marketDataList == null || marketDataList.Count == 0)
             {
-                Console.WriteLine("Trying to save an empty list of market data.");
+                Log.Error("Trying to save an empty list of market data.");
                 return 0;
             }
             else
@@ -134,8 +135,8 @@ namespace GilGoblin.Database
                 }
                 catch (Exception ex)
             {
-                Console.WriteLine("Exception: " + ex.Message);
-                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Log.Error("Exception: " + ex.Message);
+                Log.Error("Inner exception: " + ex.InnerException);
                 Disconnect();
                 return 0;
             }
@@ -171,8 +172,8 @@ namespace GilGoblin.Database
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Exception: " + ex.Message);
-            Console.WriteLine("Inner exception: " + ex.InnerException);
+            Log.Error("Exception: " + ex.Message);
+            Log.Error("Inner exception: " + ex.InnerException);
             Disconnect();
             return 0;
         }
@@ -203,13 +204,14 @@ namespace GilGoblin.Database
             {
                 //Maybe the database doesn't exist yet or not found
                 //Either way, we can return null -> it is not on the database
+                Log.Debug("Database or entry does not exist.");
                 return null;
             }
             else
             {
 
-                Console.WriteLine("Exception: " + ex.Message);
-                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Log.Error("Exception: " + ex.Message);
+                Log.Error("Inner exception: " + ex.InnerException);
                 Disconnect();
                 return null; ;
             }
@@ -247,8 +249,8 @@ namespace GilGoblin.Database
             else
             {
 
-                Console.WriteLine("Exception: " + ex.Message);
-                Console.WriteLine("Inner exception: " + ex.InnerException);
+                Log.Error("Exception: " + ex.Message);
+                Log.Error("Inner exception: " + ex.InnerException);
                 Disconnect();
                 return null; ;
             }

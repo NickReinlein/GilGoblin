@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 
 namespace GilGoblin.Functions
 {
@@ -13,7 +14,7 @@ namespace GilGoblin.Functions
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex.Message);
                 return new DateTime();
             }
         }
@@ -34,7 +35,7 @@ namespace GilGoblin.Functions
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex.Message);
                 return new DateTime();
             }
 

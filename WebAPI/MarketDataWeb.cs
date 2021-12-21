@@ -2,6 +2,7 @@
 using GilGoblin.Finance;
 using GilGoblin.Functions;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +69,7 @@ namespace GilGoblin.WebAPI
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to convert market data from JSON:" + ex.Message);
+                Log.Error("Failed to convert market data from JSON:" + ex.Message);
                 return null;
             }
         }
@@ -96,7 +97,7 @@ namespace GilGoblin.WebAPI
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to convert market data from JSON:" + ex.Message);
+                Log.Error("Failed to convert market data from JSON:" + ex.Message);
                 return null;
             }
         }
@@ -116,7 +117,7 @@ namespace GilGoblin.WebAPI
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to convert item info from JSON:" + ex.Message);
+                Log.Error("Failed to convert item info from JSON:" + ex.Message);
                 return null;
             }
         }

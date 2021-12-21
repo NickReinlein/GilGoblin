@@ -1,5 +1,6 @@
 ﻿using GilGoblin.Database;
 using GilGoblin.WebAPI;
+using Serilog;
 using System;
 using System.Collections.Generic;
 
@@ -54,7 +55,7 @@ namespace GilGoblin.Finance
         {
             if (world_ID == 0 || itemIDs == null || itemIDs.Count == 0)
             {
-                Console.WriteLine("Trying to get bulk market data with missing parameters.");
+                Log.Error("Trying to get bulk market data with missing parameters.");
                 return null;
             }
             else
@@ -72,7 +73,7 @@ namespace GilGoblin.Finance
                 catch (Exception ex)
                 {
                     // Error and/or not found in the database
-                    Console.WriteLine(ex.Message);
+                    Log.Information(ex.Message);
                 }
 
                 //Trim the list of entries back from the database
@@ -87,6 +88,7 @@ namespace GilGoblin.Finance
                     itemIDFetchList.Remove(success.item_id);
                 }
 
+                Log.Debug("Number of entries to fetch by web: " + itemIDFetchList.Count);
                 List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
                 if (itemIDFetchList.Count == 1)
                 {
