@@ -1,6 +1,7 @@
 ﻿using GilGoblin.Database;
 using GilGoblin.Finance;
 using GilGoblin.WebAPI;
+using Serilog;
 using System;
 using System.Collections.Generic;
 
@@ -28,26 +29,26 @@ namespace GilGoblin.Tests
                     throw new Exception("Market data or item info not found");
                 }
                 int marketPrice = marketData.average_price;
-                Console.WriteLine("Final market price: " + marketPrice);
+                Log.Information("Final market price: " + marketPrice);
                 int vendorPrice = itemInfo.vendor_price;
-                Console.WriteLine("Vendor price: " + vendorPrice);
+                Log.Information("Vendor price: " + vendorPrice);
                 int profit = marketPrice - vendorPrice;
-                Console.WriteLine("Estimated profit: " + profit);
+                Log.Information("Estimated profit: " + profit);
 
                 string success_message = "failure.";
                 int db_success = await DatabaseAccess.SaveMarketDataSingle(marketData);
                 if (db_success > 0) { success_message = "sucess."; }
-                Console.WriteLine("Database save was a " + success_message);
+                Log.Information("Database save was a " + success_message);
 
                 DatabaseAccess.Disconnect();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
             }
             finally
             {
-                Console.WriteLine("Press any button to quit.");
+                Log.Information("Press any button to quit.");
                 Console.ReadLine();
             }
         }
@@ -57,6 +58,14 @@ namespace GilGoblin.Tests
         {
             try
             {
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console()  
+                    .WriteTo.File("logs/test.txt")
+                    .CreateLogger();
+
+                Log.Debug("Application started.");
+
                 List<int> fetchIDList = new List<int> { item_id, 5114, 5106 };
                 List<ItemInfo> infoList = new List<ItemInfo>();
                 List<MarketDataDB> marketDataList 
@@ -74,14 +83,17 @@ namespace GilGoblin.Tests
                 string success_message = "failure.";
                 int db_success = await DatabaseAccess.SaveMarketDataBulk(marketDataList);
                 if (db_success > 0) { success_message = "sucess."; }
-                Console.WriteLine("Database save was a " + success_message);
-                Console.WriteLine(db_success + " entries saved to the database.");
+                Log.Information("Database save was a " + success_message);
+                Log.Information(db_success + " entries saved to the database.");
 
                 DatabaseAccess.Disconnect();
+                Log.Information("Application ended successfully.");
+                Log.CloseAndFlush();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
+                Log.CloseAndFlush();
             }
             finally
             {

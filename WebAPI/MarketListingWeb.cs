@@ -3,6 +3,7 @@ using GilGoblin.Database;
 using GilGoblin.Finance;
 using GilGoblin.Functions;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 
@@ -24,7 +25,7 @@ namespace GilGoblin.WebAPI
             this.hq = hq;
             if (timestamp.Equals(0))
             {
-                Console.WriteLine("Empty timestamp for web listing.");
+                Log.Error("Empty timestamp for web listing.");
             }
             else
             {
@@ -34,8 +35,8 @@ namespace GilGoblin.WebAPI
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error converting web listing's timestamp of:  {this.timestamp}");
-                    Console.WriteLine(ex.Message);
+                    Log.Error("Error converting web listing's timestamp of:  {this.timestamp}");
+                    Log.Error(ex.Message);
                 }
             }
 
