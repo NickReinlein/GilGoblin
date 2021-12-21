@@ -22,12 +22,11 @@ This means having the functionality to perform the following:
 
 In the immediate future (Dec 2021->Feb 2022), the features to be implemented are:
 
-* A database to store prices locally and only update periodically when staleness exceeds a threshold (partially complete)
+* A database to store prices locally and only update periodically when staleness exceeds a threshold (complete)
 * A binary tree to navigate crafting components
 * A front-end UI to display results
 * Basic filtering. Initially by Gil-generating activity (crafting, gathering, quests, etc.)
-
-
+* Logging
 
 ## Later
 
