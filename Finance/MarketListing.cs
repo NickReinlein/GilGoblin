@@ -6,7 +6,7 @@
         public int price { get; set; }
         public int qty { get; set; }
 
-        public MarketListing() { }
+        public MarketListing() {  }
 
     }
 }
