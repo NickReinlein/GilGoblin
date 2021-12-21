@@ -26,7 +26,7 @@ In the immediate future (Dec 2021->Feb 2022), the features to be implemented are
 * A binary tree to navigate crafting components
 * A front-end UI to display results
 * Basic filtering. Initially by Gil-generating activity (crafting, gathering, quests, etc.)
-* Logging
+* Logging (complete)
 
 ## Later
 
