@@ -1,5 +1,6 @@
 ﻿using GilGoblin.Finance;
 using GilGoblin.WebAPI;
+using System;
 using System.Collections.Generic;
 
 namespace GilGoblin.Database
@@ -24,8 +25,9 @@ namespace GilGoblin.Database
             {
                 listings.Add(web.ConvertToDB());
             }
-            this.last_updated = data.last_updated;
-            this.average_Price = data.average_Price;
+            //this.last_updated = data.last_updated;
+            this.last_updated = DateTime.Now;
+            this.average_price = data.average_price;
             this.item_id = data.item_id;
             this.world_id = data.world_id;
 

@@ -13,7 +13,7 @@ namespace GilGoblin.Finance
         public int item_id { get; set; }
         public int world_id { get; set; }
         public DateTime last_updated { get; set; }
-        public int average_Price { get; set; }
+        public int average_price { get; set; }
 
         public static int _staleness_hours_for_refresh = 2; //todo: increase for production
 
@@ -45,28 +45,97 @@ namespace GilGoblin.Finance
         }
 
         /// <summary>
-        /// Given a Dictionary<int,int> that represents the item_id and world_id
-        /// respectively, get the market data for each and return it as a List
-        /// This can be re-written more efficiently later if performance becomes an issue
+        /// Given a List<int> that represents the item_id, along with the world_id,
+        /// get the market data for each item and return it as a List
         /// </summary>
         /// <param name="dict"></param>A Dictionary<int,int> that represents the item_id and world_id
         /// <returns></returns>
-        internal static List<MarketDataDB> GetMarketDataBulk(Dictionary<int, int> dict)
+        internal static List<MarketDataDB> GetMarketDataBulk(List<int> itemIDs, int world_ID)
         {
-            if (dict == null || dict.Count == 0)
+            if (world_ID == 0 || itemIDs == null || itemIDs.Count == 0)
             {
-                Console.WriteLine("Trying to get an empty dictionary of market data.");
+                Console.WriteLine("Trying to get bulk market data with missing parameters.");
                 return null;
             }
             else
             {
-                List<MarketDataDB> list = new List<MarketDataDB>();
-                foreach (KeyValuePair<int, int> item_world in dict)
+                List<MarketDataDB> listReturn = new List<MarketDataDB>();
+                List<MarketDataDB> listDB = new List<MarketDataDB>();
+                //Does it exist in the database? Is it stale?
+                try
                 {
-                    list.Add(GetMarketData(item_world.Key, item_world.Value));
+                    listDB = DatabaseAccess.GetMarketDataDBBulk(itemIDs, world_ID);
                 }
-                return list;
+                catch (Exception ex)
+                {
+                    // Error and/or not found in the database
+                    Console.WriteLine(ex.Message);
+                }
+
+                //Trim the list of entries back from the database
+                //Return the ones that need to be fetched
+                //This should included stale data & ones new to the database
+                List<MarketDataDB> freshDataDB = new List<MarketDataDB>();
+                freshDataDB = filterFreshData(listDB);
+                List<int> itemIDFetchList = itemIDs;
+                foreach (MarketDataDB success in freshDataDB)
+                {
+                    listReturn.Add(success);
+                    itemIDFetchList.Remove(success.item_id);
+                }
+
+                List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
+                if (itemIDFetchList.Count == 1)
+                {
+                    int fetchSingle = (int)itemIDFetchList[0];
+                    listWeb.Add(MarketDataWeb.FetchMarketData(fetchSingle, world_ID)
+                        .GetAwaiter().GetResult());
+                }
+                if (itemIDFetchList.Count > 1)
+                {
+                    listWeb = MarketDataWeb.FetchMarketDataBulk(itemIDFetchList, world_ID).GetAwaiter().GetResult();
+                }
+                if (listWeb != null)
+                {
+                    foreach (MarketDataWeb web in listWeb)
+                    {
+                        listReturn.Add(new MarketDataDB(web));
+                    }
+                }
+                return listReturn;
             }
+        }
+
+        public static List<MarketDataDB> filterFreshData(List<MarketDataDB> list)
+        {
+            List<MarketDataDB> fresh = new List<MarketDataDB>();
+            if (list != null)
+            {
+                foreach (MarketDataDB dataDB in list)
+                {
+                    if (!isDataStale(dataDB))
+                    {
+                        fresh.Add(dataDB);
+                    }
+                    else { } //do nothing                       
+                }
+            }
+            return fresh;
+
+        }
+
+        /// <summary>
+        /// Verifies if the data is too stale/old
+        /// </summary>
+        /// <param name="marketData"></param>The object of market data in DB format
+        /// <returns></returns>
+        public static bool isDataStale(MarketDataDB marketData)
+        {
+            //Check for freshness: if old, update data
+            TimeSpan diff = DateTime.Now - marketData.last_updated;
+            double hoursElapsed = diff.TotalHours;
+            if (hoursElapsed > MarketData._staleness_hours_for_refresh) { return true; }
+            else { return false; }
         }
 
         public static ItemInfo GetItemInfo(int item_id)
@@ -118,6 +187,16 @@ namespace GilGoblin.Finance
             return average_Price;
         }
     }
+
+    internal class MarketDataBulk
+    {
+        ICollection<MarketData> bulkData = new List<MarketData>();
+
+        MarketDataBulk()
+        {
+        }
+    }
+
 }
 
 

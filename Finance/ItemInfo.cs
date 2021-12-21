@@ -24,13 +24,13 @@ namespace GilGoblin.WebAPI
         /// <param name="description">In-game text description</param>
         /// <param name="vendor_price">Price for selling to vendor</param>
         /// <param name="current_listings">Optional: current listings on the marketboard</param>
-        public ItemInfo(int itemID, string name, int priceMid, int stackSize, List<APIRecipe> recipes)
+        public ItemInfo(int itemID, string name, int priceMid, int stackSize, int gatheringID, List<APIRecipe> recipes)
         {
             this.item_id = itemID;
             this.description = name;
             this.vendor_price = priceMid;
             this.stack_size = stackSize;
-            //this.gathering_item = 
+            this.gathering_id = gatheringID;
             this.recipes = recipes;
         }
     }

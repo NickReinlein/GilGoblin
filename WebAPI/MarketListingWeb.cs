@@ -22,7 +22,15 @@ namespace GilGoblin.WebAPI
             this.price = pricePerUnit;
             this.qty = quantity;
             this.hq = hq;
-            this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);
+            if (timestamp.Equals(0))
+            {
+
+            }
+            else
+            {
+                this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);
+            }
+
         }
 
         public MarketListingDB ConvertToDB()
