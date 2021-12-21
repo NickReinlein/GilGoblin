@@ -60,7 +60,7 @@ namespace GilGoblin.Tests
                 List<int> fetchIDList = new List<int> { item_id, 5114, 5106 };
                 List<ItemInfo> infoList = new List<ItemInfo>();
                 List<MarketDataDB> marketDataList 
-                    = MarketData.GetMarketDataBulk(fetchIDList, world_id);
+                    = MarketData.GetMarketDataBulk(fetchIDList, world_id, true);
                 foreach (MarketDataDB dataDb in marketDataList)
                 {
                     infoList.Add(MarketData.GetItemInfo(item_id));

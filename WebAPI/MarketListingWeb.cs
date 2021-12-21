@@ -16,7 +16,7 @@ namespace GilGoblin.WebAPI
         public MarketListingWeb() { }
 
         [JsonConstructor]
-        public MarketListingWeb(int pricePerUnit, int quantity, long timestamp, bool hq) : base()
+        public MarketListingWeb(int pricePerUnit, int quantity, long lastReviewTime, bool hq) : base()
         {
             this.hq = hq;
             this.price = pricePerUnit;
@@ -24,11 +24,19 @@ namespace GilGoblin.WebAPI
             this.hq = hq;
             if (timestamp.Equals(0))
             {
-
+                Console.WriteLine("Empty timestamp for web listing.");
             }
             else
             {
-                this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(timestamp);
+                try
+                {
+                    this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(lastReviewTime);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error converting web listing's timestamp of:  {this.timestamp}");
+                    Console.WriteLine(ex.Message);
+                }
             }
 
         }

@@ -50,7 +50,7 @@ namespace GilGoblin.Finance
         /// </summary>
         /// <param name="dict"></param>A Dictionary<int,int> that represents the item_id and world_id
         /// <returns></returns>
-        internal static List<MarketDataDB> GetMarketDataBulk(List<int> itemIDs, int world_ID)
+        internal static List<MarketDataDB> GetMarketDataBulk(List<int> itemIDs, int world_ID, bool forceUpdate = false)
         {
             if (world_ID == 0 || itemIDs == null || itemIDs.Count == 0)
             {
@@ -64,7 +64,10 @@ namespace GilGoblin.Finance
                 //Does it exist in the database? Is it stale?
                 try
                 {
-                    listDB = DatabaseAccess.GetMarketDataDBBulk(itemIDs, world_ID);
+                    if (!forceUpdate)
+                    {
+                        listDB = DatabaseAccess.GetMarketDataDBBulk(itemIDs, world_ID);
+                    }
                 }
                 catch (Exception ex)
                 {
