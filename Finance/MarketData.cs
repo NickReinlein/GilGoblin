@@ -18,6 +18,7 @@ namespace GilGoblin.Finance
         public int average_price { get; set; }
         [JsonIgnore]
         public ItemInfo item_info { get; set; }
+        public ICollection<ItemRecipeAPI> recipes { get; set; } = new List<ItemRecipeAPI>();
 
         public static int _staleness_hours_for_refresh = 2; //todo: increase for production
 
@@ -183,14 +184,14 @@ namespace GilGoblin.Finance
         }
     }
 
-    internal class MarketDataBulk
-    {
-        ICollection<MarketData> bulkData = new List<MarketData>();
+    //internal class MarketDataBulk
+    //{
+    //    ICollection<MarketData> bulkData = new List<MarketData>();
 
-        MarketDataBulk()
-        {
-        }
-    }
+    //    MarketDataBulk()
+    //    {
+    //    }
+    //}
 
 }
 

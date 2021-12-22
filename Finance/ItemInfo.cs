@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace GilGoblin.WebAPI
 {
@@ -12,7 +13,7 @@ namespace GilGoblin.WebAPI
         public int stack_size { get; set; }
         public int gathering_id { get; set; }
 
-        public List<ItemRecipeAPI> recipes { get; set; }
+        public ICollection<ItemRecipeAPI> recipes { get; set; } = new List<ItemRecipeAPI>();
 
         /// <summary>
         /// Constructor for JSON de-serialization of item info (FFXIVAPI)
@@ -24,7 +25,8 @@ namespace GilGoblin.WebAPI
         /// <param name="vendor_price">Price for selling to vendor</param>
         /// <param name="recipes">Crafting recipes to make the item (represented by a Tree data structure)</param>
         /// 
-        public ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeAPI> recipes)
+        [JsonConstructor]
+        public ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeAPI> Recipes)
         {
             this.item_id = ID;
             this.icon_id = IconID;
@@ -33,7 +35,16 @@ namespace GilGoblin.WebAPI
             this.vendor_price = priceMid;
             this.stack_size = stackSize;
             this.gathering_id = gatheringID;
-            this.recipes = recipes;
+            if (Recipes != null) { 
+            this.recipes = Recipes;
+            }
+            else
+            {
+                this.recipes.Clear();
+            }
         }
+
+        //System.InvalidOperationException: 'No suitable constructor found for entity type 'ItemInfo'. The following constructors had parameters that could not be bound to properties of the entity type: cannot bind 'ID', 'IconID', 'Name', 'Description', 'priceMid', 'stackSize', 'gatheringID', 'Recipes' in 'ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeAPI> Recipes)'.'
+
     }
 }

@@ -1,32 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GilGoblin.Functions;
 
 namespace GilGoblin.Finance
 {
-    public class Recipe<T> : TreeNode<T>
+    public class Recipe
     {
-        public Recipe(T value) : base(value)
-        {
-            _value = value;
-        }
+        [Key]
+        public int recipe_id { get; set; }
+        public int target_item_id { get; set; }
+        public int icon_id { get; set; }
+        public int result_quantity { get; set; }
+        public bool CanHq { get; set; }
+        public bool CanQuickSynth { get; set; }
 
-        public Recipe(T value, TreeNode<T> parent) : this(value)
-        {
-            this.Parent = parent;
-        }
-
-        public Recipe(T value, TreeNode<T> parent, List<TreeNode<T>> list)
-            : this(value, parent)
-        {
-            if (list != null)
-            {
-                this._children = list;
-            }
-        }
-
+        public Recipe() { }
     }
 }

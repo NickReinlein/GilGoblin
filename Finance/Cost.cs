@@ -55,14 +55,13 @@ namespace GilGoblin.Finance
         public static int GetIconID(int item_id)
         {
             return GetItemInfo(item_id).icon_id;
-
         }
 
         public static int GetBaseCost(int item_id, int world_id)
         {
             int base_cost = CalculateBaseCost(item_id, world_id);
 
-            // for now we pretend to have one and use a random number                       
+            // for now we pretend to have one and use a random number                      
             if (base_cost == 0)
             {
                 base_cost = random_gen.Next(200, 700);
@@ -86,25 +85,29 @@ namespace GilGoblin.Finance
                 Log.Error("Failed to fetch the crafting cost for item_id: {item_id} world_id: {world_id}");
                 return errorReturn;
             }
-            else if (itemInfo.recipes == null || itemInfo.recipes.Count == 0)
-            {
-                Log.Information("No recipes found for item {item_id}");
-                return errorReturn;
-            }
+            //else if (itemInfo.recipes == null || itemInfo.recipes.Count == 0)
+            //{
+            //    Log.Information("No recipes found for item {item_id}",item_id);
+            //    return errorReturn;
+            //}
 
-            List<MarketRecipeWeb> recipesFound = new List<MarketRecipeWeb>();
+            List<RecipeWeb> recipesFound = new List<RecipeWeb>();
             foreach (ItemRecipeAPI recipe in itemInfo.recipes)
             {
                 int recipe_id = recipe.recipe_id;
                 if (recipe_id == 0) { continue; }
-                MarketRecipeWeb thisRecipe 
-                    = MarketRecipeWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
+                RecipeWeb thisRecipe 
+                    = RecipeWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
                 if (thisRecipe == null)
                 {
-                    Log.Error("Error fetching recipe id: {recipe_id}.");
+                    Log.Error("Error fetching recipe id: {recipe_id}.", recipe_id);
                     continue;
                 }
                 recipesFound.Add(thisRecipe);                 
+            }
+            if (recipesFound.Count != 0)
+            {
+                DatabaseAccess.SaveRecipes(recipesFound);
             }
 
             //TODO: check tree traversal here for crafting cost 

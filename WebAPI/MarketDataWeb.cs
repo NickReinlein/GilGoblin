@@ -19,8 +19,6 @@ namespace GilGoblin.WebAPI
         public ICollection<MarketListingWeb> listings { get; set; } = new List<MarketListingWeb>();
         public static int listingsToRead = 20; //TODO increase for production use
 
-        public ICollection<ItemRecipeAPI> recipes { get; set; } = new List<ItemRecipeAPI>();
-
         public int getPrice(bool update = false)
         {
             if (update || average_price == 0)

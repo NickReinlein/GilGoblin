@@ -18,7 +18,7 @@ namespace GilGoblin.Database
     {
         public ICollection<MarketListingDB> listings { get; set; }
             = new List<MarketListingDB>();
-        //public ICollection<Recipe> recipes { get; set; } = new List<Recipe>();
+
         public MarketDataDB() : base() { }
         public MarketDataDB(MarketDataWeb data) : base()
         {
@@ -43,7 +43,7 @@ namespace GilGoblin.Database
                 }
                 catch(Exception ex)
                 {
-                    Log.Error("Failed to get the item info while building market data for item id {item_id} with error: {ex.Message}");
+                    Log.Error("Failed to get the item info while building market data for item id {item_id} with error: {ex.Message}", data.item_id, ex.Message );
                     this.item_info = null;
                 }
             }

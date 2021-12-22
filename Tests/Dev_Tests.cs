@@ -47,7 +47,7 @@ namespace GilGoblin.Tests
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Error("Exception: {message}.", ex.Message);
             }
             finally
             {
@@ -89,13 +89,18 @@ namespace GilGoblin.Tests
                 Log.Information("Database save was a " + success_message);
                 Log.Information(db_success + " entries saved to the database.");
 
+                foreach (int id in fetchIDList) 
+                {
+                    Cost.GetCraftingCost(id, world_id);
+                }
+
                 DatabaseAccess.Disconnect();
                 Log.Information("Application ended successfully.");
                 Log.CloseAndFlush();
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Error("Exception: {message}.", ex.Message);
                 Log.CloseAndFlush();
             }
             finally
