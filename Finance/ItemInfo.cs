@@ -10,10 +10,9 @@ namespace GilGoblin.WebAPI
         public int icon_id { get; set; }
         public int vendor_price { get; set; }
         public int stack_size { get; set; }
-
         public int gathering_id { get; set; }
 
-        public List<APIRecipe> recipes { get; set; }
+        public List<ItemRecipeAPI> recipes { get; set; }
 
         /// <summary>
         /// Constructor for JSON de-serialization of item info (FFXIVAPI)
@@ -25,7 +24,7 @@ namespace GilGoblin.WebAPI
         /// <param name="vendor_price">Price for selling to vendor</param>
         /// <param name="recipes">Crafting recipes to make the item (represented by a Tree data structure)</param>
         /// 
-        public ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<APIRecipe> recipes)
+        public ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeAPI> recipes)
         {
             this.item_id = ID;
             this.icon_id = IconID;

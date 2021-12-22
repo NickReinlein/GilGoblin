@@ -55,9 +55,10 @@
     <Compile Include="Finance\Recipe.cs" />
     <Compile Include="Functions\Exceptions.cs" />
     <Compile Include="Functions\TreeNode.cs" />
-    <Compile Include="WebAPI\APIRecipe.cs" />
+    <Compile Include="WebAPI\ItemRecipeAPI.cs" />
     <Compile Include="Finance\ItemInfo.cs" />
     <Compile Include="WebAPI\MarketDataWeb.cs" />
+    <Compile Include="WebAPI\MarketRecipeWeb.cs" />
     <Compile Include="WebAPI\MarketListingWeb.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />

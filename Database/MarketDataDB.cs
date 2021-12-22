@@ -1,5 +1,6 @@
 ﻿using GilGoblin.Finance;
 using GilGoblin.WebAPI;
+using Serilog;
 using System;
 using System.Collections.Generic;
 
@@ -26,12 +27,26 @@ namespace GilGoblin.Database
             {
                 listings.Add(web.ConvertToDB());
             }
-            //this.last_updated = data.last_updated;
             this.last_updated = DateTime.Now;
             this.average_price = data.average_price;
             this.item_id = data.item_id;
             this.world_id = data.world_id;
-
+            if (data.item_info != null)
+            {
+                this.item_info = data.item_info;
+            }
+            else
+            {
+                try
+                {
+                    this.item_info = GetItemInfo(data.item_id);
+                }
+                catch(Exception ex)
+                {
+                    Log.Error("Failed to get the item info while building market data for item id {item_id} with error: {ex.Message}");
+                    this.item_info = null;
+                }
+            }
         }
     }
 }

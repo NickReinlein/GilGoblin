@@ -1,5 +1,6 @@
 ﻿using GilGoblin.Database;
 using GilGoblin.WebAPI;
+using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace GilGoblin.Finance
         public int world_id { get; set; }
         public DateTime last_updated { get; set; }
         public int average_price { get; set; }
+        [JsonIgnore]
+        public ItemInfo item_info { get; set; }
 
         public static int _staleness_hours_for_refresh = 2; //todo: increase for production
 
@@ -25,7 +28,7 @@ namespace GilGoblin.Finance
             //Does it exist in the database? Is it stale?
             try
             {
-                marketDataDB = Database.DatabaseAccess.GetMarketDataDB(item_id, world_id);
+                marketDataDB = DatabaseAccess.GetMarketDataDB(item_id, world_id);
             }
             catch (Exception)
             {

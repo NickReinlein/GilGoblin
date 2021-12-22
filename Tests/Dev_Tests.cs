@@ -40,6 +40,9 @@ namespace GilGoblin.Tests
                 if (db_success > 0) { success_message = "sucess."; }
                 Log.Information("Database save was a " + success_message);
 
+                //Test crafting cost calculation by tree traversal
+                int craftingCost = Cost.GetCraftingCost(item_id, world_id);
+
                 DatabaseAccess.Disconnect();
             }
             catch (Exception ex)
