@@ -17,6 +17,7 @@ namespace GilGoblin.Database
     {
         public ICollection<MarketListingDB> listings { get; set; }
             = new List<MarketListingDB>();
+        //public ICollection<Recipe> recipes { get; set; } = new List<Recipe>();
         public MarketDataDB() : base() { }
         public MarketDataDB(MarketDataWeb data) : base()
         {

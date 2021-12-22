@@ -19,6 +19,8 @@ namespace GilGoblin.WebAPI
         public ICollection<MarketListingWeb> listings { get; set; } = new List<MarketListingWeb>();
         public static int listingsToRead = 20; //TODO increase for production use
 
+        public ICollection<APIRecipe> recipes { get; set; } = new List<APIRecipe>();
+
         public int getPrice(bool update = false)
         {
             if (update || average_price == 0)
@@ -42,7 +44,7 @@ namespace GilGoblin.WebAPI
             this.item_id = itemID;
             this.world_id = worldId;
             this.last_updated
-                = General_Function.ConvertLongUnixMillisecondsToDateTime(lastUploadTime);
+                = GeneralFunctions.ConvertLongUnixMillisecondsToDateTime(lastUploadTime);
 
             this.listings = listings.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
 

@@ -52,14 +52,16 @@
     <Compile Include="Database\DatabaseAccess.cs" />
     <Compile Include="Database\MarketListingDB.cs" />
     <Compile Include="Finance\MarketListing.cs" />
+    <Compile Include="Finance\Recipe.cs" />
     <Compile Include="Functions\Exceptions.cs" />
+    <Compile Include="Functions\TreeNode.cs" />
     <Compile Include="WebAPI\APIRecipe.cs" />
     <Compile Include="Finance\ItemInfo.cs" />
     <Compile Include="WebAPI\MarketDataWeb.cs" />
     <Compile Include="WebAPI\MarketListingWeb.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
-    <Compile Include="Functions\General_Function.cs" />
+    <Compile Include="Functions\GeneralFunctions.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Tests\Dev_Tests.cs" />
     <Compile Include="Finance\MarketData.cs" />

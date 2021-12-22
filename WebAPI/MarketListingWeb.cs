@@ -31,7 +31,7 @@ namespace GilGoblin.WebAPI
             {
                 try
                 {
-                    this.timestamp = General_Function.ConvertLongUnixSecondsToDateTime(lastReviewTime);
+                    this.timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
                 }
                 catch (Exception ex)
                 {

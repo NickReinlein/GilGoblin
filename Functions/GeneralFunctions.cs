@@ -3,7 +3,7 @@ using System;
 
 namespace GilGoblin.Functions
 {
-    internal static class General_Function
+    internal static class GeneralFunctions
     {
         public static DateTime ConvertLongUnixSecondsToDateTime(long elapsed_time)
         {
