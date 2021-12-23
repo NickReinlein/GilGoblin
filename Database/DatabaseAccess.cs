@@ -104,13 +104,14 @@ namespace GilGoblin.Database
                 try
                 {
                     ItemDBContext ItemDBContext = new ItemDBContext();
-                    //await ItemDBContext.Database.EnsureCreatedAsync();                    
 
-                    List<MarketDataDB> exists = ItemDBContext.data
-                            .Where(t => (t.world_id == t.world_id && 
-                                         t.item_id == t.item_id))
-                            .Include(t => t.listings)
-                            .ToList();
+                    //TODO!
+                    List<MarketDataDB> exists = new List<MarketDataDB>();
+                    //List<MarketDataDB> exists = ItemDBContext.data
+                    //        .Where(t => (t.marketData.world_id == t.world_id && 
+                    //                     t.item_id == t.item_id))
+                    //        .Include(t => t.listings)
+                    //        .ToList();
 
 
                     if (exists == null)
@@ -189,57 +190,9 @@ namespace GilGoblin.Database
             }
         }
 
-        /// <summary>
-        /// Searches the database for a bulk list of items given their ID & world
-        /// </summary>
-        /// <param name="itemIDList"></param>A List of integers to represent item ID
-        /// <param name="world_id"></param>the world ID for world-specific data (ie: market price)
-        /// <returns></returns>
-        public static List<ItemDB> GetItemDataDBBulk(List<int> itemIDList, int world_id)
-        {
-            try
-            {
-                ItemDBContext ItemDBContext = new ItemDBContext();
 
-                List<ItemDB> exists = ItemDBContext.data
-                        .Where(t => (t.marketData.world_id == world_id && 
-                                     itemIDList.Contains(t.marketData.item_id)))
-                        .Include(t => t.marketData.listings)
-                        .ToList();
-                return exists;
-            }
-            catch (Exception ex)
-            {
-                if (ex is SqliteException || ex is InvalidOperationException)
-                {
-                    //Maybe the database doesn't exist yet or not found
-                    //Either way, we can return null -> it is not on the database
-                    Log.Debug("Database or entry does not exist.");
-                    return null;
-                }
-                else
-                {
 
-                    Log.Error("Exception: {message}.", ex.Message);
-                    Log.Error("Inner exception:{inner}.", ex.InnerException);
-                    Disconnect();
-                    return null; ;
-                }
-            }
-        }
 
-        /// <summary>
-        /// Searches the database for MarketData (average market price, vendor price, etc)
-        /// </summary>
-        /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
-        /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
-        /// <returns></returns>
-        public static ItemDB GetItemDataDB(int item_id, int world_id)
-        {
-            List<int> itemIDList = new List<int>();
-            itemIDList.Add(item_id); 
-            return GetItemDataDBBulk(itemIDList, world_id).FirstOrDefault();
-        }
 
         public static Task<int> SaveRecipes(List<RecipeFullWeb> recipesWeb)
         {
@@ -273,10 +226,17 @@ namespace GilGoblin.Database
                     ItemDBContext context = new ItemDBContext();
                     await context.Database.EnsureCreatedAsync();
 
-                    List<RecipeFullWeb> exists = context.data
-                            .Where(t => recipeIDList.Contains(t.re))
+                    var test = context.data
+                            .Where(t => t.recipes.All(
+                                  (x => recipeIDList.Contains(x.recipe_id))))
                             .ToList();
-                    if (exists == null)
+
+                        //= context.data
+                    //        .Where(t => t.fullRecipes.All(
+                    //              (x => recipeIDList.Contains(x.recipe_id))))
+                    //        .ToList();
+                    if (test == null)
+                    //if (exists == null)
                     {
                         await context.AddRangeAsync(recipes);
                     }
@@ -285,11 +245,11 @@ namespace GilGoblin.Database
                         //Non-existent entries are added to the tracker
                         foreach (RecipeDB newData in recipes)
                         {
-                            RecipeDB thisExists;
+                            RecipeDB thisExists = null;
                             try
                             {
-                                thisExists = exists
-                                    .Find(t => t.recipe_id == newData.recipe_id);
+                                //thisExists = exists
+                                //    .Find(t => t.recipe_id == newData.recipe_id);
                             }
                             catch (Exception) { thisExists = null; }
 

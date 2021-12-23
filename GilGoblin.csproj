@@ -48,8 +48,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\ICollection.cs" />
     <Compile Include="Database\ItemDB.cs" />
+    <Compile Include="Database\ItemInfoDB.cs" />
     <Compile Include="Database\MarketDataDB.cs" />
     <Compile Include="Database\DatabaseAccess.cs" />
     <Compile Include="Database\MarketListingDB.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="Functions\Exceptions.cs" />
     <Compile Include="Functions\TreeNode.cs" />
     <Compile Include="WebAPI\ItemInfoWeb.cs" />
-    <Compile Include="WebAPI\ItemRecipeShortAPI.cs" />
+    <Compile Include="WebAPI\ItemRecipeHeaderAPI.cs" />
     <Compile Include="Finance\ItemInfo.cs" />
     <Compile Include="WebAPI\MarketDataWeb.cs" />
     <Compile Include="WebAPI\RecipeFullWeb.cs" />

@@ -7,10 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace GilGoblin.Database
 {
     public class RecipeDB : Recipe
-    {        
-        
-        public ICollection<Ingredient> ingredients { get; set; } = new List<Ingredient>();
-
+    {                
         public RecipeDB() : base() { }
         public RecipeDB(RecipeFullWeb web) : base()
         {

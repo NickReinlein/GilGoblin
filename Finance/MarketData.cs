@@ -26,7 +26,7 @@ namespace GilGoblin.Finance
             //Does it exist in the database? Is it stale?
             try
             {
-                itemDB = DatabaseAccess.GetItemDataDB(item_id, world_id);
+                itemDB = ItemDB.GetItemDataDB(item_id, world_id);
             }
             catch (Exception)
             {
@@ -68,7 +68,7 @@ namespace GilGoblin.Finance
                 {
                     if (!forceUpdate)
                     {
-                        listDB = DatabaseAccess.GetItemDataDBBulk(itemIDs, world_ID);
+                        listDB = ItemDB.GetItemDataDBBulk(itemIDs, world_ID);
                     }
                 }
                 catch (Exception ex)

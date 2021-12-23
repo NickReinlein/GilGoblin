@@ -1,4 +1,5 @@
-﻿using GilGoblin.Finance;
+﻿using GilGoblin.Database;
+using GilGoblin.Finance;
 using GilGoblin.Functions;
 using Newtonsoft.Json;
 using Serilog;
@@ -12,13 +13,8 @@ using System.Threading.Tasks;
 namespace GilGoblin.WebAPI
 {
     public class RecipeFullWeb : Recipe
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-        
-        public ICollection<Ingredient> ingredients { get; set; }
-            = new List<Ingredient>();
+    {        
+        public RecipeFullWeb() : base() { }
 
         [JsonConstructor]
         public RecipeFullWeb(bool CanQuickSynth, bool CanHq, int ItemResultTargetID,
@@ -110,6 +106,19 @@ namespace GilGoblin.WebAPI
                 Log.Error("Failed to convert recipe from JSON: {message}", ex.Message);
                 return null;
             }
+        }
+
+        public RecipeDB convertToDB()
+        {
+            RecipeDB db = new RecipeDB();
+            db.recipe_id = this.recipe_id;
+            db.icon_id = this.icon_id;            
+            db.target_item_id = this.target_item_id;
+            db.recipe_id = this.recipe_id;
+            db.result_quantity = this.result_quantity;
+            db.CanHq = this.CanHq;
+            db.CanQuickSynth = this.CanQuickSynth;
+            return db;
         }
     }
 }
