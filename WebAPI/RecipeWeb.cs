@@ -4,17 +4,21 @@ using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace GilGoblin.WebAPI
 {
-
     public class RecipeWeb : Recipe
     {
-        //Dictionary representing item ID & quantity
-        public Dictionary<int, int> ingredients { get; set; } 
-            = new Dictionary<int, int>();
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+        
+        public ICollection<Ingredient> ingredients { get; set; }
+            = new List<Ingredient>();
 
         [JsonConstructor]
         public RecipeWeb(bool CanQuickSynth, bool CanHq, int ItemResultTargetID,
@@ -48,43 +52,43 @@ namespace GilGoblin.WebAPI
             this.CanQuickSynth = CanQuickSynth;
             if (AmountIngredient0 > 0)
             {
-                ingredients.Add(ItemIngredient0TargetID, AmountIngredient0);
+                ingredients.Add(new Ingredient(ItemIngredient0TargetID, AmountIngredient0));
             }
             if (AmountIngredient1 > 0)
             {
-                ingredients.Add(ItemIngredient1TargetID, AmountIngredient1);
+                ingredients.Add(new Ingredient(ItemIngredient1TargetID, AmountIngredient1));
             }
             if (AmountIngredient2 > 0)
             {
-                ingredients.Add(ItemIngredient2TargetID, AmountIngredient2);
+                ingredients.Add(new Ingredient(ItemIngredient2TargetID, AmountIngredient2));
             }
             if (AmountIngredient3 > 0)
             {
-                ingredients.Add(ItemIngredient3TargetID, AmountIngredient3);
+                ingredients.Add(new Ingredient(ItemIngredient3TargetID, AmountIngredient3));
             }
             if (AmountIngredient4 > 0)
             {
-                ingredients.Add(ItemIngredient4TargetID, AmountIngredient4);
+                ingredients.Add(new Ingredient(ItemIngredient4TargetID, AmountIngredient4));
             }
             if (AmountIngredient5 > 0)
             {
-                ingredients.Add(ItemIngredient5TargetID, AmountIngredient5);
+                ingredients.Add(new Ingredient(ItemIngredient5TargetID, AmountIngredient5));
             }
             if (AmountIngredient6 > 0)
             {
-                ingredients.Add(ItemIngredient6TargetID, AmountIngredient6);
+                ingredients.Add(new Ingredient(ItemIngredient6TargetID, AmountIngredient6));
             }
             if (AmountIngredient7 > 0)
             {
-                ingredients.Add(ItemIngredient7TargetID, AmountIngredient7);
+                ingredients.Add(new Ingredient(ItemIngredient7TargetID, AmountIngredient7));
             }
             if (AmountIngredient8 > 0)
             {
-                ingredients.Add(ItemIngredient8TargetID, AmountIngredient8);
+                ingredients.Add(new Ingredient(ItemIngredient8TargetID, AmountIngredient8));
             }
             if (AmountIngredient9 > 0)
             {
-                ingredients.Add(ItemIngredient9TargetID, AmountIngredient9);
+                ingredients.Add(new Ingredient(ItemIngredient9TargetID, AmountIngredient9));
             }
 
         }
@@ -107,6 +111,5 @@ namespace GilGoblin.WebAPI
                 return null;
             }
         }
-
     }
 }

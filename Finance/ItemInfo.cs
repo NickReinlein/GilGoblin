@@ -1,10 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GilGoblin.WebAPI
 {
     internal class ItemInfo
     {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [ForeignKey("item_id")]
+        [InverseProperty("MarketDataDB")]                
         public int item_id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
@@ -14,6 +20,8 @@ namespace GilGoblin.WebAPI
         public int gathering_id { get; set; }
 
         public ICollection<ItemRecipeAPI> recipes { get; set; } = new List<ItemRecipeAPI>();
+
+        public ItemInfo() { }
 
         /// <summary>
         /// Constructor for JSON de-serialization of item info (FFXIVAPI)
@@ -35,16 +43,9 @@ namespace GilGoblin.WebAPI
             this.vendor_price = priceMid;
             this.stack_size = stackSize;
             this.gathering_id = gatheringID;
-            if (Recipes != null) { 
-            this.recipes = Recipes;
-            }
-            else
-            {
-                this.recipes.Clear();
-            }
+            if (Recipes != null){ this.recipes = Recipes; }
+            else { this.recipes.Clear(); }
         }
-
-        //System.InvalidOperationException: 'No suitable constructor found for entity type 'ItemInfo'. The following constructors had parameters that could not be bound to properties of the entity type: cannot bind 'ID', 'IconID', 'Name', 'Description', 'priceMid', 'stackSize', 'gatheringID', 'Recipes' in 'ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeAPI> Recipes)'.'
 
     }
 }

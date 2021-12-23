@@ -17,6 +17,7 @@ namespace GilGoblin.WebAPI
     internal class MarketDataWeb : MarketData
     {
         public ICollection<MarketListingWeb> listings { get; set; } = new List<MarketListingWeb>();
+
         public static int listingsToRead = 20; //TODO increase for production use
 
         public int getPrice(bool update = false)
