@@ -10,7 +10,7 @@ namespace GilGoblin.WebAPI
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [ForeignKey("item_id")]
-        [InverseProperty("MarketDataDB")]                
+        [InverseProperty("MarketDataDB")]
         public int item_id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
@@ -19,22 +19,28 @@ namespace GilGoblin.WebAPI
         public int stack_size { get; set; }
         public int gathering_id { get; set; }
 
-        public ICollection<ItemRecipeAPI> recipes { get; set; } = new List<ItemRecipeAPI>();
-
         public ItemInfo() { }
+    }
+
+    internal class ItemInfoWeb : ItemInfo
+    { 
+        public ICollection<ItemRecipeShortAPI> recipes { get; set; } = new List<ItemRecipeShortAPI>();
+
+        public ItemInfoWeb() : base () { }
 
         /// <summary>
         /// Constructor for JSON de-serialization of item info (FFXIVAPI)
         /// </summary>
-        /// <param name="item_id">The item's ID number</param>
-        /// <param name="Name">Optional: Item name/description</param>
-        /// <param name="stack_size">Stack size of the sale</param>
-        /// <param name="gathering_id">ID of the gathering class</param>       
-        /// <param name="vendor_price">Price for selling to vendor</param>
-        /// <param name="recipes">Crafting recipes to make the item (represented by a Tree data structure)</param>
+        /// <param name="ID">The item's ID number</param>
+        /// <param name="Name">Optional: Item name</param>
+        /// <param name="Description">Optional: Item description</param>
+        /// <param name="stackSize">Stack size of the sale</param>
+        /// <param name="gatheringID">ID of the gathering class</param>       
+        /// <param name="priceMid">Price for selling to vendor</param>
+        /// <param name="Recipes">Crafting recipes to make the item (represented by a Tree data structure)</param>
         /// 
         [JsonConstructor]
-        public ItemInfo(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeAPI> Recipes)
+        public ItemInfoWeb(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeShortAPI> Recipes)
         {
             this.item_id = ID;
             this.icon_id = IconID;

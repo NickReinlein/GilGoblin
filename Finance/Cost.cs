@@ -85,19 +85,14 @@ namespace GilGoblin.Finance
                 Log.Error("Failed to fetch the crafting cost for item_id: {item_id} world_id: {world_id}");
                 return errorReturn;
             }
-            //else if (itemInfo.recipes == null || itemInfo.recipes.Count == 0)
-            //{
-            //    Log.Information("No recipes found for item {item_id}",item_id);
-            //    return errorReturn;
-            //}
 
-            List<RecipeWeb> recipesFound = new List<RecipeWeb>();
-            foreach (ItemRecipeAPI recipe in itemInfo.recipes)
+            List<RecipeFullWeb> recipesFound = new List<RecipeFullWeb>();
+            foreach (ItemRecipeShortAPI recipe in itemInfo.recipes)
             {
                 int recipe_id = recipe.recipe_id;
                 if (recipe_id == 0) { continue; }
-                RecipeWeb thisRecipe 
-                    = RecipeWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
+                RecipeFullWeb thisRecipe 
+                    = RecipeFullWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
                 if (thisRecipe == null)
                 {
                     Log.Error("Error fetching recipe id: {recipe_id}.", recipe_id);

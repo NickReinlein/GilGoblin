@@ -16,34 +16,33 @@ namespace GilGoblin.Finance
         public int world_id { get; set; }
         public DateTime last_updated { get; set; }
         public int average_price { get; set; }
-        public ItemInfo item_info { get; set; }        
 
         public static int _staleness_hours_for_refresh = 2; //todo: increase for production
 
         //Try with the database first, then if it fails we use the web API
         public static MarketDataDB GetMarketData(int item_id, int world_id)
         {
-            MarketDataDB marketDataDB;
+            ItemDB itemDB;
             //Does it exist in the database? Is it stale?
             try
             {
-                marketDataDB = DatabaseAccess.GetMarketDataDB(item_id, world_id);
+                itemDB = DatabaseAccess.GetItemDataDB(item_id, world_id);
             }
             catch (Exception)
             {
                 //Not found in the database)
-                marketDataDB = null;
+                itemDB = null;
             }
 
             //If found, stop & return
-            if (marketDataDB != null) { return marketDataDB; }
+            if (itemDB != null) { return itemDB.marketData; }
             else
             {
                 //fetch with the web api
                 MarketDataWeb marketDataWeb
                     = MarketDataWeb.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
-                marketDataDB = new MarketDataDB(marketDataWeb);
-                return marketDataDB;
+                MarketDataDB newData = new MarketDataDB(marketDataWeb);
+                return newData;
             }
         }
 
@@ -63,13 +62,13 @@ namespace GilGoblin.Finance
             else
             {
                 List<MarketDataDB> listReturn = new List<MarketDataDB>();
-                List<MarketDataDB> listDB = new List<MarketDataDB>();
+                List<ItemDB> listDB = new List<ItemDB>();
                 //Does it exist in the database? Is it stale?
                 try
                 {
                     if (!forceUpdate)
                     {
-                        listDB = DatabaseAccess.GetMarketDataDBBulk(itemIDs, world_ID);
+                        listDB = DatabaseAccess.GetItemDataDBBulk(itemIDs, world_ID);
                     }
                 }
                 catch (Exception ex)
@@ -113,16 +112,17 @@ namespace GilGoblin.Finance
             }
         }
 
-        public static List<MarketDataDB> filterFreshData(List<MarketDataDB> list)
+        public static List<MarketDataDB> filterFreshData(List<ItemDB> list)
         {
             List<MarketDataDB> fresh = new List<MarketDataDB>();
             if (list != null)
             {
-                foreach (MarketDataDB dataDB in list)
+                foreach (ItemDB itemDB in list)
                 {
-                    if (!isDataStale(dataDB))
+                    if (itemDB != null && 
+                        !isDataStale(itemDB.marketData))
                     {
-                        fresh.Add(dataDB);
+                        fresh.Add(itemDB.marketData);
                     }
                     else { } //do nothing                       
                 }

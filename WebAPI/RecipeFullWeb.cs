@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.WebAPI
 {
-    public class RecipeWeb : Recipe
+    public class RecipeFullWeb : Recipe
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -21,7 +21,7 @@ namespace GilGoblin.WebAPI
             = new List<Ingredient>();
 
         [JsonConstructor]
-        public RecipeWeb(bool CanQuickSynth, bool CanHq, int ItemResultTargetID,
+        public RecipeFullWeb(bool CanQuickSynth, bool CanHq, int ItemResultTargetID,
             int ID, int IconID, int AmountResult,
             int AmountIngredient0,
             int AmountIngredient1,
@@ -93,7 +93,7 @@ namespace GilGoblin.WebAPI
 
         }
 
-        public static async Task<RecipeWeb> FetchRecipe(int recipe_id)
+        public static async Task<RecipeFullWeb> FetchRecipe(int recipe_id)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                RecipeWeb recipe = JsonConvert.DeserializeObject<RecipeWeb>(content.Content.ReadAsStringAsync().Result);
+                RecipeFullWeb recipe = JsonConvert.DeserializeObject<RecipeFullWeb>(content.Content.ReadAsStringAsync().Result);
                 return recipe;
             }
             catch (Exception ex)

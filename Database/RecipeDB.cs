@@ -12,7 +12,7 @@ namespace GilGoblin.Database
         public ICollection<Ingredient> ingredients { get; set; } = new List<Ingredient>();
 
         public RecipeDB() : base() { }
-        public RecipeDB(RecipeWeb web) : base()
+        public RecipeDB(RecipeFullWeb web) : base()
         {
             icon_id = web.icon_id;
             CanHq = web.CanHq;

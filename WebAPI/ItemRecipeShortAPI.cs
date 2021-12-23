@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GilGoblin.WebAPI
 {
-    internal class ItemRecipeAPI
+    public class ItemRecipeShortAPI
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -13,10 +13,10 @@ namespace GilGoblin.WebAPI
         public int recipe_id { get; set; }
         public int level { get; set; }
 
-        public ItemRecipeAPI() { }
+        public ItemRecipeShortAPI() { }
 
         [JsonConstructor]
-        public ItemRecipeAPI(int ID, int classJobID, int level)
+        public ItemRecipeShortAPI(int ID, int classJobID, int level)
         {
             this.class_job_id = classJobID;
             this.recipe_id = ID;

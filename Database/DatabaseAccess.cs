@@ -75,18 +75,8 @@ namespace GilGoblin.Database
         {
             try
             {
-                RecipeDBContext recipeDBContext = new RecipeDBContext();
-                RecipeWebContext recipeWebContext = new RecipeWebContext();
-                MarketDataContext marketDataContext = new MarketDataContext();
-                MarketListingContext marketListingContext = new MarketListingContext();
-                ItemRecipeAPIContext itemRecipeAPIContext = new ItemRecipeAPIContext();
-                ItemInfoContext itemInfoContext = new ItemInfoContext();
-                marketDataContext.Database.EnsureCreatedAsync();
-                recipeDBContext.Database.EnsureCreatedAsync();
-                recipeWebContext.Database.EnsureCreatedAsync();
-                marketListingContext.Database.EnsureCreatedAsync();
-                itemRecipeAPIContext.Database.EnsureCreatedAsync();
-                itemInfoContext.Database.EnsureCreatedAsync();
+                ItemDBContext ItemDBContext = new ItemDBContext();
+                ItemDBContext.Database.EnsureCreatedAsync();
             }
             catch(Exception ex)
             {
@@ -113,11 +103,12 @@ namespace GilGoblin.Database
             {
                 try
                 {
-                    MarketDataContext marketDataContext = new MarketDataContext();
-                    //await marketDataContext.Database.EnsureCreatedAsync();                    
+                    ItemDBContext ItemDBContext = new ItemDBContext();
+                    //await ItemDBContext.Database.EnsureCreatedAsync();                    
 
-                    List<MarketDataDB> exists = marketDataContext.data
-                            .Where(t => (t.world_id == t.world_id && t.item_id == t.item_id))
+                    List<MarketDataDB> exists = ItemDBContext.data
+                            .Where(t => (t.world_id == t.world_id && 
+                                         t.item_id == t.item_id))
                             .Include(t => t.listings)
                             .ToList();
 
@@ -125,7 +116,7 @@ namespace GilGoblin.Database
                     if (exists == null)
                     {
                         //New entries, add to entity tracker     
-                        await marketDataContext.AddRangeAsync(marketDataList);
+                        await ItemDBContext.AddRangeAsync(marketDataList);
                     }
                     else
                     {
@@ -135,7 +126,7 @@ namespace GilGoblin.Database
                             //Existing entry
                             exist.average_price = exist.average_price;
                             exist.listings = exist.listings;
-                            marketDataContext.Update<MarketDataDB>(exist);
+                            ItemDBContext.Update<MarketDataDB>(exist);
                         }
                         //Non-existent entries are added to the tracker
                         foreach (MarketDataDB newData in marketDataList)
@@ -145,12 +136,12 @@ namespace GilGoblin.Database
                                            t.world_id == newData.world_id);
                             if (thisExists == null)
                             {
-                                await marketDataContext.AddAsync<MarketDataDB>(newData);
+                                await ItemDBContext.AddAsync<MarketDataDB>(newData);
                             }
                         }
                     }
 
-                    return await marketDataContext.SaveChangesAsync(); ;
+                    return await ItemDBContext.SaveChangesAsync(); ;
 
                 }
                 catch (Exception ex)
@@ -167,27 +158,26 @@ namespace GilGoblin.Database
         {
             try
             {
-                MarketDataContext marketDataContext = new MarketDataContext();
-                //await marketDataContext.Database.EnsureCreatedAsync();
+                ItemDBContext ItemDBContext = new ItemDBContext();
 
-                MarketDataDB exists = marketDataContext.data
+                ItemDB exists = ItemDBContext.data
                     .FindAsync(marketData.item_id, marketData.world_id).GetAwaiter().GetResult();
 
                 if (exists == null)
                 {
                     //New entry, add to entity tracker
-                    await marketDataContext.AddAsync<MarketDataDB>(marketData);
+                    await ItemDBContext.AddAsync<MarketDataDB>(marketData);
                 }
                 else
                 {
                     //Existing entry
-                    exists.last_updated = DateTime.Now;
-                    exists.average_price = marketData.average_price;
-                    exists.listings = marketData.listings;
-                    marketDataContext.Update<MarketDataDB>(exists);
+                    exists.marketData.last_updated = DateTime.Now;
+                    exists.marketData.average_price = marketData.average_price;
+                    exists.marketData.listings = marketData.listings;
+                    ItemDBContext.Update<ItemDB>(exists);
                 }
                 int success = 0;
-                if (saveToDB) { success = await marketDataContext.SaveChangesAsync(); }
+                if (saveToDB) { success = await ItemDBContext.SaveChangesAsync(); }
                 return success;
             }
             catch (Exception ex)
@@ -205,22 +195,22 @@ namespace GilGoblin.Database
         /// <param name="itemIDList"></param>A List of integers to represent item ID
         /// <param name="world_id"></param>the world ID for world-specific data (ie: market price)
         /// <returns></returns>
-        public static List<MarketDataDB> GetMarketDataDBBulk(List<int> itemIDList, int world_id)
+        public static List<ItemDB> GetItemDataDBBulk(List<int> itemIDList, int world_id)
         {
             try
             {
-                MarketDataContext marketDataContext = new MarketDataContext();
+                ItemDBContext ItemDBContext = new ItemDBContext();
 
-                List<MarketDataDB> exists = marketDataContext.data
-                        .Where(t => (t.world_id == world_id && itemIDList.Contains(t.item_id)))
-                        .Include(t => t.listings)
+                List<ItemDB> exists = ItemDBContext.data
+                        .Where(t => (t.marketData.world_id == world_id && 
+                                     itemIDList.Contains(t.marketData.item_id)))
+                        .Include(t => t.marketData.listings)
                         .ToList();
                 return exists;
             }
             catch (Exception ex)
             {
-                if (ex is Microsoft.Data.Sqlite.SqliteException ||
-                    ex is System.InvalidOperationException)
+                if (ex is SqliteException || ex is InvalidOperationException)
                 {
                     //Maybe the database doesn't exist yet or not found
                     //Either way, we can return null -> it is not on the database
@@ -244,43 +234,17 @@ namespace GilGoblin.Database
         /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
         /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
         /// <returns></returns>
-        public static MarketDataDB GetMarketDataDB(int item_id, int world_id)
+        public static ItemDB GetItemDataDB(int item_id, int world_id)
         {
-            try
-            {
-                MarketDataContext marketDataContext = new MarketDataContext();
-
-                MarketDataDB exists = marketDataContext.data
-                        .Where(t => (t.item_id == item_id && t.world_id == world_id))
-                        .Include(t => t.listings)
-                        .FirstOrDefault();
-
-                return exists;
-            }
-            catch (Exception ex)
-            {
-                if (ex is Microsoft.Data.Sqlite.SqliteException ||
-                    ex is System.InvalidOperationException)
-                {
-                    //Maybe the database doesn't exist yet or not found
-                    //Either way, we can return null -> it is not on the database
-                    return null;
-                }
-                else
-                {
-
-                    Log.Error("Exception: {message}.", ex.Message);
-                    Log.Error("Inner exception:{inner}.", ex.InnerException);
-                    Disconnect();
-                    return null; ;
-                }
-            }
+            List<int> itemIDList = new List<int>();
+            itemIDList.Add(item_id); 
+            return GetItemDataDBBulk(itemIDList, world_id).FirstOrDefault();
         }
 
-        public static Task<int> SaveRecipes(List<RecipeWeb> recipesWeb)
+        public static Task<int> SaveRecipes(List<RecipeFullWeb> recipesWeb)
         {
             List<RecipeDB> recipeDBs = new List<RecipeDB>();
-            foreach (RecipeWeb web in recipesWeb)
+            foreach (RecipeFullWeb web in recipesWeb)
             {
                 recipeDBs.Add(new RecipeDB(web));
             }
@@ -306,11 +270,11 @@ namespace GilGoblin.Database
                 }
                 try
                 {
-                    RecipeDBContext context = new RecipeDBContext();
-                    //await context.Database.EnsureCreatedAsync();
+                    ItemDBContext context = new ItemDBContext();
+                    await context.Database.EnsureCreatedAsync();
 
-                    List<RecipeDB> exists = context.data
-                            .Where(t => recipeIDList.Contains(t.recipe_id))
+                    List<RecipeFullWeb> exists = context.data
+                            .Where(t => recipeIDList.Contains(t.re))
                             .ToList();
                     if (exists == null)
                     {
@@ -360,204 +324,6 @@ namespace GilGoblin.Database
                     }
                 }
             }
-        }
-
-        internal class MarketDataContext : DbContext
-        {
-            public DbSet<MarketDataDB> data { get; set; }
-            private SqliteConnection conn;
-
-            public MarketDataContext()
-                : base(new DbContextOptionsBuilder<MarketDataContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
-                modelBuilder.Entity<MarketDataDB>().Property(t => t.average_price);
-                modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
-                modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
-            }
-
-        }
-
-        internal class MarketListingContext : DbContext
-        {
-            public DbSet<MarketListingDB> listingDB { get; set; }
-            private SqliteConnection conn;
-
-            public MarketListingContext()
-                : base(new DbContextOptionsBuilder<MarketListingContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.world_id).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
-                modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
-            }
-        }
-
-        internal class ItemInfoContext : DbContext
-        {
-            public DbSet<ItemInfo> data { get; set; }            
-
-            private SqliteConnection conn;
-
-            public ItemInfoContext() : base(new DbContextOptionsBuilder<ItemInfoContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<ItemInfo>().ToTable("ItemInfo");
-                modelBuilder.Entity<ItemInfo>().HasKey(t => t.item_id);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.name);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.icon_id);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.description);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.vendor_price);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.stack_size);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.gathering_id);
-                modelBuilder.Entity<ItemInfo>().Property(t => t.recipes);
-                modelBuilder.Entity<ItemInfo>().HasMany(t => t.recipes);
-            }
-        }
-
-        internal class RecipeDBContext : DbContext
-        {
-            public DbSet<RecipeDB> data { get; set; }
-            private SqliteConnection conn;
-
-            public RecipeDBContext()
-                : base(new DbContextOptionsBuilder<RecipeDBContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<RecipeDB>().ToTable("RecipeDB");
-                modelBuilder.Entity<RecipeDB>().HasKey(t => t.recipe_id);
-                modelBuilder.Entity<RecipeDB>().Property(t => t.result_quantity);
-                modelBuilder.Entity<RecipeDB>().Property(t => t.icon_id);
-                modelBuilder.Entity<RecipeDB>().Property(t => t.target_item_id);
-                modelBuilder.Entity<RecipeDB>().Property(t => t.CanHq);
-                modelBuilder.Entity<RecipeDB>().Property(t => t.CanQuickSynth);
-                modelBuilder.Entity<RecipeDB>().HasMany(t => t.ingredients);
-            }
-
-        }
-
-        internal class RecipeWebContext : DbContext
-        {
-            public DbSet<RecipeWeb> data { get; set; }
-            private SqliteConnection conn;
-
-            public RecipeWebContext()
-                : base(new DbContextOptionsBuilder<RecipeWebContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<RecipeWeb>().ToTable("RecipeWeb");
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.ID).ValueGeneratedOnAdd(); ;
-                modelBuilder.Entity<RecipeWeb>().Property(t => t.recipe_id);
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.result_quantity).IsRequired();
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.icon_id);
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.target_item_id).IsRequired();
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.CanHq);
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.CanQuickSynth);
-                modelBuilder.Entity<RecipeWeb>()
-                    .Property(t => t.ingredients);
-                modelBuilder.Entity<RecipeWeb>()
-                    .OwnsMany(t => t.ingredients);
-            }
-
-        }
-
-        internal class ItemRecipeAPIContext : DbContext
-        {
-            public DbSet<ItemRecipeAPI> data { get; set; }
-            private SqliteConnection conn;
-
-            public ItemRecipeAPIContext()
-                : base(new DbContextOptionsBuilder<ItemRecipeAPIContext>().UseSqlite(Connect()).Options)
-            {
-                conn = Connect();
-            }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                this.conn = Connect();
-                optionsBuilder.UseSqlite(this.conn);
-            }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<ItemRecipeAPI>()
-                    .ToTable("ItemRecipeAPI");
-                modelBuilder.Entity<ItemRecipeAPI>()
-                .Property(t => t.ID).ValueGeneratedOnAdd(); ;
-                modelBuilder.Entity<ItemRecipeAPI>()
-                    .Property(t => t.recipe_id).IsRequired();
-                modelBuilder.Entity<ItemRecipeAPI>()
-                    .Property(t => t.class_job_id).IsRequired();
-                modelBuilder.Entity<ItemRecipeAPI>()
-                    .Property(t => t.level).IsRequired();
-                
-            }
-
         }
     }
 }

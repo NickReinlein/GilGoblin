@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\ICollection.cs" />
+    <Compile Include="Database\ItemDB.cs" />
     <Compile Include="Database\MarketDataDB.cs" />
     <Compile Include="Database\DatabaseAccess.cs" />
     <Compile Include="Database\MarketListingDB.cs" />
@@ -58,10 +59,11 @@
     <Compile Include="Finance\RecipeNode.cs" />
     <Compile Include="Functions\Exceptions.cs" />
     <Compile Include="Functions\TreeNode.cs" />
-    <Compile Include="WebAPI\ItemRecipeAPI.cs" />
+    <Compile Include="WebAPI\ItemInfoWeb.cs" />
+    <Compile Include="WebAPI\ItemRecipeShortAPI.cs" />
     <Compile Include="Finance\ItemInfo.cs" />
     <Compile Include="WebAPI\MarketDataWeb.cs" />
-    <Compile Include="WebAPI\RecipeWeb.cs" />
+    <Compile Include="WebAPI\RecipeFullWeb.cs" />
     <Compile Include="WebAPI\MarketListingWeb.cs" />
     <Compile Include="Finance\Price.cs" />
     <Compile Include="Finance\Cost.cs" />
