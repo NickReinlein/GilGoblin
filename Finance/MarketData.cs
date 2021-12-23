@@ -145,12 +145,14 @@ namespace GilGoblin.Finance
             else { return false; }
         }
 
-        public static ItemInfo GetItemInfo(int item_id)
+        public static ItemInfoDB GetItemInfo(int item_id)
         {
             //TODO: later this needs to be doneDatabase.DatabaseAccess.GetMarketDataDB
             // and probably move to a new namespace or class
-            return MarketDataWeb.FetchItemInfo(item_id).GetAwaiter().GetResult();
-
+            ItemInfoWeb web = MarketDataWeb.FetchItemInfo(item_id).GetAwaiter().GetResult();
+            if (web == null) { return null; }
+            ItemInfoDB db = new ItemInfoDB();
+            return db;
         }
 
         /// <summary>

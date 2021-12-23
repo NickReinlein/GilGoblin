@@ -27,13 +27,13 @@ namespace GilGoblin.WebAPI
         [JsonConstructor]
         public ItemInfoWeb(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeHeaderAPI> Recipes)
         {
-            this.item_id = ID;
-            this.icon_id = IconID;
+            this.itemID = ID;
+            this.iconID = IconID;
             this.description = Description;
             this.name = Name;
             this.vendor_price = priceMid;
             this.stack_size = stackSize;
-            this.gathering_id = gatheringID;
+            this.gatheringID = gatheringID;
             if (Recipes != null) { this.recipeHeader = Recipes; }
             else { this.recipeHeader.Clear(); }
         }

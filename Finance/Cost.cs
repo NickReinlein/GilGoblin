@@ -39,9 +39,9 @@ namespace GilGoblin.Finance
         }
         ///
 
-        public static ItemInfo GetItemInfo(int item_id)
+        public static ItemInfoDB GetItemInfo(int item_id)
         {
-            return MarketDataWeb.GetItemInfo(item_id);
+            return MarketData.GetItemInfo(item_id);
         }
         public static int GetVendorCost(int item_id)
         {
@@ -55,7 +55,7 @@ namespace GilGoblin.Finance
         }
         public static int GetIconID(int item_id)
         {
-            return GetItemInfo(item_id).icon_id;
+            return GetItemInfo(item_id).iconID;
         }
 
         public static int GetBaseCost(int item_id, int world_id)
@@ -81,13 +81,12 @@ namespace GilGoblin.Finance
             int errorReturn = 999999;
             try
             {
-                ItemDB itemDb = ItemDB.GetItemDataDB(item_id, world_id);
-                if (itemDb == null)
-                {
-                    throw new ParameterException();
-                }
+                if (item_id == 0 || world_id == 0){ throw new ParameterException(); }
 
-                List <RecipeDB> recipesFound = new List<RecipeDB>();
+                ItemDB itemDb = ItemDB.GetItemDataDB(item_id, world_id);
+                if (itemDb == null) { return errorReturn; }
+
+                List<RecipeDB> recipesFound = new List<RecipeDB>();
                 foreach (RecipeDB recipe in itemDb.recipes)
                 {
                     if (recipe == null) { continue; }
@@ -108,7 +107,7 @@ namespace GilGoblin.Finance
                 }
 
                 //TODO: check tree traversal here for crafting cost 
-                return 0;
+                return 7777;
             }
             catch (ParameterException)
             {

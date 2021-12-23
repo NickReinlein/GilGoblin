@@ -103,7 +103,7 @@ namespace GilGoblin.WebAPI
             }
         }
 
-        public static async Task<ItemInfo> FetchItemInfo(int item_id)
+        public static async Task<ItemInfoWeb> FetchItemInfo(int item_id)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                ItemInfo item_info = JsonConvert.DeserializeObject<ItemInfo>(
+                ItemInfoWeb item_info = JsonConvert.DeserializeObject<ItemInfoWeb>(
                     content.Content.ReadAsStringAsync().Result);
                 return item_info;
             }
