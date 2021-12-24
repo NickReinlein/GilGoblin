@@ -32,5 +32,22 @@ namespace GilGoblin.Database
             this.item_id = data.item_id;
             this.world_id = data.world_id;
         }
+
+        public MarketDataDB(int itemID, int worldID) : base()
+        {
+            try
+            {
+                MarketDataWeb marketDataWeb
+                    = MarketDataWeb.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
+                if (marketDataWeb == null)
+                {
+                    throw new Functions.DBStatusException();
+                }
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to fetch market data for itemID {itemID}, worldID {worldID}.", item_id, world_id);
+            }
+        }
     }
 }

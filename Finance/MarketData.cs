@@ -23,6 +23,7 @@ namespace GilGoblin.Finance
         public static MarketDataDB GetMarketData(int item_id, int world_id)
         {
             ItemDB itemDB;
+            MarketDataDB returnData;
             //Does it exist in the database? Is it stale?
             try
             {
@@ -35,15 +36,16 @@ namespace GilGoblin.Finance
             }
 
             //If found, stop & return
-            if (itemDB != null) { return itemDB.marketData; }
+            if (itemDB != null) { returnData = itemDB.marketData; }
             else
             {
                 //fetch with the web api
                 MarketDataWeb marketDataWeb
                     = MarketDataWeb.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
                 MarketDataDB newData = new MarketDataDB(marketDataWeb);
-                return newData;
+                returnData = newData;
             }
+            return returnData;
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace GilGoblin.Finance
                 {
                     if (!forceUpdate)
                     {
-                        listDB = ItemDB.GetItemDataDBBulk(itemIDs, world_ID);
+                        listDB = ItemDB.GetItemDBBulk(itemIDs, world_ID);
                     }
                 }
                 catch (Exception ex)
@@ -143,16 +145,6 @@ namespace GilGoblin.Finance
             double hoursElapsed = diff.TotalHours;
             if (hoursElapsed > MarketData._staleness_hours_for_refresh) { return true; }
             else { return false; }
-        }
-
-        public static ItemInfoDB GetItemInfo(int item_id)
-        {
-            //TODO: later this needs to be doneDatabase.DatabaseAccess.GetMarketDataDB
-            // and probably move to a new namespace or class
-            ItemInfoWeb web = MarketDataWeb.FetchItemInfo(item_id).GetAwaiter().GetResult();
-            if (web == null) { return null; }
-            ItemInfoDB db = new ItemInfoDB();
-            return db;
         }
 
         /// <summary>

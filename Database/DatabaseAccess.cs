@@ -204,9 +204,9 @@ namespace GilGoblin.Database
             return SaveRecipes(recipeDBs);
         }
 
-        internal static async Task<int> SaveRecipes(List<RecipeDB> recipes)
+        internal static async Task<int> SaveRecipes(List<RecipeDB> recipesToSave)
         {
-            if (recipes == null || recipes.Count == 0)
+            if (recipesToSave == null || recipesToSave.Count == 0)
             {
                 Log.Error("Trying to save an empty list of recipes.");
                 return 0;
@@ -214,7 +214,7 @@ namespace GilGoblin.Database
             else
             {
                 HashSet<int> recipeIDList = new HashSet<int>();
-                foreach (RecipeDB recipe in recipes)
+                foreach (RecipeDB recipe in recipesToSave)
                 {
                     if (recipe != null && recipe.recipe_id != 0)
                     {
@@ -224,40 +224,43 @@ namespace GilGoblin.Database
                 try
                 {
                     ItemDBContext context = new ItemDBContext();
-                    await context.Database.EnsureCreatedAsync();
+                    List<RecipeDB> existentRecipes = new List<RecipeDB>();
+                    //await context.Database.EnsureCreatedAsync();
+                    // TODO: ensure the Startup is called & enough...
+                    //       this should be redundant
 
-                    var test = context.data
+                    List<ItemDB> itemsDB = context.data
                             .Where(t => t.recipes.All(
                                   (x => recipeIDList.Contains(x.recipe_id))))
                             .ToList();
-
-                        //= context.data
-                    //        .Where(t => t.fullRecipes.All(
-                    //              (x => recipeIDList.Contains(x.recipe_id))))
-                    //        .ToList();
-                    if (test == null)
-                    //if (exists == null)
+                    if (itemsDB == null)
                     {
-                        await context.AddRangeAsync(recipes);
+                        // None found, save everything
+                        await context.AddRangeAsync(recipesToSave);
+                        existentRecipes.Clear();
                     }
                     else
                     {
-                        //Non-existent entries are added to the tracker
-                        foreach (RecipeDB newData in recipes)
+                        //Existent entries can be added to the tracker
+                        //TODO: improve this... with LINQ?
+                        foreach (ItemDB existentDBEntry in itemsDB)
                         {
-                            RecipeDB thisExists = null;
-                            try
-                            {
-                                //thisExists = exists
-                                //    .Find(t => t.recipe_id == newData.recipe_id);
+                            existentRecipes.AddRange(existentDBEntry.recipes);
+                            foreach (RecipeDB existentRecipe in existentDBEntry.recipes)
+                            {                                
+                                await context.AddAsync<RecipeDB>(existentRecipe);
                             }
-                            catch (Exception) { thisExists = null; }
+                        }
 
-                            if (thisExists == null)
+                        IEnumerable<RecipeDB> saveMeList 
+                            = recipesToSave.Except(existentRecipes);                    
+                        //Non-existent entries are added to the tracker
+                        foreach (RecipeDB saveRecipe in saveMeList)
+                        {
+                            if (saveRecipe != null)
                             {
-                                await context.AddAsync<RecipeDB>(newData);
-                            }
-                            else { } //No need to update recipes; they never change
+                                await context.AddAsync<RecipeDB>(saveRecipe);
+                            }       
                         }
                     }
 

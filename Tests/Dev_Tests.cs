@@ -22,7 +22,7 @@ namespace GilGoblin.Tests
             try
             {
                 MarketDataDB marketData = MarketData.GetMarketData(item_id, world_id);
-                ItemInfoDB itemInfo =  MarketData.GetItemInfo(item_id);
+                ItemInfoDB itemInfo =  ItemInfoDB.GetItemInfo(item_id);
 
                 if (marketData == null || itemInfo == null)
                 {
@@ -75,7 +75,7 @@ namespace GilGoblin.Tests
                     = MarketData.GetMarketDataBulk(fetchIDList, world_id, true);
                 foreach (MarketDataDB dataDb in marketDataList)
                 {
-                    infoList.Add(MarketData.GetItemInfo(item_id));
+                    infoList.Add(ItemInfoDB.GetItemInfo(item_id));
                 }
 
                 if (infoList.Count == 0 || marketDataList.Count == 0)

@@ -41,7 +41,7 @@ namespace GilGoblin.Finance
 
         public static ItemInfoDB GetItemInfo(int item_id)
         {
-            return MarketData.GetItemInfo(item_id);
+            return ItemInfoDB.GetItemInfo(item_id);
         }
         public static int GetVendorCost(int item_id)
         {
@@ -83,11 +83,12 @@ namespace GilGoblin.Finance
             {
                 if (item_id == 0 || world_id == 0){ throw new ParameterException(); }
 
+                List<RecipeDB> recipeDBList = new List<RecipeDB>();
+                List<RecipeDB> recipesFetched = new List<RecipeDB>();
                 ItemDB itemDb = ItemDB.GetItemDataDB(item_id, world_id);
-                if (itemDb == null) { return errorReturn; }
-
-                List<RecipeDB> recipesFound = new List<RecipeDB>();
-                foreach (RecipeDB recipe in itemDb.recipes)
+                if (itemDb != null) { recipeDBList = itemDb.recipes; }
+                
+                foreach (RecipeDB recipe in recipeDBList)
                 {
                     if (recipe == null) { continue; }
                     int recipe_id = recipe.recipe_id;
@@ -99,11 +100,11 @@ namespace GilGoblin.Finance
                         Log.Error("Error fetching recipe id: {recipe_id}.", recipe_id);
                         continue;
                     }
-                    recipesFound.Add(thisRecipe.convertToDB());
+                    recipesFetched.Add(thisRecipe.convertToDB());
                 }
-                if (recipesFound.Count != 0)
+                if (recipesFetched.Count != 0)
                 {
-                    DatabaseAccess.SaveRecipes(recipesFound).GetAwaiter().GetResult();
+                    DatabaseAccess.SaveRecipes(recipesFetched).GetAwaiter().GetResult();
                 }
 
                 //TODO: check tree traversal here for crafting cost 
@@ -116,7 +117,7 @@ namespace GilGoblin.Finance
             }
             catch (Exception ex)
             {
-                Log.Error("Failed to fetch the crafting cost for item_id: {item_id} world_id: {world_id}. {NewLine} Error message: {message}", item_id, world_id, ex.Message);
+                Log.Error("Failed to fetch the crafting cost for item_id: {item_id} world_id: {world_id}. {NewLine} Error message: {ex.Message}", item_id, world_id, ex.Message);
                 return errorReturn;
             }
             

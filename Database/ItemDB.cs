@@ -23,9 +23,36 @@ namespace GilGoblin.Database
         public int worldId { get; set; }
         public MarketDataDB marketData { get; set; }
         public ItemInfoDB itemInfo { get; set; }
-        public List<RecipeDB> recipes { get; set; } = new List<RecipeDB>();        
+        public List<RecipeDB> recipes { get; set; } = new List<RecipeDB>();
 
-        public ItemDB( ) { }
+        public ItemDB() { }
+
+        public ItemDB(int itemID, int worldID)
+        {
+            this.itemId = itemID;
+            this.worldId = worldID;
+            this.marketData = new MarketDataDB(itemID, worldID);
+            this.itemInfo = ItemInfoDB.GetItemInfo(itemID);
+
+            if (this.itemInfo.fullRecipes != null)
+            {
+                recipes.AddRange(this.itemInfo.fullRecipes);
+            }
+            else
+            {
+                try
+                {
+                    Log.Debug("Looking to find the recipes here since they were not found from the item info's full recipes");
+                    //recipes = RecipeDB.FetchRecipe(marketData.)
+                }
+
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to fetch the recipes while constructing the item object.{NewLine} Error: {message}.", ex.Message);
+                }
+
+            }
+        }
 
         /// <summary>
         /// Searches the database for a bulk list of items given their ID & world
@@ -33,27 +60,67 @@ namespace GilGoblin.Database
         /// <param name="itemIDList"></param>A List of integers to represent item ID
         /// <param name="worldId"></param>the world ID for world-specific data (ie: market price)
         /// <returns></returns>
-        public static List<ItemDB> GetItemDataDBBulk(List<int> itemIDList, int worldId)
+        public static List<ItemDB> GetItemDBBulk(List<int> itemIDList, int worldId)
         {
+            if (worldId == 0 || itemIDList == null || itemIDList.Count == 0)
+            {
+                Log.Error("Trying to get item data with missing parameters.");
+                return null;
+            }
             try
             {
-                ItemDBContext ItemDBContext = new ItemDBContext();
+                ItemDBContext context = new ItemDBContext();
+                List<ItemDB> returnList = new List<ItemDB>();
 
-                List<ItemDB> exists = ItemDBContext.data
+                List<ItemDB> exists = context.data
                         .Where(t => (t.worldId == worldId &&
                                      itemIDList.Contains(t.itemId)))
-                        //.Include(t => t.marketData.listings)
+                        .Include(t => t.marketData.listings)
+                        .Include(t => t.recipes)
+                        .Include(t => t.itemInfo)
                         .ToList();
-                if (exists != null) { return exists; }
-                List<ItemDB> newData = new List<ItemDB>();
-                foreach (int thisID in itemIDList) {
+                if (exists != null &&
+                    exists.Count > 0)
+                {
+                    if (exists.Count == itemIDList.Count)
+                    {
+                        //Everything has been found, return results
+                        context.UpdateRange(exists);
+                        returnList = exists;
+                    }
+                    else
+                    {
+                        returnList.AddRange(exists);
+                        IEnumerable<ItemDB> itemFetch = returnList.Except(exists);
 
-                    ItemInfoDB itemInfo = MarketDataWeb.GetItemInfo(thisID);         
+                        //Non-existent entries are added to the tracker
+                        foreach (ItemDB newItem in returnList)
+                        {
+                            if (newItem != null)
+                            {
+                                returnList.Add(newItem);
+                                context.AddAsync<ItemDB>(newItem);
+                            }
+                        }
+                    }
                 }
-                //ItemDBContext.itemInfoData.AddRangeAsync(newData);
-                ItemDBContext.SaveChangesAsync();
+                else
+                {
+                    foreach(int newItemID in itemIDList)
+                    {
+                        ItemDB newItem = new ItemDB(newItemID, worldId);
+                        if (newItem != null)
+                        {
+                            context.AddAsync<ItemDB>(newItem);
+                        }
+                    }
+                }
 
-                return null;
+                
+            
+                context.SaveChangesAsync();
+
+                return returnList;
             }
             catch (Exception ex)
             {
@@ -85,7 +152,7 @@ namespace GilGoblin.Database
         {
             List<int> itemIDList = new List<int>();
             itemIDList.Add(item_id);
-            return ItemDB.GetItemDataDBBulk(itemIDList, world_id).FirstOrDefault();
+            return ItemDB.GetItemDBBulk(itemIDList, world_id).First();
         }
 
     }
@@ -119,6 +186,8 @@ namespace GilGoblin.Database
             modelBuilder.Entity<ItemDB>().Property(t => t.itemId);
             modelBuilder.Entity<ItemDB>().Property(t => t.worldId);
 
+
+            //TODO: here this might need to be removed
             //modelBuilder.Entity<ItemDB>().Property(t => t.itemInfo);
             //modelBuilder.Entity<ItemDB>().Property(t => t.marketData);
             //modelBuilder.Entity<ItemDB>().HasMany(t => t.recipes);
@@ -158,7 +227,7 @@ namespace GilGoblin.Database
 
             // Database format for the recipe
             modelBuilder.Entity<RecipeDB>().ToTable("RecipeDB");
-            modelBuilder.Entity<RecipeDB>().HasKey(t => t.recipe_id);            
+            modelBuilder.Entity<RecipeDB>().HasKey(t => t.recipe_id);
             modelBuilder.Entity<RecipeDB>().Property(t => t.result_quantity);
             modelBuilder.Entity<RecipeDB>().Property(t => t.icon_id);
             modelBuilder.Entity<RecipeDB>().Property(t => t.target_item_id);
