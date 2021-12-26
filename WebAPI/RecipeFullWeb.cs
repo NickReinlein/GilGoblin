@@ -118,6 +118,11 @@ namespace GilGoblin.WebAPI
             db.result_quantity = this.result_quantity;
             db.CanHq = this.CanHq;
             db.CanQuickSynth = this.CanQuickSynth;
+            foreach (Ingredient ingredient in this.ingredients)
+            {
+                if (ingredient == null) {  continue; }
+                db.ingredients.Add(ingredient);
+            }
             return db;
         }
     }

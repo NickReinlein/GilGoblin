@@ -1,6 +1,8 @@
 ﻿using GilGoblin.WebAPI;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +16,8 @@ namespace GilGoblin.Database
 
         public ItemInfoDB() : base() { }
 
-        public ItemInfoDB(ItemInfoWeb web) : base() 
-        { 
+        public ItemInfoDB(ItemInfoWeb web) : base()
+        {
             this.itemID = web.itemID;
             this.name = web.name;
             this.description = web.description;
@@ -26,9 +28,9 @@ namespace GilGoblin.Database
 
             if (web.recipeHeader != null)
             {
-                foreach(ItemRecipeHeaderAPI header in web.recipeHeader)
+                foreach (ItemRecipeHeaderAPI header in web.recipeHeader)
                 {
-                    RecipeFullWeb thisRecipe 
+                    RecipeFullWeb thisRecipe
                         = RecipeFullWeb.FetchRecipe(header.recipe_id).GetAwaiter().GetResult();
                     if (thisRecipe != null)
                     {
@@ -38,11 +40,48 @@ namespace GilGoblin.Database
             }
         }
 
-        public static ItemInfoDB GetItemInfo(int item_id)
+        public static ItemInfoDB GetItemInfo(int itemID)
         {
-            //TODO: later this needs to be doneDatabase.DatabaseAccess.GetMarketDataDB
-            // and probably move to a new namespace or class
-            ItemInfoWeb web = MarketDataWeb.FetchItemInfo(item_id).GetAwaiter().GetResult();
+            ItemInfoDB db;
+            try
+            {
+                db = GetItemInfoDB(itemID);
+            }
+            catch (Exception) { db = null; }
+            try
+            {
+                if (db == null)
+                {
+                    db = FetchItemInfo(itemID);
+                }
+                return db;
+            }
+            catch (Exception ex) {
+                Log.Error("Failed to get or fetch item info for item {itemID} with message: {message}", itemID, ex.Message);
+            return null;
+            }
+        }
+
+        public static ItemInfoDB GetItemInfoDB(int itemID)
+        {
+            if (itemID == 0) { return null; }
+
+            ItemDBContext context = new ItemDBContext();
+            try
+            {
+                ItemInfoDB exist = context.itemInfoData
+                    .Where(t => (t.itemID == itemID))
+                    .Include(t => t.fullRecipes)
+                    .FirstOrDefault();
+                return exist;
+            }
+            catch(Exception) { return null; }                        
+        }
+
+        public static ItemInfoDB FetchItemInfo(int itemID)
+        {
+            
+            ItemInfoWeb web = MarketDataWeb.FetchItemInfo(itemID).GetAwaiter().GetResult();
             if (web == null) { return null; }
             ItemInfoDB db = new ItemInfoDB(web);
             return db;

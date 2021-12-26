@@ -21,18 +21,18 @@ namespace GilGoblin.Tests
         {
             try
             {
-                MarketDataDB marketData = MarketData.GetMarketData(item_id, world_id);
+                MarketDataDB marketData = MarketDataDB.GetMarketDataSingle(item_id, world_id);
                 ItemInfoDB itemInfo =  ItemInfoDB.GetItemInfo(item_id);
 
                 if (marketData == null || itemInfo == null)
                 {
                     throw new Exception("Market data or item info not found");
                 }
-                int marketPrice = marketData.average_price;
+                float marketPrice = marketData.averagePrice;
                 Log.Information("Final market price: " + marketPrice);
                 int vendorPrice = itemInfo.vendor_price;
                 Log.Information("Vendor price: " + vendorPrice);
-                int profit = marketPrice - vendorPrice;
+                int profit = (int)marketPrice - vendorPrice;
                 Log.Information("Estimated profit: " + profit);
 
                 string success_message = "failure.";
@@ -62,7 +62,8 @@ namespace GilGoblin.Tests
             try
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
+                    .MinimumLevel.Information() 
+                    // TODO :Change logging to something less verbose for prod
                     .WriteTo.Console()  
                     .WriteTo.File("logs/test.txt")
                     .CreateLogger();
@@ -94,6 +95,7 @@ namespace GilGoblin.Tests
                     Cost.GetCraftingCost(id, world_id);
                 }
 
+                DatabaseAccess.Save();
                 DatabaseAccess.Disconnect();
                 Log.Information("Application ended successfully.");
                 Log.CloseAndFlush();

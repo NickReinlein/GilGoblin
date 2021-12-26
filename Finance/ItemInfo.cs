@@ -9,7 +9,7 @@ namespace GilGoblin.WebAPI
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [ForeignKey("itemId")]
+        [ForeignKey("itemID")]
         [InverseProperty("ItemDB")]
         public int itemID { get; set; }
         public string name { get; set; }

@@ -78,10 +78,24 @@ namespace GilGoblin.Database
                 ItemDBContext ItemDBContext = new ItemDBContext();
                 ItemDBContext.Database.EnsureCreatedAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Debug("Database startup did not succed: {message}", ex.Message);
                 return;
+            }
+        }
+
+
+        public static void Save()
+        {
+            try
+            {
+                ItemDBContext context = new ItemDBContext();
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug("Database save did not succed! Message: {message}", ex.Message);
             }
         }
 
@@ -103,50 +117,61 @@ namespace GilGoblin.Database
             {
                 try
                 {
-                    ItemDBContext ItemDBContext = new ItemDBContext();
+                    HashSet<int> itemIDList = new HashSet<int>();
+                    foreach (MarketDataDB marketData in marketDataList)
+                    {
+                        if (marketData != null)
+                        {
+                            itemIDList.Add(marketData.itemID);
+                        }
+                    }
 
-                    //TODO!
-                    List<MarketDataDB> exists = null;
-                    //    = ItemDBContext.data.
-                            //.Where(t => t..All(
-                            //      (x => recipeIDList.Contains(x.recipe_id))))
-                            //.ToList();
-                            //.Where(t => (t.marketData.world_id == t.world_id &&
-                            //             t.item_id == t.item_id))
+                    if (itemIDList.Count == 0 )
+                    {
+                        Log.Error("Could not save market data due to missing item ID and world ID list.");
+                        return 0;
+                    }
 
-                            //.Include(t => t.listings)
-                            //.ToList();
+                    ItemDBContext context = new ItemDBContext();
+                    
+                    List<ItemDB> itemDBExists = context.data
+                        .Where(t => (marketDataList.All(x => itemIDList.Contains(x.itemID))))
+                            .Include(t => t.marketData)
+                            .Include(t => t.fullRecipes)
+                            .Include(t => t.itemInfo)
+                            .ToList();
+                    List<MarketDataDB> exists = new List<MarketDataDB>();
 
-
-                    if (exists == null)
+                    if (itemDBExists == null)
                     {
                         //New entries, add to entity tracker     
-                        await ItemDBContext.AddRangeAsync(marketDataList);
+                        await context.AddRangeAsync(marketDataList);
                     }
                     else
                     {
+
                         //Existing entries get updated
                         foreach (MarketDataDB exist in exists)
                         {
                             //Existing entry
-                            exist.average_price = exist.average_price;
+                            exist.averagePrice = exist.averagePrice;
                             exist.listings = exist.listings;
-                            ItemDBContext.Update<MarketDataDB>(exist);
+                            context.Update<MarketDataDB>(exist);
                         }
                         //Non-existent entries are added to the tracker
                         foreach (MarketDataDB newData in marketDataList)
                         {
                             var thisExists = exists
-                                .Find(t => t.item_id == newData.item_id &&
-                                           t.world_id == newData.world_id);
+                                .Find(t => t.itemID == newData.itemID &&
+                                           t.worldID == newData.worldID);
                             if (thisExists == null)
                             {
-                                await ItemDBContext.AddAsync<MarketDataDB>(newData);
+                                await context.AddAsync<MarketDataDB>(newData);
                             }
                         }
                     }
 
-                    return await ItemDBContext.SaveChangesAsync(); ;
+                    return await context.SaveChangesAsync(); ;
 
                 }
                 catch (Exception ex)
@@ -165,21 +190,26 @@ namespace GilGoblin.Database
             {
                 ItemDBContext ItemDBContext = new ItemDBContext();
 
-                ItemDB exists = ItemDBContext.data
-                    .FindAsync(marketData.item_id, marketData.world_id).GetAwaiter().GetResult();
+                ItemDB itemExists = ItemDBContext.data
+                    .FindAsync(marketData.itemID, marketData.worldID).GetAwaiter().GetResult();
 
-                if (exists == null)
+                if (itemExists == null)
                 {
                     //New entry, add to entity tracker
                     await ItemDBContext.AddAsync<MarketDataDB>(marketData);
                 }
                 else
                 {
+                    // TODO: verify if this match works with object
+                    // and find in list
+                    MarketDataDB exists = itemExists.marketData
+                        .Find(t => t.itemID == marketData.itemID &&
+                                   t.worldID == marketData.worldID);
                     //Existing entry
-                    exists.marketData.last_updated = DateTime.Now;
-                    exists.marketData.average_price = marketData.average_price;
-                    exists.marketData.listings = marketData.listings;
-                    ItemDBContext.Update<ItemDB>(exists);
+                    exists.lastUpdated = DateTime.Now;
+                    exists.averagePrice = marketData.averagePrice;
+                    exists.listings = marketData.listings;
+                    ItemDBContext.Update<ItemDB>(itemExists);
                 }
                 int success = 0;
                 if (saveToDB) { success = await ItemDBContext.SaveChangesAsync(); }
@@ -198,7 +228,7 @@ namespace GilGoblin.Database
 
 
 
-        public static Task<int> SaveRecipes(List<RecipeFullWeb> recipesWeb)
+        public static Task<int> SaveRecipe(List<RecipeFullWeb> recipesWeb)
         {
             List<RecipeDB> recipeDBs = new List<RecipeDB>();
             foreach (RecipeFullWeb web in recipesWeb)
@@ -229,12 +259,9 @@ namespace GilGoblin.Database
                 {
                     ItemDBContext context = new ItemDBContext();
                     List<RecipeDB> existentRecipes = new List<RecipeDB>();
-                    //await context.Database.EnsureCreatedAsync();
-                    // TODO: ensure the Startup is called & enough...
-                    //       this should be redundant
 
                     List<ItemDB> itemsDB = context.data
-                            .Where(t => t.recipes.All(
+                            .Where(t => t.fullRecipes.All(
                                   (x => recipeIDList.Contains(x.recipe_id))))
                             .ToList();
                     if (itemsDB == null)
@@ -249,22 +276,22 @@ namespace GilGoblin.Database
                         //TODO: improve this... with LINQ?
                         foreach (ItemDB existentDBEntry in itemsDB)
                         {
-                            existentRecipes.AddRange(existentDBEntry.recipes);
-                            foreach (RecipeDB existentRecipe in existentDBEntry.recipes)
-                            {                                
+                            existentRecipes.AddRange(existentDBEntry.fullRecipes);
+                            foreach (RecipeDB existentRecipe in existentDBEntry.fullRecipes)
+                            {
                                 await context.AddAsync<RecipeDB>(existentRecipe);
                             }
                         }
 
-                        IEnumerable<RecipeDB> saveMeList 
-                            = recipesToSave.Except(existentRecipes);                    
+                        IEnumerable<RecipeDB> saveMeList
+                            = recipesToSave.Except(existentRecipes);
                         //Non-existent entries are added to the tracker
                         foreach (RecipeDB saveRecipe in saveMeList)
                         {
                             if (saveRecipe != null)
                             {
                                 await context.AddAsync<RecipeDB>(saveRecipe);
-                            }       
+                            }
                         }
                     }
 
@@ -278,7 +305,7 @@ namespace GilGoblin.Database
                     {
                         //Maybe the database doesn't exist yet or not found
                         //Either way, we can return null -> it is not on the database
-                        
+
                         return 0;
                     }
                     else

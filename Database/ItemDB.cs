@@ -16,27 +16,24 @@ namespace GilGoblin.Database
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Key]
-        public int itemId { get; set; }
+        public int itemID { get; set; }
 
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [Key]
-        public int worldId { get; set; }
-        public MarketDataDB marketData { get; set; }
         public ItemInfoDB itemInfo { get; set; }
-        public List<RecipeDB> recipes { get; set; } = new List<RecipeDB>();
+        public List<MarketDataDB> marketData { get; set; } = new List<MarketDataDB>();
+        public List<RecipeDB> fullRecipes { get; set; } = new List<RecipeDB>();
 
         public ItemDB() { }
 
         public ItemDB(int itemID, int worldID)
         {
-            this.itemId = itemID;
-            this.worldId = worldID;
-            this.marketData = new MarketDataDB(itemID, worldID);
+            this.itemID = itemID;
+            MarketDataDB marketData = MarketDataDB.GetMarketDataSingle(itemID, worldID);
+            this.marketData.Add(marketData);
             this.itemInfo = ItemInfoDB.GetItemInfo(itemID);
 
-            if (this.itemInfo.fullRecipes != null)
+            if (this.itemInfo != null && this.itemInfo.fullRecipes.Count > 0)
             {
-                recipes.AddRange(this.itemInfo.fullRecipes);
+                this.fullRecipes = this.itemInfo.fullRecipes.ToList();
             }
             else
             {
@@ -52,6 +49,10 @@ namespace GilGoblin.Database
                 }
 
             }
+
+            ItemDBContext context = new ItemDBContext();
+            context.Add(this);
+            context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -72,11 +73,12 @@ namespace GilGoblin.Database
                 ItemDBContext context = new ItemDBContext();
                 List<ItemDB> returnList = new List<ItemDB>();
 
+                //The property or navigation 'marketData' cannot be added to the entity type 'ItemDB' because a property or navigation with the same name already exists on entity type 'ItemDB'.'
+
                 List<ItemDB> exists = context.data
-                        .Where(t => (t.worldId == worldId &&
-                                     itemIDList.Contains(t.itemId)))
-                        .Include(t => t.marketData.listings)
-                        .Include(t => t.recipes)
+                        .Where(t => itemIDList.Contains(t.itemID))
+                        .Include(t => t.marketData)
+                        .Include(t => t.fullRecipes)
                         .Include(t => t.itemInfo)
                         .ToList();
                 if (exists != null &&
@@ -101,24 +103,20 @@ namespace GilGoblin.Database
                                 returnList.Add(newItem);
                                 context.AddAsync<ItemDB>(newItem);
                             }
-                        }
+                        }                        
                     }
+                    context.SaveChangesAsync();
                 }
-                else
-                {
-                    foreach(int newItemID in itemIDList)
-                    {
-                        ItemDB newItem = new ItemDB(newItemID, worldId);
-                        if (newItem != null)
-                        {
-                            context.AddAsync<ItemDB>(newItem);
-                        }
-                    }
-                }
+                //else //Does not exist, so we have to fetch it
+                //{
 
-                
-            
-                context.SaveChangesAsync();
+                //    List<ItemDB> fetchList = new List<ItemDB>();
+                //    fetchList = FetchItemDBBulk(itemIDList, worldId);
+                //    if (fetchList.Count > 0)
+                //    {
+                //        context.AddRange(fetchList);
+                //    }
+                //}
 
                 return returnList;
             }
@@ -145,21 +143,105 @@ namespace GilGoblin.Database
         /// <summary>
         /// Searches the database for MarketData (average market price, vendor price, etc)
         /// </summary>
-        /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
-        /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
+        /// <param name="itemID"></param>item ID (ie: 5057 for Copper Ingot)
+        /// <param name="worldID"></param>world ID (ie: 34 for Brynhildr)
         /// <returns></returns>
-        public static ItemDB GetItemDataDB(int item_id, int world_id)
+        public static ItemDB GetItemDBSingle(int itemID, int worldID)
         {
             List<int> itemIDList = new List<int>();
-            itemIDList.Add(item_id);
+            itemIDList.Add(itemID);
+            ItemDB returnItem = null;
+
             try
             {
-                ItemDB returnItem = ItemDB.GetItemDBBulk(itemIDList, world_id).First();
+                List<ItemDB> list = ItemDB.GetItemDBBulk(itemIDList, worldID);
+                if (list.Count > 0)
+                {
+                    returnItem = list.First();
+                }
                 return returnItem;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return null;
+            }
+        }
+
+        public static List<ItemDB> FetchItemDBBulk(List<int> itemIDList, int worldId)
+        {
+            List<ItemDB> returnList = new List<ItemDB>();
+
+            foreach (int itemID in itemIDList)
+            {
+                ItemDB itemDB = new ItemDB(itemID, worldId);
+                if (itemDB != null) { returnList.Add(itemDB); }
+            }
+
+            return returnList;
+        }
+        public static ItemDB FetchItemDBSingle(int itemID, int worldId)
+        {
+            try
+            {
+                ItemDB fetchMe = null;
+                List<int> IDAsList = new List<int>();
+                IDAsList.Add(itemID);
+
+                List<ItemDB> itemList = FetchItemDBBulk(IDAsList, worldId);
+                if (itemList.Count > 0) {
+                    fetchMe = itemList[0];
+                }
+
+                if (fetchMe == null)
+                {
+                    throw new Exception("Nothing returned from the FetchItemDBBulk() method.");
+                }
+                ItemDBContext context = new ItemDBContext();
+                context.Add(fetchMe);
+                return fetchMe;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to get itemDB in FetchItemDBSingle() for item {itemID} world {worldID} with message: {message}", itemID, worldId, ex.Message);
+                return null;
+            }
+        }
+
+        // Try with the database first, then if it fails we use the web API
+        public static MarketDataDB GetMarketData(int itemID, int worldID)
+        {
+            ItemDB itemDB;
+            MarketDataDB returnData;
+            //Does it exist in the database? Is it stale?
+            try
+            {
+                itemDB = GetItemDBSingle(itemID, worldID);
+                if (itemDB != null)
+                {
+                    //Found, stop & return
+                    returnData = itemDB.marketData.First(t => t.worldID == worldID);
+                    return returnData;
+                }
+            }
+            catch (Exception)
+            {
+                // Not found in the database
+                itemDB = null;
+            }
+
+            try
+            {
+                // Not on database, fetch with the web api
+                MarketDataWeb marketDataWeb
+                    = MarketDataWeb.FetchMarketData(itemID, worldID).GetAwaiter().GetResult();
+                MarketDataDB newData = new MarketDataDB(marketDataWeb);
+                returnData = newData;
+                return returnData;
             }
             catch(Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error("failed to fetch the market data via API for item {itemID}, world {worldID} with message {mesage}", itemID, worldID, ex.Message);
                 return null;
             }
         }
@@ -171,7 +253,6 @@ namespace GilGoblin.Database
         public DbSet<MarketDataDB> marketData { get; set; }
         public DbSet<ItemInfoDB> itemInfoData { get; set; }
         public DbSet<RecipeDB> recipeData { get; set; }
-
 
         private SqliteConnection conn;
 
@@ -189,26 +270,21 @@ namespace GilGoblin.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /* General market data for an item ID & world (with calculated average price and more) */
+            /* General data for an item ID -- A main accessor class */
             modelBuilder.Entity<ItemDB>().ToTable("ItemDB");
-            modelBuilder.Entity<ItemDB>().Property(t => t.itemId);
-            modelBuilder.Entity<ItemDB>().Property(t => t.worldId);
+            modelBuilder.Entity<ItemDB>().HasKey(t => t.itemID);
+            modelBuilder.Entity<ItemDB>().HasOne(t => t.itemInfo);
+            modelBuilder.Entity<ItemDB>().HasMany(t => t.marketData);
+            modelBuilder.Entity<ItemDB>().HasMany(t => t.fullRecipes);
 
-
-            //TODO: here this might need to be removed
-            //modelBuilder.Entity<ItemDB>().Property(t => t.itemInfo);
-            //modelBuilder.Entity<ItemDB>().Property(t => t.marketData);
-            //modelBuilder.Entity<ItemDB>().HasMany(t => t.recipes);
-
-            modelBuilder.Entity<ItemDB>().HasKey(t => new { t.itemId, t.worldId });
 
             /* General market data for an item ID & world (with calculated average price and more) */
             modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.average_price);
-            modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.itemID);
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.worldID);
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.lastUpdated);
+            modelBuilder.Entity<MarketDataDB>().Property(t => t.averagePrice);
+            modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.itemID, t.worldID });
             modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
 
             // All the market listings for an item & world ID
@@ -222,7 +298,7 @@ namespace GilGoblin.Database
             modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
 
             //// Item info from the db with full recipes
-            modelBuilder.Entity<ItemInfoDB>().ToTable("ItemInfo");
+            modelBuilder.Entity<ItemInfoDB>().ToTable("ItemInfoDB");
             modelBuilder.Entity<ItemInfoDB>().HasKey(t => t.itemID);
             modelBuilder.Entity<ItemInfoDB>().Property(t => t.name);
             modelBuilder.Entity<ItemInfoDB>().Property(t => t.iconID);
@@ -230,10 +306,10 @@ namespace GilGoblin.Database
             modelBuilder.Entity<ItemInfoDB>().Property(t => t.vendor_price);
             modelBuilder.Entity<ItemInfoDB>().Property(t => t.stack_size);
             modelBuilder.Entity<ItemInfoDB>().Property(t => t.gatheringID);
-            //modelBuilder.Entity<ItemInfoDB>().HasMany(t => t.fullRecipes);
+            modelBuilder.Entity<ItemInfoDB>().HasMany(t => t.fullRecipes);
 
 
-            // Database format for the recipe
+            // Database format for the full recipes
             modelBuilder.Entity<RecipeDB>().ToTable("RecipeDB");
             modelBuilder.Entity<RecipeDB>().HasKey(t => t.recipe_id);
             modelBuilder.Entity<RecipeDB>().Property(t => t.result_quantity);

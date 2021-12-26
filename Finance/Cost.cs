@@ -16,7 +16,7 @@ namespace GilGoblin.Finance
         /// the crafted cost of the recipe's base items, using tree traversal
         /// </summary>
         /// <returns></returns>
-        public static int CalculateBaseCost(int item_id, int world_id, 
+        public static int CalculateBaseCost(int item_id, int world_id,
             bool ignore_limited_vendor_qty = false)
         {
             int base_cost;
@@ -76,58 +76,68 @@ namespace GilGoblin.Finance
         /// calculate the total cost of crafting the item
         /// </summary>
         /// <returns></returns>
-        public static int GetCraftingCost(int item_id, int world_id)
-        {            
+        public static int GetCraftingCost(int itemID, int worldID)
+        {
             int errorReturn = 999999;
             try
             {
-                if (item_id == 0 || world_id == 0){ throw new ParameterException(); }
+                if (itemID == 0 || worldID == 0) { throw new ParameterException(); }
 
-                List<RecipeDB> recipeDBList = new List<RecipeDB>();
+                ItemDB itemDB;
                 List<RecipeDB> recipesFetched = new List<RecipeDB>();
-                ItemDB itemDb = ItemDB.GetItemDataDB(item_id, world_id);
-                if (itemDb == null)
+
+                try
                 {
-                    
-                }                
-                else 
-                { 
-                    recipeDBList = itemDb.recipes; 
+                    itemDB = ItemDB.GetItemDBSingle(itemID, worldID);
+                }
+                catch (Exception)
+                {
+                    Log.Debug("No entry in ItemDB found for: {item_id} world_id: {world_id}. {NewLine}", itemID, worldID);
+                    itemDB = null;
                 }
 
-                foreach (RecipeDB recipe in recipeDBList)
+                if (itemDB == null)
                 {
-                    if (recipe == null) { continue; }
-                    int recipe_id = recipe.recipe_id;
-                    if (recipe_id == 0) { continue; }
-                    RecipeFullWeb thisRecipe
-                        = RecipeFullWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
-                    if (thisRecipe == null)
+                    itemDB = ItemDB.FetchItemDBSingle(itemID, worldID);
+                    if (itemDB == null)
                     {
-                        Log.Error("Error fetching recipe id: {recipe_id}.", recipe_id);
-                        continue;
+                        throw new Exception();
                     }
-                    recipesFetched.Add(thisRecipe.convertToDB());
                 }
-                if (recipesFetched.Count != 0)
+                
+                if (itemDB != null && itemDB.fullRecipes.Count >0) 
                 {
-                    DatabaseAccess.SaveRecipes(recipesFetched).GetAwaiter().GetResult();
+                    DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
                 }
+
+                //foreach (RecipeDB recipe in itemDB.fullRecipes)
+                //{
+                //    if (recipe == null) { continue; }
+                //    int recipe_id = recipe.recipe_id;
+                //    if (recipe_id == 0) { continue; }
+                //    RecipeFullWeb thisRecipe
+                //        = RecipeFullWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
+                //    if (thisRecipe == null)
+                //    {
+                //        Log.Error("Error fetching recipe id: {recipe_id}.", recipe_id);
+                //        continue;
+                //    }
+                //    recipesFetched.Add(thisRecipe.convertToDB());
+                //}
+                //if (recipesFetched.Count != 0)
+                //{
+                //    DatabaseAccess.SaveRecipes(recipesFetched).GetAwaiter().GetResult();
+                //}
 
                 //TODO: check tree traversal here for crafting cost 
                 return 7777;
             }
-            catch (ParameterException)
-            {
-                Log.Error("No entry in ItemDB found for: {item_id} world_id: {world_id}. {NewLine}", item_id, world_id);
-                return errorReturn;
-            }
             catch (Exception ex)
             {
-                Log.Error("Failed to fetch the crafting cost for item_id: {item_id} world_id: {world_id}. {NewLine} Error message: {ex.Message}", item_id, world_id, ex.Message);
+                Log.Error("Failed to fetch the crafting cost for item_id: {item_id} world_id: {world_id}. {NewLine} Error message: {ex.Message}", itemID, worldID, ex.Message);
                 return errorReturn;
             }
-            
+
         }
     }
 }

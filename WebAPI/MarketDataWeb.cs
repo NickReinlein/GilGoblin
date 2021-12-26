@@ -16,20 +16,21 @@ namespace GilGoblin.WebAPI
     /// </summary>
     internal class MarketDataWeb : MarketData
     {
+        public float averagePrice { get; set; }
         public ICollection<MarketListingWeb> listings { get; set; } = new List<MarketListingWeb>();
 
         public static int listingsToRead = 20; //TODO increase for production use
 
-        public int getPrice(bool update = false)
+        public float getPrice(bool update = false)
         {
-            if (update || average_price == 0)
+            if (update || averagePrice == 0)
             {
                 //Re-calculate the price and update
                 CalculateAveragePrice(listings);
             }
 
             //Return what we do have regardless of updates
-            return average_price;
+            return averagePrice;
         }
 
         [JsonConstructor]
@@ -40,9 +41,9 @@ namespace GilGoblin.WebAPI
             {
                 throw new ArgumentException("Incorrect/missing parameters/arguments coming from the web response.");
             }
-            this.item_id = itemID;
-            this.world_id = worldId;
-            this.last_updated
+            this.itemID = itemID;
+            this.worldID = worldId;
+            this.lastUpdated
                 = GeneralFunctions.ConvertLongUnixMillisecondsToDateTime(lastUploadTime);
 
             this.listings = listings.OrderByDescending(i => i.timestamp).Take(listingsToRead).ToList();
@@ -53,7 +54,12 @@ namespace GilGoblin.WebAPI
                 listing.world_id = worldId;
             }
 
-            this.average_price = CalculateAveragePrice(this.listings);
+            if (this.listings.Count > 0)
+            {
+                this.averagePrice = (int) getPrice();
+            }
+            else { this.averagePrice = 0; }
+            
         }
 
         public static async Task<MarketDataWeb> FetchMarketData(int item_id, int world_id)
@@ -65,8 +71,8 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize from JSON to the object
-                MarketDataWeb market_Data = JsonConvert.DeserializeObject<MarketDataWeb>(content.Content.ReadAsStringAsync().Result);
-                return market_Data;
+                MarketDataWeb marketData = JsonConvert.DeserializeObject<MarketDataWeb>(content.Content.ReadAsStringAsync().Result);
+                return marketData;
             }
             catch (Exception ex)
             {
