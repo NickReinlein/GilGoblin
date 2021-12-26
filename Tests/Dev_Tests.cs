@@ -57,7 +57,7 @@ namespace GilGoblin.Tests
         }
 
         //Bulk test
-        public static async void test_Fetch_Market_Prices()
+        public static void test_Fetch_Market_Prices()
         {
             try
             {
@@ -70,24 +70,24 @@ namespace GilGoblin.Tests
                 Log.Debug("Application started.");
 
                 List<int> fetchIDList = new List<int> { item_id, 5114, 5106 };
-                List<ItemInfo> infoList = new List<ItemInfo>();
-                List<MarketDataDB> marketDataList 
-                    = MarketData.GetMarketDataBulk(fetchIDList, world_id, true);
-                foreach (MarketDataDB dataDb in marketDataList)
-                {
-                    infoList.Add(ItemInfoDB.GetItemInfo(item_id));
-                }
+                //List<ItemInfo> infoList = new List<ItemInfo>();
+                //List<MarketDataDB> marketDataList 
+                //    = MarketData.GetMarketDataBulk(fetchIDList, world_id, true);
+                //foreach (MarketDataDB dataDb in marketDataList)
+                //{
+                //    infoList.Add(ItemInfoDB.GetItemInfo(item_id));
+                //}
 
-                if (infoList.Count == 0 || marketDataList.Count == 0)
-                {
-                    throw new Exception("Market data or item info not found");
-                }
+                //if (infoList.Count == 0 || marketDataList.Count == 0)
+                //{
+                //    throw new Exception("Market data or item info not found");
+                //}
 
-                string success_message = "failure.";
-                int db_success = await DatabaseAccess.SaveMarketDataBulk(marketDataList);
-                if (db_success > 0) { success_message = "sucess."; }
-                Log.Information("Database save was a " + success_message);
-                Log.Information(db_success + " entries saved to the database.");
+                //string success_message = "failure.";
+                //int db_success = await DatabaseAccess.SaveMarketDataBulk(marketDataList);
+                //if (db_success > 0) { success_message = "sucess."; }
+                //Log.Information("Database save was a " + success_message);
+                //Log.Information(db_success + " entries saved to the database.");
 
                 foreach (int id in fetchIDList) 
                 {

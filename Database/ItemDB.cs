@@ -152,9 +152,17 @@ namespace GilGoblin.Database
         {
             List<int> itemIDList = new List<int>();
             itemIDList.Add(item_id);
-            return ItemDB.GetItemDBBulk(itemIDList, world_id).First();
+            try
+            {
+                ItemDB returnItem = ItemDB.GetItemDBBulk(itemIDList, world_id).First();
+                return returnItem;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.Message);
+                return null;
+            }
         }
-
     }
 
     internal class ItemDBContext : DbContext

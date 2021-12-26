@@ -44,7 +44,7 @@ namespace GilGoblin.Database
             // and probably move to a new namespace or class
             ItemInfoWeb web = MarketDataWeb.FetchItemInfo(item_id).GetAwaiter().GetResult();
             if (web == null) { return null; }
-            ItemInfoDB db = new ItemInfoDB();
+            ItemInfoDB db = new ItemInfoDB(web);
             return db;
         }
     }

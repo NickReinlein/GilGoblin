@@ -106,12 +106,16 @@ namespace GilGoblin.Database
                     ItemDBContext ItemDBContext = new ItemDBContext();
 
                     //TODO!
-                    List<MarketDataDB> exists = new List<MarketDataDB>();
-                    //List<MarketDataDB> exists = ItemDBContext.data
-                    //        .Where(t => (t.marketData.world_id == t.world_id && 
-                    //                     t.item_id == t.item_id))
-                    //        .Include(t => t.listings)
-                    //        .ToList();
+                    List<MarketDataDB> exists = null;
+                    //    = ItemDBContext.data.
+                            //.Where(t => t..All(
+                            //      (x => recipeIDList.Contains(x.recipe_id))))
+                            //.ToList();
+                            //.Where(t => (t.marketData.world_id == t.world_id &&
+                            //             t.item_id == t.item_id))
+
+                            //.Include(t => t.listings)
+                            //.ToList();
 
 
                     if (exists == null)

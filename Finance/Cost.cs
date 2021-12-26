@@ -86,8 +86,15 @@ namespace GilGoblin.Finance
                 List<RecipeDB> recipeDBList = new List<RecipeDB>();
                 List<RecipeDB> recipesFetched = new List<RecipeDB>();
                 ItemDB itemDb = ItemDB.GetItemDataDB(item_id, world_id);
-                if (itemDb != null) { recipeDBList = itemDb.recipes; }
-                
+                if (itemDb == null)
+                {
+                    
+                }                
+                else 
+                { 
+                    recipeDBList = itemDb.recipes; 
+                }
+
                 foreach (RecipeDB recipe in recipeDBList)
                 {
                     if (recipe == null) { continue; }

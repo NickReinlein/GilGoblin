@@ -38,10 +38,23 @@ namespace GilGoblin.Database
             try
             {
                 MarketDataWeb marketDataWeb
-                    = MarketDataWeb.FetchMarketData(item_id, world_id).GetAwaiter().GetResult();
+                    = MarketDataWeb.FetchMarketData(itemID, worldID).GetAwaiter().GetResult();
                 if (marketDataWeb == null)
                 {
                     throw new Functions.DBStatusException();
+                }
+                else 
+                {
+                    this.item_id = marketDataWeb.item_id;
+                    this.world_id = marketDataWeb.world_id;
+                    this.average_price = marketDataWeb.average_price;
+                    this.last_updated = marketDataWeb.last_updated;
+
+                    //Convert each market listing from the web format to DB
+                    foreach (MarketListingWeb web in marketDataWeb.listings)
+                    {
+                        listings.Add(web.ConvertToDB());
+                    }
                 }
             }
             catch (Exception)
