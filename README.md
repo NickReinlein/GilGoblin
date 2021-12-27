@@ -13,20 +13,20 @@ GilGoblin is a pre-alpha status project to calculate profitable items in FFXIV. 
 
 This means having the functionality to perform the following: 
 
-* Estimating the average price from the market board listings (partial implementation complete)
-* Getting the vendor cost, if available via vendor (complete)
-* Getting the recipe to craft if the item can be crafted 
-* Calculating the cost to craft from the components, based on the recipe in the previous step
-* The minimum price of the vendor or the crafting cost or the market board is used to calculate a minimum cost (partial implementation complete)
-* The profitability per item is calculated based on the difference of current market prices and the estimated minimum cost (partial implementation complete)
+* Estimating the average price from the market board listings (60%)
+* Getting the vendor cost, if available via vendor (100%)
+* Getting the recipe to craft if the item can be crafted (70%) 
+* Calculating the cost to craft from the components, based on the recipe in the previous step (40%)
+* The minimum price of the vendor or the crafting cost or the market board is used to calculate a minimum cost (80%)
+* The profitability per item is calculated based on the difference of current market prices and the estimated minimum cost (70%)
 
 In the immediate future (Dec 2021->Feb 2022), the features to be implemented are:
 
-* A database to store prices locally and only update periodically when staleness exceeds a threshold (complete)
-* A binary tree to navigate crafting components
-* A front-end UI to display results
-* Basic filtering. Initially by Gil-generating activity (crafting, gathering, quests, etc.)
-* Logging (complete)
+* A database to store prices locally and only update periodically when staleness exceeds a threshold (100%)
+* A binary tree to navigate crafting components (40%)
+* A front-end UI to display results (0%)
+* Basic filtering. Initially by Gil-generating activity (crafting, gathering, quests, etc.) (0%)
+* Logging (100%)
 
 ## Later
 
