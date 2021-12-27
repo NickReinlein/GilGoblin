@@ -57,10 +57,10 @@ namespace GilGoblin.WebAPI
 
             if (this.listings.Count > 0)
             {
-                this.averagePrice = (int) getPrice();
+                this.averagePrice = (int)getPrice();
             }
             else { this.averagePrice = 0; }
-            
+
         }
 
         public static async Task<MarketDataWeb> FetchMarketData(int item_id, int world_id)
@@ -90,7 +90,8 @@ namespace GilGoblin.WebAPI
                 HttpClient client = new HttpClient();
                 //https://universalis.app/api/34/5114%2C5106%2C5057
                 string url = String.Concat("https://universalis.app/api/", world_id, "/");
-                foreach (int itemID in itemIDs) {
+                foreach (int itemID in itemIDs)
+                {
                     url += String.Concat(itemID + "%2C");
                 }
                 var content = await client.GetAsync(url);
@@ -98,8 +99,9 @@ namespace GilGoblin.WebAPI
 
                 //Deserialize from JSON to the object
                 MarketDataWebBulk bulkData = JsonConvert.DeserializeObject<MarketDataWebBulk>(json);
-                if (bulkData != null) { 
-                    list = bulkData.items; 
+                if (bulkData != null)
+                {
+                    list = bulkData.items;
                 }
                 return list;
             }
@@ -109,28 +111,6 @@ namespace GilGoblin.WebAPI
                 return null;
             }
         }
-
-        public static async Task<ItemInfoWeb> FetchItemInfo(int item_id)
-        {
-            try
-            {
-                HttpClient client = new HttpClient();
-                string url = "https://xivapi.com/Item/" + item_id;
-                var content = await client.GetAsync(url);
-
-                //Deserialize & Cast from JSON to the object
-                ItemInfoWeb item_info = JsonConvert.DeserializeObject<ItemInfoWeb>(
-                    content.Content.ReadAsStringAsync().Result);
-                DatabaseAccess.context.Add(item_info);
-                return item_info;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to convert item info from JSON:" + ex.Message);
-                return null;
-            }
-        }
-
     }
 
     internal class MarketDataWebBulk

@@ -105,30 +105,10 @@ namespace GilGoblin.Finance
                     }
                 }
                 
-                if (itemDB != null && itemDB.fullRecipes.Count >0) 
+                if (itemDB != null && itemDB.fullRecipes.Count > 0) 
                 {
                     DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
                 }
-
-                //foreach (RecipeDB recipe in itemDB.fullRecipes)
-                //{
-                //    if (recipe == null) { continue; }
-                //    int recipe_id = recipe.recipe_id;
-                //    if (recipe_id == 0) { continue; }
-                //    RecipeFullWeb thisRecipe
-                //        = RecipeFullWeb.FetchRecipe(recipe_id).GetAwaiter().GetResult();
-                //    if (thisRecipe == null)
-                //    {
-                //        Log.Error("Error fetching recipe id: {recipe_id}.", recipe_id);
-                //        continue;
-                //    }
-                //    recipesFetched.Add(thisRecipe.convertToDB());
-                //}
-                //if (recipesFetched.Count != 0)
-                //{
-                //    DatabaseAccess.SaveRecipes(recipesFetched).GetAwaiter().GetResult();
-                //}
-
                 //TODO: check tree traversal here for crafting cost 
                 return 7777;
             }

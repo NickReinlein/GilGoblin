@@ -37,17 +37,7 @@ namespace GilGoblin.Database
             }
             else
             {
-                try
-                {
-                    Log.Debug("Looking to find the recipes here since they were not found from the item info's full recipes");
-                    //recipes = RecipeDB.FetchRecipe(marketData.)
-                }
-
-                catch (Exception ex)
-                {
-                    Log.Error("Failed to fetch the recipes while constructing the item object.{NewLine} Error: {message}.", ex.Message);
-                }
-
+                this.fullRecipes.Clear();
             }
 
             DatabaseAccess.context.Add(this);

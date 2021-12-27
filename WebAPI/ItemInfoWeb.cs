@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using GilGoblin.Database;
+using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +25,7 @@ namespace GilGoblin.WebAPI
         /// <param name="stackSize">Stack size of the sale</param>
         /// <param name="gatheringID">ID of the gathering class</param>       
         /// <param name="priceMid">Price for selling to vendor</param>
-        /// <param name="Recipes">Crafting recipes to make the item (represented by a Tree data structure)</param>
+        /// <param name="Recipes">Short recipe list that contains the recipe ID</param>
         /// 
         [JsonConstructor]
         public ItemInfoWeb(int ID, int IconID, string Name, string Description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeHeaderAPI> Recipes)
@@ -34,10 +37,37 @@ namespace GilGoblin.WebAPI
             this.vendor_price = priceMid;
             this.stack_size = stackSize;
             this.gatheringID = gatheringID;
-            if (Recipes != null) { this.recipeHeader = Recipes; }
-            else { this.recipeHeader.Clear(); }
+            
+            if (Recipes != null) 
+            { 
+                this.recipeHeader = Recipes; 
+            }
+            else { 
+                this.recipeHeader.Clear(); 
+            }
 
+        }
+        public static async Task<ItemInfoWeb> FetchItemInfo(int item_id)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                string url = "https://xivapi.com/Item/" + item_id;
+                var content = await client.GetAsync(url);
+
+                //Deserialize & Cast from JSON to the object
+                ItemInfoWeb item_info = JsonConvert.DeserializeObject<ItemInfoWeb>(
+                    content.Content.ReadAsStringAsync().Result);
+                DatabaseAccess.context.Add(item_info);
+                return item_info;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to convert item info from JSON:" + ex.Message);
+                return null;
+            }
         }
 
     }
+
 }

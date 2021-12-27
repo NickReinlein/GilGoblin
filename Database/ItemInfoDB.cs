@@ -82,7 +82,7 @@ namespace GilGoblin.Database
         public static ItemInfoDB FetchItemInfo(int itemID)
         {
             
-            ItemInfoWeb web = MarketDataWeb.FetchItemInfo(itemID).GetAwaiter().GetResult();
+            ItemInfoWeb web = ItemInfoWeb.FetchItemInfo(itemID).GetAwaiter().GetResult();
             if (web == null) { return null; }
             ItemInfoDB db = new ItemInfoDB(web);
             return db;
