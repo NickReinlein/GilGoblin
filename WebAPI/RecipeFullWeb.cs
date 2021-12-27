@@ -98,8 +98,9 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                RecipeFullWeb recipe = JsonConvert.DeserializeObject<RecipeFullWeb>(content.Content.ReadAsStringAsync().Result);
-                return recipe;
+                RecipeFullWeb fullRecipe = JsonConvert.DeserializeObject<RecipeFullWeb>(content.Content.ReadAsStringAsync().Result);
+                DatabaseAccess.context.Add(fullRecipe);
+                return fullRecipe;
             }
             catch (Exception ex)
             {

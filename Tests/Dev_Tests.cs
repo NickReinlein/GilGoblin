@@ -62,8 +62,8 @@ namespace GilGoblin.Tests
             try
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information() 
-                    // TODO :Change logging to something less verbose for prod
+                    .MinimumLevel.Debug()
+                    // PROD: reduce verbosity
                     .WriteTo.Console()  
                     .WriteTo.File("logs/test.txt")
                     .CreateLogger();
@@ -92,7 +92,9 @@ namespace GilGoblin.Tests
 
                 foreach (int id in fetchIDList) 
                 {
-                    Cost.GetCraftingCost(id, world_id);
+                    Log.Debug("Calculating crafting cost for item {itemID} on world {worldID}", id, world_id);
+                    int cost = Cost.GetCraftingCost(id, world_id);
+                    Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, world_id, cost);
                 }
 
                 DatabaseAccess.Save();

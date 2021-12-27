@@ -18,7 +18,8 @@ namespace GilGoblin.Database
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
 
-        public static SqliteConnection _conn;
+        public static SqliteConnection _conn { get; set; }
+        public static ItemDBContext context { get; private set; }
 
         internal static SqliteConnection Connect()
         {
@@ -75,8 +76,8 @@ namespace GilGoblin.Database
         {
             try
             {
-                ItemDBContext ItemDBContext = new ItemDBContext();
-                ItemDBContext.Database.EnsureCreatedAsync();
+                context = new ItemDBContext();
+                context.Database.EnsureCreatedAsync();
             }
             catch (Exception ex)
             {
@@ -85,12 +86,10 @@ namespace GilGoblin.Database
             }
         }
 
-
         public static void Save()
         {
             try
             {
-                ItemDBContext context = new ItemDBContext();
                 context.SaveChanges();
             }
             catch (Exception ex)
@@ -131,11 +130,9 @@ namespace GilGoblin.Database
                         Log.Error("Could not save market data due to missing item ID and world ID list.");
                         return 0;
                     }
-
-                    ItemDBContext context = new ItemDBContext();
                     
                     List<ItemDB> itemDBExists = context.data
-                        .Where(t => (marketDataList.All(x => itemIDList.Contains(x.itemID))))
+                            .Where(t => (marketDataList.All(x => itemIDList.Contains(x.itemID))))
                             .Include(t => t.marketData)
                             .Include(t => t.fullRecipes)
                             .Include(t => t.itemInfo)
@@ -188,15 +185,13 @@ namespace GilGoblin.Database
         {
             try
             {
-                ItemDBContext ItemDBContext = new ItemDBContext();
-
-                ItemDB itemExists = ItemDBContext.data
+                ItemDB itemExists = context.data
                     .FindAsync(marketData.itemID, marketData.worldID).GetAwaiter().GetResult();
 
                 if (itemExists == null)
                 {
                     //New entry, add to entity tracker
-                    await ItemDBContext.AddAsync<MarketDataDB>(marketData);
+                    await context.AddAsync<MarketDataDB>(marketData);
                 }
                 else
                 {
@@ -209,10 +204,10 @@ namespace GilGoblin.Database
                     exists.lastUpdated = DateTime.Now;
                     exists.averagePrice = marketData.averagePrice;
                     exists.listings = marketData.listings;
-                    ItemDBContext.Update<ItemDB>(itemExists);
+                    context.Update<ItemDB>(itemExists);
                 }
                 int success = 0;
-                if (saveToDB) { success = await ItemDBContext.SaveChangesAsync(); }
+                if (saveToDB) { success = await context.SaveChangesAsync(); }
                 return success;
             }
             catch (Exception ex)
@@ -223,9 +218,6 @@ namespace GilGoblin.Database
                 return 0;
             }
         }
-
-
-
 
 
         public static Task<int> SaveRecipe(List<RecipeFullWeb> recipesWeb)
@@ -257,7 +249,7 @@ namespace GilGoblin.Database
                 }
                 try
                 {
-                    ItemDBContext context = new ItemDBContext();
+                    ItemDBContext context = DatabaseAccess.context;
                     List<RecipeDB> existentRecipes = new List<RecipeDB>();
 
                     List<ItemDB> itemsDB = context.data
@@ -279,7 +271,7 @@ namespace GilGoblin.Database
                             existentRecipes.AddRange(existentDBEntry.fullRecipes);
                             foreach (RecipeDB existentRecipe in existentDBEntry.fullRecipes)
                             {
-                                await context.AddAsync<RecipeDB>(existentRecipe);
+                                context.Update(existentRecipe);
                             }
                         }
 

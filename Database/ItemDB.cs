@@ -50,9 +50,7 @@ namespace GilGoblin.Database
 
             }
 
-            ItemDBContext context = new ItemDBContext();
-            context.Add(this);
-            context.SaveChangesAsync();
+            DatabaseAccess.context.Add(this);
         }
 
         /// <summary>
@@ -70,16 +68,14 @@ namespace GilGoblin.Database
             }
             try
             {
-                ItemDBContext context = new ItemDBContext();
+                ItemDBContext context = DatabaseAccess.context;
                 List<ItemDB> returnList = new List<ItemDB>();
-
-                //The property or navigation 'marketData' cannot be added to the entity type 'ItemDB' because a property or navigation with the same name already exists on entity type 'ItemDB'.'
 
                 List<ItemDB> exists = context.data
                         .Where(t => itemIDList.Contains(t.itemID))
                         .Include(t => t.marketData)
                         .Include(t => t.fullRecipes)
-                        .Include(t => t.itemInfo)
+                        .Include(t => t.itemInfo)                     
                         .ToList();
                 if (exists != null &&
                     exists.Count > 0)
@@ -197,7 +193,7 @@ namespace GilGoblin.Database
                 {
                     throw new Exception("Nothing returned from the FetchItemDBBulk() method.");
                 }
-                ItemDBContext context = new ItemDBContext();
+                ItemDBContext context = DatabaseAccess.context;
                 context.Add(fetchMe);
                 return fetchMe;
             }
@@ -321,7 +317,7 @@ namespace GilGoblin.Database
 
 
             // The full recipe from the web
-            modelBuilder.Entity<RecipeFullWeb>().ToTable("RecipeWeb");
+            modelBuilder.Entity<RecipeFullWeb>().ToTable("RecipeFullWeb");
             modelBuilder.Entity<RecipeFullWeb>().HasKey(t => t.recipe_id);
             modelBuilder.Entity<RecipeFullWeb>().Property(t => t.result_quantity).IsRequired();
             modelBuilder.Entity<RecipeFullWeb>().Property(t => t.icon_id);
@@ -341,7 +337,6 @@ namespace GilGoblin.Database
             modelBuilder.Entity<ItemInfoWeb>().Property(t => t.stack_size);
             modelBuilder.Entity<ItemInfoWeb>().Property(t => t.gatheringID);
             modelBuilder.Entity<ItemInfoWeb>().HasMany(t => t.recipeHeader);
-
 
             //The abbreviated recipe with only 3 properties in the market data
             modelBuilder.Entity<ItemRecipeHeaderAPI>().ToTable("ItemRecipeHeaderAPI");

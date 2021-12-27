@@ -36,6 +36,7 @@ namespace GilGoblin.WebAPI
             this.gatheringID = gatheringID;
             if (Recipes != null) { this.recipeHeader = Recipes; }
             else { this.recipeHeader.Clear(); }
+
         }
 
     }

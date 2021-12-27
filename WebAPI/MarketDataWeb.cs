@@ -1,4 +1,5 @@
 ﻿
+using GilGoblin.Database;
 using GilGoblin.Finance;
 using GilGoblin.Functions;
 using Newtonsoft.Json;
@@ -120,6 +121,7 @@ namespace GilGoblin.WebAPI
                 //Deserialize & Cast from JSON to the object
                 ItemInfoWeb item_info = JsonConvert.DeserializeObject<ItemInfoWeb>(
                     content.Content.ReadAsStringAsync().Result);
+                DatabaseAccess.context.Add(item_info);
                 return item_info;
             }
             catch (Exception ex)

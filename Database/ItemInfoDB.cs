@@ -34,6 +34,7 @@ namespace GilGoblin.Database
                         = RecipeFullWeb.FetchRecipe(header.recipe_id).GetAwaiter().GetResult();
                     if (thisRecipe != null)
                     {
+
                         this.fullRecipes.Add(thisRecipe.convertToDB());
                     }
                 }
@@ -66,7 +67,7 @@ namespace GilGoblin.Database
         {
             if (itemID == 0) { return null; }
 
-            ItemDBContext context = new ItemDBContext();
+            ItemDBContext context = DatabaseAccess.context;
             try
             {
                 ItemInfoDB exist = context.itemInfoData

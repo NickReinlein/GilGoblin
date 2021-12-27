@@ -151,6 +151,7 @@ namespace GilGoblin.Database
                         listReturn.Add(new MarketDataDB(web));
                     }
                 }
+                DatabaseAccess.context.AddRange(listReturn);
                 return listReturn;
             }
         }
