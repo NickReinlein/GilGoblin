@@ -13,6 +13,11 @@ namespace GilGoblin.Functions
         public T _value { get; set; }
         public List<TreeNode<T>> _children { get; set; } = new List<TreeNode<T>>();
 
+        /// <summary>
+        /// Empty constructor expects to set the value later
+        /// </summary>
+        public TreeNode(){ }
+
         public TreeNode(T value)
         {
             _value = value;
@@ -37,7 +42,8 @@ namespace GilGoblin.Functions
 
         public TreeNode<T> InsertChild(TreeNode<T> parent, T value)
         {
-            var node = new TreeNode<T>(value) { Parent = parent }; parent._children.Add(node);
+            var node = new TreeNode<T>(value) { Parent = parent }; 
+            parent._children.Add(node);
             return node;
         }
 

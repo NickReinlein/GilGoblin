@@ -15,7 +15,7 @@ namespace GilGoblin.Finance
         public int recipe_id { get; set; }
 
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [ForeignKey("itemId")]
+        [ForeignKey("itemID")]
         [InverseProperty("ItemDB")]
         public int target_item_id { get; set; }
         public int icon_id { get; set; }

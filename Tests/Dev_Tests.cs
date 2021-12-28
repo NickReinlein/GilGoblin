@@ -71,7 +71,7 @@ namespace GilGoblin.Tests
 
                 Log.Debug("Application started.");
 
-                List<int> fetchIDList 
+                List<int> fetchIDList   
                     = new List<int> { 2499, 34680, 5057, 5114, 5106 };
 
                 foreach (int id in fetchIDList) 
