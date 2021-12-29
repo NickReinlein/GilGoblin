@@ -41,6 +41,11 @@ namespace GilGoblin.Database
             }
         }
 
+        /// <summary>
+        /// General get function: Get from DB then if that fails, fetch from web
+        /// </summary>
+        /// <param name="itemID">The itemd's ID</param>
+        /// <returns></returns>
         public static ItemInfoDB GetItemInfo(int itemID)
         {
             ItemInfoDB db;
@@ -86,6 +91,26 @@ namespace GilGoblin.Database
             if (web == null) { return null; }
             ItemInfoDB db = new ItemInfoDB(web);
             return db;
+        }
+
+        public static bool IsCraftable(int itemID)
+        {
+            List<RecipeDB> recipeList = GetCraftingList(itemID);
+            if (recipeList != null && recipeList.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static List<RecipeDB> GetCraftingList(int itemID)
+        {
+            ItemInfoDB itemInfo = GetItemInfo(itemID);
+            if (itemInfo != null && itemInfo.fullRecipes.Count() > 0) 
+            { 
+                return itemInfo.fullRecipes.ToList(); 
+            }
+            return null;
         }
     }
 

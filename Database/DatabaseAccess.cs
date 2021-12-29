@@ -94,7 +94,7 @@ namespace GilGoblin.Database
             }
             catch (Exception ex)
             {
-                Log.Debug("Database save did not succed! Message: {message}", ex.Message);
+                Log.Debug("Database save did not succeed! Message: {message}", ex.Message);
             }
         }
 
@@ -195,12 +195,15 @@ namespace GilGoblin.Database
                 }
                 else
                 {
-                    // TODO: verify if this match works with object
-                    // and find in list
                     MarketDataDB exists = itemExists.marketData
                         .Find(t => t.itemID == marketData.itemID &&
                                    t.worldID == marketData.worldID);
                     //Existing entry
+                    if (exists == null) 
+                    {
+                        Log.Error("No market data while saving for item {itemID} & world {worldID}.", itemExists.itemInfo.itemID, marketData.worldID);
+                        return 0;
+                    }
                     exists.lastUpdated = DateTime.Now;
                     exists.averagePrice = marketData.averagePrice;
                     exists.listings = marketData.listings;

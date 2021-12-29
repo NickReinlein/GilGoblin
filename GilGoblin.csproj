@@ -55,8 +55,10 @@
     <Compile Include="Database\DatabaseAccess.cs" />
     <Compile Include="Database\MarketListingDB.cs" />
     <Compile Include="Database\RecipeDB.cs" />
+    <Compile Include="Finance\Ingredient.cs" />
     <Compile Include="Finance\MarketListing.cs" />
     <Compile Include="Finance\Recipe.cs" />
+    <Compile Include="Finance\RecipeIngredientBreakdown.cs" />
     <Compile Include="Finance\RecipeNode.cs" />
     <Compile Include="Functions\Exceptions.cs" />
     <Compile Include="Functions\TreeNode.cs" />

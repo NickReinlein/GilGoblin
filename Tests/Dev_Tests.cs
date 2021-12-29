@@ -15,10 +15,12 @@ namespace GilGoblin.Tests
         // Item ID for Copper Ingot: 5057
         // Item ID for Chondrite Magitek Sword: 34680
         // Item ID for Bomb Frypan: 2499
+        // Item ID for Iron Scale Mail: 3057
+        // Item ID for Heavy Darksteel Armor: 3256
 
         public const string world_name = "Brynhildr";
         public const int world_id = 34;
-        public const int item_id = 5057;
+        public const int item_id = 3057;
         public static async void test_Fetch_Market_Price()
         {
             try
@@ -71,14 +73,20 @@ namespace GilGoblin.Tests
 
                 Log.Debug("Application started.");
 
-                List<int> fetchIDList   
-                    = new List<int> { 2499, 34680, 5057, 5114, 5106 };
+                List<int> fetchIDList
+                    = new List<int> { 2499, 34680, 5057, 5114, 5106, 3256 };                    
 
                 foreach (int id in fetchIDList) 
                 {
-                    Log.Debug("Calculating crafting cost for item {itemID} on world {worldID}", id, world_id);
                     int cost = Cost.GetCraftingCost(id, world_id);
                     Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, world_id, cost);
+                    int averagePrice = Price.getAveragePrice(id, world_id);
+                    Log.Debug("Calculated average price for item {itemID} on world {worldID} is: {price}", id, world_id, averagePrice);
+                    int baseCost = Cost.GetBaseCost(id, world_id);
+                    Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, world_id, baseCost);
+                    int profit = averagePrice - baseCost;
+                    Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, world_id, profit);
+
                 }
 
                 DatabaseAccess.Save();

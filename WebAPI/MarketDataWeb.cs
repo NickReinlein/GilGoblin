@@ -38,9 +38,14 @@ namespace GilGoblin.WebAPI
         public MarketDataWeb(int itemID, int worldId, long lastUploadTime,
                                ICollection<MarketListingWeb> listings) : base()
         {
-            if (itemID == 0 || worldId == 0 || lastUploadTime == 0 || listings == null || listings.Count == 0)
+            if (itemID == 0 || worldId == 0 || lastUploadTime == 0)
             {
                 throw new ArgumentException("Incorrect/missing parameters/arguments coming from the web response.");
+            }
+            if (listings == null || listings.Count == 0)
+            {
+                // This is logged for informational purposes; might be an error
+                Log.Information("No listings found for item {itemID} with world {worldID}.", itemID, worldId);
             }
             this.itemID = itemID;
             this.worldID = worldId;

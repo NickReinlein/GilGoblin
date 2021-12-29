@@ -22,6 +22,7 @@ namespace GilGoblin.Database
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             this.conn = DatabaseAccess.Connect();
+            optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseSqlite(this.conn);
         }
 

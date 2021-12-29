@@ -32,7 +32,7 @@ namespace GilGoblin.Database
                 }
             }
             this.lastUpdated = DateTime.Now;
-            this.averagePrice = (int) data.averagePrice;
+            this.averagePrice = (int)data.averagePrice;
             this.itemID = data.itemID;
             this.worldID = data.worldID;
         }
@@ -51,7 +51,7 @@ namespace GilGoblin.Database
                 {
                     this.itemID = marketDataWeb.itemID;
                     this.worldID = marketDataWeb.worldID;
-                    this.averagePrice = (int) marketDataWeb.averagePrice;
+                    this.averagePrice = (int)marketDataWeb.averagePrice;
                     this.lastUpdated = marketDataWeb.lastUpdated;
 
                     //Convert each market listing from the web format to DB
@@ -88,15 +88,15 @@ namespace GilGoblin.Database
             return returnMe;
         }
 
-            /// <summary>
-            /// Given a List<int> that represents the item_id, along with the world_id,
-            /// get the market data for each item and return it as a List
-            /// </summary>
-            /// <param name="dict"></param>A Dictionary<int,int> that represents the item_id and world_id
-            /// <returns></returns>
-            internal static List<MarketDataDB> GetMarketDataBulk(List<int> itemIDs, int world_ID, bool forceUpdate = false)
+        /// <summary>
+        /// Given a List<int> that represents the item_id, along with the world_id,
+        /// get the market data for each item and return it as a List
+        /// </summary>
+        /// <param name="dict"></param>A Dictionary<int,int> that represents the item_id and world_id
+        /// <returns></returns>
+        internal static List<MarketDataDB> GetMarketDataBulk(List<int> itemIDs, int world_ID, bool forceUpdate = false)
         {
-            if (world_ID == 0 || itemIDs == null || 
+            if (world_ID == 0 || itemIDs == null ||
                 itemIDs.Count == 0)
             {
                 Log.Error("Trying to get bulk market data with missing parameters.");
@@ -123,36 +123,46 @@ namespace GilGoblin.Database
                 //Trim the list of entries back from the database
                 //Return the ones that need to be fetched
                 //This should included stale data & ones new to the database
-                List<MarketDataDB> freshDataDB = new List<MarketDataDB>();
-                freshDataDB = filterFreshData(listDB);
-                List<int> itemIDFetchList = itemIDs;
-                foreach (MarketDataDB success in freshDataDB)
+                try
                 {
-                    listReturn.Add(success);
-                    itemIDFetchList.Remove(success.itemID);
-                }
-
-                Log.Debug("Number of entries to fetch by web: " + itemIDFetchList.Count);
-                List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
-                if (itemIDFetchList.Count == 1)
-                {
-                    int fetchSingle = (int)itemIDFetchList[0];
-                    listWeb.Add(MarketDataWeb.FetchMarketData(fetchSingle, world_ID)
-                        .GetAwaiter().GetResult());
-                }
-                if (itemIDFetchList.Count > 1)
-                {
-                    listWeb = MarketDataWeb.FetchMarketDataBulk(itemIDFetchList, world_ID).GetAwaiter().GetResult();
-                }
-                if (listWeb != null)
-                {
-                    foreach (MarketDataWeb web in listWeb)
+                    List<MarketDataDB> freshDataDB = new List<MarketDataDB>();
+                    freshDataDB = filterFreshData(listDB);
+                    List<int> itemIDFetchList = itemIDs;
+                    foreach (MarketDataDB success in freshDataDB)
                     {
-                        listReturn.Add(new MarketDataDB(web));
+                        listReturn.Add(success);
+                        itemIDFetchList.Remove(success.itemID);
                     }
+
+                    Log.Debug("Number of entries to fetch by web: " + itemIDFetchList.Count);
+                    List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
+                    if (itemIDFetchList.Count == 1)
+                    {
+                        int fetchSingle = (int)itemIDFetchList[0];
+                        listWeb.Add(MarketDataWeb.FetchMarketData(fetchSingle, world_ID)
+                            .GetAwaiter().GetResult());
+                    }
+                    else if (itemIDFetchList.Count > 1)
+                    {
+                        listWeb = MarketDataWeb.FetchMarketDataBulk(itemIDFetchList, world_ID).GetAwaiter().GetResult();
+                    }
+
+                    if (listWeb != null)
+                    {
+                        foreach (MarketDataWeb web in listWeb)
+                        {
+                            listReturn.Add(new MarketDataDB(web));
+                        }
+                    }
+                    //DatabaseAccess.context.AddRange(listReturn);
+                    return listReturn;
                 }
-                DatabaseAccess.context.AddRange(listReturn);
-                return listReturn;
+                catch (Exception ex) 
+                { 
+                    Log.Information(ex.Message);
+                    return null;
+                }
+                
             }
         }
 

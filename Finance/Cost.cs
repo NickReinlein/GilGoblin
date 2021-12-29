@@ -34,7 +34,7 @@ namespace GilGoblin.Finance
                 base_cost = crafting_cost;
             }
 
-            Log.Debug("For {item_id} in world {world_id}, base cost: {base_cost} from crafting: {crafting_cost} and vendor: {vendor_cost}");
+            Log.Debug("For {item_id} in world {world_id}, base cost: {base_cost} from crafting: {crafting_cost} and vendor: {vendor_cost}",item_id,world_id,base_cost, crafting_cost, vendor_cost);
 
             return base_cost;
         }
@@ -107,22 +107,23 @@ namespace GilGoblin.Finance
                     }
                 }
 
-                if (itemDB != null && itemDB.fullRecipes.Count > 0)
-                {
-                    DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
-                    RecipeList recipeList = createTree(itemDB, worldID);
-                    foreach (RecipeNode<RecipeDB> recipe in recipeList.list)
+                if (itemDB != null){
+                    if (itemDB.fullRecipes.Count > 0)
                     {
-                        // Calculate cost of the recipeNode
-                        int thisCost = GetRecipeCost(recipe._value, worldID);
-                        if (thisCost > craftingCost)
+                        DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
+
+                        RecipeIngredientBreakdown breakdown
+                            = GetRecipeBreakdown(itemDB.fullRecipes);
+                        foreach (Ingredient ingredient in breakdown.ingredients.Values)
                         {
-                            craftingCost = thisCost;
+                            int averagePrice = Price.getAveragePrice(itemID, worldID);
+                            craftingCost += ingredient.quantity * averagePrice;
                         }
-                        else
-                        {
-                            craftingCost = thisCost;
-                        }
+                    }
+                    else
+                    {
+                        // Cannot be crafted
+                        craftingCost = 0;
                     }
                 }
 
@@ -141,87 +142,94 @@ namespace GilGoblin.Finance
 
         }
 
-        protected static int GetRecipeCost(RecipeDB recipe, int worldID)
+        protected static RecipeIngredientBreakdown GetRecipeBreakdown(List<RecipeDB> fullRecipes)
         {
-            int cost = 0;
-            int errorReturn = 9999999;
-            RecipeNode<RecipeDB> recipeNode = createNode(recipe, worldID);
-            if (recipeNode != null)
-            {
+            if (fullRecipes == null || fullRecipes.Count == 0) { return null; }
+            RecipeIngredientBreakdown breakdown = new RecipeIngredientBreakdown(fullRecipes);
+            return breakdown;
+        }
+
+        //protected static int GetRecipeCost(RecipeDB recipe, int worldID)
+        //{
+        //    int cost = 0;
+        //    int errorReturn = 9999999;
+        //    RecipeNode<RecipeDB> recipeNode = createNode(recipe, worldID);
+        //    if (recipeNode != null)
+        //    {
                 
-            }
-            return errorReturn;
+        //    }
+        //    return errorReturn;
             
-        }
+        //}
 
-        /// <summary>
-        /// Each full crafting reicpe will have a RecipeNode object
-        /// to represent the tree. The returned list is a list of trees
-        /// with each tree/RecipeNode representing
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        protected static RecipeList createTree(ItemDB item, int worldID)
-        {
-            if (item == null || item.fullRecipes.Count == 0)
-            {
-                return null;
-            }
-            return createTree(item.fullRecipes, worldID);
-        }
+        ///// <summary>
+        ///// Each full crafting reicpe will have a RecipeNode object
+        ///// to represent the tree. The returned list is a list of trees
+        ///// with each tree/RecipeNode representing
+        ///// </summary>
+        ///// <param name="item"></param>
+        ///// <returns></returns>
+        //protected static RecipeList createTree(ItemDB item, int worldID)
+        //{
+        //    if (item == null || item.fullRecipes.Count == 0)
+        //    {
+        //        return null;
+        //    }
+        //    return createTree(item.fullRecipes, worldID);
+        //}
 
-        protected static RecipeList createTree(List<RecipeDB> list, int worldID)
-        {
-            RecipeList finalRecipeList = new RecipeList();
-            foreach (RecipeDB thisRecipe in list)
-            {
-                RecipeNode<RecipeDB> thisRecipeNode = createNode(thisRecipe, worldID);
-                if (thisRecipeNode != null)
-                {
-                    finalRecipeList.list.Add(thisRecipeNode);
-                }
-            }
+        //protected static RecipeList createTree(List<RecipeDB> list, int worldID)
+        //{
+        //    RecipeList finalRecipeList = new RecipeList();
+        //    foreach (RecipeDB thisRecipe in list)
+        //    {
+        //        RecipeNode<RecipeDB> thisRecipeNode = createNode(thisRecipe, worldID);
+        //        if (thisRecipeNode != null)
+        //        {
+        //            finalRecipeList.list.Add(thisRecipeNode);
+        //        }
+        //    }
 
-            return finalRecipeList;
-        }
+        //    return finalRecipeList;
+        //}
 
-        protected static RecipeNode<RecipeDB> createNode(RecipeDB recipe, int worldID)
-        {
-            if (recipe == null)
-            {
-                Log.Error("Error creating crafting tree for recipe {recipeID} with target item {targetItemID}.", recipe.recipe_id, recipe.target_item_id);
-                return null;
-            }
-            RecipeNode<RecipeDB> recipeNode = new RecipeNode<RecipeDB>(recipe);
-            foreach (Ingredient ingredient in recipe.ingredients)
-            {
-                RecipeNode<RecipeDB> ingredientRecipe = createNode(ingredient, worldID);
-                recipeNode.InsertChild(ingredientRecipe.Parent, ingredientRecipe._value);
-            }
+        //protected static RecipeNode<RecipeDB> createNode(RecipeDB recipe, int worldID)
+        //{
+        //    if (recipe == null)
+        //    {
+        //        Log.Error("Error creating crafting tree for recipe {recipeID} with target item {targetItemID}.", recipe.recipe_id, recipe.target_item_id);
+        //        return null;
+        //    }
+        //    RecipeNode<RecipeDB> recipeNode = new RecipeNode<RecipeDB>(recipe);
+        //    foreach (Ingredient ingredient in recipe.ingredients)
+        //    {
+        //        RecipeNode<RecipeDB> ingredientRecipe = createNode(ingredient, worldID);
+        //        recipeNode.InsertChild(ingredientRecipe.Parent, ingredientRecipe._value);
+        //    }
 
-            return recipeNode;
-        }
+        //    return recipeNode;
+        //}
 
-        protected static RecipeNode<RecipeDB> createNode(Ingredient ingredient, int worldID)
-        {
-            if (ingredient == null)
-            {
-                Log.Error("Error creating crafting tree for ingredients.");
-                return null;
-            }
+        //protected static RecipeNode<RecipeDB> createNode(Ingredient ingredient, int worldID)
+        //{
+        //    if (ingredient == null)
+        //    {
+        //        Log.Error("Error creating crafting tree for ingredients.");
+        //        return null;
+        //    }
 
-            try
-            {
-                ItemDB thisIngredientItem = ItemDB.GetItemDBSingle(ingredient.item_id, worldID);
-                var test = createTree(thisIngredientItem, worldID);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error creating crafting tree for ingredients. Message: {message}", ex.Message);
-                return null;
-            }
+        //    try
+        //    {
+        //        ItemDB thisIngredientItem = ItemDB.GetItemDBSingle(ingredient.item_id, worldID);
+        //        var test = createTree(thisIngredientItem, worldID);
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error("Error creating crafting tree for ingredients. Message: {message}", ex.Message);
+        //        return null;
+        //    }
 
-        }
+        //}
     }
 }
