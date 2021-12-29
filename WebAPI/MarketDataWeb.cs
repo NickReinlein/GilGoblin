@@ -12,9 +12,7 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.WebAPI
 {
-    /// <summary>
-    /// Here we map the market data coming via web API's.
-    /// </summary>
+    ///<summary> Here we map the market data coming via web API's. </summary>
     internal class MarketDataWeb : MarketData
     {
         public float averagePrice { get; set; }

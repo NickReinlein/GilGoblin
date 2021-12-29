@@ -59,9 +59,7 @@
     <Compile Include="Finance\MarketListing.cs" />
     <Compile Include="Finance\Recipe.cs" />
     <Compile Include="Finance\RecipeIngredientBreakdown.cs" />
-    <Compile Include="Finance\RecipeNode.cs" />
     <Compile Include="Functions\Exceptions.cs" />
-    <Compile Include="Functions\TreeNode.cs" />
     <Compile Include="Migrations\20211228153148_abct.cs" />
     <Compile Include="Migrations\20211228153148_abct.designer.cs">
       <DependentUpon>20211228153148_abct.cs</DependentUpon>

@@ -78,6 +78,7 @@ namespace GilGoblin.Tests
 
                 foreach (int id in fetchIDList) 
                 {
+                    Console.WriteLine();
                     int cost = Cost.GetCraftingCost(id, world_id);
                     Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, world_id, cost);
                     int averagePrice = Price.getAveragePrice(id, world_id);
@@ -86,7 +87,7 @@ namespace GilGoblin.Tests
                     Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, world_id, baseCost);
                     int profit = averagePrice - baseCost;
                     Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, world_id, profit);
-
+                    Console.WriteLine();
                 }
 
                 DatabaseAccess.Save();
