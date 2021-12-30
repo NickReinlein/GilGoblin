@@ -134,7 +134,7 @@ namespace GilGoblin.Database
                         itemIDFetchList.Remove(success.itemID);
                     }
 
-                    Log.Debug("Number of entries to fetch by web: " + itemIDFetchList.Count);
+                    Log.Information("Number of entries to fetch by web: " + itemIDFetchList.Count);
                     List<MarketDataWeb> listWeb = new List<MarketDataWeb>();
                     if (itemIDFetchList.Count == 1)
                     {

@@ -19,14 +19,14 @@ namespace GilGoblin.Tests
         // Item ID for Heavy Darksteel Armor: 3256
 
         public const string world_name = "Brynhildr";
-        public const int world_id = 34;
-        public const int item_id = 3057;
+        public const int defaultWorldID = 34;
+        public const int defaultItemID = 3057;
         public static async void test_Fetch_Market_Price()
         {
             try
             {
-                MarketDataDB marketData = MarketDataDB.GetMarketDataSingle(item_id, world_id);
-                ItemInfoDB itemInfo =  ItemInfoDB.GetItemInfo(item_id);
+                MarketDataDB marketData = MarketDataDB.GetMarketDataSingle(defaultItemID, defaultWorldID);
+                ItemInfoDB itemInfo =  ItemInfoDB.GetItemInfo(defaultItemID);
 
                 if (marketData == null || itemInfo == null)
                 {
@@ -45,7 +45,7 @@ namespace GilGoblin.Tests
                 Log.Information("Database save was a " + success_message);
 
                 //Test crafting cost calculation by tree traversal
-                int craftingCost = Cost.GetCraftingCost(item_id, world_id);
+                int craftingCost = Cost.GetCraftingCost(defaultItemID, defaultWorldID);
 
                 DatabaseAccess.Disconnect();
             }
@@ -74,19 +74,23 @@ namespace GilGoblin.Tests
                 Log.Debug("Application started.");
 
                 List<int> fetchIDList
-                    = new List<int> { 2499, 34680, 5057, 5114, 5106, 3256 };                    
+                    = new List<int> { 3057, 34680, 5057, 5114, 5106, 3256 };                    
 
                 foreach (int id in fetchIDList) 
                 {
                     Console.WriteLine();
-                    int cost = Cost.GetCraftingCost(id, world_id);
-                    Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, world_id, cost);
-                    int averagePrice = Price.getAveragePrice(id, world_id);
-                    Log.Debug("Calculated average price for item {itemID} on world {worldID} is: {price}", id, world_id, averagePrice);
-                    int baseCost = Cost.GetBaseCost(id, world_id);
-                    Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, world_id, baseCost);
+                    int cost = Cost.GetCraftingCost(id, defaultWorldID);
+                    Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, defaultWorldID, cost);
+                    int averagePrice = Price.getAveragePrice(id, defaultWorldID);
+                    Log.Debug("Calculated average price for item {itemID} on world {worldID} is: {price}", id, defaultWorldID, averagePrice);
+                    int vendorCost = Cost.GetVendorCost(id);
+                    Log.Debug("Vendor cost for item {itemID} is: {vendorCost}.",id,vendorCost);
+                    int baseCost = Cost.GetBaseCost(id, defaultWorldID);
+                    Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, baseCost);
+                    int minCost = Cost.GetMinCost(id,defaultWorldID);
+                    Log.Debug("Calculated min cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, minCost);
                     int profit = averagePrice - baseCost;
-                    Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, world_id, profit);
+                    Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, defaultWorldID, profit);
                     Console.WriteLine();
                 }
 

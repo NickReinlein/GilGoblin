@@ -17,26 +17,24 @@ namespace GilGoblin.Finance
         /// the crafted cost of the recipe's base items, using tree traversal
         /// </summary>
         /// <returns></returns>
-        public static int CalculateBaseCost(int item_id, int world_id,
+        public static int CalculateBaseCost(int itemID, int worldID,
             bool ignore_limited_vendor_qty = false)
         {
-            int base_cost;
-            int crafting_cost = GetCraftingCost(item_id, world_id);
-            int vendor_cost = GetVendorCost(item_id);
+            int baseCost;
+            int craftingCost = GetCraftingCost(itemID, worldID);
+            int vendorCost = GetVendorCost(itemID);
 
             // If the item is available at a vendor at a lower cost, use that instead
-            if (vendor_cost > 0 && !ignore_limited_vendor_qty)
+            if (vendorCost > 0 && !ignore_limited_vendor_qty)
             {
-                base_cost = (int)Math.Min(crafting_cost, vendor_cost);
+                baseCost = (int)Math.Min(craftingCost, vendorCost);
             }
             else
             {
-                base_cost = crafting_cost;
+                baseCost = craftingCost;
             }
 
-            Log.Debug("For {item_id} in world {world_id}, base cost: {base_cost} from crafting: {crafting_cost} and vendor: {vendor_cost}",item_id,world_id,base_cost, crafting_cost, vendor_cost);
-
-            return base_cost;
+            return baseCost;
         }
         ///
 
@@ -63,6 +61,13 @@ namespace GilGoblin.Finance
         {
             int base_cost = CalculateBaseCost(item_id, world_id);
             return base_cost;
+        }
+
+        public static int GetMinCost(int itemID, int worldID)
+        {
+            int baseCost = CalculateBaseCost(itemID, worldID);
+            int craftingCost = GetCraftingCost(itemID, worldID);
+            return Math.Min(baseCost, craftingCost);
         }
 
         /// <summary>
@@ -116,7 +121,7 @@ namespace GilGoblin.Finance
                     else
                     {
                         // Cannot be crafted
-                        craftingCost = 0;
+                        craftingCost = errorReturn;
                     }
                 }
 
