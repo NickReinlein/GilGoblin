@@ -16,12 +16,13 @@ namespace GilGoblin.Database
         public int Id { get; set; }
 
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [ForeignKey("item_id")]
-        [InverseProperty("MarketDataDB")]
+        [ForeignKey("itemId")]
+        [InverseProperty("ItemDB")]
         public int item_id { get; set; }
 
-        [ForeignKey("world_id")]
-        [InverseProperty("MarketDataDB")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [ForeignKey("worldId")]
+        [InverseProperty("ItemDB")]
         public int world_id { get; set; }
         public DateTime timestamp { get; set; }
 

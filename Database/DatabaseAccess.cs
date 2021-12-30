@@ -1,4 +1,5 @@
 ﻿using GilGoblin.Finance;
+using GilGoblin.WebAPI;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static GilGoblin.Database.RecipeDB;
 
 namespace GilGoblin.Database
 {
@@ -16,7 +18,8 @@ namespace GilGoblin.Database
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
 
-        public static SqliteConnection _conn;
+        public static SqliteConnection _conn { get; set; }
+        public static ItemDBContext context { get; private set; }
 
         internal static SqliteConnection Connect()
         {
@@ -40,13 +43,13 @@ namespace GilGoblin.Database
                 }
                 else
                 {
-                    Log.Error("Connection not open. State is: " + _conn.State.ToString());
+                    Log.Error("Connection not open. State is: {state}.", _conn.State);
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                Log.Error("failed connection: " + ex.Message);
+                Log.Error("failed connection:{message}.", ex.Message);
                 return null;
             }
         }
@@ -69,6 +72,32 @@ namespace GilGoblin.Database
 
         }
 
+        public static void Startup()
+        {
+            try
+            {
+                context = new ItemDBContext();
+                context.Database.EnsureCreatedAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug("Database startup did not succed: {message}", ex.Message);
+                return;
+            }
+        }
+
+        public static void Save()
+        {
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug("Database save did not succeed! Message: {message}", ex.Message);
+            }
+        }
+
         /// <summary>
         /// Saves a list of marketDataDB items (with listings) 
         /// This can be done in bulk much more efficiently but requires refactoring & testing
@@ -85,242 +114,207 @@ namespace GilGoblin.Database
             }
             else
             {
-
                 try
                 {
-                    MarketDataContext marketDataContext = new MarketDataContext();
-                    await marketDataContext.Database.EnsureCreatedAsync();
-
-                    List<MarketDataDB> exists = marketDataContext.data
-                            .Where(t => (t.world_id == t.world_id && t.item_id == t.item_id))
-                            .Include(t => t.listings)
-                            .ToList();
-
-
-                    if (exists == null)
+                    HashSet<int> itemIDList = new HashSet<int>();
+                    foreach (MarketDataDB marketData in marketDataList)
                     {
-                        //New entry, add to entity tracker
-                        //await marketDataContext.AddAsync<MarketDataDB>(marketData);)        
-                        await marketDataContext.AddRangeAsync(marketDataList);
+                        if (marketData != null)
+                        {
+                            itemIDList.Add(marketData.itemID);
+                        }
+                    }
+
+                    if (itemIDList.Count == 0 )
+                    {
+                        Log.Error("Could not save market data due to missing item ID and world ID list.");
+                        return 0;
+                    }
+                    
+                    List<ItemDB> itemDBExists = context.data
+                            .Where(t => (marketDataList.All(x => itemIDList.Contains(x.itemID))))
+                            .Include(t => t.marketData)
+                            .Include(t => t.fullRecipes)
+                            .Include(t => t.itemInfo)
+                            .ToList();
+                    List<MarketDataDB> exists = new List<MarketDataDB>();
+
+                    if (itemDBExists == null)
+                    {
+                        //New entries, add to entity tracker     
+                        await context.AddRangeAsync(marketDataList);
                     }
                     else
                     {
+
                         //Existing entries get updated
-
-                        //Redundant? done in the fetch:
-                        //MarketData.filterFreshData(exists);
-
                         foreach (MarketDataDB exist in exists)
                         {
                             //Existing entry
-                            exist.average_price = exist.average_price;
+                            exist.averagePrice = exist.averagePrice;
                             exist.listings = exist.listings;
-                            marketDataContext.Update<MarketDataDB>(exist);
+                            context.Update<MarketDataDB>(exist);
                         }
                         //Non-existent entries are added to the tracker
                         foreach (MarketDataDB newData in marketDataList)
                         {
                             var thisExists = exists
-                                .Find(t => t.item_id == newData.item_id &&
-                                           t.world_id == newData.world_id);
+                                .Find(t => t.itemID == newData.itemID &&
+                                           t.worldID == newData.worldID);
                             if (thisExists == null)
                             {
-                                await marketDataContext.AddAsync<MarketDataDB>(newData);
+                                await context.AddAsync<MarketDataDB>(newData);
                             }
                         }
                     }
 
-                    return await marketDataContext.SaveChangesAsync(); ;
+                    return await context.SaveChangesAsync(); ;
 
                 }
                 catch (Exception ex)
+                {
+                    Log.Error("Exception: {message}.", ex.Message);
+                    Log.Error("{NewLine}Inner exception: {innser}.", ex.InnerException);
+                    Disconnect();
+                    return 0;
+                }
+            }
+        }
+
+        internal static async Task<int> SaveMarketDataSingle(MarketDataDB marketData, bool saveToDB = true)
+        {
+            try
             {
-                Log.Error("Exception: " + ex.Message);
-                Log.Error("Inner exception: " + ex.InnerException);
+                ItemDB itemExists = context.data
+                    .FindAsync(marketData.itemID, marketData.worldID).GetAwaiter().GetResult();
+
+                if (itemExists == null)
+                {
+                    //New entry, add to entity tracker
+                    await context.AddAsync<MarketDataDB>(marketData);
+                }
+                else
+                {
+                    MarketDataDB exists = itemExists.marketData
+                        .Find(t => t.itemID == marketData.itemID &&
+                                   t.worldID == marketData.worldID);
+                    //Existing entry
+                    if (exists == null) 
+                    {
+                        Log.Error("No market data while saving for item {itemID} & world {worldID}.", itemExists.itemInfo.itemID, marketData.worldID);
+                        return 0;
+                    }
+                    exists.lastUpdated = DateTime.Now;
+                    exists.averagePrice = marketData.averagePrice;
+                    exists.listings = marketData.listings;
+                    context.Update<ItemDB>(itemExists);
+                }
+                int success = 0;
+                if (saveToDB) { success = await context.SaveChangesAsync(); }
+                return success;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Exception: {message}.", ex.Message);
+                Log.Error("Inner exception:{inner}.", ex.InnerException);
                 Disconnect();
                 return 0;
             }
         }
-    }
 
-    internal static async Task<int> SaveMarketDataSingle(MarketDataDB marketData, bool saveToDB = true)
-    {
-        try
+
+        public static Task<int> SaveRecipe(List<RecipeFullWeb> recipesWeb)
         {
-            MarketDataContext marketDataContext = new MarketDataContext();
-            await marketDataContext.Database.EnsureCreatedAsync();
-
-            MarketDataDB exists = marketDataContext.data
-                .FindAsync(marketData.item_id, marketData.world_id).GetAwaiter().GetResult();
-
-            if (exists == null)
+            List<RecipeDB> recipeDBs = new List<RecipeDB>();
+            foreach (RecipeFullWeb web in recipesWeb)
             {
-                //New entry, add to entity tracker
-                await marketDataContext.AddAsync<MarketDataDB>(marketData);
+                recipeDBs.Add(new RecipeDB(web));
+            }
+            return SaveRecipes(recipeDBs);
+        }
+
+        internal static async Task<int> SaveRecipes(List<RecipeDB> recipesToSave)
+        {
+            if (recipesToSave == null || recipesToSave.Count == 0)
+            {
+                Log.Error("Trying to save an empty list of recipes.");
+                return 0;
             }
             else
             {
-                //Existing entry
-                exists.last_updated = DateTime.Now;
-                exists.average_price = marketData.average_price;
-                exists.listings = marketData.listings;
-                marketDataContext.Update<MarketDataDB>(exists);
-            }
-            int success = 0;
-            if (saveToDB) { success = await marketDataContext.SaveChangesAsync(); }
-            return success;
-        }
-        catch (Exception ex)
-        {
-            Log.Error("Exception: " + ex.Message);
-            Log.Error("Inner exception: " + ex.InnerException);
-            Disconnect();
-            return 0;
-        }
-    }
+                HashSet<int> recipeIDList = new HashSet<int>();
+                foreach (RecipeDB recipe in recipesToSave)
+                {
+                    if (recipe != null && recipe.recipe_id != 0)
+                    {
+                        recipeIDList.Add(recipe.recipe_id);
+                    }
+                }
+                try
+                {
+                    ItemDBContext context = DatabaseAccess.context;
+                    List<RecipeDB> existentRecipes = new List<RecipeDB>();
 
-    /// <summary>
-    /// Searches the database for a bulk list of items given their ID & world
-    /// </summary>
-    /// <param name="item_id"></param>A List of integers to represent item ID
-    /// <param name="world_id"></param>the world ID for world-specific data (ie: market price)
-    /// <returns></returns>
-    public static List<MarketDataDB> GetMarketDataDBBulk(List<int> item_id, int world_id)
-    {
-        try
-        {
-            MarketDataContext marketDataContext = new MarketDataContext();
+                    List<ItemDB> itemsDB = context.data
+                            .Where(t => t.fullRecipes.All(
+                                  (x => recipeIDList.Contains(x.recipe_id))))
+                            .ToList();
+                    if (itemsDB == null)
+                    {
+                        // None found, save everything
+                        await context.AddRangeAsync(recipesToSave);
+                        existentRecipes.Clear();
+                    }
+                    else
+                    {
+                        //Existent entries can be added to the tracker
+                        //TODO: improve this... with LINQ?
+                        foreach (ItemDB existentDBEntry in itemsDB)
+                        {
+                            existentRecipes.AddRange(existentDBEntry.fullRecipes);
+                            foreach (RecipeDB existentRecipe in existentDBEntry.fullRecipes)
+                            {
+                                context.Update(existentRecipe);
+                            }
+                        }
 
-            List<MarketDataDB> exists = marketDataContext.data
-                    .Where(t => (t.world_id == world_id && item_id.Contains(t.item_id)))
-                    .Include(t => t.listings)
-                    .ToList();
-            return exists;
-        }
-        catch (Exception ex)
-        {
-            if (ex is Microsoft.Data.Sqlite.SqliteException ||
-                ex is System.InvalidOperationException)
-            {
-                //Maybe the database doesn't exist yet or not found
-                //Either way, we can return null -> it is not on the database
-                Log.Debug("Database or entry does not exist.");
-                return null;
-            }
-            else
-            {
+                        IEnumerable<RecipeDB> saveMeList
+                            = recipesToSave.Except(existentRecipes);
+                        //Non-existent entries are added to the tracker
+                        foreach (RecipeDB saveRecipe in saveMeList)
+                        {
+                            if (saveRecipe != null)
+                            {
+                                await context.AddAsync<RecipeDB>(saveRecipe);
+                            }
+                        }
+                    }
 
-                Log.Error("Exception: " + ex.Message);
-                Log.Error("Inner exception: " + ex.InnerException);
-                Disconnect();
-                return null; ;
-            }
-        }
-    }
+                    return await context.SaveChangesAsync(); ;
 
-    /// <summary>
-    /// Searches the database for MarketData (average market price, vendor price, etc)
-    /// </summary>
-    /// <param name="item_id"></param>item ID (ie: 5057 for Copper Ingot)
-    /// <param name="world_id"></param>world ID (ie: 34 for Brynhildr)
-    /// <returns></returns>
-    public static MarketDataDB GetMarketDataDB(int item_id, int world_id)
-    {
-        try
-        {
-            MarketDataContext marketDataContext = new MarketDataContext();
+                }
+                catch (Exception ex)
+                {
+                    if (ex is Microsoft.Data.Sqlite.SqliteException ||
+                        ex is System.InvalidOperationException)
+                    {
+                        //Maybe the database doesn't exist yet or not found
+                        //Either way, we can return null -> it is not on the database
 
-            MarketDataDB exists = marketDataContext.data
-                    .Where(t => (t.item_id == item_id && t.world_id == world_id))
-                    .Include(t => t.listings)
-                    .FirstOrDefault();
+                        return 0;
+                    }
+                    else
+                    {
 
-            return exists;
-        }
-        catch (Exception ex)
-        {
-            if (ex is Microsoft.Data.Sqlite.SqliteException ||
-                ex is System.InvalidOperationException)
-            {
-                //Maybe the database doesn't exist yet or not found
-                //Either way, we can return null -> it is not on the database
-                return null;
-            }
-            else
-            {
-
-                Log.Error("Exception: " + ex.Message);
-                Log.Error("Inner exception: " + ex.InnerException);
-                Disconnect();
-                return null; ;
+                        Log.Error("Exception: {message}.", ex.Message);
+                        Log.Error("Inner exception:{inner}.", ex.InnerException);
+                        Disconnect();
+                        return 0; ;
+                    }
+                }
             }
         }
     }
-
-    internal class MarketDataContext : DbContext
-    {
-        public DbSet<MarketDataDB> data { get; set; }
-        private SqliteConnection conn;
-
-        public MarketDataContext()
-            : base(new DbContextOptionsBuilder<MarketDataContext>().UseSqlite(Connect()).Options)
-        {
-            conn = Connect();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            this.conn = Connect();
-            optionsBuilder.UseSqlite(this.conn);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MarketDataDB>().ToTable("MarketDataDB");
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.item_id);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.world_id);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.last_updated);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.average_price);
-            modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.item_id, t.world_id });
-
-            modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
-        }
-
-    }
-
-    internal class MarketListingContext : DbContext
-    {
-        public DbSet<MarketListingDB> listingDB { get; set; }
-        private SqliteConnection conn;
-
-        public MarketListingContext()
-            : base(new DbContextOptionsBuilder<MarketListingContext>().UseSqlite(Connect()).Options)
-        {
-            conn = Connect();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            this.conn = Connect();
-            optionsBuilder.UseSqlite(this.conn);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.world_id).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
-        }
-
-    }
-
-
-}
 }
 
 

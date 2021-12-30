@@ -13,26 +13,30 @@ namespace GilGoblin.Tests
         // Item ID for Mithril Ore: 5114
         // Item ID for Copper Ore: 5106
         // Item ID for Copper Ingot: 5057
+        // Item ID for Chondrite Magitek Sword: 34680
+        // Item ID for Bomb Frypan: 2499
+        // Item ID for Iron Scale Mail: 3057
+        // Item ID for Heavy Darksteel Armor: 3256
 
         public const string world_name = "Brynhildr";
-        public const int world_id = 34;
-        public const int item_id = 5057;
+        public const int defaultWorldID = 34;
+        public const int defaultItemID = 3057;
         public static async void test_Fetch_Market_Price()
         {
             try
             {
-                MarketDataDB marketData = MarketData.GetMarketData(item_id, world_id);
-                ItemInfo itemInfo = MarketData.GetItemInfo(item_id);
+                MarketDataDB marketData = MarketDataDB.GetMarketDataSingle(defaultItemID, defaultWorldID);
+                ItemInfoDB itemInfo =  ItemInfoDB.GetItemInfo(defaultItemID);
 
                 if (marketData == null || itemInfo == null)
                 {
                     throw new Exception("Market data or item info not found");
                 }
-                int marketPrice = marketData.average_price;
+                float marketPrice = marketData.averagePrice;
                 Log.Information("Final market price: " + marketPrice);
                 int vendorPrice = itemInfo.vendor_price;
                 Log.Information("Vendor price: " + vendorPrice);
-                int profit = marketPrice - vendorPrice;
+                int profit = (int)marketPrice - vendorPrice;
                 Log.Information("Estimated profit: " + profit);
 
                 string success_message = "failure.";
@@ -40,11 +44,14 @@ namespace GilGoblin.Tests
                 if (db_success > 0) { success_message = "sucess."; }
                 Log.Information("Database save was a " + success_message);
 
+                //Test crafting cost calculation by tree traversal
+                int craftingCost = Cost.GetCraftingCost(defaultItemID, defaultWorldID);
+
                 DatabaseAccess.Disconnect();
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Error("Exception: {message}.", ex.Message);
             }
             finally
             {
@@ -54,45 +61,47 @@ namespace GilGoblin.Tests
         }
 
         //Bulk test
-        public static async void test_Fetch_Market_Prices()
+        public static void test_Fetch_Market_Prices()
         {
             try
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
+                    .MinimumLevel.Debug() // PROD: reduce verbosity
                     .WriteTo.Console()  
                     .WriteTo.File("logs/test.txt")
                     .CreateLogger();
 
                 Log.Debug("Application started.");
 
-                List<int> fetchIDList = new List<int> { item_id, 5114, 5106 };
-                List<ItemInfo> infoList = new List<ItemInfo>();
-                List<MarketDataDB> marketDataList 
-                    = MarketData.GetMarketDataBulk(fetchIDList, world_id, true);
-                foreach (MarketDataDB dataDb in marketDataList)
+                List<int> fetchIDList
+                    = new List<int> { 3057, 34680, 5057, 5114, 5106, 3256 };                    
+
+                foreach (int id in fetchIDList) 
                 {
-                    infoList.Add(MarketData.GetItemInfo(item_id));
+                    Console.WriteLine();
+                    int cost = Cost.GetCraftingCost(id, defaultWorldID);
+                    Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, defaultWorldID, cost);
+                    int averagePrice = Price.getAveragePrice(id, defaultWorldID);
+                    Log.Debug("Calculated average price for item {itemID} on world {worldID} is: {price}", id, defaultWorldID, averagePrice);
+                    int vendorCost = Cost.GetVendorCost(id);
+                    Log.Debug("Vendor cost for item {itemID} is: {vendorCost}.",id,vendorCost);
+                    int baseCost = Cost.GetBaseCost(id, defaultWorldID);
+                    Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, baseCost);
+                    int minCost = Cost.GetMinCost(id,defaultWorldID);
+                    Log.Debug("Calculated min cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, minCost);
+                    int profit = averagePrice - baseCost;
+                    Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, defaultWorldID, profit);
+                    Console.WriteLine();
                 }
 
-                if (infoList.Count == 0 || marketDataList.Count == 0)
-                {
-                    throw new Exception("Market data or item info not found");
-                }
-
-                string success_message = "failure.";
-                int db_success = await DatabaseAccess.SaveMarketDataBulk(marketDataList);
-                if (db_success > 0) { success_message = "sucess."; }
-                Log.Information("Database save was a " + success_message);
-                Log.Information(db_success + " entries saved to the database.");
-
+                DatabaseAccess.Save();
                 DatabaseAccess.Disconnect();
                 Log.Information("Application ended successfully.");
                 Log.CloseAndFlush();
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Error("Exception: {message}.", ex.Message);
                 Log.CloseAndFlush();
             }
             finally
