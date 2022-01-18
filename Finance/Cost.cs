@@ -108,10 +108,11 @@ namespace GilGoblin.Finance
                 if (itemDB != null){
                     if (itemDB.fullRecipes.Count > 0)
                     {
-                        DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
+                        if (DatabaseAccess.context != null) {
+                            DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
+                        }
 
-                        RecipeIngredientBreakdown breakdown
-                            = GetRecipeBreakdown(itemDB.fullRecipes);
+                        RecipeIngredientBreakdown breakdown = GetRecipeBreakdown(itemDB.fullRecipes);
                         foreach (Ingredient ingredient in breakdown.ingredients.Values)
                         {
                             int averagePrice = Price.getAveragePrice(itemID, worldID);

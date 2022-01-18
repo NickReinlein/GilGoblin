@@ -69,6 +69,7 @@
     <Compile Include="Migrations\ItemDBContextModelSnapshot.cs" />
     <Compile Include="Tests\TestDB.cs" />
     <Compile Include="Tests\TestFetch.cs" />
+    <Compile Include="Tests\TestGet.cs" />
     <Compile Include="WebAPI\ItemInfoWeb.cs" />
     <Compile Include="WebAPI\ItemRecipeHeaderAPI.cs" />
     <Compile Include="Finance\ItemInfo.cs" />

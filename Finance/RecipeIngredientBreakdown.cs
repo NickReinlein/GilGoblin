@@ -17,11 +17,23 @@ namespace GilGoblin.Finance
         public RecipeIngredientBreakdown() { }
         public RecipeIngredientBreakdown(int itemID, Ingredient ingredient)
         {
-            this.Add(itemID, ingredient);
+            insert(itemID, ingredient);
         }
         public RecipeIngredientBreakdown(List<RecipeDB> list)
         {
             Add(list);
+        }
+
+        public void insert(int itemID, Ingredient ingredient)
+        {
+            if (ingredients.ContainsKey(itemID))
+            {
+                ingredients.ElementAt(itemID).Value.quantity += ingredient.quantity;
+            }
+            else
+            {
+                ingredients.Add(itemID, ingredient);
+            }
         }
 
         public void Add(List<RecipeDB> list)
@@ -31,7 +43,16 @@ namespace GilGoblin.Finance
             {
                 if (recipe != null)
                 {
-                    this.Add(recipe);
+                    try
+                    {
+                        this.Add(recipe);
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Error("Failed to add recipe to the breakdown list: " +
+                            "{recipeID},{NewLine} Error message: {ex.Message}",
+                            recipe.recipe_id, ex.Message);
+                    }
                 }
             }
         }
@@ -41,6 +62,7 @@ namespace GilGoblin.Finance
             if (recipe == null)
             {
                 Log.Error("Recipe is null and trying to add to the recipe ingredient breakdown.");
+
                 return;
             }
             else
@@ -48,26 +70,28 @@ namespace GilGoblin.Finance
                 //Add all the ingredients in the recipe
                 foreach (Ingredient ingredient in recipe.ingredients)
                 {
-                    if (ItemInfoDB.IsCraftable(ingredient.item_id))
-                    {
-                        List<RecipeDB> ingredientBreakdownList
-                            = ItemInfoDB.GetCraftingList(ingredient.item_id);
+                    try {
+                        if (ItemInfoDB.IsCraftable(ingredient.item_id))
+                        {
+                            List<RecipeDB> ingredientBreakdownList
+                                = ItemInfoDB.GetCraftingList(ingredient.item_id);
                     
-                        this.Add(ingredientBreakdownList);
+                            this.Add(ingredientBreakdownList);
                     
+                        }
+                        else
+                        {
+                            this.insert(ingredient.item_id, ingredient);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        this.Add(ingredient.item_id, ingredient);
+                        Log.Error("Failed to add ingredient to the breakdown list: " +
+                            "{ingredient.item_id},{NewLine} Error message: {ex.Message}",
+                            recipe.recipe_id, ex.Message);
                     }
                 }
             }
-        }
-
-
-        public void Add(int itemID, Ingredient ingredient)
-        {
-            ingredients.Add(itemID, ingredient);
         }
 
         public int getQuantity(int itemID)

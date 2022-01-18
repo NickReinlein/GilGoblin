@@ -40,7 +40,8 @@ namespace GilGoblin.Database
                 this.fullRecipes.Clear();
             }
 
-            DatabaseAccess.context.Add(this);
+            ItemDBContext context = DatabaseAccess.context;
+            if (context != null) { context.Add(this); }
         }
 
         /// <summary>
@@ -61,12 +62,20 @@ namespace GilGoblin.Database
                 ItemDBContext context = DatabaseAccess.context;
                 List<ItemDB> returnList = new List<ItemDB>();
 
-                List<ItemDB> exists = context.data
-                        .Where(t => itemIDList.Contains(t.itemID))
-                        .Include(t => t.marketData)
-                        .Include(t => t.fullRecipes)
-                        .Include(t => t.itemInfo)                     
-                        .ToList();
+                List<ItemDB> exists;
+                try
+                {
+                    exists = context.data
+                            .Where(t => itemIDList.Contains(t.itemID))
+                            .Include(t => t.marketData)
+                            .Include(t => t.fullRecipes)
+                            .Include(t => t.itemInfo)
+                            .ToList();
+                }
+                catch (System.NullReferenceException)
+                {
+                    exists = null;
+                }
                 if (exists != null &&
                     exists.Count > 0)
                 {
@@ -184,7 +193,7 @@ namespace GilGoblin.Database
                     throw new Exception("Nothing returned from the FetchItemDBBulk() method.");
                 }
                 ItemDBContext context = DatabaseAccess.context;
-                context.Add(fetchMe);
+                if (context != null) { context.Add(fetchMe); }
                 return fetchMe;
             }
             catch (Exception ex)
