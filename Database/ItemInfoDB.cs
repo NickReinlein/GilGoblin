@@ -95,12 +95,16 @@ namespace GilGoblin.Database
 
         public static bool IsCraftable(int itemID)
         {
-            List<RecipeDB> recipeList = GetCraftingList(itemID);
-            if (recipeList != null && recipeList.Count > 0)
+            try
             {
-                return true;
+                List<RecipeDB> recipeList = GetCraftingList(itemID);
+                if (recipeList != null && recipeList.Count > 0)
+                {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (Exception) { return false; }
         }
 
         public static List<RecipeDB> GetCraftingList(int itemID)

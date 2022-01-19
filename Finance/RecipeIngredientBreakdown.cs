@@ -28,7 +28,7 @@ namespace GilGoblin.Finance
         {
             if (ingredients.ContainsKey(itemID))
             {
-                ingredients.ElementAt(itemID).Value.quantity += ingredient.quantity;
+                ingredients[itemID].quantity += ingredient.quantity;
             }
             else
             {

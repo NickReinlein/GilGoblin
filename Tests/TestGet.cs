@@ -41,9 +41,9 @@ namespace GilGoblin.Tests
         [Theory, InlineData(5057, 34)]
         public void TestCalculateCraftingCost(int itemID, int worldID)
         {
-            //int craftingCost = Cost.GetCraftingCost(itemID, worldID);
-            //Assert.True(craftingCost > 1);
-            //Assert.True(craftingCost < 999999);
+            int craftingCost = Cost.GetCraftingCost(itemID, worldID);
+            Assert.True(craftingCost > 1);
+            Assert.True(craftingCost < 999999);
         }
     }
 }
