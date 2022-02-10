@@ -1,4 +1,5 @@
-﻿using GilGoblin.WebAPI;
+﻿using GilGoblin.Finance;
+using GilGoblin.WebAPI;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -42,6 +43,16 @@ namespace GilGoblin.Database
 
             ItemDBContext context = DatabaseAccess.context;
             if (context != null) { context.Add(this); }
+        }
+
+        /// <summary>
+        /// Pulls item using the default world ID
+        /// </summary>
+        /// <param name="itemIDList"></param> A list of integers represnting item ID
+        /// <returns></returns>
+        public static List<ItemDB> GetItemDBBulk(List<int> itemIDList)
+        {
+            return GetItemDBBulk(itemIDList, Cost._default_world_id);
         }
 
         /// <summary>
@@ -102,16 +113,16 @@ namespace GilGoblin.Database
                     }
                     context.SaveChangesAsync();
                 }
-                //else //Does not exist, so we have to fetch it
-                //{
+                else //Does not exist, so we have to fetch it
+                {
 
-                //    List<ItemDB> fetchList = new List<ItemDB>();
-                //    fetchList = FetchItemDBBulk(itemIDList, worldId);
-                //    if (fetchList.Count > 0)
-                //    {
-                //        context.AddRange(fetchList);
-                //    }
-                //}
+                    List<ItemDB> fetchList = new List<ItemDB>();
+                    fetchList = FetchItemDBBulk(itemIDList, worldId);
+                    if (fetchList.Count > 0)
+                    {
+                        context.AddRange(fetchList);
+                    }
+                }
 
                 return returnList;
             }
@@ -167,9 +178,12 @@ namespace GilGoblin.Database
         {
             List<ItemDB> returnList = new List<ItemDB>();
 
+
+            //TODO Redo:This is NOT BULK!
             foreach (int itemID in itemIDList)
             {
-                ItemDB itemDB = new ItemDB(itemID, worldId);
+                //ItemDB itemDB = new ItemDB(itemID, worldId);
+                ItemDB itemDB = FetchItemDBSingle(itemID, worldId); 
                 if (itemDB != null) { returnList.Add(itemDB); }
             }
 
@@ -179,22 +193,15 @@ namespace GilGoblin.Database
         {
             try
             {
-                ItemDB fetchMe = null;
-                List<int> IDAsList = new List<int>();
-                IDAsList.Add(itemID);
+                ItemDB itemDBFetched = new ItemDB(itemID, worldId);
 
-                List<ItemDB> itemList = FetchItemDBBulk(IDAsList, worldId);
-                if (itemList.Count > 0) {
-                    fetchMe = itemList[0];
-                }
-
-                if (fetchMe == null)
+                if (itemDBFetched == null)
                 {
                     throw new Exception("Nothing returned from the FetchItemDBBulk() method.");
                 }
                 ItemDBContext context = DatabaseAccess.context;
-                if (context != null) { context.Add(fetchMe); }
-                return fetchMe;
+                if (context != null) { context.Add(itemDBFetched); }
+                return itemDBFetched;
             }
             catch (Exception ex)
             {

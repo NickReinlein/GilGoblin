@@ -2,6 +2,8 @@
 using GilGoblin.WebAPI;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,9 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
+        public const int _initialDBCreationEntryCount = 100; //TODO: increase for production?
+        public const int _entriesPerAPIPull = 100; //TODO: increase for production?
+        public const int _gameItemTotalCount = 300; //TODO: change to 36700; // Item ID's go to this #
 
         public static SqliteConnection _conn { get; set; }
         public static ItemDBContext context { get; private set; }
@@ -73,15 +78,22 @@ namespace GilGoblin.Database
         }
 
         public static void Startup(){
+            context = new ItemDBContext();
             try
-            {
-                context = new ItemDBContext();
-                if (context.data.Count() > 20) {
-                    context.Database.EnsureCreatedAsync();
+            {                
+                bool initial = false;
+                try {
+                    int itemCount = context.data.Count();
+                    if (itemCount < _initialDBCreationEntryCount){
+                        initial = true;
+                    }
                 }
-                else{
-                    InitialStartup(context);
+                catch (Exception ex){
+                    initial = true;
                 }
+                
+                if (initial) { InitialStartup(context); }
+                
             }
             catch (Exception ex)
             {
@@ -90,14 +102,30 @@ namespace GilGoblin.Database
             }
         }
 
-        public static void InitialStartup(ItemDBContext context){
+        public static async void InitialStartup(ItemDBContext context){
             try
             {
-                context.Database.EnsureCreated();
-                // TODO: initial startup
-                // Get the initial list of items (probably >1000)
-                // probably from a file
-                // Pull the data for all of these items 
+                List<int> batchItemIDList = new List<int>();
+                List<ItemDB> initialItemRun = new List<ItemDB>();
+                await context.Database.EnsureCreatedAsync();
+                
+                // Loop through every X number of entries to build as packages
+                // to pull from the API (ie: 100 entries at a time).
+                // Wait to prevent this application from overloading the API servers
+                for (int i=1; i<_gameItemTotalCount; i = i+_entriesPerAPIPull-1){
+                    batchItemIDList = Enumerable.Range(i, i+_entriesPerAPIPull).ToList();
+
+                    // TODO: Get the world ID fed here so we can pull for the right world ID
+                    //List<ItemDB> thisBatchOfItems = new List<ItemDB>();
+                    var thisBatchOfItems = ItemDB.GetItemDBBulk(batchItemIDList);
+                    initialItemRun.AddRange(thisBatchOfItems);
+                    await Task.Delay(5000);
+                }
+
+                Database.DatabaseAccess.Save();
+                 
+                
+
                 // Not to slam the API servers, we queue and process in batches
                 // and display a message for users to wait
                 // Then continue
