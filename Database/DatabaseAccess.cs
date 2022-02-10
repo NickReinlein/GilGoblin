@@ -66,23 +66,45 @@ namespace GilGoblin.Database
                 }
                 catch (Exception ex)
                 {
-                    Console.Write(ex.Message);
+                    Log.Error(ex.Message);
                 }
             }
 
         }
 
-        public static void Startup()
-        {
+        public static void Startup(){
             try
             {
                 context = new ItemDBContext();
-                context.Database.EnsureCreatedAsync();
+                if (context.data.Count() > 20) {
+                    context.Database.EnsureCreatedAsync();
+                }
+                else{
+                    InitialStartup(context);
+                }
             }
             catch (Exception ex)
             {
                 Log.Debug("Database startup did not succed: {message}", ex.Message);
                 return;
+            }
+        }
+
+        public static void InitialStartup(ItemDBContext context){
+            try
+            {
+                context.Database.EnsureCreated();
+                // TODO: initial startup
+                // Get the initial list of items (probably >1000)
+                // probably from a file
+                // Pull the data for all of these items 
+                // Not to slam the API servers, we queue and process in batches
+                // and display a message for users to wait
+                // Then continue
+            }
+            catch(Exception ex)
+            {
+                Log.Error("Failed initial database startup with error: {message}", ex.Message);
             }
         }
 
