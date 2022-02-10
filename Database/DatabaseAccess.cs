@@ -233,6 +233,11 @@ namespace GilGoblin.Database
             return SaveRecipes(recipeDBs);
         }
 
+        /// <summary>
+        /// Saves the recipes in the list of RecipeDB (DB-format)
+        /// </summary>
+        /// <param name="recipesToSave"></param> List of recipes to save in DB format
+        /// <returns></returns>
         internal static async Task<int> SaveRecipes(List<RecipeDB> recipesToSave)
         {
             if (recipesToSave == null || recipesToSave.Count == 0)
