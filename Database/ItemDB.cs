@@ -46,6 +46,88 @@ namespace GilGoblin.Database
         }
 
         /// <summary>
+        /// Used for bulk processing ease-of-use: can take a single marketData and extract recipes
+        /// so less parameters are required
+        /// </summary>
+        /// <param name="itemID">Item ID</param>
+        /// <param name="itemInfo">General item information</param>
+        /// <param name="marketData">Market data from one world</param>
+        protected ItemDB(int itemID, ItemInfoDB itemInfo, MarketDataDB marketData)
+        {
+            this.itemID = itemID;            
+            this.itemInfo = itemInfo;
+            
+            List<MarketDataDB> listConvert = new List<MarketDataDB>();
+            listConvert.Add(marketData);
+            this.marketData = listConvert;
+            
+            if (this.itemInfo != null && this.itemInfo.fullRecipes.Count > 0)
+            {
+                this.fullRecipes = this.itemInfo.fullRecipes.ToList();
+            }
+            else
+            {
+                this.fullRecipes.Clear();
+            }
+        }
+
+            /// <summary>
+            /// Used internally for bulk processing when items are fetched in bulk
+            /// </summary>
+            /// <param name="itemID">Item ID</param>
+            /// <param name="itemInfo">Basic general info</param>
+            /// <param name="marketData">Marketdata list (per world)</param>
+            /// <param name="fullRecipes">List of complete Recipes</param>
+
+            protected ItemDB(int itemID, ItemInfoDB itemInfo, List<MarketDataDB> marketData, List<RecipeDB> fullRecipes)
+        {
+            this.itemID = itemID;
+            // XIVAPI does not have a bulk API call AFAIK :(
+            this.itemInfo = itemInfo;
+            this.marketData = marketData;
+            this.fullRecipes = fullRecipes;
+
+            // Do this outside in bulk!
+            //ItemDBContext context = DatabaseAccess.context;
+            //if (context != null) { context.Add(this); }
+        }
+
+        public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs)
+        {
+            return bulkCreateItemDB(itemIDs, Cost._default_world_id);
+        }
+
+            public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs, int worldID)
+        {
+            List<ItemDB> listItemDB = new List<ItemDB>();
+            try
+            {
+                List<MarketDataDB> marketData = MarketDataDB.ConvertWebToDBBulk(
+                    MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
+
+                foreach (int i in itemIDs)
+                {
+                    ItemInfoDB itemInfo = ItemInfoDB.GetItemInfo(i);
+                    MarketDataDB marketDataDb = marketData.Find(t => t.itemID == i);
+                    ItemDB newItem = new ItemDB(i, itemInfo, marketDataDb);
+                    listItemDB.Add(newItem);
+                }
+
+                Log.Debug("Bulk create: Created {create} entries out of {req} requested.", listItemDB.Count, itemIDs.Count);
+
+            // We add to the context once for the bulk of new listings
+                ItemDBContext context = DatabaseAccess.context;
+                if (context != null) { context.AddRange(listItemDB); }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed bulk created with error message:{ex.m}",ex.Message);
+            }
+            return listItemDB;
+
+        }
+
+        /// <summary>
         /// Pulls item using the default world ID
         /// </summary>
         /// <param name="itemIDList"></param> A list of integers represnting item ID
@@ -178,15 +260,15 @@ namespace GilGoblin.Database
         {
             List<ItemDB> returnList = new List<ItemDB>();
 
-
-            //TODO Redo:This is NOT BULK!
-            foreach (int itemID in itemIDList)
+            try
             {
-                //ItemDB itemDB = new ItemDB(itemID, worldId);
-                ItemDB itemDB = FetchItemDBSingle(itemID, worldId); 
-                if (itemDB != null) { returnList.Add(itemDB); }
+                returnList = ItemDB.bulkCreateItemDB(itemIDList, worldId);
             }
-
+            catch (Exception ex)
+            {
+                Log.Error("Failed to get itemDB in item list in world {worldID} with message: {message}", worldId, ex.Message);
+                return null;
+            }
             return returnList;
         }
         public static ItemDB FetchItemDBSingle(int itemID, int worldId)

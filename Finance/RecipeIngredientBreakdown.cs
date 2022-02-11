@@ -13,7 +13,6 @@ namespace GilGoblin.Finance
         public Dictionary<int, Ingredient> ingredients { get; set; } 
             = new Dictionary<int, Ingredient>();
 
-
         public RecipeIngredientBreakdown() { }
         public RecipeIngredientBreakdown(int itemID, Ingredient ingredient)
         {

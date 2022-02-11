@@ -67,6 +67,26 @@ namespace GilGoblin.Database
             }
         }
 
+        public static List<MarketDataDB> ConvertWebToDBBulk(List<MarketDataWeb> list)
+        {
+            List<MarketDataDB> returnList = new List<MarketDataDB>();
+
+            try
+            {
+                foreach (MarketDataWeb web in list)
+                {
+                    MarketDataDB db = new MarketDataDB(web);
+                    returnList.Add(db);
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Error("Failed to convert MarketDataWeb to DB in bulk. Message:{ex.message}", ex.Message);
+            }
+
+            return returnList;
+        }
+
         internal static MarketDataDB GetMarketDataSingle(int itemID, int worldID
             , bool forceUpdate = false)
         {
