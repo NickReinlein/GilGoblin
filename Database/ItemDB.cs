@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GilGoblin.Database
@@ -86,10 +87,6 @@ namespace GilGoblin.Database
             this.itemInfo = itemInfo;
             this.marketData = marketData;
             this.fullRecipes = fullRecipes;
-
-            // Do this outside in bulk!
-            //ItemDBContext context = DatabaseAccess.context;
-            //if (context != null) { context.Add(this); }
         }
 
         public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs)
@@ -105,19 +102,19 @@ namespace GilGoblin.Database
                 List<MarketDataDB> marketData = MarketDataDB.ConvertWebToDBBulk(
                     MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
 
+
                 foreach (int i in itemIDs)
                 {
-                    ItemInfoDB itemInfo = ItemInfoDB.GetItemInfo(i);
+                    ItemInfoDB itemInfo = ItemInfoDB.FetchItemInfo(i);
                     MarketDataDB marketDataDb = marketData.Find(t => t.itemID == i);
+                    if (marketDataDb == null || itemInfo == null) { continue; }
                     ItemDB newItem = new ItemDB(i, itemInfo, marketDataDb);
-                    listItemDB.Add(newItem);
+                    if (newItem != null) { listItemDB.Add(newItem); }
                 }
 
-                Log.Debug("Bulk create: Created {create} entries out of {req} requested.", listItemDB.Count, itemIDs.Count);
+                //DatabaseAccess.context.AddRange(listItemDB);
 
-            // We add to the context once for the bulk of new listings
-                ItemDBContext context = DatabaseAccess.context;
-                if (context != null) { context.AddRange(listItemDB); }
+                Log.Debug("Bulk create: Created {create} entries out of {req} requested.", listItemDB.Count, itemIDs.Count);
             }
             catch (Exception ex)
             {

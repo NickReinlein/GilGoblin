@@ -91,7 +91,7 @@ namespace GilGoblin.WebAPI
             {
                 List<MarketDataWeb> list = new List<MarketDataWeb>();
                 HttpClient client = new HttpClient();
-                //https://universalis.app/api/34/5114%2C5106%2C5057
+                //example: https://universalis.app/api/34/5114%2C5106%2C5057
                 string url = String.Concat("https://universalis.app/api/", world_id, "/");
                 foreach (int itemID in itemIDs)
                 {

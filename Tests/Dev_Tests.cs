@@ -66,12 +66,14 @@ namespace GilGoblin.Tests
             try
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug() // PROD: reduce verbosity
+                    .MinimumLevel.Information() // PROD: reduce verbosity
                     .WriteTo.Console()  
                     .WriteTo.File("logs/test.txt")
                     .CreateLogger();
 
                 Log.Debug("Application started.");
+
+                DatabaseAccess.Startup();
 
                 List<int> fetchIDList
                     = new List<int> { 3057, 34680, 5057, 5114, 5106, 3256 };                    
