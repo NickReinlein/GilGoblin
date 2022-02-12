@@ -40,11 +40,7 @@ namespace GilGoblin.WebAPI
             {
                 throw new ArgumentException("Incorrect/missing parameters/arguments coming from the web response.");
             }
-            if (listings == null || listings.Count == 0)
-            {
-                // This is logged for informational purposes; might be an error
-                Log.Debug("No listings found for item {itemID} with world {worldID}.", itemID, worldId);
-            }
+            
             this.itemID = itemID;
             this.worldID = worldId;
             this.lastUpdated

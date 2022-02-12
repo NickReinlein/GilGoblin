@@ -20,13 +20,12 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 60; //TODO: increase for production
+        public const int _initialDBCreationEntryCount = 40; //TODO: increase for production
         public const int _entriesPerAPIPull = 20;
-        public const int _waitTimeInMsForAPICalls = 1000;
+        public const int _waitTimeInMsForAPICalls = 500;
         public const int _gameItemTotalCount = 300; //TODO: change to 36700; // Item ID's go to this #
 
         public static SqliteConnection _conn { get; set; }
-        //public static ItemDBContext context { get; private set; }
 
         public static ItemDBContext getContext()
         {
@@ -91,10 +90,12 @@ namespace GilGoblin.Database
         public static void Startup(){
             try
             {
-                using (ItemDBContext context = getContext())
-                {
+                
+                
                     bool initial = false;
                     try
+                    {
+                    using (ItemDBContext context = getContext())
                     {
 
                         int itemCount = context.data.Count();
@@ -103,14 +104,14 @@ namespace GilGoblin.Database
                             initial = true;
                         }
                     }
+                    }
                     catch (Exception ex)
                     {
                         Log.Debug($"Exception during startup, trying initial setup next:{ex.Message}.", ex.Message);
                         initial = true;
                     }
 
-                    if (initial) { InitialStartup(context); }
-                }
+                    if (initial) { InitialStartup(); }
                 
             }
             catch (Exception ex)
@@ -120,7 +121,7 @@ namespace GilGoblin.Database
             }
         }
 
-        public static void InitialStartup(ItemDBContext context){
+        public static void InitialStartup(){
             try
             {
                 //await context.Database.EnsureCreatedAsync();
@@ -130,22 +131,31 @@ namespace GilGoblin.Database
                 // to pull from the API (ie: 20 entries at a time).
                 // Wait to prevent this application from overloading the API servers
                 List<int> batchItemIDList;
-                for (int i=1; i< _initialDBCreationEntryCount; i += _entriesPerAPIPull-1){
+                for (int i=1; i< _initialDBCreationEntryCount; i += _entriesPerAPIPull){
                     // TODO: Get the world ID fed here so we can pull for the right world ID)
                    batchItemIDList = Enumerable.Range(i, i+_entriesPerAPIPull-1).ToList();
-                    Log.Debug("Pulling information on ID's in range: {i} to {endRange}.", i, i + _entriesPerAPIPull-1);
+                    Log.Debug("Pulling information on ID's in range: {i} to {endRange}.", i, i+ _entriesPerAPIPull-1);
                     var thisBatchOfItems = ItemDB.bulkCreateItemDB(batchItemIDList);
                     Log.Debug("Returned with {numberOfrecords} records: ", thisBatchOfItems.Count());
-                    initialItemRun.Concat(thisBatchOfItems);
+                    initialItemRun.UnionWith(thisBatchOfItems);
                     batchItemIDList.Clear();
-                    Log.Debug("Waiting {wait} seconds before next API call.", (int)_waitTimeInMsForAPICalls / 1000);
+                    Log.Debug("Waiting {wait} seconds before next API call.", (float)_waitTimeInMsForAPICalls / 1000);
                     Thread.Sleep(_waitTimeInMsForAPICalls);
                 }
 
-                context.AddRange(initialItemRun);
-                Save(context);
-                 
-                
+                try
+                {
+                    using (ItemDBContext context = getContext())
+                    {
+                        context.AddRange(initialItemRun);
+                        context.Database.EnsureCreatedAsync();
+                        Save(context);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error saving bulk data for initial startup, message:{ex.Message} .... Inner Error: {inner}.", ex.Message,ex.InnerException);
+                }
 
                 // Not to slam the API servers, we queue and process in batches
                 // and display a message for users to wait
@@ -161,6 +171,7 @@ namespace GilGoblin.Database
         {
             try
             {
+                context.Database.EnsureCreated();
                 context.SaveChanges();
                 context.Dispose();
             }

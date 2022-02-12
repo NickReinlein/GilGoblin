@@ -91,6 +91,7 @@ namespace GilGoblin.WebAPI
 
         public static async Task<RecipeFullWeb> FetchRecipe(int recipe_id)
         {
+            RecipeFullWeb fullRecipe;
             try
             {
                 HttpClient client = new HttpClient();
@@ -98,14 +99,30 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                RecipeFullWeb fullRecipe = JsonConvert.DeserializeObject<RecipeFullWeb>(content.Content.ReadAsStringAsync().Result);
-                return fullRecipe;
+                fullRecipe = JsonConvert.DeserializeObject<RecipeFullWeb>(content.Content.ReadAsStringAsync().Result);
             }
             catch (Exception ex)
             {
                 Log.Error("Failed to convert recipe from JSON: {message}", ex.Message);
                 return null;
             }
+
+            // Save fetched information
+            try
+            {
+                using (ItemDBContext context = DatabaseAccess.getContext())
+                {
+                    context.Add(fullRecipe);
+                    context.Database.EnsureCreated();
+                    DatabaseAccess.Save(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error saving fetched item recipes from the web, message:{ex.Message} .... Inner Error: {inner}.", ex.Message, ex.InnerException);
+            }
+
+            return fullRecipe;
         }
 
         public RecipeDB convertToDB()

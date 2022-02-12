@@ -80,20 +80,20 @@ namespace GilGoblin.Tests
 
                 foreach (int id in fetchIDList) 
                 {
-                    Console.WriteLine();
-                    int cost = Cost.GetCraftingCost(id, defaultWorldID);
-                    Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, defaultWorldID, cost);
-                    int averagePrice = Price.getAveragePrice(id, defaultWorldID);
-                    Log.Debug("Calculated average price for item {itemID} on world {worldID} is: {price}", id, defaultWorldID, averagePrice);
-                    int vendorCost = Cost.GetVendorCost(id);
-                    Log.Debug("Vendor cost for item {itemID} is: {vendorCost}.",id,vendorCost);
-                    int baseCost = Cost.GetBaseCost(id, defaultWorldID);
-                    Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, baseCost);
-                    int minCost = Cost.GetMinCost(id,defaultWorldID);
-                    Log.Debug("Calculated min cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, minCost);
-                    int profit = averagePrice - baseCost;
-                    Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, defaultWorldID, profit);
-                    Console.WriteLine();
+                    //Console.WriteLine();
+                    //int cost = Cost.GetCraftingCost(id, defaultWorldID);
+                    //Log.Debug("Calculated crafting cost for item {itemID} on world {worldID} is: {cost}", id, defaultWorldID, cost);
+                    //int averagePrice = Price.getAveragePrice(id, defaultWorldID);
+                    //Log.Debug("Calculated average price for item {itemID} on world {worldID} is: {price}", id, defaultWorldID, averagePrice);
+                    //int vendorCost = Cost.GetVendorCost(id);
+                    //Log.Debug("Vendor cost for item {itemID} is: {vendorCost}.",id,vendorCost);
+                    //int baseCost = Cost.GetBaseCost(id, defaultWorldID);
+                    //Log.Debug("Calculated base cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, baseCost);
+                    //int minCost = Cost.GetMinCost(id,defaultWorldID);
+                    //Log.Debug("Calculated min cost for item {itemID} on world {worldID} is: {baseCost}", id, defaultWorldID, minCost);
+                    //int profit = averagePrice - baseCost;
+                    //Log.Debug("Calculated profit for item {itemID} on world {worldID} is: {profit}", id, defaultWorldID, profit);
+                    //Console.WriteLine();
                 }
 
                 //DatabaseAccess.Save();

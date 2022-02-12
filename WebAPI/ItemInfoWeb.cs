@@ -49,6 +49,7 @@ namespace GilGoblin.WebAPI
         }
         public static async Task<ItemInfoWeb> FetchItemInfo(int item_id)
         {
+            ItemInfoWeb itemInfo;
             try
             {
                 HttpClient client = new HttpClient();
@@ -56,19 +57,31 @@ namespace GilGoblin.WebAPI
                 var content = await client.GetAsync(url);
 
                 //Deserialize & Cast from JSON to the object
-                ItemInfoWeb item_info = JsonConvert.DeserializeObject<ItemInfoWeb>(
-                    content.Content.ReadAsStringAsync().Result);
-                //if (DatabaseAccess.context != null)
-                //{ 
-                //    DatabaseAccess.context.Add(item_info);
-                //}
-                return item_info;
+                itemInfo = JsonConvert.DeserializeObject<ItemInfoWeb>(
+                    content.Content.ReadAsStringAsync().Result);                
             }
             catch (Exception ex)
             {
                 Log.Error("Failed to convert item info from JSON:" + ex.Message);
                 return null;
             }
+
+            // Save fetched information
+            try
+            {
+                using (ItemDBContext context = DatabaseAccess.getContext())
+                {
+                    context.AddRange(itemInfo);
+                    context.Database.EnsureCreated();
+                    DatabaseAccess.Save(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error saving fetched item info from the web, message:{ex.Message} .... Inner Error: {inner}.", ex.Message, ex.InnerException);
+            }
+
+            return itemInfo;
         }
 
     }

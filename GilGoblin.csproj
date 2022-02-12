@@ -66,6 +66,10 @@
     <Compile Include="Migrations\20211228153148_abct.designer.cs">
       <DependentUpon>20211228153148_abct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20220212210933_ItemInfoDB.cs" />
+    <Compile Include="Migrations\20220212210933_ItemInfoDB.designer.cs">
+      <DependentUpon>20220212210933_ItemInfoDB.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ItemDBContextModelSnapshot.cs" />
     <Compile Include="Tests\TestDB.cs" />
     <Compile Include="Tests\TestFetch.cs" />

@@ -94,29 +94,36 @@ namespace GilGoblin.Database
             public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs, int worldID)
         {
             List<ItemDB> listItemDB = new List<ItemDB>();
+            List<MarketDataDB> marketData = new List<MarketDataDB>();
+
             try
             {
-                List<MarketDataDB> marketData = MarketDataDB.ConvertWebToDBBulk(
+                marketData = MarketDataDB.ConvertWebToDBBulk(
                     MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
+            }
+            catch (Exception ex) {
+                Log.Error("Failed bulk fetch of market data with error message:{error}", ex.Message);
+            }
 
 
                 foreach (int i in itemIDs)
                 {
-                    ItemInfoDB itemInfo = ItemInfoDB.FetchItemInfo(i);
-                    MarketDataDB marketDataDb = marketData.Find(t => t.itemID == i);
-                    if (marketDataDb == null || itemInfo == null) { continue; }
-                    ItemDB newItem = new ItemDB(i, itemInfo, marketDataDb);
-                    if (newItem != null) { listItemDB.Add(newItem); }
+                    try
+                    {
+                        ItemInfoDB itemInfo = ItemInfoDB.FetchItemInfo(i);
+                        MarketDataDB marketDataDb = marketData.Find(t => t.itemID == i);
+                        if (marketDataDb == null || itemInfo == null) { continue; }
+                        ItemDB newItem = new ItemDB(i, itemInfo, marketDataDb);
+                        if (newItem != null && newItem.itemInfo.name.Length >0) { listItemDB.Add(newItem); }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Failed (bulk) creation of item ID:{itemID} with error message:{error}", i, ex.Message);
+                    }
                 }
 
-                //DatabaseAccess.context.AddRange(listItemDB);
+            Log.Debug("Bulk create: Created {create} of {req} entries requested.", listItemDB.Count, itemIDs.Count);
 
-                Log.Debug("Bulk create: Created {create} entries out of {req} requested.", listItemDB.Count, itemIDs.Count);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed bulk created with error message:{ex.m}",ex.Message);
-            }
             return listItemDB;
 
         }
@@ -176,29 +183,14 @@ namespace GilGoblin.Database
                     else
                     {
                         returnList.AddRange(exists);
-                        IEnumerable<ItemDB> itemFetch = returnList.Except(exists);
-
-                        ////Non-existent entries are added to the tracker
-                        //foreach (ItemDB newItem in returnList)
-                        //{
-                        //    if (newItem != null)
-                        //    {
-                        //        returnList.Add(newItem);
-                        //        context.AddAsync<ItemDB>(newItem);
-                        //    }
-                        //}                        
+                        IEnumerable<ItemDB> itemFetch = returnList.Except(exists);                  
                     }
-                    //context.SaveChangesAsync();
                 }
                 else //Does not exist, so we have to fetch it
                 {
 
                     List<ItemDB> fetchList = new List<ItemDB>();
                     fetchList = FetchItemDBBulk(itemIDList, worldId);
-                    //if (fetchList.Count > 0)
-                    //{
-                    //    context.AddRange(fetchList);
-                    //}
                 }
 
                 return returnList;
