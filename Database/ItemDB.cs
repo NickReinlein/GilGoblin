@@ -41,9 +41,6 @@ namespace GilGoblin.Database
             {
                 this.fullRecipes.Clear();
             }
-
-            ItemDBContext context = DatabaseAccess.context;
-            if (context != null) { context.Add(this); }
         }
 
         /// <summary>
@@ -149,18 +146,20 @@ namespace GilGoblin.Database
             }
             try
             {
-                ItemDBContext context = DatabaseAccess.context;
                 List<ItemDB> returnList = new List<ItemDB>();
 
                 List<ItemDB> exists;
                 try
                 {
-                    exists = context.data
+                    using (ItemDBContext context = DatabaseAccess.getContext())
+                    {
+                        exists = context.data
                             .Where(t => itemIDList.Contains(t.itemID))
                             .Include(t => t.marketData)
                             .Include(t => t.fullRecipes)
                             .Include(t => t.itemInfo)
                             .ToList();
+                    }
                 }
                 catch (System.NullReferenceException)
                 {
@@ -172,7 +171,6 @@ namespace GilGoblin.Database
                     if (exists.Count == itemIDList.Count)
                     {
                         //Everything has been found, return results
-                        context.UpdateRange(exists);
                         returnList = exists;
                     }
                     else
@@ -180,27 +178,27 @@ namespace GilGoblin.Database
                         returnList.AddRange(exists);
                         IEnumerable<ItemDB> itemFetch = returnList.Except(exists);
 
-                        //Non-existent entries are added to the tracker
-                        foreach (ItemDB newItem in returnList)
-                        {
-                            if (newItem != null)
-                            {
-                                returnList.Add(newItem);
-                                context.AddAsync<ItemDB>(newItem);
-                            }
-                        }                        
+                        ////Non-existent entries are added to the tracker
+                        //foreach (ItemDB newItem in returnList)
+                        //{
+                        //    if (newItem != null)
+                        //    {
+                        //        returnList.Add(newItem);
+                        //        context.AddAsync<ItemDB>(newItem);
+                        //    }
+                        //}                        
                     }
-                    context.SaveChangesAsync();
+                    //context.SaveChangesAsync();
                 }
                 else //Does not exist, so we have to fetch it
                 {
 
                     List<ItemDB> fetchList = new List<ItemDB>();
                     fetchList = FetchItemDBBulk(itemIDList, worldId);
-                    if (fetchList.Count > 0)
-                    {
-                        context.AddRange(fetchList);
-                    }
+                    //if (fetchList.Count > 0)
+                    //{
+                    //    context.AddRange(fetchList);
+                    //}
                 }
 
                 return returnList;
@@ -278,8 +276,6 @@ namespace GilGoblin.Database
                 {
                     throw new Exception("Nothing returned from the FetchItemDBBulk() method.");
                 }
-                ItemDBContext context = DatabaseAccess.context;
-                if (context != null) { context.Add(itemDBFetched); }
                 return itemDBFetched;
             }
             catch (Exception ex)

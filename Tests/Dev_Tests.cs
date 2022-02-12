@@ -66,7 +66,7 @@ namespace GilGoblin.Tests
             try
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information() // PROD: reduce verbosity
+                    .MinimumLevel.Verbose() // PROD: reduce verbosity
                     .WriteTo.Console()  
                     .WriteTo.File("logs/test.txt")
                     .CreateLogger();
@@ -96,7 +96,7 @@ namespace GilGoblin.Tests
                     Console.WriteLine();
                 }
 
-                DatabaseAccess.Save();
+                //DatabaseAccess.Save();
                 DatabaseAccess.Disconnect();
                 Log.Information("Application ended successfully.");
                 Log.CloseAndFlush();

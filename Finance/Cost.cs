@@ -108,9 +108,9 @@ namespace GilGoblin.Finance
                 if (itemDB != null){
                     if (itemDB.fullRecipes.Count > 0)
                     {
-                        if (DatabaseAccess.context != null) {
-                            DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
-                        }
+                        //using (ItemDBContext context = DatabaseAccess.getContext()) { 
+                        //    DatabaseAccess.SaveRecipes(itemDB.fullRecipes).GetAwaiter().GetResult();
+                        //}
 
                         RecipeIngredientBreakdown breakdown = GetRecipeBreakdown(itemDB.fullRecipes);
                         foreach (Ingredient ingredient in breakdown.ingredients.Values)

@@ -43,7 +43,7 @@ namespace GilGoblin.WebAPI
             if (listings == null || listings.Count == 0)
             {
                 // This is logged for informational purposes; might be an error
-                Log.Information("No listings found for item {itemID} with world {worldID}.", itemID, worldId);
+                Log.Debug("No listings found for item {itemID} with world {worldID}.", itemID, worldId);
             }
             this.itemID = itemID;
             this.worldID = worldId;

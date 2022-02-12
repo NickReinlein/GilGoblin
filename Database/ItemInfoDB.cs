@@ -72,13 +72,16 @@ namespace GilGoblin.Database
         {
             if (itemID == 0) { return null; }
 
-            ItemDBContext context = DatabaseAccess.context;
             try
             {
-                ItemInfoDB exist = context.itemInfoData
+                ItemInfoDB exist;
+                using (ItemDBContext context = DatabaseAccess.getContext())
+                {
+                    exist = context.itemInfoData
                     .Where(t => (t.itemID == itemID))
                     .Include(t => t.fullRecipes)
                     .FirstOrDefault();
+                }
                 return exist;
             }
             catch(Exception) { return null; }                        
