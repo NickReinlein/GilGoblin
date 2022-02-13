@@ -20,7 +20,7 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 40; //TODO: increase for production
+        public const int _initialDBCreationEntryCount = 80; //TODO: increase for production
         public const int _entriesPerAPIPull = 20;
         public const int _waitTimeInMsForAPICalls = 500;
         public const int _gameItemTotalCount = 300; //TODO: change to 36700; // Item ID's go to this #
@@ -129,21 +129,36 @@ namespace GilGoblin.Database
 
                 // Loop through every X number of entries to build as packages
                 // to pull from the API (ie: 20 entries at a time).
-                // Wait to prevent this application from overloading the API servers
-                List<int> batchItemIDList;
-                for (int i=1; i< _initialDBCreationEntryCount; i += _entriesPerAPIPull){
-                    // TODO: Get the world ID fed here so we can pull for the right world ID)
-                   batchItemIDList = Enumerable.Range(i, i+_entriesPerAPIPull-1).ToList();
-                    Log.Debug("Pulling information on ID's in range: {i} to {endRange}.", i, i+ _entriesPerAPIPull-1);
+                // Wait to prevent this application from overloading the API servers                
+
+                List<int> batchItemIDList = ItemDB.getListOfCraftingIDs();
+                if (batchItemIDList.Count > 0) {                    
                     var thisBatchOfItems = ItemDB.bulkCreateItemDB(batchItemIDList);
                     Log.Debug("Returned with {numberOfrecords} records: ", thisBatchOfItems.Count());
                     initialItemRun.UnionWith(thisBatchOfItems);
-                    batchItemIDList.Clear();
-                    Log.Debug("Waiting {wait} seconds before next API call.", (float)_waitTimeInMsForAPICalls / 1000);
-                    Thread.Sleep(_waitTimeInMsForAPICalls);
+                    //Log.Debug("Waiting {wait} seconds before next API call.", (float)_waitTimeInMsForAPICalls / 1000);
+                    //Thread.Sleep(_waitTimeInMsForAPICalls);
+                }
+                else
+                {
+                    Log.Error("Failed to intialize database: initial list for item ID is empty!");
+                    throw new Functions.OperationException("Failed create initial item ID list for database startup.");
                 }
 
-                try
+                //for (int i=1; i< _initialDBCreationEntryCount; i += _entriesPerAPIPull){
+                //    // TODO: Get the world ID fed here so we can pull for the right world ID)
+                //    List<int> batchItemIDList = Enumerable.Range(i, _entriesPerAPIPull).ToList();
+                //    Log.Debug("Pulling information on ID's in range: {i} to {endRange}.", i, i+_entriesPerAPIPull);
+
+                //    var thisBatchOfItems = ItemDB.bulkCreateItemDB(batchItemIDList);
+                //    Log.Debug("Returned with {numberOfrecords} records: ", thisBatchOfItems.Count());
+
+                //    initialItemRun.UnionWith(thisBatchOfItems);                    
+                //    //Log.Debug("Waiting {wait} seconds before next API call.", (float)_waitTimeInMsForAPICalls / 1000);
+                //    //Thread.Sleep(_waitTimeInMsForAPICalls);
+                //}
+
+            try
                 {
                     using (ItemDBContext context = getContext())
                     {

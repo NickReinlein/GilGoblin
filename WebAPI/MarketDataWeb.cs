@@ -62,12 +62,12 @@ namespace GilGoblin.WebAPI
 
         }
 
-        public static async Task<MarketDataWeb> FetchMarketData(int item_id, int world_id)
+        public static async Task<MarketDataWeb> FetchMarketData(int itemID, int worldID)
         {
             try
             {
                 HttpClient client = new HttpClient();
-                string url = "https://universalis.app/api/" + world_id + "/" + item_id;
+                string url = "https://universalis.app/api/" + worldID + "/" + itemID;
                 var content = await client.GetAsync(url);
 
                 //Deserialize from JSON to the object

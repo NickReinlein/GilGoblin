@@ -52,13 +52,13 @@ namespace GilGoblin.Database
         /// <param name="marketData">Market data from one world</param>
         protected ItemDB(int itemID, ItemInfoDB itemInfo, MarketDataDB marketData)
         {
-            this.itemID = itemID;            
+            this.itemID = itemID;
             this.itemInfo = itemInfo;
-            
+
             List<MarketDataDB> listConvert = new List<MarketDataDB>();
             listConvert.Add(marketData);
             this.marketData = listConvert;
-            
+
             if (this.itemInfo != null && this.itemInfo.fullRecipes.Count > 0)
             {
                 this.fullRecipes = this.itemInfo.fullRecipes.ToList();
@@ -69,15 +69,15 @@ namespace GilGoblin.Database
             }
         }
 
-            /// <summary>
-            /// Used internally for bulk processing when items are fetched in bulk
-            /// </summary>
-            /// <param name="itemID">Item ID</param>
-            /// <param name="itemInfo">Basic general info</param>
-            /// <param name="marketData">Marketdata list (per world)</param>
-            /// <param name="fullRecipes">List of complete Recipes</param>
+        /// <summary>
+        /// Used internally for bulk processing when items are fetched in bulk
+        /// </summary>
+        /// <param name="itemID">Item ID</param>
+        /// <param name="itemInfo">Basic general info</param>
+        /// <param name="marketData">Marketdata list (per world)</param>
+        /// <param name="fullRecipes">List of complete Recipes</param>
 
-            protected ItemDB(int itemID, ItemInfoDB itemInfo, List<MarketDataDB> marketData, List<RecipeDB> fullRecipes)
+        protected ItemDB(int itemID, ItemInfoDB itemInfo, List<MarketDataDB> marketData, List<RecipeDB> fullRecipes)
         {
             this.itemID = itemID;
             // XIVAPI does not have a bulk API call AFAIK :(
@@ -91,7 +91,7 @@ namespace GilGoblin.Database
             return bulkCreateItemDB(itemIDs, Cost._default_world_id);
         }
 
-            public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs, int worldID)
+        public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs, int worldID)
         {
             List<ItemDB> listItemDB = new List<ItemDB>();
             List<MarketDataDB> marketData = new List<MarketDataDB>();
@@ -101,26 +101,39 @@ namespace GilGoblin.Database
                 marketData = MarketDataDB.ConvertWebToDBBulk(
                     MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Log.Error("Failed bulk fetch of market data with error message:{error}", ex.Message);
             }
 
 
-                foreach (int i in itemIDs)
+            foreach (int i in itemIDs)
+            {
+                try
                 {
-                    try
+                    ItemInfoDB itemInfo = ItemInfoDB.FetchItemInfo(i);
+                    if (itemInfo == null)
                     {
-                        ItemInfoDB itemInfo = ItemInfoDB.FetchItemInfo(i);
-                        MarketDataDB marketDataDb = marketData.Find(t => t.itemID == i);
-                        if (marketDataDb == null || itemInfo == null) { continue; }
-                        ItemDB newItem = new ItemDB(i, itemInfo, marketDataDb);
-                        if (newItem != null && newItem.itemInfo.name.Length >0) { listItemDB.Add(newItem); }
+                        Log.Debug("Failed to get itemInfo for item with ID:{id}, skipping this.", i);
+                        continue;
                     }
-                    catch (Exception ex)
+
+                    var marketDataDb = marketData.Find(t => t.itemID == i && t.worldID == worldID);
+                    if (marketDataDb == null){
+                        Log.Verbose("Did not find marketData for item with ID:{id}, worldID:{worldID}", i, worldID);
+                    }
+
+                    ItemDB newItem = new ItemDB(i, itemInfo, marketDataDb);
+                    if (newItem != null && newItem.itemInfo.name.Length > 0)
                     {
-                        Log.Error("Failed (bulk) creation of item ID:{itemID} with error message:{error}", i, ex.Message);
+                        listItemDB.Add(newItem);
                     }
                 }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed (bulk) creation of item ID:{itemID} with error message:{error}", i, ex.Message);
+                }
+            }
 
             Log.Debug("Bulk create: Created {create} of {req} entries requested.", listItemDB.Count, itemIDs.Count);
 
@@ -183,7 +196,7 @@ namespace GilGoblin.Database
                     else
                     {
                         returnList.AddRange(exists);
-                        IEnumerable<ItemDB> itemFetch = returnList.Except(exists);                  
+                        IEnumerable<ItemDB> itemFetch = returnList.Except(exists);
                     }
                 }
                 else //Does not exist, so we have to fetch it
@@ -289,7 +302,7 @@ namespace GilGoblin.Database
                 if (itemDB != null)
                 {
                     //Found, stop & return
-                    returnData = itemDB.marketData.First(t => t.worldID == worldID);
+                    returnData = itemDB.marketData.First(t => t.itemID == itemID && t.worldID == worldID);
                     return returnData;
                 }
             }
@@ -308,11 +321,24 @@ namespace GilGoblin.Database
                 returnData = newData;
                 return returnData;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error("failed to fetch the market data via API for item {itemID}, world {worldID} with message {mesage}", itemID, worldID, ex.Message);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Gets a list of crafting ID's for a specific crafting job (ie: Armorer)
+        /// </summary>
+        /// <returns></returns>
+        public static List<int> getListOfCraftingIDs()
+        {
+            List<int> list = new List<int>();
+            //https://xivapi.com/search?filters=Recipes.ID%3E0?limit=3000
+
+
+            return list;
         }
     }
 }

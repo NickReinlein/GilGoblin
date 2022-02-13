@@ -34,7 +34,6 @@ namespace GilGoblin.Database
                         = RecipeFullWeb.FetchRecipe(header.recipe_id).GetAwaiter().GetResult();
                     if (thisRecipe != null)
                     {
-
                         this.fullRecipes.Add(thisRecipe.convertToDB());
                     }
                 }

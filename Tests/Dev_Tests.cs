@@ -66,7 +66,7 @@ namespace GilGoblin.Tests
             try
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Verbose() // PROD: reduce verbosity
+                    .MinimumLevel.Debug() // PROD: reduce verbosity
                     .WriteTo.Console()  
                     .WriteTo.File("logs/test.txt")
                     .CreateLogger();

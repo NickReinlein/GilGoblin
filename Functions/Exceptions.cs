@@ -24,4 +24,15 @@ namespace GilGoblin.Functions
         public ParameterException(string message, Exception inner)
             : base(message, inner) { }
     }
+    [Serializable]
+    public class OperationException : Exception
+    {
+        public OperationException() { }
+
+        public OperationException(string message)
+            : base(message) { }
+
+        public OperationException(string message, Exception inner)
+            : base(message, inner) { }
+    }
 }
