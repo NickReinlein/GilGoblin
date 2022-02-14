@@ -328,17 +328,5 @@ namespace GilGoblin.Database
             }
         }
 
-        /// <summary>
-        /// Gets a list of crafting ID's for a specific crafting job (ie: Armorer)
-        /// </summary>
-        /// <returns></returns>
-        public static List<int> getListOfCraftingIDs()
-        {
-            List<int> list = new List<int>();
-            //https://xivapi.com/search?filters=Recipes.ID%3E0?limit=3000
-
-
-            return list;
-        }
     }
 }

@@ -59,5 +59,18 @@ namespace GilGoblin.Tests
             Assert.True(listing.timestamp.CompareTo(testDateTime) > 0);
         }
 
+        [Fact]
+        public void TestGetAllCraftingItemIDsViaRecipeLookup()
+        {
+            var craftingList = CraftingList.getListOfAllCraftableItemIDs();
+            Assert.NotNull(craftingList);
+            Assert.True(craftingList.Count > 7000);
+
+            var craftingListArmorer = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer);
+            Assert.NotNull(craftingListArmorer);
+            Assert.True(craftingListArmorer.Count > 300);
+
+        }
+
     }
 }

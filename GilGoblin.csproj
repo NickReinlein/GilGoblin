@@ -74,6 +74,7 @@
     <Compile Include="Tests\TestDB.cs" />
     <Compile Include="Tests\TestFetch.cs" />
     <Compile Include="Tests\TestGet.cs" />
+    <Compile Include="Database\CraftingList.cs" />
     <Compile Include="WebAPI\ItemInfoWeb.cs" />
     <Compile Include="WebAPI\ItemRecipeHeaderAPI.cs" />
     <Compile Include="Finance\ItemInfo.cs" />
@@ -90,6 +91,9 @@
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="FileHelpers, Version=3.5.1.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
+      <HintPath>packages\FileHelpers.3.5.1\lib\net45\FileHelpers.dll</HintPath>
     </Reference>
     <Reference Include="Flurl, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Flurl.3.0.2\lib\net472\Flurl.dll</HintPath>

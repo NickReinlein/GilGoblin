@@ -131,7 +131,7 @@ namespace GilGoblin.Database
                 // to pull from the API (ie: 20 entries at a time).
                 // Wait to prevent this application from overloading the API servers                
 
-                List<int> batchItemIDList = ItemDB.getListOfCraftingIDs();
+                List<int> batchItemIDList = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer); //TODO: remove armorer limitation 
                 if (batchItemIDList.Count > 0) {                    
                     var thisBatchOfItems = ItemDB.bulkCreateItemDB(batchItemIDList);
                     Log.Debug("Returned with {numberOfrecords} records: ", thisBatchOfItems.Count());
