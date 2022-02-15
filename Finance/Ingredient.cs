@@ -8,14 +8,15 @@ namespace GilGoblin.Finance
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        public int item_id { get; set; }
+        public int recipeID { get; set; }
+        public int itemID { get; set; }
         public int quantity { get; set; }
 
-        public Ingredient(int item_id, int quantity)
+        public Ingredient(int itemID, int quantity, int recipeID)
         {
-            this.item_id = item_id;
+            this.itemID = itemID;
             this.quantity = quantity;
+            this.recipeID = recipeID;
         }
     }
 }

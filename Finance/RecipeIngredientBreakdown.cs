@@ -70,17 +70,17 @@ namespace GilGoblin.Finance
                 foreach (Ingredient ingredient in recipe.ingredients)
                 {
                     try {
-                        if (ItemInfoDB.IsCraftable(ingredient.item_id))
+                        if (ItemInfoDB.IsCraftable(ingredient.itemID))
                         {
                             List<RecipeDB> ingredientBreakdownList
-                                = ItemInfoDB.GetCraftingList(ingredient.item_id);
+                                = ItemInfoDB.GetCraftingList(ingredient.itemID);
                     
                             this.Add(ingredientBreakdownList);
                     
                         }
                         else
                         {
-                            this.insert(ingredient.item_id, ingredient);
+                            this.insert(ingredient.itemID, ingredient);
                         }
                     }
                     catch (Exception ex)

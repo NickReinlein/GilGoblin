@@ -3,6 +3,7 @@ using GilGoblin.WebAPI;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GilGoblin.Database
 {
@@ -79,7 +80,7 @@ namespace GilGoblin.Database
                     returnList.Add(db);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error("Failed to convert MarketDataWeb to DB in bulk. Message:{ex.message}", ex.Message);
             }
@@ -176,12 +177,12 @@ namespace GilGoblin.Database
                     //DatabaseAccess.context.AddRange(listReturn);
                     return listReturn;
                 }
-                catch (Exception ex) 
-                { 
+                catch (Exception ex)
+                {
                     Log.Information(ex.Message);
                     return null;
                 }
-                
+
             }
         }
 
@@ -214,6 +215,41 @@ namespace GilGoblin.Database
             double hoursElapsed = diff.TotalHours;
             if (hoursElapsed > MarketData._staleness_hours_for_refresh) { return true; }
             else { return false; }
+        }
+
+        // Try with the database first, then if it fails we use the web API
+        public static MarketDataDB GetMarketData(int itemID, int worldID)
+        {
+            ItemDB itemDB;
+            MarketDataDB returnData;
+            //Does it exist in the database? Is it stale?
+            try
+            {
+                itemDB = ItemDB.GetItemDBSingle(itemID, worldID);
+                if (itemDB != null){ //Found, stop & return
+                    returnData = itemDB.marketData.First(t => t.itemID == itemID && t.worldID == worldID);
+                    return returnData;
+                }
+            }
+            catch (Exception){
+                // Not found in the database
+                itemDB = null;
+            }
+
+            try
+            {
+                // Not on database, fetch with the web api
+                MarketDataWeb marketDataWeb
+                    = MarketDataWeb.FetchMarketData(itemID, worldID).GetAwaiter().GetResult();
+                MarketDataDB newData = new MarketDataDB(marketDataWeb);
+                returnData = newData;
+                return returnData;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("failed to fetch the market data via API for item {itemID}, world {worldID} with message {mesage}", itemID, worldID, ex.Message);
+                return null;
+            }
         }
     }
 }

@@ -76,36 +76,38 @@ namespace GilGoblin.Database
             modelBuilder.Entity<RecipeDB>().Property(t => t.CanHq);
             modelBuilder.Entity<RecipeDB>().Property(t => t.CanQuickSynth);
             modelBuilder.Entity<RecipeDB>().HasMany(t => t.ingredients);
-
-
-            // The full recipe from the web
-            modelBuilder.Entity<RecipeFullWeb>().ToTable("RecipeFullWeb");
-            modelBuilder.Entity<RecipeFullWeb>().HasKey(t => t.recipe_id);
-            modelBuilder.Entity<RecipeFullWeb>().Property(t => t.result_quantity).IsRequired();
-            modelBuilder.Entity<RecipeFullWeb>().Property(t => t.icon_id);
-            modelBuilder.Entity<RecipeFullWeb>().Property(t => t.target_item_id).IsRequired();
-            modelBuilder.Entity<RecipeFullWeb>().Property(t => t.CanHq);
-            modelBuilder.Entity<RecipeFullWeb>().Property(t => t.CanQuickSynth);
-            modelBuilder.Entity<RecipeFullWeb>().HasMany(t => t.ingredients);
-
-
-            // Item info from the web with short recipes
-            modelBuilder.Entity<ItemInfoWeb>().ToTable("ItemInfoWeb");
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.itemID).IsRequired();
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.name);
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.iconID);
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.description);
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.vendor_price);
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.stack_size);
-            modelBuilder.Entity<ItemInfoWeb>().Property(t => t.gatheringID);
-            modelBuilder.Entity<ItemInfoWeb>().HasMany(t => t.recipeHeader);
-
-            //The abbreviated recipe with only 3 properties in the market data
-            modelBuilder.Entity<ItemRecipeHeaderAPI>().ToTable("ItemRecipeHeaderAPI");
-            modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.ID).ValueGeneratedOnAdd(); ;
-            modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.recipe_id).IsRequired();
-            modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.class_job_id).IsRequired();
-            modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.level).IsRequired();
         }
     }
 }
+
+/** No longer saved!
+//The abbreviated recipe with only 3 properties in the market data
+modelBuilder.Entity<ItemRecipeHeaderAPI>().ToTable("ItemRecipeHeaderAPI");
+modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.ID).ValueGeneratedOnAdd(); ;
+modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.recipeID).IsRequired();
+modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.classJobID).IsRequired();
+modelBuilder.Entity<ItemRecipeHeaderAPI>().Property(t => t.level).IsRequired(); **/
+
+/** No longer saved! Pull and save to DB every time. Eventually read CSV?
+//// The full recipe from the web
+//modelBuilder.Entity<RecipeFullWeb>().ToTable("RecipeFullWeb");
+//modelBuilder.Entity<RecipeFullWeb>().HasKey(t => t.recipe_id);
+//modelBuilder.Entity<RecipeFullWeb>().Property(t => t.result_quantity).IsRequired();
+//modelBuilder.Entity<RecipeFullWeb>().Property(t => t.icon_id);
+//modelBuilder.Entity<RecipeFullWeb>().Property(t => t.target_item_id).IsRequired();
+//modelBuilder.Entity<RecipeFullWeb>().Property(t => t.CanHq);
+//modelBuilder.Entity<RecipeFullWeb>().Property(t => t.CanQuickSynth);
+//modelBuilder.Entity<RecipeFullWeb>().HasMany(t => t.ingredients); **/
+
+
+/** No longer saved! Pull and save to DB every time. Eventually read CSV?  
+// Item info from the web with short recipes
+modelBuilder.Entity<ItemInfoWeb>().ToTable("ItemInfoWeb");
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.itemID).IsRequired();
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.name);
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.iconID);
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.description);
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.vendor_price);
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.stack_size);
+modelBuilder.Entity<ItemInfoWeb>().Property(t => t.gatheringID);
+modelBuilder.Entity<ItemInfoWeb>().HasMany(t => t.recipeHeader); **/

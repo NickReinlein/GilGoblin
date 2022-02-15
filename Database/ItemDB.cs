@@ -98,8 +98,9 @@ namespace GilGoblin.Database
 
             try
             {
-                marketData = MarketDataDB.ConvertWebToDBBulk(
-                    MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
+                marketData = MarketDataDB.GetMarketDataBulk(itemIDs, worldID,true);
+                //marketData = MarketDataDB.ConvertWebToDBBulk(
+                //    MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
             }
             catch (Exception ex)
             {
@@ -111,7 +112,7 @@ namespace GilGoblin.Database
             {
                 try
                 {
-                    ItemInfoDB itemInfo = ItemInfoDB.FetchItemInfo(i);
+                    ItemInfoDB itemInfo = ItemInfoDB.GetItemInfo(i);
                     if (itemInfo == null)
                     {
                         Log.Debug("Failed to get itemInfo for item with ID:{id}, skipping this.", i);
@@ -135,7 +136,7 @@ namespace GilGoblin.Database
                 }
             }
 
-            Log.Debug("Bulk create: Created {create} of {req} entries requested.", listItemDB.Count, itemIDs.Count);
+            Log.Debug("Bulk create: Created {create} of {req} entries requested in bulkCreateItemDB().", listItemDB.Count, itemIDs.Count);
 
             return listItemDB;
 
@@ -288,45 +289,7 @@ namespace GilGoblin.Database
                 Log.Error("Failed to get itemDB in FetchItemDBSingle() for item {itemID} world {worldID} with message: {message}", itemID, worldId, ex.Message);
                 return null;
             }
-        }
-
-        // Try with the database first, then if it fails we use the web API
-        public static MarketDataDB GetMarketData(int itemID, int worldID)
-        {
-            ItemDB itemDB;
-            MarketDataDB returnData;
-            //Does it exist in the database? Is it stale?
-            try
-            {
-                itemDB = GetItemDBSingle(itemID, worldID);
-                if (itemDB != null)
-                {
-                    //Found, stop & return
-                    returnData = itemDB.marketData.First(t => t.itemID == itemID && t.worldID == worldID);
-                    return returnData;
-                }
-            }
-            catch (Exception)
-            {
-                // Not found in the database
-                itemDB = null;
-            }
-
-            try
-            {
-                // Not on database, fetch with the web api
-                MarketDataWeb marketDataWeb
-                    = MarketDataWeb.FetchMarketData(itemID, worldID).GetAwaiter().GetResult();
-                MarketDataDB newData = new MarketDataDB(marketDataWeb);
-                returnData = newData;
-                return returnData;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("failed to fetch the market data via API for item {itemID}, world {worldID} with message {mesage}", itemID, worldID, ex.Message);
-                return null;
-            }
-        }
+        }        
 
     }
 }

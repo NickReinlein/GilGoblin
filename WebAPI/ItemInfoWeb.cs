@@ -66,21 +66,6 @@ namespace GilGoblin.WebAPI
                 return null;
             }
 
-            // Save fetched information
-            try
-            {
-                using (ItemDBContext context = DatabaseAccess.getContext())
-                {
-                    context.AddRange(itemInfo);
-                    context.Database.EnsureCreated();
-                    DatabaseAccess.Save(context);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error saving fetched item info from the web, message:{ex.Message} .... Inner Error: {inner}.", ex.Message, ex.InnerException);
-            }
-
             return itemInfo;
         }
 

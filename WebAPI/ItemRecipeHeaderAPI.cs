@@ -9,8 +9,8 @@ namespace GilGoblin.WebAPI
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public int class_job_id { get; set; }
-        public int recipe_id { get; set; }
+        public int classJobID { get; set; }
+        public int recipeID { get; set; }
         public int level { get; set; }
 
         public ItemRecipeHeaderAPI() { }
@@ -18,8 +18,8 @@ namespace GilGoblin.WebAPI
         [JsonConstructor]
         public ItemRecipeHeaderAPI(int ID, int classJobID, int level)
         {
-            this.class_job_id = classJobID;
-            this.recipe_id = ID;
+            this.classJobID = classJobID;
+            this.recipeID = ID;
             this.level = level;
         }
 

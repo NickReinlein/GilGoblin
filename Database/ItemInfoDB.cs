@@ -31,7 +31,7 @@ namespace GilGoblin.Database
                 foreach (ItemRecipeHeaderAPI header in web.recipeHeader)
                 {
                     RecipeFullWeb thisRecipe
-                        = RecipeFullWeb.FetchRecipe(header.recipe_id).GetAwaiter().GetResult();
+                        = RecipeFullWeb.FetchRecipe(header.recipeID).GetAwaiter().GetResult();
                     if (thisRecipe != null)
                     {
                         this.fullRecipes.Add(thisRecipe.convertToDB());
