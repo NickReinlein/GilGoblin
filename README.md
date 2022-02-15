@@ -43,3 +43,5 @@ Additional functionality that is currently considered but no immediate plans to 
 
 * XIVAPI: A FINAL FANTASY XIV: Online REST API ( https://xivapi.com/ )
 * Universalis: A crowdsourced market board aggregator for the game FFXIV ( https://github.com/Universalis-FFXIV/Universalis )
+* FileHelpers: A free and easy to use .NET library to import or export data from fixed length or delimited records in files, strings or streams.   (https://www.filehelpers.net/)
+* Serilog: A clean logging library which provides diagnostic logging to files, the console, and elsewhere.  (https://serilog.net/)
