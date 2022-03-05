@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,10 +21,10 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 100; //TODO: increase for production
+        public const int _initialDBCreationEntryCount = 36700; //TODO: increase for production
         public const int _entriesPerAPIPull = 20;
         public const int _waitTimeInMsForAPICalls = 500;
-        public const int _gameItemTotalCount = 300; //TODO: change to 36700; // Item ID's go to this #
+        public const int _gameItemTotalCount = 36700; //Item ID's go to this #
 
         public static SqliteConnection _conn { get; set; }
 
@@ -128,21 +129,16 @@ namespace GilGoblin.Database
             try{
                 //await context.Database.EnsureCreatedAsync();
                 HashSet<ItemDB> initialItemRun = new HashSet<ItemDB>();
-
-                // TODO: Get the world ID fed here so we can pull for the right world ID)
-
-                // Loop through every X number of entries to build as packages
-                // to pull from the API (ie: 20 entries at a time).
-                // Wait to prevent this application from overloading the API servers               
-                List<int> batchItemIDList = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer); //TODO: remove armorer limitation 
+                Stopwatch stopwatch = new Stopwatch();
+                Log.Information("Beginning initial startup.");
+                // TODO: Get the world ID fed here so we can pull for the right world ID)            
+                List<int> batchItemIDList = CraftingList.getListOfAllCraftableItemIDs();
                 List<int> shortList = batchItemIDList.GetRange(0, Math.Min(_initialDBCreationEntryCount, batchItemIDList.Count));
                 if (shortList.Count > 0)
                 {
-                    var thisBatchOfItems = ItemDB.bulkCreateItemDB(shortList);
+                    var thisBatchOfItems = ItemDB.bulkCreateItemDBFromLargeList(shortList);
                     Log.Debug("Returned with {numberOfrecords} records: ", thisBatchOfItems.Count());
                     initialItemRun.UnionWith(thisBatchOfItems);
-                    //Log.Debug("Waiting {wait} seconds before next API call.", (float)_waitTimeInMsForAPICalls / 1000);
-                    //Thread.Sleep(_waitTimeInMsForAPICalls);
                 }
                 else
                 {
@@ -156,6 +152,14 @@ namespace GilGoblin.Database
                     {
                         context.AddRange(initialItemRun);
                         Save(context);
+                        stopwatch.Stop();                        
+                        TimeSpan ts = stopwatch.Elapsed;
+
+                        // Format and display the TimeSpan value.
+                        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                            ts.Hours, ts.Minutes, ts.Seconds,
+                            ts.Milliseconds / 10);
+                        Log.Information("Done initial startup. Total runTime is: " + elapsedTime);
                     }
                 }
                 catch (Exception ex)

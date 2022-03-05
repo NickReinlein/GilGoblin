@@ -26,8 +26,7 @@ namespace GilGoblin.Database
         /// Gets a list of crafting ID's for a specific crafting job (ie: Armorer)
         /// </summary>
         /// <returns></returns>
-        public static List<RecipeLookup> getListOfCraftingLookup()
-        {
+        public static List<RecipeLookup> getListOfCraftingLookup(){
             List<RecipeLookup> list = RecipeLookup.getRecipeList();            
             return list;        
         }

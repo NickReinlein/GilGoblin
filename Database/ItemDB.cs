@@ -2,6 +2,7 @@
 using GilGoblin.WebAPI;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using System.Timers;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace GilGoblin.Database
 {
@@ -84,6 +86,37 @@ namespace GilGoblin.Database
             this.itemInfo = itemInfo;
             this.marketData = marketData;
             this.fullRecipes = fullRecipes;
+        }
+
+        public static List<ItemDB> bulkCreateItemDBFromLargeList(List<int> itemIDs)
+        {
+            List<ItemDB> listItemDB = new List<ItemDB>();
+            int jumpCount = DatabaseAccess._entriesPerAPIPull;
+            
+            // Process a large list in batches to prevent API abuse
+            for (int i = 0; i < itemIDs.Count; i = i+jumpCount){
+                try
+                {
+                    List<int> subIDList = itemIDs.GetRange(i, jumpCount);
+                    Stopwatch stopwatch = new Stopwatch();
+                    Log.Debug("Starting creation of " + jumpCount + " items.");
+                    List<ItemDB> subList = bulkCreateItemDB(subIDList);
+                    stopwatch.Stop();
+                    int seconds = (int) stopwatch.Elapsed.TotalSeconds;
+                    Log.Debug("Done in " + seconds + " seconds.");
+                    listItemDB.AddRange(subList);
+                    float donePercent = ((float)i / (float)itemIDs.Count) * 100;
+                    String percentString = donePercent.ToString("0.00");
+                    Log.Information(percentString+"% done. Found:" +i+"/"+itemIDs.Count);
+                    //Wait here
+                    //Thread.Sleep(1000);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to fetch a sublist of items from a large list. Err:{errmessage}", ex.Message);
+                }
+            }
+            return listItemDB;
         }
 
         public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs)
