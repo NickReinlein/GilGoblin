@@ -21,7 +21,7 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 36700; //TODO: increase for production
+        public const int _initialDBCreationEntryCount = 200; //TODO: increase for production
         public const int _entriesPerAPIPull = 20;
         public const int _waitTimeInMsForAPICalls = 500;
         public const int _gameItemTotalCount = 36700; //Item ID's go to this #
@@ -80,11 +80,6 @@ namespace GilGoblin.Database
                 {
                     Log.Error(ex.Message);
                 }
-                Log.Logger = new LoggerConfiguration()
-   .MinimumLevel.Information() // PROD: reduce verbosity
-   .WriteTo.Console()
-   .WriteTo.File("logs/test.txt")
-   .CreateLogger();
             }
 
         }
@@ -93,7 +88,7 @@ namespace GilGoblin.Database
         {
             try
             {
-
+                Log.Information("Startup initiated.");
 
                 bool initial = false;
                 try
@@ -126,19 +121,21 @@ namespace GilGoblin.Database
 
         public static void InitialStartup()
         {
-            try{
+            try
+            {
                 //await context.Database.EnsureCreatedAsync();
                 HashSet<ItemDB> initialItemRun = new HashSet<ItemDB>();
                 Stopwatch stopwatch = new Stopwatch();
-                Log.Information("Beginning initial startup.");
+                Log.Information("Inital startup initiated.");
                 // TODO: Get the world ID fed here so we can pull for the right world ID)            
-                List<int> batchItemIDList = CraftingList.getListOfAllCraftableItemIDs();
+                List<int> batchItemIDList = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer);
                 List<int> shortList = batchItemIDList.GetRange(0, Math.Min(_initialDBCreationEntryCount, batchItemIDList.Count));
                 if (shortList.Count > 0)
                 {
-                    var thisBatchOfItems = ItemDB.bulkCreateItemDBFromLargeList(shortList);
-                    Log.Debug("Returned with {numberOfrecords} records: ", thisBatchOfItems.Count());
+                    //var thisBatchOfItems = ItemDB.bulkCreateItemDBFromLargeList(shortList);
+                    var thisBatchOfItems = ItemDB.GetItemDBBulk(shortList);
                     initialItemRun.UnionWith(thisBatchOfItems);
+                    Log.Debug("Returned from bulk get with {numberOfrecords} records, for a total of {totalRecords}.", thisBatchOfItems.Count(), initialItemRun.Count);
                 }
                 else
                 {
@@ -150,7 +147,6 @@ namespace GilGoblin.Database
                 {
                     using (ItemDBContext context = getContext())
                     {
-                        context.AddRange(initialItemRun);
                         Save(context);
                         stopwatch.Stop();                        
                         TimeSpan ts = stopwatch.Elapsed;

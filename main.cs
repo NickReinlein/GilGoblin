@@ -8,7 +8,7 @@ class main
     {
 
         Log.Logger = new LoggerConfiguration()
-            //.MinimumLevel.Information() // PROD: reduce verbosity
+            .MinimumLevel.Information() // PROD: reduce verbosity
             .WriteTo.Console()
             .WriteTo.File("logs/test.txt")
             .CreateLogger();

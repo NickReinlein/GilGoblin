@@ -148,7 +148,7 @@ namespace GilGoblin.Database
                 {
                     List<MarketDataDB> freshDataDB = new List<MarketDataDB>();
                     freshDataDB = filterFreshData(listDB);
-                    List<int> itemIDFetchList = itemIDs;
+                    List<int> itemIDFetchList = new List<int>(itemIDs);
                     foreach (MarketDataDB success in freshDataDB)
                     {
                         listReturn.Add(success);
