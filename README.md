@@ -2,21 +2,14 @@
 
 ## Summary
 
-GilGoblin is a locally run application for FFXIV, written in C#. This is a project intended to help the author learn C# and web API calls with synchronization. However, the project should prove useful to other players. GilGoblin calculates the most profitable items to flip or craft based on market prices, vendor prices and crafting component costs. 
+GilGoblin is a locally run application for FFXIV, written in C#. It calculates the most profitable items to craft based on market prices, vendor prices and crafting component costs. It stores the data in an embedded SQLite database for local reuse while the data is not stale. 
 
-## About
-This is intended as a learning exercise that would also provide a useful tool to other FFXIV players. GilGoblin is currently developed & maintained by 1 developer working part-time on the project.
+The initial functionality includes the following:
 
-## Soon
-
-GilGoblin is a pre-alpha status project to calculate profitable items in FFXIV. The plan is to pull market data from the appropriate world/data center and compare to the best available cost to calculate maximum potential profits for any items considered (ie: All materials that can be gathered by a "Miner", how much profit (if any) comes from crafting a "Mithril Ingot" based on component prices, such as "Mithril Ore" prices).
-
-This means having the functionality to perform the following: 
-
-* Estimating the average price from the market board listings (75%)
+* Estimating the average price from the market board listings (100%)
 * Getting the vendor cost, if available via vendor (100%)
-* Getting the recipe to craft if the item can be crafted (85%)
-* Calculating the cost to craft from the components, based on the recipe in the previous step (80%)
+* Getting the recipe to craft if the item can be crafted (100%)
+* Calculating the cost to craft from the components, based on the recipe in the previous step (100%)
 * The minimum price of the vendor or the crafting cost or the market board is used to calculate a minimum cost (100%)
 * The profitability per item is calculated based on the difference of current market prices and the estimated minimum cost (100%)
 
