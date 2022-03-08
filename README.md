@@ -20,12 +20,12 @@ This means having the functionality to perform the following:
 * The minimum price of the vendor or the crafting cost or the market board is used to calculate a minimum cost (100%)
 * The profitability per item is calculated based on the difference of current market prices and the estimated minimum cost (100%)
 
-In the immediate future (Dec 2021->Feb 2022), the features to be implemented are:
+In the immediate future, the features to be implemented are:
 
 * A database to store prices locally and only update periodically when staleness exceeds a threshold (100%)
-* A ~~binary tree~~ recursive algorithm to gather cascading crafting components (70%)
-* A front-end UI to display results (0%)
-* Basic filtering. Initially by Gil-generating activity (crafting, gathering, quests, etc.) (20%)
+* A ~~binary tree~~ recursive algorithm to gather cascading crafting components (100%)
+* ~~A front-end UI to display results (0%)~~ (now out of scope)
+* Basic filtering. Initially by Gil-generating activity (crafting, ~~gathering, quests, etc.~~) (80% for crafting, others out of scope)
 * Logging (100%)
 
 ## Later
