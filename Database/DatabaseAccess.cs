@@ -14,20 +14,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using static GilGoblin.Database.RecipeDB;
 
-namespace GilGoblin.Database
-{
-    internal class DatabaseAccess
-    {
+namespace GilGoblin.Database {
+    internal class DatabaseAccess {
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 40; //TODO: increase for production
+        public const int _initialDBCreationEntryCount = 4000; //TODO: remove for production
         public const int _entriesPerAPIPull = 20;
         public const int _waitTimeInMsForAPICalls = 500;
         public const int _gameItemTotalCount = 36700; //Item ID's go to this #
 
         public static SqliteConnection _conn { get; set; }
 
+
+        /// <summary>
+        /// Gets a context for EF regarding the ItemID: use then discard!
+        /// </summary>
+        /// <returns></returns>
         public static ItemDBContext getContext()
         {
             return new ItemDBContext();
@@ -84,8 +87,10 @@ namespace GilGoblin.Database
 
         }
 
-        public static void Startup(){
-            try{
+        public static void Startup()
+        {
+            try
+            {
                 Log.Information("Startup initiated.");
 
                 bool initial = false;
@@ -124,10 +129,11 @@ namespace GilGoblin.Database
                 HashSet<ItemDB> initialItemRun = new HashSet<ItemDB>();
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                Log.Information("Inital startup initiated.");
                 // TODO: Get the world ID fed here so we can pull for the right world ID)            
-                List<int> batchItemIDList = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer);
+                //List<int> batchItemIDList = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer);
+                List<int> batchItemIDList = CraftingList.getListOfAllCraftableItemIDs();
                 List<int> shortList = batchItemIDList.GetRange(0, Math.Min(_initialDBCreationEntryCount, batchItemIDList.Count));
+                Log.Information("One-time inital database startup. Timer started. Starting with {itemCount} items.", shortList.Count);
                 if (shortList.Count > 0)
                 {
                     var thisBatchOfItems = ItemDB.GetItemDBBulk(shortList);
@@ -145,32 +151,24 @@ namespace GilGoblin.Database
                     Log.Error("Tried to fetch {tryCount} items but found none! Nothing saved.", shortList.Count);
                     throw new Functions.OperationException("Failed create initial item ID list for database startup.");
                 }
-                else if (initialItemRun.Count != shortList.Count){
+                else if (initialItemRun.Count != shortList.Count)
+                {
                     Log.Warning("Tried to fetch {tryCount} items but found {foundCount}. Saving the items found successfully.");
                 }
-                else { Log.Debug("Found all {tryCount} items. Saving.", shortList.Count); 
+                else
+                {
+                    Log.Debug("Found all {tryCount} items. Saving.", shortList.Count);
                 }
 
-                // We have successfully found at least part of the list. Let's save now.
-                try
-                {
-                    using (ItemDBContext context = getContext())
-                    {
-                        Save(context);
-                        stopwatch.Stop();                        
-                        TimeSpan ts = stopwatch.Elapsed;
 
-                        // Format and display the TimeSpan value.
-                        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                            ts.Hours, ts.Minutes, ts.Seconds,
-                            ts.Milliseconds / 10);
-                        Log.Information("Done initial startup. Total runTime is: {elapsedTime}, or {speed} items/second.",elapsedTime, initialItemRun.Count/ts.Seconds);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error saving bulk data for initial startup, message:{ex.Message} .... Inner Error: {inner}.", ex.Message, ex.InnerException);
-                }
+                stopwatch.Stop();
+                TimeSpan ts = stopwatch.Elapsed;
+
+                // Format and display the TimeSpan value.
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                Log.Information("Done initial startup. Total runTime is: {elapsedTime}, or {speed} items/second.", elapsedTime, initialItemRun.Count / ts.Seconds);
 
                 // Not to slam the API servers, we queue and process in batches
                 // and display a message for users to wait
@@ -191,7 +189,7 @@ namespace GilGoblin.Database
                 context.Database.EnsureCreated();
                 int savedEntries = context.SaveChanges();
                 Log.Debug("Saved {saved} entries to the database.", savedEntries);
-                context.Dispose();                
+                context.Dispose();
             }
             catch (Exception ex)
             {

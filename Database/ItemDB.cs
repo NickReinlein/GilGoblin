@@ -182,7 +182,9 @@ namespace GilGoblin.Database {
                     {
                         listItemDB.Add(newItem);
                     }
-                    if (count % 20 == 0){
+
+                    // Print progress %
+                    if (count % DatabaseAccess._entriesPerAPIPull == 0){
                         float donePercent = ((float)count / (float)itemIDs.Count) * 100;
                         String percentString = donePercent.ToString("0.00");
                         Log.Information(percentString + "% done. Found:" + count + "/" + itemIDs.Count);
@@ -211,7 +213,7 @@ namespace GilGoblin.Database {
         }
 
         /// <summary>
-        /// Searches the database for a bulk list of items given their ID & world
+        /// Searches the database for a bulk list of items given their ID & world. If they are not found in the database, they are fetched via GET web request, then saved.
         /// </summary>
         /// <param name="itemIDList"></param>A List of integers to represent item ID
         /// <param name="worldId"></param>the world ID for world-specific data (ie: market price)
@@ -248,8 +250,9 @@ namespace GilGoblin.Database {
                 }
 
 
-                if (exists != null && exists.Count > 0){   
+                if (exists != null && exists.Count > 0){
                     // Add what we found to our return variable, fetch the rest
+                    Log.Debug("Found {entries} entries in the database of the {total} requested.", exists.Count, itemIDList.Count);
                     returnList.AddRange(exists);
                     foreach (ItemDB itemDB in exists){
                         remainingItemIDList.Remove(itemDB.itemID); 
@@ -259,9 +262,15 @@ namespace GilGoblin.Database {
                 if (remainingItemIDList.Count > 0)
                 {
                     // Create many items, skip checking the DB, skip getting market data for initial startup
+                    Log.Debug("{entries} entries not found in the database of the {total} requested. Fetching these with GET request.", remainingItemIDList.Count, itemIDList.Count);
                     newlyCreatedItems = bulkCreateItemDB(remainingItemIDList, worldId, true, true);
+
                     returnList.AddRange(newlyCreatedItems);
-                    DatabaseAccess.getContext().AddRange(newlyCreatedItems);
+
+                    using (ItemDBContext context = DatabaseAccess.getContext()){
+                        context.AddRange(newlyCreatedItems);
+                        DatabaseAccess.Save(context);
+                    }
                 }     
                 return returnList;
             }

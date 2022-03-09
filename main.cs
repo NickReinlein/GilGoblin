@@ -17,7 +17,7 @@ class main
         Log.Information("Application started.");
         DatabaseAccess.Startup();
 
-        Log.Information("Application finished.");
+        Log.Information("Application finished. Press any key to exit.");
         Console.ReadLine();
 
     }
