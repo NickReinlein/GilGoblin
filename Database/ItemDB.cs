@@ -89,7 +89,12 @@ namespace GilGoblin.Database {
             this.fullRecipes = fullRecipes;
         }
 
-        public static List<ItemDB> bulkCreateItemDBFromLargeList(List<int> itemIDs)
+        /// <summary>
+        /// Creates new items. Looks for the basic information (name, description, etc) but does not fetch market data such as market listings (and therefore average price)
+        /// </summary>
+        /// <param name="itemIDs">A list of item IDs to create</param>
+        /// <returns></returns>
+        public static List<ItemDB> bulkCreateItemBasicInfo(List<int> itemIDs)
         {
             List<ItemDB> listItemDB = new List<ItemDB>();
             int jumpCount = DatabaseAccess._entriesPerAPIPull;
@@ -102,11 +107,11 @@ namespace GilGoblin.Database {
                     List<int> subIDList = itemIDs.GetRange(i, jumpCount);
                     Stopwatch stopwatch = new Stopwatch();
                     Log.Debug("Starting creation of " + jumpCount + " items.");
-                    List<ItemDB> subList = bulkCreateItemDB(subIDList);
+                    List<ItemDB> subList = bulkCreateItemDB(subIDList, true, false);
                     stopwatch.Stop();
-                    int seconds = (int)stopwatch.Elapsed.TotalSeconds;
-                    Log.Debug("Done in " + seconds + " seconds.");
-                    listItemDB.AddRange(subList);
+                    int milliseconds = (int)stopwatch.Elapsed.TotalMilliseconds;
+                    Log.Debug("Done in " + milliseconds + " milliseconds.");
+                    listItemDB.AddRange(new List<ItemDB>(subList));
                     float donePercent = ((float)i / (float)itemIDs.Count) * 100;
                     String percentString = donePercent.ToString("0.00");
                     Log.Information(percentString + "% done. Found:" + i + "/" + itemIDs.Count);
@@ -121,11 +126,13 @@ namespace GilGoblin.Database {
             return listItemDB;
         }
 
+        // Default world ID is used
         public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs, bool skipMarketData = false, bool skipDBCheck = false)
         {
-            return bulkCreateItemDB(itemIDs, Cost._default_world_id);
+            return bulkCreateItemDB(itemIDs, Cost._default_world_id, skipMarketData, skipDBCheck);
         }
 
+        // World ID is provided for market data
         public static List<ItemDB> bulkCreateItemDB(List<int> itemIDs, int worldID, bool skipMarketData = false, bool skipDBCheck = false)
         {
             List<ItemDB> listItemDB = new List<ItemDB>();
@@ -136,8 +143,6 @@ namespace GilGoblin.Database {
                 try
                 {
                     marketData = MarketDataDB.GetMarketDataBulk(itemIDs, worldID, true);
-                    //marketData = MarketDataDB.ConvertWebToDBBulk(
-                    //    MarketDataWeb.FetchMarketDataBulk(itemIDs, worldID).GetAwaiter().GetResult());
                 }
                 catch (Exception ex)
                 {
@@ -145,10 +150,12 @@ namespace GilGoblin.Database {
                 }
             }
 
+            int count = 0;
             foreach (int i in itemIDs)
             {
                 try
                 {
+                    count++;
                     ItemInfoDB itemInfo = ItemInfoDB.GetItemInfo(i);
                     if (itemInfo == null)
                     {
@@ -170,9 +177,15 @@ namespace GilGoblin.Database {
                     {
                         newItem = new ItemDB(i, itemInfo);
                     }
+
                     if (newItem != null && newItem.itemInfo.name.Length > 0)
                     {
                         listItemDB.Add(newItem);
+                    }
+                    if (count % 20 == 0){
+                        float donePercent = ((float)count / (float)itemIDs.Count) * 100;
+                        String percentString = donePercent.ToString("0.00");
+                        Log.Information(percentString + "% done. Found:" + count + "/" + itemIDs.Count);
                     }
                 }
                 catch (Exception ex)
@@ -180,7 +193,7 @@ namespace GilGoblin.Database {
                     Log.Error("Failed (bulk) creation of item ID:{itemID} with error message:{error}", i, ex.Message);
                 }
             }
-
+            
             Log.Debug("Bulk create: Created {create} of {req} entries requested in bulkCreateItemDB().", listItemDB.Count, itemIDs.Count);
 
             return listItemDB;
@@ -213,7 +226,7 @@ namespace GilGoblin.Database {
             try
             {
                 List<ItemDB> returnList = new List<ItemDB>();
-                List<ItemDB> fetchList = new List<ItemDB>();
+                List<ItemDB> newlyCreatedItems = new List<ItemDB>();
                 List<int> remainingItemIDList = new List<int>(itemIDList);
 
                 List<ItemDB> exists;
@@ -229,44 +242,27 @@ namespace GilGoblin.Database {
                             .ToList();
                     }
                 }
-                catch (System.NullReferenceException)
+                catch (Exception)
                 {
                     exists = null;
                 }
 
 
-                if (exists != null && exists.Count > 0)
-                {   
+                if (exists != null && exists.Count > 0){   
                     // Add what we found to our return variable, fetch the rest
                     returnList.AddRange(exists);
-                    foreach (ItemDB itemDB in exists)
-                    {
+                    foreach (ItemDB itemDB in exists){
                         remainingItemIDList.Remove(itemDB.itemID); 
-                    }
-
-                    //IEnumerable<ItemDB> itemFetch = returnList.Except(exists);
-
-                    ////fetchList = (from i in itemFetch select i).ToList();
-                    ////List<int> missingItemIDs = (from i in fetchList select i.itemID).ToList();  
-                    //List<int> missingItemIDs = (from i in itemFetch select i.itemID).ToList();
-
-                    if (remainingItemIDList.Count > 0){
-                        // Create many items, skip checking the DB, skip getting market data for initial startup
-                        List<ItemDB> tempList = bulkCreateItemDB(remainingItemIDList, worldId,true,true);
-
-                        returnList.AddRange(tempList);
-                        DatabaseAccess.getContext().AddRange(tempList.ToArray());
-                    }
-                }
-                else
-                { //Does not exist, so we have to fetch everything
-                    fetchList = FetchItemDBBulk(itemIDList, worldId);
+                    }                    
                 }
 
-                using (ItemDBContext context = DatabaseAccess.getContext()) { 
-                    context.SaveChanges(); 
-                }                        
-
+                if (remainingItemIDList.Count > 0)
+                {
+                    // Create many items, skip checking the DB, skip getting market data for initial startup
+                    newlyCreatedItems = bulkCreateItemDB(remainingItemIDList, worldId, true, true);
+                    returnList.AddRange(newlyCreatedItems);
+                    DatabaseAccess.getContext().AddRange(newlyCreatedItems);
+                }     
                 return returnList;
             }
             catch (Exception ex)
@@ -317,13 +313,12 @@ namespace GilGoblin.Database {
             }
         }
 
-        public static List<ItemDB> FetchItemDBBulk(List<int> itemIDList, int worldId)
-        {
+        public static List<ItemDB> FetchItemDBBulk(List<int> itemIDList, int worldId, bool skipMarketData = false, bool skipDBCheck = false){
             List<ItemDB> returnList = new List<ItemDB>();
 
             try
             {
-                returnList = ItemDB.bulkCreateItemDB(itemIDList, worldId);
+                returnList = ItemDB.bulkCreateItemDB(itemIDList, worldId, skipMarketData,skipDBCheck);
             }
             catch (Exception ex)
             {
@@ -332,11 +327,13 @@ namespace GilGoblin.Database {
             }
             return returnList;
         }
-        public static ItemDB FetchItemDBSingle(int itemID, int worldId)
-        {
+        public static ItemDB FetchItemDBSingle(int itemID, int worldID, bool skipMarketData = false, bool skipDBCheck = false)
+            {
             try
             {
-                ItemDB itemDBFetched = new ItemDB(itemID, worldId);
+                List<int> itemIDList = new List<int>();
+                itemIDList.Add(itemID);
+                ItemDB itemDBFetched = FetchItemDBBulk(itemIDList, worldID, skipMarketData, skipDBCheck).First();
 
                 if (itemDBFetched == null)
                 {
@@ -346,7 +343,7 @@ namespace GilGoblin.Database {
             }
             catch (Exception ex)
             {
-                Log.Error("Failed to get itemDB in FetchItemDBSingle() for item {itemID} world {worldID} with message: {message}", itemID, worldId, ex.Message);
+                Log.Error("Failed to get itemDB in FetchItemDBSingle() for item {itemID} world {worldID} with message: {message}", itemID, worldID, ex.Message);
                 return null;
             }
         }

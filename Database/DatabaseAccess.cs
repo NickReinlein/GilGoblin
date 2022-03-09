@@ -21,7 +21,7 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 200; //TODO: increase for production
+        public const int _initialDBCreationEntryCount = 40; //TODO: increase for production
         public const int _entriesPerAPIPull = 20;
         public const int _waitTimeInMsForAPICalls = 500;
         public const int _gameItemTotalCount = 36700; //Item ID's go to this #
@@ -84,10 +84,8 @@ namespace GilGoblin.Database
 
         }
 
-        public static void Startup()
-        {
-            try
-            {
+        public static void Startup(){
+            try{
                 Log.Information("Startup initiated.");
 
                 bool initial = false;
@@ -123,18 +121,17 @@ namespace GilGoblin.Database
         {
             try
             {
-                //await context.Database.EnsureCreatedAsync();
                 HashSet<ItemDB> initialItemRun = new HashSet<ItemDB>();
                 Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
                 Log.Information("Inital startup initiated.");
                 // TODO: Get the world ID fed here so we can pull for the right world ID)            
                 List<int> batchItemIDList = CraftingList.getListOfCraftableItemIDsByClass(CraftingClass.armorer);
                 List<int> shortList = batchItemIDList.GetRange(0, Math.Min(_initialDBCreationEntryCount, batchItemIDList.Count));
                 if (shortList.Count > 0)
                 {
-                    //var thisBatchOfItems = ItemDB.bulkCreateItemDBFromLargeList(shortList);
                     var thisBatchOfItems = ItemDB.GetItemDBBulk(shortList);
-                    initialItemRun.UnionWith(thisBatchOfItems);
+                    initialItemRun.UnionWith(new List<ItemDB>(thisBatchOfItems));
                     Log.Debug("Returned from bulk get with {numberOfrecords} records, for a total of {totalRecords}.", thisBatchOfItems.Count(), initialItemRun.Count);
                 }
                 else
@@ -143,6 +140,18 @@ namespace GilGoblin.Database
                     throw new Functions.OperationException("Failed create initial item ID list for database startup.");
                 }
 
+                if (initialItemRun.Count == 0)
+                {
+                    Log.Error("Tried to fetch {tryCount} items but found none! Nothing saved.", shortList.Count);
+                    throw new Functions.OperationException("Failed create initial item ID list for database startup.");
+                }
+                else if (initialItemRun.Count != shortList.Count){
+                    Log.Warning("Tried to fetch {tryCount} items but found {foundCount}. Saving the items found successfully.");
+                }
+                else { Log.Debug("Found all {tryCount} items. Saving.", shortList.Count); 
+                }
+
+                // We have successfully found at least part of the list. Let's save now.
                 try
                 {
                     using (ItemDBContext context = getContext())
@@ -155,7 +164,7 @@ namespace GilGoblin.Database
                         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                             ts.Hours, ts.Minutes, ts.Seconds,
                             ts.Milliseconds / 10);
-                        Log.Information("Done initial startup. Total runTime is: " + elapsedTime);
+                        Log.Information("Done initial startup. Total runTime is: {elapsedTime}, or {speed} items/second.",elapsedTime, initialItemRun.Count/ts.Seconds);
                     }
                 }
                 catch (Exception ex)
@@ -178,9 +187,11 @@ namespace GilGoblin.Database
         {
             try
             {
+                Log.Debug("Saving to database.");
                 context.Database.EnsureCreated();
-                context.SaveChanges();
-                context.Dispose();
+                int savedEntries = context.SaveChanges();
+                Log.Debug("Saved {saved} entries to the database.", savedEntries);
+                context.Dispose();                
             }
             catch (Exception ex)
             {

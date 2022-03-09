@@ -1,6 +1,7 @@
 ﻿using GilGoblin.Database;
 using GilGoblin.Tests;
 using Serilog;
+using System;
 
 class main
 {
@@ -8,13 +9,17 @@ class main
     {
 
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information() // PROD: reduce verbosity
+            .MinimumLevel.Verbose() // PROD: reduce verbosity
             .WriteTo.Console()
             .WriteTo.File("logs/test.txt")
             .CreateLogger();
 
         Log.Information("Application started.");
         DatabaseAccess.Startup();
+
+        Log.Information("Application finished.");
+        Console.ReadLine();
+
     }
 
 }
