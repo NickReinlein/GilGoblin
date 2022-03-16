@@ -252,7 +252,7 @@ namespace GilGoblin.Database {
 
                 if (exists != null && exists.Count > 0){
                     // Add what we found to our return variable, fetch the rest
-                    Log.Debug("Found {entries} entries in the database of the {total} requested.", exists.Count, itemIDList.Count);
+                    Log.Verbose("Found {entries} entries in the database of the {total} requested.", exists.Count, itemIDList.Count);
                     returnList.AddRange(exists);
                     foreach (ItemDB itemDB in exists){
                         remainingItemIDList.Remove(itemDB.itemID); 

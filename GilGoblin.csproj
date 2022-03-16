@@ -81,7 +81,7 @@
     <Compile Include="WebAPI\MarketDataWeb.cs" />
     <Compile Include="WebAPI\RecipeFullWeb.cs" />
     <Compile Include="WebAPI\MarketListingWeb.cs" />
-    <Compile Include="Finance\Price.cs" />
+    <Compile Include="Finance\Prices.cs" />
     <Compile Include="Finance\Cost.cs" />
     <Compile Include="Functions\GeneralFunctions.cs" />
     <Compile Include="main.cs" />

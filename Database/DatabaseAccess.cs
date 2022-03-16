@@ -19,10 +19,10 @@ namespace GilGoblin.Database {
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 4000; //TODO: remove for production
+        public const int _initialDBCreationEntryCount = 8320;
         public const int _entriesPerAPIPull = 20;
         public const int _waitTimeInMsForAPICalls = 500;
-        public const int _gameItemTotalCount = 36700; //Item ID's go to this #
+        public const int _gameItemTotalCount = 36700;
 
         public static SqliteConnection _conn { get; set; }
 
@@ -139,6 +139,14 @@ namespace GilGoblin.Database {
                     var thisBatchOfItems = ItemDB.GetItemDBBulk(shortList);
                     initialItemRun.UnionWith(new List<ItemDB>(thisBatchOfItems));
                     Log.Debug("Returned from bulk get with {numberOfrecords} records, for a total of {totalRecords}.", thisBatchOfItems.Count(), initialItemRun.Count);
+                    stopwatch.Stop();
+                    TimeSpan ts = stopwatch.Elapsed;
+
+                    // Format and display the TimeSpan value.
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                        ts.Hours, ts.Minutes, ts.Seconds,
+                        ts.Milliseconds / 10);
+                    Log.Information("Done initial startup. Total runTime is: {elapsedTime}, or {speed} items/second.", elapsedTime, thisBatchOfItems.Count / Math.Max(1,ts.Seconds));
                 }
                 else
                 {
@@ -159,20 +167,6 @@ namespace GilGoblin.Database {
                 {
                     Log.Debug("Found all {tryCount} items. Saving.", shortList.Count);
                 }
-
-
-                stopwatch.Stop();
-                TimeSpan ts = stopwatch.Elapsed;
-
-                // Format and display the TimeSpan value.
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                    ts.Hours, ts.Minutes, ts.Seconds,
-                    ts.Milliseconds / 10);
-                Log.Information("Done initial startup. Total runTime is: {elapsedTime}, or {speed} items/second.", elapsedTime, initialItemRun.Count / ts.Seconds);
-
-                // Not to slam the API servers, we queue and process in batches
-                // and display a message for users to wait
-                // Then continue
             }
             catch (Exception ex)
             {

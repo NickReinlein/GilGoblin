@@ -4,10 +4,11 @@ using GilGoblin.WebAPI;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GilGoblin.Tests
 {
-    internal static class testCalcs
+    public static class testCalcs
     {
         // Wolrd ID & Name for testing: 34 	Brynhildr
         // Item ID for Mithril Ore: 5114
@@ -21,6 +22,65 @@ namespace GilGoblin.Tests
         public const string world_name = "Brynhildr";
         public const int defaultWorldID = 34;
         public const int defaultItemID = 3057;
+        public static async void test_Top_Crafts()
+        {
+            int topNumberOfCrafts = 20;
+            System.Console.WriteLine("What is your world id? (ie: 34 for Brynhildr)");
+            int intWorldID = Convert.ToInt32(Console.ReadLine());
+            if (!(intWorldID >= 0 && intWorldID <= 200))
+            {
+                System.Console.WriteLine("Not a valid choice!");
+                return;
+            }
+            System.Console.WriteLine("Choose the crafting class:");
+            System.Console.WriteLine("1.Carpenter");
+            System.Console.WriteLine("2.Blacksmith");
+            System.Console.WriteLine("3.Armorer");
+            System.Console.WriteLine("4.Goldsmith"); 
+            System.Console.WriteLine("5.Leatherworker");
+            System.Console.WriteLine("6.Weaver");
+            System.Console.WriteLine("7.Alchemist");
+            System.Console.WriteLine("8.Culinarian");
+            int intCraft = Convert.ToInt32(Console.ReadLine());
+            if (!(intCraft >=1 && intCraft <= 8)) {
+                System.Console.WriteLine("Not a valid choice!");
+                return; 
+            }
+            else
+            {
+
+            }
+            CraftingClass craftingClass = new CraftingClass();
+            List<int> craftables = CraftingList.getListOfCraftableItemIDsByClass(craftingClass);
+
+            List<ItemDB> craftableItems = ItemDB.GetItemDBBulk(craftables, intWorldID);
+            if (craftableItems == null || craftableItems.Count == 0){
+                System.Console.WriteLine("No items found!");
+                Log.Fatal("Could not find craftable items despite a supposedly correct crafting class integer.");
+                return;
+            }
+
+            List<MarketDataDB> marketData = MarketDataDB.GetMarketDataBulk(craftables, intWorldID,true);
+
+            Dictionary<int, int> craftsList = new Dictionary<int, int>();
+            Dictionary<int, Prices> craftsPrices = new Dictionary<int, Prices>();
+            foreach (ItemDB craft in craftableItems){
+                Prices craftPrice = new Prices(craft.itemID, intWorldID);
+                craftsPrices.Add(craft.itemID, craftPrice);
+                craftsList.Add(craft.itemID, craftPrice.profit);
+            }
+
+            var topList = craftsList.OrderByDescending(t => t.Value).Take(topNumberOfCrafts).ToList();
+
+            int count = 0;
+            foreach (var top in topList){
+                count++;
+                int itemID = top.Key;
+                ItemDB item = craftableItems[itemID];
+                Prices prices = craftsPrices[itemID];
+                Console.WriteLine("#" + count + ". " + item.itemInfo.name + "  . Avg. price:" + prices.averagePrice + " - crafting cost:" + prices.craftingCost + " = profit:" + prices.profit + " Gil.");
+            }
+        }
         public static async void test_Fetch_Market_Price()
         {
             try
@@ -111,6 +171,13 @@ namespace GilGoblin.Tests
                 Console.WriteLine("Press any button to quit.");
                 Console.ReadLine();
             }
+        }
+    }
+
+    internal class IOrderedEnumerable<T1, T2> {
+        public static implicit operator IOrderedEnumerable<T1, T2>(SortedList<int, int> v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

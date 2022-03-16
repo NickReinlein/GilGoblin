@@ -9,13 +9,15 @@ class main
     {
 
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose() // PROD: reduce verbosity
+            .MinimumLevel.Debug() // PROD: reduce verbosity
             .WriteTo.Console()
             .WriteTo.File("logs/test.txt")
             .CreateLogger();
 
-        Log.Information("Application started.");
+        Log.Information("Application started. Logging enabled.");
         DatabaseAccess.Startup();
+
+        testCalcs.test_Top_Crafts();
 
         Log.Information("Application finished. Press any key to exit.");
         Console.ReadLine();

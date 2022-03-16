@@ -115,7 +115,7 @@ namespace GilGoblin.Finance
                         RecipeIngredientBreakdown breakdown = GetRecipeBreakdown(itemDB.fullRecipes);
                         foreach (Ingredient ingredient in breakdown.ingredients.Values)
                         {
-                            int averagePrice = Price.getAveragePrice(itemID, worldID);
+                            int averagePrice = Prices.getAveragePrice(itemID, worldID);
                             craftingCost += ingredient.quantity * averagePrice;
                         }
                     }

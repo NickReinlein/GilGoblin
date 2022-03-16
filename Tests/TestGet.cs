@@ -14,7 +14,7 @@ namespace GilGoblin.Tests
         [Theory, InlineData(5057, 34)]
         public void TestGetAveragePrice(int itemID, int worldID)
         {
-            int avg = Price.getAveragePrice(itemID, worldID);
+            int avg = Prices.getAveragePrice(itemID, worldID);
             Assert.True(avg > 1);
             Assert.True(avg < 600); //beyond reasonable price
          }

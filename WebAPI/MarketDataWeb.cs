@@ -38,7 +38,7 @@ namespace GilGoblin.WebAPI
         {
             if (itemID == 0 || worldId == 0 || lastUploadTime == 0)
             {
-                throw new ArgumentException("Incorrect/missing parameters/arguments coming from the web response.");
+                Log.Error("Incorrect/missing parameters/arguments coming from the web response. ItemID:{itemID}, worldID:{worldID},lastUpLoadTime:{last}",itemID,worldID,lastUploadTime);
             }
             
             this.itemID = itemID;
