@@ -2,7 +2,7 @@
 
 ## Summary
 
-GilGoblin is a locally run application for FFXIV, written in C#. It calculates the most profitable items to craft based on market prices, vendor prices and crafting component costs. It stores the data in an embedded SQLite database for local reuse while the data is not stale. 
+GilGoblin is a web REST API for FFXIV, written in C#. It calculates the most profitable items to craft based on market prices, vendor prices and crafting component costs. It stores the data in an embedded SQLite database for local reuse while the data is not stale. 
 
 The initial functionality includes the following:
 
@@ -33,8 +33,10 @@ Additional functionality that is currently considered but no immediate plans to 
 * Including estimated profitability based on sale momentum and approximate demand (later)
 
 ## Special Thanks & References
-
+Other Projects:
 * XIVAPI: A FINAL FANTASY XIV: Online REST API ( https://xivapi.com/ )
 * Universalis: A crowdsourced market board aggregator for the game FFXIV ( https://github.com/Universalis-FFXIV/Universalis )
+
+Applications & Libraries:
 * FileHelpers: A free and easy to use .NET library to import or export data from fixed length or delimited records in files, strings or streams.   (https://www.filehelpers.net/)
 * Serilog: A clean logging library which provides diagnostic logging to files, the console, and elsewhere.  (https://serilog.net/)
