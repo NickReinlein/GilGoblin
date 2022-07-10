@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System;
 
-namespace GilGoblin.Functions
+namespace GilGoblin
 {
     internal static class GeneralFunctions
     {
