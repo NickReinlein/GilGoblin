@@ -36,6 +36,6 @@
                 "${workspaceFolder}/GilGoblin.csproj"
             ],
             "problemMatcher": "$msCompile"
-        }
+        },
     ]
 }

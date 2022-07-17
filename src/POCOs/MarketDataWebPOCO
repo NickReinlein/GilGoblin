@@ -20,7 +20,7 @@ namespace GilGoblin.POCOs
         //   // The average sale price, with outliers removed beyond 3 standard deviations of the mean.
         //   averagePrice: number;
         //   // The average NQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        //   averagePriceNQ: number;
+        //   averagePriceNQ: number; 
         //   // The average HQ sale price, with outliers removed beyond 3 standard deviations of the mean.
         //   averagePriceHQ: number;
 

@@ -1,5 +1,9 @@
-interface IMarketDataWeb {
+namespace GilGoblin.web
+{
+    interface IMarketDataWeb
+    {
 
+    }
 }
 
 // //interface CurrentlyShownView {
@@ -63,4 +67,3 @@ interface IMarketDataWeb {
 //   worldName?: string;
 //   // The last upload times in milliseconds since epoch for each world in the response, if this is a DC request.
 //   worldUploadTimes?: Object;
-}
