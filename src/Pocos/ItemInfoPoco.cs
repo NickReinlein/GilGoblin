@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GilGoblin.POCOs
+namespace GilGoblin.Pocos
 {
     internal class ItemInfoPoco
     {
@@ -19,7 +19,7 @@ namespace GilGoblin.POCOs
         public int iconID { get; set; }
         public int vendorPrice { get; set; }
         public int stackSize { get; set; }
-        public int gatheringId { get; set; }                
+        public int gatheringID { get; set; }                
         public DateTime lastUpdated { get; set; }
         public ICollection<ItemRecipeHeaderPoco> recipeHeader { get; set; } = new List<ItemRecipeHeaderPoco>();
 
@@ -32,7 +32,7 @@ namespace GilGoblin.POCOs
             this.name = Name;
             this.vendorPrice = priceMid;
             this.stackSize = stackSize;
-            this.gatheringId = gatheringID;
+            this.gatheringID = gatheringID;
             
             if (Recipes != null) 
             { 
@@ -43,6 +43,8 @@ namespace GilGoblin.POCOs
             }
 
         }
+
+        // TODO decouple from Poco
         public static async Task<ItemInfoPoco?> FetchItemInfo(int itemId)
         {
             ItemInfoPoco? itemInfo;
@@ -60,7 +62,6 @@ namespace GilGoblin.POCOs
                 return null;
             }
         }
-
     }
 
 }

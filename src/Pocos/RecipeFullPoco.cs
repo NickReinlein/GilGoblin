@@ -7,13 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace GilGoblin.POCOs
+namespace GilGoblin.Pocos
 {
     public class RecipeFullPoco
     {        
         public int recipeID { get; set; }
         public int targetItemID { get; set; }
-        public int iconId { get; set; }
+        public int iconID { get; set; }
         public int resultQuantity { get; set; }
         public bool canHq { get; set; }
         public bool canQuickSynth { get; set; }
@@ -46,7 +46,7 @@ namespace GilGoblin.POCOs
             int ItemIngredient9TargetID) : base()
         {
             this.canHq = CanHq;
-            this.iconId = IconID;
+            this.iconID = IconID;
             this.targetItemID = ItemResultTargetID;
             this.recipeID = ID;
             this.resultQuantity = AmountResult;

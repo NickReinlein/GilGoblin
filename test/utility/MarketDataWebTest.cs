@@ -1,18 +1,19 @@
-namespace GilGoblin.Test.utility;
+// namespace GilGoblin.Test.utility
+// {
+//     [TestFixture]
+//     public class UtilityTest
+//     {
+//         [SetUp]
+//         public void setUp()
+//         {
 
-[TestFixture]
-public class UtilityTest
-{
-    [SetUp]
-    public void setUp()
-    {
+//         }
 
-    }
-
-    [Test]
-    public void test_utility()
-    {
-        var a = 1;
-        Assert.AreEqual(a,a);
-    }
-}
+//         [Test]
+//         public void test_utility()
+//         {
+//             var a = 1;
+//             Assert.That(a, Is.EqualTo(a));
+//         }
+//     }
+// }

@@ -2,13 +2,14 @@
 using Serilog;
 using System;
 using System.Collections.Generic;
+using GilGoblin.utility;
 
-namespace GilGoblin.POCOs
+namespace GilGoblin.Pocos
 {
     internal class MarketListingPoco
     {
         public int itemID { get; set; }
-        public int worldId { get; set; }
+        public int worldID { get; set; }
         public DateTime timestamp { get; set; }
         public bool hq { get; set; }
         public int price { get; set; }
