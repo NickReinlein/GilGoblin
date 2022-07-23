@@ -2,6 +2,7 @@ namespace GilGoblin.Pocos
 {
     public class MarketDataWebPoco
     {
+
         // The item ID.
         public int itemID { get; set; }
         // The world ID, if applicable.
@@ -28,5 +29,10 @@ namespace GilGoblin.Pocos
         public decimal? averagePriceNQ { get; set; }
         // The average HQ sale price, with outliers removed beyond 3 standard deviations of the mean.
         public double? averagePriceHQ { get; set; }
+        public MarketDataWebPoco()
+        {
+        }
+
+        
     }
 }
