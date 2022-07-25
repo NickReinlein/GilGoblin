@@ -15,7 +15,7 @@ namespace GilGoblin.Test.web
         public void setUp()
         {
             poco = new MarketDataWebPoco();
-            _marketData = Substitute.For<IMarketDataWeb>(); ;
+            _marketData = Substitute.For<IMarketDataWeb>();
             //_marketData.FetchMarketData(Arg.Any<int>(), Arg.Any<int>()).Returns(poco);
         }
         [TearDown]
@@ -26,7 +26,7 @@ namespace GilGoblin.Test.web
 
         [Test]
         public void GivenAMarketFetcher_WhenRequestingASingleItem_ThenASingleItemIsReturned()
-        {
+        {            
             _marketData.FetchMarketData(1, 1).Returns(poco);
             var result = _marketData.FetchMarketData(1, 1);
 

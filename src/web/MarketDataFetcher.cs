@@ -4,18 +4,14 @@ namespace GilGoblin.web
 {
     public class MarketDataFetcher : IMarketDataWeb
     {
-        public MarketDataFetcher()
-        {
-        }
-
-        public MarketDataWebPoco? FetchMarketData(int itemID, int worldID)
+        public MarketDataWebPoco? FetchMarketData(int worldID, int itemID)
         {
             int[] itemAsArray = { itemID };
-            var response = FetchMarketDataBulkAsync(itemAsArray, worldID);
+            var response = FetchMarketDataBulk(worldID, itemAsArray);
             return response[0];
         }
 
-        public MarketDataWebPoco[] FetchMarketDataBulkAsync(int[] itemIDs, int worldId)
+        public MarketDataWebPoco[] FetchMarketDataBulk(int worldId,int[] itemIDs)
         {
             return Array.Empty<MarketDataWebPoco>();
         }

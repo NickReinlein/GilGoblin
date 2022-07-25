@@ -45,7 +45,7 @@ namespace GilGoblin.Pocos
         }
 
         // TODO decouple from Poco
-        public static async Task<ItemInfoPoco?> FetchItemInfo(int itemId)
+        public async Task<ItemInfoPoco?> FetchItemInfo(int itemId)
         {
             ItemInfoPoco? itemInfo;
             try
