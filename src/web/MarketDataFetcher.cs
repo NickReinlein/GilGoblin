@@ -6,7 +6,11 @@ namespace GilGoblin.web
     {
         public MarketDataWebPoco[] FetchMarketDataItems(int worldId, int[] itemIDs)
         {
-            return Array.Empty<MarketDataWebPoco>();
+            List<MarketDataWebPoco> list = new List<MarketDataWebPoco>();
+            foreach (var pocoID in itemIDs){
+                list.Add(new MarketDataWebPoco(1,pocoID,1,"test","testRealm", 300,200,400, 600,400,800));
+            }
+            return list.ToArray<MarketDataWebPoco>();
         }
         // WIP 
         //      try

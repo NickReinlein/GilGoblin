@@ -12,12 +12,15 @@ namespace GilGoblin.Test.web
         private MarketDataFetcher _fetcher;
         private int[] itemIDs = { 1, 2, 3, 4, 5, 6 };
         private MarketDataWebPoco[] _pocos;
+        private MarketDataWebPoco _poco;
 
         [SetUp]
         public void setUp()
         {
             _marketData = Substitute.For<IMarketDataWeb>();
             _fetcher = new MarketDataFetcher();
+            _poco = new MarketDataWebPoco(1,1,1,"test","testRealm", 300,200,400, 600,400,800);
+            _pocos = new MarketDataWebPoco[] { _poco };        
         }
         [TearDown]
         public void tearDown()
@@ -28,15 +31,16 @@ namespace GilGoblin.Test.web
         [Test]
         public void GivenAMarketFetcher_WhenFetchingItemsSucessfully_ThenItemsAreReturned()
         {
-            _pocos = new MarketDataWebPoco[] { new MarketDataWebPoco() };
-            _marketData.FetchMarketDataItems(1, itemIDs).Returns(_pocos);
-            var result = _fetcher.FetchMarketDataItems(1, itemIDs);
+            mockFetch<MarketDataWebPoco[]>(_pocos);
 
-            const callWasReceived = _marketData.Received().FetchMarketDataItems(1, itemIDs);
-           // Assert.That(callWasReceived, Is.True);
+            var result = _marketData.FetchMarketDataItems(1, itemIDs);
+
+            _marketData.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
             Assert.That(result, Is.TypeOf<MarketDataWebPoco[]>());
-            // additional asserts for sent            
+            Assert.That(result, Is.EquivalentTo(_pocos));
+            Assert.That(result.Count(),Is.EqualTo(_pocos.Count()));
         }
+        
         [Test]
         public void GivenAMarketFetcher_WhenRequestingInexistantItem_ThenNullIsReturned()
         {
@@ -46,6 +50,10 @@ namespace GilGoblin.Test.web
             // _marketData.Received().FetchMarketData(1, 1);
             // Assert.IsNull(result);
             // // additional asserts for sent            
+        }
+
+        public void mockFetch<T>(IEnumerable<MarketDataWebPoco> pocosReturned){
+            _marketData.FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>()).Returns(pocosReturned);
         }
     }
 }

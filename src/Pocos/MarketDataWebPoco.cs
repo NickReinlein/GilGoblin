@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace GilGoblin.Pocos
 {
     public class MarketDataWebPoco
@@ -11,28 +13,43 @@ namespace GilGoblin.Pocos
         public long lastUploadTime { get; set; }
 
         // The DC name, if applicable.
-        public string? Name { get; set; }
+        public string? name { get; set; }
         // The region name, if applicable.
         public string? regionName { get; set; }
 
         // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal currentAveragePrice { get; set; }
+        public decimal averageListingPrice { get; set; }
         // The average NQ listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal currentAveragePriceNQ { get; set; }
+        public decimal averagePriceNQ { get; set; }
         // The average HQ listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal currentAveragePriceHQ { get; set; }
+        public decimal averagePriceHQ { get; set; }
 
         // TODO: return later to see which is the best data type for price Poco
         // The average sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public float? averagePrice { get; set; }
+        public float? averageSale { get; set; }
         // The average NQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal? averagePriceNQ { get; set; }
+        public decimal? averageSaleNQ { get; set; }
         // The average HQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public double? averagePriceHQ { get; set; }
+        public double? averageSaleHQ { get; set; }
         public MarketDataWebPoco()
         {
         }
-
-        
+        [JsonConstructor]
+        public MarketDataWebPoco(int itemID, int worldID, long lastUploadTime, string? name, string? regionName, 
+            decimal currentAveragePrice, decimal currentAveragePriceNQ, decimal currentAveragePriceHQ, 
+            float? averagePrice, decimal? averagePriceNQ, double? averagePriceHQ)
+        {
+            this.itemID = itemID;
+            this.worldID = worldID;
+            this.lastUploadTime = lastUploadTime;
+            this.name = name;
+            this.regionName = regionName;
+            this.averageListingPrice = currentAveragePrice;
+            this.averagePriceNQ = currentAveragePriceNQ;
+            this.averagePriceHQ = currentAveragePriceHQ;
+            this.averageSale = averagePrice;
+            this.averageSaleNQ = averagePriceNQ;
+            this.averageSaleHQ = averagePriceHQ;
+        }
     }
 }
