@@ -4,7 +4,6 @@ namespace GilGoblin.web
 {
     public interface IMarketDataWeb
     {
-        public MarketDataWebPoco? FetchMarketData(int worldID, int itemID);
-        public MarketDataWebPoco[] FetchMarketDataBulk(int worldId, int[] itemIDs);
+        public MarketDataWebPoco[] FetchMarketDataItems(int worldId, int[] itemIDs);
     }
 }

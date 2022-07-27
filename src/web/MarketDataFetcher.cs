@@ -4,18 +4,11 @@ namespace GilGoblin.web
 {
     public class MarketDataFetcher : IMarketDataWeb
     {
-        public MarketDataWebPoco? FetchMarketData(int worldID, int itemID)
-        {
-            int[] itemAsArray = { itemID };
-            var response = FetchMarketDataBulk(worldID, itemAsArray);
-            return response[0];
-        }
-
-        public MarketDataWebPoco[] FetchMarketDataBulk(int worldId,int[] itemIDs)
+        public MarketDataWebPoco[] FetchMarketDataItems(int worldId, int[] itemIDs)
         {
             return Array.Empty<MarketDataWebPoco>();
         }
-            // WIP 
+        // WIP 
         //      try
         //     {
         //         List<MarketDataWebPoco> list = new List<MarketDataWebPoco>();
@@ -43,11 +36,6 @@ namespace GilGoblin.web
         //         return null;
         //     }
         // }        
-        
+
     }
 }
-
-
-
-
-// //interface CurrentlyShownView {

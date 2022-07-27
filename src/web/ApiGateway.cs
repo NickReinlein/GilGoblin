@@ -2,13 +2,14 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.web
 {
-    class ApiGateway{
-        public MarketDataWebPoco? getMarketDataSingle(int worldID, int itemID){
-            return new MarketDataFetcher().FetchMarketData(worldID, itemID);
+    class ApiGateway : IHealthCheck{
+
+        public MarketDataWebPoco[] updateMarketData(int worldID, int[] itemIDs){
+            return new MarketDataFetcher().FetchMarketDataItems(worldID, itemIDs);
         }
 
-        public MarketDataWebPoco[] getMarketDataBulk(int worldID, int[] itemIDs){
-            return new MarketDataFetcher().FetchMarketDataBulk(worldID, itemIDs);
+        public bool ping(){
+            return true;
         }
     }
 }
