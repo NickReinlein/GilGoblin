@@ -36,20 +36,37 @@ namespace GilGoblin.Test.web
             var result = _marketData.FetchMarketDataItems(1, itemIDs);
 
             _marketData.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
-            Assert.That(result, Is.TypeOf<MarketDataWebPoco[]>());
-            Assert.That(result, Is.EquivalentTo(_pocos));
-            Assert.That(result.Count(),Is.EqualTo(_pocos.Count()));
+            Assert.That(result, Is.EquivalentTo(_pocos));;
         }
         
         [Test]
-        public void GivenAMarketFetcher_WhenRequestingInexistantItem_ThenNullIsReturned()
+        public void GivenAMarketFetcher_WhenRequestingInexistantItems_ThenNothingIsReturned()
         {
-            // _marketData.FetchMarketData(Arg.Any<int>(), Arg.Any<int>()).Returns(_ => null);
-            // var result = _marketData.FetchMarketData(1, 1);
+            _pocos = new MarketDataWebPoco[]{};
+            mockFetch<MarketDataWebPoco[]>(_pocos);
 
-            // _marketData.Received().FetchMarketData(1, 1);
-            // Assert.IsNull(result);
-            // // additional asserts for sent            
+            var result = _marketData.FetchMarketDataItems(1, itemIDs);
+
+            _marketData.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void GivenAMarketFetcher_WhenRequestingSomeItemsSuccessfulSomeFail_ThenSuccessulAreReturned()
+        {
+            var _poco1 = new MarketDataWebPoco(_poco);
+            _poco1.itemID = 444;
+            var _poco2 = new MarketDataWebPoco(_poco);
+            _poco2.itemID = 777;
+            var existingItems = new MarketDataWebPoco[] { _poco1,_poco2 };
+            mockFetch<MarketDataWebPoco[]>(existingItems);
+
+            var result = _marketData.FetchMarketDataItems(1, itemIDs);
+
+            _marketData.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
+            Assert.That(result.Count(), Is.GreaterThan(0));
+            Assert.That(itemIDs.Count(), Is.GreaterThan(0));
+            Assert.That(_poco1, Is.SubsetOf(result));
         }
 
         public void mockFetch<T>(IEnumerable<MarketDataWebPoco> pocosReturned){

@@ -51,5 +51,22 @@ namespace GilGoblin.Pocos
             this.averageSaleNQ = averagePriceNQ;
             this.averageSaleHQ = averagePriceHQ;
         }
+
+        
+
+        public MarketDataWebPoco(MarketDataWebPoco copyMe)
+        {
+            this.itemID = copyMe.itemID;
+            this.worldID = copyMe.worldID;
+            this.lastUploadTime = copyMe.lastUploadTime;
+            this.name = copyMe.name;
+            this.regionName = copyMe.regionName;
+            this.averageListingPrice = copyMe.averageListingPrice;
+            this.averagePriceNQ = copyMe.averagePriceNQ;
+            this.averagePriceHQ = copyMe.averagePriceHQ;
+            this.averageSale = copyMe.averageSale;
+            this.averageSaleNQ = copyMe.averageSaleNQ;
+            this.averageSaleHQ = copyMe.averageSaleHQ;
+        }
     }
 }
