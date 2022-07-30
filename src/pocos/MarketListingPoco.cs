@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using GilGoblin.utility;
 
-namespace GilGoblin.Pocos
+namespace GilGoblin.pocos
 {
     internal class MarketListingPoco
     {

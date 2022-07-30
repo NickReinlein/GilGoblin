@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GilGoblin.Pocos
+namespace GilGoblin.pocos
 {
     internal class ItemInfoPoco
     {

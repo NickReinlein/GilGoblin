@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace GilGoblin.Pocos
+namespace GilGoblin.pocos
 {
     public class RecipeFullPoco
     {        

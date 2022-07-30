@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GilGoblin.Pocos
+namespace GilGoblin.pocos
 {
     public class ItemRecipeHeaderPoco
     {
