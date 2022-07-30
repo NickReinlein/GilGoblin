@@ -4,7 +4,7 @@ namespace GilGoblin.web
 {
     public interface IMarketDataWeb
     {
-        public MarketDataWebPoco[] FetchMarketDataItems(int worldId, int[] itemIDs);
+        public IEnumerable<MarketDataWebPoco> FetchMarketDataItems(int worldId, IEnumerable<int> itemIDs);
         //TODO other POCOS should have methods here to aggregate market data
     }
 }

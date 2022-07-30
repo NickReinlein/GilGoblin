@@ -4,13 +4,14 @@ namespace GilGoblin.web
 {
     public class MarketDataFetcher : IMarketDataWeb
     {
-        public MarketDataWebPoco[] FetchMarketDataItems(int worldId, int[] itemIDs)
+        public IEnumerable<MarketDataWebPoco> FetchMarketDataItems(int worldId, IEnumerable<int> itemIDs)
         {
-            List<MarketDataWebPoco> list = new List<MarketDataWebPoco>();
-            foreach (var pocoID in itemIDs){
-                list.Add(new MarketDataWebPoco(1,pocoID,1,"test","testRealm", 300,200,400, 600,400,800));
-            }
-            return list.ToArray<MarketDataWebPoco>();
+            var uniqueItemIDs = itemIDs.Distinct().ToArray();
+            //logger.LogWarning("The person {PersonId} could not be found.", personId);
+
+            var returnUniqueItems = uniqueItemIDs.Select(x => new MarketDataWebPoco(x,1,1,"fake","fakeRealm", 3,2,4,6,4,8));
+
+            return returnUniqueItems;
         }
         // WIP 
         //      try
