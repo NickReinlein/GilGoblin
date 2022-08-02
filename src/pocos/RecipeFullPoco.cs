@@ -22,10 +22,8 @@ namespace GilGoblin.pocos
         public RecipeFullPoco() : base() { }
 
         [JsonConstructor]
-        public RecipeFullPoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID,
-            int ID, int IconID, int AmountResult,
-            int AmountIngredient0,
-            int AmountIngredient1,
+        public RecipeFullPoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID, int ID, int IconID, int AmountResult,
+            int AmountIngredient0,int AmountIngredient1,
             int AmountIngredient2,
             int AmountIngredient3,
             int AmountIngredient4,
@@ -91,28 +89,6 @@ namespace GilGoblin.pocos
             {
                 ingredients.Add(new IngredientPoco(ItemIngredient9TargetID, AmountIngredient9, this.recipeID));
             }
-
-        }
-
-        public static async Task<RecipeFullPoco?> FetchRecipe(int recipe_id)
-        {
-            RecipeFullPoco? fullRecipe;
-            try
-            {
-                HttpClient client = new HttpClient();
-                string url = "https://xivapi.com/recipe/" + recipe_id;
-                var content = await client.GetAsync(url);
-
-                //Deserialize & Cast from JSON to the object
-                fullRecipe = JsonConvert.DeserializeObject<RecipeFullPoco>(content.Content.ReadAsStringAsync().Result);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to convert recipe from JSON: {message}", ex.Message);
-                return null;
-            }
-
-            return fullRecipe;
         }
     }
 }
