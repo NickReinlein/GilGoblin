@@ -12,6 +12,6 @@ namespace GilGoblin.crafting
 
         public int ID { get; set; }
         public int qty { get; set; }
-        
+
     }
 }

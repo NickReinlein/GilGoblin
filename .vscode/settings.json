@@ -1,5 +1,6 @@
 {
-    "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
-    "editor.formatOnSave": true,
-    "prettier.printWidth": 120,
+  "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
+  "editor.formatOnSave": true,
+  "prettier.printWidth": 120,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.pocos
 {
-    public class RecipeFullPoco
+    public class RecipeFullPoco 
     {
         public int recipeID { get; set; }
         public int targetItemID { get; set; }
