@@ -1,3 +1,5 @@
 {
     "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
+    "editor.formatOnSave": true,
+    "prettier.printWidth": 120,
 }

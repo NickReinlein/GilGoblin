@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace GilGoblin.pocos
 {
     public class RecipeFullPoco
-    {        
+    {
         public int recipeID { get; set; }
         public int targetItemID { get; set; }
         public int iconID { get; set; }
@@ -22,7 +22,7 @@ namespace GilGoblin.pocos
 
         [JsonConstructor]
         public RecipeFullPoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID, int ID, int IconID, int AmountResult,
-            int AmountIngredient0,int AmountIngredient1,
+            int AmountIngredient0, int AmountIngredient1,
             int AmountIngredient2,
             int AmountIngredient3,
             int AmountIngredient4,
@@ -50,7 +50,7 @@ namespace GilGoblin.pocos
             this.canQuickSynth = CanQuickSynth;
             if (AmountIngredient0 > 0)
             {
-                ingredients.Add(new IngredientPoco(ItemIngredient0TargetID, AmountIngredient0,this.recipeID));
+                ingredients.Add(new IngredientPoco(ItemIngredient0TargetID, AmountIngredient0, this.recipeID));
             }
             if (AmountIngredient1 > 0)
             {

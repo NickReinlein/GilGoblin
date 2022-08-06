@@ -17,11 +17,19 @@ namespace GilGoblin.crafting
             var ingredientList = new List<IngredientQty>();
             var recipe = _fetcher.GetRecipeByID(recipeID);
             if (recipe is null) return Array.Empty<IngredientQty>();
-            foreach (var ingredient in recipe.ingredients){
-                if (ingredient.recipeID is not 0) 
+            foreach (var ingredient in recipe.ingredients)
+            {
+                if (canMakeRecipe(ingredient.recipeID))
                     ingredientList.AddRange(breakdownRecipe(ingredient.recipeID));
+                // if no recipe, can we look it up with the ingredient's ID?
             }
             return ingredientList;
+        }
+
+        private bool canMakeRecipe(int recipeID)
+        {
+            //add functionality here to check for crafting levels per recipe
+            return recipeID is not 0;
         }
 
         public int calculateCraftingCost(int itemID, int worldID, bool hq = false)
