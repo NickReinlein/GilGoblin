@@ -17,9 +17,8 @@ namespace GilGoblin.pocos
         public int resultQuantity { get; set; }
         public bool canHq { get; set; }
         public bool canQuickSynth { get; set; }
-        public ICollection<IngredientPoco> ingredients { get; set; }
-            = new List<IngredientPoco>();
-        public RecipeFullPoco() : base() { }
+        public List<IngredientPoco> ingredients { get; set; } = new List<IngredientPoco>();
+        public RecipeFullPoco() { }
 
         [JsonConstructor]
         public RecipeFullPoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID, int ID, int IconID, int AmountResult,
