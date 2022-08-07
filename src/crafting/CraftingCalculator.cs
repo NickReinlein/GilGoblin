@@ -32,9 +32,10 @@ namespace GilGoblin.crafting
             return recipeID is not 0;
         }
 
-        public int calculateCraftingCost(int itemID, int worldID, bool hq = false)
+        private static Random random = new Random();         //temporary
+        public int calculateCraftingCost(int itemID, int worldID)
         {
-            return hq ? 2 : 1;
+            return random.Next(100,400);
         }
     }
 }
