@@ -2,7 +2,7 @@ using GilGoblin.pocos;
 
 namespace GilGoblin.web
 {
-    public class MarketDataFetcher : IMarketDataWeb
+    public class MarketDataGateway : IMarketDataGateway
     {
         public IEnumerable<GilGoblin.pocos.MarketDataPoco> FetchMarketDataItems(int worldId, IEnumerable<int> itemIDs)
         {
