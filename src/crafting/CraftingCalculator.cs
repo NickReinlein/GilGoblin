@@ -6,23 +6,21 @@ namespace GilGoblin.crafting
 {
     public partial class CraftingCalculator : ICraftingCalculator
     {
-        private static RecipeFetcher _fetcher = new RecipeFetcher();
+        private static RecipeGateway _fetcher = new RecipeGateway();
         public IEnumerable<IngredientQty> breakdownRecipe(int recipeID)
         {
-            // get recipe
-            // foreach on ingredient
-            // if recipeExists && CanMake
-            // breakdown each ingredient by calling self
-            // return
             var ingredientList = new List<IngredientQty>();
-            var recipe = _fetcher.GetRecipeByID(recipeID);
-            if (recipe is null) return Array.Empty<IngredientQty>();
+            var recipe = _fetcher.GetRecipe(recipeID);
+
+            if (recipe is not null ){            
             foreach (var ingredient in recipe.ingredients)
             {
+                // if no recipe, can we look it up with the ingredient's ID?
                 if (canMakeRecipe(ingredient.recipeID))
                     ingredientList.AddRange(breakdownRecipe(ingredient.recipeID));
-                // if no recipe, can we look it up with the ingredient's ID?
             }
+            }
+            
             return ingredientList;
         }
 
