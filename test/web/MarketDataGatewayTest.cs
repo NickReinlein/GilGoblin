@@ -26,7 +26,7 @@ namespace GilGoblin.Test.web
         }
 
         [Test]
-        public void GivenAMarketFetcher_WhenFetchingItemsSucessfully_ThenItemsAreReturned()
+        public void GivenAMarketDataGateway_WhenFetchingItems_WhenSucessfull_ThenItemsAreReturned()
         {
             mockFetch<IEnumerable<MarketDataPoco>>(_pocos);
 
@@ -38,7 +38,7 @@ namespace GilGoblin.Test.web
 
 
         [Test]
-        public void GivenAMarketFetcher_WhenFetchingItemsWithWeHaveDuplicateIDs_ThenItemsAreReturnedWithoutDuplicates()
+        public void GivenAMarketDataGateway_WhenFetchingItems_WhenSuccessfulWithDuplicateIDs_ThenItemsAreReturnedWithoutDuplicates()
         {
             var itemIdListWithDupes = new int[] { 1, 1, 1, 2, 2, 3 };
             var itemIdListWithoutDupes = itemIdListWithDupes.Distinct().ToArray();
@@ -50,7 +50,7 @@ namespace GilGoblin.Test.web
         }        
         
         [Test]
-        public void GivenAMarketFetcher_WhenRequestingInexistantItems_ThenNothingIsReturned()
+        public void GivenAMarketDataGateway_WhenFetchingItems_WhenItemDoesNotExist_ThenNothingIsReturned()
         {
             mockFetch<IEnumerable<MarketDataPoco>>(Array.Empty<MarketDataPoco>());
 
@@ -61,7 +61,7 @@ namespace GilGoblin.Test.web
         }
 
         [Test]
-        public void GivenAMarketFetcher_WhenRequestingSomeItemsSuccessfulSomeFail_ThenSuccessulAreReturned()
+        public void GivenAMarketDataGateway_WhenFetchingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
         {
             var _poco1 = new MarketDataPoco(_poco);
             _poco1.itemID = 444;

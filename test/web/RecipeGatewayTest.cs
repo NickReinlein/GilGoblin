@@ -9,8 +9,8 @@ namespace GilGoblin.Test.web
     [TestFixture]
     public class RecipeGatewayTest
     {
-        private IRecipeGateway _mock = Substitute.For<IRecipeGateway>();
-        private RecipeGateway _gateway = new RecipeGateway();
+        private IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
+        //private RecipeGateway _gateway = new RecipeGateway();
         private RecipeFullPoco _poco = new RecipeFullPoco();
     
         [SetUp]
@@ -22,19 +22,54 @@ namespace GilGoblin.Test.web
         [TearDown]
         public void tearDown()
         {
-            _mock.ClearReceivedCalls();
+            _gateway.ClearReceivedCalls();
         }
 
         [Test]
-        public void GivenARecipeGateway_WhenRecipeIDDoesNotExist_ThenNullIsReturned()
+        public void GivenARecipeGateway_WhenGettingARecipe_WhenRecipeDoesNotExist_ThenNullIsReturned()
         {
             const int inexistentRecipeID = -1;
-            _mock.GetRecipe(inexistentRecipeID).ReturnsNull();
+            _gateway.GetRecipe(inexistentRecipeID).ReturnsNull();
             
-            var result = _mock.GetRecipe(inexistentRecipeID);
+            var result = _gateway.GetRecipe(inexistentRecipeID);
 
-            _mock.Received(1).GetRecipe(inexistentRecipeID);
+            _gateway.Received(1).GetRecipe(inexistentRecipeID);
             Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GivenARecipeGateway_WhenGettingARecipe_WhenRecipeDoesExist_ThenTheRecipeIsReturned()
+        {
+            const int existentRecipeID = 1033;
+            _gateway.GetRecipe(existentRecipeID).Returns(_poco);
+            
+            var result = _gateway.GetRecipe(existentRecipeID);
+
+            _gateway.Received(1).GetRecipe(existentRecipeID);
+            Assert.That(result, Is.EqualTo(_poco));
+        }
+        [Test]
+        public void GivenARecipeGateway_WhenFetchingARecipe_WhenRecipeDoesNotExist_ThenNullIsReturned()
+        {
+            const int inexistentRecipeID = -1;
+            _gateway.FetchRecipe(inexistentRecipeID).ReturnsNull();
+            
+            var result = _gateway.FetchRecipe(inexistentRecipeID);
+
+            _gateway.Received(1).FetchRecipe(inexistentRecipeID);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GivenARecipeGateway_WhenFetchingARecipe_WhenRecipeDoesExist_ThenTheRecipeIsReturned()
+        {
+            const int existentRecipeID = 1033;
+            _gateway.FetchRecipe(existentRecipeID).Returns(_poco);
+            
+            var result = _gateway.FetchRecipe(existentRecipeID);
+
+            _gateway.Received(1).FetchRecipe(existentRecipeID);
+            Assert.That(result, Is.EqualTo(_poco));
         }
 
         private void setupPoco()
