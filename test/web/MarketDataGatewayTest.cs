@@ -41,11 +41,12 @@ namespace GilGoblin.Test.web
         {
             var itemIdListWithDupes = new int[] { 1, 1, 1, 2, 2, 3 };
             var itemIdListWithoutDupes = itemIdListWithDupes.Distinct().ToArray();
+            var itemsWithoutDupes = convertItemIDsToPocos(itemIdListWithoutDupes);
+            _gateway.FetchMarketDataItems(Arg.Any<int>(),itemIdListWithDupes).Returns(itemsWithoutDupes);
 
             var result = _gateway.FetchMarketDataItems(1, itemIdListWithDupes);
 
-            var resultIDs = result.Select(x => x.itemID);
-            Assert.That(resultIDs.Count(), Is.EqualTo(itemIdListWithoutDupes.Count()));
+            Assert.That(result, Is.EqualTo(itemsWithoutDupes));
         }        
         
         [Test]
@@ -76,7 +77,7 @@ namespace GilGoblin.Test.web
             Assert.That(result, Is.EquivalentTo(existingItems));
         }
 
-[Test]
+        [Test]
         public void GivenAMarketDataGateway_WhenGettingItems_WhenSucessfull_ThenItemsAreReturned()
         {
             mockFetch<IEnumerable<MarketDataPoco>>(_pocos);
@@ -93,11 +94,12 @@ namespace GilGoblin.Test.web
         {
             var itemIdListWithDupes = new int[] { 1, 1, 1, 2, 2, 3 };
             var itemIdListWithoutDupes = itemIdListWithDupes.Distinct().ToArray();
+            var itemsWithoutDupes = convertItemIDsToPocos(itemIdListWithoutDupes);
+            _gateway.GetMarketDataItems(Arg.Any<int>(),itemIdListWithDupes).Returns(itemsWithoutDupes);
 
-            var result = _gateway.FetchMarketDataItems(1, itemIdListWithDupes);
+            var result = _gateway.GetMarketDataItems(1, itemIdListWithDupes);
 
-            var resultIDs = result.Select(x => x.itemID);
-            Assert.That(resultIDs.Count(), Is.EqualTo(itemIdListWithoutDupes.Count()));
+            Assert.That(result, Is.EqualTo(itemsWithoutDupes));
         }        
         
         [Test]
@@ -130,6 +132,9 @@ namespace GilGoblin.Test.web
 
         private void mockFetch<T>(IEnumerable<MarketDataPoco> pocosReturned){
             _gateway.FetchMarketDataItems(Arg.Any<int>(), Arg.Any<IEnumerable<int>>()).Returns(pocosReturned);
+        }
+        private IEnumerable<MarketDataPoco> convertItemIDsToPocos(IEnumerable<int> itemIDs){
+            return itemIDs.Select(x => new MarketDataPoco(x,1,1,"fake","fakeRealm", 3,2,4,6,4,8));
         }
     }
 }

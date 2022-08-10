@@ -10,7 +10,6 @@ namespace GilGoblin.Test.web
     public class RecipeGatewayTest
     {
         private IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
-        //private RecipeGateway _gateway = new RecipeGateway();
         private RecipeFullPoco _poco = new RecipeFullPoco();
     
         [SetUp]

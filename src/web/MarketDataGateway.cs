@@ -4,7 +4,7 @@ namespace GilGoblin.web
 {
     public class MarketDataGateway : IMarketDataGateway
     {
-        public IEnumerable<GilGoblin.pocos.MarketDataPoco> FetchMarketDataItems(int worldId, IEnumerable<int> itemIDs)
+        public IEnumerable<MarketDataPoco> FetchMarketDataItems(int worldId, IEnumerable<int> itemIDs)
         {
             var uniqueItemIDs = itemIDs.Distinct().ToArray();
             //logger.LogWarning("The person {PersonId} could not be found.", personId);
@@ -13,6 +13,13 @@ namespace GilGoblin.web
 
             return returnUniqueItems;
         }
+
+        public IEnumerable<MarketDataPoco> GetMarketDataItems(int worldId, IEnumerable<int> itemIDs)
+        {
+            return FetchMarketDataItems(worldId,itemIDs);
+        }        
+
+
         // WIP 
         //      try
         //     {

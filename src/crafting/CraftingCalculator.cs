@@ -6,11 +6,12 @@ namespace GilGoblin.crafting
 {
     public partial class CraftingCalculator : ICraftingCalculator
     {
-        private static RecipeGateway _gateway = new RecipeGateway();
+        private static RecipeGateway _recipeGateway = new RecipeGateway();
+        private static MarketDataGateway _marketDataGateway = new MarketDataGateway();
         public IEnumerable<IngredientQty> breakdownRecipe(int recipeID)
         {
             var ingredientList = new List<IngredientQty>();
-            var recipe = _gateway.GetRecipe(recipeID);
+            var recipe = _recipeGateway.GetRecipe(recipeID);
 
             if (recipe is not null ){            
             foreach (var ingredient in recipe.ingredients)
@@ -31,9 +32,12 @@ namespace GilGoblin.crafting
         }
 
         private static Random random = new Random();         //temporary
-        public int calculateCraftingCost(int itemID, int worldID)
+        public int calculateCraftingCost(int worldID, int itemID)
         {
-            return random.Next(100,400);
+            var list = new List<int> { itemID };
+            int cost = (int)_marketDataGateway.GetMarketDataItems(worldID, list)
+                                              .FirstOrDefault().averageListingPrice;
+            return 0;
         }
     }
 }
