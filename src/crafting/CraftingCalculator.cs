@@ -40,13 +40,15 @@ namespace GilGoblin.crafting
                 var list = new List<int> { itemID };
                 var marketData = _marketDataGateway.GetMarketDataItems(worldID, list)?.First();
 
-                if (marketData is null) throw new MarketDataNotFoundException();
-                if (marketData.averageSale is null) throw new MarketDataNotFoundException("Found the item but a null value for the cost.");
+                 if (marketData is null) 
+                     throw new GilGoblin.web.MarketDataNotFoundException();
+                // else if (marketData.averageSale is null) 
+                //     throw new MarketDataNotFoundException2("Found the item but a null value for the cost.");
                 
                 return (int) MathF.Floor((float)marketData.averageSale);
             }
-            catch(MarketDataNotFoundException err) {
-                Log.Error($"Failed to find market data for itemID: {itemID}, worldID: {worldID}. Error Message: {err}", itemID, worldID, err);
+            catch(FileNotFoundException err) {
+                Log.Error($"Failed to find market data for itemID: {itemID}, worldID: {worldID}. Error Message: {err}", itemID, worldID, err.Message);
                 return ERROR_COST;
             }
         }

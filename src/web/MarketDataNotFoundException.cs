@@ -1,5 +1,6 @@
-
-namespace GilGoblin.web {
+using System;
+namespace GilGoblin.web 
+{
     public class MarketDataNotFoundException : Exception
     {
         public MarketDataNotFoundException()

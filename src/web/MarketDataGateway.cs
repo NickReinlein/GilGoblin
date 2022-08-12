@@ -1,22 +1,28 @@
 using GilGoblin.pocos;
+using Serilog;
 
 namespace GilGoblin.web
 {
     public class MarketDataGateway : IMarketDataGateway
     {
-        public IEnumerable<MarketDataPoco> FetchMarketDataItems(int worldId, IEnumerable<int> itemIDs)
+        public IEnumerable<MarketDataPoco> FetchMarketDataItems(int worldID, IEnumerable<int> itemIDs)
         {
+            if (!itemIDs.Any()) {
+                Log.Error($"Tried to fetch data on an empty list of itemIDs for world {worldID}.", worldID);
+                return Array.Empty<MarketDataPoco>();
+            }
+            
             var uniqueItemIDs = itemIDs.Distinct().ToArray();
-            //logger.LogWarning("The person {PersonId} could not be found.", personId);
-
             var returnUniqueItems = uniqueItemIDs.Select(x => new MarketDataPoco(x,1,1,"fake","fakeRealm", 3,2,4,6,4,8));
 
+            Log.Information("Successfully fetched market data for {count} unique item IDs for world {worldID}", 
+                returnUniqueItems.Count(), worldID);
             return returnUniqueItems;
         }
 
-        public IEnumerable<MarketDataPoco> GetMarketDataItems(int worldId, IEnumerable<int> itemIDs)
+        public IEnumerable<MarketDataPoco> GetMarketDataItems(int worldID, IEnumerable<int> itemIDs)
         {
-            return FetchMarketDataItems(worldId,itemIDs);
+            return FetchMarketDataItems(worldID,itemIDs);
         }        
 
 
