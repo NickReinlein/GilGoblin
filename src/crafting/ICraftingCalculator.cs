@@ -2,8 +2,9 @@ using GilGoblin.pocos;
 
 namespace GilGoblin.crafting
 {
-    public interface ICraftingCalculator {
-        public int calculateCraftingCost(int itemID, int worldID);
-        public IEnumerable<IngredientQty> breakdownRecipe(int recipeID);
+    public interface ICraftingCalculator
+    {
+        public int CalculateCraftingCost(int worldID, int itemID);
+        public IEnumerable<IngredientQty> BreakdownRecipe(int recipeID);
     }
 }
