@@ -3,6 +3,7 @@ using GilGoblin.web;
 using GilGoblin.crafting;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace GilGoblin.Test.crafting
 {
@@ -10,17 +11,32 @@ namespace GilGoblin.Test.crafting
     public class CraftingCalculatorTest
     {
         private ICraftingCalculator _calc = Substitute.For<ICraftingCalculator>();
+        private ILogger _log = Substitute.For<ILogger>();
+        private int ERROR_COST = CraftingCalculator.ERROR_DEFAULT_COST;
         private int[] itemIDs = { 1, 2, 3, 4, 5, 6 };
-        private MarketDataPoco _poco = new MarketDataPoco(1,1,1,"test","testRealm", 300,200,400, 600,400,800);
+        private MarketDataPoco _poco = new MarketDataPoco(
+            1,
+            1,
+            1,
+            "test",
+            "testRealm",
+            300,
+            200,
+            400,
+            600,
+            400,
+            800
+        );
         private MarketDataPoco[] _pocos = Array.Empty<MarketDataPoco>();
 
-        private const int WORLD_ID = 34;      // Brynnhildr
+        private const int WORLD_ID = 34; // Brynnhildr
 
         [SetUp]
         public void setUp()
-        {        
+        {
             _pocos = new MarketDataPoco[] { _poco };
         }
+
         [TearDown]
         public void tearDown()
         {
@@ -28,36 +44,29 @@ namespace GilGoblin.Test.crafting
         }
 
         [Test]
-        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesNotExist_ReturnNull()
+        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesNotExist_ReturnErrorCost()
         {
-            // int inexistentItemID = -200;        
-            // _calc.calculateCraftingCost(inexistentItemID,WORLD_ID).Returns(null);
+            int inexistentItemID = -200;
+            _calc.CalculateCraftingCost(WORLD_ID, inexistentItemID).Returns(ERROR_COST);
 
-            // var result = _calc.calculateCraftingCost(1, itemIDs);
+            var result = _calc.CalculateCraftingCost(WORLD_ID, inexistentItemID);
 
-            // _calc.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
-            // Assert.That(result, Is.EquivalentTo(_pocos));;
+            _calc.Received(1).CalculateCraftingCost(WORLD_ID, inexistentItemID);
+            Assert.That(result, Is.EqualTo(ERROR_COST));
         }
-        
-        //             const int inexistentRecipeID = -1;
-        //     _gateway.FetchRecipe(inexistentRecipeID).ReturnsNull();
-            
-        //     var result = _gateway.FetchRecipe(inexistentRecipeID);
 
-        //     _gateway.Received(1).FetchRecipe(inexistentRecipeID);
-        //     Assert.That(result, Is.Null);
-        // }
+        [Test]
+        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesExist_ReturnCraftingCost()
+        {
+            const int existentRecipeID = 1033;
+            const int craftingCost = 250;
+            _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID).Returns(craftingCost);
 
-        // [Test]
-        // public void GivenARecipeGateway_WhenFetchingARecipe_WhenRecipeDoesExist_ThenTheRecipeIsReturned()
-        // {
-        //     const int existentRecipeID = 1033;
-        //     _gateway.FetchRecipe(existentRecipeID).Returns(_poco);
-            
-        //     var result = _gateway.FetchRecipe(existentRecipeID);
+            var result = _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID);
 
-        //     _gateway.Received(1).FetchRecipe(existentRecipeID);
-        //     Assert.That(result, Is.EqualTo(_poco));
-        // }
+            _calc.Received(1).CalculateCraftingCost(WORLD_ID, existentRecipeID);
+            // throws
+            Assert.That(result, Is.EqualTo(craftingCost));
+        }
     }
 }
