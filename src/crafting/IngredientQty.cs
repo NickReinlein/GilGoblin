@@ -6,12 +6,11 @@ namespace GilGoblin.crafting
 
         public IngredientQty(int id, int qty)
         {
-            ID = id;
-            this.qty = qty;
+            this.ItemID = id;
+            this.Quantity = qty;
         }
 
-        public int ID { get; set; }
-        public int qty { get; set; }
-
+        public int ItemID { get; set; }
+        public int Quantity { get; set; }
     }
 }

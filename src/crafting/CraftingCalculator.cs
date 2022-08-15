@@ -3,10 +3,25 @@ using Serilog;
 
 namespace GilGoblin.crafting
 {
-    public partial class CraftingCalculator : ICraftingCalculator
+    public class CraftingCalculator : ICraftingCalculator
     {
-        private static IRecipeGateway _recipeGateway = new RecipeGateway();
-        private static IMarketDataGateway _marketDataGateway = new MarketDataGateway();
+        private IRecipeGateway _recipeGateway;
+        private IMarketDataGateway _marketDataGateway;
+
+        public CraftingCalculator()
+        {
+            _recipeGateway = new RecipeGateway();
+            _marketDataGateway = new MarketDataGateway();
+        }
+
+        public CraftingCalculator(
+            IRecipeGateway recipeGateway,
+            IMarketDataGateway marketDataGateway
+        )
+        {
+            _recipeGateway = recipeGateway;
+            _marketDataGateway = marketDataGateway;
+        }
 
         public static int ERROR_DEFAULT_COST { get; } = -1;
 
@@ -15,16 +30,16 @@ namespace GilGoblin.crafting
             var ingredientList = new List<IngredientQty>();
             var recipe = _recipeGateway.GetRecipe(recipeID);
 
-            if (recipe is not null)
-            {
-                foreach (var ingredient in recipe.ingredients)
-                {
-                    // if no recipe, can we look it up with the ingredient's ID?
-                    if (canMakeRecipe(ingredient.recipeID))
-                        ingredientList.AddRange(BreakdownRecipe(ingredient.recipeID));
-                }
-            }
+            if (recipe is null)
+                return Array.Empty<IngredientQty>();
 
+            foreach (var ingredient in recipe.ingredients)
+            {
+                // if no recipe, can we look it up with the ingredient's ID?
+                // TODO ; can use LINQ here.. wait for unit tests
+                if (canMakeRecipe(ingredient.recipeID))
+                    ingredientList.AddRange(BreakdownRecipe(ingredient.recipeID));
+            }
             return ingredientList;
         }
 
@@ -39,27 +54,39 @@ namespace GilGoblin.crafting
             try
             {
                 var list = new List<int> { itemID };
-                var marketData = _marketDataGateway.GetMarketDataItems(worldID, list)?.First();
+                var marketData = _marketDataGateway.GetMarketDataItems(worldID, list);
 
-                if (marketData is null)
+                if (!marketData.Any())
                     throw new MarketDataNotFoundException();
-                else if (marketData.averageSale is 0)
-                    throw new MarketDataNotFoundException(
-                        "Found the item but a null value for the cost."
-                    );
 
-                return (int)MathF.Floor((float)marketData.averageSale);
+                float itemCost = (float)marketData.First().averageSale;
+                if (itemCost < 1)
+                    throw new MarketDataNotFoundException(COST_MISSING_ERROR);
+
+                return (int)MathF.Floor(itemCost);
             }
-            catch (FileNotFoundException err)
+            catch (MarketDataNotFoundException err)
             {
-                Log.Error(
-                    $"Failed to find market data for itemID: {itemID}, worldID: {worldID}. Error Message: {err}",
-                    itemID,
-                    worldID,
-                    err.Message
-                );
+                LogMarketDataNotFoundError(worldID, itemID, err);
                 return ERROR_DEFAULT_COST;
             }
         }
+
+        private static void LogMarketDataNotFoundError(
+            int worldID,
+            int itemID,
+            MarketDataNotFoundException err
+        )
+        {
+            Log.Error(
+                $"Failed to find market data for itemID: {itemID}, worldID: {worldID}. Error Message: {err}",
+                itemID,
+                worldID,
+                err.Message
+            );
+        }
+
+        private const string COST_MISSING_ERROR =
+            "Found the item but no value for averageSale, used to calculate cost.";
     }
 }

@@ -10,63 +10,68 @@ namespace GilGoblin.Test.crafting
     [TestFixture]
     public class CraftingCalculatorTest
     {
-        private ICraftingCalculator _calc = Substitute.For<ICraftingCalculator>();
+        private CraftingCalculator _calc = new CraftingCalculator();
+        private IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
+        private IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
         private ILogger _log = Substitute.For<ILogger>();
-        private int ERROR_COST = CraftingCalculator.ERROR_DEFAULT_COST;
         private int[] itemIDs = { 1, 2, 3, 4, 5, 6 };
-        private MarketDataPoco _poco = new MarketDataPoco(
-            1,
-            1,
-            1,
-            "test",
-            "testRealm",
-            300,
-            200,
-            400,
-            600,
-            400,
-            800
-        );
-        private MarketDataPoco[] _pocos = Array.Empty<MarketDataPoco>();
+        private MarketDataPoco? _poco;
+        private MarketDataPoco[]? _pocos;
 
+        private int ERROR_COST = CraftingCalculator.ERROR_DEFAULT_COST;
         private const int WORLD_ID = 34; // Brynnhildr
 
         [SetUp]
         public void setUp()
         {
+            _poco = _getGoodPoco();
             _pocos = new MarketDataPoco[] { _poco };
+            _calc = new CraftingCalculator(_recipeGateway, _marketDataGateway);
         }
 
         [TearDown]
         public void tearDown()
         {
-            _calc.ClearReceivedCalls();
+            _recipeGateway.ClearReceivedCalls();
+            _marketDataGateway.ClearReceivedCalls();
         }
 
         [Test]
         public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesNotExist_ReturnErrorCost()
         {
             int inexistentItemID = -200;
-            _calc.CalculateCraftingCost(WORLD_ID, inexistentItemID).Returns(ERROR_COST);
+            _marketDataGateway
+                .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
+                .ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
 
             var result = _calc.CalculateCraftingCost(WORLD_ID, inexistentItemID);
 
-            _calc.Received(1).CalculateCraftingCost(WORLD_ID, inexistentItemID);
+            _marketDataGateway
+                .ReceivedWithAnyArgs(1)
+                .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>());
             Assert.That(result, Is.EqualTo(ERROR_COST));
         }
 
         [Test]
         public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesExist_ReturnCraftingCost()
         {
+            // todo : fix
             const int existentRecipeID = 1033;
             const int craftingCost = 250;
+            _marketDataGateway
+                .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
+                .ReturnsForAnyArgs(_getGoodPoco);
             _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID).Returns(craftingCost);
 
             var result = _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID);
 
             _calc.Received(1).CalculateCraftingCost(WORLD_ID, existentRecipeID);
-            // throws
             Assert.That(result, Is.EqualTo(craftingCost));
+        }
+
+        private static MarketDataPoco _getGoodPoco()
+        {
+            return new MarketDataPoco(1, 1, 1, "test", "testRealm", 300, 200, 400, 600, 400, 800);
         }
     }
 }
