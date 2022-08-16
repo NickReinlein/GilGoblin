@@ -55,18 +55,18 @@ namespace GilGoblin.Test.crafting
         [Test]
         public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesExist_ReturnCraftingCost()
         {
-            // todo : fix
             const int existentRecipeID = 1033;
-            const int craftingCost = 250;
+            MarketDataPoco pocoReturned = _getGoodPoco();
             _marketDataGateway
                 .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
-                .ReturnsForAnyArgs(_getGoodPoco);
-            _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID).Returns(craftingCost);
+                .ReturnsForAnyArgs(new List<MarketDataPoco>() { pocoReturned });
 
             var result = _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID);
 
-            _calc.Received(1).CalculateCraftingCost(WORLD_ID, existentRecipeID);
-            Assert.That(result, Is.EqualTo(craftingCost));
+            _marketDataGateway
+                .ReceivedWithAnyArgs(1)
+                .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>());
+            Assert.That(result, Is.EqualTo(pocoReturned.averageSale));
         }
 
         private static MarketDataPoco _getGoodPoco()
