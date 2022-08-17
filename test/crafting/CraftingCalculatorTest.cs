@@ -3,7 +3,7 @@ using GilGoblin.web;
 using GilGoblin.crafting;
 using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
+using Serilog;
 
 namespace GilGoblin.Test.crafting
 {
@@ -13,6 +13,7 @@ namespace GilGoblin.Test.crafting
         private CraftingCalculator _calc = new CraftingCalculator();
         private IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
         private IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
+
         private ILogger _log = Substitute.For<ILogger>();
         private int[] itemIDs = { 1, 2, 3, 4, 5, 6 };
         private MarketDataPoco? _poco;
@@ -26,7 +27,8 @@ namespace GilGoblin.Test.crafting
         {
             _poco = _getGoodPoco();
             _pocos = new MarketDataPoco[] { _poco };
-            _calc = new CraftingCalculator(_recipeGateway, _marketDataGateway);
+
+            _calc = new CraftingCalculator(_recipeGateway, _marketDataGateway, _log);
         }
 
         [TearDown]
@@ -37,7 +39,7 @@ namespace GilGoblin.Test.crafting
         }
 
         [Test]
-        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesNotExist_ReturnErrorCost()
+        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesNotExist_ThenReturnErrorCost()
         {
             int inexistentItemID = -200;
             _marketDataGateway
@@ -53,7 +55,7 @@ namespace GilGoblin.Test.crafting
         }
 
         [Test]
-        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesExist_ReturnCraftingCost()
+        public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesExist_ThenReturnCraftingCost()
         {
             const int existentRecipeID = 1033;
             MarketDataPoco pocoReturned = _getGoodPoco();
@@ -66,7 +68,7 @@ namespace GilGoblin.Test.crafting
             _marketDataGateway
                 .ReceivedWithAnyArgs(1)
                 .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>());
-            Assert.That(result, Is.EqualTo(pocoReturned.averageSale));
+            Assert.That(result, Is.EqualTo(pocoReturned.averageSold));
         }
 
         private static MarketDataPoco _getGoodPoco()

@@ -7,20 +7,24 @@ namespace GilGoblin.crafting
     {
         private IRecipeGateway _recipeGateway;
         private IMarketDataGateway _marketDataGateway;
+        private ILogger _log;
 
         public CraftingCalculator()
         {
             _recipeGateway = new RecipeGateway();
             _marketDataGateway = new MarketDataGateway();
+            _log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
         }
 
         public CraftingCalculator(
             IRecipeGateway recipeGateway,
-            IMarketDataGateway marketDataGateway
+            IMarketDataGateway marketDataGateway,
+            ILogger log
         )
         {
             _recipeGateway = recipeGateway;
             _marketDataGateway = marketDataGateway;
+            _log = log;
         }
 
         public static int ERROR_DEFAULT_COST { get; } = -1;
@@ -59,17 +63,40 @@ namespace GilGoblin.crafting
                 if (!marketData.Any())
                     throw new MarketDataNotFoundException();
 
-                float itemCost = (float)marketData.First().averageSale;
+                float itemCost = (float)marketData.First().averageSold;
                 if (itemCost < 1)
                     throw new MarketDataNotFoundException(COST_MISSING_ERROR);
 
-                return (int)MathF.Floor(itemCost);
+                LogMarketDataSuccess(worldID, itemID);
+                int craftingCost = (int)MathF.Floor(itemCost);
+
+                LogCraftingCostSuccess(worldID, itemID, craftingCost);
+                return craftingCost;
             }
             catch (MarketDataNotFoundException err)
             {
                 LogMarketDataNotFoundError(worldID, itemID, err);
                 return ERROR_DEFAULT_COST;
             }
+        }
+
+        private static void LogCraftingCostSuccess(int worldID, int itemID, int craftingCost)
+        {
+            Log.Information(
+                $"Returning crafitng cost for itemID: {itemID}, worldID: {worldID}, craftingCost: {craftingCost}",
+                itemID,
+                worldID,
+                craftingCost
+            );
+        }
+
+        private static void LogMarketDataSuccess(int worldID, int itemID)
+        {
+            Log.Information(
+                $"Found the market data for itemID: {itemID}, worldID: {worldID}.",
+                itemID,
+                worldID
+            );
         }
 
         private static void LogMarketDataNotFoundError(
