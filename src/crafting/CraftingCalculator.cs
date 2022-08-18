@@ -40,17 +40,12 @@ namespace GilGoblin.crafting
             foreach (var ingredient in recipe.ingredients)
             {
                 // if no recipe, can we look it up with the ingredient's ID?
-                // TODO ; can use LINQ here.. wait for unit tests
-                if (canMakeRecipe(ingredient.recipeID))
-                    ingredientList.AddRange(BreakdownRecipe(ingredient.recipeID));
+                // if (ingredient.recipeID is not 0 && canMakeRecipe(ingredient.recipeID))
+                //     ingredientList.AddRange(BreakdownRecipe(ingredient.recipeID));
+                // else
+                ingredientList.Add(new IngredientQty(ingredient.itemID, ingredient.quantity));
             }
             return ingredientList;
-        }
-
-        private bool canMakeRecipe(int recipeID)
-        {
-            //add functionality here to check for crafting levels per recipe
-            return recipeID is not 0;
         }
 
         public int CalculateCraftingCost(int worldID, int itemID)
@@ -78,6 +73,12 @@ namespace GilGoblin.crafting
                 LogMarketDataNotFoundError(worldID, itemID, err);
                 return ERROR_DEFAULT_COST;
             }
+        }
+
+        private bool canMakeRecipe(int recipeID)
+        {
+            //add functionality here to check for crafting levels per recipe
+            return recipeID is not 0;
         }
 
         private static void LogCraftingCostSuccess(int worldID, int itemID, int craftingCost)

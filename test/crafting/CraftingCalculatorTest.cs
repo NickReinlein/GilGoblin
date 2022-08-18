@@ -25,7 +25,7 @@ namespace GilGoblin.Test.crafting
         [SetUp]
         public void setUp()
         {
-            _poco = _getGoodPoco();
+            _poco = _getMarketData();
             _pocos = new MarketDataPoco[] { _poco };
 
             _calc = new CraftingCalculator(_recipeGateway, _marketDataGateway, _log);
@@ -58,22 +58,73 @@ namespace GilGoblin.Test.crafting
         public void GivenACraftingCalculator_WhenCalculatingCost_WhenItemDoesExist_ThenReturnCraftingCost()
         {
             const int existentRecipeID = 1033;
-            MarketDataPoco pocoReturned = _getGoodPoco();
+            MarketDataPoco goodPoco = _getMarketData();
             _marketDataGateway
                 .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
-                .ReturnsForAnyArgs(new List<MarketDataPoco>() { pocoReturned });
+                .ReturnsForAnyArgs(new List<MarketDataPoco>() { goodPoco });
 
             var result = _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID);
 
             _marketDataGateway
                 .ReceivedWithAnyArgs(1)
                 .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>());
-            Assert.That(result, Is.EqualTo(pocoReturned.averageSold));
+            Assert.That(result, Is.EqualTo(goodPoco.averageSold));
         }
 
-        private static MarketDataPoco _getGoodPoco()
+        [Test]
+        public void GivenACraftingCalculator_WhenBreakingDownARecipeThatExists_ThenReturnIngredients()
+        {
+            const int existentRecipeID = 1033;
+            RecipeFullPoco recipePoco = _getRecipe();
+            var expectedTotalIngredientsCount = recipePoco.ingredients
+                .Select(x => x.quantity)
+                .Sum();
+            //Expect(expectedTotalIngredientsCount, Is.GreaterThanOrEqualTo(6));
+            _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+
+            var result = _calc.BreakdownRecipe(existentRecipeID);
+
+            _recipeGateway.Received(1).GetRecipe(existentRecipeID);
+            Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
+            var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+        }
+
+        private static MarketDataPoco _getMarketData()
         {
             return new MarketDataPoco(1, 1, 1, "test", "testRealm", 300, 200, 400, 600, 400, 800);
+        }
+
+        private static RecipeFullPoco _getRecipe()
+        {
+            return new RecipeFullPoco(
+                true,
+                true,
+                955,
+                6044,
+                254,
+                1,
+                3,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                554,
+                668,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            );
         }
     }
 }
