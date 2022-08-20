@@ -7,6 +7,7 @@ namespace GilGoblin.web
     {
         public RecipeFullPoco GetRecipe(int recipeID) => new RecipeFullPoco();
         public RecipeFullPoco FetchRecipe(int recipeID) => new RecipeFullPoco();
+        public IEnumerable<RecipeFullPoco> GetRecipesForItem(int itemID) => Array.Empty<RecipeFullPoco>();
         // public class RecipeFetcher //: IRecipeFetcher
         // {
         //     public async Task<RecipeFullPoco?> FetchRecipe(int recipe_id)

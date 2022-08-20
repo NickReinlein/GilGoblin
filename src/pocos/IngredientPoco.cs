@@ -7,16 +7,16 @@ namespace GilGoblin.pocos
     {
         // Primary key would now be recipeID & ItemID
         [Key]
-        public int recipeID { get; set; }
+        public int RecipeID { get; set; }
         [Key]
-        public int itemID { get; set; }
-        public int quantity { get; set; }
+        public int ItemID { get; set; }
+        public int Quantity { get; set; }
 
         public IngredientPoco(int itemID, int quantity, int recipeID)
         {
-            this.itemID = itemID;
-            this.quantity = quantity;
-            this.recipeID = recipeID;
+            this.ItemID = itemID;
+            this.Quantity = quantity;
+            this.RecipeID = recipeID;
         }
     }
 }

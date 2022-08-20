@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.pocos
 {
-    public class RecipeFullPoco 
+    public class RecipeFullPoco
     {
         public int recipeID { get; set; }
         public int targetItemID { get; set; }
@@ -88,6 +88,17 @@ namespace GilGoblin.pocos
             {
                 ingredients.Add(new IngredientPoco(ItemIngredient9TargetID, AmountIngredient9, this.recipeID));
             }
+        }
+
+        public RecipeFullPoco(RecipeFullPoco old)
+        {
+            this.recipeID = old.recipeID;
+            this.targetItemID = old.targetItemID;
+            this.iconID = old.iconID;
+            this.resultQuantity = old.resultQuantity;
+            this.canHq = old.canHq;
+            this.canQuickSynth = old.canQuickSynth;
+            this.ingredients = old.ingredients;
         }
     }
 }

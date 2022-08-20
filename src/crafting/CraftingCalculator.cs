@@ -1,3 +1,4 @@
+using GilGoblin.pocos;
 using GilGoblin.web;
 using Serilog;
 
@@ -29,21 +30,33 @@ namespace GilGoblin.crafting
 
         public static int ERROR_DEFAULT_COST { get; } = -1;
 
-        public IEnumerable<IngredientQty> BreakdownRecipe(int recipeID)
+        public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
         {
-            var ingredientList = new List<IngredientQty>();
             var recipe = _recipeGateway.GetRecipe(recipeID);
 
-            if (recipe is null)
-                return Array.Empty<IngredientQty>();
+            if (recipe is null) return Array.Empty<IngredientPoco>();
 
+            var ingredientList = new List<IngredientPoco>();
             foreach (var ingredient in recipe.ingredients)
             {
-                // if no recipe, can we look it up with the ingredient's ID?
-                // if (ingredient.recipeID is not 0 && canMakeRecipe(ingredient.recipeID))
-                //     ingredientList.AddRange(BreakdownRecipe(ingredient.recipeID));
-                // else
-                ingredientList.Add(new IngredientQty(ingredient.itemID, ingredient.quantity));
+                var ingredientRecipes = _recipeGateway.GetRecipesForItem(ingredient.ItemID);
+
+                if (ingredientRecipes.Count() == 0)
+                {
+                    ingredientList.Add(ingredient);
+                    continue;
+                }
+
+                foreach (var ingredientRecipe in ingredientRecipes)
+                {
+                    int ingredientRecipeID = ingredientRecipe.recipeID;
+                    if (canMakeRecipe(ingredientRecipeID))
+                    {
+                        var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
+                        break;
+                        // todo later: each breakdown -> get best price -> choose best breakdwon                        
+                    }
+                }
             }
             return ingredientList;
         }

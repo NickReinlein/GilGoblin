@@ -78,7 +78,7 @@ namespace GilGoblin.Test.crafting
             const int existentRecipeID = 1033;
             RecipeFullPoco recipePoco = _getRecipe();
             var expectedTotalIngredientsCount = recipePoco.ingredients
-                .Select(x => x.quantity)
+                .Select(x => x.Quantity)
                 .Sum();
             _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
 
@@ -96,9 +96,9 @@ namespace GilGoblin.Test.crafting
         {
             const int existentRecipeID = 1033;
             RecipeFullPoco recipePoco = _getRecipe();
-            recipePoco.ingredients.Add(new IngredientPoco(753, 5, existentRecipeID));
+            recipePoco.ingredients.Add(new pocos.IngredientPoco(753, 5, existentRecipeID));
             var expectedTotalIngredientsCount = recipePoco.ingredients
-                .Select(x => x.quantity)
+                .Select(x => x.Quantity)
                 .Sum();
             _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
 
@@ -111,27 +111,35 @@ namespace GilGoblin.Test.crafting
             Assert.That(recipePoco.ingredients.Count(), Is.GreaterThanOrEqualTo(3));
         }
 
-        [Test]
-        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
-        {
-            const int existentRecipeID = 1033;
-            RecipeFullPoco recipePoco = _getRecipe();
-            _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+        // [Test]
+        // public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
+        // {
+        //     // TODO WIP
+        //     // const int existentRecipeID = 1033;
+        //     // const int subRecipeID = 2000;
+        //     // RecipeFullPoco recipePoco = _getRecipe();
+        //     // var subSubPoco = ??
+        //     // var subRecipePoco = new RecipeFullPoco(recipePoco);
+        //     // subRecipePoco.ingredients = new List<IngredientPoco>();
+        //     // subRecipePoco.recipeID = subRecipeID;
+        //     // _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+        //     // int firstItemID = recipePoco.ingredients.First().ItemID;
+        //     // _recipeGateway.GetRecipesForItem(firstItemID).Returns(new List<RecipeFullPoco>() { subRecipePoco });
 
-            // TODO: one item can be broken down further
+        //     // var expectedTotalIngredientsCount = recipePoco.ingredients
+        //     //     .Select(x => x.Quantity)
+        //     //     .Sum();
 
-            // var expectedTotalIngredientsCount = recipePoco.ingredients
-            //     .Select(x => x.quantity)
-            //     .Sum();
+        //     // var result = _calc.BreakdownRecipe(existentRecipeID);
 
-            var result = _calc.BreakdownRecipe(existentRecipeID);
+        //     // Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
+        //     // _recipeGateway.Received(1).GetRecipe(existentRecipeID);
+        //     // _recipeGateway.Received().GetRecipesForItem(firstItemID);
 
-            _recipeGateway.Received(1).GetRecipe(existentRecipeID);
-            Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
-            var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
-            Assert.That(recipePoco.ingredients.Count(), Is.GreaterThanOrEqualTo(2));
-        }
+        //     // var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+        //     // Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+        //     // Assert.That(recipePoco.ingredients.Count(), Is.GreaterThanOrEqualTo(2));
+        // }
 
         private static MarketDataPoco _getMarketData()
         {

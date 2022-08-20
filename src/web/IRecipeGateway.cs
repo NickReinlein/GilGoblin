@@ -6,5 +6,6 @@ namespace GilGoblin.web
     {
         public RecipeFullPoco GetRecipe(int recipeID);
         public RecipeFullPoco FetchRecipe(int recipeID);
+        public IEnumerable<RecipeFullPoco> GetRecipesForItem(int itemID);
     }
 }
