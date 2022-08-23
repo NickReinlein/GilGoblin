@@ -13,9 +13,8 @@ namespace GilGoblin.Test.crafting
         private CraftingCalculator _calc = new CraftingCalculator();
         private IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
         private IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
-
         private ILogger _log = Substitute.For<ILogger>();
-        private int[] itemIDs = { 1, 2, 3, 4, 5, 6 };
+
         private MarketDataPoco? _poco;
         private MarketDataPoco[]? _pocos;
 
@@ -76,7 +75,7 @@ namespace GilGoblin.Test.crafting
         public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Ingredients_ThenReturn2()
         {
             const int existentRecipeID = 1033;
-            RecipeFullPoco recipePoco = _getRecipe();
+            var recipePoco = _getRecipe();
             var expectedTotalIngredientsCount = recipePoco.ingredients
                 .Select(x => x.Quantity)
                 .Sum();
@@ -84,9 +83,9 @@ namespace GilGoblin.Test.crafting
 
             var result = _calc.BreakdownRecipe(existentRecipeID);
 
+            var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
             _recipeGateway.Received(1).GetRecipe(existentRecipeID);
             Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
-            var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
             Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
             Assert.That(recipePoco.ingredients.Count(), Is.GreaterThanOrEqualTo(2));
         }
@@ -94,56 +93,58 @@ namespace GilGoblin.Test.crafting
         [Test]
         public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturn3()
         {
-            const int existentRecipeID = 1033;
-            RecipeFullPoco recipePoco = _getRecipe();
-            recipePoco.ingredients.Add(new pocos.IngredientPoco(753, 5, existentRecipeID));
+            var recipePoco = _getRecipe();
+            var recipeID = recipePoco.recipeID;
+            recipePoco.ingredients.Add(new pocos.IngredientPoco(753, 5, recipeID));
             var expectedTotalIngredientsCount = recipePoco.ingredients
                 .Select(x => x.Quantity)
                 .Sum();
-            _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+            _recipeGateway.GetRecipe(recipeID).Returns(recipePoco);
 
-            var result = _calc.BreakdownRecipe(existentRecipeID);
+            var result = _calc.BreakdownRecipe(recipeID);
 
-            _recipeGateway.Received(1).GetRecipe(existentRecipeID);
-            Assert.That(result.Count(), Is.GreaterThanOrEqualTo(3));
             var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+            _recipeGateway.Received(1).GetRecipe(recipeID);
+            Assert.That(result.Count(), Is.GreaterThanOrEqualTo(3));
             Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
             Assert.That(recipePoco.ingredients.Count(), Is.GreaterThanOrEqualTo(3));
         }
 
-        // [Test]
-        // public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
-        // {
-        //     // TODO WIP
-        //     // const int existentRecipeID = 1033;
-        //     // const int subRecipeID = 2000;
-        //     // RecipeFullPoco recipePoco = _getRecipe();
-        //     // var subSubPoco = ??
-        //     // var subRecipePoco = new RecipeFullPoco(recipePoco);
-        //     // subRecipePoco.ingredients = new List<IngredientPoco>();
-        //     // subRecipePoco.recipeID = subRecipeID;
-        //     // _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
-        //     // int firstItemID = recipePoco.ingredients.First().ItemID;
-        //     // _recipeGateway.GetRecipesForItem(firstItemID).Returns(new List<RecipeFullPoco>() { subRecipePoco });
+        [Test]
+        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
+        {
+            const int secondRecipeID = 2000;
+            const int secondItemID = 885;
 
-        //     // var expectedTotalIngredientsCount = recipePoco.ingredients
-        //     //     .Select(x => x.Quantity)
-        //     //     .Sum();
+            var secondItem = new MarketDataPoco(_poco);
+            secondItem.name = "Iron Ore";
+            secondItem.itemID = secondItemID;
+            var secondRecipeIngredient = new IngredientPoco(secondItem.itemID, 2, secondRecipeID);
 
-        //     // var result = _calc.BreakdownRecipe(existentRecipeID);
+            RecipeFullPoco firstRecipe = _getRecipe();
+            var firstRecipeID = firstRecipe.recipeID;
+            var firstItem = firstRecipe.ingredients.First();
+            var secondRecipe = new RecipeFullPoco(firstRecipe);
+            secondRecipe.ingredients = new List<IngredientPoco>() { secondRecipeIngredient };
+            secondRecipe.recipeID = secondRecipeID;
 
-        //     // Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
-        //     // _recipeGateway.Received(1).GetRecipe(existentRecipeID);
-        //     // _recipeGateway.Received().GetRecipesForItem(firstItemID);
+            _recipeGateway.GetRecipe(firstRecipeID).Returns(firstRecipe);
+            _recipeGateway.GetRecipesForItem(firstItem.ItemID).Returns(new List<RecipeFullPoco>() { secondRecipe });
+            _recipeGateway.GetRecipe(firstItem.RecipeID).Returns(secondRecipe);
 
-        //     // var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        //     // Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
-        //     // Assert.That(recipePoco.ingredients.Count(), Is.GreaterThanOrEqualTo(2));
-        // }
+            var result = _calc.BreakdownRecipe(firstRecipeID);
+
+            //Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
+            _recipeGateway.Received(1).GetRecipe(firstRecipeID);
+            _recipeGateway.Received(1).GetRecipe(firstItem.RecipeID);
+            //_recipeGateway.Received(1).GetRecipesForItem(firstItem.ItemID);
+
+            Assert.That(firstRecipe.ingredients.Count(), Is.GreaterThanOrEqualTo(2));
+        }
 
         private static MarketDataPoco _getMarketData()
         {
-            return new MarketDataPoco(1, 1, 1, "test", "testRealm", 300, 200, 400, 600, 400, 800);
+            return new MarketDataPoco(1, 1, 1, "Iron Sword", "testRealm", 300, 200, 400, 600, 400, 800);
         }
 
         private static RecipeFullPoco _getRecipe()
@@ -156,7 +157,7 @@ namespace GilGoblin.Test.crafting
                 254,
                 1,
                 3,
-                3,
+                4,
                 0,
                 0,
                 0,
