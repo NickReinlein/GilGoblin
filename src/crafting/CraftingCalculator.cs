@@ -39,23 +39,24 @@ namespace GilGoblin.crafting
             var ingredientList = new List<IngredientPoco>();
             foreach (var ingredient in recipe.ingredients)
             {
+                bool canCraftIngredient = false;
                 var ingredientRecipes = _recipeGateway.GetRecipesForItem(ingredient.ItemID);
-
-                if (ingredientRecipes.Count() == 0)
-                {
-                    ingredientList.Add(ingredient);
-                    continue;
-                }
 
                 foreach (var ingredientRecipe in ingredientRecipes)
                 {
                     int ingredientRecipeID = ingredientRecipe.recipeID;
                     if (canMakeRecipe(ingredientRecipeID))
                     {
-                        ingredientList.AddRange(BreakdownRecipe(ingredientRecipeID));
+                        var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
+                        ingredientList.AddRange(recipeIngredients);
+                        canCraftIngredient = true;
                         break;
-                        // todo later: each breakdown -> get best price -> choose best breakdwon                        
+                        // later: each breakdown -> get best price -> choose best breakdwon                        
                     }
+                }
+                if (!canCraftIngredient)
+                {
+                    ingredientList.Add(ingredient);
                 }
             }
             return ingredientList;
@@ -91,7 +92,7 @@ namespace GilGoblin.crafting
         private bool canMakeRecipe(int recipeID)
         {
             //add functionality here to check for crafting levels per recipe
-            return recipeID is not 0;
+            return recipeID > 0;
         }
 
         private static void LogCraftingCostSuccess(int worldID, int itemID, int craftingCost)
