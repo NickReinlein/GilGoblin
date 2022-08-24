@@ -52,7 +52,7 @@ namespace GilGoblin.crafting
                     int ingredientRecipeID = ingredientRecipe.recipeID;
                     if (canMakeRecipe(ingredientRecipeID))
                     {
-                        var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
+                        ingredientList.AddRange(BreakdownRecipe(ingredientRecipeID));
                         break;
                         // todo later: each breakdown -> get best price -> choose best breakdwon                        
                     }

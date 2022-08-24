@@ -4,8 +4,8 @@ namespace GilGoblin.web
 {
     public interface IRecipeGateway
     {
-        public RecipeFullPoco GetRecipe(int recipeID);
-        public RecipeFullPoco FetchRecipe(int recipeID);
-        public IEnumerable<RecipeFullPoco> GetRecipesForItem(int itemID);
+        public RecipePoco GetRecipe(int recipeID);
+        public RecipePoco FetchRecipe(int recipeID);
+        public IEnumerable<RecipePoco> GetRecipesForItem(int itemID);
     }
 }

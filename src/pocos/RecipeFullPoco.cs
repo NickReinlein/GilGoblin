@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.pocos
 {
-    public class RecipeFullPoco
+    public class RecipePoco
     {
         public int recipeID { get; set; }
         public int targetItemID { get; set; }
@@ -18,10 +18,10 @@ namespace GilGoblin.pocos
         public bool canHq { get; set; }
         public bool canQuickSynth { get; set; }
         public List<IngredientPoco> ingredients { get; set; } = new List<IngredientPoco>();
-        public RecipeFullPoco() { }
+        public RecipePoco() { }
 
         [JsonConstructor]
-        public RecipeFullPoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID, int ID, int IconID, int AmountResult,
+        public RecipePoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID, int ID, int IconID, int AmountResult,
             int AmountIngredient0, int AmountIngredient1,
             int AmountIngredient2,
             int AmountIngredient3,
@@ -90,7 +90,7 @@ namespace GilGoblin.pocos
             }
         }
 
-        public RecipeFullPoco(RecipeFullPoco old)
+        public RecipePoco(RecipePoco old)
         {
             this.recipeID = old.recipeID;
             this.targetItemID = old.targetItemID;
