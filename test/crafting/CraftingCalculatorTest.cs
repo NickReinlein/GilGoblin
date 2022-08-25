@@ -95,7 +95,7 @@ namespace GilGoblin.Test.crafting
         }
 
         [Test]
-        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturn3()
+        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturnAll3()
         {
             var recipe = _getNewRecipe();
             var recipeID = recipe.recipeID;
