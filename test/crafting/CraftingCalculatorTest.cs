@@ -49,7 +49,7 @@ namespace GilGoblin.Test.crafting
                 .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
                 .ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
 
-            var result = _calc.CalculateCraftingCost(WORLD_ID, inexistentItemID);
+            var result = _calc.GetBestCostForItem(WORLD_ID, inexistentItemID);
 
             _marketDataGateway
                 .ReceivedWithAnyArgs(1)
@@ -67,7 +67,7 @@ namespace GilGoblin.Test.crafting
                 .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
                 .ReturnsForAnyArgs(new List<MarketDataPoco>() { goodPoco });
 
-            var result = _calc.CalculateCraftingCost(WORLD_ID, existentRecipeID);
+            var result = _calc.GetBestCostForItem(WORLD_ID, existentRecipeID);
 
             _marketDataGateway
                 .ReceivedWithAnyArgs(1)

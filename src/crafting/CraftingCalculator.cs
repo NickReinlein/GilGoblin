@@ -45,13 +45,13 @@ namespace GilGoblin.crafting
                 foreach (var ingredientRecipe in ingredientRecipes)
                 {
                     int ingredientRecipeID = ingredientRecipe.recipeID;
-                    if (canMakeRecipe(ingredientRecipeID))
+                    if (_canMakeRecipe(ingredientRecipeID))
                     {
                         var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
                         ingredientList.AddRange(recipeIngredients);
                         canCraftIngredient = true;
                         break;
-                        // later: each breakdown -> get best price -> choose best breakdwon                        
+                        // todo later: each breakdown -> get best price -> choose best breakdwon                        
                     }
                 }
                 if (!canCraftIngredient)
@@ -62,40 +62,60 @@ namespace GilGoblin.crafting
             return ingredientList;
         }
 
-        public int CalculateCraftingCost(int worldID, int itemID)
+        public int GetBestCostForItem(int worldID, int itemID)
         {
             try
             {
                 var list = new List<int> { itemID };
-                var marketData = _marketDataGateway.GetMarketDataItems(worldID, list);
+                var marketDataList = _marketDataGateway.GetMarketDataItems(worldID, list);
 
-                if (!marketData.Any())
-                    throw new MarketDataNotFoundException();
+                if (!marketDataList.Any()) throw new MarketDataNotFoundException();
 
-                float itemCost = (float)marketData.First().averageSold;
-                if (itemCost < 1)
-                    throw new MarketDataNotFoundException(COST_MISSING_ERROR);
+                // Market Data
+                MarketDataPoco marketData = marketDataList.First();
+                float marketCost = (float)marketData.averageSold;
+                if (marketCost < 1) throw new MarketDataNotFoundException(COST_MISSING_ERROR);
+                _logMarketDataInfoSuccess(worldID, itemID);
+                ///
 
-                LogMarketDataSuccess(worldID, itemID);
-                int craftingCost = (int)MathF.Floor(itemCost);
-
+                /// Crafting
+                var craftingCost = 999999;
+                craftingCost = CalculateCraftingCost(marketData);
                 LogCraftingCostSuccess(worldID, itemID, craftingCost);
+                //
+
                 return craftingCost;
             }
             catch (MarketDataNotFoundException err)
             {
-                LogMarketDataNotFoundError(worldID, itemID, err);
+                _logMarketDataNotFoundError(worldID, itemID, err);
                 return ERROR_DEFAULT_COST;
             }
         }
 
-        private bool canMakeRecipe(int recipeID)
+        public int CalculateCraftingCost(int worldID, int itemID)
+        {
+            var lowestCost = int.MaxValue;
+            var recipes = _recipeGateway.GetRecipesForItem(itemID);
+            foreach (var recipe in recipes)
+            {
+
+            }
+
+        }
+
+        public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
+        {
+
+        }
+
+        private bool _canMakeRecipe(int recipeID)
         {
             //add functionality here to check for crafting levels per recipe
             return recipeID > 0;
         }
 
-        private static void LogCraftingCostSuccess(int worldID, int itemID, int craftingCost)
+        private static void _logCraftingCostSuccess(int worldID, int itemID, int craftingCost)
         {
             Log.Information(
                 $"Returning crafitng cost for itemID: {itemID}, worldID: {worldID}, craftingCost: {craftingCost}",
@@ -105,7 +125,7 @@ namespace GilGoblin.crafting
             );
         }
 
-        private static void LogMarketDataSuccess(int worldID, int itemID)
+        private static void _logMarketDataInfoSuccess(int worldID, int itemID)
         {
             Log.Information(
                 $"Found the market data for itemID: {itemID}, worldID: {worldID}.",
@@ -114,7 +134,7 @@ namespace GilGoblin.crafting
             );
         }
 
-        private static void LogMarketDataNotFoundError(
+        private static void _logMarketDataNotFoundError(
             int worldID,
             int itemID,
             MarketDataNotFoundException err
@@ -129,6 +149,6 @@ namespace GilGoblin.crafting
         }
 
         private const string COST_MISSING_ERROR =
-            "Found the item but no value for averageSale, used to calculate cost.";
+            "Found the item but no value for averageSale, which used to calculate cost.";
     }
 }

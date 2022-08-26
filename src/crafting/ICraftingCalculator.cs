@@ -4,7 +4,7 @@ namespace GilGoblin.crafting
 {
     public interface ICraftingCalculator
     {
-        public int CalculateCraftingCost(int worldID, int itemID);
+        public int GetBestCostForItem(int worldID, int itemID);
         public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID);
     }
 }
