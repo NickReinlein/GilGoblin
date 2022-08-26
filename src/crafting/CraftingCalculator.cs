@@ -93,20 +93,28 @@ namespace GilGoblin.crafting
             }
         }
 
-        public int CalculateCraftingCost(int worldID, int itemID)
+        public int CalculateCraftingCostForItem(int worldID, int itemID)
         {
             var lowestCost = int.MaxValue;
             var recipes = _recipeGateway.GetRecipesForItem(itemID);
             foreach (var recipe in recipes)
             {
-
+                var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe);
+                lowestCost = Math.Min(recipeCost, lowestCost);
             }
-
+            return lowestCost;
         }
 
-        public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
+        public int CalculateCraftingCostForRecipe(int worldID, RecipePoco recipe)
         {
-
+            var ingredients = BreakdownRecipe(recipe.recipeID);
+            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
+            var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
+            // todo next: calculate crafting cost for each ingredient
+            // generate list
+            // return int total cost or something fancier?
+            // undoubtedly the latter to be re-used as an endpoint... right?
+            return 12;
         }
 
         private bool _canMakeRecipe(int recipeID)
