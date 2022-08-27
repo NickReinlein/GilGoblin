@@ -68,13 +68,20 @@ namespace GilGoblin.Test.crafting
             _recipeGateway
                 .GetRecipesForItem(existentItemID)
                 .Returns(new List<RecipePoco>() { recipe });
+            _marketDataGateway
+                .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
+                .ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
 
             var result = _calc.CalculateCraftingCostForItem(WORLD_ID, existentItemID);
 
             _recipeGateway
                 .Received(1)
                 .GetRecipesForItem(existentItemID);
-            Assert.That(result, Is.LessThan(int.MaxValue));
+            _marketDataGateway
+                .Received(1)
+                .GetMarketDataItems(Arg.Any<int>(), Arg.Any<IEnumerable<int>>());
+            Assert.That(result, Is.LessThan(int.MaxValue));            
+            // todo: later we change this to an expected crafting value            
         }
 
         [Test]
@@ -151,8 +158,6 @@ namespace GilGoblin.Test.crafting
             Assert.That(resultIngredientsSum, Is.EqualTo(expectedIngredientsSum));
             Assert.That(resultIngredientsCount, Is.EqualTo(expectedIngredientsCount));
         }
-
-
 
         private void _mockRecipeGatewayForTwoRecipes(RecipePoco firstRecipe, RecipePoco secondRecipe)
         {
