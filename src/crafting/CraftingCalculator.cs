@@ -32,11 +32,11 @@ namespace GilGoblin.crafting
 
         public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
         {
-            var recipe = _recipeGateway.GetRecipe(recipeID);
+            var ingredientList = new List<IngredientPoco>();
 
+            var recipe = _recipeGateway.GetRecipe(recipeID);
             if (recipe is null) return Array.Empty<IngredientPoco>();
 
-            var ingredientList = new List<IngredientPoco>();
             foreach (var ingredient in recipe.ingredients)
             {
                 var breakdownIngredient = BreakdownItem(ingredient.ItemID);
@@ -58,8 +58,10 @@ namespace GilGoblin.crafting
                 if (_canMakeRecipe(ingredientRecipeID))
                 {
                     var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
-                    return recipeIngredients;
-                    // todo later: each breakdown -> get best price -> choose best breakdwon                        
+                    // todo later: each breakdown -> get best price -> choose best breakdwon                                            
+                    // for now we choose the first one
+                    if (recipeIngredients.Count()>0) 
+                        return recipeIngredients;
                 }
             }
             return Array.Empty<IngredientPoco>();
@@ -101,12 +103,16 @@ namespace GilGoblin.crafting
 
         public int CalculateCraftingCostForItem(int worldID, int itemID)
         {
-            var lowestCost = int.MaxValue;
+            var lowestCost = ERROR_DEFAULT_COST;
             var recipes = _recipeGateway.GetRecipesForItem(itemID);
+            var recipeCount = recipes.Count();
             foreach (var recipe in recipes)
             {
                 var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.recipeID);
                 lowestCost = Math.Min(recipeCost, lowestCost);
+            }
+            if (recipeCount>0 && lowestCost==ERROR_DEFAULT_COST){
+                _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipeCount);
             }
             return lowestCost;
         }

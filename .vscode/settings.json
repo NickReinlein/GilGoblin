@@ -2,7 +2,7 @@
   "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
   "dotnet-test-explorer.treeMode": "flat",
   "editor.formatOnSave": true,
-  "prettier.printWidth": 160,
+  "prettier.printWidth": 120,
   "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
