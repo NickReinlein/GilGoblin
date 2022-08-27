@@ -10,11 +10,11 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="newtonsoft.json" Version="13.0.1" />
-    <PackageReference Include="serilog" Version="2.11.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.*" />
+    <PackageReference Include="newtonsoft.json" Version="13.0.1"/>
+    <PackageReference Include="serilog" Version="2.11.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.43.0.51858"/>
   </ItemGroup>
 </Project>

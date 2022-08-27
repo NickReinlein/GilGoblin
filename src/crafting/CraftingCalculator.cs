@@ -6,7 +6,7 @@ namespace GilGoblin.crafting
 {
     public class CraftingCalculator : ICraftingCalculator
     {
-        private IRecipeGateway _recipeGateway;
+        private readonly IRecipeGateway _recipeGateway;
         private IMarketDataGateway _marketDataGateway;
         private ILogger _log;
 
@@ -39,27 +39,30 @@ namespace GilGoblin.crafting
             var ingredientList = new List<IngredientPoco>();
             foreach (var ingredient in recipe.ingredients)
             {
-                bool canCraftIngredient = false;
-                var ingredientRecipes = _recipeGateway.GetRecipesForItem(ingredient.ItemID);
-
-                foreach (var ingredientRecipe in ingredientRecipes)
-                {
-                    int ingredientRecipeID = ingredientRecipe.recipeID;
-                    if (_canMakeRecipe(ingredientRecipeID))
-                    {
-                        var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
-                        ingredientList.AddRange(recipeIngredients);
-                        canCraftIngredient = true;
-                        break;
-                        // todo later: each breakdown -> get best price -> choose best breakdwon                        
-                    }
-                }
-                if (!canCraftIngredient)
-                {
+                var breakdownIngredient = BreakdownItem(ingredient.ItemID);
+                if (breakdownIngredient.Count() > 0)
+                    ingredientList.AddRange(breakdownIngredient);
+                else
                     ingredientList.Add(ingredient);
-                }
             }
             return ingredientList;
+        }
+
+        public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
+        {
+            var ingredientRecipes = _recipeGateway.GetRecipesForItem(itemID);
+
+            foreach (var ingredientRecipe in ingredientRecipes)
+            {
+                int ingredientRecipeID = ingredientRecipe.recipeID;
+                if (_canMakeRecipe(ingredientRecipeID))
+                {
+                    var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
+                    return recipeIngredients;
+                    // todo later: each breakdown -> get best price -> choose best breakdwon                        
+                }
+            }
+            return Array.Empty<IngredientPoco>();
         }
 
         public int GetBestCostForItem(int worldID, int itemID)
@@ -80,8 +83,8 @@ namespace GilGoblin.crafting
 
                 /// Crafting
                 var craftingCost = 999999;
-                craftingCost = CalculateCraftingCost(marketData);
-                LogCraftingCostSuccess(worldID, itemID, craftingCost);
+                // craftingCost = CalculateCraftingCost(marketData);
+                // LogCraftingCostSuccess(worldID, itemID, craftingCost);
                 //
 
                 return craftingCost;
