@@ -40,7 +40,7 @@ namespace GilGoblin.crafting
             foreach (var ingredient in recipe.ingredients)
             {
                 var breakdownIngredient = BreakdownItem(ingredient.ItemID);
-                if (breakdownIngredient.Count() > 0)
+                if (breakdownIngredient.Any())
                     ingredientList.AddRange(breakdownIngredient);
                 else
                     ingredientList.Add(ingredient);
@@ -60,7 +60,7 @@ namespace GilGoblin.crafting
                     var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
                     // todo later: each breakdown -> get best price -> choose best breakdwon                                            
                     // for now we choose the first one
-                    if (recipeIngredients.Count()>0) 
+                    if (recipeIngredients.Any()) 
                         return recipeIngredients;
                 }
             }

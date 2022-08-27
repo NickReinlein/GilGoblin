@@ -43,7 +43,7 @@ namespace GilGoblin.Test.crafting
         }
 
         [Test]
-        public void GivenACraftingCalculator_WhenCalculatingItemCost_WhenNoRecipesExist_ThenReturnErrorCost()
+        public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenNoRecipesExist_ThenReturnErrorCost()
         {
             int inexistentItemID = -200;
             _recipeGateway
@@ -60,7 +60,7 @@ namespace GilGoblin.Test.crafting
         }
 
         [Test]
-        public void GivenACraftingCalculator_WhenCalculatingItemCost_WhenARecipeExists_ThenReturnCraftingCost()
+        public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenARecipeExists_ThenReturnCraftingCost()
         {
             const int existentItemID = 1033;
             var goodPoco = _getNewMarketData();
@@ -83,6 +83,26 @@ namespace GilGoblin.Test.crafting
             Assert.That(result, Is.LessThan(int.MaxValue));            
             // todo: later we change this to an expected crafting value            
         }
+
+        [Test]
+        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas1Ingredient_ThenReturn1()
+        {
+            const int existentRecipeID = 1033;
+            var recipePoco = _getNewRecipe();
+            recipePoco.ingredients = new List<IngredientPoco>(){ recipePoco.ingredients.First()};
+            var expectedTotalIngredientsCount = recipePoco.ingredients
+                .Select(x => x.Quantity)
+                .Sum();
+            _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+
+            var result = _calc.BreakdownRecipe(existentRecipeID);
+
+            var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+            _recipeGateway.Received(1).GetRecipe(existentRecipeID);
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+            Assert.That(recipePoco.ingredients.Count(), Is.EqualTo(1));
+        }        
 
         [Test]
         public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Ingredients_ThenReturn2()
