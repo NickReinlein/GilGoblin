@@ -67,6 +67,41 @@ namespace GilGoblin.crafting
             return Array.Empty<IngredientPoco>();
         }
 
+
+        public int CalculateCraftingCostForItem(int worldID, int itemID)
+        {
+            var lowestCost = ERROR_DEFAULT_COST;
+            var recipes = _recipeGateway.GetRecipesForItem(itemID);
+            foreach (var recipe in recipes)
+            {
+                var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.recipeID);
+                lowestCost = Math.Min(recipeCost, lowestCost);
+            }
+
+            if (recipes.Count() > 0 && lowestCost == ERROR_DEFAULT_COST)
+                LogErrorCraftingCostForItem(worldID, itemID, recipes.Count());
+            return lowestCost;
+        }
+
+        private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
+        {
+            _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
+        }
+
+        public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
+        {
+            var ingredients = BreakdownRecipe(recipeID);
+            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
+            var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
+            if (!ingredientsMarketData.Any())
+                _log.Error("Failed to find market data while calculating recipe cost of: world {worldID}, recipe {recipeID}", worldID, recipeID);
+            // todo next: calculate crafting cost for each ingredient
+            // generate list
+            // return int total cost or something fancier?
+            // undoubtedly the latter to be re-used as an endpoint... right?
+            return 12;
+        }
+
         // public int GetBestCostForItem(int worldID, int itemID)
         // {
         //     try
@@ -100,36 +135,6 @@ namespace GilGoblin.crafting
         //         return ERROR_DEFAULT_COST;
         //     }
         // }
-
-        public int CalculateCraftingCostForItem(int worldID, int itemID)
-        {
-            var lowestCost = ERROR_DEFAULT_COST;
-            var recipes = _recipeGateway.GetRecipesForItem(itemID);
-            foreach (var recipe in recipes)
-            {
-                var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.recipeID);
-                lowestCost = Math.Min(recipeCost, lowestCost);
-            }
-
-            if (recipes.Count()>0 && lowestCost==ERROR_DEFAULT_COST)
-                _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipes.Count());
-            return lowestCost;
-        }
-
-        public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
-        {
-            var ingredients = BreakdownRecipe(recipeID);
-            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
-            var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
-            if (!ingredientsMarketData.Any())
-                _log.Error("Failed to find market data while calculating recipe cost of: world {worldID}, recipe {recipeID}", worldID, recipeID);
-            // todo next: calculate crafting cost for each ingredient
-            // generate list
-            // return int total cost or something fancier?
-            // undoubtedly the latter to be re-used as an endpoint... right?
-            return 12;
-        }
-
         private bool _canMakeRecipe(int recipeID)
         {
             //add functionality here to check for crafting levels per recipe

@@ -42,18 +42,21 @@ namespace GilGoblin.Test.crafting
             _log.ClearReceivedCalls();
         }
 
-        // [Test]
-        // public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenNoRecipesExist_ThenReturnErrorCost()
-        // {
-        //     int inexistentItemID = -200;
-        //     _recipeGateway
-        //         .GetRecipesForItem(inexistentItemID)
-        //         .Returns(Array.Empty<RecipePoco>());WhenNoRecipesExist_ThenReturnErrorCost
-        //         .Received(1)
-        //         .GetRecipesForItem(inexistentItemID);
-        //     _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketDataItems(default, default!);
-        //     Assert.That(result, Is.EqualTo(ERROR_COST));
-        // }
+        [Test]
+        public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenNoRecipesExist_ThenReturnErrorCost()
+        {
+            int inexistentItemID = -200;
+            _recipeGateway
+                .GetRecipesForItem(inexistentItemID)
+                .Returns(Array.Empty<RecipePoco>());
+                
+            var result = _calc!.CalculateCraftingCostForItem(WORLD_ID, inexistentItemID);
+                
+            _recipeGateway.Received(1).GetRecipesForItem(inexistentItemID);
+            _marketDataGateway.DidNotReceiveWithAnyArgs()
+                              .GetMarketDataItems(default, default!);
+            Assert.That(result, Is.EqualTo(ERROR_COST));
+        }
 
         [Test]
         public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenARecipeExists_ThenReturnCraftingCost()
