@@ -91,10 +91,14 @@ namespace GilGoblin.crafting
         public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
         {
             var ingredients = BreakdownRecipe(recipeID);
+            if (!ingredients.Any()) return ERROR_DEFAULT_COST;
+            
             var itemIDList = ingredients.Select(e => e.ItemID).ToList();
             var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
-            if (!ingredientsMarketData.Any())
+            if (!ingredientsMarketData.Any()){
                 _log.Error("Failed to find market data while calculating recipe cost of: world {worldID}, recipe {recipeID}", worldID, recipeID);
+                return ERROR_DEFAULT_COST;
+            }
             // todo next: calculate crafting cost for each ingredient
             // generate list
             // return int total cost or something fancier?

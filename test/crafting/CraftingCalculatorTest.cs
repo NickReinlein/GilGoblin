@@ -61,24 +61,24 @@ namespace GilGoblin.Test.crafting
         [Test]
         public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenARecipeExists_ThenReturnCraftingCost()
         {
-            const int existentItemID = 1033;
-            var goodPoco = _getNewMarketData();
+            var item = _getNewMarketData();
+            var subItem = _getNewMarketData();
+            subItem.itemID = subItem1ID;
             var recipe =  _getNewRecipe();
-            _recipeGateway
-                .GetRecipesForItem(existentItemID)
-                .Returns(new List<RecipePoco>() { recipe });
-            _marketDataGateway
-                .GetMarketDataItems(default, Arg.Any<IEnumerable<int>>())
-                .ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
+            var subIngredient = recipe.ingredients.First();
+            subIngredient.Quantity = 10;
+            subIngredient.RecipeID = recipe.recipeID;
+            var subRecipe = _getNewRecipe();
+            subRecipe.ingredients = new List<IngredientPoco> { subIngredient };
+            _recipeGateway.GetRecipesForItem(firstItemID).Returns(new List<RecipePoco>() { recipe });
+            _recipeGateway.GetRecipesForItem(subItem1ID).Returns(new List<RecipePoco>() { subRecipe });
 
-            var result = _calc!.CalculateCraftingCostForItem(WORLD_ID, existentItemID);
+            _marketDataGateway.GetMarketDataItems(default, Arg.Any<IEnumerable<int>>()).ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
 
-            _recipeGateway
-                .Received(1)
-                .GetRecipesForItem(existentItemID);
-            _marketDataGateway
-                .Received(1)
-                .GetMarketDataItems(Arg.Any<int>(), Arg.Any<IEnumerable<int>>());
+            var result = _calc!.CalculateCraftingCostForItem(WORLD_ID, firstItemID);
+
+            _recipeGateway.Received(1).GetRecipesForItem(firstItemID);
+            _marketDataGateway.Received().GetMarketDataItems(Arg.Any<int>(), Arg.Any<IEnumerable<int>>());
             Assert.That(result, Is.LessThan(int.MaxValue));            
             // todo: later we change this to an expected crafting value            
         }
@@ -86,15 +86,15 @@ namespace GilGoblin.Test.crafting
         // [Test]
         // public void GivenACraftingCalculator_WhenCalculateCraftingCostForRecipe_WhenNoRecipesExist_ThenReturnErrorCost()
         // {
-        //     int inexistentItemID = -200;
+        //     int inexistentRecipeID = -200;
         //     _recipeGateway
-        //         .GetRecipesForItem(inexistentItemID)
-        //         .Returns(Array.Empty<RecipePoco>());
+        //         .GetRecipe(inexistentRecipeID)
+        //         .Returns(null);
 
-        //     var result = _calc!.CalculateCraftingCostForRecipe(WORLD_ID, inexistentItemID);
+        //     var result = _calc!.CalculateCraftingCostForRecipe(WORLD_ID, inexistentRecipeID);
 
-        //     _recipeGateway
-        //         .Received(1)WhenNoRecipesExist_ThenReturnErrorCostfault!);
+        //     _recipeGateway.Received(1).GetRecipe(inexistentRecipeID);
+        //     _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketDataItems(default, default!);
         //     Assert.That(result, Is.EqualTo(ERROR_COST));
         // }
 
