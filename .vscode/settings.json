@@ -9,5 +9,26 @@
   "[vue]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[csharp]": { "editor.defaultFormatter": "SonarSource.sonarlint-vscode" }
+  "[csharp]": {
+    "editor.defaultFormatter": "SonarSource.sonarlint-vscode"
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#47037a",
+    "activityBar.background": "#47037a",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#9c5b04",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#47037a",
+    "statusBar.background": "#2a0248",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#47037a",
+    "statusBarItem.remoteBackground": "#2a0248",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#2a0248",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#2a024899",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  }
 }
