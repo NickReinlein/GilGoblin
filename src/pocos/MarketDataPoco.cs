@@ -4,40 +4,55 @@ namespace GilGoblin.pocos
 {
     public class MarketDataPoco
     {
-
         // The item ID.
         public int itemID { get; set; }
+
         // The world ID, if applicable.
         public int worldID { get; set; }
+
         // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
         public long lastUploadTime { get; set; }
 
         // The DC name, if applicable.
         public string? name { get; set; }
+
         // The region name, if applicable.
         public string? regionName { get; set; }
 
         // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal averageListingPrice { get; set; }
-        // The average NQ listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal averagePriceNQ { get; set; }
-        // The average HQ listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal averagePriceHQ { get; set; }
+        public float averageListingPrice { get; set; }
 
-        // TODO: return later to see which is the best data type for price Poco
+        // The average NQ listing price, with outliers removed beyond 3 standard deviations of the mean.
+        public float averageListingPriceNQ { get; set; }
+
+        // The average HQ listing price, with outliers removed beyond 3 standard deviations of the mean.
+        public float averageListingPriceHQ { get; set; }
+
         // The average sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public float? averageSale { get; set; }
+        public float averageSold { get; set; }
+
         // The average NQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public decimal? averageSaleNQ { get; set; }
+        public float averageSoldNQ { get; set; }
+
         // The average HQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public double? averageSaleHQ { get; set; }
-        public MarketDataPoco()
-        {
-        }
+        public float averageSoldHQ { get; set; }
+
+        public MarketDataPoco() { }
+
         [JsonConstructor]
-        public MarketDataPoco(int itemID, int worldID, long lastUploadTime, string? name, string? regionName, 
-            decimal currentAveragePrice, decimal currentAveragePriceNQ, decimal currentAveragePriceHQ, 
-            float? averagePrice, decimal? averagePriceNQ, double? averagePriceHQ)
+        public MarketDataPoco(
+            int itemID,
+            int worldID,
+            long lastUploadTime,
+            string? name,
+            string? regionName,
+            float currentAveragePrice,
+            float currentAveragePriceNQ,
+            float currentAveragePriceHQ,
+            float averagePrice,
+            float averagePriceNQ,
+            float averagePriceHQ
+        )
         {
             this.itemID = itemID;
             this.worldID = worldID;
@@ -45,14 +60,12 @@ namespace GilGoblin.pocos
             this.name = name;
             this.regionName = regionName;
             this.averageListingPrice = currentAveragePrice;
-            this.averagePriceNQ = currentAveragePriceNQ;
-            this.averagePriceHQ = currentAveragePriceHQ;
-            this.averageSale = averagePrice;
-            this.averageSaleNQ = averagePriceNQ;
-            this.averageSaleHQ = averagePriceHQ;
+            this.averageListingPriceNQ = currentAveragePriceNQ;
+            this.averageListingPriceHQ = currentAveragePriceHQ;
+            this.averageSold = averagePrice;
+            this.averageSoldNQ = averagePriceNQ;
+            this.averageSoldHQ = averagePriceHQ;
         }
-
-        
 
         public MarketDataPoco(MarketDataPoco copyMe)
         {
@@ -62,11 +75,11 @@ namespace GilGoblin.pocos
             this.name = copyMe.name;
             this.regionName = copyMe.regionName;
             this.averageListingPrice = copyMe.averageListingPrice;
-            this.averagePriceNQ = copyMe.averagePriceNQ;
-            this.averagePriceHQ = copyMe.averagePriceHQ;
-            this.averageSale = copyMe.averageSale;
-            this.averageSaleNQ = copyMe.averageSaleNQ;
-            this.averageSaleHQ = copyMe.averageSaleHQ;
+            this.averageListingPriceNQ = copyMe.averageListingPriceNQ;
+            this.averageListingPriceHQ = copyMe.averageListingPriceHQ;
+            this.averageSold = copyMe.averageSold;
+            this.averageSoldNQ = copyMe.averageSoldNQ;
+            this.averageSoldHQ = copyMe.averageSoldHQ;
         }
     }
 }
