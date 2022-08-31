@@ -117,7 +117,7 @@ namespace GilGoblin.Test.crafting
         }
 
         // [Test]
-        // public void GivenACraftingCalculator_WhenCalculateCraftingCostForRecipe_WhenARecipeExists__WThenReturnCraftingCost()
+        // public void GivenACraftingCalculator_WhenCalculateCraftingCostForRecipe_WhenARecipeExists__ThenReturnCraftingCost()
         // {
         //     var goodPoco = _getNewMarketData();
         //     var recipe =  _getNewRecipe();
@@ -142,7 +142,7 @@ namespace GilGoblin.Test.crafting
         // }  
 
         [Test]
-        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmptyResult()
+        public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmpty()
         {
             const int inexistentRecipeID = 1033;
             var recipePoco = _getNewRecipe();

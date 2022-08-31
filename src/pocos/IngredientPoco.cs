@@ -25,18 +25,5 @@ namespace GilGoblin.pocos
             this.ItemID = copyMe.ItemID;
             this.Quantity = copyMe.Quantity;
         }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is IngredientPoco poco &&
-                   RecipeID == poco.RecipeID &&
-                   ItemID == poco.ItemID &&
-                   Quantity == poco.Quantity;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(RecipeID, ItemID, Quantity);
-        }
     }
 }
