@@ -45,6 +45,7 @@ namespace GilGoblin.crafting
             return lowestCost;
         }
 
+        // todo: refactor
         public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
         {
             var recipe = _recipeGateway.GetRecipe(recipeID);
@@ -52,22 +53,36 @@ namespace GilGoblin.crafting
             if (recipe is null || !ingredients.Any()) return ERROR_DEFAULT_COST;
             
             var itemIDList = ingredients.Select(e => e.ItemID).ToList();
+            var marketData = _marketDataGateway.GetMarketDataItems(worldID, new List<int>() { recipe.targetItemID });
             var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
-            if (!ingredientsMarketData.Any()){
+            if (marketData is null || !ingredientsMarketData.Any()){
                 _log.Error("Failed to find market data while calculating recipe cost of: world {worldID}, recipe {recipeID}", worldID, recipeID);
                 return ERROR_DEFAULT_COST;
             }
-            var marketData = _marketDataGateway.GetMarketDataItems(worldID, new int[] { recipe.targetItemID });
             
-            var craft = new Craft(recipe, marketData, ingredients, ingredientsMarketData);
+            List<CraftIngredient> craftIngredients = new List<CraftIngredient>();
+            foreach (var ingredient in ingredients){
+                var market = ingredientsMarketData.Single(e=>e.itemID == ingredient.ItemID);
+                if (market is null) {
+                    _log.Error("Failed to find expected market data for item {ItemID}: world {WorldID}, recipe {RecipeID}", 
+                        ingredient.ItemID, worldID, recipeID);
+                  return ERROR_DEFAULT_COST;
+                }
+                
+                craftIngredients.Add(new CraftIngredient(ingredient, market));
+            }
+            int craftingCost = ERROR_DEFAULT_COST;
 
-            // todo next: calculate crafting cost for each ingredient
-            // generate list
-            // return int total cost or something fancier?
-            // undoubtedly the latter to be re-used as an endpoint... right?
-            return 12;
-            
+            foreach (var craft in craftIngredients){
+                var minCost = Math.Min((int)craft.MarketData.averageSold, CalculateCraftingCostForItem(worldID, craft.ItemID));
+                craftingCost += craft.Quantity * minCost;
+            }
+
+            Log.Information("Successfully calculated crafting cost for recipe {RecipeID} world {WorldID} with {IngCount} ingredients", 
+                recipeID, worldID, ingredients.Count());
+            return craftingCost;
         }
+
         public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
         {
             var ingredientList = new List<IngredientPoco>();
@@ -104,8 +119,6 @@ namespace GilGoblin.crafting
             }
             return Array.Empty<IngredientPoco>();
         }
-
-
 
         // public int GetBestCostForItem(int worldID, int itemID)
         // {
