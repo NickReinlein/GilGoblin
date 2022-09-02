@@ -64,9 +64,9 @@ namespace GilGoblin.Test.web
         public void GivenAMarketDataGateway_WhenFetchingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
         {
             var _poco1 = new MarketDataPoco(_poco);
-            _poco1.itemID = 444;
+            _poco1.ItemID = 444;
             var _poco2 = new MarketDataPoco(_poco);
-            _poco2.itemID = 777;
+            _poco2.ItemID = 777;
             var existingItems = new MarketDataPoco[] { _poco1,_poco2 };
             mockFetch<IEnumerable<MarketDataPoco>>(existingItems);
             Assume.That(itemIDs.Count(), Is.GreaterThan(existingItems.Count()));
@@ -117,9 +117,9 @@ namespace GilGoblin.Test.web
         public void GivenAMarketDataGateway_WhenGettingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
         {
             var _poco1 = new MarketDataPoco(_poco);
-            _poco1.itemID = 444;
+            _poco1.ItemID = 444;
             var _poco2 = new MarketDataPoco(_poco);
-            _poco2.itemID = 777;
+            _poco2.ItemID = 777;
             var existingItems = new MarketDataPoco[] { _poco1,_poco2 };
             mockFetch<IEnumerable<MarketDataPoco>>(existingItems);
             Assume.That(itemIDs.Count(), Is.GreaterThan(existingItems.Count()));

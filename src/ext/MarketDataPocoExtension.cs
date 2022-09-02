@@ -7,14 +7,14 @@ namespace GilGoblin.ext
         //public static int GetCraftingCost(){};
         public static int GetAverageSoldPrice(this MarketDataPoco marketData, bool hq = false)
         {
-            return hq ? (int)marketData.averageSoldHQ : (int)marketData.averageSoldNQ;
+            return hq ? (int)marketData.AverageSoldHQ : (int)marketData.AverageSoldNQ;
         }
 
         public static int GetAverageListingPrice(this MarketDataPoco marketData, bool hq = false)
         {
             return hq
-                ? (int)marketData.averageListingPriceHQ
-                : (int)marketData.averageListingPriceNQ;
+                ? (int)marketData.AverageListingPriceHQ
+                : (int)marketData.AverageListingPriceNQ;
         }
     }
 }

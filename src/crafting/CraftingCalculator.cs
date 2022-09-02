@@ -42,6 +42,7 @@ namespace GilGoblin.crafting
 
             if (recipes.Count() > 0 && lowestCost == ERROR_DEFAULT_COST)
                 LogErrorCraftingCostForItem(worldID, itemID, recipes.Count());
+
             return lowestCost;
         }
 
@@ -77,7 +78,7 @@ namespace GilGoblin.crafting
             int totalCraftingCost = 0;
             foreach (var craft in craftIngredients)
             {
-                int averageSold = (int)craft.MarketData.averageSold;
+                int averageSold = (int)craft.MarketData.AverageSold;
                 int craftingCost = CalculateCraftingCostForItem(worldID, craft.ItemID);
                 var minCost = Math.Min(averageSold, craftingCost);
 
@@ -89,27 +90,6 @@ namespace GilGoblin.crafting
             return totalCraftingCost;
         }
 
-        private IEnumerable<MarketDataPoco> _getIngredientMarketData(int worldID, int itemID, IEnumerable<IngredientPoco> ingredients)
-        {
-            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
-            var marketData = _marketDataGateway.GetMarketDataItems(worldID, new List<int>() { itemID });
-            var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
-            if (marketData is null || !ingredientsMarketData.Any()) throw new MarketDataNotFoundException();
-            return ingredientsMarketData;
-        }
-
-        private static List<CraftIngredient> _makeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
-        {
-            List<CraftIngredient> crafts = new List<CraftIngredient>();
-            foreach (var ingredient in ingredients)
-            {
-                var market = marketData.Single(e => e.itemID == ingredient.ItemID);
-                if (market is null) throw new MarketDataNotFoundException();
-
-                crafts.Add(new CraftIngredient(ingredient, market));
-            }
-            return crafts;
-        }
 
         public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
         {
@@ -146,6 +126,30 @@ namespace GilGoblin.crafting
                 }
             }
             return Array.Empty<IngredientPoco>();
+        }
+
+
+        public static List<CraftIngredient> _makeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
+        {
+            List<CraftIngredient> crafts = new List<CraftIngredient>();
+            foreach (var ingredient in ingredients)
+            {
+                var market = marketData.Single(e => e.ItemID == ingredient.ItemID);
+                if (market is null) throw new MarketDataNotFoundException();
+
+                crafts.Add(new CraftIngredient(ingredient, market));
+            }
+            return crafts;
+        }
+
+        private IEnumerable<MarketDataPoco> _getIngredientMarketData(int worldID, int itemID, IEnumerable<IngredientPoco> ingredients)
+        {
+            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
+            itemIDList.Add(itemID);
+            itemIDList.Sort();
+            var marketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
+            if (!marketData.Any()) throw new MarketDataNotFoundException();
+            return marketData;
         }
 
         // public int GetBestCostForItem(int worldID, int itemID)
