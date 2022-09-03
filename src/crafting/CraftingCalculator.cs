@@ -34,15 +34,19 @@ namespace GilGoblin.crafting
         {
             var lowestCost = ERROR_DEFAULT_COST;
             var recipes = _recipeGateway.GetRecipesForItem(itemID);
+            int recipeCount = recipes.Count();
             foreach (var recipe in recipes)
             {
                 var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.recipeID);
                 lowestCost = Math.Min(recipeCost, lowestCost);
             }
 
-            if (recipes.Count() > 0 && lowestCost == ERROR_DEFAULT_COST)
-                LogErrorCraftingCostForItem(worldID, itemID, recipes.Count());
+            if (recipeCount > 0 && lowestCost == ERROR_DEFAULT_COST)
+                LogErrorCraftingCostForItem(worldID, itemID, recipeCount);
 
+
+            Log.Information("Successfully calculated crafting cost of {LowestCost} for item {ItemID} world {WorldID} with {RecipeCount} craftable recipes",
+                    lowestCost, itemID, worldID, recipeCount);
             return lowestCost;
         }
 

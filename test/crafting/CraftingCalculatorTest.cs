@@ -4,6 +4,7 @@ using GilGoblin.crafting;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
+using System.Linq.Expressions;
 
 namespace GilGoblin.Test.crafting
 {
@@ -73,23 +74,34 @@ namespace GilGoblin.Test.crafting
             
             var ingredient = new IngredientPoco(recipe.ingredients.First());
             ingredient.Quantity = 10;
-            ingredient.ItemID = ingredientID;
+            ingredient.ItemID = ingredientID;        
             var ingredientMarket = _getNewMarketData();
             ingredientMarket.ItemID = ingredientID;
             recipe.ingredients = new List<IngredientPoco>() { ingredient };
             var itemIDList = new List<int>(){ itemID, ingredientID };
             itemIDList.Sort();
+            // _marketDataGateway
+            //     .GetMarketDataItems(WORLD_ID, Arg.Any<IEnumerable<int>>().SequenceEqual(itemIDList));
+            //     .Returns(new List<MarketDataPoco>() { market, ingredientMarket });            
+            _marketDataGateway
+                .GetMarketDataItems(default, default!)
+                .ReturnsForAnyArgs(new List<MarketDataPoco>() { market, ingredientMarket });            
 
-            _recipeGateway.GetRecipesForItem(itemID).Returns(new List<RecipePoco>() { recipe });
-            _recipeGateway.GetRecipesForItem(ingredientID).Returns(Array.Empty<RecipePoco>()); 
-            _recipeGateway.GetRecipe(recipe.recipeID).Returns(recipe);             
-            _marketDataGateway.GetMarketDataItems(WORLD_ID, itemIDList).Returns(new List<MarketDataPoco>() { market, ingredientMarket });
+            _recipeGateway
+                .GetRecipesForItem(itemID)
+                .Returns(new List<RecipePoco>() { recipe });
+            _recipeGateway
+                .GetRecipesForItem(ingredientID)
+                .Returns(Array.Empty<RecipePoco>()); 
+            _recipeGateway
+                .GetRecipe(recipe.recipeID)
+                .Returns(recipe);             
 
             var result = _calc!.CalculateCraftingCostForItem(WORLD_ID, itemID);
 
             _recipeGateway.Received().GetRecipesForItem(itemID);
             _recipeGateway.Received().GetRecipesForItem(ingredientID);
-            _marketDataGateway.Received().GetMarketDataItems(Arg.Any<int>(), Arg.Any<IEnumerable<int>>());
+            _marketDataGateway.ReceivedWithAnyArgs().GetMarketDataItems(default, default!);
             Assert.That(result, Is.LessThan(int.MaxValue));            
         }
 
