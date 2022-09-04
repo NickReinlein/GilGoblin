@@ -8,7 +8,7 @@ namespace GilGoblin.crafting
     {
         private readonly IRecipeGateway _recipeGateway;
         private IMarketDataGateway _marketDataGateway;
-        private ILogger _log;
+        private readonly ILogger _log;
 
         public CraftingCalculator()
         {
@@ -36,14 +36,13 @@ namespace GilGoblin.crafting
             int recipeCount = recipes.Count();
             var craftingCost = getLowestCraftingCost(worldID, recipes);
 
-            if (recipeCount > 0 && craftingCost == ERROR_DEFAULT_COST)
-                LogErrorCraftingCostForItem(worldID, itemID, recipeCount);
-
-
-            Log.Information("Successfully calculated crafting cost of {LowestCost} for item {ItemID} world {WorldID} with {RecipeCount} craftable recipes",
-                    craftingCost, itemID, worldID, recipeCount);
+            if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
+                _logErrorCraftingCostForItem(worldID, itemID, recipeCount);
+            else
+                _logSucessInfo(worldID, itemID, recipeCount, craftingCost);
             return craftingCost;
         }
+
 
         public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
         {
@@ -170,7 +169,13 @@ namespace GilGoblin.crafting
             return recipeID > 0;
         }
 
-        private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
+        private static void _logSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
+        {
+            Log.Information("Successfully calculated crafting cost of {LowestCost} " +
+                                "for item {ItemID} world {WorldID} with {RecipeCount} craftable recipes",
+                                craftingCost, itemID, worldID, recipeCount);
+        }
+        private void _logErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
         {
             _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
         }

@@ -160,12 +160,20 @@ namespace GilGoblin.Test.crafting
             _recipeGateway
                 .Received()
                 .GetRecipe(recipeID);
-            // _recipeGateway
-            //     .ReceivedWithAnyArgs(recipe.ingredients.Count() +1)
-            //     .GetRecipesForItem(default);
-            _marketDataGateway.Received().GetMarketDataItems(WORLD_ID, Arg.Any<IEnumerable<int>>());
-            Assert.That(result, Is.LessThan(int.MaxValue));
-            // todo: later we change this to an expected crafting value            
+            _recipeGateway
+                .Received()
+                .GetRecipesForItem(recipe.ingredients[0].ItemID);
+            _recipeGateway
+                .Received()
+                .GetRecipesForItem(recipe.ingredients[1].ItemID);
+            _recipeGateway
+                .DidNotReceive()
+                .GetRecipesForItem(recipe.targetItemID);
+            _marketDataGateway
+                .Received()
+                .GetMarketDataItems(WORLD_ID, Arg.Any<IEnumerable<int>>());
+            Assert.That(result, Is.LessThan(100000000));
+            Assert.That(result, Is.GreaterThan(3000));
         }
 
         [Test]
