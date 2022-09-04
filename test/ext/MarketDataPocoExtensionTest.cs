@@ -19,15 +19,15 @@ namespace GilGoblin.Test.ext
         public void setUp()
         {
             _poco = _getGoodPoco();
-            _poco.averageSoldNQ = 888;
-            _poco.averageSoldHQ = 1234;
+            _poco.AverageSoldNQ = 888;
+            _poco.AverageSoldHQ = 1234;
         }
 
         [Test]
         public void GivenAMarketDataPoco_WhenGettingAverageSalesCostHQ_ReturnHQValue()
         {
             bool isHQ = true;
-            var salePrice = isHQ ? _poco.averageSoldHQ : _poco.averageSoldNQ;
+            var salePrice = isHQ ? _poco.AverageSoldHQ : _poco.AverageSoldNQ;
 
             var result = _poco.GetAverageSoldPrice(isHQ);
 
@@ -38,7 +38,7 @@ namespace GilGoblin.Test.ext
         public void GivenAMarketDataPoco_WhenGettingAverageSalesCostNQ_ReturnNQValue()
         {
             bool isHQ = false;
-            var salePrice = isHQ ? _poco.averageSoldHQ : _poco.averageSoldNQ;
+            var salePrice = isHQ ? _poco.AverageSoldHQ : _poco.AverageSoldNQ;
 
             var result = _poco.GetAverageSoldPrice(isHQ);
 
@@ -49,7 +49,7 @@ namespace GilGoblin.Test.ext
         public void GivenAMarketDataPoco_WhenGettingAverageListingPriceHQ_ReturnHQValue()
         {
             bool isHQ = true;
-            var listingPrice = isHQ ? _poco.averageListingPriceHQ : _poco.averageListingPriceNQ;
+            var listingPrice = isHQ ? _poco.AverageListingPriceHQ : _poco.AverageListingPriceNQ;
 
             var result = _poco.GetAverageListingPrice(isHQ);
 
@@ -60,7 +60,7 @@ namespace GilGoblin.Test.ext
         public void GivenAMarketDataPoco_WhenGettingAverageListingPriceNQ_ReturnNQValue()
         {
             bool isHQ = false;
-            var listingPrice = isHQ ? _poco.averageListingPriceHQ : _poco.averageListingPriceNQ;
+            var listingPrice = isHQ ? _poco.AverageListingPriceHQ : _poco.AverageListingPriceNQ;
 
             var result = _poco.GetAverageListingPrice(isHQ);
 

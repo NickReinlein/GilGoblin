@@ -2,16 +2,16 @@
   "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
   "dotnet-test-explorer.treeMode": "flat",
   "editor.formatOnSave": true,
-  "prettier.printWidth": 120,
+  "prettier.enable": true,
+  "prettier.printWidth": 80,
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.enableEditorConfigSupport": true,
   "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[vue]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[csharp]": {
-    "editor.defaultFormatter": "SonarSource.sonarlint-vscode"
-  },
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#47037a",
     "activityBar.background": "#47037a",

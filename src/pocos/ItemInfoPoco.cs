@@ -19,7 +19,7 @@ namespace GilGoblin.pocos
         public int iconID { get; set; }
         public int vendorPrice { get; set; }
         public int stackSize { get; set; }
-        public int gatheringID { get; set; }                
+        public int gatheringID { get; set; }
         public DateTime lastUpdated { get; set; }
         public ICollection<ItemRecipeHeaderPoco> recipeHeader { get; set; } = new List<ItemRecipeHeaderPoco>();
 
@@ -33,13 +33,14 @@ namespace GilGoblin.pocos
             this.vendorPrice = priceMid;
             this.stackSize = stackSize;
             this.gatheringID = gatheringID;
-            
-            if (Recipes != null) 
-            { 
-                this.recipeHeader = Recipes; 
+
+            if (Recipes != null)
+            {
+                this.recipeHeader = Recipes;
             }
-            else { 
-                this.recipeHeader.Clear(); 
+            else
+            {
+                this.recipeHeader.Clear();
             }
 
         }
@@ -54,7 +55,7 @@ namespace GilGoblin.pocos
                 string url = "https://xivapi.com/Item/" + itemId;
                 var content = await client.GetAsync(url);
 
-                return itemInfo = JsonConvert.DeserializeObject<ItemInfoPoco>(content.Content.ReadAsStringAsync().Result);                
+                return itemInfo = JsonConvert.DeserializeObject<ItemInfoPoco>(content.Content.ReadAsStringAsync().Result);
             }
             catch (Exception ex)
             {

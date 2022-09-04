@@ -8,7 +8,7 @@ namespace GilGoblin.crafting
     {
         private readonly IRecipeGateway _recipeGateway;
         private IMarketDataGateway _marketDataGateway;
-        private ILogger _log;
+        private readonly ILogger _log;
 
         public CraftingCalculator()
         {
@@ -29,6 +29,67 @@ namespace GilGoblin.crafting
         }
 
         public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
+
+        public int CalculateCraftingCostForItem(int worldID, int itemID)
+        {
+            var recipes = _recipeGateway.GetRecipesForItem(itemID);
+            int recipeCount = recipes.Count();
+            var craftingCost = getLowestCraftingCost(worldID, recipes);
+
+            if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
+                _logErrorCraftingCostForItem(worldID, itemID, recipeCount);
+            else
+                _logSucessInfo(worldID, itemID, recipeCount, craftingCost);
+            return craftingCost;
+        }
+
+
+        public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
+        {
+            try
+            {
+                var recipe = _recipeGateway.GetRecipe(recipeID);
+                var ingredients = BreakdownRecipe(recipeID);
+                if (recipe is null || !ingredients.Any()) return ERROR_DEFAULT_COST;
+
+                IEnumerable<MarketDataPoco> ingredientsMarketData = _getIngredientMarketData(worldID, recipe.targetItemID, ingredients);
+                IEnumerable<CraftIngredient> craftIngredients = _makeCraftIngredients(ingredients, ingredientsMarketData);
+
+                int craftingCost = CalculateCraftingCostForIngredients(worldID, craftIngredients);
+
+                Log.Information("Successfully calculated crafting cost of {CraftCost} for recipe {RecipeID} world {WorldID} with {IngCount} ingredients",
+                    craftingCost, recipeID, worldID, ingredients.Count());
+                return craftingCost;
+            }
+            catch (MarketDataNotFoundException)
+            {
+                Log.Error("Failed to find market data while calculating crafting cost for recipe {RecipeID} in world {WorldID} for item {ItemID}", recipeID, worldID);
+                return ERROR_DEFAULT_COST;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Failed to calculate crafting cost: {e}", e.Message);
+                return ERROR_DEFAULT_COST;
+            }
+        }
+
+        public int CalculateCraftingCostForIngredients(int worldID, IEnumerable<CraftIngredient> craftIngredients)
+        {
+            int totalCraftingCost = 0;
+            foreach (var craft in craftIngredients)
+            {
+                int averageSold = (int)craft.MarketData.AverageSold;
+                int craftingCost = CalculateCraftingCostForItem(worldID, craft.ItemID);
+                var minCost = Math.Min(averageSold, craftingCost);
+
+                Log.Debug("Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}",
+                    minCost, craft.ItemID, worldID, averageSold, craftingCost);
+                totalCraftingCost += craft.Quantity * minCost;
+            }
+
+            return totalCraftingCost;
+        }
+
 
         public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
         {
@@ -58,9 +119,9 @@ namespace GilGoblin.crafting
                 if (_canMakeRecipe(ingredientRecipeID))
                 {
                     var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
-                    // todo later: each breakdown -> get best price -> choose best breakdwon                                            
+                    // todo later: each breakdown -> get best price -> choose besingredientst breakdwon                                            
                     // for now we choose the first one
-                    if (recipeIngredients.Any()) 
+                    if (recipeIngredients.Any())
                         return recipeIngredients;
                 }
             }
@@ -68,81 +129,55 @@ namespace GilGoblin.crafting
         }
 
 
-        public int CalculateCraftingCostForItem(int worldID, int itemID)
+        public static List<CraftIngredient> _makeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
+        {
+            List<CraftIngredient> crafts = new List<CraftIngredient>();
+            foreach (var ingredient in ingredients)
+            {
+                var market = marketData.Single(e => e.ItemID == ingredient.ItemID);
+                if (market is null) throw new MarketDataNotFoundException();
+
+                crafts.Add(new CraftIngredient(ingredient, market));
+            }
+            return crafts;
+        }
+
+        private IEnumerable<MarketDataPoco> _getIngredientMarketData(int worldID, int itemID, IEnumerable<IngredientPoco> ingredients)
+        {
+            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
+            itemIDList.Add(itemID);
+            itemIDList.Sort();
+            var marketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
+            if (!marketData.Any()) throw new MarketDataNotFoundException();
+            return marketData;
+        }
+
+        private int getLowestCraftingCost(int worldID, IEnumerable<RecipePoco> recipes)
         {
             var lowestCost = ERROR_DEFAULT_COST;
-            var recipes = _recipeGateway.GetRecipesForItem(itemID);
             foreach (var recipe in recipes)
             {
                 var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.recipeID);
                 lowestCost = Math.Min(recipeCost, lowestCost);
             }
-
-            if (recipes.Count() > 0 && lowestCost == ERROR_DEFAULT_COST)
-                LogErrorCraftingCostForItem(worldID, itemID, recipes.Count());
             return lowestCost;
         }
 
-        private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
-        {
-            _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
-        }
-
-        public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
-        {
-            var ingredients = BreakdownRecipe(recipeID);
-            if (!ingredients.Any()) return ERROR_DEFAULT_COST;
-            
-            var itemIDList = ingredients.Select(e => e.ItemID).ToList();
-            var ingredientsMarketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
-            if (!ingredientsMarketData.Any()){
-                _log.Error("Failed to find market data while calculating recipe cost of: world {worldID}, recipe {recipeID}", worldID, recipeID);
-                return ERROR_DEFAULT_COST;
-            }
-            // todo next: calculate crafting cost for each ingredient
-            // generate list
-            // return int total cost or something fancier?
-            // undoubtedly the latter to be re-used as an endpoint... right?
-            return 12;
-        }
-
-        // public int GetBestCostForItem(int worldID, int itemID)
-        // {
-        //     try
-        //     {
-        //         var list = new List<int> { itemID };
-        //         var marketDataList = _marketDataGateway.GetMarketDataItems(worldID, list);
-
-        //         if (!marketDataList.Any()) throw new MarketDataNotFoundException();
-
-        //         // Market Data
-        //         MarketDataPoco marketData = marketDataList.First();
-        //         float marketCost = (float)marketData.averageSold;
-        //         if (marketCost < 1) throw new MarketDataNotFoundException(COST_MISSING_ERROR);
-        //         _logMarketDataInfoSuccess(worldID, itemID);
-        //         ///
-
-        //         /// Crafting
-        //         var craftingCost = ERROR_DEFAULT_COST;
-        //         // craftingCost = CalculateCraftingCost(marketData);
-        //         if (craftingCost == ERROR_DEFAULT_COST)
-        //             _logCraftingCostError(worldID, itemID, craftingCost);
-        //         else    
-        //             _logCraftingCostSuccess(worldID, itemID, craftingCost);
-        //         //
-
-        //         return craftingCost;
-        //     }
-        //     catch (MarketDataNotFoundException err)
-        //     {
-        //         _logMarketDataNotFoundError(worldID, itemID, err);
-        //         return ERROR_DEFAULT_COST;
-        //     }
-        // }
         private bool _canMakeRecipe(int recipeID)
         {
             //add functionality here to check for crafting levels per recipe
             return recipeID > 0;
+        }
+
+        private static void _logSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
+        {
+            Log.Information("Successfully calculated crafting cost of {LowestCost} " +
+                                "for item {ItemID} world {WorldID} with {RecipeCount} craftable recipes",
+                                craftingCost, itemID, worldID, recipeCount);
+        }
+        private void _logErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
+        {
+            _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
         }
 
         private static void _logCraftingCostSuccess(int worldID, int itemID, int craftingCost)

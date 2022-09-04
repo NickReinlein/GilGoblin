@@ -5,37 +5,37 @@ namespace GilGoblin.pocos
     public class MarketDataPoco
     {
         // The item ID.
-        public int itemID { get; set; }
+        public int ItemID { get; set; }
 
         // The world ID, if applicable.
-        public int worldID { get; set; }
+        public int WorldID { get; set; }
 
         // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
-        public long lastUploadTime { get; set; }
+        public long LastUploadTime { get; set; }
 
         // The DC name, if applicable.
-        public string? name { get; set; }
+        public string? Name { get; set; }
 
         // The region name, if applicable.
-        public string? regionName { get; set; }
+        public string? RegionName { get; set; }
 
         // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public float averageListingPrice { get; set; }
+        public float AverageListingPrice { get; set; }
 
         // The average NQ listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public float averageListingPriceNQ { get; set; }
+        public float AverageListingPriceNQ { get; set; }
 
         // The average HQ listing price, with outliers removed beyond 3 standard deviations of the mean.
-        public float averageListingPriceHQ { get; set; }
+        public float AverageListingPriceHQ { get; set; }
 
         // The average sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public float averageSold { get; set; }
+        public float AverageSold { get; set; }
 
         // The average NQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public float averageSoldNQ { get; set; }
+        public float AverageSoldNQ { get; set; }
 
         // The average HQ sale price, with outliers removed beyond 3 standard deviations of the mean.
-        public float averageSoldHQ { get; set; }
+        public float AverageSoldHQ { get; set; }
 
         public MarketDataPoco() { }
 
@@ -54,32 +54,32 @@ namespace GilGoblin.pocos
             float averagePriceHQ
         )
         {
-            this.itemID = itemID;
-            this.worldID = worldID;
-            this.lastUploadTime = lastUploadTime;
-            this.name = name;
-            this.regionName = regionName;
-            this.averageListingPrice = currentAveragePrice;
-            this.averageListingPriceNQ = currentAveragePriceNQ;
-            this.averageListingPriceHQ = currentAveragePriceHQ;
-            this.averageSold = averagePrice;
-            this.averageSoldNQ = averagePriceNQ;
-            this.averageSoldHQ = averagePriceHQ;
+            this.ItemID = itemID;
+            this.WorldID = worldID;
+            this.LastUploadTime = lastUploadTime;
+            this.Name = name;
+            this.RegionName = regionName;
+            this.AverageListingPrice = currentAveragePrice;
+            this.AverageListingPriceNQ = currentAveragePriceNQ;
+            this.AverageListingPriceHQ = currentAveragePriceHQ;
+            this.AverageSold = averagePrice;
+            this.AverageSoldNQ = averagePriceNQ;
+            this.AverageSoldHQ = averagePriceHQ;
         }
 
         public MarketDataPoco(MarketDataPoco copyMe)
         {
-            this.itemID = copyMe.itemID;
-            this.worldID = copyMe.worldID;
-            this.lastUploadTime = copyMe.lastUploadTime;
-            this.name = copyMe.name;
-            this.regionName = copyMe.regionName;
-            this.averageListingPrice = copyMe.averageListingPrice;
-            this.averageListingPriceNQ = copyMe.averageListingPriceNQ;
-            this.averageListingPriceHQ = copyMe.averageListingPriceHQ;
-            this.averageSold = copyMe.averageSold;
-            this.averageSoldNQ = copyMe.averageSoldNQ;
-            this.averageSoldHQ = copyMe.averageSoldHQ;
+            this.ItemID = copyMe.ItemID;
+            this.WorldID = copyMe.WorldID;
+            this.LastUploadTime = copyMe.LastUploadTime;
+            this.Name = copyMe.Name;
+            this.RegionName = copyMe.RegionName;
+            this.AverageListingPrice = copyMe.AverageListingPrice;
+            this.AverageListingPriceNQ = copyMe.AverageListingPriceNQ;
+            this.AverageListingPriceHQ = copyMe.AverageListingPriceHQ;
+            this.AverageSold = copyMe.AverageSold;
+            this.AverageSoldNQ = copyMe.AverageSoldNQ;
+            this.AverageSoldHQ = copyMe.AverageSoldHQ;
         }
     }
 }
