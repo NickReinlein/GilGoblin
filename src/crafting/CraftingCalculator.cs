@@ -58,17 +58,19 @@ namespace GilGoblin.crafting
 
                 int craftingCost = CalculateCraftingCostForIngredients(worldID, craftIngredients);
 
-                Log.Information("Successfully calculated crafting cost of {CraftCost} for recipe {RecipeID} world {WorldID} with {IngCount} ingredients",   
+                Log.Information("Successfully calculated crafting cost of {CraftCost} for recipe {RecipeID} world {WorldID} with {IngCount} ingredients",
                     craftingCost, recipeID, worldID, ingredients.Count());
                 return craftingCost;
             }
-            catch (MarketDataNotFoundException){
+            catch (MarketDataNotFoundException)
+            {
                 Log.Error("Failed to find market data while calculating crafting cost for recipe {RecipeID} in world {WorldID} for item {ItemID}", recipeID, worldID);
                 return ERROR_DEFAULT_COST;
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 Log.Error("Failed to calculate crafting cost: {e}", e.Message);
-             return ERROR_DEFAULT_COST;   
+                return ERROR_DEFAULT_COST;
             }
         }
 
@@ -81,7 +83,7 @@ namespace GilGoblin.crafting
                 int craftingCost = CalculateCraftingCostForItem(worldID, craft.ItemID);
                 var minCost = Math.Min(averageSold, craftingCost);
 
-                Log.Debug("Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}", 
+                Log.Debug("Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}",
                     minCost, craft.ItemID, worldID, averageSold, craftingCost);
                 totalCraftingCost += craft.Quantity * minCost;
             }
@@ -120,7 +122,7 @@ namespace GilGoblin.crafting
                     var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
                     // todo later: each breakdown -> get best price -> choose besingredientst breakdwon                                            
                     // for now we choose the first one
-                    if (recipeIngredients.Any()) 
+                    if (recipeIngredients.Any())
                         return recipeIngredients;
                 }
             }
@@ -161,14 +163,14 @@ namespace GilGoblin.crafting
             }
             return lowestCost;
         }
-    
+
         private bool _canMakeRecipe(int recipeID)
         {
             //add functionality here to check for crafting levels per recipe
             return recipeID > 0;
         }
 
-                private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
+        private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
         {
             _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
         }
