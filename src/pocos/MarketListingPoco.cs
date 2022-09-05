@@ -8,21 +8,21 @@ namespace GilGoblin.pocos
 {
     internal class MarketListingPoco
     {
-        public int itemID { get; set; }
-        public int worldID { get; set; }
-        public DateTime timestamp { get; set; }
-        public bool hq { get; set; }
-        public int price { get; set; }
-        public int quantity { get; set; }
+        public int ItemID { get; set; }
+        public int WorldID { get; set; }
+        public DateTime Timestamp { get; set; }
+        public bool Hq { get; set; }
+        public int Price { get; set; }
+        public int Quantity { get; set; }
 
         public MarketListingPoco() {  }        
         public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq) : base()
         {
-            this.hq = hq;
-            this.price = pricePerUnit;
-            this.quantity = quantity;
-            this.hq = hq;
-            if (timestamp.Equals(0))
+            this.Hq = hq;
+            this.Price = pricePerUnit;
+            this.Quantity = quantity;
+            this.Hq = hq;
+            if (Timestamp.Equals(0))
             {
                 Log.Error("Empty timestamp for web listing.");
             }
@@ -30,7 +30,7 @@ namespace GilGoblin.pocos
             {
                 try
                 {
-                    this.timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
+                    this.Timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
                 }
                 catch (Exception ex)
                 {
