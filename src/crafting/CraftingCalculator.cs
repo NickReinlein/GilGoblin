@@ -7,7 +7,7 @@ namespace GilGoblin.crafting
     public class CraftingCalculator : ICraftingCalculator
     {
         private readonly IRecipeGateway _recipeGateway;
-        private IMarketDataGateway _marketDataGateway;
+        private readonly IMarketDataGateway _marketDataGateway;
         private readonly ILogger _log;
 
         public CraftingCalculator()
@@ -52,8 +52,8 @@ namespace GilGoblin.crafting
                 var ingredients = BreakdownRecipe(recipeID);
                 if (recipe is null || !ingredients.Any()) return ERROR_DEFAULT_COST;
 
-                IEnumerable<MarketDataPoco> ingredientsMarketData = _getIngredientMarketData(worldID, recipe.targetItemID, ingredients);
-                IEnumerable<CraftIngredient> craftIngredients = _makeCraftIngredients(ingredients, ingredientsMarketData);
+                IEnumerable<MarketDataPoco> ingredientsMarketData = _getIngredientMarketData(worldID, recipe.TargetItemID, ingredients);
+                IEnumerable<CraftIngredient> craftIngredients = MakeCraftIngredients(ingredients, ingredientsMarketData);
 
                 int craftingCost = CalculateCraftingCostForIngredients(worldID, craftIngredients);
 
@@ -98,7 +98,7 @@ namespace GilGoblin.crafting
             var recipe = _recipeGateway.GetRecipe(recipeID);
             if (recipe is null) return Array.Empty<IngredientPoco>();
 
-            foreach (var ingredient in recipe.ingredients)
+            foreach (var ingredient in recipe.Ingredients)
             {
                 var breakdownIngredient = BreakdownItem(ingredient.ItemID);
                 if (breakdownIngredient.Any())
@@ -115,7 +115,7 @@ namespace GilGoblin.crafting
 
             foreach (var ingredientRecipe in ingredientRecipes)
             {
-                int ingredientRecipeID = ingredientRecipe.recipeID;
+                int ingredientRecipeID = ingredientRecipe.RecipeID;
                 if (_canMakeRecipe(ingredientRecipeID))
                 {
                     var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
@@ -129,7 +129,7 @@ namespace GilGoblin.crafting
         }
 
 
-        public static List<CraftIngredient> _makeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
+        public static List<CraftIngredient> MakeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
         {
             List<CraftIngredient> crafts = new List<CraftIngredient>();
             foreach (var ingredient in ingredients)
@@ -157,7 +157,7 @@ namespace GilGoblin.crafting
             var lowestCost = ERROR_DEFAULT_COST;
             foreach (var recipe in recipes)
             {
-                var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.recipeID);
+                var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.RecipeID);
                 lowestCost = Math.Min(recipeCost, lowestCost);
             }
             return lowestCost;
@@ -180,7 +180,7 @@ namespace GilGoblin.crafting
             _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
         }
 
-        private static void _logCraftingCostSuccess(int worldID, int itemID, int craftingCost)
+        private static void LogCraftingCostSuccess(int worldID, int itemID, int craftingCost)
         {
             Log.Information(
                 $"Successfully calculated crafitng cost for itemID: {itemID}, worldID: {worldID}, craftingCost: {craftingCost}",
@@ -190,7 +190,7 @@ namespace GilGoblin.crafting
             );
         }
 
-        private void _logCraftingCostError(int worldID, int itemID, int craftingCost)
+        private void LogCraftingCostError(int worldID, int itemID, int craftingCost)
         {
             Log.Error(
                 $"Error calculating crafitng cost for itemID: {itemID}, worldID: {worldID}, craftingCost: {craftingCost}",
@@ -200,7 +200,7 @@ namespace GilGoblin.crafting
             );
         }
 
-        private static void _logMarketDataInfoSuccess(int worldID, int itemID)
+        private static void LogMarketDataInfoSuccess(int worldID, int itemID)
         {
             Log.Information(
                 $"Found the market data for itemID: {itemID}, worldID: {worldID}.",
@@ -222,8 +222,5 @@ namespace GilGoblin.crafting
                 err.Message
             );
         }
-
-        private const string COST_MISSING_ERROR =
-            "Found the item but no value for averageSale, which used to calculate cost.";
     }
 }
