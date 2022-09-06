@@ -1,7 +1,7 @@
-﻿using Serilog;
 using System;
+using Serilog;
 
-namespace GilGoblin.utility
+namespace GilGoblin.Utility
 {
     internal static class GeneralFunctions
     {
@@ -9,7 +9,7 @@ namespace GilGoblin.utility
         {
             try
             {
-                DateTime date = DateTimeOffset.FromUnixTimeSeconds(elapsed_time).LocalDateTime;
+                var date = DateTimeOffset.FromUnixTimeSeconds(elapsed_time).LocalDateTime;
                 return date;
             }
             catch (Exception ex)
@@ -21,7 +21,7 @@ namespace GilGoblin.utility
 
         public static DateTime ConvertLongUnixMillisecondsToDateTime(long elapsed_time)
         {
-            DateTime date
+            var date
                 = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
             return date;
         }
@@ -30,7 +30,7 @@ namespace GilGoblin.utility
         {
             try
             {
-                DateTime date = DateTime.FromBinary(elapsed_time).ToLocalTime();
+                var date = DateTime.FromBinary(elapsed_time).ToLocalTime();
                 return date;
             }
             catch (Exception ex)

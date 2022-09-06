@@ -15,7 +15,7 @@ namespace GilGoblin.Test.Ext
         [SetUp]
         public void SetUp()
         {
-            _poco = _getGoodPoco();
+            _poco = GetGoodPoco();
             _poco.AverageSoldNQ = 888;
             _poco.AverageSoldHQ = 1234;
         }
@@ -64,7 +64,7 @@ namespace GilGoblin.Test.Ext
             Assert.That(result, Is.EqualTo(listingPrice));
         }
 
-        private static MarketDataPoco _getGoodPoco()
+        private static MarketDataPoco GetGoodPoco()
         {
             return new MarketDataPoco(1, 1, 1, "test", "testRealm", 300, 200, 400, 600, 400, 800);
         }

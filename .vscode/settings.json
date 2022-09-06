@@ -3,7 +3,7 @@
   "dotnet-test-explorer.treeMode": "flat",
   "editor.formatOnSave": true,
   "prettier.enable": true,
-  "prettier.printWidth": 80,
+  "prettier.printWidth": 120,
   "omnisharp.enableRoslynAnalyzers": true,
   "omnisharp.enableEditorConfigSupport": true,
   "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },

@@ -4,22 +4,22 @@ using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 
-namespace GilGoblin.Test.web
+namespace GilGoblin.Test.Web
 {
     [TestFixture]
     public class RecipeGatewayTest
     {
-        private IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
-        private RecipePoco _poco = new RecipePoco();
+        private readonly IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
+        private RecipePoco _poco = new();
 
         [SetUp]
-        public void setUp()
+        public void SetUp()
         {
             SetupPoco();
         }
 
         [TearDown]
-        public void tearDown()
+        public void TearDown()
         {
             _gateway.ClearReceivedCalls();
         }

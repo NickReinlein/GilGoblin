@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Serilog;
 using System;
 using System.Collections.Generic;
-using GilGoblin.utility;
+using GilGoblin.Utility;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace GilGoblin.Pocos
 {

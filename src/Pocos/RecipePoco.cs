@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace GilGoblin.Pocos;
 
@@ -14,72 +14,72 @@ public class RecipePoco
     public RecipePoco() { }
 
     [JsonConstructor]
-    public RecipePoco(bool CanQuickSynth, bool CanHq, int ItemResultTargetID, int ID, int IconID, int AmountResult,
-        int AmountIngredient0, int AmountIngredient1,
-        int AmountIngredient2,
-        int AmountIngredient3,
-        int AmountIngredient4,
-        int AmountIngredient5,
-        int AmountIngredient6,
-        int AmountIngredient7,
-        int AmountIngredient8,
-        int AmountIngredient9,
-        int ItemIngredient0TargetID,
-        int ItemIngredient1TargetID,
-        int ItemIngredient2TargetID,
-        int ItemIngredient3TargetID,
-        int ItemIngredient4TargetID,
-        int ItemIngredient5TargetID,
-        int ItemIngredient6TargetID,
-        int ItemIngredient7TargetID,
-        int ItemIngredient8TargetID,
-        int ItemIngredient9TargetID) : base()
+    public RecipePoco(bool canQuickSynth, bool canHq, int itemResultTargetID, int id, int iconID, int amountResult,
+        int amountIngredient0, int amountIngredient1,
+        int amountIngredient2,
+        int amountIngredient3,
+        int amountIngredient4,
+        int amountIngredient5,
+        int amountIngredient6,
+        int amountIngredient7,
+        int amountIngredient8,
+        int amountIngredient9,
+        int itemIngredient0TargetID,
+        int itemIngredient1TargetID,
+        int itemIngredient2TargetID,
+        int itemIngredient3TargetID,
+        int itemIngredient4TargetID,
+        int itemIngredient5TargetID,
+        int itemIngredient6TargetID,
+        int itemIngredient7TargetID,
+        int itemIngredient8TargetID,
+        int itemIngredient9TargetID) : base()
     {
-        this.CanHq = CanHq;
-        this.IconID = IconID;
-        this.TargetItemID = ItemResultTargetID;
-        this.RecipeID = ID;
-        this.ResultQuantity = AmountResult;
-        this.CanQuickSynth = CanQuickSynth;
-        if (AmountIngredient0 > 0)
+        this.CanHq = canHq;
+        this.IconID = iconID;
+        this.TargetItemID = itemResultTargetID;
+        this.RecipeID = id;
+        this.ResultQuantity = amountResult;
+        this.CanQuickSynth = canQuickSynth;
+        if (amountIngredient0 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient0TargetID, AmountIngredient0, RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient0TargetID, amountIngredient0, RecipeID));
         }
-        if (AmountIngredient1 > 0)
+        if (amountIngredient1 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient1TargetID, AmountIngredient1, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient1TargetID, amountIngredient1, this.RecipeID));
         }
-        if (AmountIngredient2 > 0)
+        if (amountIngredient2 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient2TargetID, AmountIngredient2, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient2TargetID, amountIngredient2, this.RecipeID));
         }
-        if (AmountIngredient3 > 0)
+        if (amountIngredient3 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient3TargetID, AmountIngredient3, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient3TargetID, amountIngredient3, this.RecipeID));
         }
-        if (AmountIngredient4 > 0)
+        if (amountIngredient4 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient4TargetID, AmountIngredient4, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient4TargetID, amountIngredient4, this.RecipeID));
         }
-        if (AmountIngredient5 > 0)
+        if (amountIngredient5 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient5TargetID, AmountIngredient5, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient5TargetID, amountIngredient5, this.RecipeID));
         }
-        if (AmountIngredient6 > 0)
+        if (amountIngredient6 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient6TargetID, AmountIngredient6, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient6TargetID, amountIngredient6, this.RecipeID));
         }
-        if (AmountIngredient7 > 0)
+        if (amountIngredient7 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient7TargetID, AmountIngredient7, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient7TargetID, amountIngredient7, this.RecipeID));
         }
-        if (AmountIngredient8 > 0)
+        if (amountIngredient8 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient8TargetID, AmountIngredient8, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient8TargetID, amountIngredient8, this.RecipeID));
         }
-        if (AmountIngredient9 > 0)
+        if (amountIngredient9 > 0)
         {
-            Ingredients.Add(new IngredientPoco(ItemIngredient9TargetID, AmountIngredient9, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient9TargetID, amountIngredient9, this.RecipeID));
         }
     }
 
