@@ -1,6 +1,6 @@
-using GilGoblin.pocos;
+using GilGoblin.Pocos;
 
-namespace GilGoblin.ext
+namespace GilGoblin.Ext
 {
     public static class MarketDataPocoExtension
     {

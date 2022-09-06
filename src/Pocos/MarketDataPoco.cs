@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace GilGoblin.pocos
+namespace GilGoblin.Pocos
 {
     public class MarketDataPoco
     {

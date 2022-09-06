@@ -1,12 +1,12 @@
-using GilGoblin.pocos;
+using GilGoblin.Pocos;
 using Newtonsoft.Json;
 
-namespace GilGoblin.web
+namespace GilGoblin.Web
 {
     public class RecipeGateway : IRecipeGateway
     {
-        public RecipePoco GetRecipe(int recipeID) => new RecipePoco();
-        public RecipePoco FetchRecipe(int recipeID) => new RecipePoco();
+        public RecipePoco GetRecipe(int recipeID) => new();
+        public RecipePoco FetchRecipe(int recipeID) => new();
         public IEnumerable<RecipePoco> GetRecipesForItem(int itemID) => Array.Empty<RecipePoco>();
         // public class RecipeFetcher //: IRecipeFetcher
         // {

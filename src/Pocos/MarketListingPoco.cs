@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using GilGoblin.utility;
 
-namespace GilGoblin.pocos
+namespace GilGoblin.Pocos
 {
     internal class MarketListingPoco
     {
@@ -15,7 +15,7 @@ namespace GilGoblin.pocos
         public int Price { get; set; }
         public int Quantity { get; set; }
 
-        public MarketListingPoco() {  }        
+        public MarketListingPoco() { }
         public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq) : base()
         {
             this.Hq = hq;

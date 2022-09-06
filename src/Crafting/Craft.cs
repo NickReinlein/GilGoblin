@@ -1,9 +1,11 @@
 
 
-using GilGoblin.pocos;
+using GilGoblin.Pocos;
 
-namespace GilGoblin.crafting {
-    public class Craft : CraftIngredient {
+namespace GilGoblin.Crafting
+{
+    public class Craft : CraftIngredient
+    {
         public List<CraftIngredient> Ingredients { get; set; } = new List<CraftIngredient>();
         public Craft(IngredientPoco ingredient, MarketDataPoco marketData, List<CraftIngredient> ingredients) : base(ingredient, marketData)
         {

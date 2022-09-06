@@ -1,5 +1,5 @@
 using System;
-namespace GilGoblin.web 
+namespace GilGoblin.Web
 {
     public class MarketDataNotFoundException : Exception
     {
