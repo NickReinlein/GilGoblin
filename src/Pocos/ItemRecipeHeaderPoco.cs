@@ -14,10 +14,10 @@ namespace GilGoblin.Pocos
         public ItemRecipeHeaderPoco() { }
 
         [JsonConstructor]
-        public ItemRecipeHeaderPoco(int ID, int classJobID, int level)
+        public ItemRecipeHeaderPoco(int id, int classJobID, int level)
         {
             this.ClassJobID = classJobID;
-            this.RecipeID = ID;
+            this.RecipeID = id;
             this.Level = level;
         }
 

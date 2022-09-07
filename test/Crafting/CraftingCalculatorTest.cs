@@ -174,6 +174,102 @@ public class CraftingCalculatorTest
     }
 
     [Test]
+    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenRecipeDoesNotExist_ThenReturnEmpty()
+    {
+        const int inexistentItemID = 1033;
+        _recipeGateway.GetRecipesForItem(inexistentItemID)
+                      .Returns(Array.Empty<RecipePoco>());
+
+        var result = _calc!.BreakdownItem(inexistentItemID);
+
+        _recipeGateway.Received(1).GetRecipesForItem(inexistentItemID);
+        _recipeGateway.DidNotReceiveWithAnyArgs().GetRecipe(default);
+        Assert.That(result.Count(), Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas1Ingredient_ThenReturn1()
+    {
+        const int itemID = 2344;
+        var recipe = NewRecipe;
+        recipe.TargetItemID = itemID;
+        recipe.ResultQuantity = 1;
+        var recipeID = recipe.RecipeID;
+        var subItem1 = new IngredientPoco(_subItem1ID, 10, recipeID);
+        recipe.Ingredients = new List<IngredientPoco>() { subItem1 };
+        var expectedTotalIngredientsCount = recipe.Ingredients
+            .Select(x => x.Quantity)
+            .Sum();
+        _recipeGateway.GetRecipe(recipeID)
+                      .Returns(recipe);
+        _recipeGateway.GetRecipesForItem(itemID)
+                      .Returns(new List<RecipePoco>() { recipe });
+        _recipeGateway.GetRecipesForItem(_subItem1ID)
+                      .Returns(Array.Empty<RecipePoco>());
+
+        var result = _calc!.BreakdownItem(itemID);
+
+        var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+        _recipeGateway.Received(1).GetRecipesForItem(itemID);
+        _recipeGateway.Received(1).GetRecipesForItem(_subItem1ID);
+        _recipeGateway.Received(1).GetRecipe(recipeID);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+            Assert.That(recipe.Ingredients, Has.Count.EqualTo(1));
+        });
+    }
+
+    // [Test]
+    // public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas2Ingredients_ThenReturn2()
+    // {
+    //     const int existentRecipeID = 1033;
+    //     var recipePoco = NewRecipe;
+    //     var expectedTotalIngredientsCount = recipePoco.Ingredients
+    //         .Select(x => x.Quantity)
+    //         .Sum();
+    //     _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+
+    //     var result = _calc!.BreakdownRecipe(existentRecipeID);
+
+    //     var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+    //     _recipeGateway.Received(1).GetRecipe(existentRecipeID);
+    //     Assert.Multiple(() =>
+    //     {
+    //         Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
+    //         Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+    //         Assert.That(recipePoco.Ingredients, Has.Count.GreaterThanOrEqualTo(2));
+    //     });
+    // }
+
+    // [Test]
+    // public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas3Ingredients_ThenReturn3()
+    // {
+    //     var recipe = NewRecipe;
+    //     var recipeID = recipe.RecipeID;
+
+    //     recipe.Ingredients.Add(new IngredientPoco(753, 5, recipeID));
+    //     _recipeGateway.GetRecipe(recipeID).Returns(recipe);
+    //     MockIngredientsToReturnEmpty(recipe.Ingredients);
+    //     var expectedIngredientsSum = recipe.Ingredients.Select(x => x.Quantity).Sum();
+    //     var expectedIngredientsCount = recipe.Ingredients.Count;
+
+    //     var result = _calc!.BreakdownRecipe(recipeID);
+
+    //     var resultIngredientsSum = result.Select(x => x.Quantity).Sum();
+    //     var resultIngredientsCount = result.Count();
+    //     _recipeGateway.Received(1).GetRecipe(recipeID);
+    //     _recipeGateway.ReceivedWithAnyArgs(3).GetRecipesForItem(Arg.Any<int>());
+    //     Assert.Multiple(() =>
+    //     {
+    //         Assert.That(resultIngredientsSum, Is.EqualTo(expectedIngredientsSum));
+    //         Assert.That(resultIngredientsCount, Is.GreaterThanOrEqualTo(3));
+    //         Assert.That(expectedIngredientsCount, Is.GreaterThanOrEqualTo(3));
+    //     });
+    // }
+
+    [Test]
     public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmpty()
     {
         const int inexistentRecipeID = 1033;
