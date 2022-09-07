@@ -305,10 +305,9 @@ public class CraftingCalculatorTest
         const int existentRecipeID = 1033;
         var recipePoco = NewRecipe;
         recipePoco.Ingredients = new List<IngredientPoco>() { recipePoco.Ingredients.First() };
-        var expectedTotalIngredientsCount = recipePoco.Ingredients
-            .Select(x => x.Quantity)
-            .Sum();
+        var expectedTotalIngredients = recipePoco.Ingredients.Select(x => x.Quantity).Sum();
         _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+        Assume.That(recipePoco.Ingredients.Count, Is.EqualTo(1));
 
         var result = _calc!.BreakdownRecipe(existentRecipeID);
 
@@ -317,7 +316,7 @@ public class CraftingCalculatorTest
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
             Assert.That(recipePoco.Ingredients, Has.Count.EqualTo(1));
         });
     }
@@ -327,10 +326,9 @@ public class CraftingCalculatorTest
     {
         const int existentRecipeID = 1033;
         var recipePoco = NewRecipe;
-        var expectedTotalIngredientsCount = recipePoco.Ingredients
-            .Select(x => x.Quantity)
-            .Sum();
+        var expectedTotalIngredients = recipePoco.Ingredients.Select(x => x.Quantity).Sum();
         _recipeGateway.GetRecipe(existentRecipeID).Returns(recipePoco);
+        Assume.That(recipePoco.Ingredients.Count, Is.EqualTo(2));
 
         var result = _calc!.BreakdownRecipe(existentRecipeID);
 
@@ -339,7 +337,7 @@ public class CraftingCalculatorTest
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
-            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredientsCount));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
             Assert.That(recipePoco.Ingredients, Has.Count.GreaterThanOrEqualTo(2));
         });
     }
@@ -355,6 +353,7 @@ public class CraftingCalculatorTest
         MockIngredientsToReturnEmpty(recipe.Ingredients);
         var expectedIngredientsSum = recipe.Ingredients.Select(x => x.Quantity).Sum();
         var expectedIngredientsCount = recipe.Ingredients.Count;
+        Assume.That(recipe.Ingredients.Count, Is.EqualTo(3));
 
         var result = _calc!.BreakdownRecipe(recipeID);
 
