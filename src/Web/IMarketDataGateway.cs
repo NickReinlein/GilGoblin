@@ -1,6 +1,6 @@
-using GilGoblin.pocos;
+using GilGoblin.Pocos;
 
-namespace GilGoblin.web
+namespace GilGoblin.Web
 {
     public interface IMarketDataGateway
     {

@@ -1,25 +1,25 @@
-using GilGoblin.pocos;
-using GilGoblin.web;
+using GilGoblin.Pocos;
+using GilGoblin.Web;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 
-namespace GilGoblin.Test.web
+namespace GilGoblin.Test.Web
 {
     [TestFixture]
     public class RecipeGatewayTest
     {
-        private IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
-        private RecipePoco _poco = new RecipePoco();
+        private readonly IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
+        private RecipePoco _poco = new();
 
         [SetUp]
-        public void setUp()
+        public void SetUp()
         {
-            setupPoco();
+            SetupPoco();
         }
 
         [TearDown]
-        public void tearDown()
+        public void TearDown()
         {
             _gateway.ClearReceivedCalls();
         }
@@ -71,7 +71,7 @@ namespace GilGoblin.Test.web
             Assert.That(result, Is.EqualTo(_poco));
         }
 
-        private void setupPoco()
+        private void SetupPoco()
         {
             _poco = new RecipePoco(true, true, 50, 1, 323, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 0, 0, 0);
         }

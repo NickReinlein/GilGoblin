@@ -1,12 +1,10 @@
-using System;
 using Serilog;
-using Serilog.Sinks;
 
 namespace GilGoblin
 {
     public class Application
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()

@@ -1,7 +1,7 @@
-using GilGoblin.pocos;
+using GilGoblin.Pocos;
 using Serilog;
 
-namespace GilGoblin.web
+namespace GilGoblin.Web
 {
     public class MarketDataGateway : IMarketDataGateway
     {

@@ -1,9 +1,13 @@
 {
   "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
-  "dotnet-test-explorer.treeMode": "flat",
+  "dotnet-test-explorer.treeMode": "merged", // set to flat if broken
   "editor.formatOnSave": true,
   "prettier.enable": true,
+<<<<<<< HEAD
   "prettier.printWidth": 80,
+=======
+  "prettier.printWidth": 120,
+>>>>>>> add-crafting-calculator-part-3
   "omnisharp.enableRoslynAnalyzers": true,
   "omnisharp.enableEditorConfigSupport": true,
   "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },

@@ -1,6 +1,6 @@
-using GilGoblin.pocos;
+using GilGoblin.Pocos;
 
-namespace GilGoblin.crafting
+namespace GilGoblin.Crafting
 {
     public interface ICraftingCalculator
     {
