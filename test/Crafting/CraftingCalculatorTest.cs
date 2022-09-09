@@ -77,19 +77,12 @@ public class CraftingCalculatorTest
         recipe.Ingredients = new List<IngredientPoco>() { ingredient };
         var itemIDList = new List<int>() { itemID, ingredientID };
         itemIDList.Sort();
-        _marketDataGateway
-            .GetMarketDataItems(default, default!)
-            .ReturnsForAnyArgs(new List<MarketDataPoco>() { market, ingredientMarket });
+        _marketDataGateway.GetMarketDataItems(default, default!).ReturnsForAnyArgs(new List<MarketDataPoco>() { market, ingredientMarket });
 
-        _recipeGateway
-            .GetRecipesForItem(itemID)
+        _recipeGateway.GetRecipesForItem(itemID)
             .Returns(new List<RecipePoco>() { recipe });
-        _recipeGateway
-            .GetRecipesForItem(ingredientID)
-            .Returns(Array.Empty<RecipePoco>());
-        _recipeGateway
-            .GetRecipe(recipe.RecipeID)
-            .Returns(recipe);
+        _recipeGateway.GetRecipesForItem(ingredientID).Returns(Array.Empty<RecipePoco>());
+        _recipeGateway.GetRecipe(recipe.RecipeID).Returns(recipe);
 
         var result = _calc!.CalculateCraftingCostForItem(_worldID, itemID);
 
@@ -154,21 +147,11 @@ public class CraftingCalculatorTest
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
-        _recipeGateway
-            .Received()
-            .GetRecipe(recipeID);
-        _recipeGateway
-            .Received()
-            .GetRecipesForItem(recipe.Ingredients[0].ItemID);
-        _recipeGateway
-            .Received()
-            .GetRecipesForItem(recipe.Ingredients[1].ItemID);
-        _recipeGateway
-            .DidNotReceive()
-            .GetRecipesForItem(recipe.TargetItemID);
-        _marketDataGateway
-            .Received()
-            .GetMarketDataItems(_worldID, Arg.Any<IEnumerable<int>>());
+        _recipeGateway.Received().GetRecipe(recipeID);
+        _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[0].ItemID);
+        _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[1].ItemID);
+        _recipeGateway.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
+        _marketDataGateway.Received().GetMarketDataItems(_worldID, Arg.Any<IEnumerable<int>>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(3000));
     }
@@ -262,11 +245,7 @@ public class CraftingCalculatorTest
         var subItem3 = new IngredientPoco(_secondItemID, 7, recipeID);
         recipe.Ingredients = new List<IngredientPoco>() { subItem1, subItem2, subItem3 };
         var expectedTotalIngredients = recipe.Ingredients.Select(x => x.Quantity).Sum();
-        _recipeGateway.GetRecipe(recipeID).Returns(recipe);
-        _recipeGateway.GetRecipesForItem(itemID).Returns(new List<RecipePoco>() { recipe });
-        _recipeGateway.GetRecipesForItem(_subItem1ID).Returns(Array.Empty<RecipePoco>());
-        _recipeGateway.GetRecipesForItem(_subItem2ID).Returns(Array.Empty<RecipePoco>());
-        _recipeGateway.GetRecipesForItem(_secondItemID).Returns(Array.Empty<RecipePoco>());
+        SetupBreakingDown3ForItem(itemID, recipe, recipeID);
 
         var result = _calc!.BreakdownItem(itemID);
 
@@ -282,6 +261,64 @@ public class CraftingCalculatorTest
             Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
             Assert.That(recipe.Ingredients, Has.Count.EqualTo(3));
         });
+
+        void SetupBreakingDown3ForItem(int itemID, RecipePoco recipe, int recipeID)
+        {
+            _recipeGateway.GetRecipe(recipeID).Returns(recipe);
+            _recipeGateway.GetRecipesForItem(itemID).Returns(new List<RecipePoco>() { recipe });
+            _recipeGateway.GetRecipesForItem(_subItem1ID).Returns(Array.Empty<RecipePoco>());
+            _recipeGateway.GetRecipesForItem(_subItem2ID).Returns(Array.Empty<RecipePoco>());
+            _recipeGateway.GetRecipesForItem(_secondItemID).Returns(Array.Empty<RecipePoco>());
+        }
+    }
+
+    [Test]
+    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas2Levels_ThenReturnAllBrokenDown()
+    {
+        const int itemID = 2344;
+        const int subRecipeID = 8844;
+        var recipe = NewRecipe;
+        recipe.TargetItemID = itemID;
+        recipe.ResultQuantity = 1;
+        var recipeID = recipe.RecipeID;
+        var subItem1 = new IngredientPoco(_subItem1ID, 10, recipeID);
+        var subItem2 = new IngredientPoco(_subItem2ID, 4, recipeID);
+        recipe.Ingredients = new List<IngredientPoco>() { subItem1, subItem2 };
+
+        var subSubItem = new IngredientPoco(_secondItemID, 7, subRecipeID);
+        var subRecipe = new RecipePoco(recipe)
+        {
+            RecipeID = subRecipeID,
+            Ingredients = new List<IngredientPoco>() { subSubItem }
+        };
+        Setup2LevelItemTest(itemID, subRecipeID, recipe, recipeID, subRecipe);
+        var expectedIngredientsSum = recipe.Ingredients.First().Quantity + subRecipe.Ingredients.First().Quantity;
+
+        var result = _calc!.BreakdownItem(itemID);
+
+        var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
+        _recipeGateway.Received(1).GetRecipesForItem(itemID);
+        _recipeGateway.Received(1).GetRecipesForItem(_subItem1ID);
+        _recipeGateway.Received(1).GetRecipesForItem(_subItem2ID);
+        _recipeGateway.Received(1).GetRecipesForItem(_secondItemID);
+        _recipeGateway.Received(1).GetRecipe(recipeID);
+        _recipeGateway.Received(1).GetRecipe(subRecipeID);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedIngredientsSum));
+            Assert.That(recipe.Ingredients, Has.Count.EqualTo(2));
+        });
+
+        void Setup2LevelItemTest(int itemID, int subRecipeID, RecipePoco recipe, int recipeID, RecipePoco subRecipe)
+        {
+            _recipeGateway.GetRecipe(recipeID).Returns(recipe);
+            _recipeGateway.GetRecipe(subRecipeID).Returns(subRecipe);
+            _recipeGateway.GetRecipesForItem(itemID).Returns(new List<RecipePoco>() { recipe });
+            _recipeGateway.GetRecipesForItem(_subItem1ID).Returns(Array.Empty<RecipePoco>());
+            _recipeGateway.GetRecipesForItem(_subItem2ID).Returns(new List<RecipePoco>() { subRecipe });
+            _recipeGateway.GetRecipesForItem(_secondItemID).Returns(Array.Empty<RecipePoco>());
+        }
     }
 
     [Test]
@@ -290,8 +327,7 @@ public class CraftingCalculatorTest
         const int inexistentRecipeID = 1033;
         var recipePoco = NewRecipe;
         recipePoco.Ingredients = new List<IngredientPoco>() { recipePoco.Ingredients.First() };
-        _recipeGateway.GetRecipe(inexistentRecipeID)
-                      .Returns(_ => null!);
+        _recipeGateway.GetRecipe(inexistentRecipeID).Returns(_ => null!);
 
         var result = _calc!.BreakdownRecipe(inexistentRecipeID);
 
@@ -374,18 +410,18 @@ public class CraftingCalculatorTest
     {
         var firstRecipe = NewRecipe;
         var firstRecipeID = firstRecipe.RecipeID;
-        Assume.That(firstRecipe.Ingredients.Count, Is.GreaterThanOrEqualTo(2));
         var subItem1 = GetNewMarketData;
         subItem1.ItemID = _subItem1ID;
         var subItem2 = GetNewMarketData;
         subItem2.ItemID = _subItem2ID;
         var secondRecipe = GetSecondRecipe(subItem1, subItem2);
-        Assume.That(secondRecipe.Ingredients.Count, Is.GreaterThanOrEqualTo(2));
+
         var expectedIngredients = GetExpectedIngredientsFromRecipes(firstRecipe, secondRecipe);
         var expectedIngredientsSum = expectedIngredients.Select(x => x.Quantity).Sum();
         var expectedIngredientsCount = expectedIngredients.Count;
-        Assume.That(expectedIngredientsCount, Is.GreaterThanOrEqualTo(3));
-        MockRecipeGatewayForTwoRecipes(firstRecipe, secondRecipe);
+        Setup2LevelsRecipeTest(firstRecipe, secondRecipe);
+        MockIngredientsToReturnEmpty(secondRecipe.Ingredients);
+        VerifyAssumptions(firstRecipe, secondRecipe, expectedIngredientsSum, expectedIngredientsCount);
 
         var result = _calc!.BreakdownRecipe(firstRecipeID);
 
@@ -403,17 +439,25 @@ public class CraftingCalculatorTest
             Assert.That(resultIngredientsSum, Is.EqualTo(expectedIngredientsSum));
             Assert.That(resultIngredientsCount, Is.EqualTo(expectedIngredientsCount));
         });
-    }
 
-    private void MockRecipeGatewayForTwoRecipes(RecipePoco firstRecipe, RecipePoco secondRecipe)
-    {
-        Assume.That(secondRecipe.Ingredients.Count, Is.GreaterThan(1));
-        Assume.That(firstRecipe.Ingredients.Count, Is.GreaterThan(1));
-        _recipeGateway.GetRecipe(firstRecipe.RecipeID).Returns(firstRecipe);
-        _recipeGateway.GetRecipe(secondRecipe.RecipeID).Returns(secondRecipe);
-        _recipeGateway.GetRecipesForItem(_firstItemID).Returns(Array.Empty<RecipePoco>());
-        _recipeGateway.GetRecipesForItem(_secondItemID).Returns(new List<RecipePoco>() { secondRecipe });
-        MockIngredientsToReturnEmpty(secondRecipe.Ingredients);
+        void Setup2LevelsRecipeTest(RecipePoco firstRecipe, RecipePoco secondRecipe)
+        {
+            _recipeGateway.GetRecipe(firstRecipe.RecipeID).Returns(firstRecipe);
+            _recipeGateway.GetRecipe(secondRecipe.RecipeID).Returns(secondRecipe);
+            _recipeGateway.GetRecipesForItem(_firstItemID).Returns(Array.Empty<RecipePoco>());
+            _recipeGateway.GetRecipesForItem(_secondItemID).Returns(new List<RecipePoco>() { secondRecipe });
+        }
+
+        void VerifyAssumptions(RecipePoco firstRecipe, RecipePoco secondRecipe, int expectedIngredientsSum, int expectedIngredientsCount)
+        {
+            Assume.That(firstRecipe.Ingredients.Count, Is.EqualTo(2));
+            Assume.That(secondRecipe.Ingredients.Count, Is.EqualTo(2));
+            Assume.That(expectedIngredientsCount, Is.EqualTo(3));
+            Assume.That(secondRecipe.Ingredients.Count, Is.GreaterThan(1));
+            Assume.That(firstRecipe.Ingredients.Count, Is.GreaterThan(1));
+            var unBrokendownSum = firstRecipe.Ingredients.Select(i => i.Quantity).Sum();
+            Assume.That(expectedIngredientsSum, Is.GreaterThan(unBrokendownSum));
+        }
     }
 
     private void MockIngredientsToReturnEmpty(IEnumerable<IngredientPoco> ingredients)

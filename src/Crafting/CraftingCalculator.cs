@@ -119,10 +119,11 @@ public class CraftingCalculator : ICraftingCalculator
             if (CanMakeRecipe(ingredientRecipeID))
             {
                 var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
-                // todo later: each breakdown -> get best price -> choose besingredientst breakdwon                                            
-                // for now we choose the first one
-                if (recipeIngredients.Any())
-                    return recipeIngredients;
+                foreach (var ingredient in recipeIngredients)
+                {
+                    ingredient.Quantity *= ingredientRecipe.ResultQuantity;
+                }
+                return recipeIngredients;
             }
         }
         return Array.Empty<IngredientPoco>();
