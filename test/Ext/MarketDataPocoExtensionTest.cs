@@ -1,7 +1,5 @@
 using GilGoblin.Pocos;
 using GilGoblin.Ext;
-using GilGoblin.Crafting;
-using NSubstitute;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
