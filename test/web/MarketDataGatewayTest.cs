@@ -32,7 +32,7 @@ namespace GilGoblin.Test.Web
             var result = _gateway.FetchMarketDataItems(1, _itemIDs);
 
             _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
-            Assert.That(result, Is.EquivalentTo(_pocos));  ;
+            Assert.That(result, Is.EquivalentTo(_pocos));
         }
 
 
@@ -89,7 +89,7 @@ namespace GilGoblin.Test.Web
             var result = _gateway.FetchMarketDataItems(1, _itemIDs);
 
             _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
-            Assert.That(result, Is.EquivalentTo(_pocos));  ;
+            Assert.That(result, Is.EquivalentTo(_pocos));
         }
 
 
