@@ -32,7 +32,7 @@ namespace GilGoblin.Test.Web
             var result = _gateway.FetchMarketDataItems(1, _itemIDs);
 
             _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
-            Assert.That(result, Is.EquivalentTo(_pocos)); ;
+            Assert.That(result, Is.EquivalentTo(_pocos));  ;
         }
 
 
@@ -63,19 +63,6 @@ namespace GilGoblin.Test.Web
         [Test]
         public void GivenAMarketDataGateway_WhenFetchingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
         {
-<<<<<<< HEAD
-            var _poco1 = new MarketDataPoco(_poco);
-            _poco1.ItemID = 444;
-            var _poco2 = new MarketDataPoco(_poco);
-            _poco2.ItemID = 777;
-            var existingItems = new MarketDataPoco[] { _poco1,_poco2 };
-            mockFetch<IEnumerable<MarketDataPoco>>(existingItems);
-            Assume.That(itemIDs.Count(), Is.GreaterThan(existingItems.Count()));
-
-            var result = _gateway.FetchMarketDataItems(1, itemIDs);
-
-            _gateway.Received().FetchMarketDataItems(1,itemIDs);
-=======
             var poco1 = new MarketDataPoco(_poco)
             {
                 ItemID = 444
@@ -91,7 +78,6 @@ namespace GilGoblin.Test.Web
             var result = _gateway.FetchMarketDataItems(1, _itemIDs);
 
             _gateway.Received().FetchMarketDataItems(1, _itemIDs);
->>>>>>> add-crafting-calculator-part-3
             Assert.That(result, Is.EquivalentTo(existingItems));
         }
 
@@ -103,7 +89,7 @@ namespace GilGoblin.Test.Web
             var result = _gateway.FetchMarketDataItems(1, _itemIDs);
 
             _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
-            Assert.That(result, Is.EquivalentTo(_pocos)); ;
+            Assert.That(result, Is.EquivalentTo(_pocos));  ;
         }
 
 
@@ -134,19 +120,6 @@ namespace GilGoblin.Test.Web
         [Test]
         public void GivenAMarketDataGateway_WhenGettingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
         {
-<<<<<<< HEAD
-            var _poco1 = new MarketDataPoco(_poco);
-            _poco1.ItemID = 444;
-            var _poco2 = new MarketDataPoco(_poco);
-            _poco2.ItemID = 777;
-            var existingItems = new MarketDataPoco[] { _poco1,_poco2 };
-            mockFetch<IEnumerable<MarketDataPoco>>(existingItems);
-            Assume.That(itemIDs.Count(), Is.GreaterThan(existingItems.Count()));
-
-            var result = _gateway.FetchMarketDataItems(1, itemIDs);
-
-            _gateway.Received().FetchMarketDataItems(1,itemIDs);
-=======
             var poco1 = new MarketDataPoco(_poco)
             {
                 ItemID = 444
@@ -162,7 +135,6 @@ namespace GilGoblin.Test.Web
             var result = _gateway.FetchMarketDataItems(1, _itemIDs);
 
             _gateway.Received().FetchMarketDataItems(1, _itemIDs);
->>>>>>> add-crafting-calculator-part-3
             Assert.That(result, Is.EquivalentTo(existingItems));
         }
 
