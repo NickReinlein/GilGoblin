@@ -7,25 +7,21 @@ namespace GilGoblin.Crafting;
 public class CraftingCalculator : ICraftingCalculator
 {
     private readonly IRecipeGateway _recipeGateway;
-    private readonly IMarketDataGateway _marketDataGateway;
+    private readonly IMarketDataGateway _marketGateway;
+    private readonly IRecipeGrocer _grocer;
     private readonly ILogger _log;
-
-    public CraftingCalculator()
-    {
-        _recipeGateway = new RecipeGateway();
-        _marketDataGateway = new MarketDataGateway();
-        _log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-    }
 
     public CraftingCalculator(
         IRecipeGateway recipeGateway,
         IMarketDataGateway marketDataGateway,
+        IRecipeGrocer grocer,
         ILogger log
     )
     {
-        this._recipeGateway = recipeGateway;
-        _marketDataGateway = marketDataGateway;
+        _recipeGateway = recipeGateway;
+        _marketGateway = marketDataGateway;
         _log = log;
+        _grocer = grocer;
     }
 
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
@@ -91,43 +87,43 @@ public class CraftingCalculator : ICraftingCalculator
     }
 
 
-    public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
-    {
-        var ingredientList = new List<IngredientPoco>();
+    // public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
+    // {
+    //     var ingredientList = new List<IngredientPoco>();
 
-        var recipe = _recipeGateway.GetRecipe(recipeID);
-        if (recipe is null) return Array.Empty<IngredientPoco>();
+    //     var recipe = _recipeGateway.GetRecipe(recipeID);
+    //     if (recipe is null) return Array.Empty<IngredientPoco>();
 
-        foreach (var ingredient in recipe.Ingredients)
-        {
-            var breakdownIngredient = BreakdownItem(ingredient.ItemID);
-            if (breakdownIngredient.Any())
-                ingredientList.AddRange(breakdownIngredient);
-            else
-                ingredientList.Add(ingredient);
-        }
-        return ingredientList;
-    }
+    //     foreach (var ingredient in recipe.Ingredients)
+    //     {
+    //         var breakdownIngredient = BreakdownItem(ingredient.ItemID);
+    //         if (breakdownIngredient.Any())
+    //             ingredientList.AddRange(breakdownIngredient);
+    //         else
+    //             ingredientList.Add(ingredient);
+    //     }
+    //     return ingredientList;
+    // }
 
-    public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
-    {
-        var ingredientRecipes = _recipeGateway.GetRecipesForItem(itemID);
+    // public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
+    // {
+    //     var ingredientRecipes = _recipeGateway.GetRecipesForItem(itemID);
 
-        foreach (var ingredientRecipe in ingredientRecipes)
-        {
-            var ingredientRecipeID = ingredientRecipe.RecipeID;
-            if (CanMakeRecipe(ingredientRecipeID))
-            {
-                var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
-                foreach (var ingredient in recipeIngredients)
-                {
-                    ingredient.Quantity *= ingredientRecipe.ResultQuantity;
-                }
-                return recipeIngredients;
-            }
-        }
-        return Array.Empty<IngredientPoco>();
-    }
+    //     foreach (var ingredientRecipe in ingredientRecipes)
+    //     {
+    //         var ingredientRecipeID = ingredientRecipe.RecipeID;
+    //         if (CanMakeRecipe(ingredientRecipeID))
+    //         {
+    //             var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
+    //             foreach (var ingredient in recipeIngredients)
+    //             {
+    //                 ingredient.Quantity *= ingredientRecipe.ResultQuantity;
+    //             }
+    //             return recipeIngredients;
+    //         }
+    //     }
+    //     return Array.Empty<IngredientPoco>();
+    // }
 
 
     public static List<CraftIngredient> MakeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
@@ -148,7 +144,7 @@ public class CraftingCalculator : ICraftingCalculator
         var itemIDList = ingredients.Select(e => e.ItemID).ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
-        var marketData = _marketDataGateway.GetMarketDataItems(worldID, itemIDList);
+        var marketData = _marketGateway.GetMarketDataItems(worldID, itemIDList);
         if (!marketData.Any()) throw new MarketDataNotFoundException();
         return marketData;
     }

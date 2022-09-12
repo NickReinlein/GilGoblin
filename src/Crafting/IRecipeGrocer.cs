@@ -1,8 +1,8 @@
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Ext
+namespace GilGoblin.Crafting
 {
-    public interface IRecipeGatewayExtension
+    public interface IRecipeGrocer
     {
         public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID);
         public IEnumerable<IngredientPoco> BreakdownItem(int itemID);

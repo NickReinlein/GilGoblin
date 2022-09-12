@@ -5,6 +5,8 @@ using NSubstitute;
 using NUnit.Framework;
 using Serilog;
 using System.Linq.Expressions;
+using System;
+using System.Linq;
 
 namespace GilGoblin.Test.Crafting;
 
@@ -13,6 +15,7 @@ public class CraftingCalculatorTest
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
+    private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
     private readonly ILogger _log = Substitute.For<ILogger>();
     private CraftingCalculator? _calc;
 
@@ -38,6 +41,7 @@ public class CraftingCalculatorTest
         _recipeGateway.ClearReceivedCalls();
         _marketDataGateway.ClearReceivedCalls();
         _log.ClearReceivedCalls();
+        _grocer.ClearReceivedCalls();
     }
 
     [Test]
