@@ -12,13 +12,13 @@ using System.Collections.Generic;
 namespace GilGoblin.Test.Crafting;
 
 [TestFixture]
-public class CraftingCalculatorTest
+public class RecipeGrocerTest
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
-    private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
+    private readonly ICraftingCalculator _calc = Substitute.For<ICraftingCalculator>();
     private readonly ILogger _log = Substitute.For<ILogger>();
-    private CraftingCalculator? _calc;
+    private RecipeGrocer _grocer;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
     private static readonly int _worldID = 34; // Brynnhildr
@@ -33,7 +33,7 @@ public class CraftingCalculatorTest
     [SetUp]
     public void SetUp()
     {
-        _calc = new CraftingCalculator(_recipeGateway, _marketDataGateway, _grocer, _log);
+        _grocer = new RecipeGrocerButler(_recipeGateway, _log);
     }
 
     [TearDown]
@@ -59,106 +59,6 @@ public class CraftingCalculatorTest
         _marketDataGateway.DidNotReceiveWithAnyArgs()
                           .GetMarketDataItems(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
-    }
-
-    [Test]
-    public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenARecipeExists_ThenReturnCraftingCost()
-    {
-        const int itemID = 1;
-        const int ingredientID = 2;
-        var market = GetNewMarketData;
-        market.ItemID = itemID;
-        var recipe = NewRecipe;
-        recipe.TargetItemID = itemID;
-        recipe.ResultQuantity = 1;
-
-        var ingredient = new IngredientPoco(recipe.Ingredients.First())
-        {
-            Quantity = 10,
-            ItemID = ingredientID
-        };
-        var ingredientMarket = GetNewMarketData;
-        ingredientMarket.ItemID = ingredientID;
-        recipe.Ingredients = new List<IngredientPoco>() { ingredient };
-        var itemIDList = new List<int>() { itemID, ingredientID };
-        itemIDList.Sort();
-        _marketDataGateway.GetMarketDataItems(default, default!).ReturnsForAnyArgs(new List<MarketDataPoco>() { market, ingredientMarket });
-
-        _recipeGateway.GetRecipesForItem(itemID)
-            .Returns(new List<RecipePoco>() { recipe });
-        _recipeGateway.GetRecipesForItem(ingredientID).Returns(Array.Empty<RecipePoco>());
-        _recipeGateway.GetRecipe(recipe.RecipeID).Returns(recipe);
-
-        var result = _calc!.CalculateCraftingCostForItem(_worldID, itemID);
-
-        _recipeGateway.Received().GetRecipesForItem(itemID);
-        _recipeGateway.Received().GetRecipesForItem(ingredientID);
-        _marketDataGateway.ReceivedWithAnyArgs().GetMarketDataItems(default, default!);
-        Assert.That(result, Is.LessThan(int.MaxValue));
-    }
-
-    [Test]
-    public void GivenACraftingCalculator_WhenCalculateCraftingCostForRecipe_WhenNoRecipesExist_ThenReturnErrorCost()
-    {
-        var inexistentRecipeID = -200;
-        _recipeGateway
-            .GetRecipe(inexistentRecipeID)
-            .Returns(_ => null!);
-
-        var result = _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
-
-        _recipeGateway.Received().GetRecipe(inexistentRecipeID);
-        _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketDataItems(default, default!);
-        Assert.That(result, Is.EqualTo(_errorCost));
-    }
-    [Test]
-    public void GivenACraftingCalculator_WhenCalculateCraftingCostForRecipe_WhenARecipeExists_WhenNoMarketDataFound_ThenReturnErrorCost()
-    {
-        var recipe = NewRecipe;
-        var recipeID = recipe.RecipeID;
-        _recipeGateway.GetRecipe(recipeID).Returns(recipe);
-        _marketDataGateway
-            .GetMarketDataItems(_worldID, default!)
-            .ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
-
-        var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
-
-        _recipeGateway.Received().GetRecipe(recipeID);
-        _marketDataGateway.ReceivedWithAnyArgs().GetMarketDataItems(default, default!);
-        Assert.That(result, Is.EqualTo(_errorCost));
-    }
-
-    [Test]
-    public void GivenACraftingCalculator_WhenCalculateCraftingCostForRecipe_WhenARecipeExists__ThenReturnCraftingCost()
-    {
-        var recipe = NewRecipe;
-        var recipeID = recipe.RecipeID;
-        _recipeGateway.GetRecipesForItem(recipeID).Returns(new List<RecipePoco>() { recipe });
-        _recipeGateway.GetRecipe(recipeID).Returns(recipe);
-        foreach (var ingredient in recipe.Ingredients)
-            _recipeGateway.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
-
-        var marketData = GetNewMarketData;
-        var ingredientMarketDataList = new List<MarketDataPoco>();
-        foreach (var ingredient in recipe.Ingredients)
-        {
-            var tempData = GetNewMarketData;
-            tempData.ItemID = ingredient.ItemID;
-            ingredientMarketDataList.Add(tempData);
-        }
-        var returnMarketData = new List<MarketDataPoco>() { marketData };
-        returnMarketData.AddRange(ingredientMarketDataList);
-        _marketDataGateway.GetMarketDataItems(_worldID, Arg.Any<IEnumerable<int>>()).Returns(returnMarketData);
-
-        var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
-
-        _recipeGateway.Received().GetRecipe(recipeID);
-        _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[0].ItemID);
-        _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[1].ItemID);
-        _recipeGateway.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
-        _marketDataGateway.Received().GetMarketDataItems(_worldID, Arg.Any<IEnumerable<int>>());
-        Assert.That(result, Is.LessThan(100000000));
-        Assert.That(result, Is.GreaterThan(3000));
     }
 
     [Test]

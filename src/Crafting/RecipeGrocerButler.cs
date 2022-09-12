@@ -4,12 +4,12 @@ using Serilog;
 
 namespace GilGoblin.Crafting;
 
-public class RecipeGrocer : IRecipeGrocer
+public class RecipeGrocerButler : IRecipeGrocer
 {
-    private readonly RecipeGateway _gateway;
+    private readonly IRecipeGateway _gateway;
     private readonly ILogger _log;
 
-    public RecipeGrocer(RecipeGateway gateway, ILogger log)
+    public RecipeGrocerButler(IRecipeGateway gateway, ILogger log)
     {
         _gateway = gateway;
         _log = log;

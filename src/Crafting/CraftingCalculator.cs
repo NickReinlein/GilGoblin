@@ -45,7 +45,7 @@ public class CraftingCalculator : ICraftingCalculator
         try
         {
             var recipe = _recipeGateway.GetRecipe(recipeID);
-            var ingredients = BreakdownRecipe(recipeID);
+            var ingredients = _grocer.BreakdownRecipe(recipeID);
             if (recipe is null || !ingredients.Any()) return ERROR_DEFAULT_COST;
 
             var ingredientsMarketData = GetIngredientMarketData(worldID, recipe.TargetItemID, ingredients);
@@ -86,46 +86,6 @@ public class CraftingCalculator : ICraftingCalculator
         return totalCraftingCost;
     }
 
-
-    // public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
-    // {
-    //     var ingredientList = new List<IngredientPoco>();
-
-    //     var recipe = _recipeGateway.GetRecipe(recipeID);
-    //     if (recipe is null) return Array.Empty<IngredientPoco>();
-
-    //     foreach (var ingredient in recipe.Ingredients)
-    //     {
-    //         var breakdownIngredient = BreakdownItem(ingredient.ItemID);
-    //         if (breakdownIngredient.Any())
-    //             ingredientList.AddRange(breakdownIngredient);
-    //         else
-    //             ingredientList.Add(ingredient);
-    //     }
-    //     return ingredientList;
-    // }
-
-    // public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
-    // {
-    //     var ingredientRecipes = _recipeGateway.GetRecipesForItem(itemID);
-
-    //     foreach (var ingredientRecipe in ingredientRecipes)
-    //     {
-    //         var ingredientRecipeID = ingredientRecipe.RecipeID;
-    //         if (CanMakeRecipe(ingredientRecipeID))
-    //         {
-    //             var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
-    //             foreach (var ingredient in recipeIngredients)
-    //             {
-    //                 ingredient.Quantity *= ingredientRecipe.ResultQuantity;
-    //             }
-    //             return recipeIngredients;
-    //         }
-    //     }
-    //     return Array.Empty<IngredientPoco>();
-    // }
-
-
     public static List<CraftIngredient> MakeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
     {
         List<CraftIngredient> crafts = new();
@@ -158,12 +118,6 @@ public class CraftingCalculator : ICraftingCalculator
             lowestCost = Math.Min(recipeCost, lowestCost);
         }
         return lowestCost;
-    }
-
-    private static bool CanMakeRecipe(int recipeID)
-    {
-        //add functionality here to check for crafting levels per recipe
-        return recipeID > 0;
     }
 
     private static void LogSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
