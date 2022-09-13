@@ -42,23 +42,6 @@ public class RecipeGrocerTest
         _recipeGateway.ClearReceivedCalls();
         _marketDataGateway.ClearReceivedCalls();
         _log.ClearReceivedCalls();
-        _grocer.ClearReceivedCalls();
-    }
-
-    [Test]
-    public void GivenACraftingCalculator_WhenCalculateCraftingCostForItem_WhenNoRecipesExist_ThenReturnErrorCost()
-    {
-        var inexistentItemID = -200;
-        _recipeGateway
-            .GetRecipesForItem(inexistentItemID)
-            .Returns(Array.Empty<RecipePoco>());
-
-        var result = _calc!.CalculateCraftingCostForItem(_worldID, inexistentItemID);
-
-        _recipeGateway.Received(1).GetRecipesForItem(inexistentItemID);
-        _marketDataGateway.DidNotReceiveWithAnyArgs()
-                          .GetMarketDataItems(default, default!);
-        Assert.That(result, Is.EqualTo(_errorCost));
     }
 
     [Test]
