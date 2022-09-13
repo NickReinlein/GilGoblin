@@ -10,6 +10,7 @@ public class CraftingCalculator : ICraftingCalculator
     private readonly IMarketDataGateway _marketGateway;
     private readonly IRecipeGrocer _grocer;
     private readonly ILogger _log;
+    public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeGateway recipeGateway,
@@ -23,8 +24,6 @@ public class CraftingCalculator : ICraftingCalculator
         _log = log;
         _grocer = grocer;
     }
-
-    public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public int CalculateCraftingCostForItem(int worldID, int itemID)
     {
@@ -49,7 +48,7 @@ public class CraftingCalculator : ICraftingCalculator
             if (recipe is null || !ingredients.Any()) return ERROR_DEFAULT_COST;
 
             var ingredientsMarketData = GetIngredientMarketData(worldID, recipe.TargetItemID, ingredients);
-            IEnumerable<CraftIngredient> craftIngredients = MakeCraftIngredients(ingredients, ingredientsMarketData);
+            IEnumerable<CraftIngredient> craftIngredients = AddMarketDataToIngredients(ingredients, ingredientsMarketData);
 
             var craftingCost = CalculateCraftingCostForIngredients(worldID, craftIngredients);
 
@@ -86,7 +85,7 @@ public class CraftingCalculator : ICraftingCalculator
         return totalCraftingCost;
     }
 
-    public static List<CraftIngredient> MakeCraftIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
+    public static List<CraftIngredient> AddMarketDataToIngredients(IEnumerable<IngredientPoco> ingredients, IEnumerable<MarketDataPoco> marketData)
     {
         List<CraftIngredient> crafts = new();
         foreach (var ingredient in ingredients)

@@ -33,7 +33,7 @@ public class RecipeGrocerTest
     [SetUp]
     public void SetUp()
     {
-        _grocer = new RecipeGrocerButler(_recipeGateway, _log);
+        _grocer = new RecipeGrocer(_recipeGateway, _log);
     }
 
     [TearDown]
