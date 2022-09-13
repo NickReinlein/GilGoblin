@@ -45,7 +45,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenRecipeDoesNotExist_ThenReturnEmpty()
+    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenRecipeDoesNotExist_ThenReturnEmpty()
     {
         const int inexistentItemID = 1033;
         _recipeGateway.GetRecipesForItem(inexistentItemID)
@@ -59,7 +59,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas1Ingredient_ThenReturn1()
+    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas1Ingredient_ThenReturn1()
     {
         const int itemID = 2344;
         var recipe = NewRecipe;
@@ -88,7 +88,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas2Ingredients_ThenReturn2()
+    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas2Ingredients_ThenReturn2()
     {
         const int itemID = 2344;
         var recipe = NewRecipe;
@@ -121,7 +121,7 @@ public class RecipeGrocerTest
 
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas3Ingredients_ThenReturn3()
+    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas3Ingredients_ThenReturn3()
     {
         const int itemID = 2344;
         var recipe = NewRecipe;
@@ -161,7 +161,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownAnItem_WhenItHas2Levels_ThenReturnAllBrokenDown()
+    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas2Levels_ThenReturnAllBrokenDown()
     {
         const int itemID = 2344;
         const int subRecipeID = 8844;
@@ -210,7 +210,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmpty()
+    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmpty()
     {
         const int inexistentRecipeID = 1033;
         var recipePoco = NewRecipe;
@@ -224,7 +224,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas1Ingredient_ThenReturn1()
+    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas1Ingredient_ThenReturn1()
     {
         const int existentRecipeID = 1033;
         var recipePoco = NewRecipe;
@@ -246,7 +246,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Ingredients_ThenReturn2()
+    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas2Ingredients_ThenReturn2()
     {
         const int existentRecipeID = 1033;
         var recipePoco = NewRecipe;
@@ -267,7 +267,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturn3()
+    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturn3()
     {
         var recipe = NewRecipe;
         var recipeID = recipe.RecipeID;
@@ -294,7 +294,7 @@ public class RecipeGrocerTest
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
+    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
     {
         var firstRecipe = NewRecipe;
         var firstRecipeID = firstRecipe.RecipeID;
