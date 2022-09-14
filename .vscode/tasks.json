@@ -9,9 +9,10 @@
                 "build",
                 "${workspaceFolder}/GilGoblin.csproj",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "/consoleloggerparameters:NoSummary",
+                "/property:GenerateFullPaths=true"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
         },
         {
             "label": "publish",
