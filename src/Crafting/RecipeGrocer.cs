@@ -17,7 +17,6 @@ public class RecipeGrocer : IRecipeGrocer
 
     public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
     {
-        var ingredientList = new List<IngredientPoco>();
         _log.Information("Fetching recipe ID {RecipeID} from gateway", recipeID);
         var recipe = _gateway.GetRecipe(recipeID);
         if (recipe is null)
@@ -26,13 +25,14 @@ public class RecipeGrocer : IRecipeGrocer
             return Array.Empty<IngredientPoco>();
         }
 
-        BreakDownIngredient(ingredientList);
+        var ingredientList = BreakDownIngredientEntirely(recipe.Ingredients);
 
         return ingredientList;
     }
 
-    public List<IngredientPoco> BreakDownIngredient(List<IngredientPoco> ingredientList)
+    public List<IngredientPoco> BreakDownIngredientEntirely(List<IngredientPoco> ingredientList)
     {
+        var ingredientsBrokenDownList = new List<IngredientPoco>();
         _log.Information("Breaking down {IngCount} ingredients in ingredient list", ingredientList.Count);
         foreach (var ingredient in ingredientList)
         {
@@ -42,16 +42,16 @@ public class RecipeGrocer : IRecipeGrocer
             if (breakdownIngredient.Any())
             {
                 _log.Debug("Found {IngCount} ingredients", breakdownIngredient.Count());
-                ingredientList.AddRange(breakdownIngredient);
+                ingredientsBrokenDownList.AddRange(breakdownIngredient);
             }
             else
             {
                 _log.Debug("Did not find any items to break down item ID {ItemID}", itemID);
-                ingredientList.Add(ingredient);
+                ingredientsBrokenDownList.Add(ingredient);
             }
         }
         _log.Information("Breakdown complete. {IngCount} ingredients returned", ingredientList.Count);
-        return ingredientList;
+        return ingredientsBrokenDownList;
     }
 
     public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
