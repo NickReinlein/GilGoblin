@@ -47,6 +47,48 @@ namespace GilGoblin.Test.Web
             _gateway.Received(1).GetRecipe(existentRecipeID);
             Assert.That(result, Is.EqualTo(_poco));
         }
+
+        [Test]
+        public void GivenARecipeGateway_WhenGettingAllRecipesForItem_WhenRecipeDoesNotExist_ThenNullIsReturned()
+        {
+            const int inexistentRecipeID = -1;
+            _gateway.GetRecipesForItem(inexistentRecipeID).ReturnsNull();
+
+            var result = _gateway.GetRecipesForItem(inexistentRecipeID);
+
+            _gateway.Received(1).GetRecipesForItem(inexistentRecipeID);
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GivenARecipeGateway_WhenGettingAllRecipesForItem_When1RecipeExists_Then1RecipeIsReturned()
+        {
+            const int existentRecipeID = 1033;
+            var existentRecipeForItem = new List<RecipePoco>() { _poco };
+            _gateway.GetRecipesForItem(existentRecipeID).Returns(existentRecipeForItem);
+
+            var result = _gateway.GetRecipesForItem(existentRecipeID);
+
+            _gateway.Received(1).GetRecipesForItem(existentRecipeID);
+            Assert.That(result, Is.EqualTo(existentRecipeForItem));
+        }
+
+        [Test]
+        public void GivenARecipeGateway_WhenGettingAllRecipesForItem_When2RecipesExist_Then2RecipeAreReturned()
+        {
+            const int existentRecipeID = 1033;
+            var poco2 = new RecipePoco(_poco);
+            poco2.TargetItemID = 333;
+            poco2.RecipeID = 2900;
+            var existentRecipeForItem = new List<RecipePoco>() { _poco, poco2 };
+            _gateway.GetRecipesForItem(existentRecipeID).Returns(existentRecipeForItem);
+
+            var result = _gateway.GetRecipesForItem(existentRecipeID);
+
+            _gateway.Received(1).GetRecipesForItem(existentRecipeID);
+            Assert.That(result, Is.EqualTo(existentRecipeForItem));
+        }
+
         [Test]
         public void GivenARecipeGateway_WhenFetchingARecipe_WhenRecipeDoesNotExist_ThenNullIsReturned()
         {

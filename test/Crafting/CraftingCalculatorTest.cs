@@ -24,9 +24,6 @@ public class CraftingCalculatorTest
     private static readonly int _worldID = 34; // Brynnhildr
     private static readonly int _firstItemID = 554;
     private static readonly int _secondItemID = 668;
-    private static readonly int _secondRecipeID = 2000;
-    private static readonly int _subItem1ID = 4100;
-    private static readonly int _subItem2ID = 4200;
     private static readonly int _recipeID = 6044;
     private static readonly int _targetItemID = 955;
 
