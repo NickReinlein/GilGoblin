@@ -16,11 +16,9 @@ public class RecipeGrocerTest
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
-    private readonly ICraftingCalculator _calc = Substitute.For<ICraftingCalculator>();
     private readonly ILogger _log = Substitute.For<ILogger>();
     private RecipeGrocer _grocer;
 
-    private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
     private static readonly int _worldID = 34; // Brynnhildr
     private static readonly int _firstItemID = 554;
     private static readonly int _secondItemID = 668;

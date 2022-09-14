@@ -77,9 +77,11 @@ namespace GilGoblin.Test.Web
         public void GivenARecipeGateway_WhenGettingAllRecipesForItem_When2RecipesExist_Then2RecipeAreReturned()
         {
             const int existentRecipeID = 1033;
-            var poco2 = new RecipePoco(_poco);
-            poco2.TargetItemID = 333;
-            poco2.RecipeID = 2900;
+            var poco2 = new RecipePoco(_poco)
+            {
+                TargetItemID = 333,
+                RecipeID = 2900
+            };
             var existentRecipeForItem = new List<RecipePoco>() { _poco, poco2 };
             _gateway.GetRecipesForItem(existentRecipeID).Returns(existentRecipeForItem);
 
