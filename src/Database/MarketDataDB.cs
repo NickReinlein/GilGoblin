@@ -6,11 +6,11 @@ namespace GilGoblin.Database
     internal class MarketDataDB : DbContext
     {
         // public DbSet<ItemDB> data { get; set; }
-        // public DbSet<MarketDataDB> marketData { get; set; }
+        public DbSet<MarketDataDB> MarketData { get; set; }
         // public DbSet<ItemInfoDB> itemInfoData { get; set; }
         // public DbSet<RecipeDB> recipeData { get; set; }
 
-        private SqliteConnection conn;
+        private SqliteConnection _conn;
 
         // public ItemDBContext()
         //     : base(new DbContextOptionsBuilder<ItemDBContext>().UseSqlite(DatabaseAccess.Connect()).Options)
@@ -20,9 +20,9 @@ namespace GilGoblin.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            this.conn = DatabaseAccess.Connect();
+            this._conn = DatabaseAccess.Connect();
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlite(this.conn);
+            optionsBuilder.UseSqlite(this._conn);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
