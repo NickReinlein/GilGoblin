@@ -13,7 +13,7 @@ public class CraftingCalculatorTest
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
     private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
-    private readonly ILogger<CraftingCalculator> _log = (ILogger<CraftingCalculator>)Substitute.For<ILogger>();
+    private readonly ILogger<CraftingCalculator> _log = Substitute.For<ILogger<CraftingCalculator>>();
     private CraftingCalculator? _calc;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;

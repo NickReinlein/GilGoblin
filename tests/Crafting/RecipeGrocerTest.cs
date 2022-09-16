@@ -11,7 +11,7 @@ public class RecipeGrocerTest
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
-    private readonly ILogger<RecipeGrocer> _log = (ILogger<RecipeGrocer>)Substitute.For<ILogger>();
+    private readonly ILogger<RecipeGrocer> _log = Substitute.For<ILogger<RecipeGrocer>>();
     private readonly RecipeGrocer _grocer;
 
     private static readonly int _worldID = 34; // Brynnhildr
