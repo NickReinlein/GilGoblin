@@ -1,11 +1,11 @@
-using Microsoft.Data.Sqlite;
+// using Microsoft.Data.Sqlite;
 
-namespace GilGoblin.Database
-{
-    public interface IDatabaseGateway
-    {
-        public SqliteConnection? Connect();
-        public bool Disconnect();
+// namespace GilGoblin.Database
+// {
+//     public interface IDatabaseGateway
+//     {
+//         public SqliteConnection? Connect();
+//         public bool Disconnect();
 
-    }
-}
+//     }
+// }
