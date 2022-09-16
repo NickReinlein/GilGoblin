@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace GilGoblin.Test.Crafting;
+namespace GilGoblin.Tests.Crafting;
 
 [TestFixture]
 public class RecipeGrocerTest

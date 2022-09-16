@@ -4,7 +4,7 @@ using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 
-namespace GilGoblin.Test.Web
+namespace GilGoblin.Tests.Web
 {
     [TestFixture]
     public class RecipeGatewayTest
