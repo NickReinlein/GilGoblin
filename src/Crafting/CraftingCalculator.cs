@@ -1,5 +1,6 @@
 using GilGoblin.Pocos;
 using GilGoblin.Web;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace GilGoblin.Crafting;
@@ -9,14 +10,14 @@ public class CraftingCalculator : ICraftingCalculator
     private readonly IRecipeGateway _recipeGateway;
     private readonly IMarketDataGateway _marketGateway;
     private readonly IRecipeGrocer _grocer;
-    private readonly ILogger _log;
+    private readonly ILogger<CraftingCalculator> _log;
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeGateway recipeGateway,
         IMarketDataGateway marketDataGateway,
         IRecipeGrocer grocer,
-        ILogger log
+        ILogger<CraftingCalculator> log
     )
     {
         _recipeGateway = recipeGateway;
@@ -77,7 +78,7 @@ public class CraftingCalculator : ICraftingCalculator
             var craftingCost = CalculateCraftingCostForItem(worldID, craft.ItemID);
             var minCost = Math.Min(averageSold, craftingCost);
 
-            Log.Debug("Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}",
+            Log.Information("Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}",
                 minCost, craft.ItemID, worldID, averageSold, craftingCost);
             totalCraftingCost += craft.Quantity * minCost;
         }
@@ -127,6 +128,6 @@ public class CraftingCalculator : ICraftingCalculator
     }
     private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
     {
-        _log.Error("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
+        _log.LogError("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
     }
 }

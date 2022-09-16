@@ -3,11 +3,7 @@ using GilGoblin.Web;
 using GilGoblin.Crafting;
 using NSubstitute;
 using NUnit.Framework;
-using Serilog;
-using System.Linq.Expressions;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Tests.Crafting;
 
@@ -17,7 +13,7 @@ public class CraftingCalculatorTest
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
     private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
-    private readonly ILogger _log = Substitute.For<ILogger>();
+    private readonly ILogger<CraftingCalculator> _log = (ILogger<CraftingCalculator>)Substitute.For<ILogger>();
     private CraftingCalculator? _calc;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
