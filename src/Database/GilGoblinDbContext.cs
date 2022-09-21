@@ -6,34 +6,34 @@ namespace GilGoblin.Database
 {
     internal class GilGoblinDbContext : DbContext
     {
-        public DbSet<ItemDB> data { get; set; }
-        public DbSet<MarketDataPoco> marketData { get; set; }
-        public DbSet<ItemInfoPoco> itemInfoData { get; set; }
-        public DbSet<RecipePoco> recipeData { get; set; }
+        public DbSet<ItemDb> Data { get; set; }
+        public DbSet<MarketDataPoco> MarketData { get; set; }
+        public DbSet<ItemInfoPoco> ItemInfoData { get; set; }
+        public DbSet<RecipePoco> RecipeData { get; set; }
 
-        private SqliteConnection conn;
+        private SqliteConnection _conn;
 
         public GilGoblinDbContext()
             : base(new DbContextOptionsBuilder<ItemDBContext>().UseSqlite(DatabaseAccess.Connect()).Options)
         {
-            conn = DatabaseAccess.Connect();
+            _conn = DatabaseAccess.Connect();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            this.conn = DatabaseAccess.Connect();
+            this._conn = DatabaseAccess.Connect();
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlite(this.conn);
+            optionsBuilder.UseSqlite(this._conn);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             /* General data for an item ID -- A main accessor class */
-            modelBuilder.Entity<ItemDB>().ToTable("ItemDB");
-            modelBuilder.Entity<ItemDB>().HasKey(t => t.itemID);
-            modelBuilder.Entity<ItemDB>().HasOne(t => t.itemInfo);
-            modelBuilder.Entity<ItemDB>().HasMany(t => t.marketData);
-            modelBuilder.Entity<ItemDB>().HasMany(t => t.fullRecipes);
+            modelBuilder.Entity<ItemDb>().ToTable("ItemDB");
+            modelBuilder.Entity<ItemDb>().HasKey(t => t.ItemID);
+            modelBuilder.Entity<ItemDb>().HasOne(t => t.ItemInfo);
+            modelBuilder.Entity<ItemDb>().HasMany(t => t.MarketData);
+            modelBuilder.Entity<ItemDb>().HasMany(t => t.fullRecipes);
 
 
             /* General market data for an item ID & world (with calculated average price and more) */
