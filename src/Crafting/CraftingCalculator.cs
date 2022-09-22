@@ -104,7 +104,7 @@ public class CraftingCalculator : ICraftingCalculator
         var itemIDList = ingredients.Select(e => e.ItemID).ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
-        var marketData = _marketGateway.GetMarketDataItems(worldID, itemIDList);
+        var marketData = _marketGateway.GetMarketData(worldID, itemIDList);
         if (!marketData.Any()) throw new MarketDataNotFoundException();
         return marketData;
     }

@@ -50,7 +50,7 @@ public class CraftingCalculatorTest
 
         _recipeGateway.Received(1).GetRecipesForItem(inexistentItemID);
         _marketDataGateway.DidNotReceiveWithAnyArgs()
-                          .GetMarketDataItems(default, default!);
+                          .GetMarketData(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -81,14 +81,14 @@ public class CraftingCalculatorTest
 
         _recipeGateway.Received().GetRecipesForItem(itemID);
         _recipeGateway.Received().GetRecipesForItem(ingredientID);
-        _marketDataGateway.ReceivedWithAnyArgs().GetMarketDataItems(default, default!);
+        _marketDataGateway.ReceivedWithAnyArgs().GetMarketData(default, default!);
         Assert.That(result, Is.LessThan(int.MaxValue));
         Assert.That(result, Is.GreaterThan(ingredientMarket.AverageSoldNQ));
     }
 
     private void MockGatewaysForSingularTest(MarketDataPoco market, RecipePoco recipe, MarketDataPoco ingredientMarket)
     {
-        _marketDataGateway.GetMarketDataItems(default, default!)
+        _marketDataGateway.GetMarketData(default, default!)
             .ReturnsForAnyArgs(new List<MarketDataPoco>() { market, ingredientMarket });
         _grocer.BreakdownRecipe(recipe.RecipeID).Returns(recipe.Ingredients);
         _recipeGateway.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
@@ -107,7 +107,7 @@ public class CraftingCalculatorTest
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
 
         _recipeGateway.Received().GetRecipe(inexistentRecipeID);
-        _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketDataItems(default, default!);
+        _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketData(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
     [Test]
@@ -117,13 +117,13 @@ public class CraftingCalculatorTest
         var recipeID = recipe.RecipeID;
         _recipeGateway.GetRecipe(recipeID).Returns(recipe);
         _marketDataGateway
-            .GetMarketDataItems(_worldID, default!)
+            .GetMarketData(_worldID, default!)
             .ReturnsForAnyArgs(Array.Empty<MarketDataPoco>());
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
         _recipeGateway.Received().GetRecipe(recipeID);
-        _marketDataGateway.ReceivedWithAnyArgs().GetMarketDataItems(default, default!);
+        _marketDataGateway.ReceivedWithAnyArgs().GetMarketData(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -143,7 +143,7 @@ public class CraftingCalculatorTest
         _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[0].ItemID);
         _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[1].ItemID);
         _recipeGateway.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
-        _marketDataGateway.Received().GetMarketDataItems(_worldID, Arg.Any<IEnumerable<int>>());
+        _marketDataGateway.Received().GetMarketData(_worldID, Arg.Any<IEnumerable<int>>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(3000));
     }
@@ -158,7 +158,7 @@ public class CraftingCalculatorTest
 
         var returnMarketData = new List<MarketDataPoco>() { marketData };
         returnMarketData.AddRange(ingredientMarketDataList);
-        _marketDataGateway.GetMarketDataItems(_worldID, Arg.Any<IEnumerable<int>>())
+        _marketDataGateway.GetMarketData(_worldID, Arg.Any<IEnumerable<int>>())
             .Returns(returnMarketData);
         _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients);
     }
