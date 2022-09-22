@@ -6,15 +6,15 @@ namespace GilGoblin.Database
 {
     internal class GilGoblinDbContext : DbContext
     {
-        public DbSet<ItemDb> Data { get; set; }
         public DbSet<MarketDataPoco> MarketData { get; set; }
-        public DbSet<ItemInfoPoco> ItemInfoData { get; set; }
-        public DbSet<RecipePoco> RecipeData { get; set; }
+        public DbSet<ItemInfoPoco> ItemInfo { get; set; }
+        public DbSet<RecipePoco> Recipe { get; set; }
+        public DbSet<IngredientPoco> Ingredient { get; set; }
 
         private SqliteConnection _conn;
 
         public GilGoblinDbContext()
-            : base(new DbContextOptionsBuilder<ItemDBContext>().UseSqlite(DatabaseAccess.Connect()).Options)
+            : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(DatabaseAccess.Connect()).Options)
         {
             _conn = DatabaseAccess.Connect();
         }
@@ -28,54 +28,44 @@ namespace GilGoblin.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /* General data for an item ID -- A main accessor class */
-            modelBuilder.Entity<ItemDb>().ToTable("ItemDB");
-            modelBuilder.Entity<ItemDb>().HasKey(t => t.ItemID);
-            modelBuilder.Entity<ItemDb>().HasOne(t => t.ItemInfo);
-            modelBuilder.Entity<ItemDb>().HasMany(t => t.MarketData);
-            modelBuilder.Entity<ItemDb>().HasMany(t => t.fullRecipes);
+            modelBuilder.Entity<MarketDataPoco>().ToTable("MarketData");
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.ItemID);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.WorldID);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.LastUploadTime);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageListingPrice);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageListingPriceHQ);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageListingPriceNQ);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageSold);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageSoldHQ);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageSoldNQ);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.Name);
+            modelBuilder.Entity<MarketDataPoco>().Property(t => t.RegionName);
+            modelBuilder.Entity<MarketDataPoco>().HasKey(t => new { t.ItemID, t.WorldID });
+            //modelBuilder.Entity<MarketDataPoco>().HasMany(t => t.listings);
 
+            modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
+            modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ItemID);
+            modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Name);
+            modelBuilder.Entity<ItemInfoPoco>().Property(t => t.IconID);
+            modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
+            modelBuilder.Entity<ItemInfoPoco>().Property(t => t.VendorPrice);
+            modelBuilder.Entity<ItemInfoPoco>().Property(t => t.StackSize);
+            modelBuilder.Entity<ItemInfoPoco>().Property(t => t.GatheringID);
 
-            /* General market data for an item ID & world (with calculated average price and more) */
-            modelBuilder.Entity<MarketDataDB>().ToTable("MarketData");
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.itemID);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.worldID);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.lastUpdated);
-            modelBuilder.Entity<MarketDataDB>().Property(t => t.averagePrice);
-            modelBuilder.Entity<MarketDataDB>().HasKey(t => new { t.itemID, t.worldID });
-            modelBuilder.Entity<MarketDataDB>().HasMany(t => t.listings);
+            modelBuilder.Entity<RecipePoco>().ToTable("Recipe");
+            modelBuilder.Entity<RecipePoco>().HasKey(t => t.RecipeID);
+            modelBuilder.Entity<RecipePoco>().Property(t => t.ResultQuantity);
+            modelBuilder.Entity<RecipePoco>().Property(t => t.IconID);
+            modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemID);
+            modelBuilder.Entity<RecipePoco>().Property(t => t.CanHq);
+            modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth);
+            modelBuilder.Entity<RecipePoco>().HasMany(t => t.Ingredients);
 
-            // All the market listings for an item & world ID
-            modelBuilder.Entity<MarketListingDB>().ToTable("MarketListing");
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.item_id).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.world_id).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.timestamp);
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.price).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.hq).IsRequired();
-            modelBuilder.Entity<MarketListingDB>().Property(t => t.qty).IsRequired();
-
-            //// Item info from the db with full recipes
-            modelBuilder.Entity<ItemInfoDB>().ToTable("ItemInfoDB");
-            modelBuilder.Entity<ItemInfoDB>().HasKey(t => t.itemID);
-            modelBuilder.Entity<ItemInfoDB>().Property(t => t.name);
-            modelBuilder.Entity<ItemInfoDB>().Property(t => t.iconID);
-            modelBuilder.Entity<ItemInfoDB>().Property(t => t.description);
-            modelBuilder.Entity<ItemInfoDB>().Property(t => t.vendor_price);
-            modelBuilder.Entity<ItemInfoDB>().Property(t => t.stack_size);
-            modelBuilder.Entity<ItemInfoDB>().Property(t => t.gatheringID);
-            modelBuilder.Entity<ItemInfoDB>().HasMany(t => t.fullRecipes);
-
-
-            // Database format for the full recipes
-            modelBuilder.Entity<RecipeDB>().ToTable("RecipeDB");
-            modelBuilder.Entity<RecipeDB>().HasKey(t => t.recipe_id);
-            modelBuilder.Entity<RecipeDB>().Property(t => t.result_quantity);
-            modelBuilder.Entity<RecipeDB>().Property(t => t.icon_id);
-            modelBuilder.Entity<RecipeDB>().Property(t => t.target_item_id);
-            modelBuilder.Entity<RecipeDB>().Property(t => t.CanHq);
-            modelBuilder.Entity<RecipeDB>().Property(t => t.CanQuickSynth);
-            modelBuilder.Entity<RecipeDB>().HasMany(t => t.ingredients);
+            modelBuilder.Entity<IngredientPoco>().ToTable("Ingredient");
+            modelBuilder.Entity<IngredientPoco>().HasKey(t => new { t.ItemID, t.RecipeID });
+            modelBuilder.Entity<IngredientPoco>().Property(t => t.ItemID);
+            modelBuilder.Entity<IngredientPoco>().Property(t => t.RecipeID);
+            modelBuilder.Entity<IngredientPoco>().Property(t => t.Quantity);
         }
     }
 }

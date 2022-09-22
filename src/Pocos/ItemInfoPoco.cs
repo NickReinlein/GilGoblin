@@ -21,10 +21,10 @@ namespace GilGoblin.Pocos
         public int StackSize { get; set; }
         public int GatheringID { get; set; }
         public DateTime LastUpdated { get; set; }
-        public ICollection<ItemRecipeHeaderPoco> RecipeHeaders { get; set; } = new List<ItemRecipeHeaderPoco>();
+        public ICollection<RecipeClassRequirementsPoco> RecipeHeaders { get; set; } = new List<RecipeClassRequirementsPoco>();
 
         [JsonConstructor]
-        public ItemInfoPoco(int id, int iconID, string name, string description, int priceMid, int stackSize, int gatheringID, List<ItemRecipeHeaderPoco> recipes)
+        public ItemInfoPoco(int id, int iconID, string name, string description, int priceMid, int stackSize, int gatheringID, List<RecipeClassRequirementsPoco> recipes)
         {
             this.ItemID = id;
             this.IconID = iconID;
