@@ -5,7 +5,7 @@ namespace GilGoblin.Web
 {
     public class MarketDataGateway : IMarketDataGateway
     {
-        public IEnumerable<MarketDataPoco> FetchMarketDataItems(int worldID, IEnumerable<int> itemIDs)
+        public IEnumerable<MarketDataPoco> FetchMarketData(int worldID, IEnumerable<int> itemIDs)
         {
             if (!itemIDs.Any())
             {
@@ -21,9 +21,9 @@ namespace GilGoblin.Web
             return returnUniqueItems;
         }
 
-        public IEnumerable<MarketDataPoco> GetMarketDataItems(int worldID, IEnumerable<int> itemIDs)
+        public IEnumerable<MarketDataPoco> GetMarketData(int worldID, IEnumerable<int> itemIDs)
         {
-            return FetchMarketDataItems(worldID, itemIDs);
+            return FetchMarketData(worldID, itemIDs);
         }
 
 

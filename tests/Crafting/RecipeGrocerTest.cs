@@ -3,21 +3,16 @@ using GilGoblin.Web;
 using GilGoblin.Crafting;
 using NSubstitute;
 using NUnit.Framework;
-using Serilog;
-using System.Linq.Expressions;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Tests.Crafting;
 
-[TestFixture]
 public class RecipeGrocerTest
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
-    private readonly ILogger _log = Substitute.For<ILogger>();
-    private RecipeGrocer _grocer;
+    private readonly ILogger<RecipeGrocer> _log = Substitute.For<ILogger<RecipeGrocer>>();
+    private readonly RecipeGrocer _grocer;
 
     private static readonly int _worldID = 34; // Brynnhildr
     private static readonly int _firstItemID = 554;
@@ -28,10 +23,14 @@ public class RecipeGrocerTest
     private static readonly int _recipeID = 6044;
     private static readonly int _targetItemID = 955;
 
+    public RecipeGrocerTest()
+    {
+        _grocer = new RecipeGrocer(_recipeGateway, _log);
+    }
+
     [SetUp]
     public void SetUp()
     {
-        _grocer = new RecipeGrocer(_recipeGateway, _log);
     }
 
     [TearDown]

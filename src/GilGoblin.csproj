@@ -17,5 +17,8 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.*"/>
+    <PackageReference Include="EntityFramework" Version="6.4.4"/>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.9"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9"/>
   </ItemGroup>
 </Project>

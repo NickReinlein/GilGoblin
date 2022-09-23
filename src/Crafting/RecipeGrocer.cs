@@ -1,17 +1,15 @@
 using GilGoblin.Pocos;
 using GilGoblin.Web;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Crafting;
 
 public class RecipeGrocer : IRecipeGrocer
 {
     private readonly IRecipeGateway _gateway;
-    private readonly ILogger _log;
+    private readonly ILogger<RecipeGrocer> _log;
 
-
-
-    public RecipeGrocer(IRecipeGateway gateway, ILogger log)
+    public RecipeGrocer(IRecipeGateway gateway, ILogger<RecipeGrocer> log)
     {
         _gateway = gateway;
         _log = log;
@@ -19,11 +17,11 @@ public class RecipeGrocer : IRecipeGrocer
 
     public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
     {
-        _log.Information("Fetching recipe ID {RecipeID} from gateway", recipeID);
+        _log.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
         var recipe = _gateway.GetRecipe(recipeID);
         if (recipe is null)
         {
-            _log.Information("No recipe was found with ID {RecipeID} ", recipeID);
+            _log.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
             return Array.Empty<IngredientPoco>();
         }
 
@@ -35,32 +33,32 @@ public class RecipeGrocer : IRecipeGrocer
     public List<IngredientPoco> BreakDownIngredientEntirely(List<IngredientPoco> ingredientList)
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
-        _log.Information("Breaking down {IngCount} ingredients in ingredient list", ingredientList.Count);
+        _log.LogInformation("Breaking down {IngCount} ingredients in ingredient list", ingredientList.Count);
         foreach (var ingredient in ingredientList)
         {
             var itemID = ingredient.ItemID;
-            _log.Debug("Breaking down item ID {ItemID}", itemID);
+            _log.LogDebug("Breaking down item ID {ItemID}", itemID);
             var breakdownIngredient = BreakdownItem(itemID);
             if (breakdownIngredient.Any())
             {
-                _log.Debug("Found {IngCount} ingredients", breakdownIngredient.Count());
+                _log.LogDebug("Found {IngCount} ingredients", breakdownIngredient.Count());
                 ingredientsBrokenDownList.AddRange(breakdownIngredient);
             }
             else
             {
-                _log.Debug("Did not find any items to break down item ID {ItemID}", itemID);
+                _log.LogDebug("Did not find any items to break down item ID {ItemID}", itemID);
                 ingredientsBrokenDownList.Add(ingredient);
             }
         }
-        _log.Information("Breakdown complete. {IngCount} ingredients returned", ingredientList.Count);
+        _log.LogInformation("Breakdown complete. {IngCount} ingredients returned", ingredientList.Count);
         return ingredientsBrokenDownList;
     }
 
     public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
     {
-        _log.Information("Fetching recipes for item ID {ItemID} from gateway", itemID);
+        _log.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
         var ingredientRecipes = _gateway.GetRecipesForItem(itemID);
-        _log.Information("No recipe was found for item ID {ItemID} ", itemID);
+        _log.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
         foreach (var ingredientRecipe in ingredientRecipes)
         {

@@ -29,9 +29,9 @@ namespace GilGoblin.Tests.Web
         {
             MockFetch<IEnumerable<MarketDataPoco>>(_pocos);
 
-            var result = _gateway.FetchMarketDataItems(1, _itemIDs);
+            var result = _gateway.FetchMarketData(1, _itemIDs);
 
-            _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
+            _gateway.Received().FetchMarketData(Arg.Any<int>(), Arg.Any<int[]>());
             Assert.That(result, Is.EquivalentTo(_pocos));
         }
 
@@ -42,9 +42,9 @@ namespace GilGoblin.Tests.Web
             var itemIdListWithDupes = new int[] { 1, 1, 1, 2, 2, 3 };
             var itemIdListWithoutDupes = itemIdListWithDupes.Distinct().ToArray();
             var itemsWithoutDupes = ConvertItemIDsToPocos(itemIdListWithoutDupes);
-            _gateway.FetchMarketDataItems(Arg.Any<int>(), itemIdListWithDupes).Returns(itemsWithoutDupes);
+            _gateway.FetchMarketData(Arg.Any<int>(), itemIdListWithDupes).Returns(itemsWithoutDupes);
 
-            var result = _gateway.FetchMarketDataItems(1, itemIdListWithDupes);
+            var result = _gateway.FetchMarketData(1, itemIdListWithDupes);
 
             Assert.That(result, Is.EqualTo(itemsWithoutDupes));
         }
@@ -54,9 +54,9 @@ namespace GilGoblin.Tests.Web
         {
             MockFetch<IEnumerable<MarketDataPoco>>(Array.Empty<MarketDataPoco>());
 
-            var result = _gateway.FetchMarketDataItems(1, _itemIDs);
+            var result = _gateway.FetchMarketData(1, _itemIDs);
 
-            _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
+            _gateway.Received().FetchMarketData(Arg.Any<int>(), Arg.Any<int[]>());
             Assert.That(result, Is.Empty);
         }
 
@@ -75,9 +75,9 @@ namespace GilGoblin.Tests.Web
             MockFetch<IEnumerable<MarketDataPoco>>(existingItems);
             Assume.That(_itemIDs.Length, Is.GreaterThan(existingItems.Length));
 
-            var result = _gateway.FetchMarketDataItems(1, _itemIDs);
+            var result = _gateway.FetchMarketData(1, _itemIDs);
 
-            _gateway.Received().FetchMarketDataItems(1, _itemIDs);
+            _gateway.Received().FetchMarketData(1, _itemIDs);
             Assert.That(result, Is.EquivalentTo(existingItems));
         }
 
@@ -86,9 +86,9 @@ namespace GilGoblin.Tests.Web
         {
             MockFetch<IEnumerable<MarketDataPoco>>(_pocos);
 
-            var result = _gateway.FetchMarketDataItems(1, _itemIDs);
+            var result = _gateway.FetchMarketData(1, _itemIDs);
 
-            _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
+            _gateway.Received().FetchMarketData(Arg.Any<int>(), Arg.Any<int[]>());
             Assert.That(result, Is.EquivalentTo(_pocos));
         }
 
@@ -99,9 +99,9 @@ namespace GilGoblin.Tests.Web
             var itemIdListWithDupes = new int[] { 1, 1, 1, 2, 2, 3 };
             var itemIdListWithoutDupes = itemIdListWithDupes.Distinct().ToArray();
             var itemsWithoutDupes = ConvertItemIDsToPocos(itemIdListWithoutDupes);
-            _gateway.GetMarketDataItems(Arg.Any<int>(), itemIdListWithDupes).Returns(itemsWithoutDupes);
+            _gateway.GetMarketData(Arg.Any<int>(), itemIdListWithDupes).Returns(itemsWithoutDupes);
 
-            var result = _gateway.GetMarketDataItems(1, itemIdListWithDupes);
+            var result = _gateway.GetMarketData(1, itemIdListWithDupes);
 
             Assert.That(result, Is.EqualTo(itemsWithoutDupes));
         }
@@ -111,9 +111,9 @@ namespace GilGoblin.Tests.Web
         {
             MockFetch<IEnumerable<MarketDataPoco>>(Array.Empty<MarketDataPoco>());
 
-            var result = _gateway.FetchMarketDataItems(1, _itemIDs);
+            var result = _gateway.FetchMarketData(1, _itemIDs);
 
-            _gateway.Received().FetchMarketDataItems(Arg.Any<int>(), Arg.Any<int[]>());
+            _gateway.Received().FetchMarketData(Arg.Any<int>(), Arg.Any<int[]>());
             Assert.That(result, Is.Empty);
         }
 
@@ -132,15 +132,15 @@ namespace GilGoblin.Tests.Web
             MockFetch<IEnumerable<MarketDataPoco>>(existingItems);
             Assume.That(_itemIDs.Length, Is.GreaterThan(existingItems.Length));
 
-            var result = _gateway.FetchMarketDataItems(1, _itemIDs);
+            var result = _gateway.FetchMarketData(1, _itemIDs);
 
-            _gateway.Received().FetchMarketDataItems(1, _itemIDs);
+            _gateway.Received().FetchMarketData(1, _itemIDs);
             Assert.That(result, Is.EquivalentTo(existingItems));
         }
 
         private void MockFetch<T>(IEnumerable<MarketDataPoco> pocosReturned)
         {
-            _gateway.FetchMarketDataItems(Arg.Any<int>(), Arg.Any<IEnumerable<int>>()).Returns(pocosReturned);
+            _gateway.FetchMarketData(Arg.Any<int>(), Arg.Any<IEnumerable<int>>()).Returns(pocosReturned);
         }
         private static IEnumerable<MarketDataPoco> ConvertItemIDsToPocos(IEnumerable<int> itemIDs)
         {
