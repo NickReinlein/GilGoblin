@@ -13,6 +13,9 @@ namespace GilGoblin
                 .CreateLogger();
 
             Console.WriteLine("Hello World");
+
+            var conn = Database.DatabaseAccess.Connect();
+
             Log.CloseAndFlush();
         }
     }

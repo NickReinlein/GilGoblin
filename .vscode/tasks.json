@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/GilGoblin.csproj",
+                "${workspaceFolder}/src/GilGoblin.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary",
                 "/property:GenerateFullPaths=true"
@@ -20,7 +20,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/GilGoblin.csproj",
+                "${workspaceFolder}/src/GilGoblin.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -34,9 +34,14 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/GilGoblin.csproj"
+                "${workspaceFolder}/src/GilGoblin.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+          "label": "echo",
+          "command": "echo ${workspaceFolder}",
+          "type": "shell"
         },
     ]
 }

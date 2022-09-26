@@ -22,19 +22,13 @@ namespace GilGoblin.Database
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 8320;
-        public const int _entriesPerAPIPull = 20;
-        public const int _waitTimeInMsForAPICalls = 500;
-        public const int _gameItemTotalCount = 36700;
-
-        public static SqliteConnection _conn { get; set; }
-
+        private static SqliteConnection _conn { get; set; }
 
         /// <summary>
         /// Gets a context for EF regarding the ItemID: use then discard!
         /// </summary>
         /// <returns></returns>
-        public static GilGoblinDbContext getContext()
+        public static GilGoblinDbContext GetContext()
         {
             return new GilGoblinDbContext();
         }

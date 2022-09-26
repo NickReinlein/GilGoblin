@@ -11,7 +11,7 @@ namespace GilGoblin.Database
         public DbSet<RecipePoco> Recipe { get; set; }
         public DbSet<IngredientPoco> Ingredient { get; set; }
 
-        private SqliteConnection _conn;
+        private SqliteConnection? _conn;
 
         public GilGoblinDbContext()
             : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(DatabaseAccess.Connect()).Options)
@@ -41,7 +41,6 @@ namespace GilGoblin.Database
             modelBuilder.Entity<MarketDataPoco>().Property(t => t.Name);
             modelBuilder.Entity<MarketDataPoco>().Property(t => t.RegionName);
             modelBuilder.Entity<MarketDataPoco>().HasKey(t => new { t.ItemID, t.WorldID });
-            //modelBuilder.Entity<MarketDataPoco>().HasMany(t => t.listings);
 
             modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
             modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ItemID);
