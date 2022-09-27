@@ -13,18 +13,15 @@ namespace GilGoblin.Pocos
     internal class ItemInfoPoco
     {
         public int ItemID { get; set; }
-        public int WorldID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int IconID { get; set; }
         public int VendorPrice { get; set; }
         public int StackSize { get; set; }
         public int GatheringID { get; set; }
-        public DateTime LastUpdated { get; set; }
-        public ICollection<RecipeClassRequirementsPoco> RecipeHeaders { get; set; } = new List<RecipeClassRequirementsPoco>();
 
         [JsonConstructor]
-        public ItemInfoPoco(int id, int iconID, string name, string description, int priceMid, int stackSize, int gatheringID, List<RecipeClassRequirementsPoco> recipes)
+        public ItemInfoPoco(int id, int iconID, string name, string description, int priceMid, int stackSize, int gatheringID)
         {
             this.ItemID = id;
             this.IconID = iconID;
