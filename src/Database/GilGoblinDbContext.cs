@@ -23,7 +23,7 @@ namespace GilGoblin.Database
         {
             this._conn = DatabaseAccess.Connect();
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlite(this._conn);
+            optionsBuilder.UseSqlite(_conn);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

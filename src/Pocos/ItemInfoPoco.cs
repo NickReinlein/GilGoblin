@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Serilog;
 
 namespace GilGoblin.Pocos
@@ -30,16 +23,6 @@ namespace GilGoblin.Pocos
             this.VendorPrice = priceMid;
             this.StackSize = stackSize;
             this.GatheringID = gatheringID;
-
-            if (recipes != null)
-            {
-                this.RecipeHeaders = recipes;
-            }
-            else
-            {
-                this.RecipeHeaders.Clear();
-            }
-
         }
 
         // TODO decouple from Poco
