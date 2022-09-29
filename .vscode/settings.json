@@ -1,6 +1,6 @@
 {
   "dotnet-test-explorer.testProjectPath": "**/*/*Test.csproj",
-  "dotnet-test-explorer.treeMode": "merged", // set to flat if broken
+  "dotnet-test-explorer.treeMode": "merged",
   "editor.formatOnSave": true,
   "prettier.enable": true,
   "prettier.printWidth": 120,

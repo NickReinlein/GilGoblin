@@ -14,9 +14,8 @@ namespace GilGoblin
 
             Console.WriteLine("Hello World");
 
-            var conn = Database.DatabaseAccess.Connect();
             var context = Database.DatabaseAccess.GetContext();
-            var firstIngredient = context.Ingredient.First();
+            var recipe = context.Recipe.First();
 
             Log.CloseAndFlush();
         }

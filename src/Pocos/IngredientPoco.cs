@@ -5,7 +5,6 @@ namespace GilGoblin.Pocos;
 
 public class IngredientPoco
 {
-
     [Key]
     [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
     public int ID { get; set; }

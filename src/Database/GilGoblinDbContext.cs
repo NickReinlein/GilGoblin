@@ -43,7 +43,7 @@ namespace GilGoblin.Database
             modelBuilder.Entity<MarketDataPoco>().HasKey(t => new { t.ItemID, t.WorldID });
 
             modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
-            modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ItemID);
+            modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ID);
             modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Name);
             modelBuilder.Entity<ItemInfoPoco>().Property(t => t.IconID);
             modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
@@ -61,9 +61,10 @@ namespace GilGoblin.Database
             modelBuilder.Entity<RecipePoco>().HasMany(t => t.Ingredients);
 
             modelBuilder.Entity<IngredientPoco>().ToTable("Ingredient");
-            modelBuilder.Entity<IngredientPoco>().HasKey(t => new { t.ItemID, t.RecipeID });
-            modelBuilder.Entity<IngredientPoco>().Property(t => t.ItemID);
+            //modelBuilder.Entity<IngredientPoco>().HasKey(t => new { t.ItemID, t.RecipeID });
+            modelBuilder.Entity<IngredientPoco>().HasKey(t => t.ID);
             modelBuilder.Entity<IngredientPoco>().Property(t => t.RecipeID);
+            modelBuilder.Entity<IngredientPoco>().Property(t => t.ItemID);
             modelBuilder.Entity<IngredientPoco>().Property(t => t.Quantity);
         }
     }

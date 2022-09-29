@@ -5,7 +5,7 @@ namespace GilGoblin.Pocos
 {
     internal class ItemInfoPoco
     {
-        public int ItemID { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int IconID { get; set; }
@@ -14,13 +14,13 @@ namespace GilGoblin.Pocos
         public int GatheringID { get; set; }
 
         [JsonConstructor]
-        public ItemInfoPoco(int id, int iconID, string name, string description, int priceMid, int stackSize, int gatheringID)
+        public ItemInfoPoco(int ID, string name, string description, int iconID, int vendorPrice, int stackSize, int gatheringID)
         {
-            this.ItemID = id;
+            this.ID = ID;
             this.IconID = iconID;
             this.Description = description;
             this.Name = name;
-            this.VendorPrice = priceMid;
+            this.VendorPrice = vendorPrice;
             this.StackSize = stackSize;
             this.GatheringID = gatheringID;
         }
