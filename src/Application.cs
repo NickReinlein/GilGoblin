@@ -1,4 +1,6 @@
 using Serilog;
+using GilGoblin.Crafting;
+using GilGoblin.Database;
 
 namespace GilGoblin
 {
@@ -15,7 +17,8 @@ namespace GilGoblin
             Console.WriteLine("Hello World");
 
             var context = Database.DatabaseAccess.GetContext();
-            var recipe = context.Recipe.First();
+
+            var context2 = new GilGoblinDbContext();
 
             Log.CloseAndFlush();
         }
