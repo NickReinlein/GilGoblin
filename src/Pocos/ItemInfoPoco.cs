@@ -3,7 +3,7 @@ using Serilog;
 
 namespace GilGoblin.Pocos
 {
-    internal class ItemInfoPoco
+    public class ItemInfoPoco
     {
         public int ID { get; set; }
         public string Name { get; set; }
