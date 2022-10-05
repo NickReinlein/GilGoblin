@@ -1,3 +1,4 @@
+using GilGoblin.Crafting;
 using GilGoblin.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,13 +10,15 @@ namespace GilGoblin.DI
     {
         private readonly IRecipeGateway _recipeGateway;
         private readonly IMarketDataGateway _marketDataGateway;
+        private readonly IRecipeGrocer _recipeGrocer;
         private readonly ILogger<GilGoblinService> _log;
 
-        public GilGoblinService(IRecipeGateway recipeGateway, IMarketDataGateway marketDataGateway, ILogger<GilGoblinService> log)
+        public GilGoblinService(IRecipeGateway recipeGateway, IMarketDataGateway marketDataGateway, IRecipeGrocer recipeGrocer, ILogger<GilGoblinService> log)
         {
             _log = log;
             _recipeGateway = recipeGateway;
             _marketDataGateway = marketDataGateway;
+            _recipeGrocer = recipeGrocer;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
