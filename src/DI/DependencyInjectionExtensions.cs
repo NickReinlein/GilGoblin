@@ -10,26 +10,16 @@ namespace GilGoblin.DI
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddDatabase();
+            return services.AddGateways();
         }
 
-        public static IServiceCollection AddDatabase(this IServiceCollection services)
+        public static IServiceCollection AddGateways(this IServiceCollection services)
         {
 
             services
-                .AddSingleton(_ => new GilGoblinDbContext())
+                .AddSingleton(_ => new MarketDataGateway())
                 .AddSingleton(_ => new RecipeGateway());
             return services;
-        }
-
-        private static string GetReadConnectionString(this IServiceProvider service)
-        {
-            return service.GetService<IConfiguration>().GetConnectionString("Read");
-        }
-
-        private static string GetWriteConnectionString(this IServiceProvider service)
-        {
-            return service.GetService<IConfiguration>().GetConnectionString("Write");
         }
     }
 }

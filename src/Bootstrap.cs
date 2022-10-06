@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using GilGoblin.DI;
 
 namespace GilGoblin
 {
@@ -19,7 +20,8 @@ namespace GilGoblin
                 .ConfigureServices((hostContext, services) =>
                 {
                     services
-                        .AddSingleton(hostContext.Configuration);
+                        .AddSingleton(hostContext.Configuration)
+                        .AddServices();
                 });
         }
         private const string NETCORE_ENVIRONMENT = nameof(NETCORE_ENVIRONMENT);

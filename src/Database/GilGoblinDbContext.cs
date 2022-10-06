@@ -6,10 +6,10 @@ namespace GilGoblin.Database
 {
     internal class GilGoblinDbContext : DbContext
     {
-        public DbSet<MarketDataPoco> MarketData { get; set; }
-        public DbSet<ItemInfoPoco> ItemInfo { get; set; }
-        public DbSet<RecipePoco> Recipe { get; set; }
-        public DbSet<IngredientPoco> Ingredient { get; set; }
+        public DbSet<MarketDataPoco>? MarketData { get; set; }
+        public DbSet<ItemInfoPoco>? ItemInfo { get; set; }
+        public DbSet<RecipePoco>? Recipe { get; set; }
+        public DbSet<IngredientPoco>? Ingredient { get; set; }
 
         private SqliteConnection? _conn;
 

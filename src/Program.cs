@@ -18,10 +18,9 @@ namespace GilGoblin
             .WriteTo.File("logs/GilGoblin.txt", shared: true, rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
-            Bootstrap
-                .CreateHostBuilder(args)
-                .Build()
-                .Run();
+            var builder = Bootstrap.CreateHostBuilder(args);
+
+            builder.Build().Run();
 
             Console.WriteLine("Hello world!");
 
