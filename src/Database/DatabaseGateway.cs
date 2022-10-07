@@ -17,7 +17,7 @@ using static GilGoblin.Pocos.RecipePoco;
 
 namespace GilGoblin.Database
 {
-    internal class DatabaseAccess
+    internal class DatabaseGateway
     {
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
@@ -68,7 +68,7 @@ namespace GilGoblin.Database
 
         public static void Disconnect()
         {
-            if (DatabaseAccess.Connection.State != System.Data.ConnectionState.Closed)
+            if (DatabaseGateway.Connection.State != System.Data.ConnectionState.Closed)
             {
                 try
                 {

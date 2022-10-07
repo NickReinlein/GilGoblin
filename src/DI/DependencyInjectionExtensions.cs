@@ -10,7 +10,7 @@ namespace GilGoblin.DI
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddGateways();
+            return services.AddGateways().AddHostedServices();
         }
 
         public static IServiceCollection AddGateways(this IServiceCollection services)
@@ -21,5 +21,11 @@ namespace GilGoblin.DI
                 .AddSingleton(_ => new RecipeGateway());
             return services;
         }
+
+        public static IServiceCollection AddHostedServices(this IServiceCollection services)
+        {
+            return services.AddHostedService<GilGoblinService>();
+        }
+
     }
 }

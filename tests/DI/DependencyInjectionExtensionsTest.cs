@@ -10,18 +10,8 @@ public class DependencyInjectionExtensionsTest
     [Test]
     public void GivenAHostBuilder_WhenWeSetupHost_ThenWeSucceed()
     {
-        var hostBuilder = Bootstrap
-            .CreateHostBuilder("local")
-            .ConfigureServices((_, services) =>
-            {
-                var descriptor = new ServiceDescriptor(
-                    typeof(IRecipeGateway),
-                    typeof(RecipeGateway),
-                    ServiceLifetime.Scoped);
-                services.Replace(descriptor);
-            }
-        );
-        var host = hostBuilder.Build();
-        Assert.That(host, Is.Not.Null);
+        var hostBuilder = Bootstrap.CreateHostBuilder().Build();
+
+        Assert.That(hostBuilder, Is.Not.Null);
     }
 }

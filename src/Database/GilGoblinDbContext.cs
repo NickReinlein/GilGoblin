@@ -14,14 +14,14 @@ namespace GilGoblin.Database
         private SqliteConnection? _conn;
 
         public GilGoblinDbContext()
-            : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(DatabaseAccess.Connect()).Options)
+            : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(DatabaseGateway.Connect()).Options)
         {
-            _conn = DatabaseAccess.Connect();
+            _conn = DatabaseGateway.Connect();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            this._conn = DatabaseAccess.Connect();
+            this._conn = DatabaseGateway.Connect();
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseSqlite(_conn);
         }

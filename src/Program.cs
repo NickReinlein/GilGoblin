@@ -12,18 +12,13 @@ namespace GilGoblin
     {
         public static void Main(string[] args)
         {
-            var logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .WriteTo.File("logs/GilGoblin.txt", shared: true, rollingInterval: RollingInterval.Day)
-            .CreateLogger();
-
-            var builder = Bootstrap.CreateHostBuilder(args);
-
-            builder.Build().Run();
+            var builder = Bootstrap.CreateHostBuilder(args).Build();
 
             Console.WriteLine("Hello world!");
 
+            builder.Run();
+
+            Console.WriteLine("Goodbye, cruel world!");
         }
     }
 }
