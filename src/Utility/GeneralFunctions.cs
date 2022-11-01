@@ -41,6 +41,6 @@ namespace GilGoblin.Utility
 
         }
 
-
+        public static string GetProjectFolder() => AppDomain.CurrentDomain.BaseDirectory;
     }
 }

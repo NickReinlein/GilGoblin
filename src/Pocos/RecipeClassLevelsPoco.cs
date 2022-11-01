@@ -4,17 +4,17 @@ using Newtonsoft.Json;
 
 namespace GilGoblin.Pocos
 {
-    public class RecipeClassRequirementsPoco
+    public class RecipeClassLevelsPoco
     {
         public int ID { get; set; }
         public int ClassJobID { get; set; }
         public int RecipeID { get; set; }
         public int Level { get; set; }
 
-        public RecipeClassRequirementsPoco() { }
+        public RecipeClassLevelsPoco() { }
 
         [JsonConstructor]
-        public RecipeClassRequirementsPoco(int id, int classJobID, int level)
+        public RecipeClassLevelsPoco(int id, int classJobID, int level)
         {
             this.ClassJobID = classJobID;
             this.RecipeID = id;

@@ -5,10 +5,10 @@ namespace GilGoblin.Pocos;
 
 public class IngredientPoco
 {
-    // Primary key would now be recipeID & ItemID
     [Key]
+    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    public int ID { get; set; }
     public int RecipeID { get; set; }
-    [Key]
     public int ItemID { get; set; }
     public int Quantity { get; set; }
 

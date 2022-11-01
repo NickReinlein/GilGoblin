@@ -47,39 +47,39 @@ public class RecipePoco
         }
         if (amountIngredient1 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient1TargetID, amountIngredient1, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient1TargetID, amountIngredient1, RecipeID));
         }
         if (amountIngredient2 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient2TargetID, amountIngredient2, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient2TargetID, amountIngredient2, RecipeID));
         }
         if (amountIngredient3 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient3TargetID, amountIngredient3, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient3TargetID, amountIngredient3, RecipeID));
         }
         if (amountIngredient4 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient4TargetID, amountIngredient4, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient4TargetID, amountIngredient4, RecipeID));
         }
         if (amountIngredient5 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient5TargetID, amountIngredient5, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient5TargetID, amountIngredient5, RecipeID));
         }
         if (amountIngredient6 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient6TargetID, amountIngredient6, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient6TargetID, amountIngredient6, RecipeID));
         }
         if (amountIngredient7 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient7TargetID, amountIngredient7, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient7TargetID, amountIngredient7, RecipeID));
         }
         if (amountIngredient8 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient8TargetID, amountIngredient8, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient8TargetID, amountIngredient8, RecipeID));
         }
         if (amountIngredient9 > 0)
         {
-            Ingredients.Add(new IngredientPoco(itemIngredient9TargetID, amountIngredient9, this.RecipeID));
+            Ingredients.Add(new IngredientPoco(itemIngredient9TargetID, amountIngredient9, RecipeID));
         }
     }
 

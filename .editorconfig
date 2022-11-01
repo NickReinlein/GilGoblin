@@ -26,6 +26,9 @@ indent_size = 4
 # IDE0055: Fix formatting
 dotnet_diagnostic.IDE0055.severity = warning
 
+# IDE1006: Fix formatting
+# dotnet_diagnostic.IDE1006.severity = false 
+
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
@@ -80,6 +83,17 @@ dotnet_naming_rule.constants_should_be_camel_case.style = constant_style
 dotnet_naming_symbols.constants.applicable_kinds = field, local
 dotnet_naming_symbols.constants.required_modifiers = const
 dotnet_naming_style.constant_style.capitalization = camel_case
+
+# Private Constants are CamelCase
+dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
+dotnet_naming_rule.dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
+.symbols = constants
+dotnet_naming_rule.dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
+.style = constant_style
+dotnet_naming_symbols.constants.applicable_kinds = field, local
+dotnet_naming_symbols.constants.required_modifiers = const
+dotnet_naming_style.constant_style.capitalization = camel_case
+dotnet_naming_style.instance_field_style.required_prefix = _
 
 # Pascalcase below. It is the default
 # Non-private static fields are PascalCase

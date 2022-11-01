@@ -17,24 +17,18 @@ using static GilGoblin.Pocos.RecipePoco;
 
 namespace GilGoblin.Database
 {
-    internal class DatabaseAccess
+    internal class DatabaseGateway
     {
         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
         public static string _db_name = "GilGoblin.db";
         public static string _path = Path.Combine(_file_path, _db_name);
-        public const int _initialDBCreationEntryCount = 8320;
-        public const int _entriesPerAPIPull = 20;
-        public const int _waitTimeInMsForAPICalls = 500;
-        public const int _gameItemTotalCount = 36700;
-
-        public static SqliteConnection _conn { get; set; }
-
+        private static SqliteConnection? Connection { get; set; }
 
         /// <summary>
         /// Gets a context for EF regarding the ItemID: use then discard!
         /// </summary>
         /// <returns></returns>
-        public static GilGoblinDbContext getContext()
+        public static GilGoblinDbContext GetContext()
         {
             return new GilGoblinDbContext();
         }
@@ -43,25 +37,25 @@ namespace GilGoblin.Database
         {
             try
             {
-                if (_conn == null)
+                if (Connection == null)
                 {
-                    _conn = new SqliteConnection("Data Source=" + _path);
+                    Connection = new SqliteConnection("Data Source=" + _path);
                 }
 
                 //Already open, return
-                if (_conn.State == System.Data.ConnectionState.Open)
+                if (Connection.State == System.Data.ConnectionState.Open)
                 {
-                    return _conn;
+                    return Connection;
                 }
 
-                _conn.Open();
-                if (_conn.State == System.Data.ConnectionState.Open)
+                Connection.Open();
+                if (Connection.State == System.Data.ConnectionState.Open)
                 {
-                    return _conn;
+                    return Connection;
                 }
                 else
                 {
-                    Log.Error("Connection not open. State is: {State}.", _conn.State);
+                    Log.Error("Connection not open. State is: {State}.", Connection.State);
                     return null;
                 }
             }
@@ -74,12 +68,12 @@ namespace GilGoblin.Database
 
         public static void Disconnect()
         {
-            if (DatabaseAccess._conn.State != System.Data.ConnectionState.Closed)
+            if (DatabaseGateway.Connection.State != System.Data.ConnectionState.Closed)
             {
                 try
                 {
-                    _conn.Close();
-                    _conn.Dispose();
+                    Connection.Close();
+                    Connection.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -103,7 +97,7 @@ namespace GilGoblin.Database
             }
             catch (Exception ex)
             {
-                Log.Debug("Database save failed! Message: {Message}.", ex.Message);
+                Log.Error("Database save failed! Message: {Message}.", ex.Message);
             }
         }
 
