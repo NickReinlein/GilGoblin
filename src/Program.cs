@@ -5,6 +5,9 @@ using GilGoblin.DI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace GilGoblin
 {
@@ -12,12 +15,12 @@ namespace GilGoblin
     {
         public static void Main(string[] args)
         {
-            var builder = Bootstrap.CreateHostBuilder(args).Build();
-
-            Console.WriteLine("Hello world!");
-
-            builder.Run();
-
+            var app = WebApplication.CreateBuilder(args).Build();
+            app.MapGet("/", () => "Hello World!");
+            // app.UseHttpsRedirection();
+            // app.UseAuthorization();
+            // app.MapControllers();
+            app.Run("http://localhost:3000");
             Console.WriteLine("Goodbye, cruel world!");
         }
     }

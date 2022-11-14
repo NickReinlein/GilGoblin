@@ -1,3 +1,5 @@
+using GilGoblin.Controller;
+using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Web;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +12,7 @@ namespace GilGoblin.DI
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddGateways().AddHostedServices();
+            return services.AddGateways().AddHostedServices().AddDatabase();
         }
 
         public static IServiceCollection AddGateways(this IServiceCollection services)
@@ -26,6 +28,9 @@ namespace GilGoblin.DI
         {
             return services.AddHostedService<GilGoblinService>();
         }
-
+        public static IServiceCollection AddDatabase(this IServiceCollection services)
+        {
+            return services.AddDbContext<GilGoblinDb>();
+        }
     }
 }

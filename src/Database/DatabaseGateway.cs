@@ -28,9 +28,9 @@ namespace GilGoblin.Database
         /// Gets a context for EF regarding the ItemID: use then discard!
         /// </summary>
         /// <returns></returns>
-        public static GilGoblinDbContext GetContext()
+        public static GilGoblinDb GetContext()
         {
-            return new GilGoblinDbContext();
+            return new GilGoblinDb();
         }
 
         internal static SqliteConnection? Connect()
@@ -83,7 +83,7 @@ namespace GilGoblin.Database
 
         }
 
-        public static void Save(GilGoblinDbContext context)
+        public static void Save(GilGoblinDb context)
         {
             try
             {

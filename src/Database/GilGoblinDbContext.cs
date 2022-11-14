@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GilGoblin.Database
 {
-    internal class GilGoblinDbContext : DbContext
+    internal class GilGoblinDb : DbContext
     {
         public DbSet<MarketDataPoco>? MarketData { get; set; }
         public DbSet<ItemInfoPoco>? ItemInfo { get; set; }
@@ -13,8 +13,8 @@ namespace GilGoblin.Database
 
         private SqliteConnection? _conn;
 
-        public GilGoblinDbContext()
-            : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(DatabaseGateway.Connect()).Options)
+        public GilGoblinDb()
+            : base(new DbContextOptionsBuilder<GilGoblinDb>().UseSqlite(DatabaseGateway.Connect()).Options)
         {
             _conn = DatabaseGateway.Connect();
         }
