@@ -12,14 +12,6 @@ namespace GilGoblin
         public static IHostBuilder CreateHostBuilder(params string[] args) => CreateHostBuilder(EnvironmentName, args);
         public static IHostBuilder CreateHostBuilder(string environment, params string[] args)
         {
-            var logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .WriteTo.File("logs/GilGoblin.txt", shared: true, rollingInterval: RollingInterval.Day)
-                .CreateLogger();
-
-            // TODO : need to put this in config and use DI to inject config
-
             return Host
                 .CreateDefaultBuilder(args)
                 .UseEnvironment(environment)
