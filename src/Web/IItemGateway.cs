@@ -5,6 +5,7 @@ namespace GilGoblin.Web
     public interface IItemGateway
     {
         public ItemInfoPoco GetItem(int itemID);
-        public ItemInfoPoco GetItems(IEnumerable<int> itemIDs);
+        public IEnumerable<ItemInfoPoco> GetItems(IEnumerable<int> itemIDs);
+        public IEnumerable<ItemInfoPoco> GetAllItems();
     }
 }

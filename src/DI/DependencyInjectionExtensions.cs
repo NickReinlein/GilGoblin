@@ -20,7 +20,8 @@ namespace GilGoblin.DI
 
             services
                 .AddSingleton(_ => new MarketDataGateway())
-                .AddSingleton(_ => new RecipeGateway());
+                .AddSingleton(_ => new RecipeGateway())
+                .AddSingleton(_ => new ItemGateway());
             return services;
         }
 

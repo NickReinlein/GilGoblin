@@ -14,15 +14,19 @@ namespace GilGoblin.Pocos
         public int GatheringID { get; set; }
 
         [JsonConstructor]
-        public ItemInfoPoco(int ID, string name, string description, int iconID, int vendorPrice, int stackSize, int gatheringID)
+        public ItemInfoPoco(int id, string name, string description, int iconID, int vendorPrice, int stackSize, int gatheringID)
         {
-            this.ID = ID;
+            this.ID = id;
             this.IconID = iconID;
             this.Description = description;
             this.Name = name;
             this.VendorPrice = vendorPrice;
             this.StackSize = stackSize;
             this.GatheringID = gatheringID;
+        }
+
+        public ItemInfoPoco()
+        {
         }
 
         // TODO decouple from Poco
