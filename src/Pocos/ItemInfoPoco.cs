@@ -28,6 +28,16 @@ namespace GilGoblin.Pocos
         public ItemInfoPoco()
         {
         }
+        public ItemInfoPoco(ItemInfoPoco copyMe)
+        {
+            this.ID = copyMe.ID;
+            this.IconID = copyMe.IconID;
+            this.Description = copyMe.Description;
+            this.Name = copyMe.Name;
+            this.VendorPrice = copyMe.VendorPrice;
+            this.StackSize = copyMe.StackSize;
+            this.GatheringID = copyMe.GatheringID;
+        }
 
         // TODO decouple from Poco
         public static async Task<ItemInfoPoco?> FetchItemInfo(int itemId)

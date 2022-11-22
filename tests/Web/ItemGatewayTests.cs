@@ -11,11 +11,13 @@ namespace GilGoblin.Tests.Web
     {
         private readonly IItemGateway _gateway = Substitute.For<IItemGateway>();
         private ItemInfoPoco _poco = new();
+        const int existentItemID = 1033;
+        const int inexistentItemID = -1;
 
         [SetUp]
         public void SetUp()
         {
-            SetupPoco();
+            SetupBasicPoco();
         }
 
         [TearDown]
@@ -39,7 +41,6 @@ namespace GilGoblin.Tests.Web
         [Test]
         public void GivenAnItemGateway_WhenGettingAnItem_WhenItemDoesExist_ThenTheItemIsReturned()
         {
-            const int existentItemID = 1033;
             _gateway.GetItem(existentItemID).Returns(_poco);
 
             var result = _gateway.GetItem(existentItemID);
@@ -51,7 +52,6 @@ namespace GilGoblin.Tests.Web
         [Test]
         public void GivenAnItemGateway_WhenGettingAllItemsForItem_WhenItemDoesNotExist_ThenNullIsReturned()
         {
-            const int inexistentItemID = -1;
             _gateway.GetItem(inexistentItemID).ReturnsNull();
 
             var result = _gateway.GetItem(inexistentItemID);
@@ -63,7 +63,6 @@ namespace GilGoblin.Tests.Web
         [Test]
         public void GivenAnItemGateway_WhenGettingAllItemsForItem_When1ItemExists_Then1ItemIsReturned()
         {
-            const int existentItemID = 1033;
             var existentItemIds = new List<int>() { existentItemID };
             var existentItems = new List<ItemInfoPoco>() { _poco };
             _gateway.GetItems(existentItemIds).Returns(existentItems);
@@ -77,48 +76,46 @@ namespace GilGoblin.Tests.Web
         [Test]
         public void GivenAnItemGateway_WhenGettingAllItemsForItem_When2ItemsExist_Then2ItemAreReturned()
         {
-            const int existentItemID = 1033;
             var poco2 = new ItemInfoPoco(_poco)
             {
-                TargetItemID = 333,
-                ItemID = 2900
+                ID = 1055
             };
-            var existentItemForItem = new List<ItemInfoPoco>() { _poco, poco2 };
-            _gateway.GetItems(existentItemID).Returns(existentItemForItem);
+            var existentItems = new List<ItemInfoPoco>() { _poco, poco2 };
+            var existentItemIds = existentItems.Select((item) => item.ID).ToList();
+            _gateway.GetItems(existentItemIds).Returns(existentItems);
 
-            var result = _gateway.GetItems(existentItemID);
+            var result = _gateway.GetItems(existentItemIds);
 
-            _gateway.Received(1).GetItems(existentItemID);
-            Assert.That(result, Is.EqualTo(existentItemForItem));
+            _gateway.Received(1).GetItems(existentItemIds);
+            Assert.That(result, Is.EqualTo(existentItems));
         }
 
         [Test]
         public void GivenAnItemGateway_WhenFetchingAnItem_WhenItemDoesNotExist_ThenNullIsReturned()
         {
-            const int inexistentItemID = -1;
-            _gateway.FetchItem(inexistentItemID).ReturnsNull();
+            _gateway.GetItem(inexistentItemID).ReturnsNull();
 
-            var result = _gateway.FetchItem(inexistentItemID);
+            var result = _gateway.GetItem(inexistentItemID);
 
-            _gateway.Received(1).FetchItem(inexistentItemID);
+            _gateway.Received(1).GetItem(inexistentItemID);
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public void GivenAnItemGateway_WhenFetchingAnItem_WhenItemDoesExist_ThenTheItemIsReturned()
         {
-            const int existentItemID = 1033;
-            _gateway.FetchItem(existentItemID).Returns(_poco);
 
-            var result = _gateway.FetchItem(existentItemID);
+            _gateway.GetItem(existentItemID).Returns(_poco);
 
-            _gateway.Received(1).FetchItem(existentItemID);
+            var result = _gateway.GetItem(existentItemID);
+
+            _gateway.Received(1).GetItem(existentItemID);
             Assert.That(result, Is.EqualTo(_poco));
         }
 
-        private void SetupPoco()
+        private void SetupBasicPoco()
         {
-            _poco = new ItemInfoPoco(true, true, 50, 1, 323, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 0, 0, 0);
+            _poco = new ItemInfoPoco(existentItemID, "testItem", "testDescription", 99, 2300, 20, 9922);
         }
     }
 }

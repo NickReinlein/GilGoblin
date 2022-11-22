@@ -26,4 +26,5 @@ public class ItemGateway : IItemGateway
             yield return GetItem(itemId);
         }
     }
+    public IEnumerable<ItemInfoPoco> GetAllItems() => GetItems(Enumerable.Range(1, 100).ToArray());
 }
