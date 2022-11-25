@@ -1,24 +1,24 @@
-using Serilog;
-using GilGoblin.Crafting;
-using GilGoblin.Database;
-using GilGoblin.DI;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
-using Microsoft.Extensions.Hosting;
-
-namespace GilGoblin
+using Microsoft.EntityFrameworkCore;
+namespace GilGoblin;
+var webApplicationOptions = new WebApplicationOptions
 {
-    public class Application
-    {
-        public static void Main(string[] args)
-        {
-            var builder = Bootstrap.CreateHostBuilder(args).Build();
+    ContentRootPath = AppContext.BaseDirectory,
+    Args = args,
+};
+var builder = WebApplication.CreateBuilder(args);
 
-            Console.WriteLine("Hello world!");
+builder.Services.AddRazorPages();
 
-            builder.Run();
+var app = builder.Build();
 
-            Console.WriteLine("Goodbye, cruel world!");
-        }
-    }
-}
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapRazorPages();
+app.MapGet("/", () => "Hello World!");
+
+app.Run();

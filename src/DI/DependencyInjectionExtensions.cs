@@ -1,10 +1,6 @@
-using GilGoblin.Controller;
-using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Web;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DI
 {
