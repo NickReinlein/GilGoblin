@@ -30,5 +30,8 @@
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveBackground": "#2a024899",
     "titleBar.inactiveForeground": "#e7e7e799"
-  }
+  },
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "master"
+  ]
 }
