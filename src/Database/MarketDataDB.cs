@@ -1,13 +1,13 @@
-﻿using GilGoblin.Crafting;
-using GilGoblin.Pocos;
-using GilGoblin.Web;
-using GilGoblin.Ext;
-using GilGoblin.Utility;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GilGoblin.Crafting;
+using GilGoblin.Ext;
+using GilGoblin.Pocos;
+using GilGoblin.Utility;
+using GilGoblin.Web;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace GilGoblin.Database
 {

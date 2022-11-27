@@ -23,6 +23,9 @@ indent_size = 2
 [*.cs]
 indent_size = 4
 
+# Namespace settings
+csharp_style_namespace_declarations=file_scoped:suggestion
+
 # IDE0055: Fix formatting
 dotnet_diagnostic.IDE0055.severity = warning
 
@@ -95,7 +98,6 @@ dotnet_naming_symbols.constants.required_modifiers = const
 dotnet_naming_style.constant_style.capitalization = camel_case
 dotnet_naming_style.instance_field_style.required_prefix = _
 
-# Pascalcase below. It is the default
 # Non-private static fields are PascalCase
 dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.symbols = non_private_static_fields
@@ -128,8 +130,6 @@ dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case_style
 dotnet_naming_symbols.all_members.applicable_kinds = *
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-# CSharp code style settings:
-[*.cs]
 # Newline settings
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
