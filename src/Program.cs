@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+
 namespace GilGoblin;
+
 var webApplicationOptions = new WebApplicationOptions
 {
     ContentRootPath = AppContext.BaseDirectory,
