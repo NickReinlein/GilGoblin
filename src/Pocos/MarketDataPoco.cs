@@ -47,9 +47,9 @@ namespace GilGoblin.Pocos
             long lastUploadTime,
             string? name,
             string? regionName,
-            float currentAveragePrice,
-            float currentAveragePriceNQ,
-            float currentAveragePriceHQ,
+            float averageListingPrice,
+            float averageListingPriceNQ,
+            float averageListingPriceHQ,
             float averagePrice,
             float averagePriceNQ,
             float averagePriceHQ
@@ -60,9 +60,9 @@ namespace GilGoblin.Pocos
             this.LastUploadTime = lastUploadTime;
             this.Name = name;
             this.RegionName = regionName;
-            this.AverageListingPrice = currentAveragePrice;
-            this.AverageListingPriceNQ = currentAveragePriceNQ;
-            this.AverageListingPriceHQ = currentAveragePriceHQ;
+            this.AverageListingPrice = averageListingPrice;
+            this.AverageListingPriceNQ = averageListingPriceNQ;
+            this.AverageListingPriceHQ = averageListingPriceHQ;
             this.AverageSold = averagePrice;
             this.AverageSoldNQ = averagePriceNQ;
             this.AverageSoldHQ = averagePriceHQ;

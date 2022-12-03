@@ -6,15 +6,23 @@ namespace GilGoblin.Pocos
     public class ItemInfoPoco
     {
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
         public int IconID { get; set; }
         public int VendorPrice { get; set; }
         public int StackSize { get; set; }
         public int GatheringID { get; set; }
 
         [JsonConstructor]
-        public ItemInfoPoco(int id, string name, string description, int iconID, int vendorPrice, int stackSize, int gatheringID)
+        public ItemInfoPoco(
+            int id,
+            string name,
+            string description,
+            int iconID,
+            int vendorPrice,
+            int stackSize,
+            int gatheringID
+        )
         {
             this.ID = id;
             this.IconID = iconID;
@@ -25,9 +33,8 @@ namespace GilGoblin.Pocos
             this.GatheringID = gatheringID;
         }
 
-        public ItemInfoPoco()
-        {
-        }
+        public ItemInfoPoco() { }
+
         public ItemInfoPoco(ItemInfoPoco copyMe)
         {
             this.ID = copyMe.ID;
@@ -49,7 +56,9 @@ namespace GilGoblin.Pocos
                 var url = "https://xivapi.com/Item/" + itemId;
                 var content = await client.GetAsync(url);
 
-                return itemInfo = JsonConvert.DeserializeObject<ItemInfoPoco>(content.Content.ReadAsStringAsync().Result);
+                return itemInfo = JsonConvert.DeserializeObject<ItemInfoPoco>(
+                    content.Content.ReadAsStringAsync().Result
+                );
             }
             catch (Exception ex)
             {
@@ -58,5 +67,4 @@ namespace GilGoblin.Pocos
             }
         }
     }
-
 }

@@ -21,5 +21,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 </Project>

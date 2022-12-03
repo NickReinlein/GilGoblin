@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using GilGoblin.Pocos;
 
 namespace GilGoblin.Controller;
 
@@ -16,18 +17,25 @@ public class GilGoblinPriceController : ControllerBase
     [HttpGet(Name = "GetPrice")]
     public IEnumerable<MarketDataPoco> Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new MarketDataPoco { 
-            itemID = index,
-            orldID = 42,
-            lastUploadTime = 10,
-            name = "testObject"+index,
-            regionName = 'testRealm',
-            currentAveragePrice = index*5.0,
-            currentAveragePriceNQ =index*3.0,
-            currentAveragePriceHQ = index*8.0,
-            averagePrice = index*6.0,
-            averagePriceNQ = index * 5.0,
-            averagePriceHQ = index * 9.0,
-        }).ToAarray();
+        return Enumerable
+            .Range(1, 5)
+            .Select(
+                index =>
+                    new MarketDataPoco
+                    {
+                        ItemID = index,
+                        WorldID = 42,
+                        LastUploadTime = 10,
+                        Name = "testObject",
+                        RegionName = "MountFuji",
+                        AverageListingPrice = index * 5f,
+                        AverageListingPriceNQ = index * 3f,
+                        AverageListingPriceHQ = index * 8f,
+                        AverageSold = index * 6f,
+                        AverageSoldNQ = index * 5f,
+                        AverageSoldHQ = index * 9f,
+                    }
+            )
+            .ToArray();
     }
 }
