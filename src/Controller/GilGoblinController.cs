@@ -4,17 +4,17 @@ using GilGoblin.Pocos;
 namespace GilGoblin.Controller;
 
 [ApiController]
-[Route("[prices]")]
-public class GilGoblinPriceController : ControllerBase
+[Route("[controller]")]
+public class PriceController : ControllerBase
 {
-    private readonly ILogger<GilGoblinPriceController> _logger;
+    private readonly ILogger<PriceController> _logger;
 
-    public GilGoblinPriceController(ILogger<GilGoblinPriceController> logger)
+    public PriceController(ILogger<PriceController> logger)
     {
         _logger = logger;
     }
 
-    [HttpGet(Name = "GetPrice")]
+    [HttpGet]
     public IEnumerable<MarketDataPoco> Get()
     {
         return Enumerable
@@ -26,7 +26,7 @@ public class GilGoblinPriceController : ControllerBase
                         ItemID = index,
                         WorldID = 42,
                         LastUploadTime = 10,
-                        Name = "testObject",
+                        Name = "testObject" + index,
                         RegionName = "MountFuji",
                         AverageListingPrice = index * 5f,
                         AverageListingPriceNQ = index * 3f,
@@ -37,5 +37,24 @@ public class GilGoblinPriceController : ControllerBase
                     }
             )
             .ToArray();
+    }
+
+    [HttpGet("{id}")]
+    public MarketDataPoco Get(int id)
+    {
+        return new MarketDataPoco
+        {
+            ItemID = id,
+            WorldID = 42,
+            LastUploadTime = 10,
+            Name = "testObject" + id,
+            RegionName = "MountFuji",
+            AverageListingPrice = id * 5f,
+            AverageListingPriceNQ = id * 3f,
+            AverageListingPriceHQ = id * 8f,
+            AverageSold = id * 6f,
+            AverageSoldNQ = id * 5f,
+            AverageSoldHQ = id * 9f,
+        };
     }
 }
