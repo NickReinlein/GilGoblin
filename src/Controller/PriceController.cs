@@ -17,26 +17,7 @@ public class PriceController : ControllerBase
     [HttpGet]
     public IEnumerable<MarketDataPoco> Get()
     {
-        return Enumerable
-            .Range(1, 5)
-            .Select(
-                index =>
-                    new MarketDataPoco
-                    {
-                        ItemID = index,
-                        WorldID = 42,
-                        LastUploadTime = 10,
-                        Name = "testObject" + index,
-                        RegionName = "MountFuji",
-                        AverageListingPrice = index * 5f,
-                        AverageListingPriceNQ = index * 3f,
-                        AverageListingPriceHQ = index * 8f,
-                        AverageSold = index * 6f,
-                        AverageSoldNQ = index * 5f,
-                        AverageSoldHQ = index * 9f,
-                    }
-            )
-            .ToArray();
+        return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
     }
 
     [HttpGet("{id}")]
