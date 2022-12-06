@@ -1,11 +1,10 @@
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Web
+namespace GilGoblin.Web;
+
+public interface IRecipeGateway
 {
-    public interface IRecipeGateway
-    {
-        public RecipePoco GetRecipe(int recipeID);
-        public RecipePoco FetchRecipe(int recipeID);
-        public IEnumerable<RecipePoco> GetRecipesForItem(int itemID);
-    }
+    public RecipePoco GetRecipe(int recipeID);
+    public RecipePoco FetchRecipe(int recipeID);
+    public IEnumerable<RecipePoco> GetRecipesForItem(int itemID);
 }

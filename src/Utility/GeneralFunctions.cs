@@ -1,46 +1,45 @@
 using System;
 using Serilog;
 
-namespace GilGoblin.Utility
-{
-    internal static class GeneralFunctions
-    {
-        public static DateTime ConvertLongUnixSecondsToDateTime(long elapsed_time)
-        {
-            try
-            {
-                var date = DateTimeOffset.FromUnixTimeSeconds(elapsed_time).LocalDateTime;
-                return date;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                return new DateTime();
-            }
-        }
+namespace GilGoblin.Utility;
 
-        public static DateTime ConvertLongUnixMillisecondsToDateTime(long elapsed_time)
+internal static class GeneralFunctions
+{
+    public static DateTime ConvertLongUnixSecondsToDateTime(long elapsed_time)
+    {
+        try
         {
-            var date
-                = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
+            var date = DateTimeOffset.FromUnixTimeSeconds(elapsed_time).LocalDateTime;
             return date;
         }
-
-        public static DateTime ConvertLongFromBinaryToDateTime(long elapsed_time)
+        catch (Exception ex)
         {
-            try
-            {
-                var date = DateTime.FromBinary(elapsed_time).ToLocalTime();
-                return date;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                return new DateTime();
-            }
+            Log.Error(ex.Message);
+            return new DateTime();
+        }
+    }
 
+    public static DateTime ConvertLongUnixMillisecondsToDateTime(long elapsed_time)
+    {
+        var date
+            = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
+        return date;
+    }
+
+    public static DateTime ConvertLongFromBinaryToDateTime(long elapsed_time)
+    {
+        try
+        {
+            var date = DateTime.FromBinary(elapsed_time).ToLocalTime();
+            return date;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+            return new DateTime();
         }
 
-        public static string GetProjectFolder() => AppDomain.CurrentDomain.BaseDirectory;
     }
+
+    public static string GetProjectFolder() => AppDomain.CurrentDomain.BaseDirectory;
 }

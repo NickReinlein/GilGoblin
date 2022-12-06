@@ -1,11 +1,10 @@
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Web
+namespace GilGoblin.Web;
+
+public interface IItemGateway
 {
-    public interface IItemGateway
-    {
-        public ItemInfoPoco GetItem(int itemID);
-        public IEnumerable<ItemInfoPoco> GetItems(IEnumerable<int> itemIDs);
-        public IEnumerable<ItemInfoPoco> GetAllItems();
-    }
+    public ItemInfoPoco GetItem(int itemID);
+    public IEnumerable<ItemInfoPoco> GetItems(IEnumerable<int> itemIDs);
+    public IEnumerable<ItemInfoPoco> GetAllItems();
 }

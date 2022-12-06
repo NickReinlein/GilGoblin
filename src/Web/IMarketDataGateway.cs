@@ -1,7 +1,6 @@
 using GilGoblin.Database;
-namespace GilGoblin.Web
+namespace GilGoblin.Web;
+
+public interface IMarketDataGateway : IMarketDataDB, IMarketDataWeb
 {
-    public interface IMarketDataGateway : IMarketDataDB, IMarketDataWeb
-    {
-    }
 }
