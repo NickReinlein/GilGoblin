@@ -14,4 +14,11 @@ public class DependencyInjectionExtensionsTest
 
         Assert.That(hostBuilder, Is.Not.Null);
     }
+
+    [Test]
+    public void GivenAGilGoblin_WhenWeRun_ThenWeSucceed()
+    {
+        var program = new GilGoblin();
+        Assert.That(program is not null);
+    }
 }
