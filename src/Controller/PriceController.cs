@@ -17,12 +17,14 @@ public class PriceController : ControllerBase
     [HttpGet]
     public IEnumerable<MarketDataPoco> Get()
     {
+        _logger.LogInformation($"Fetching all market data");
         return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
     }
 
     [HttpGet("{id}")]
     public MarketDataPoco Get(int id)
     {
+        _logger.LogInformation($"Fetching market data id: {id}");
         return new MarketDataPoco
         {
             ItemID = id,

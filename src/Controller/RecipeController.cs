@@ -17,12 +17,14 @@ public class RecipeController : ControllerBase
     [HttpGet]
     public IEnumerable<RecipePoco> Get()
     {
+        _logger.LogInformation($"Fetching all recipes");
         return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
     }
 
     [HttpGet("{id}")]
     public RecipePoco Get(int id)
     {
+        _logger.LogInformation($"Fetching recipe id: {id}");
         return new RecipePoco
         {
             RecipeID = id,
