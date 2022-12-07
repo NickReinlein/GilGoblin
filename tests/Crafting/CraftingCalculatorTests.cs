@@ -7,13 +7,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Tests.Crafting;
 
-[TestFixture]
-public class CraftingCalculatorTest
+public class CraftingCalculatorTests
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
     private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
-    private readonly ILogger<CraftingCalculator> _log = Substitute.For<ILogger<CraftingCalculator>>();
+    private readonly ILogger<CraftingCalculator> _log = Substitute.For<
+        ILogger<CraftingCalculator>
+    >();
     private CraftingCalculator? _calc;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
@@ -42,15 +43,12 @@ public class CraftingCalculatorTest
     public void GivenACraftingCalculator_WhenCalculatingCraftingCostForItem_WhenNoRecipesExist_ThenReturnErrorCost()
     {
         var inexistentItemID = -200;
-        _recipeGateway
-            .GetRecipesForItem(inexistentItemID)
-            .Returns(Array.Empty<RecipePoco>());
+        _recipeGateway.GetRecipesForItem(inexistentItemID).Returns(Array.Empty<RecipePoco>());
 
         var result = _calc!.CalculateCraftingCostForItem(_worldID, inexistentItemID);
 
         _recipeGateway.Received(1).GetRecipesForItem(inexistentItemID);
-        _marketDataGateway.DidNotReceiveWithAnyArgs()
-                          .GetMarketData(default, default!);
+        _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketData(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -86,13 +84,20 @@ public class CraftingCalculatorTest
         Assert.That(result, Is.GreaterThan(ingredientMarket.AverageSoldNQ));
     }
 
-    private void MockGatewaysForSingularTest(MarketDataPoco market, RecipePoco recipe, MarketDataPoco ingredientMarket)
+    private void MockGatewaysForSingularTest(
+        MarketDataPoco market,
+        RecipePoco recipe,
+        MarketDataPoco ingredientMarket
+    )
     {
-        _marketDataGateway.GetMarketData(default, default!)
+        _marketDataGateway
+            .GetMarketData(default, default!)
             .ReturnsForAnyArgs(new List<MarketDataPoco>() { market, ingredientMarket });
         _grocer.BreakdownRecipe(recipe.RecipeID).Returns(recipe.Ingredients);
         _recipeGateway.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
-        _recipeGateway.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
+        _recipeGateway
+            .GetRecipesForItem(ingredientMarket.ItemID)
+            .Returns(Array.Empty<RecipePoco>());
         _recipeGateway.GetRecipe(recipe.RecipeID).Returns(recipe);
     }
 
@@ -100,9 +105,7 @@ public class CraftingCalculatorTest
     public void GivenACraftingCalculator_WhenCalculatingCraftingCostForRecipe_WhenNoRecipesExist_ThenReturnErrorCost()
     {
         var inexistentRecipeID = -200;
-        _recipeGateway
-            .GetRecipe(inexistentRecipeID)
-            .Returns(_ => null!);
+        _recipeGateway.GetRecipe(inexistentRecipeID).Returns(_ => null!);
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
 
@@ -110,6 +113,7 @@ public class CraftingCalculatorTest
         _marketDataGateway.DidNotReceiveWithAnyArgs().GetMarketData(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
+
     [Test]
     public void GivenACraftingCalculator_WhenCalculatingCraftingCostForRecipe_WhenARecipeExists_WhenNoMarketDataFound_ThenReturnErrorCost()
     {
@@ -138,7 +142,6 @@ public class CraftingCalculatorTest
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
-
         _recipeGateway.Received().GetRecipe(recipeID);
         _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[0].ItemID);
         _recipeGateway.Received().GetRecipesForItem(recipe.Ingredients[1].ItemID);
@@ -148,17 +151,24 @@ public class CraftingCalculatorTest
         Assert.That(result, Is.GreaterThan(3000));
     }
 
-    private void SetupBasicTestCase(RecipePoco recipe, MarketDataPoco marketData, List<MarketDataPoco> ingredientMarketDataList)
+    private void SetupBasicTestCase(
+        RecipePoco recipe,
+        MarketDataPoco marketData,
+        List<MarketDataPoco> ingredientMarketDataList
+    )
     {
         var recipeID = recipe.RecipeID;
         _recipeGateway.GetRecipesForItem(recipeID).Returns(new List<RecipePoco>() { recipe });
         _recipeGateway.GetRecipe(recipeID).Returns(recipe);
         foreach (var ingredient in recipe.Ingredients)
-            _recipeGateway.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
+            _recipeGateway
+                .GetRecipesForItem(ingredient.ItemID)
+                .Returns(_ => Array.Empty<RecipePoco>());
 
         var returnMarketData = new List<MarketDataPoco>() { marketData };
         returnMarketData.AddRange(ingredientMarketDataList);
-        _marketDataGateway.GetMarketData(_worldID, Arg.Any<IEnumerable<int>>())
+        _marketDataGateway
+            .GetMarketData(_worldID, Arg.Any<IEnumerable<int>>())
             .Returns(returnMarketData);
         _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients);
     }
@@ -176,7 +186,36 @@ public class CraftingCalculatorTest
         return ingredientMarketDataList;
     }
 
-    private static MarketDataPoco GetNewMarketData => new(1, _worldID, 1, "Iron Sword", "testRealm", 300, 200, 400, 600, 400, 800);
+    private static MarketDataPoco GetNewMarketData =>
+        new(1, _worldID, 1, "Iron Sword", "testRealm", 300, 200, 400, 600, 400, 800);
 
-    private static RecipePoco NewRecipe => new(true, true, _targetItemID, _recipeID, 254, 1, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, _firstItemID, _secondItemID, 0, 0, 0, 0, 0, 0, 0, 0);
+    private static RecipePoco NewRecipe =>
+        new(
+            true,
+            true,
+            _targetItemID,
+            _recipeID,
+            254,
+            1,
+            3,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            _firstItemID,
+            _secondItemID,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        );
 }

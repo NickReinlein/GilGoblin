@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Tests.Crafting;
 
-public class RecipeGrocerTest
+public class RecipeGrocerTests
 {
     private readonly IRecipeGateway _recipeGateway = Substitute.For<IRecipeGateway>();
     private readonly IMarketDataGateway _marketDataGateway = Substitute.For<IMarketDataGateway>();
@@ -23,7 +23,7 @@ public class RecipeGrocerTest
     private static readonly int _recipeID = 6044;
     private static readonly int _targetItemID = 955;
 
-    public RecipeGrocerTest()
+    public RecipeGrocerTests()
     {
         _grocer = new RecipeGrocer(_recipeGateway, _log);
     }

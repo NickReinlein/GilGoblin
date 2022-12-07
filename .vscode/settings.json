@@ -1,5 +1,5 @@
 {
-  "dotnet-test-explorer.testProjectPath": "**/*Test.csproj",
+  "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj",
   "dotnet-test-explorer.treeMode": "merged",
   "editor.formatOnSave": true,
   "prettier.enable": true,

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GilGoblin.Controller;
 
-public interface IGilGoblinController<T> where T : class
+public interface IGoblinController<T> where T : class
 {
     [HttpGet]
     IEnumerable<T> Get();

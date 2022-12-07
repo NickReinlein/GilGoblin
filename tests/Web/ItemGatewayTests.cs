@@ -6,8 +6,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Web;
 
-[TestFixture]
-public class ItemGatewayTest
+public class ItemGatewayTests
 {
     private readonly IItemGateway _gateway = Substitute.For<IItemGateway>();
     private ItemInfoPoco _poco = new();
@@ -76,10 +75,7 @@ public class ItemGatewayTest
     [Test]
     public void GivenAnItemGateway_WhenGettingAllItemsForItem_When2ItemsExist_Then2ItemAreReturned()
     {
-        var poco2 = new ItemInfoPoco(_poco)
-        {
-            ID = 1055
-        };
+        var poco2 = new ItemInfoPoco(_poco) { ID = 1055 };
         var existentItems = new List<ItemInfoPoco>() { _poco, poco2 };
         var existentItemIds = existentItems.Select((item) => item.ID).ToList();
         _gateway.GetItems(existentItemIds).Returns(existentItems);
@@ -104,7 +100,6 @@ public class ItemGatewayTest
     [Test]
     public void GivenAnItemGateway_WhenFetchingAnItem_WhenItemDoesExist_ThenTheItemIsReturned()
     {
-
         _gateway.GetItem(existentItemID).Returns(_poco);
 
         var result = _gateway.GetItem(existentItemID);

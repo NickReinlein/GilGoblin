@@ -6,8 +6,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Web;
 
-[TestFixture]
-public class RecipeGatewayTest
+public class RecipeGatewayTests
 {
     private readonly IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
     private RecipePoco _poco = new();
@@ -77,11 +76,7 @@ public class RecipeGatewayTest
     public void GivenARecipeGateway_WhenGettingAllRecipesForItem_When2RecipesExist_Then2RecipeAreReturned()
     {
         const int existentRecipeID = 1033;
-        var poco2 = new RecipePoco(_poco)
-        {
-            TargetItemID = 333,
-            RecipeID = 2900
-        };
+        var poco2 = new RecipePoco(_poco) { TargetItemID = 333, RecipeID = 2900 };
         var existentRecipeForItem = new List<RecipePoco>() { _poco, poco2 };
         _gateway.GetRecipesForItem(existentRecipeID).Returns(existentRecipeForItem);
 
@@ -117,6 +112,33 @@ public class RecipeGatewayTest
 
     private void SetupPoco()
     {
-        _poco = new RecipePoco(true, true, 50, 1, 323, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 0, 0, 0);
+        _poco = new RecipePoco(
+            true,
+            true,
+            50,
+            1,
+            323,
+            1,
+            2,
+            3,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            3,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        );
     }
 }

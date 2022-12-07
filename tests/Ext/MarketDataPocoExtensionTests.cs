@@ -5,8 +5,7 @@ using NUnit.Framework.Internal;
 
 namespace GilGoblin.Tests.Ext;
 
-[TestFixture]
-public class MarketDataPocoExtensionTest
+public class MarketDataPocoExtensionTests
 {
     private MarketDataPoco _poco = new();
 

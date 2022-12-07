@@ -5,12 +5,12 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Web;
 
-[TestFixture]
-public class CraftingCalculatorTest
+public class MarketDataGatewayTests
 {
     private readonly IMarketDataGateway _gateway = Substitute.For<IMarketDataGateway>();
     private readonly int[] _itemIDs = { 1, 2, 3, 4, 5, 6 };
-    private readonly MarketDataPoco _poco = new(1, 1, 1, "test", "testRealm", 300, 200, 400, 600, 400, 800);
+    private readonly MarketDataPoco _poco =
+        new(1, 1, 1, "test", "testRealm", 300, 200, 400, 600, 400, 800);
     private MarketDataPoco[] _pocos = Array.Empty<MarketDataPoco>();
 
     [SetUp]
@@ -18,6 +18,7 @@ public class CraftingCalculatorTest
     {
         _pocos = new MarketDataPoco[] { _poco };
     }
+
     [TearDown]
     public void TearDown()
     {
@@ -34,7 +35,6 @@ public class CraftingCalculatorTest
         _gateway.Received().FetchMarketData(Arg.Any<int>(), Arg.Any<int[]>());
         Assert.That(result, Is.EquivalentTo(_pocos));
     }
-
 
     [Test]
     public void GivenAMarketDataGateway_WhenFetchingItems_WhenSuccessfulWithDuplicateIDs_ThenItemsAreReturnedWithoutDuplicates()
@@ -63,14 +63,8 @@ public class CraftingCalculatorTest
     [Test]
     public void GivenAMarketDataGateway_WhenFetchingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
     {
-        var poco1 = new MarketDataPoco(_poco)
-        {
-            ItemID = 444
-        };
-        var poco2 = new MarketDataPoco(_poco)
-        {
-            ItemID = 777
-        };
+        var poco1 = new MarketDataPoco(_poco) { ItemID = 444 };
+        var poco2 = new MarketDataPoco(_poco) { ItemID = 777 };
         var existingItems = new MarketDataPoco[] { poco1, poco2 };
         MockFetch<IEnumerable<MarketDataPoco>>(existingItems);
         Assume.That(_itemIDs.Length, Is.GreaterThan(existingItems.Length));
@@ -91,7 +85,6 @@ public class CraftingCalculatorTest
         _gateway.Received().FetchMarketData(Arg.Any<int>(), Arg.Any<int[]>());
         Assert.That(result, Is.EquivalentTo(_pocos));
     }
-
 
     [Test]
     public void GivenAMarketDataGateway_WhenGettingItems_WhenSuccessfulWithDuplicateIDs_ThenItemsAreReturnedWithoutDuplicates()
@@ -120,14 +113,8 @@ public class CraftingCalculatorTest
     [Test]
     public void GivenAMarketDataGateway_WhenGettingItems_WhenSomeAreSuccessfulAndSomeFail_ThenSuccessfulAreReturned()
     {
-        var poco1 = new MarketDataPoco(_poco)
-        {
-            ItemID = 444
-        };
-        var poco2 = new MarketDataPoco(_poco)
-        {
-            ItemID = 777
-        };
+        var poco1 = new MarketDataPoco(_poco) { ItemID = 444 };
+        var poco2 = new MarketDataPoco(_poco) { ItemID = 777 };
         var existingItems = new MarketDataPoco[] { poco1, poco2 };
         MockFetch<IEnumerable<MarketDataPoco>>(existingItems);
         Assume.That(_itemIDs.Length, Is.GreaterThan(existingItems.Length));
@@ -140,10 +127,15 @@ public class CraftingCalculatorTest
 
     private void MockFetch<T>(IEnumerable<MarketDataPoco> pocosReturned)
     {
-        _gateway.FetchMarketData(Arg.Any<int>(), Arg.Any<IEnumerable<int>>()).Returns(pocosReturned);
+        _gateway
+            .FetchMarketData(Arg.Any<int>(), Arg.Any<IEnumerable<int>>())
+            .Returns(pocosReturned);
     }
+
     private static IEnumerable<MarketDataPoco> ConvertItemIDsToPocos(IEnumerable<int> itemIDs)
     {
-        return itemIDs.Select(x => new MarketDataPoco(x, 1, 1, "fake", "fakeRealm", 3, 2, 4, 6, 4, 8));
+        return itemIDs.Select(
+            x => new MarketDataPoco(x, 1, 1, "fake", "fakeRealm", 3, 2, 4, 6, 4, 8)
+        );
     }
 }
