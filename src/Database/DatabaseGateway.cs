@@ -1,4 +1,4 @@
-// using System;
+return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();// using System;
 // using System.Collections.Generic;
 // using System.Diagnostics;
 // using System.IO;
