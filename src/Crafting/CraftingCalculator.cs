@@ -126,6 +126,7 @@ public class CraftingCalculator : ICraftingCalculator
                             "for item {ItemID} world {WorldID} with {RecipeCount} craftable recipes",
                             craftingCost, itemID, worldID, recipeCount);
     }
+
     private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
     {
         _log.LogError("Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes", worldID, itemID, recipesCount);
