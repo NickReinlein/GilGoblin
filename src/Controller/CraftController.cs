@@ -5,7 +5,7 @@ namespace GilGoblin.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class CraftController : ControllerBase
+public class CraftController : ControllerBase, ICraftController<CraftResultPoco>
 {
     private readonly ILogger<CraftController> _logger;
 
@@ -14,26 +14,10 @@ public class CraftController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    public IEnumerable<ItemInfoPoco> Get()
+    [HttpGet("{worldId}/{id}")]
+    public CraftResultPoco Get(int worldId, int id)
     {
-        _logger.LogInformation($"Fetching all crafts data");
-        return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
-    }
-
-    [HttpGet("{id}")]
-    public ItemInfoPoco Get(int id)
-    {
-        _logger.LogInformation($"Fetching craft id: {id}");
-        return new ItemInfoPoco
-        {
-            ID = id,
-            Description = "TestItem" + id,
-            GatheringID = id + 144,
-            IconID = id + 42,
-            Name = "TestItem" + id,
-            StackSize = 1,
-            VendorPrice = id
-        };
+        _logger.LogInformation($"Fetching craft for item id {id} in world {worldId}");
+        return new CraftResultPoco();
     }
 }

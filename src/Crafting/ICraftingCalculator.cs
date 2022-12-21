@@ -6,6 +6,8 @@ public interface ICraftingCalculator
 {
     public int CalculateCraftingCostForRecipe(int worldID, int recipeID);
     public int CalculateCraftingCostForItem(int worldID, int itemID);
-    public int CalculateCraftingCostForIngredients(int worldID,
-        IEnumerable<CraftIngredient> craftIngredients);
+    public int CalculateCraftingCostForIngredients(
+        int worldID,
+        IEnumerable<CraftIngredientPoco> craftIngredients
+    );
 }
