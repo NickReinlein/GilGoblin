@@ -5,11 +5,11 @@ namespace GilGoblin.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class ItemInfoController : ControllerBase
+public class CraftController : ControllerBase
 {
-    private readonly ILogger<ItemInfoController> _logger;
+    private readonly ILogger<CraftController> _logger;
 
-    public ItemInfoController(ILogger<ItemInfoController> logger)
+    public CraftController(ILogger<CraftController> logger)
     {
         _logger = logger;
     }
@@ -17,14 +17,14 @@ public class ItemInfoController : ControllerBase
     [HttpGet]
     public IEnumerable<ItemInfoPoco> Get()
     {
-        _logger.LogInformation($"Fetching all item info data");
+        _logger.LogInformation($"Fetching all crafts data");
         return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
     }
 
     [HttpGet("{id}")]
     public ItemInfoPoco Get(int id)
     {
-        _logger.LogInformation($"Fetching item info id: {id}");
+        _logger.LogInformation($"Fetching craft id: {id}");
         return new ItemInfoPoco
         {
             ID = id,

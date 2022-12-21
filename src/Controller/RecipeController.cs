@@ -5,7 +5,7 @@ namespace GilGoblin.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class RecipeController : ControllerBase
+public class RecipeController : ControllerBase, IDataController<RecipePoco>
 {
     private readonly ILogger<RecipeController> _logger;
 

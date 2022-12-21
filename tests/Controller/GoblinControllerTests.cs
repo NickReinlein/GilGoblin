@@ -6,7 +6,7 @@ namespace GilGoblin.Tests.Controller;
 
 public class GoblinControllerTests<T> where T : class
 {
-    private readonly IGoblinController<T> _controller = Substitute.For<IGoblinController<T>>();
+    private readonly IDataController<T> _controller = Substitute.For<IDataController<T>>();
 
     [SetUp]
     public void SetUp() { }

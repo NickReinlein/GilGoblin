@@ -5,7 +5,7 @@ namespace GilGoblin.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class PriceController : ControllerBase
+public class PriceController : ControllerBase, IDataController<MarketDataPoco>
 {
     private readonly ILogger<PriceController> _logger;
 

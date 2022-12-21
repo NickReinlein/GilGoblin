@@ -1,20 +1,12 @@
 using System;
-namespace GilGoblin.Web
+
+namespace GilGoblin.Web;
+
+public class MarketDataNotFoundException : Exception
 {
-    public class MarketDataNotFoundException : Exception
-    {
-        public MarketDataNotFoundException()
-        {
-        }
+    public MarketDataNotFoundException() { }
 
-        public MarketDataNotFoundException(string message)
-            : base(message)
-        {
-        }
+    public MarketDataNotFoundException(string message) : base(message) { }
 
-        public MarketDataNotFoundException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
+    public MarketDataNotFoundException(string message, Exception inner) : base(message, inner) { }
 }
