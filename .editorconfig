@@ -29,8 +29,8 @@ csharp_style_namespace_declarations=file_scoped:suggestion
 # IDE0055: Fix formatting
 dotnet_diagnostic.IDE0055.severity = warning
 
-# IDE1006: Fix formatting
-# dotnet_diagnostic.IDE1006.severity = false 
+# CA2254: logging message template false positive
+dotnet_diagnostic.CA2254.severity = none
 
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true

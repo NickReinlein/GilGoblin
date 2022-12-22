@@ -13,7 +13,12 @@ public class GilGoblinService : IHostedService
     private readonly IRecipeGrocer _recipeGrocer;
     private readonly ILogger<GilGoblinService> _log;
 
-    public GilGoblinService(IRecipeGateway recipeGateway, IMarketDataGateway marketDataGateway, IRecipeGrocer recipeGrocer, ILogger<GilGoblinService> log)
+    public GilGoblinService(
+        IRecipeGateway recipeGateway,
+        IMarketDataGateway marketDataGateway,
+        IRecipeGrocer recipeGrocer,
+        ILogger<GilGoblinService> log
+    )
     {
         _log = log;
         _recipeGateway = recipeGateway;
@@ -21,24 +26,28 @@ public class GilGoblinService : IHostedService
         _recipeGrocer = recipeGrocer;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken ct)
     {
         _log.LogInformation("Starting Gilgoblin Service.");
-        Task.Run(async () =>
-        {
-            while (!cancellationToken.IsCancellationRequested)
+        Task.Run(
+            async () =>
             {
-                await Task.Delay(new TimeSpan(0, 0, 2)); // 2 second delay'
-                var getItemTest = _recipeGateway.GetRecipe(12);
-                if (getItemTest is null) throw new Exception("Failed here");
-            }
-        });
+                while (!ct.IsCancellationRequested)
+                {
+                    await Task.Delay(new TimeSpan(0, 0, 3)); // 2 second delay'
+                    var getItemTest = _recipeGateway.GetRecipe(12);
+                    if (getItemTest is null)
+                        throw new Exception("Failed here");
+                }
+            },
+            ct
+        );
 
         _log.LogWarning("Gilgoblin Service ended.");
         return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken ct)
     {
         _log.LogInformation("Gilgoblin Service was stopped.");
         return Task.CompletedTask;
