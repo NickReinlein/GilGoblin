@@ -32,7 +32,7 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
         };
     }
 
-    [HttpGet("{world}")]
+    [HttpGet("{worldId}")]
     public IEnumerable<CraftSummaryPoco> GetBestCrafts(int worldId)
     {
         _logger.LogInformation($"Fetching best crafts for world {worldId}");
