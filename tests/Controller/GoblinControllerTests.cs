@@ -20,7 +20,7 @@ public class GoblinControllerTests<T> where T : class
     [Test]
     public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAnEnumerableResultIsReturned()
     {
-        var result = _controller.Get();
+        var result = _controller.GetAll();
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.TypeOf<IEnumerable<T>>());

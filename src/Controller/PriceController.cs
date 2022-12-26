@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 
 namespace GilGoblin.Controller;
 
@@ -8,36 +9,27 @@ namespace GilGoblin.Controller;
 public class PriceController : ControllerBase, IDataController<MarketDataPoco>
 {
     private readonly ILogger<PriceController> _logger;
+    private readonly IDataRepository<MarketDataPoco> _priceRepo;
 
-    public PriceController(ILogger<PriceController> logger)
+    public PriceController(ILogger<PriceController> logger, IDataRepository<MarketDataPoco> priceRepo)
     {
         _logger = logger;
+        _priceRepo = priceRepo;
     }
 
     [HttpGet]
-    public IEnumerable<MarketDataPoco> Get()
+    public IEnumerable<MarketDataPoco> GetAll()
     {
         _logger.LogInformation($"Fetching all market data");
-        return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
+        var allPrices = _priceRepo.GetAll();
+        return allPrices;
     }
 
     [HttpGet("{id}")]
     public MarketDataPoco Get(int id)
     {
         _logger.LogInformation($"Fetching market data id: {id}");
-        return new MarketDataPoco
-        {
-            ItemID = id,
-            WorldID = 42,
-            LastUploadTime = 10,
-            Name = "testObject" + id,
-            RegionName = "MountFuji",
-            AverageListingPrice = id * 5f,
-            AverageListingPriceNQ = id * 3f,
-            AverageListingPriceHQ = id * 8f,
-            AverageSold = id * 6f,
-            AverageSoldNQ = id * 5f,
-            AverageSoldHQ = id * 9f,
-        };
+        var price = _priceRepo.Get(id);
+        return price;
     }
 }

@@ -15,7 +15,7 @@ public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
     }
 
     [HttpGet]
-    public IEnumerable<ItemInfoPoco> Get()
+    public IEnumerable<ItemInfoPoco> GetAll()
     {
         _logger.LogInformation($"Fetching all item info data");
         return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();

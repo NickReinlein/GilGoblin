@@ -15,7 +15,7 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
     }
 
     [HttpGet]
-    public IEnumerable<RecipePoco> Get()
+    public IEnumerable<RecipePoco> GetAll()
     {
         _logger.LogInformation($"Fetching all recipes");
         return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
