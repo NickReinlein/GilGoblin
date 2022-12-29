@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 
 namespace GilGoblin.Controller;
 
@@ -7,10 +8,15 @@ namespace GilGoblin.Controller;
 [Route("[controller]")]
 public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco>
 {
+    private readonly ICraftRepository<CraftSummaryPoco> _craftRepo;
     private readonly ILogger<CraftController> _logger;
 
-    public CraftController(ILogger<CraftController> logger)
+    public CraftController(
+        ICraftRepository<CraftSummaryPoco> craftRepo,
+        ILogger<CraftController> logger
+    )
     {
+        _craftRepo = craftRepo;
         _logger = logger;
     }
 

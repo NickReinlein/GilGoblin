@@ -3,10 +3,11 @@ using GilGoblin.Repository;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IPriceRepository, PriceRepository>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 var app = builder.Build();
 
