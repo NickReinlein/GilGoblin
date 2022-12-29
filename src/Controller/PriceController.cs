@@ -6,7 +6,7 @@ namespace GilGoblin.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class PriceController : ControllerBase, IDataController<MarketDataPoco>
+public class PriceController : ControllerBase, IPriceController
 {
     private readonly ILogger<PriceController> _logger;
     private readonly IPriceRepository _priceRepo;
@@ -17,18 +17,18 @@ public class PriceController : ControllerBase, IDataController<MarketDataPoco>
         _priceRepo = priceRepo;
     }
 
-    [HttpGet]
-    public IEnumerable<MarketDataPoco> GetAll()
+    [HttpGet("{worldId}")]
+    public IEnumerable<MarketDataPoco> GetAll(int worldID)
     {
-        _logger.LogInformation($"Fetching all market data");
-        return _priceRepo.GetAll();
+        _logger.LogInformation($"Fetching all market data for world {worldID}");
+        return _priceRepo.GetAll(worldID);
     }
 
-    [HttpGet("{id}")]
-    public MarketDataPoco Get(int id)
+    [HttpGet("{worldId}/{id}")]
+    public MarketDataPoco Get(int worldID, int id)
     {
-        _logger.LogInformation($"Fetching market data id: {id}");
-        return _priceRepo.Get(id);
+        _logger.LogInformation($"Fetching market data world {worldID}, id: {id}");
+        return _priceRepo.Get(worldID, id);
         ;
     }
 }

@@ -31,11 +31,7 @@ public class CraftingCalculator : ICraftingCalculator
         var recipes = _recipeGateway.GetRecipesForItem(itemID);
         var recipeCount = recipes.Count();
         var craftingCost = GetLowestCraftingCost(worldID, recipes);
-
-        if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
-            LogErrorCraftingCostForItem(worldID, itemID, recipeCount);
-        else
-            LogSucessInfo(worldID, itemID, recipeCount, craftingCost);
+        LogCraftingResult(worldID, itemID, recipeCount, craftingCost);
         return craftingCost;
     }
 
@@ -152,6 +148,14 @@ public class CraftingCalculator : ICraftingCalculator
             lowestCost = Math.Min(recipeCost, lowestCost);
         }
         return lowestCost;
+    }
+
+    private void LogCraftingResult(int worldID, int itemID, int recipeCount, int craftingCost)
+    {
+        if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
+            LogErrorCraftingCostForItem(worldID, itemID, recipeCount);
+        else
+            LogSucessInfo(worldID, itemID, recipeCount, craftingCost);
     }
 
     private static void LogSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
