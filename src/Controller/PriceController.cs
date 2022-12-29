@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GilGoblin.Controller;
 
