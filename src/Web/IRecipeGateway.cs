@@ -2,7 +2,7 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Web;
 
-public interface IRecipeGateway
+public interface IRecipeRepository
 {
     public RecipePoco GetRecipe(int recipeID);
     public RecipePoco FetchRecipe(int recipeID);

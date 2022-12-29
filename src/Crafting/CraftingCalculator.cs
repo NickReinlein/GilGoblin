@@ -1,4 +1,5 @@
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using GilGoblin.Web;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -7,28 +8,28 @@ namespace GilGoblin.Crafting;
 
 public class CraftingCalculator : ICraftingCalculator
 {
-    private readonly IRecipeGateway _recipeGateway;
-    private readonly IMarketDataGateway _marketGateway;
+    private readonly Repository.IRecipeRepository _recipes;
+    private readonly IPriceRepository _prices;
     private readonly IRecipeGrocer _grocer;
     private readonly ILogger<CraftingCalculator> _log;
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
-        IRecipeGateway recipeGateway,
-        IMarketDataGateway marketDataGateway,
+        Repository.IRecipeRepository recipes,
+        IPriceRepository prices,
         IRecipeGrocer grocer,
         ILogger<CraftingCalculator> log
     )
     {
-        _recipeGateway = recipeGateway;
-        _marketGateway = marketDataGateway;
-        _log = log;
+        _recipes = recipes;
+        _prices = prices;
         _grocer = grocer;
+        _log = log;
     }
 
     public int CalculateCraftingCostForItem(int worldID, int itemID)
     {
-        var recipes = _recipeGateway.GetRecipesForItem(itemID);
+        var recipes = _recipes.GetRecipesForItem(itemID);
         var recipeCount = recipes.Count();
         var craftingCost = GetLowestCraftingCost(worldID, recipes);
         LogCraftingResult(worldID, itemID, recipeCount, craftingCost);
@@ -39,7 +40,7 @@ public class CraftingCalculator : ICraftingCalculator
     {
         try
         {
-            var recipe = _recipeGateway.GetRecipe(recipeID);
+            var recipe = this._recipes.Get(recipeID);
             var ingredients = _grocer.BreakdownRecipe(recipeID);
             if (recipe is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
@@ -133,10 +134,15 @@ public class CraftingCalculator : ICraftingCalculator
         var itemIDList = ingredients.Select(e => e.ItemID).ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
-        var marketData = _marketGateway.GetMarketData(worldID, itemIDList);
-        if (!marketData.Any())
+        var result = new List<MarketDataPoco>();
+        foreach (var ingredientID in itemIDList)
+        {
+            result.Add(_prices.Get(worldID, ingredientID));
+        }
+
+        if (!result.Any())
             throw new MarketDataNotFoundException();
-        return marketData;
+        return result;
     }
 
     private int GetLowestCraftingCost(int worldID, IEnumerable<RecipePoco> recipes)
@@ -170,12 +176,12 @@ public class CraftingCalculator : ICraftingCalculator
         );
     }
 
-    private void LogErrorCraftingCostForItem(int worldID, int itemID, int recipesCount)
+    private void LogErrorCraftingCostForItem(int worldID, int ingredientID, int recipesCount)
     {
         _log.LogError(
             "Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes",
             worldID,
-            itemID,
+            ingredientID,
             recipesCount
         );
     }

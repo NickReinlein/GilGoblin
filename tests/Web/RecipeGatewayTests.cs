@@ -8,7 +8,7 @@ namespace GilGoblin.Tests.Web;
 
 public class RecipeGatewayTests
 {
-    private readonly IRecipeGateway _gateway = Substitute.For<IRecipeGateway>();
+    private readonly IRecipeRepository _gateway = Substitute.For<IRecipeRepository>();
     private RecipePoco _poco = new();
 
     [SetUp]

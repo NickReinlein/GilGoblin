@@ -1,24 +1,23 @@
 using GilGoblin.Pocos;
-using GilGoblin.Web;
-using Microsoft.Extensions.Logging;
+using GilGoblin.Repository;
 
 namespace GilGoblin.Crafting;
 
 public class RecipeGrocer : IRecipeGrocer
 {
-    private readonly IRecipeGateway _gateway;
+    private readonly IRecipeRepository _recipes;
     private readonly ILogger<RecipeGrocer> _log;
 
-    public RecipeGrocer(IRecipeGateway gateway, ILogger<RecipeGrocer> log)
+    public RecipeGrocer(IRecipeRepository recipes, ILogger<RecipeGrocer> log)
     {
-        _gateway = gateway;
+        _recipes = recipes;
         _log = log;
     }
 
     public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
     {
         _log.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
-        var recipe = _gateway.GetRecipe(recipeID);
+        var recipe = _recipes.Get(recipeID);
         if (recipe is null)
         {
             _log.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
@@ -33,7 +32,10 @@ public class RecipeGrocer : IRecipeGrocer
     public List<IngredientPoco> BreakDownIngredientEntirely(List<IngredientPoco> ingredientList)
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
-        _log.LogInformation("Breaking down {IngCount} ingredients in ingredient list", ingredientList.Count);
+        _log.LogInformation(
+            "Breaking down {IngCount} ingredients in ingredient list",
+            ingredientList.Count
+        );
         foreach (var ingredient in ingredientList)
         {
             var itemID = ingredient.ItemID;
@@ -50,14 +52,17 @@ public class RecipeGrocer : IRecipeGrocer
                 ingredientsBrokenDownList.Add(ingredient);
             }
         }
-        _log.LogInformation("Breakdown complete. {IngCount} ingredients returned", ingredientList.Count);
+        _log.LogInformation(
+            "Breakdown complete. {IngCount} ingredients returned",
+            ingredientList.Count
+        );
         return ingredientsBrokenDownList;
     }
 
     public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
     {
         _log.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
-        var ingredientRecipes = _gateway.GetRecipesForItem(itemID);
+        var ingredientRecipes = _recipes.GetRecipesForItem(itemID);
         _log.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
         foreach (var ingredientRecipe in ingredientRecipes)
@@ -75,6 +80,7 @@ public class RecipeGrocer : IRecipeGrocer
         }
         return Array.Empty<IngredientPoco>();
     }
+
     public static bool CanMakeRecipe(int recipeID)
     {
         //add functionality here to check for crafting levels per recipe

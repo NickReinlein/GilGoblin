@@ -1,12 +1,11 @@
+using GilGoblin.Crafting;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IPriceRepository, PriceRepository>();
-builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IItemRepository, ItemRepository>();
-builder.Services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+AddServices(builder);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -24,3 +23,14 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+static void AddServices(WebApplicationBuilder builder)
+{
+    builder.Services.AddScoped<IPriceRepository, PriceRepository>();
+    builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+    builder.Services.AddScoped<IItemRepository, ItemRepository>();
+    builder.Services.AddScoped<IRecipeGrocer, RecipeGrocer>();
+
+    builder.Services.AddScoped<ICraftingCalculator, CraftingCalculator>();
+    builder.Services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+}

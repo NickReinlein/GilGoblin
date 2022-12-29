@@ -3,10 +3,12 @@ using Newtonsoft.Json;
 
 namespace GilGoblin.Web;
 
-public class RecipeGateway : IRecipeGateway
+public class RecipeGateway : IRecipeRepository
 {
     public RecipePoco GetRecipe(int recipeID) => new();
+
     public RecipePoco FetchRecipe(int recipeID) => new();
+
     public IEnumerable<RecipePoco> GetRecipesForItem(int itemID) => Array.Empty<RecipePoco>();
     // public class RecipeFetcher //: IRecipeFetcher
     // {
