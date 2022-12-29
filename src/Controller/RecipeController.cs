@@ -25,15 +25,6 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
     public RecipePoco Get(int id)
     {
         _logger.LogInformation($"Fetching recipe id: {id}");
-        return new RecipePoco
-        {
-            RecipeID = id,
-            TargetItemID = id + 1000,
-            IconID = id + 42,
-            ResultQuantity = 1,
-            CanHq = true,
-            CanQuickSynth = true,
-            Ingredients = new List<IngredientPoco>()
-        };
+
     }
 }

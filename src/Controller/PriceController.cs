@@ -9,9 +9,9 @@ namespace GilGoblin.Controller;
 public class PriceController : ControllerBase, IDataController<MarketDataPoco>
 {
     private readonly ILogger<PriceController> _logger;
-    private readonly IDataRepository<MarketDataPoco> _priceRepo;
+    private readonly IPriceRepository _priceRepo;
 
-    public PriceController(ILogger<PriceController> logger, IDataRepository<MarketDataPoco> priceRepo)
+    public PriceController(IPriceRepository priceRepo, ILogger<PriceController> logger)
     {
         _logger = logger;
         _priceRepo = priceRepo;
@@ -21,15 +21,14 @@ public class PriceController : ControllerBase, IDataController<MarketDataPoco>
     public IEnumerable<MarketDataPoco> GetAll()
     {
         _logger.LogInformation($"Fetching all market data");
-        var allPrices = _priceRepo.GetAll();
-        return allPrices;
+        return _priceRepo.GetAll();
     }
 
     [HttpGet("{id}")]
     public MarketDataPoco Get(int id)
     {
         _logger.LogInformation($"Fetching market data id: {id}");
-        var price = _priceRepo.Get(id);
-        return price;
+        return _priceRepo.Get(id);
+        ;
     }
 }
