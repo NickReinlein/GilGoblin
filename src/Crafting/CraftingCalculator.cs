@@ -116,7 +116,7 @@ public class CraftingCalculator : ICraftingCalculator
         List<CraftIngredientPoco> crafts = new();
         foreach (var ingredient in ingredients)
         {
-            var market = marketData.Single(e => e.ItemID == ingredient.ItemID);
+            var market = marketData.First(e => e.ItemID == ingredient.ItemID);
             if (market is null)
                 throw new MarketDataNotFoundException();
 

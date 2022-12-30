@@ -35,7 +35,6 @@ public class CraftingCalculatorTests
     {
         _recipes.ClearReceivedCalls();
         _prices.ClearReceivedCalls();
-        _log.ClearReceivedCalls();
         _grocer.ClearReceivedCalls();
     }
 
@@ -53,7 +52,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public void GivenACraftingCalculator_WhenCalculatingCraftingCostForItem_WhenARecipeExists_ThenReturnCraftingCost()
+    public void GivenACraftingCalculator_WhenCalculatingCraftingCostForItem_WhenARecipeExists_ThenWeTheReturnCraftingCost()
     {
         const int itemID = 1;
         const int ingredientID = 2;
@@ -73,29 +72,17 @@ public class CraftingCalculatorTests
         recipe.Ingredients = new List<IngredientPoco>() { ingredient };
         var itemIDList = new List<int>() { itemID, ingredientID };
         itemIDList.Sort();
-        MockGatewaysForSingularTest(market, recipe, ingredientMarket);
+        MockReposForSingularTest(market, recipe, ingredientMarket);
+        SetupMarketDataForIngredients(recipe);
 
         var result = _calc!.CalculateCraftingCostForItem(_worldID, itemID);
 
         _recipes.Received().GetRecipesForItem(itemID);
         _recipes.Received().GetRecipesForItem(ingredientID);
-        _prices.ReceivedWithAnyArgs().Get(default, default!);
+        _prices.Received().Get(_worldID, itemID);
+        _prices.Received().Get(_worldID, ingredientID);
         Assert.That(result, Is.LessThan(int.MaxValue));
         Assert.That(result, Is.GreaterThan(ingredientMarket.AverageSoldNQ));
-    }
-
-    private void MockGatewaysForSingularTest(
-        MarketDataPoco market,
-        RecipePoco recipe,
-        MarketDataPoco ingredientMarket
-    )
-    {
-        _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
-        _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID).ReturnsForAnyArgs(market);
-        _grocer.BreakdownRecipe(recipe.RecipeID).Returns(recipe.Ingredients);
-        _recipes.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
-        _recipes.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
-        _recipes.Get(recipe.RecipeID).Returns(recipe);
     }
 
     [Test]
@@ -133,6 +120,7 @@ public class CraftingCalculatorTests
         var recipeID = recipe.RecipeID;
         var marketData = GetNewMarketData;
         SetupBasicTestCase(recipe, marketData);
+        SetupMarketDataForIngredients(recipe);
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
@@ -142,7 +130,7 @@ public class CraftingCalculatorTests
         _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
         _prices.Received().Get(_worldID, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
-        Assert.That(result, Is.GreaterThan(3000));
+        Assert.That(result, Is.GreaterThan(1000));
     }
 
     private void SetupBasicTestCase(RecipePoco recipe, MarketDataPoco marketData)
@@ -157,17 +145,34 @@ public class CraftingCalculatorTests
         _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients);
     }
 
-    private static List<MarketDataPoco> SetupMarketDataForIngredients(RecipePoco recipe)
+    private void SetupMarketDataForIngredients(RecipePoco recipe, int worldID = 34)
     {
-        var ingredientMarketDataList = new List<MarketDataPoco>();
         foreach (var ingredient in recipe.Ingredients)
         {
-            var tempData = GetNewMarketData;
-            tempData.ItemID = ingredient.ItemID;
-            ingredientMarketDataList.Add(tempData);
+            var ingredientMarketData = new MarketDataPoco()
+            {
+                ItemID = ingredient.ItemID,
+                AverageListingPrice = 300,
+                AverageSold = 280,
+                WorldID = worldID,
+                Name = "TestItem" + ingredient.ItemID,
+            };
+            _prices.Get(worldID, ingredient.ItemID).Returns(ingredientMarketData);
         }
+    }
 
-        return ingredientMarketDataList;
+    private void MockReposForSingularTest(
+        MarketDataPoco market,
+        RecipePoco recipe,
+        MarketDataPoco ingredientMarket
+    )
+    {
+        _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
+        _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID).ReturnsForAnyArgs(market);
+        _grocer.BreakdownRecipe(recipe.RecipeID).Returns(recipe.Ingredients);
+        _recipes.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
+        _recipes.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
+        _recipes.Get(recipe.RecipeID).Returns(recipe);
     }
 
     private static MarketDataPoco GetNewMarketData =>
