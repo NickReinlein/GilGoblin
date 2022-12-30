@@ -1,7 +1,6 @@
-using System;
 using System.Runtime.Serialization;
 
-namespace GilGoblin.Database;
+namespace GilGoblin.Exceptions;
 
 public class DatabaseException : ApplicationException
 {
