@@ -4,9 +4,9 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Controller;
 
-public class GoblinControllerTests<T> where T : class
+public class ICraftControllerTests<T> where T : class
 {
-    private readonly IDataController<T> _controller = Substitute.For<IDataController<T>>();
+    private readonly ICraftController<T> _controller = Substitute.For<ICraftController<T>>();
 
     [SetUp]
     public void SetUp() { }
@@ -18,9 +18,9 @@ public class GoblinControllerTests<T> where T : class
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAnEnumerableResultIsReturned()
+    public void GivenAController_WhenWeReceiveAGetBestCraftsRequest_ThenAnEnumerableResultIsReturned()
     {
-        var result = _controller.GetAll();
+        var result = _controller.GetBestCrafts(34);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.TypeOf<IEnumerable<T>>());
@@ -30,7 +30,7 @@ public class GoblinControllerTests<T> where T : class
     [Test]
     public void GivenAController_WhenWeReceiveAGetRequest_ThenOneResultIsReturned()
     {
-        var result = _controller.Get(3);
+        var result = _controller.GetCraft(34, 3);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.TypeOf<T>());
