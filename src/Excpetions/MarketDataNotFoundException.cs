@@ -1,6 +1,6 @@
 using System;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Exceptions;
 
 public class MarketDataNotFoundException : Exception
 {

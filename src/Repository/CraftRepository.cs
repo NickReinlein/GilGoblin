@@ -5,17 +5,17 @@ namespace GilGoblin.Repository;
 
 public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 {
-    private readonly CraftingCalculator _calc;
+    private readonly ICraftingCalculator _calc;
     private readonly IPriceRepository _priceRepo;
     private readonly IRecipeGrocer _recipeGrocer;
     private readonly IItemRepository _itemRepo;
     private readonly ILogger<CraftRepository> _logger;
 
     public CraftRepository(
-        CraftingCalculator calc,
+        ICraftingCalculator calc,
         IPriceRepository priceRepo,
         IRecipeGrocer recipeGrocer,
-        ItemRepository itemRepo,
+        IItemRepository itemRepo,
         ILogger<CraftRepository> logger
     )
     {

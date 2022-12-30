@@ -1,14 +1,13 @@
+using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using GilGoblin.Web;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace GilGoblin.Crafting;
 
 public class CraftingCalculator : ICraftingCalculator
 {
-    private readonly Repository.IRecipeRepository _recipes;
+    private readonly IRecipeRepository _recipes;
     private readonly IPriceRepository _prices;
     private readonly IRecipeGrocer _grocer;
     private readonly ILogger<CraftingCalculator> _log;
