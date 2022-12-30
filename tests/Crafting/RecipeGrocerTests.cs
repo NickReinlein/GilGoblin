@@ -1,10 +1,10 @@
+using GilGoblin.Crafting;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using GilGoblin.Crafting;
-using NSubstitute;
-using NUnit.Framework;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace GilGoblin.Tests.Crafting;
 
