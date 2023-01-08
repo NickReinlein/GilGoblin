@@ -37,10 +37,10 @@ public class CraftControllerTests
     [Test]
     public void WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
     {
-        _repo.GetBestCrafts(Arg.Any<int>()).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
         _ = _controller!.GetBestCrafts(_world);
 
-        _repo.GetBestCrafts(_world).Received(1);
+        _repo.GetBestCrafts(_world);
     }
 
     [Test]
@@ -48,26 +48,28 @@ public class CraftControllerTests
     {
         _ = _controller!.GetCraft(_world, _craftId);
 
-        _repo.GetCraft(_world, _craftId).Received(1);
+        _repo.Received(1).GetCraft(_world, _craftId);
     }
 
-    // [Test]
-    // public void WhenReceivingARequestGetBestCrafts_ThenTheAnEnumerableIsReturned()
-    // {
-    //     _repo.GetBestCrafts(Arg.Any<int>()).Returns(Array.Empty<CraftSummaryPoco>());
+    [Test]
+    public void WhenReceivingARequestGetBestCrafts_ThenTheAnEnumerableIsReturned()
+    {
+        _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
 
-    //     var result = _controller!.GetBestCrafts(_world);
+        var result = _controller!.GetBestCrafts(_world);
 
-    //     Assert.That(result, Is.Not.Null);
-    //     // Assert.That(result, Is.TypeOf<IEnumerable<CraftSummaryPoco>>());
-    // }
+        Assert.That(result is not null);
+        Assert.That(result is IEnumerable<CraftSummaryPoco>);
+    }
 
-    // [Test]
-    // public void WhenReceivingARequestGetCraft_ThenAPocoIsReturned()
-    // {
-    //     var result = _controller!.GetBestCrafts(_defaultWorld);
+    [Test]
+    public void WhenReceivingARequestGetCraft_ThenAPocoIsReturned()
+    {
+        _repo.GetCraft(_world, _craftId).Returns(new CraftSummaryPoco());
 
-    //     Assert.That(result, Is.Not.Null);
-    //     Assert.That(result, Is.TypeOf<CraftSummaryPoco>());
-    // }
+        var result = _controller!.GetCraft(_world, _craftId);
+
+        Assert.That(result is not null);
+        Assert.That(result is CraftSummaryPoco);
+    }
 }
