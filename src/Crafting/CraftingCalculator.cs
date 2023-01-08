@@ -14,7 +14,7 @@ public class CraftingCalculator : ICraftingCalculator
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
-        Repository.IRecipeRepository recipes,
+        IRecipeRepository recipes,
         IPriceRepository prices,
         IRecipeGrocer grocer,
         ILogger<CraftingCalculator> log
