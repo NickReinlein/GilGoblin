@@ -8,8 +8,8 @@ namespace GilGoblin.Controller;
 [Route("[controller]")]
 public class PriceController : ControllerBase, IPriceController
 {
-    private readonly ILogger<PriceController> _logger;
     private readonly IPriceRepository _priceRepo;
+    private readonly ILogger<PriceController> _logger;
 
     public PriceController(IPriceRepository priceRepo, ILogger<PriceController> logger)
     {

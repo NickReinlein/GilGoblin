@@ -7,10 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+AddGoblinServices(builder.Services);
 
-// builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
-
-//builder.WebHost.UseStartup<Startup>();
 builder.WebHost.UseDefaultServiceProvider(
     (_, options) =>
     {
@@ -25,3 +23,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+static void AddGoblinServices(IServiceCollection services)
+{
+    services.AddScoped<IPriceRepository, PriceRepository>();
+    services.AddScoped<IRecipeRepository, RecipeRepository>();
+    services.AddScoped<IItemRepository, ItemRepository>();
+    services.AddScoped<IRecipeGrocer, RecipeGrocer>();
+    services.AddScoped<ICraftingCalculator, CraftingCalculator>();
+    services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+}
