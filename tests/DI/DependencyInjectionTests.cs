@@ -1,7 +1,11 @@
+using System.Net;
 using System.Reflection;
 using GilGoblin.Crafting;
+using GilGoblin.DI;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,59 +21,51 @@ public class DependencyInjectionTests
     private IWebHostEnvironment _environment;
     private IServiceCollection _services;
 
-    private IEnumerable<Type>? Controllers =>
-        Assembly
-            .GetAssembly(typeof(Startup))
-            ?.GetTypes()
-            .Where(type => typeof(ControllerBase).IsAssignableFrom(type));
-
     [SetUp]
     public void SetUp()
     {
         _services = new ServiceCollection();
 
-        _configuration = new ConfigurationBuilder()
-        //.AddApplicationConfigurationsSource<Startup>("tests")
-        .Build();
+        _configuration = new ConfigurationBuilder().Build();
 
         _environment = Substitute.For<IWebHostEnvironment>();
         _environment.EnvironmentName.Returns("production");
     }
 
     [Test]
-    public void WhenWeConfigureServices_ThenDependenciesAreRegisteredCorrectlyForControllers()
+    public async Task GivenScopedDependencies_WhenWeResolveBackgroundService_ThenTheDependenciesAreResolved2()
     {
-        var startup = new Startup(_configuration, _environment);
-        startup.ConfigureServices(_services);
-        _services
-            .AddTransient(typeof(ILogger<>), typeof(NullLogger<>))
-            .AddTransient<ILoggerFactory>(_ => NullLoggerFactory.Instance);
+        await using var application = new WebApplicationFactory<Program>().WithWebHostBuilder(
+            builder =>
+                builder.ConfigureServices(services =>
+                {
+                    services.AddControllers();
+                    services.AddEndpointsApiExplorer();
+                    services.AddSwaggerGen();
+                    services.AddGoblinServices();
+                })
+        );
 
-        var provider = _services.BuildServiceProvider();
+        var client = application.CreateClient();
 
-        var controllersDependencies = Controllers!
-            .Where(c => !c.IsAbstract)
-            .SelectMany(c => c.GetConstructors().First().GetParameters());
+        var response = await client.GetAsync("/item/1");
 
-        foreach (var dependency in controllersDependencies)
-        {
-            Assert.That(
-                provider.GetService(dependency.ParameterType),
-                Is.Not.Null,
-                $"{dependency.ParameterType} is null"
-            );
-        }
+        Assert.That(response, Is.Not.Null);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        // TODO  continue here
     }
 
     [Test]
     public void GivenScopedDependencies_WhenWeResolveBackgroundService_ThenTheDependenciesAreResolved()
     {
-        var startup = new Startup(_configuration, _environment);
-        startup.ConfigureServices(_services);
-        var provider = _services.BuildServiceProvider();
+        var builder = WebApplication.CreateBuilder();
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddGoblinServices();
 
-        var scopedService = provider.GetRequiredService<ICraftingCalculator>();
+        var app = builder.Build();
 
+        var scopedService = app.Services.GetRequiredService<ICraftingCalculator>();
         Assert.That(scopedService, Is.Not.Null);
     }
 }
