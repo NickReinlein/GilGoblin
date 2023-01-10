@@ -1,101 +1,81 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Diagnostics;
-// using System.IO;
-// using System.Linq;
-// using System.Threading;
-// using System.Threading.Tasks;
-// using GilGoblin.Crafting;
-// using GilGoblin.Pocos;
-// using GilGoblin.Web;
-// using Microsoft.Data.Sqlite;
-// using Serilog;
-// using static GilGoblin.Pocos.RecipePoco;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using GilGoblin.Crafting;
+using GilGoblin.Pocos;
+using GilGoblin.Web;
+using Microsoft.Data.Sqlite;
+using Serilog;
+using static GilGoblin.Pocos.RecipePoco;
 
-// namespace GilGoblin.Database
-// {
-//     internal class DatabaseGateway
-//     {
-//         public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
-//         public static string _db_name = "GilGoblin.db";
-//         public static string _path = Path.Combine(_file_path, _db_name);
-//         private static SqliteConnection? Connection { get; set; }
+namespace GilGoblin.Database;
 
-//         /// <summary>
-//         /// Gets a context for EF regarding the ItemID: use then discard!
-//         /// </summary>
-//         /// <returns></returns>
-//         public static GilGoblinDb GetContext()
-//         {
-//             return new GilGoblinDb();
-//         }
+internal class GoblinDatabase
+{
+    public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
+    public static string _db_name = "GilGoblin.db";
+    public static string _path = Path.Combine(_file_path, _db_name);
+    private static SqliteConnection? Connection { get; set; }
 
-//         internal static SqliteConnection? Connect()
-//         {
-//             try
-//             {
-//                 if (Connection == null)
-//                 {
-//                     Connection = new SqliteConnection("Data Source=" + _path);
-//                 }
+    public static GoblinDatabase GetContext()
+    {
+        return new GoblinDatabase();
+    }
 
-//                 //Already open, return
-//                 if (Connection.State == System.Data.ConnectionState.Open)
-//                 {
-//                     return Connection;
-//                 }
+    internal static SqliteConnection? Connect()
+    {
+        try
+        {
+            Connection ??= new SqliteConnection("Data Source=" + _path);
 
-//                 Connection.Open();
-//                 if (Connection.State == System.Data.ConnectionState.Open)
-//                 {
-//                     return Connection;
-//                 }
-//                 else
-//                 {
-//                     Log.Error("Connection not open. State is: {State}.", Connection.State);
-//                     return null;
-//                 }
-//             }
-//             catch (Exception ex)
-//             {
-//                 Log.Error("failed connection:{Message}.", ex.Message);
-//                 return null;
-//             }
-//         }
+            if (Connection.State == System.Data.ConnectionState.Open)
+                return Connection;
 
-//         public static void Disconnect()
-//         {
-//             if (DatabaseGateway.Connection.State != System.Data.ConnectionState.Closed)
-//             {
-//                 try
-//                 {
-//                     Connection.Close();
-//                     Connection.Dispose();
-//                 }
-//                 catch (Exception ex)
-//                 {
-//                     Log.Error(ex.Message);
-//                 }
-//             }
-//         }
+            Connection.Open();
+            if (Connection.State == System.Data.ConnectionState.Open)
+                return Connection;
 
-//         public static void Save(GilGoblinDb context)
-//         {
-//             try
-//             {
-//                 Log.Debug("Saving to database.");
+            Log.Error("Connection not open. State is: {State}.", Connection.State);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Log.Error("failed connection:{Message}.", ex.Message);
+            return null;
+        }
+    }
 
-//                 context.Database.EnsureCreated();
-//                 var savedEntries = context.SaveChanges();
+    public static void Disconnect()
+    {
+        if (GoblinDatabase.Connection.State == System.Data.ConnectionState.Closed)
+            return;
 
-//                 Log.Debug("Saved {saved} entries to the database.", savedEntries);
-//                 context.Dispose();
-//             }
-//             catch (Exception ex)
-//             {
-//                 Log.Error("Database save failed! Message: {Message}.", ex.Message);
-//             }
-//         }
+        Connection.Close();
+        Connection.Dispose();
+    }
+
+    public static void Save(GilGoblinDbContext context)
+    {
+        try
+        {
+            Log.Debug("Saving to database.");
+
+            context.Database.EnsureCreated();
+            var savedEntries = context.SaveChanges();
+
+            Log.Debug("Saved {saved} entries to the database.", savedEntries);
+            context.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Database save failed! Message: {Message}.", ex.Message);
+        }
+    }
+}
 
 //         // /// <summary>
 //         // /// Saves a list of marketDataDB items (with listings)

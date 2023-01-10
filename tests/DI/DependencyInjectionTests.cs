@@ -32,8 +32,17 @@ public class DependencyInjectionTests
         _environment.EnvironmentName.Returns("production");
     }
 
-    [Test]
-    public async Task GivenScopedDependencies_WhenWeResolveBackgroundService_ThenTheDependenciesAreResolved2()
+    [TestCase("/item/")]
+    [TestCase("/item/100")]
+    [TestCase("/recipe/")]
+    [TestCase("/recipe/100")]
+    [TestCase("/price/34/")]
+    [TestCase("/price/34/100")]
+    [TestCase("/craft/34/")]
+    [TestCase("/craft/34/100")]
+    public async Task GivenScopedDependencies_WhenWeResolveBackgroundService_ThenTheDependenciesAreResolved(
+        string endpoint
+    )
     {
         await using var application = new WebApplicationFactory<Program>().WithWebHostBuilder(
             builder =>
@@ -41,31 +50,15 @@ public class DependencyInjectionTests
                 {
                     services.AddControllers();
                     services.AddEndpointsApiExplorer();
-                    services.AddSwaggerGen();
                     services.AddGoblinServices();
                 })
         );
 
         var client = application.CreateClient();
 
-        var response = await client.GetAsync("/item/1");
+        var response = await client.GetAsync(endpoint);
 
         Assert.That(response, Is.Not.Null);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        // TODO  continue here
-    }
-
-    [Test]
-    public void GivenScopedDependencies_WhenWeResolveBackgroundService_ThenTheDependenciesAreResolved()
-    {
-        var builder = WebApplication.CreateBuilder();
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddGoblinServices();
-
-        var app = builder.Build();
-
-        var scopedService = app.Services.GetRequiredService<ICraftingCalculator>();
-        Assert.That(scopedService, Is.Not.Null);
     }
 }
