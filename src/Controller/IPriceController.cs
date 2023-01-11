@@ -6,8 +6,8 @@ namespace GilGoblin.Controller;
 public interface IPriceController
 {
     [HttpGet("{worldId}")]
-    IEnumerable<MarketDataPoco> GetAll(int worldID);
+    IEnumerable<PricePoco> GetAll(int worldID);
 
     [HttpGet("{worldId}/{id}")]
-    MarketDataPoco Get(int worldID, int id);
+    PricePoco Get(int worldID, int id);
 }

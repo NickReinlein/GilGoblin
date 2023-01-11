@@ -6,7 +6,7 @@ namespace GilGoblin.Database;
 
 internal class GilGoblinDbContext : DbContext
 {
-    public DbSet<MarketDataPoco>? MarketData { get; set; }
+    public DbSet<PricePoco>? Price { get; set; }
     public DbSet<ItemInfoPoco>? ItemInfo { get; set; }
     public DbSet<RecipePoco>? Recipe { get; set; }
     public DbSet<IngredientPoco>? Ingredient { get; set; }
@@ -31,19 +31,19 @@ internal class GilGoblinDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<MarketDataPoco>().ToTable("MarketData");
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.ItemID);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.WorldID);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.LastUploadTime);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageListingPrice);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageListingPriceHQ);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageListingPriceNQ);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageSold);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageSoldHQ);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.AverageSoldNQ);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.Name);
-        modelBuilder.Entity<MarketDataPoco>().Property(t => t.RegionName);
-        modelBuilder.Entity<MarketDataPoco>().HasKey(t => new { t.ItemID, t.WorldID });
+        modelBuilder.Entity<PricePoco>().ToTable("Price");
+        modelBuilder.Entity<PricePoco>().Property(t => t.ItemID);
+        modelBuilder.Entity<PricePoco>().Property(t => t.WorldID);
+        modelBuilder.Entity<PricePoco>().Property(t => t.LastUploadTime);
+        modelBuilder.Entity<PricePoco>().Property(t => t.AverageListingPrice);
+        modelBuilder.Entity<PricePoco>().Property(t => t.AverageListingPriceHQ);
+        modelBuilder.Entity<PricePoco>().Property(t => t.AverageListingPriceNQ);
+        modelBuilder.Entity<PricePoco>().Property(t => t.AverageSold);
+        modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldHQ);
+        modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldNQ);
+        modelBuilder.Entity<PricePoco>().Property(t => t.Name);
+        modelBuilder.Entity<PricePoco>().Property(t => t.RegionName);
+        modelBuilder.Entity<PricePoco>().HasKey(t => new { t.ItemID, t.WorldID });
 
         modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
         modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ID);

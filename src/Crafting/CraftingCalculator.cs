@@ -44,14 +44,10 @@ public class CraftingCalculator : ICraftingCalculator
             if (recipe is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
-            var ingredientsMarketData = GetIngredientMarketData(
-                worldID,
-                recipe.TargetItemID,
-                ingredients
-            );
-            IEnumerable<CraftIngredientPoco> craftIngredients = AddMarketDataToIngredients(
+            var ingredientPrices = GetIngredientPrice(worldID, recipe.TargetItemID, ingredients);
+            IEnumerable<CraftIngredientPoco> craftIngredients = AddPricesToIngredients(
                 ingredients,
-                ingredientsMarketData
+                ingredientPrices
             );
 
             var craftingCost = CalculateCraftingCostForIngredients(worldID, craftIngredients);
@@ -65,7 +61,7 @@ public class CraftingCalculator : ICraftingCalculator
             );
             return craftingCost;
         }
-        catch (MarketDataNotFoundException)
+        catch (DataNotFoundException)
         {
             Log.Error(
                 "Failed to find market data while calculating crafting cost for recipe {RecipeID} in world {WorldID} for item {ItemID}",
@@ -89,7 +85,7 @@ public class CraftingCalculator : ICraftingCalculator
         var totalCraftingCost = 0;
         foreach (var craft in craftIngredients)
         {
-            var averageSold = (int)craft.MarketData.AverageSold;
+            var averageSold = (int)craft.Price.AverageSold;
             var craftingCost = CalculateCraftingCostForItem(worldID, craft.ItemID);
             var minCost = Math.Min(averageSold, craftingCost);
 
@@ -107,24 +103,24 @@ public class CraftingCalculator : ICraftingCalculator
         return totalCraftingCost;
     }
 
-    public static List<CraftIngredientPoco> AddMarketDataToIngredients(
+    public static List<CraftIngredientPoco> AddPricesToIngredients(
         IEnumerable<IngredientPoco> ingredients,
-        IEnumerable<MarketDataPoco> marketData
+        IEnumerable<PricePoco> price
     )
     {
         List<CraftIngredientPoco> crafts = new();
         foreach (var ingredient in ingredients)
         {
-            var market = marketData.First(e => e.ItemID == ingredient.ItemID);
+            var market = price.First(e => e.ItemID == ingredient.ItemID);
             if (market is null)
-                throw new MarketDataNotFoundException();
+                throw new DataNotFoundException();
 
             crafts.Add(new CraftIngredientPoco(ingredient, market));
         }
         return crafts;
     }
 
-    private IEnumerable<MarketDataPoco> GetIngredientMarketData(
+    private IEnumerable<PricePoco> GetIngredientPrice(
         int worldID,
         int itemID,
         IEnumerable<IngredientPoco> ingredients
@@ -133,14 +129,14 @@ public class CraftingCalculator : ICraftingCalculator
         var itemIDList = ingredients.Select(e => e.ItemID).ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
-        var result = new List<MarketDataPoco>();
+        var result = new List<PricePoco>();
         foreach (var ingredientID in itemIDList)
         {
             result.Add(_prices.Get(worldID, ingredientID));
         }
 
         if (!result.Any())
-            throw new MarketDataNotFoundException();
+            throw new DataNotFoundException();
         return result;
     }
 

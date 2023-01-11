@@ -1,10 +1,10 @@
+using GilGoblin.Database;
 using GilGoblin.Pocos;
-using GilGoblin.Web;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 
-namespace GilGoblin.Tests.Web;
+namespace GilGoblin.Tests.Database;
 
 public class ItemGatewayTests
 {

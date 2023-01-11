@@ -1,7 +1,7 @@
 using GilGoblin.Pocos;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Database;
 
 public class ItemGateway : IItemGateway
 {
@@ -26,5 +26,6 @@ public class ItemGateway : IItemGateway
             yield return GetItem(itemId);
         }
     }
-    public IEnumerable<ItemInfoPoco> GetAllItems() => GetItems(Enumerable.Range(1, 100).ToArray());
+
+    public IEnumerable<ItemInfoPoco> GetAllItems() => GetItems(Enumerable.Range(1, 10).ToArray());
 }

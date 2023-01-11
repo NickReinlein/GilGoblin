@@ -47,23 +47,23 @@ public class CraftSummaryPoco
     }
 
     public CraftSummaryPoco(
-        MarketDataPoco marketData,
+        PricePoco price,
         ItemInfoPoco itemInfo,
         int craftingCost,
         IEnumerable<IngredientPoco> ingredients
     )
     {
-        WorldID = marketData.WorldID;
-        ItemID = marketData.ItemID;
+        WorldID = price.WorldID;
+        ItemID = price.ItemID;
         Name = itemInfo.Name;
         VendorPrice = itemInfo.VendorPrice;
         IconID = itemInfo.IconID;
         StackSize = itemInfo.StackSize;
-        AverageListingPrice = marketData.AverageListingPrice;
-        AverageSold = marketData.AverageSold;
+        AverageListingPrice = price.AverageListingPrice;
+        AverageSold = price.AverageSold;
         CraftingCost = craftingCost;
-        CraftingProfitVsListings = marketData.AverageListingPrice - craftingCost;
-        CraftingProfitVsSold = marketData.AverageSold - craftingCost;
+        CraftingProfitVsListings = price.AverageListingPrice - craftingCost;
+        CraftingProfitVsSold = price.AverageSold - craftingCost;
         Ingredients = ingredients;
     }
 }

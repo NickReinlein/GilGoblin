@@ -6,6 +6,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddGoblinServices();
+builder.Services.AddGoblinDatabases();
 
 builder.WebHost.UseDefaultServiceProvider(
     (_, options) =>

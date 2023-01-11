@@ -4,9 +4,9 @@ namespace GilGoblin.Repository;
 
 public class PriceRepository : IPriceRepository
 {
-    public MarketDataPoco Get(int worldID, int itemID)
+    public PricePoco Get(int worldID, int itemID)
     {
-        return new MarketDataPoco
+        return new PricePoco
         {
             ItemID = itemID,
             WorldID = worldID,
@@ -22,7 +22,7 @@ public class PriceRepository : IPriceRepository
         };
     }
 
-    public IEnumerable<MarketDataPoco> GetAll(int worldID)
+    public IEnumerable<PricePoco> GetAll(int worldID)
     {
         return Enumerable.Range(1, 5).Select(index => Get(worldID, index)).ToArray();
     }

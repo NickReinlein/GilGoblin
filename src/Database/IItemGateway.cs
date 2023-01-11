@@ -1,6 +1,6 @@
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Database;
 
 public interface IItemGateway
 {

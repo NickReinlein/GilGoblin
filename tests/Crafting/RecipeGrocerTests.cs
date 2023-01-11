@@ -299,9 +299,9 @@ public class RecipeGrocerTests
     {
         var firstRecipe = NewRecipe;
         var firstRecipeID = firstRecipe.RecipeID;
-        var subItem1 = GetNewMarketData;
+        var subItem1 = GetNewPrice;
         subItem1.ItemID = _subItem1ID;
-        var subItem2 = GetNewMarketData;
+        var subItem2 = GetNewPrice;
         subItem2.ItemID = _subItem2ID;
         var secondRecipe = GetSecondRecipe(subItem1, subItem2);
 
@@ -384,7 +384,7 @@ public class RecipeGrocerTests
         return expectedIngredients;
     }
 
-    private static RecipePoco GetSecondRecipe(MarketDataPoco subItem1, MarketDataPoco subItem2)
+    private static RecipePoco GetSecondRecipe(PricePoco subItem1, PricePoco subItem2)
     {
         var recipe = NewRecipe;
         recipe.RecipeID = _secondRecipeID;
@@ -397,7 +397,7 @@ public class RecipeGrocerTests
         return recipe;
     }
 
-    private static MarketDataPoco GetNewMarketData =>
+    private static PricePoco GetNewPrice =>
         new(1, _worldID, 1, "Iron Sword", "testRealm", 300, 200, 400, 600, 400, 800);
 
     private static RecipePoco NewRecipe =>

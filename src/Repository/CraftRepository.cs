@@ -30,9 +30,9 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     {
         var craftingCost = _calc.CalculateCraftingCostForItem(worldID, itemID);
         var ingredients = _recipeGrocer.BreakdownItem(itemID);
-        var marketData = _priceRepo.Get(worldID, itemID);
+        var price = _priceRepo.Get(worldID, itemID);
         var itemInfo = _itemRepo.Get(itemID);
-        return new CraftSummaryPoco(marketData, itemInfo, craftingCost, ingredients);
+        return new CraftSummaryPoco(price, itemInfo, craftingCost, ingredients);
     }
 
     public IEnumerable<CraftSummaryPoco> GetBestCrafts(int worldId)

@@ -56,7 +56,7 @@ public class CraftingCalculatorTests
     {
         const int itemID = 1;
         const int ingredientID = 2;
-        var market = GetNewMarketData;
+        var market = GetNewPrice;
         market.ItemID = itemID;
         var recipe = NewRecipe;
         recipe.TargetItemID = itemID;
@@ -67,13 +67,13 @@ public class CraftingCalculatorTests
             Quantity = 10,
             ItemID = ingredientID
         };
-        var ingredientMarket = GetNewMarketData;
+        var ingredientMarket = GetNewPrice;
         ingredientMarket.ItemID = ingredientID;
         recipe.Ingredients = new List<IngredientPoco>() { ingredient };
         var itemIDList = new List<int>() { itemID, ingredientID };
         itemIDList.Sort();
         MockReposForSingularTest(market, recipe, ingredientMarket);
-        SetupMarketDataForIngredients(recipe);
+        SetupPricesForIngredients(recipe);
 
         var result = _calc!.CalculateCraftingCostForItem(_worldID, itemID);
 
@@ -104,7 +104,7 @@ public class CraftingCalculatorTests
         var recipe = NewRecipe;
         var recipeID = recipe.RecipeID;
         _recipes.Get(recipeID).Returns(recipe);
-        _prices.Get(_worldID, default).ReturnsForAnyArgs(new MarketDataPoco());
+        _prices.Get(_worldID, default).ReturnsForAnyArgs(new PricePoco());
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
@@ -118,9 +118,9 @@ public class CraftingCalculatorTests
     {
         var recipe = NewRecipe;
         var recipeID = recipe.RecipeID;
-        var marketData = GetNewMarketData;
-        SetupBasicTestCase(recipe, marketData);
-        SetupMarketDataForIngredients(recipe);
+        var price = GetNewPrice;
+        SetupBasicTestCase(recipe, price);
+        SetupPricesForIngredients(recipe);
 
         var result = _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
@@ -133,7 +133,7 @@ public class CraftingCalculatorTests
         Assert.That(result, Is.GreaterThan(1000));
     }
 
-    private void SetupBasicTestCase(RecipePoco recipe, MarketDataPoco marketData)
+    private void SetupBasicTestCase(RecipePoco recipe, PricePoco price)
     {
         var recipeID = recipe.RecipeID;
         _recipes.GetRecipesForItem(recipeID).Returns(new List<RecipePoco>() { recipe });
@@ -141,15 +141,15 @@ public class CraftingCalculatorTests
         foreach (var ingredient in recipe.Ingredients)
             _recipes.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
 
-        _prices.Get(marketData.WorldID, marketData.ItemID).Returns(marketData);
+        _prices.Get(price.WorldID, price.ItemID).Returns(price);
         _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients);
     }
 
-    private void SetupMarketDataForIngredients(RecipePoco recipe, int worldID = 34)
+    private void SetupPricesForIngredients(RecipePoco recipe, int worldID = 34)
     {
         foreach (var ingredient in recipe.Ingredients)
         {
-            var ingredientMarketData = new MarketDataPoco()
+            var ingredientPrice = new PricePoco()
             {
                 ItemID = ingredient.ItemID,
                 AverageListingPrice = 300,
@@ -157,14 +157,14 @@ public class CraftingCalculatorTests
                 WorldID = worldID,
                 Name = "TestItem" + ingredient.ItemID,
             };
-            _prices.Get(worldID, ingredient.ItemID).Returns(ingredientMarketData);
+            _prices.Get(worldID, ingredient.ItemID).Returns(ingredientPrice);
         }
     }
 
     private void MockReposForSingularTest(
-        MarketDataPoco market,
+        PricePoco market,
         RecipePoco recipe,
-        MarketDataPoco ingredientMarket
+        PricePoco ingredientMarket
     )
     {
         _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
@@ -175,7 +175,7 @@ public class CraftingCalculatorTests
         _recipes.Get(recipe.RecipeID).Returns(recipe);
     }
 
-    private static MarketDataPoco GetNewMarketData =>
+    private static PricePoco GetNewPrice =>
         new(1, _worldID, 1, "Iron Sword", "testRealm", 300, 200, 400, 600, 400, 800);
 
     private static RecipePoco NewRecipe =>

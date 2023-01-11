@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace GilGoblin.Pocos;
 
-public class MarketDataPoco
+public class PricePoco
 {
     // The item ID.
     public int ItemID { get; set; }
@@ -38,10 +38,10 @@ public class MarketDataPoco
     // The average HQ sale price, with outliers removed beyond 3 standard deviations of the mean.
     public float AverageSoldHQ { get; set; }
 
-    public MarketDataPoco() { }
+    public PricePoco() { }
 
     [JsonConstructor]
-    public MarketDataPoco(
+    public PricePoco(
         int itemID,
         int worldID,
         long lastUploadTime,
@@ -68,7 +68,7 @@ public class MarketDataPoco
         this.AverageSoldHQ = averagePriceHQ;
     }
 
-    public MarketDataPoco(MarketDataPoco copyMe)
+    public PricePoco(PricePoco copyMe)
     {
         this.ItemID = copyMe.ItemID;
         this.WorldID = copyMe.WorldID;

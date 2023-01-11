@@ -1,4 +1,5 @@
 using GilGoblin.Crafting;
+using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
@@ -14,5 +15,13 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+    }
+
+    public static void AddGoblinDatabases(this IServiceCollection services)
+    {
+        services.AddScoped<IItemGateway, ItemGateway>();
+        services.AddScoped<IRecipeGateway, RecipeGateway>();
+        services.AddScoped<IPriceGateway, PriceGateway>();
+        services.AddDbContext<GilGoblinDbContext>();
     }
 }
