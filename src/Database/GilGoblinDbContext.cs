@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GilGoblin.Database;
 
-internal class GilGoblinDbContext : DbContext
+public class GilGoblinDbContext : DbContext
 {
     public DbSet<PricePoco>? Price { get; set; }
     public DbSet<ItemInfoPoco>? ItemInfo { get; set; }

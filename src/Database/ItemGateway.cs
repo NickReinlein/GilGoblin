@@ -5,8 +5,25 @@ namespace GilGoblin.Database;
 
 public class ItemGateway : IItemGateway
 {
+    private readonly GoblinDatabase _database;
+    private readonly ILogger<GoblinDatabase> _logger;
+
+    public ItemGateway(GoblinDatabase database, ILogger<GoblinDatabase> logger)
+    {
+        _database = database;
+        _logger = logger;
+    }
+
     public ItemInfoPoco GetItem(int itemID)
     {
+        try
+        {
+            var connection = GoblinDatabase.Connect();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Unable to connect to database:", e.Message);
+        }
         return new ItemInfoPoco()
         {
             ID = itemID,

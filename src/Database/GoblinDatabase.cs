@@ -3,7 +3,7 @@ using Serilog;
 
 namespace GilGoblin.Database;
 
-internal class GoblinDatabase
+public class GoblinDatabase
 {
     public static string _file_path = Path.GetDirectoryName(AppContext.BaseDirectory);
     public static string _db_name = "GilGoblin.db";
@@ -15,7 +15,7 @@ internal class GoblinDatabase
         return new GoblinDatabase();
     }
 
-    internal static SqliteConnection? Connect()
+    public static SqliteConnection? Connect()
     {
         try
         {
