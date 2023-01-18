@@ -16,7 +16,7 @@ public class ItemRepository : IItemRepository
 
     public ItemInfoPoco Get(int itemID)
     {
-        return _database.GetItem(itemID);
+        return _database.GetItem(itemID).Result;
         // return new ItemInfoPoco
         // {
         //     ID = itemID,

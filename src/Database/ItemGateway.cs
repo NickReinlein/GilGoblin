@@ -1,4 +1,6 @@
+using System.Data;
 using GilGoblin.Pocos;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
@@ -6,43 +8,45 @@ namespace GilGoblin.Database;
 public class ItemGateway : IItemGateway
 {
     private readonly GoblinDatabase _database;
+    private readonly GilGoblinDbContext _context;
     private readonly ILogger<GoblinDatabase> _logger;
 
-    public ItemGateway(GoblinDatabase database, ILogger<GoblinDatabase> logger)
+    public ItemGateway(
+        GoblinDatabase database,
+        ILogger<GoblinDatabase> logger,
+        GilGoblinDbContext context
+    )
     {
         _database = database;
         _logger = logger;
+        _context = context;
     }
 
-    public ItemInfoPoco GetItem(int itemID)
+    public async Task<ItemInfoPoco?> GetItem(int itemID)
     {
         try
         {
-            var connection = GoblinDatabase.Connect();
+            using var connection = GoblinDatabase.Connect();
+            connection.Open();
+            return _context.ItemInfo?.Single(x => x.ID == itemID);
         }
         catch (Exception e)
         {
             _logger.LogError("Unable to connect to database:", e.Message);
+            return null;
         }
-        return new ItemInfoPoco()
-        {
-            ID = itemID,
-            Name = "testName",
-            Description = "testDescription",
-            GatheringID = 999,
-            IconID = 3200,
-            StackSize = 20,
-            VendorPrice = new Random().Next(int.MinValue, int.MaxValue)
-        };
     }
 
-    public IEnumerable<ItemInfoPoco> GetItems(IEnumerable<int> itemIDs)
+    public async Task<IEnumerable<ItemInfoPoco>> GetItems(IEnumerable<int> itemIDs)
     {
+        var items = new List<ItemInfoPoco>();
         foreach (var itemId in itemIDs)
         {
-            yield return GetItem(itemId);
+            items.Add(await GetItem(itemId));
         }
+        return items;
     }
 
-    public IEnumerable<ItemInfoPoco> GetAllItems() => GetItems(Enumerable.Range(1, 10).ToArray());
+    public async Task<IEnumerable<ItemInfoPoco>> GetAllItems() =>
+        await GetItems(Enumerable.Range(1, 10).ToArray());
 }
