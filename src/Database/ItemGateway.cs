@@ -8,18 +8,12 @@ namespace GilGoblin.Database;
 public class ItemGateway : IItemGateway
 {
     private readonly GoblinDatabase _database;
-    private readonly GilGoblinDbContext _context;
     private readonly ILogger<GoblinDatabase> _logger;
 
-    public ItemGateway(
-        GoblinDatabase database,
-        ILogger<GoblinDatabase> logger,
-        GilGoblinDbContext context
-    )
+    public ItemGateway(GoblinDatabase database, ILogger<GoblinDatabase> logger)
     {
         _database = database;
         _logger = logger;
-        _context = context;
     }
 
     public async Task<ItemInfoPoco?> GetItem(int itemID)
@@ -28,7 +22,8 @@ public class ItemGateway : IItemGateway
         {
             using var connection = GoblinDatabase.Connect();
             connection.Open();
-            return _context.ItemInfo?.Single(x => x.ID == itemID);
+            using var context = _database.GetContext();
+            return context.ItemInfo?.Single(x => x.ID == itemID);
         }
         catch (Exception e)
         {

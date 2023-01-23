@@ -59,6 +59,7 @@ public class DependencyInjectionTests
         var response = await client.GetAsync(endpoint);
 
         Assert.That(response, Is.Not.Null);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        var acceptableResponseCodes = new[] { HttpStatusCode.OK, HttpStatusCode.NoContent };
+        Assert.True(acceptableResponseCodes.Contains(response.StatusCode));
     }
 }

@@ -10,9 +10,18 @@ public class GoblinDatabase
     public static string _path = Path.Combine(_file_path, _db_name);
     private static SqliteConnection? Connection { get; set; }
 
-    public static GoblinDatabase GetContext()
+    public GilGoblinDbContext GetContext()
     {
-        return new GoblinDatabase();
+        var context = new GilGoblinDbContext();
+        if (context.ItemInfo?.Count() < 10) { 
+            FillTableItemInfo();
+        }
+        return context;
+    }
+
+    private void FillTableItemInfo()
+    {
+        throw new NotImplementedException();
     }
 
     public static SqliteConnection? Connect()
@@ -65,183 +74,3 @@ public class GoblinDatabase
         }
     }
 }
-
-//         // /// <summary>
-//         // /// Saves a list of marketDataDB items (with listings)
-//         // /// This can be done in bulk much more efficiently but requires refactoring & testing
-//         // /// Will revisit if performance is an issue
-//         // /// </summary>
-//         // /// <param name="marketDataList"></param> a List<MarketData> that will be saved to the database
-//         // /// <returns></returns>
-//         // internal static async Task<int> SaveMarketDataBulk(List<MarketDataDB> marketDataList)
-//         // {
-//         //     if (marketDataList == null || marketDataList.Count == 0)
-//         //     {
-//         //         Log.Error("Trying to save an empty list of market data.");
-//         //         return 0;
-//         //     }
-//         //     else
-//         //     {
-//         //         try
-//         //         {
-//         //             using (GilGoblinDbContext context = getContext())
-//         //             {
-//         //                 HashSet<int> itemIDList = new HashSet<int>();
-//         //                 foreach (MarketDataDB marketData in marketDataList)
-//         //                 {
-//         //                     if (marketData != null)
-//         //                     {
-//         //                         itemIDList.Add(marketData.itemID);
-//         //                     }
-//         //                 }
-
-//         //                 if (itemIDList.Count == 0)
-//         //                 {
-//         //                     Log.Error("Could not save market data due to missing item ID and world ID list.");
-//         //                     return 0;
-//         //                 }
-
-//         //                 List<ItemDB> itemDBExists = context.data
-//         //                         .Where(t => (marketDataList.All(x => itemIDList.Contains(x.itemID))))
-//         //                         .Include(t => t.marketData)
-//         //                         .Include(t => t.fullRecipes)
-//         //                         .Include(t => t.itemInfo)
-//         //                         .ToList();
-//         //                 List<MarketDataDB> exists = new List<MarketDataDB>();
-
-//         //                 if (itemDBExists == null)
-//         //                 {
-//         //                     //New entries, add to entity tracker
-//         //                     await context.AddRangeAsync(marketDataList);
-//         //                 }
-//         //                 else
-//         //                 {
-
-//         //                     //Existing entries get updated
-//         //                     foreach (MarketDataDB exist in exists)
-//         //                     {
-//         //                         //Existing entry
-//         //                         exist.averagePrice = exist.averagePrice;
-//         //                         exist.listings = exist.listings;
-//         //                         context.Update<MarketDataDB>(exist);
-//         //                     }
-//         //                     //Non-existent entries are added to the tracker
-//         //                     foreach (MarketDataDB newData in marketDataList)
-//         //                     {
-//         //                         var thisExists = exists
-//         //                             .Find(t => t.itemID == newData.itemID &&
-//         //                                        t.worldID == newData.worldID);
-//         //                         if (thisExists == null)
-//         //                         {
-//         //                             await context.AddAsync<MarketDataDB>(newData);
-//         //                         }
-//         //                     }
-//         //                 }
-
-//         //                 return await context.SaveChangesAsync(); ;
-
-//         //             }
-//         //         }
-//         //         catch (Exception ex)
-//         //         {
-//         //             Log.Error("Exception: {message}.", ex.Message);
-//         //             Log.Error("{NewLine}Inner exception: {innser}.", ex.InnerException);
-//         //             Disconnect();
-//         //             return 0;
-//         //         }
-//         //     }
-//     }
-
-//     // public static Task<int> SaveRecipe(List<RecipePoco> recipes)
-//     // {
-//     //     List<RecipeDB> recipeDBs = new List<RecipeDB>();
-//     //     foreach (RecipePoco web in recipes)
-//     //     {
-//     //         recipeDBs.Add(new RecipeDB(web));
-//     //     }
-//     //     return SaveRecipes(recipeDBs);
-//     // }
-
-//     /// <summary>
-//     /// Saves the recipes in the list of RecipeDB (DB-format)
-//     /// </summary>
-//     /// <param name="recipesToSave"></param> List of recipes to save in DB format
-//     /// <returns></returns>
-//     // internal static async Task<int> SaveRecipes(List<RecipeDB> recipesToSave)
-//     // {
-//     //     if (recipesToSave == null || recipesToSave.Count == 0)
-//     //     {
-//     //         Log.Error("Trying to save an empty list of recipes.");
-//     //         return 0;
-//     //     }
-//     //     else
-//     //     {
-//     //         HashSet<int> recipeIDList = new HashSet<int>();
-//     //         foreach (RecipeDB recipe in recipesToSave)
-//     //         {
-//     //             if (recipe != null && recipe.recipe_id != 0)
-//     //             {
-//     //                 recipeIDList.Add(recipe.recipe_id);
-//     //             }
-//     //         }
-//     //         try
-//     //         {
-//     //             using (GilGoblinDbContext context = getContext())
-//     //             {
-
-//     //                 List<RecipeDB> existentRecipes = new List<RecipeDB>();
-
-//     //                 List<ItemDB> itemsDB = context.data
-//     //                         .Where(t => t.fullRecipes.All(
-//     //                               (x => recipeIDList.Contains(x.recipe_id))))
-//     //                         .ToList();
-//     //                 if (itemsDB == null)
-//     //                 {
-//     //                     // None found, save everything
-//     //                     await context.AddRangeAsync(recipesToSave);
-//     //                     existentRecipes.Clear();
-//     //                 }
-//     //                 else
-//     //                 {
-//     //                     //Existent entries can be added to the tracker
-//     //                     //TODO: improve this... with LINQ?
-//     //                     foreach (ItemDB existentDBEntry in itemsDB)
-//     //                     {
-//     //                         existentRecipes.AddRange(existentDBEntry.fullRecipes);
-//     //                         foreach (RecipeDB existentRecipe in existentDBEntry.fullRecipes)
-//     //                         {
-//     //                             context.Update(existentRecipe);
-//     //                         }
-//     //                     }
-
-//     //                     IEnumerable<RecipeDB> saveMeList
-//     //                         = recipesToSave.Except(existentRecipes);
-//     //                     //Non-existent entries are added to the tracker
-//     //                     foreach (RecipeDB saveRecipe in saveMeList)
-//     //                     {
-//     //                         if (saveRecipe != null)
-//     //                         {
-//     //                             await context.AddAsync<RecipeDB>(saveRecipe);
-//     //                         }
-//     //                     }
-//     //                 }
-
-//     //                 return await context.SaveChangesAsync(); ;
-//     //             }
-//     //         }
-//     //         catch (Exception ex) when (ex is SqliteException || ex is InvalidOperationException)
-//     //         {
-//     //             //Maybe the database doesn't exist yet or not found
-//     //             //Either way, we can return null -> it is not on the database
-
-//     //             return 0;
-//     //         }
-//     //         catch (Exception ex)
-//     //         {
-
-//     //             Log.Error("Exception: {Message}. Inner: {Inner}", ex.Message, ex.InnerException);
-//     //             Disconnect();
-//     //             return 0; ;
-//     //         }
-//     //     }
-// }
