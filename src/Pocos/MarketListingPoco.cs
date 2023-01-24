@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GilGoblin.Utility;
+using GilGoblin.Services;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -16,6 +16,7 @@ internal class MarketListingPoco
     public int Quantity { get; set; }
 
     public MarketListingPoco() { }
+
     public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq) : base()
     {
         this.Hq = hq;
@@ -38,6 +39,5 @@ internal class MarketListingPoco
                 Log.Error(ex.Message);
             }
         }
-
     }
 }

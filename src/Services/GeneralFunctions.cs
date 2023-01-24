@@ -1,7 +1,7 @@
 using System;
 using Serilog;
 
-namespace GilGoblin.Utility;
+namespace GilGoblin.Services;
 
 internal static class GeneralFunctions
 {
@@ -21,8 +21,7 @@ internal static class GeneralFunctions
 
     public static DateTime ConvertLongUnixMillisecondsToDateTime(long elapsed_time)
     {
-        var date
-            = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
+        var date = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
         return date;
     }
 
@@ -38,7 +37,6 @@ internal static class GeneralFunctions
             Log.Error(ex.Message);
             return new DateTime();
         }
-
     }
 
     public static string GetProjectFolder() => AppDomain.CurrentDomain.BaseDirectory;
