@@ -17,7 +17,7 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.AbstractDFFions" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.9"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0"/>

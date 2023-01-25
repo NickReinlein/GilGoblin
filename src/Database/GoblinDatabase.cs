@@ -7,9 +7,13 @@ namespace GilGoblin.Database;
 
 public class GoblinDatabase
 {
+    private const string Resource = "resources/AllItems.json";
+    private static readonly string BaseFolderPath = Directory
+        .GetParent(System.IO.Directory.GetCurrentDirectory())
+        .Parent.Parent.Parent.FullName;
     public static readonly string ResourceFilePath = System.IO.Path.Combine(
-        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName,
-        "Resources/AllItems.json"
+        BaseFolderPath,
+        Resource
     );
     public static string FilePath = System.IO.Path.GetDirectoryName(AppContext.BaseDirectory);
     public static string DbName = "GilGoblin.db";
@@ -27,11 +31,11 @@ public class GoblinDatabase
     {
         if (context.ItemInfo?.Count() < 10)
         {
-            var result = await JSONLoader.LoadJSONFile<ItemInfoPoco>(ResourceFilePath);
-            if (result.Any())
-            {
-                // save results if correct
-            }
+            // var result = await JSONLoader.LoadJSONFile<ItemInfoPoco>(ResourceFilePath);
+            // if (result.Any())
+            // {
+            //     // save results if correct
+            // }
         }
     }
 
