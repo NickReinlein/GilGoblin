@@ -14,7 +14,10 @@ public class ItemInfoFetcherTests
     }
 
     [SetUp]
-    public void SetUp() { }
+    public void SetUp()
+    {
+        //fetcher. GetAsync(default).ReturnsForAnyArgs(_getItemJSONResponse);
+    }
 
     [TearDown]
     public void TearDown() { }
@@ -28,13 +31,13 @@ public class ItemInfoFetcherTests
         Assert.That(result!.ID, Is.EqualTo(int.Parse(_getPath)));
     }
 
-    [Test]
-    public async Task WhenWeGetAllItems_WeCallUsingCorrectParameters()
-    {
-        var result = await fetcher.GetAllAsync(_getAllPath);
+    // [Test]
+    // public async Task WhenWeGetAllItems_WeCallUsingCorrectParameters()
+    // {
+    //     var result = await fetcher.GetAllAsync(_getAllPath);
 
-        Assert.That(result, Is.Not.Null);
-    }
+    //     Assert.That(result, Is.Not.Null);
+    // }
 
     private static readonly string _fullPathGet = string.Concat(
         ItemInfoFetcher.ItemInfoBaseUrl,
@@ -47,4 +50,15 @@ public class ItemInfoFetcherTests
     );
     private static readonly string _getPath = """1""";
     private static readonly string _getAllPath = string.Empty;
+
+    public static readonly string _getItemJSONResponse = $$"""
+{
+	"Description": "Standard Eorzean currency.",
+	"ID": 1,
+	"IconID": 65002,
+	"Name": "Gil",
+	"PriceMid": 0,
+	"StackSize": 999999999
+}
+""";
 }

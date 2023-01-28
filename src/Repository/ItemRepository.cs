@@ -14,23 +14,14 @@ public class ItemRepository : IItemRepository
         _logger = logger;
     }
 
-    public ItemInfoPoco Get(int itemID)
+    public async Task<ItemInfoPoco?> Get(int itemID)
     {
-        return _database.GetItem(itemID).Result;
-        // return new ItemInfoPoco
-        // {
-        //     ID = itemID,
-        //     Description = "TestItem" + itemID,
-        //     GatheringID = itemID + 144,
-        //     IconID = itemID + 42,
-        //     Name = "TestItem" + itemID,
-        //     StackSize = 1,
-        //     VendorPrice = itemID
-        // };
+        return await _database.GetItem(itemID);
     }
 
-    public IEnumerable<ItemInfoPoco> GetAll()
+    public async Task<IEnumerable<ItemInfoPoco?>> GetAll()
     {
-        return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
+        var enumerable = Enumerable.Range(1, 5).Select(async (index) => await Get(index)).ToList();
+        return null;
     }
 }

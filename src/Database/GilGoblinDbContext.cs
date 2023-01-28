@@ -52,7 +52,6 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.VendorPrice);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.StackSize);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.GatheringID);
 
         modelBuilder.Entity<RecipePoco>().ToTable("Recipe");
         modelBuilder.Entity<RecipePoco>().HasKey(t => t.RecipeID);

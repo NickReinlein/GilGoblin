@@ -4,28 +4,32 @@ namespace GilGoblin.Repository;
 
 public class RecipeRepository : IRecipeRepository
 {
-    public RecipePoco Get(int recipeID)
+    public RecipeRepository() { }
+
+    public Task<RecipePoco?> Get(int recipeID)
     {
-        return new RecipePoco
-        {
-            RecipeID = recipeID,
-            TargetItemID = recipeID + 1000,
-            IconID = recipeID + 42,
-            ResultQuantity = 1,
-            CanHq = true,
-            CanQuickSynth = true,
-            Ingredients = new List<IngredientPoco>()
-        };
+        return new Task<RecipePoco?>(
+            () =>
+                new RecipePoco
+                {
+                    RecipeID = recipeID,
+                    TargetItemID = recipeID + 1000,
+                    IconID = recipeID + 42,
+                    ResultQuantity = 1,
+                    CanHq = true,
+                    CanQuickSynth = true,
+                    Ingredients = new List<IngredientPoco>()
+                }
+        );
     }
 
-    public IEnumerable<RecipePoco> GetAll()
-    {
-        return Enumerable.Range(1, 5).Select(index => Get(index)).ToArray();
-    }
+    public async Task<IEnumerable<RecipePoco?>> GetAll() => null;
 
-    public IEnumerable<RecipePoco> GetRecipesForItem(int id)
+    // Enumerable.Range(1, 5).Select(async (index) => await Get(index)).ToList();
+
+    public async Task<IEnumerable<RecipePoco?>> GetRecipesForItem(int id)
     {
-        var recipe = Get(id);
-        return new List<RecipePoco>() { recipe };
+        var recipe = await Get(id);
+        return new List<RecipePoco?>() { recipe };
     }
 }
