@@ -18,14 +18,14 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
     }
 
     [HttpGet]
-    public IEnumerable<RecipePoco> GetAll()
+    public async Task<IEnumerable<RecipePoco?>> GetAll()
     {
         _logger.LogInformation($"Fetching all recipes");
-        return _recipeRepo.GetAll();
+        return await _recipeRepo.GetAll();
     }
 
     [HttpGet("{id}")]
-    public RecipePoco Get(int id)
+    public RecipePoco? Get(int id)
     {
         _logger.LogInformation($"Fetching recipe id: {id}");
         return _recipeRepo.Get(id);
