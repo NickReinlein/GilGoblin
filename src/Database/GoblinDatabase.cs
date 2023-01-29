@@ -7,14 +7,14 @@ namespace GilGoblin.Database;
 
 public class GoblinDatabase
 {
-    private const string Resource = "resources/AllItems.json";
-    private static readonly string BaseFolderPath = Directory
+    public static readonly string BaseFolderPath = Directory
         .GetParent(System.IO.Directory.GetCurrentDirectory())
         .Parent.Parent.Parent.FullName;
     public static readonly string ResourceFilePath = System.IO.Path.Combine(
         BaseFolderPath,
         Resource
     );
+    public const string Resource = "resources/AllItems.json";
     public static string FilePath = System.IO.Path.GetDirectoryName(AppContext.BaseDirectory);
     public static string DbName = "GilGoblin.db";
     public static string Path = System.IO.Path.Combine(FilePath, DbName);
@@ -29,14 +29,7 @@ public class GoblinDatabase
 
     private async Task FillTablesIfEmpty(GilGoblinDbContext context)
     {
-        if (context.ItemInfo?.Count() < 10)
-        {
-            // var result = await JSONLoader.LoadJSONFile<ItemInfoPoco>(ResourceFilePath);
-            // if (result.Any())
-            // {
-            //     // save results if correct
-            // }
-        }
+        if (context.ItemInfo?.Count() < 10) { }
     }
 
     public static SqliteConnection? Connect()

@@ -14,14 +14,14 @@ public class ItemRepository : IItemRepository
         _logger = logger;
     }
 
-    public async Task<ItemInfoPoco?> Get(int itemID)
+    public ItemInfoPoco? Get(int itemID)
     {
-        return await _database.GetItem(itemID);
+        return _database.GetItem(itemID).Result;
     }
 
-    public async Task<IEnumerable<ItemInfoPoco?>> GetAll()
+    public IEnumerable<ItemInfoPoco?> GetAll()
     {
-        var enumerable = Enumerable.Range(1, 5).Select(async (index) => await Get(index)).ToList();
-        return null;
+        // var enumerable = Enumerable.Range(1, 5).Select((index) => Get(index)).ToList();
+        return Enumerable.Range(1, 5).Select(Get).ToList();
     }
 }

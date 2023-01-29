@@ -22,8 +22,6 @@ public class DataFetcher<T> where T : class
 
         var result = await response.Content.ReadFromJsonAsync<T>();
         return result;
-        //     return itemInfo = JsonConvert.DeserializeObject<ItemInfoPoco>(
-        // content.Content.ReadAsStringAsync().Result
     }
 
     public virtual async Task<IEnumerable<T>> GetAllAsync(string path)

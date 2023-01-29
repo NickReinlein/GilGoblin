@@ -140,11 +140,13 @@ public class CraftingCalculator : ICraftingCalculator
         return result;
     }
 
-    private int GetLowestCraftingCost(int worldID, IEnumerable<RecipePoco> recipes)
+    private int GetLowestCraftingCost(int worldID, IEnumerable<RecipePoco?> recipes)
     {
         var lowestCost = ERROR_DEFAULT_COST;
         foreach (var recipe in recipes)
         {
+            if (recipe is null)
+                continue;
             var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.RecipeID);
             lowestCost = Math.Min(recipeCost, lowestCost);
         }

@@ -67,6 +67,9 @@ public class RecipeGrocer : IRecipeGrocer
 
         foreach (var ingredientRecipe in ingredientRecipes)
         {
+            if (ingredientRecipe is null)
+                continue;
+
             var ingredientRecipeID = ingredientRecipe.RecipeID;
             if (CanMakeRecipe(ingredientRecipeID))
             {

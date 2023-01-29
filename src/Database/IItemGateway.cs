@@ -4,7 +4,7 @@ namespace GilGoblin.Database;
 
 public interface IItemGateway
 {
-    public Task<ItemInfoPoco?> GetItem(int itemID);
-    public Task<IEnumerable<ItemInfoPoco>> GetItems(IEnumerable<int> itemIDs);
-    public Task<IEnumerable<ItemInfoPoco>> GetAllItems();
+    public ItemInfoPoco? GetItem(int itemID);
+    public IEnumerable<ItemInfoPoco> GetItems(IEnumerable<int> itemIDs);
+    public IEnumerable<ItemInfoPoco> GetAllItems();
 }

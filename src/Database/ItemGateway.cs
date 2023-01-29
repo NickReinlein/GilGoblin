@@ -16,7 +16,7 @@ public class ItemGateway : IItemGateway
         _logger = logger;
     }
 
-    public async Task<ItemInfoPoco?> GetItem(int itemID)
+    public ItemInfoPoco? GetItem(int itemID)
     {
         try
         {
@@ -32,16 +32,15 @@ public class ItemGateway : IItemGateway
         }
     }
 
-    public async Task<IEnumerable<ItemInfoPoco>> GetItems(IEnumerable<int> itemIDs)
+    public IEnumerable<ItemInfoPoco?> GetItems(IEnumerable<int> itemIDs)
     {
-        var items = new List<ItemInfoPoco>();
+        var items = new List<ItemInfoPoco?>();
         foreach (var itemId in itemIDs)
         {
-            items.Add(await GetItem(itemId));
+            items.Add(GetItem(itemId));
         }
         return items;
     }
 
-    public async Task<IEnumerable<ItemInfoPoco>> GetAllItems() =>
-        await GetItems(Enumerable.Range(1, 10).ToArray());
+    public IEnumerable<ItemInfoPoco> GetAllItems() => GetItems(Enumerable.Range(1, 10).ToArray());
 }
