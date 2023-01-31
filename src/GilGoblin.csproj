@@ -9,7 +9,6 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.11.*"/>
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.*"/>
@@ -22,11 +21,11 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    <PackageReference Include="CsvHelper" Version="30.0.*"/>
   </ItemGroup>
-  
-   <ItemGroup>
+  <ItemGroup>
     <Content Include="Resources\**">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-</ItemGroup>   
+  </ItemGroup>
 </Project>
