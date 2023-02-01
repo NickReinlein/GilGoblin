@@ -57,7 +57,7 @@ public class CraftSummaryPoco
         ItemID = price.ItemID;
         Name = itemInfo.Name;
         VendorPrice = itemInfo.VendorPrice;
-        IconID = itemInfo.IconID;
+        IconID = itemInfo.Icon;
         StackSize = itemInfo.StackSize;
         AverageListingPrice = price.AverageListingPrice;
         AverageSold = price.AverageSold;

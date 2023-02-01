@@ -10,12 +10,26 @@ public class CsvInteractorTests
     public void SetUp() { }
 
     [Test]
-    public void WhenWeLoadATestFile_ThenThereAreNoErrors()
+    public void WhenWeLoadATestFile_ThenWeReadAndDeserializeObjects()
     {
-        Assert.DoesNotThrow(() =>
+        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath);
+        Assert.That(result.Count, Is.GreaterThan(10));
+    }
+
+    [Test]
+    public void WhenWeLoadATestFile_ThenDeserializeObjectsCorrectly()
+    {
+        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath);
+        var gilItemEntry = result.First(i => i.ID == 1);
+        var lightningShardItemEntry = result.First(i => i.ID == 6);
+        Assert.Multiple(() =>
         {
-            var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath);
-            Assert.NotNull(result);
+            Assert.That(gilItemEntry.Name, Is.EqualTo("Gil"));
+            Assert.That(gilItemEntry.Icon, Is.EqualTo(65002));
+            Assert.That(gilItemEntry.StackSize, Is.GreaterThanOrEqualTo(9999999));
+            Assert.That(lightningShardItemEntry.Name, Is.EqualTo("Lightning Shard"));
+            Assert.That(lightningShardItemEntry.Icon, Is.EqualTo(20005));
+            Assert.That(lightningShardItemEntry.StackSize, Is.EqualTo(9999));
         });
     }
 

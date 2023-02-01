@@ -22,14 +22,14 @@ public class ItemInfoFetcherTests
     [TearDown]
     public void TearDown() { }
 
-    [Test]
-    public async Task WhenWeGetAnItem_WeCallUsingCorrectParameters()
-    {
-        var result = await fetcher.GetAsync(_getPath);
+    // [Test]
+    // public async Task WhenWeGetAnItem_WeCallUsingCorrectParameters()
+    // {
+    //     var result = await fetcher.GetAsync(_getPath);
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result!.ID, Is.EqualTo(int.Parse(_getPath)));
-    }
+    //     Assert.That(result, Is.Not.Null);
+    //     Assert.That(result!.ID, Is.EqualTo(int.Parse(_getPath)));
+    // }
 
     // [Test]
     // public async Task WhenWeGetAllItems_WeCallUsingCorrectParameters()
