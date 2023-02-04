@@ -23,26 +23,24 @@ public class ItemGateway : IItemRepository
         return context?.ItemInfo?.FirstOrDefault(x => x.ID == itemID);
     }
 
-    public Task<IEnumerable<ItemInfoPoco>> GetAll()
+    public async Task<IEnumerable<ItemInfoPoco>> GetAll()
     {
-        throw new NotImplementedException();
+        using var context = await GetContext();
+        return context?.ItemInfo?.ToList() ?? new List<ItemInfoPoco>();
     }
 
     public async Task<IEnumerable<ItemInfoPoco?>> GetMultiple(IEnumerable<int> itemIDs)
     {
-        var items = new List<ItemInfoPoco?>();
-        foreach (var itemId in itemIDs)
-        {
-            items.Add(await Get(itemId));
-        }
-        return items;
+        using var context = await GetContext();
+        return context?.ItemInfo?.Where(i => itemIDs.Contains(i.ID)).ToList()
+            ?? new List<ItemInfoPoco>();
     }
 
     private async Task<GilGoblinDbContext?> GetContext()
     {
         try
         {
-            using var connection = await GoblinDatabase.Connect();
+            using var connection = GoblinDatabase.Connect();
             if (connection is null)
                 throw new IOException("Unable to connect to the database");
 

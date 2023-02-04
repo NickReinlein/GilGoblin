@@ -22,7 +22,7 @@ public class GilGoblinDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        _conn = GoblinDatabase.Connect();
+        this._conn = GoblinDatabase.Connect();
         optionsBuilder.UseSqlite(_conn);
     }
 

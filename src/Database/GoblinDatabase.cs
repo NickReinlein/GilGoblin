@@ -13,7 +13,7 @@ public class GoblinDatabase
 
     public async static Task<GilGoblinDbContext?> GetContext()
     {
-        Connection ??= await Connect();
+        Connection ??= Connect();
         var context = new GilGoblinDbContext();
         await FillTablesIfEmpty(context);
         return context;
@@ -35,6 +35,9 @@ public class GoblinDatabase
 
     public static SqliteConnection? Connect()
     {
+        if (Connection is not null)
+            return Connection;
+
         try
         {
             var path = ResourceFilePath(DbName);
