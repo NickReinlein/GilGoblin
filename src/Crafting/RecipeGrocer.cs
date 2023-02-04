@@ -77,7 +77,7 @@ public class RecipeGrocer : IRecipeGrocer
             if (ingredientRecipe is null)
                 continue;
 
-            var ingredientRecipeID = ingredientRecipe.RecipeID;
+            var ingredientRecipeID = ingredientRecipe.ID;
             if (CanMakeRecipe(ingredientRecipeID))
             {
                 var recipeIngredients = await BreakdownRecipe(ingredientRecipeID);

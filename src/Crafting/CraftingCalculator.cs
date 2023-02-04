@@ -158,7 +158,7 @@ public class CraftingCalculator : ICraftingCalculator
         {
             if (recipe is null)
                 continue;
-            var recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.RecipeID);
+            var recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.ID);
             lowestCost = Math.Min(recipeCost, lowestCost);
         }
         return lowestCost;

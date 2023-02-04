@@ -14,14 +14,18 @@ public class GoblinDatabase
     public async static Task<GilGoblinDbContext?> GetContext()
     {
         Connection ??= Connect();
-        var context = new GilGoblinDbContext();
+        if (Connection is null)
+            return null;
+
+        var context = new GilGoblinDbContext(Connection);
         await FillTablesIfEmpty(context);
         return context;
     }
 
     private static async Task FillTablesIfEmpty(GilGoblinDbContext context)
     {
-        if (context.ItemInfo?.Count() < 10)
+        var count = context.ItemInfo?.Count();
+        if (count < 10)
         {
             var path = ResourceFilePath(ResourceFileNameItemCsv);
             var result = CsvInteractor<ItemInfoPoco>.LoadFile(path);
@@ -50,8 +54,7 @@ public class GoblinDatabase
             if (Connection.State == System.Data.ConnectionState.Open)
                 return Connection;
 
-            Log.Error("Connection not open. State is: {State}.", Connection.State);
-            return null;
+            throw new Exception($"Connection not open. State is: {Connection?.State}");
         }
         catch (Exception ex)
         {
@@ -84,9 +87,7 @@ public class GoblinDatabase
     }
 
     public static readonly string ResourcesFolderPath = System.IO.Path.Combine(
-        Directory
-            .GetParent(System.IO.Directory.GetCurrentDirectory())
-            .Parent.Parent.Parent.FullName,
+        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName,
         "resources/"
     );
 

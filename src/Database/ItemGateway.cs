@@ -20,7 +20,8 @@ public class ItemGateway : IItemRepository
     public async Task<ItemInfoPoco?> Get(int itemID)
     {
         using var context = await GetContext();
-        return context?.ItemInfo?.FirstOrDefault(x => x.ID == itemID);
+        var itemInfoPoco = context?.ItemInfo?.FirstOrDefault(x => x.ID == itemID);
+        return itemInfoPoco;
     }
 
     public async Task<IEnumerable<ItemInfoPoco>> GetAll()
@@ -40,7 +41,7 @@ public class ItemGateway : IItemRepository
     {
         try
         {
-            using var connection = GoblinDatabase.Connect();
+            var connection = GoblinDatabase.Connect();
             if (connection is null)
                 throw new IOException("Unable to connect to the database");
 

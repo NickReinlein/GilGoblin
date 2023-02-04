@@ -1,3 +1,4 @@
+using System.Data.Common;
 using GilGoblin.Pocos;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +17,20 @@ public class GilGoblinDbContext : DbContext
     public GilGoblinDbContext()
         : base(
             new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .UseSqlite(GoblinDatabase.Connect())
+                .UseSqlite<GilGoblinDbContext>(GoblinDatabase.Connect())
+                .Options
+        ) { }
+
+    public GilGoblinDbContext(DbConnection connection)
+        : base(
+            new DbContextOptionsBuilder<GilGoblinDbContext>()
+                .UseSqlite<GilGoblinDbContext>(connection)
                 .Options
         ) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        this._conn = GoblinDatabase.Connect();
+        _conn = GoblinDatabase.Connect();
         optionsBuilder.UseSqlite(_conn);
     }
 
@@ -49,9 +57,11 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.VendorPrice);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.StackSize);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Level);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.CanBeHq);
 
         modelBuilder.Entity<RecipePoco>().ToTable("Recipe");
-        modelBuilder.Entity<RecipePoco>().HasKey(t => t.RecipeID);
+        modelBuilder.Entity<RecipePoco>().HasKey(t => t.ID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.ResultQuantity);
         modelBuilder.Entity<RecipePoco>().Property(t => t.IconID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemID);
