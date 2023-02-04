@@ -4,9 +4,9 @@ namespace GilGoblin.Crafting;
 
 public interface ICraftingCalculator
 {
-    public int CalculateCraftingCostForRecipe(int worldID, int recipeID);
-    public int CalculateCraftingCostForItem(int worldID, int itemID);
-    public int CalculateCraftingCostForIngredients(
+    Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID);
+    Task<int> CalculateCraftingCostForItem(int worldID, int itemID);
+    Task<int> CalculateCraftingCostForIngredients(
         int worldID,
         IEnumerable<CraftIngredientPoco> craftIngredients
     );

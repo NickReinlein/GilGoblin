@@ -21,13 +21,13 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
     public IEnumerable<RecipePoco?> GetAll()
     {
         _logger.LogInformation($"Fetching all recipes");
-        return _recipeRepo.GetAll();
+        return _recipeRepo.GetAll().Result;
     }
 
     [HttpGet("{id}")]
     public RecipePoco? Get(int id)
     {
         _logger.LogInformation($"Fetching recipe id: {id}");
-        return _recipeRepo.Get(id);
+        return _recipeRepo.Get(id).Result;
     }
 }

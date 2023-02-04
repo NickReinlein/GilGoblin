@@ -4,6 +4,7 @@ using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Crafting;
@@ -41,20 +42,20 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenRecipeDoesNotExist_ThenReturnEmpty()
+    public async Task GivenARecipeGrocer_WhenBreakingDownAnItem_WhenRecipeDoesNotExist_ThenReturnEmpty()
     {
         const int inexistentItemID = 1033;
         _recipes.GetRecipesForItem(inexistentItemID).Returns(Array.Empty<RecipePoco>());
 
-        var result = _grocer.BreakdownItem(inexistentItemID);
+        var result = await _grocer.BreakdownItem(inexistentItemID);
 
-        _recipes.Received(1).GetRecipesForItem(inexistentItemID);
-        _recipes.DidNotReceiveWithAnyArgs().Get(default);
+        await _recipes.Received(1).GetRecipesForItem(inexistentItemID);
+        await _recipes.DidNotReceiveWithAnyArgs().Get(inexistentItemID);
         Assert.That(result.Count(), Is.EqualTo(0));
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas1Ingredient_ThenReturn1()
+    public async Task GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas1Ingredient_ThenReturn1()
     {
         const int itemID = 2344;
         var recipe = NewRecipe;
@@ -68,12 +69,12 @@ public class RecipeGrocerTests
         _recipes.GetRecipesForItem(itemID).Returns(new List<RecipePoco>() { recipe });
         _recipes.GetRecipesForItem(_subItem1ID).Returns(Array.Empty<RecipePoco>());
 
-        var result = _grocer.BreakdownItem(itemID);
+        var result = await _grocer.BreakdownItem(itemID);
 
         var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        _recipes.Received(1).GetRecipesForItem(itemID);
-        _recipes.Received(1).GetRecipesForItem(_subItem1ID);
-        _recipes.Received(1).Get(recipeID);
+        await _recipes.Received(1).GetRecipesForItem(itemID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
+        await _recipes.Received(1).Get(recipeID);
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -83,7 +84,7 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas2Ingredients_ThenReturn2()
+    public async Task GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas2Ingredients_ThenReturn2()
     {
         const int itemID = 2344;
         var recipe = NewRecipe;
@@ -99,13 +100,13 @@ public class RecipeGrocerTests
         _recipes.GetRecipesForItem(_subItem1ID).Returns(Array.Empty<RecipePoco>());
         _recipes.GetRecipesForItem(_subItem2ID).Returns(Array.Empty<RecipePoco>());
 
-        var result = _grocer.BreakdownItem(itemID);
+        var result = await _grocer.BreakdownItem(itemID);
 
-        var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        _recipes.Received(1).GetRecipesForItem(itemID);
-        _recipes.Received(1).GetRecipesForItem(_subItem1ID);
-        _recipes.Received(1).GetRecipesForItem(_subItem2ID);
-        _recipes.Received(1).Get(recipeID);
+        var resultTotalIngredients = result.Select(x => x?.Quantity).Sum();
+        await _recipes.Received(1).GetRecipesForItem(itemID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem2ID);
+        await _recipes.Received(1).Get(recipeID);
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(2));
@@ -115,7 +116,7 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas3Ingredients_ThenReturn3()
+    public async Task GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas3Ingredients_ThenReturn3()
     {
         const int itemID = 2344;
         var recipe = NewRecipe;
@@ -129,14 +130,14 @@ public class RecipeGrocerTests
         var expectedTotalIngredients = recipe.Ingredients.Select(x => x.Quantity).Sum();
         SetupBreakingDown3ForItem(itemID, recipe, recipeID);
 
-        var result = _grocer.BreakdownItem(itemID);
+        var result = await _grocer.BreakdownItem(itemID);
 
         var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        _recipes.Received(1).GetRecipesForItem(itemID);
-        _recipes.Received(1).GetRecipesForItem(_subItem1ID);
-        _recipes.Received(1).GetRecipesForItem(_subItem2ID);
-        _recipes.Received(1).GetRecipesForItem(_secondItemID);
-        _recipes.Received(1).Get(recipeID);
+        await _recipes.Received(1).GetRecipesForItem(itemID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem2ID);
+        await _recipes.Received(1).GetRecipesForItem(_secondItemID);
+        await _recipes.Received(1).Get(recipeID);
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(3));
@@ -155,7 +156,7 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas2Levels_ThenReturnAllBrokenDown()
+    public async Task GivenARecipeGrocer_WhenBreakingDownAnItem_WhenItHas2Levels_ThenReturnAllBrokenDown()
     {
         const int itemID = 2344;
         const int subRecipeID = 8844;
@@ -177,15 +178,15 @@ public class RecipeGrocerTests
         var expectedIngredientsSum =
             recipe.Ingredients.First().Quantity + subRecipe.Ingredients.First().Quantity;
 
-        var result = _grocer.BreakdownItem(itemID);
+        var result = await _grocer.BreakdownItem(itemID);
 
         var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        _recipes.Received(1).GetRecipesForItem(itemID);
-        _recipes.Received(1).GetRecipesForItem(_subItem1ID);
-        _recipes.Received(1).GetRecipesForItem(_subItem2ID);
-        _recipes.Received(1).GetRecipesForItem(_secondItemID);
-        _recipes.Received(1).Get(recipeID);
-        _recipes.Received(1).Get(subRecipeID);
+        await _recipes.Received(1).GetRecipesForItem(itemID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem2ID);
+        await _recipes.Received(1).GetRecipesForItem(_secondItemID);
+        await _recipes.Received(1).Get(recipeID);
+        await _recipes.Received(1).Get(subRecipeID);
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(2));
@@ -211,21 +212,21 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmpty()
+    public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenRecipeDoesNotExist_ThenReturnEmpty()
     {
         const int inexistentRecipeID = 1033;
         var recipePoco = NewRecipe;
         recipePoco.Ingredients = new List<IngredientPoco>() { recipePoco.Ingredients.First() };
-        _recipes.Get(inexistentRecipeID).Returns(_ => null!);
+        _recipes.Get(inexistentRecipeID).ReturnsNull();
 
-        var result = _grocer.BreakdownRecipe(inexistentRecipeID);
+        var result = await _grocer.BreakdownRecipe(inexistentRecipeID);
 
-        _recipes.Received(1).Get(inexistentRecipeID);
+        await _recipes.Received(1).Get(inexistentRecipeID);
         Assert.That(result.Count(), Is.EqualTo(0));
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas1Ingredient_ThenReturn1()
+    public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas1Ingredient_ThenReturn1()
     {
         const int existentRecipeID = 1033;
         var recipePoco = NewRecipe;
@@ -234,10 +235,10 @@ public class RecipeGrocerTests
         _recipes.Get(existentRecipeID).Returns(recipePoco);
         Assume.That(recipePoco.Ingredients.Count, Is.EqualTo(1));
 
-        var result = _grocer.BreakdownRecipe(existentRecipeID);
+        var result = await _grocer.BreakdownRecipe(existentRecipeID);
 
         var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        _recipes.Received(1).Get(existentRecipeID);
+        await _recipes.Received(1).Get(existentRecipeID);
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -247,7 +248,7 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas2Ingredients_ThenReturn2()
+    public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas2Ingredients_ThenReturn2()
     {
         const int existentRecipeID = 1033;
         var recipePoco = NewRecipe;
@@ -255,10 +256,10 @@ public class RecipeGrocerTests
         _recipes.Get(existentRecipeID).Returns(recipePoco);
         Assume.That(recipePoco.Ingredients.Count, Is.EqualTo(2));
 
-        var result = _grocer.BreakdownRecipe(existentRecipeID);
+        var result = await _grocer.BreakdownRecipe(existentRecipeID);
 
         var resultTotalIngredients = result.Select(x => x.Quantity).Sum();
-        _recipes.Received(1).Get(existentRecipeID);
+        await _recipes.Received(1).Get(existentRecipeID);
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
@@ -268,7 +269,7 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturn3()
+    public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas3Ingredients_ThenReturn3()
     {
         var recipe = NewRecipe;
         var recipeID = recipe.RecipeID;
@@ -280,12 +281,12 @@ public class RecipeGrocerTests
         var expectedIngredientsCount = recipe.Ingredients.Count;
         Assume.That(recipe.Ingredients.Count, Is.EqualTo(3));
 
-        var result = _grocer.BreakdownRecipe(recipeID);
+        var result = await _grocer.BreakdownRecipe(recipeID);
 
         var resultIngredientsSum = result.Select(x => x.Quantity).Sum();
         var resultIngredientsCount = result.Count();
-        _recipes.Received(1).Get(recipeID);
-        _recipes.ReceivedWithAnyArgs(3).GetRecipesForItem(Arg.Any<int>());
+        await _recipes.Received(1).Get(recipeID);
+        await _recipes.ReceivedWithAnyArgs(3).GetRecipesForItem(Arg.Any<int>());
         Assert.Multiple(() =>
         {
             Assert.That(resultIngredientsSum, Is.EqualTo(expectedIngredientsSum));
@@ -295,7 +296,7 @@ public class RecipeGrocerTests
     }
 
     [Test]
-    public void GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
+    public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas2Levels_ThenReturnAllBrokenDown()
     {
         var firstRecipe = NewRecipe;
         var firstRecipeID = firstRecipe.RecipeID;
@@ -317,17 +318,17 @@ public class RecipeGrocerTests
             expectedIngredientsCount
         );
 
-        var result = _grocer.BreakdownRecipe(firstRecipeID);
+        var result = await _grocer.BreakdownRecipe(firstRecipeID);
 
         //Ensure we check for every item and its respective potential breakdowns
         var resultIngredientsSum = result.Select(x => x.Quantity).Sum();
         var resultIngredientsCount = result.Count();
-        _recipes.Received(1).Get(firstRecipeID);
-        _recipes.Received(1).Get(_secondRecipeID);
-        _recipes.Received(1).GetRecipesForItem(_firstItemID);
-        _recipes.Received(1).GetRecipesForItem(_secondItemID);
-        _recipes.Received(1).GetRecipesForItem(_subItem1ID);
-        _recipes.Received(1).GetRecipesForItem(_subItem2ID);
+        await _recipes.Received(1).Get(firstRecipeID);
+        await _recipes.Received(1).Get(_secondRecipeID);
+        await _recipes.Received(1).GetRecipesForItem(_firstItemID);
+        await _recipes.Received(1).GetRecipesForItem(_secondItemID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
+        await _recipes.Received(1).GetRecipesForItem(_subItem2ID);
         Assert.Multiple(() =>
         {
             Assert.That(resultIngredientsSum, Is.EqualTo(expectedIngredientsSum));

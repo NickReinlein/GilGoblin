@@ -4,5 +4,5 @@ namespace GilGoblin.Repository;
 
 public interface IRecipeRepository : IDataRepository<RecipePoco>
 {
-    IEnumerable<RecipePoco?> GetRecipesForItem(int id);
+    Task<IEnumerable<RecipePoco?>> GetRecipesForItem(int id);
 }

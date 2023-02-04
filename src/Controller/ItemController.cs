@@ -18,16 +18,16 @@ public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
     }
 
     [HttpGet]
-    public IEnumerable<ItemInfoPoco?> GetAll()
+    public IEnumerable<ItemInfoPoco> GetAll()
     {
         _logger.LogInformation($"Fetching all item info data");
-        return _itemRepo.GetAll();
+        return _itemRepo.GetAll().Result;
     }
 
     [HttpGet("{id}")]
     public ItemInfoPoco? Get(int id)
     {
         _logger.LogInformation($"Fetching item info id: {id}");
-        return _itemRepo.Get(id);
+        return _itemRepo.Get(id).Result;
     }
 }

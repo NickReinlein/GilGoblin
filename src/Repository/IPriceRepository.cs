@@ -4,6 +4,7 @@ namespace GilGoblin.Repository;
 
 public interface IPriceRepository
 {
-    PricePoco Get(int worldID, int id);
-    IEnumerable<PricePoco> GetAll(int worldID);
+    Task<PricePoco?> Get(int worldID, int id);
+    Task<IEnumerable<PricePoco?>> GetMultiple(int worldID, IEnumerable<int> id);
+    Task<IEnumerable<PricePoco>> GetAll(int worldID);
 }
