@@ -30,27 +30,38 @@ public class GoblinDatabase
             if (context is null || context.ItemInfo is null)
                 return;
             await context.Database.EnsureCreatedAsync();
+
             if (context.ItemInfo.Count() < 10)
-            {
-                Log.Information(
-                    "Database table ItemInfo has missing entries. Loading entries from Csv"
-                );
-                var path = ResourceFilePath(ResourceFileNameItemCsv);
-                var result = CsvInteractor<ItemInfoPoco>.LoadFile(path);
-                if (result.Any())
-                {
-                    await context.AddRangeAsync(result);
-                    await context.SaveChangesAsync();
-                    Log.Information(
-                        "Sucessfully saved {ResultCount} entries from Csv",
-                        result.Count()
-                    );
-                }
-            }
+                await FillTable<ItemInfoPoco>(context);
+
+            if (context.Recipe.Count() < 10)
+                await FillTable<RecipePoco>(context);
         }
         catch (Exception e)
         {
             Log.Error(e.Message);
+        }
+    }
+
+    private static async Task FillTable<T>(GilGoblinDbContext context) where T : class
+    {
+        var pocoName = typeof(T).ToString().Split(".")[2];
+        var tableName = pocoName.Remove(pocoName.Length - 4);
+        Log.Warning(
+            "Database table {TableName} has missing entries. Loading entries from Csv",
+            tableName
+        );
+
+        var result = CsvInteractor<T>.LoadFile(ResourceFilePath(ResourceFilenameCsv(tableName)));
+        if (result.Any())
+        {
+            // await context.AddRangeAsync(result);
+            await context.SaveChangesAsync();
+            Log.Information(
+                "Sucessfully saved to table {TableName} {ResultCount} entries from Csv",
+                tableName,
+                result.Count()
+            );
         }
     }
 
@@ -108,9 +119,10 @@ public class GoblinDatabase
         "resources/"
     );
 
-    public static string ResourceFilePath(string resourceFileName) =>
-        System.IO.Path.Combine(ResourcesFolderPath, resourceFileName);
+    public static string ResourceFilePath(string resourceFilename) =>
+        System.IO.Path.Combine(ResourcesFolderPath, resourceFilename);
 
-    public const string ResourceFileNameItemCsv = "Item.csv";
+    public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
+
     public const string DbName = "GilGoblin.db";
 }

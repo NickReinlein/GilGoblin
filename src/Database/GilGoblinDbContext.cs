@@ -63,7 +63,6 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipePoco>().ToTable("Recipe");
         modelBuilder.Entity<RecipePoco>().HasKey(t => t.ID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.ResultQuantity);
-        modelBuilder.Entity<RecipePoco>().Property(t => t.IconID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanHq);
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth);

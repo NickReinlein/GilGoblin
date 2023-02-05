@@ -1,12 +1,17 @@
 using System.Text.Json.Serialization;
+using CsvHelper.Configuration.Attributes;
 
 namespace GilGoblin.Pocos;
 
 public class RecipePoco
 {
+    [Name("#")]
     public int ID { get; set; }
+
+    [Name("Item{Result}")]
     public int TargetItemID { get; set; }
-    public int IconID { get; set; }
+
+    [Name("Amount{Result}")]
     public int ResultQuantity { get; set; }
     public bool CanHq { get; set; }
     public bool CanQuickSynth { get; set; }
@@ -20,7 +25,6 @@ public class RecipePoco
         bool canHq,
         int itemResultTargetID,
         int id,
-        int iconID,
         int amountResult,
         int amountIngredient0,
         int amountIngredient1,
@@ -45,7 +49,6 @@ public class RecipePoco
     ) : base()
     {
         this.CanHq = canHq;
-        this.IconID = iconID;
         this.TargetItemID = itemResultTargetID;
         this.ID = id;
         this.ResultQuantity = amountResult;
@@ -96,7 +99,6 @@ public class RecipePoco
     {
         this.ID = old.ID;
         this.TargetItemID = old.TargetItemID;
-        this.IconID = old.IconID;
         this.ResultQuantity = old.ResultQuantity;
         this.CanHq = old.CanHq;
         this.CanQuickSynth = old.CanQuickSynth;
