@@ -15,7 +15,26 @@ public class RecipePoco
     public int ResultQuantity { get; set; }
     public bool CanHq { get; set; }
     public bool CanQuickSynth { get; set; }
-    public List<IngredientPoco> Ingredients { get; set; } = new List<IngredientPoco>();
+    public int AmountIngredient0 { get; set; }
+    public int AmountIngredient1 { get; set; }
+    public int AmountIngredient2 { get; set; }
+    public int AmountIngredient3 { get; set; }
+    public int AmountIngredient4 { get; set; }
+    public int AmountIngredient5 { get; set; }
+    public int AmountIngredient6 { get; set; }
+    public int AmountIngredient7 { get; set; }
+    public int AmountIngredient8 { get; set; }
+    public int AmountIngredient9 { get; set; }
+    public int ItemIngredient0TargetID { get; set; }
+    public int ItemIngredient1TargetID { get; set; }
+    public int ItemIngredient2TargetID { get; set; }
+    public int ItemIngredient3TargetID { get; set; }
+    public int ItemIngredient4TargetID { get; set; }
+    public int ItemIngredient5TargetID { get; set; }
+    public int ItemIngredient6TargetID { get; set; }
+    public int ItemIngredient7TargetID { get; set; }
+    public int ItemIngredient8TargetID { get; set; }
+    public int ItemIngredient9TargetID { get; set; }
 
     public RecipePoco() { }
 
@@ -48,60 +67,44 @@ public class RecipePoco
         int itemIngredient9TargetID
     ) : base()
     {
-        this.CanHq = canHq;
-        this.TargetItemID = itemResultTargetID;
-        this.ID = id;
-        this.ResultQuantity = amountResult;
-        this.CanQuickSynth = canQuickSynth;
-        if (amountIngredient0 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient0TargetID, amountIngredient0, ID));
-        }
-        if (amountIngredient1 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient1TargetID, amountIngredient1, ID));
-        }
-        if (amountIngredient2 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient2TargetID, amountIngredient2, ID));
-        }
-        if (amountIngredient3 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient3TargetID, amountIngredient3, ID));
-        }
-        if (amountIngredient4 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient4TargetID, amountIngredient4, ID));
-        }
-        if (amountIngredient5 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient5TargetID, amountIngredient5, ID));
-        }
-        if (amountIngredient6 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient6TargetID, amountIngredient6, ID));
-        }
-        if (amountIngredient7 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient7TargetID, amountIngredient7, ID));
-        }
-        if (amountIngredient8 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient8TargetID, amountIngredient8, ID));
-        }
-        if (amountIngredient9 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient9TargetID, amountIngredient9, ID));
-        }
+        CanHq = canHq;
+        TargetItemID = itemResultTargetID;
+        ID = id;
+        ResultQuantity = amountResult;
+        AmountIngredient0 = amountIngredient0;
+        AmountIngredient1 = amountIngredient1;
+        AmountIngredient2 = amountIngredient2;
+        AmountIngredient3 = amountIngredient3;
+        AmountIngredient4 = amountIngredient4;
+        AmountIngredient5 = amountIngredient5;
+        AmountIngredient6 = amountIngredient6;
+        AmountIngredient7 = amountIngredient7;
+        AmountIngredient8 = amountIngredient8;
+        AmountIngredient9 = amountIngredient9;
+        ItemIngredient0TargetID = itemIngredient0TargetID;
+        ItemIngredient1TargetID = itemIngredient1TargetID;
+        ItemIngredient2TargetID = itemIngredient2TargetID;
+        ItemIngredient3TargetID = itemIngredient3TargetID;
+        ItemIngredient4TargetID = itemIngredient4TargetID;
+        ItemIngredient5TargetID = itemIngredient5TargetID;
+        ItemIngredient6TargetID = itemIngredient6TargetID;
+        ItemIngredient7TargetID = itemIngredient7TargetID;
+        ItemIngredient8TargetID = itemIngredient8TargetID;
+        ItemIngredient9TargetID = itemIngredient9TargetID;
+        CanQuickSynth = canQuickSynth;
     }
 
-    public RecipePoco(RecipePoco old)
-    {
-        this.ID = old.ID;
-        this.TargetItemID = old.TargetItemID;
-        this.ResultQuantity = old.ResultQuantity;
-        this.CanHq = old.CanHq;
-        this.CanQuickSynth = old.CanQuickSynth;
-        this.Ingredients = old.Ingredients;
-    }
+    public List<IngredientPoco> Ingredients =>
+        new()
+        {
+            new IngredientPoco(ItemIngredient0TargetID, AmountIngredient1, ID),
+            new IngredientPoco(ItemIngredient1TargetID, AmountIngredient2, ID),
+            new IngredientPoco(ItemIngredient2TargetID, AmountIngredient3, ID),
+            new IngredientPoco(ItemIngredient3TargetID, AmountIngredient4, ID),
+            new IngredientPoco(ItemIngredient5TargetID, AmountIngredient5, ID),
+            new IngredientPoco(ItemIngredient6TargetID, AmountIngredient6, ID),
+            new IngredientPoco(ItemIngredient7TargetID, AmountIngredient7, ID),
+            new IngredientPoco(ItemIngredient8TargetID, AmountIngredient8, ID),
+            new IngredientPoco(ItemIngredient9TargetID, AmountIngredient9, ID)
+        };
 }

@@ -27,7 +27,7 @@ public class GoblinDatabase
     {
         try
         {
-            if (context is null || context.ItemInfo is null)
+            if (context is null || context.ItemInfo is null || context.Recipe is null)
                 return;
             await context.Database.EnsureCreatedAsync();
 

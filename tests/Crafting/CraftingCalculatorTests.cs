@@ -62,14 +62,11 @@ public class CraftingCalculatorTests
         var recipe = NewRecipe;
         recipe.TargetItemID = itemID;
         recipe.ResultQuantity = 1;
-        var ingredient = new IngredientPoco(recipe.Ingredients.First())
-        {
-            Quantity = 10,
-            ItemID = ingredientID
-        };
         var ingredientMarket = GetNewPrice;
         ingredientMarket.ItemID = ingredientID;
-        recipe.Ingredients = new List<IngredientPoco>() { ingredient };
+        recipe.ItemIngredient0TargetID = ingredientID;
+        recipe.AmountIngredient0 = 10;
+
         var itemIDList = new List<int>() { itemID, ingredientID };
         itemIDList.Sort();
         MockReposForSingularTest(market, recipe, ingredientMarket);

@@ -10,13 +10,15 @@ public class ItemInfoPoco
     public int ID { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public int Icon { get; set; }
+    public int IconID { get; set; }
+
     [Name("Level{Item}")]
-    public int Level {get;set;}
+    public int Level { get; set; }
+
     [Name("Price{Mid}")]
     public int VendorPrice { get; set; }
     public int StackSize { get; set; }
-    public bool CanBeHq {get; set;}
+    public bool CanBeHq { get; set; }
 
     [JsonConstructor]
     public ItemInfoPoco(
@@ -27,10 +29,11 @@ public class ItemInfoPoco
         int priceMid,
         int stackSize,
         int level,
-        bool canBeHq)
+        bool canBeHq
+    )
     {
         ID = id;
-        Icon = iconID;
+        IconID = iconID;
         Description = description;
         Name = name;
         VendorPrice = priceMid;

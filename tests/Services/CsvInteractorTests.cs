@@ -25,10 +25,10 @@ public class CsvInteractorTests
         Assert.Multiple(() =>
         {
             Assert.That(gilItemEntry.Name, Is.EqualTo("Gil"));
-            Assert.That(gilItemEntry.Icon, Is.EqualTo(65002));
+            Assert.That(gilItemEntry.IconID, Is.EqualTo(65002));
             Assert.That(gilItemEntry.StackSize, Is.GreaterThanOrEqualTo(9999999));
             Assert.That(lightningShardItemEntry.Name, Is.EqualTo("Lightning Shard"));
-            Assert.That(lightningShardItemEntry.Icon, Is.EqualTo(20005));
+            Assert.That(lightningShardItemEntry.IconID, Is.EqualTo(20005));
             Assert.That(lightningShardItemEntry.StackSize, Is.EqualTo(9999));
         });
     }
