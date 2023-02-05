@@ -2,48 +2,67 @@ using Microsoft.Data.Sqlite;
 using Serilog;
 using GilGoblin.Services;
 using GilGoblin.Pocos;
+using System.Data;
 
 namespace GilGoblin.Database;
 
 public class GoblinDatabase
 {
-    private const string Resource = "resources/AllItems.json";
-    private static readonly string BaseFolderPath = Directory
-        .GetParent(System.IO.Directory.GetCurrentDirectory())
-        .Parent.Parent.Parent.FullName;
-    public static readonly string ResourceFilePath = System.IO.Path.Combine(
-        BaseFolderPath,
-        Resource
-    );
-    public static string FilePath = System.IO.Path.GetDirectoryName(AppContext.BaseDirectory);
-    public static string DbName = "GilGoblin.db";
-    public static string Path = System.IO.Path.Combine(FilePath, DbName);
     private static SqliteConnection? Connection { get; set; }
 
-    public GilGoblinDbContext GetContext()
+    public GoblinDatabase() { }
+
+    public async static Task<GilGoblinDbContext?> GetContext()
     {
-        var context = new GilGoblinDbContext();
-        FillTablesIfEmpty(context);
+        Connection ??= Connect();
+        if (Connection is null || Connection.State != ConnectionState.Open)
+            return null;
+
+        var context = new GilGoblinDbContext(Connection);
+        await FillTablesIfEmpty(context);
         return context;
     }
 
-    private async Task FillTablesIfEmpty(GilGoblinDbContext context)
+    private static async Task FillTablesIfEmpty(GilGoblinDbContext? context)
     {
-        if (context.ItemInfo?.Count() < 10)
+        try
         {
-            // var result = await JSONLoader.LoadJSONFile<ItemInfoPoco>(ResourceFilePath);
-            // if (result.Any())
-            // {
-            //     // save results if correct
-            // }
+            if (context is null || context.ItemInfo is null)
+                return;
+            await context.Database.EnsureCreatedAsync();
+            if (context.ItemInfo.Count() < 10)
+            {
+                Log.Information(
+                    "Database table ItemInfo has missing entries. Loading entries from Csv"
+                );
+                var path = ResourceFilePath(ResourceFileNameItemCsv);
+                var result = CsvInteractor<ItemInfoPoco>.LoadFile(path);
+                if (result.Any())
+                {
+                    await context.AddRangeAsync(result);
+                    await context.SaveChangesAsync();
+                    Log.Information(
+                        "Sucessfully saved {ResultCount} entries from Csv",
+                        result.Count()
+                    );
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
         }
     }
 
     public static SqliteConnection? Connect()
     {
+        if (Connection is not null)
+            return Connection;
+
         try
         {
-            Connection ??= new SqliteConnection("Data Source=" + Path);
+            var path = ResourceFilePath(DbName);
+            Connection ??= new SqliteConnection("Data Source=" + path);
 
             if (Connection.State == System.Data.ConnectionState.Open)
                 return Connection;
@@ -52,8 +71,7 @@ public class GoblinDatabase
             if (Connection.State == System.Data.ConnectionState.Open)
                 return Connection;
 
-            Log.Error("Connection not open. State is: {State}.", Connection.State);
-            return null;
+            throw new Exception($"Connection not open. State is: {Connection?.State}");
         }
         catch (Exception ex)
         {
@@ -64,11 +82,8 @@ public class GoblinDatabase
 
     public static void Disconnect()
     {
-        if (GoblinDatabase.Connection.State == System.Data.ConnectionState.Closed)
-            return;
-
-        Connection.Close();
-        Connection.Dispose();
+        Connection?.Close();
+        Connection?.Dispose();
     }
 
     public static void Save(GilGoblinDbContext context)
@@ -77,7 +92,6 @@ public class GoblinDatabase
         {
             Log.Debug("Saving to database.");
 
-            context.Database.EnsureCreated();
             var savedEntries = context.SaveChanges();
 
             Log.Debug("Saved {saved} entries to the database.", savedEntries);
@@ -88,4 +102,15 @@ public class GoblinDatabase
             Log.Error("Database save failed! Message: {Message}.", ex.Message);
         }
     }
+
+    public static readonly string ResourcesFolderPath = System.IO.Path.Combine(
+        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName,
+        "resources/"
+    );
+
+    public static string ResourceFilePath(string resourceFileName) =>
+        System.IO.Path.Combine(ResourcesFolderPath, resourceFileName);
+
+    public const string ResourceFileNameItemCsv = "Item.csv";
+    public const string DbName = "GilGoblin.db";
 }

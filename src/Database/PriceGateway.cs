@@ -1,11 +1,12 @@
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using Serilog;
 
 namespace GilGoblin.Database;
 
-public class PriceGateway : IPriceGateway
+public class PriceGateway : IPriceRepository
 {
-    public PricePoco GetPrice(int worldID, int itemID)
+    public async Task<PricePoco> Get(int worldID, int itemID)
     {
         return new PricePoco
         {
@@ -18,14 +19,16 @@ public class PriceGateway : IPriceGateway
         };
     }
 
-    public IEnumerable<PricePoco> GetPrices(int worldID, IEnumerable<int> itemIDs)
+    public async Task<IEnumerable<PricePoco?>> GetMultiple(int worldID, IEnumerable<int> itemIDs)
     {
+        var returnList = new List<PricePoco?>();
         foreach (var itemId in itemIDs)
         {
-            yield return GetPrice(worldID, itemId);
+            returnList.Add(await Get(worldID, itemId));
         }
+        return returnList;
     }
 
-    public IEnumerable<PricePoco> GetAllPrices(int worldID) =>
-        GetPrices(worldID, Enumerable.Range(1, 20).ToArray());
+    public async Task<IEnumerable<PricePoco>> GetAll(int worldID) =>
+        await GetMultiple(worldID, Enumerable.Range(1, 20).ToArray());
 }

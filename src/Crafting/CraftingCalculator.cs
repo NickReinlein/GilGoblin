@@ -26,31 +26,35 @@ public class CraftingCalculator : ICraftingCalculator
         _log = log;
     }
 
-    public int CalculateCraftingCostForItem(int worldID, int itemID)
+    public async Task<int> CalculateCraftingCostForItem(int worldID, int itemID)
     {
-        var recipes = _recipes.GetRecipesForItem(itemID);
+        var recipes = await _recipes.GetRecipesForItem(itemID);
         var recipeCount = recipes.Count();
-        var craftingCost = GetLowestCraftingCost(worldID, recipes);
+        var craftingCost = await GetLowestCraftingCost(worldID, recipes);
         LogCraftingResult(worldID, itemID, recipeCount, craftingCost);
         return craftingCost;
     }
 
-    public int CalculateCraftingCostForRecipe(int worldID, int recipeID)
+    public async Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID)
     {
         try
         {
-            var recipe = this._recipes.Get(recipeID);
-            var ingredients = _grocer.BreakdownRecipe(recipeID);
+            var recipe = await _recipes.Get(recipeID);
+            var ingredients = await _grocer.BreakdownRecipe(recipeID);
             if (recipe is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
-            var ingredientPrices = GetIngredientPrice(worldID, recipe.TargetItemID, ingredients);
+            var ingredientPrices = await GetIngredientPrice(
+                worldID,
+                recipe.TargetItemID,
+                ingredients
+            );
             IEnumerable<CraftIngredientPoco> craftIngredients = AddPricesToIngredients(
                 ingredients,
                 ingredientPrices
             );
 
-            var craftingCost = CalculateCraftingCostForIngredients(worldID, craftIngredients);
+            var craftingCost = await CalculateCraftingCostForIngredients(worldID, craftIngredients);
 
             Log.Information(
                 "Successfully calculated crafting cost of {CraftCost} for recipe {RecipeID} world {WorldID} with {IngCount} ingredients",
@@ -77,7 +81,7 @@ public class CraftingCalculator : ICraftingCalculator
         }
     }
 
-    public int CalculateCraftingCostForIngredients(
+    public async Task<int> CalculateCraftingCostForIngredients(
         int worldID,
         IEnumerable<CraftIngredientPoco> craftIngredients
     )
@@ -86,7 +90,7 @@ public class CraftingCalculator : ICraftingCalculator
         foreach (var craft in craftIngredients)
         {
             var averageSold = (int)craft.Price.AverageSold;
-            var craftingCost = CalculateCraftingCostForItem(worldID, craft.ItemID);
+            var craftingCost = await CalculateCraftingCostForItem(worldID, craft.ItemID);
             var minCost = Math.Min(averageSold, craftingCost);
 
             Log.Information(
@@ -120,19 +124,26 @@ public class CraftingCalculator : ICraftingCalculator
         return crafts;
     }
 
-    private IEnumerable<PricePoco> GetIngredientPrice(
+    private async Task<IEnumerable<PricePoco?>> GetIngredientPrice(
         int worldID,
         int itemID,
-        IEnumerable<IngredientPoco> ingredients
+        IEnumerable<IngredientPoco?> ingredients
     )
     {
-        var itemIDList = ingredients.Select(e => e.ItemID).ToList();
+        var itemIDList = ingredients
+            .Where(i => i is not null)
+            .ToList()
+            .Select(e => e!.ItemID)
+            .ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
         var result = new List<PricePoco>();
         foreach (var ingredientID in itemIDList)
         {
-            result.Add(_prices.Get(worldID, ingredientID));
+            var ingredientPrice = await _prices.Get(worldID, ingredientID);
+            if (ingredientPrice is null)
+                continue;
+            result.Add(ingredientPrice);
         }
 
         if (!result.Any())
@@ -140,12 +151,14 @@ public class CraftingCalculator : ICraftingCalculator
         return result;
     }
 
-    private int GetLowestCraftingCost(int worldID, IEnumerable<RecipePoco> recipes)
+    private async Task<int> GetLowestCraftingCost(int worldID, IEnumerable<RecipePoco?> recipes)
     {
         var lowestCost = ERROR_DEFAULT_COST;
         foreach (var recipe in recipes)
         {
-            var recipeCost = CalculateCraftingCostForRecipe(worldID, recipe.RecipeID);
+            if (recipe is null)
+                continue;
+            var recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.ID);
             lowestCost = Math.Min(recipeCost, lowestCost);
         }
         return lowestCost;

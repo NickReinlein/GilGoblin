@@ -1,11 +1,12 @@
 using System.Data;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
-public class ItemGateway : IItemGateway
+public class ItemGateway : IItemRepository
 {
     private readonly GoblinDatabase _database;
     private readonly ILogger<GoblinDatabase> _logger;
@@ -16,14 +17,33 @@ public class ItemGateway : IItemGateway
         _logger = logger;
     }
 
-    public async Task<ItemInfoPoco?> GetItem(int itemID)
+    public async Task<ItemInfoPoco?> Get(int itemID)
+    {
+        using var context = await GetContext();
+        var itemInfoPoco = context?.ItemInfo?.FirstOrDefault(x => x.ID == itemID);
+        return itemInfoPoco;
+    }
+
+    public async Task<IEnumerable<ItemInfoPoco>> GetAll()
+    {
+        using var context = await GetContext();
+        return context?.ItemInfo?.ToList() ?? new List<ItemInfoPoco>();
+    }
+
+    public async Task<IEnumerable<ItemInfoPoco?>> GetMultiple(IEnumerable<int> itemIDs)
+    {
+        using var context = await GetContext();
+        return context?.ItemInfo?.Where(i => itemIDs.Contains(i.ID)).ToList()
+            ?? new List<ItemInfoPoco>();
+    }
+
+    private async Task<GilGoblinDbContext?> GetContext()
     {
         try
         {
-            using var connection = GoblinDatabase.Connect();
-            connection.Open();
-            using var context = _database.GetContext();
-            return context.ItemInfo?.Single(x => x.ID == itemID);
+            var connection = GoblinDatabase.Connect();
+            connection?.Open();
+            return await GoblinDatabase.GetContext();
         }
         catch (Exception e)
         {
@@ -31,17 +51,4 @@ public class ItemGateway : IItemGateway
             return null;
         }
     }
-
-    public async Task<IEnumerable<ItemInfoPoco>> GetItems(IEnumerable<int> itemIDs)
-    {
-        var items = new List<ItemInfoPoco>();
-        foreach (var itemId in itemIDs)
-        {
-            items.Add(await GetItem(itemId));
-        }
-        return items;
-    }
-
-    public async Task<IEnumerable<ItemInfoPoco>> GetAllItems() =>
-        await GetItems(Enumerable.Range(1, 10).ToArray());
 }

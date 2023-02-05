@@ -9,5 +9,5 @@ public interface IPriceController
     IEnumerable<PricePoco> GetAll(int worldID);
 
     [HttpGet("{worldId}/{id}")]
-    PricePoco Get(int worldID, int id);
+    PricePoco? Get(int worldID, int id);
 }

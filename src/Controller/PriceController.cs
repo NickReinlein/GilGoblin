@@ -21,14 +21,14 @@ public class PriceController : ControllerBase, IPriceController
     public IEnumerable<PricePoco> GetAll(int worldID)
     {
         _logger.LogInformation($"Fetching all market data for world {worldID}");
-        return _priceRepo.GetAll(worldID);
+        return _priceRepo.GetAll(worldID).Result;
     }
 
     [HttpGet("{worldId}/{id}")]
-    public PricePoco Get(int worldID, int id)
+    public PricePoco? Get(int worldID, int id)
     {
         _logger.LogInformation($"Fetching market data world {worldID}, id: {id}");
-        return _priceRepo.Get(worldID, id);
+        return _priceRepo.Get(worldID, id).Result;
         ;
     }
 }

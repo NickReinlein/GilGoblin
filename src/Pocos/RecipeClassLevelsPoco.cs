@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace GilGoblin.Pocos;
 
@@ -20,5 +18,4 @@ public class RecipeClassLevelsPoco
         this.RecipeID = id;
         this.Level = level;
     }
-
 }

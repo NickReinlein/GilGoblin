@@ -1,25 +1,29 @@
 using GilGoblin.Pocos;
-using Newtonsoft.Json;
+using GilGoblin.Repository;
 
 namespace GilGoblin.Database;
 
-public class RecipeGateway : IRecipeGateway
+public class RecipeGateway : IRecipeRepository
 {
-    public RecipePoco GetRecipe(int recipeID) => new();
+    public async Task<RecipePoco?> Get(int recipeID) => new();
 
-    public IEnumerable<RecipePoco> GetRecipesForItem(int itemID) => Array.Empty<RecipePoco>();
+    public async Task<IEnumerable<RecipePoco?>> GetRecipesForItem(int itemID) =>
+        Array.Empty<RecipePoco>();
 
-    public IEnumerable<RecipePoco> GetRecipes(IEnumerable<int> recipeIDs)
+    public async Task<IEnumerable<RecipePoco?>> GetMultiple(IEnumerable<int> recipeIDs)
     {
         var recipes = new List<RecipePoco>();
         foreach (var recipe in recipeIDs)
         {
-            recipes.Add(GetRecipe(recipe));
+            var result = await Get(recipe);
+            if (result is null)
+                continue;
+            recipes.Add(result);
         }
         return recipes;
     }
 
-    public IEnumerable<RecipePoco> GetAllRecipes()
+    public async Task<IEnumerable<RecipePoco>> GetAll()
     {
         return new List<RecipePoco>();
     }
