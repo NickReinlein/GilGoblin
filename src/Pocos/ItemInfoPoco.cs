@@ -10,6 +10,8 @@ public class ItemInfoPoco
     public int ID { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
+
+    [Name("Icon")]
     public int IconID { get; set; }
 
     [Name("Level{Item}")]

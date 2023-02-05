@@ -15,25 +15,65 @@ public class RecipePoco
     public int ResultQuantity { get; set; }
     public bool CanHq { get; set; }
     public bool CanQuickSynth { get; set; }
+
+    [Name("Amount{Ingredient}[0]")]
     public int AmountIngredient0 { get; set; }
+
+    [Name("Amount{Ingredient}[1]")]
     public int AmountIngredient1 { get; set; }
+
+    [Name("Amount{Ingredient}[2]")]
     public int AmountIngredient2 { get; set; }
+
+    [Name("Amount{Ingredient}[3]")]
     public int AmountIngredient3 { get; set; }
+
+    [Name("Amount{Ingredient}[4]")]
     public int AmountIngredient4 { get; set; }
+
+    [Name("Amount{Ingredient}[5]")]
     public int AmountIngredient5 { get; set; }
+
+    [Name("Amount{Ingredient}[6]")]
     public int AmountIngredient6 { get; set; }
+
+    [Name("Amount{Ingredient}[7]")]
     public int AmountIngredient7 { get; set; }
+
+    [Name("Amount{Ingredient}[8]")]
     public int AmountIngredient8 { get; set; }
+
+    [Name("Amount{Ingredient}[9]")]
     public int AmountIngredient9 { get; set; }
+
+    [Name("Item{Ingredient}[0]")]
     public int ItemIngredient0TargetID { get; set; }
+
+    [Name("Item{Ingredient}[1]")]
     public int ItemIngredient1TargetID { get; set; }
+
+    [Name("Item{Ingredient}[2]")]
     public int ItemIngredient2TargetID { get; set; }
+
+    [Name("Item{Ingredient}[3]")]
     public int ItemIngredient3TargetID { get; set; }
+
+    [Name("Item{Ingredient}[4]")]
     public int ItemIngredient4TargetID { get; set; }
+
+    [Name("Item{Ingredient}[5]")]
     public int ItemIngredient5TargetID { get; set; }
+
+    [Name("Item{Ingredient}[6]")]
     public int ItemIngredient6TargetID { get; set; }
+
+    [Name("Item{Ingredient}[7]")]
     public int ItemIngredient7TargetID { get; set; }
+
+    [Name("Item{Ingredient}[8]")]
     public int ItemIngredient8TargetID { get; set; }
+
+    [Name("Item{Ingredient}[9]")]
     public int ItemIngredient9TargetID { get; set; }
 
     public RecipePoco() { }
@@ -93,18 +133,4 @@ public class RecipePoco
         ItemIngredient9TargetID = itemIngredient9TargetID;
         CanQuickSynth = canQuickSynth;
     }
-
-    public List<IngredientPoco> Ingredients =>
-        new()
-        {
-            new IngredientPoco(ItemIngredient0TargetID, AmountIngredient1, ID),
-            new IngredientPoco(ItemIngredient1TargetID, AmountIngredient2, ID),
-            new IngredientPoco(ItemIngredient2TargetID, AmountIngredient3, ID),
-            new IngredientPoco(ItemIngredient3TargetID, AmountIngredient4, ID),
-            new IngredientPoco(ItemIngredient5TargetID, AmountIngredient5, ID),
-            new IngredientPoco(ItemIngredient6TargetID, AmountIngredient6, ID),
-            new IngredientPoco(ItemIngredient7TargetID, AmountIngredient7, ID),
-            new IngredientPoco(ItemIngredient8TargetID, AmountIngredient8, ID),
-            new IngredientPoco(ItemIngredient9TargetID, AmountIngredient9, ID)
-        };
 }

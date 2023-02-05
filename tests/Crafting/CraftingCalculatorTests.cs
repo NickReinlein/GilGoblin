@@ -1,4 +1,5 @@
 using GilGoblin.Crafting;
+using GilGoblin.Extension;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
@@ -122,8 +123,8 @@ public class CraftingCalculatorTests
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
         await _recipes.Received().Get(recipeID);
-        await _recipes.Received().GetRecipesForItem(recipe.Ingredients[0].ItemID);
-        await _recipes.Received().GetRecipesForItem(recipe.Ingredients[1].ItemID);
+        await _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetID);
+        await _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetID);
         await _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
         await _prices.Received().Get(_worldID, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
@@ -135,16 +136,16 @@ public class CraftingCalculatorTests
         var recipeID = recipe.ID;
         _recipes.GetRecipesForItem(recipeID).Returns(new List<RecipePoco>() { recipe });
         _recipes.Get(recipeID).Returns(recipe);
-        foreach (var ingredient in recipe.Ingredients)
+        foreach (var ingredient in recipe.Ingredients())
             _recipes.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
 
         _prices.Get(price.WorldID, price.ItemID).Returns(price);
-        _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients);
+        _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients());
     }
 
     private void SetupPricesForIngredients(RecipePoco recipe, int worldID = 34)
     {
-        foreach (var ingredient in recipe.Ingredients)
+        foreach (var ingredient in recipe.Ingredients())
         {
             var ingredientPrice = new PricePoco()
             {
@@ -166,7 +167,7 @@ public class CraftingCalculatorTests
     {
         _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
         _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID).ReturnsForAnyArgs(market);
-        _grocer.BreakdownRecipe(recipe.ID).Returns(recipe.Ingredients);
+        _grocer.BreakdownRecipe(recipe.ID).Returns(recipe.Ingredients());
         _recipes.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
         _recipes.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
         _recipes.Get(recipe.ID).Returns(recipe);
@@ -181,7 +182,6 @@ public class CraftingCalculatorTests
             true,
             _targetItemID,
             _recipeID,
-            254,
             1,
             3,
             4,

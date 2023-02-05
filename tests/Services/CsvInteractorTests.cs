@@ -10,16 +10,16 @@ public class CsvInteractorTests
     public void SetUp() { }
 
     [Test]
-    public void WhenWeLoadATestFile_ThenWeReadAndDeserializeObjects()
+    public void WhenWeLoadAnItemTestFile_ThenWeReadAndDeserializeItems()
     {
-        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath);
+        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath(ItemTestFileName));
         Assert.That(result.Count, Is.GreaterThan(10));
     }
 
     [Test]
-    public void WhenWeLoadATestFile_ThenDeserializeObjectsCorrectly()
+    public void WhenWeLoadAnItemTestFile_ThenWeDeserializeItems()
     {
-        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath);
+        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath(ItemTestFileName));
         var gilItemEntry = result.First(i => i.ID == 1);
         var lightningShardItemEntry = result.First(i => i.ID == 6);
         Assert.Multiple(() =>
@@ -33,15 +33,23 @@ public class CsvInteractorTests
         });
     }
 
-    public static readonly string ResourcesFolderPath = System.IO.Path.Combine(
+    [Test]
+    public void WhenWeLoadARecipeTestFile_ThenWeReadAndDeserializeRecipes()
+    {
+        var result = CsvInteractor<RecipePoco>.LoadFile(ResourceFilePath(RecipeTestFileName));
+        Assert.That(result.Count, Is.GreaterThan(10));
+    }
+
+    private static string ResourcesFolderPath = System.IO.Path.Combine(
         Directory
             .GetParent(System.IO.Directory.GetCurrentDirectory())
             .Parent.Parent.Parent.FullName,
         "resources/"
     );
-    public static readonly string ResourceFilePath = System.IO.Path.Combine(
-        ResourcesFolderPath,
-        ResourceFileName
-    );
-    public const string ResourceFileName = "ItemTest.csv";
+
+    private static string ResourceFilePath(string filename) =>
+        System.IO.Path.Combine(ResourcesFolderPath, filename);
+
+    public const string ItemTestFileName = "ItemTest.csv";
+    public const string RecipeTestFileName = "RecipeTest.csv";
 }

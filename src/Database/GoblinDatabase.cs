@@ -52,16 +52,25 @@ public class GoblinDatabase
             tableName
         );
 
-        var result = CsvInteractor<T>.LoadFile(ResourceFilePath(ResourceFilenameCsv(tableName)));
-        if (result.Any())
+        var path = ResourceFilePath(ResourceFilenameCsv(tableName));
+        try
         {
-            // await context.AddRangeAsync(result);
-            await context.SaveChangesAsync();
-            Log.Information(
-                "Sucessfully saved to table {TableName} {ResultCount} entries from Csv",
-                tableName,
-                result.Count()
-            );
+            var result = CsvInteractor<T>.LoadFile(path);
+
+            if (result.Any())
+            {
+                // await context.AddRangeAsync(result);
+                await context.SaveChangesAsync();
+                Log.Information(
+                    "Sucessfully saved to table {TableName} {ResultCount} entries from Csv",
+                    tableName,
+                    result.Count()
+                );
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
         }
     }
 

@@ -8,7 +8,7 @@ public static class CsvInteractor<T> where T : class
 {
     public static IEnumerable<T> LoadFile(string path)
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true, };
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, config);
         try

@@ -1,3 +1,4 @@
+using GilGoblin.Extension;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
@@ -24,7 +25,7 @@ public class RecipeGrocer : IRecipeGrocer
             return Array.Empty<IngredientPoco>();
         }
 
-        var ingredientList = await BreakDownIngredientEntirely(recipe.Ingredients);
+        var ingredientList = await BreakDownIngredientEntirely(recipe.Ingredients());
 
         return ingredientList;
     }
