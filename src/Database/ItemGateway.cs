@@ -42,10 +42,7 @@ public class ItemGateway : IItemRepository
         try
         {
             var connection = GoblinDatabase.Connect();
-            if (connection is null)
-                throw new IOException("Unable to connect to the database");
-
-            connection.Open();
+            connection?.Open();
             return await GoblinDatabase.GetContext();
         }
         catch (Exception e)

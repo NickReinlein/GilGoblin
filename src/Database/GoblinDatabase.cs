@@ -2,6 +2,7 @@ using Microsoft.Data.Sqlite;
 using Serilog;
 using GilGoblin.Services;
 using GilGoblin.Pocos;
+using System.Data;
 
 namespace GilGoblin.Database;
 
@@ -14,7 +15,7 @@ public class GoblinDatabase
     public async static Task<GilGoblinDbContext?> GetContext()
     {
         Connection ??= Connect();
-        if (Connection is null)
+        if (Connection is null || Connection.State != ConnectionState.Open)
             return null;
 
         var context = new GilGoblinDbContext(Connection);
@@ -22,18 +23,34 @@ public class GoblinDatabase
         return context;
     }
 
-    private static async Task FillTablesIfEmpty(GilGoblinDbContext context)
+    private static async Task FillTablesIfEmpty(GilGoblinDbContext? context)
     {
-        var count = context.ItemInfo?.Count();
-        if (count < 10)
+        try
         {
-            var path = ResourceFilePath(ResourceFileNameItemCsv);
-            var result = CsvInteractor<ItemInfoPoco>.LoadFile(path);
-            if (result.Any())
+            if (context is null || context.ItemInfo is null)
+                return;
+            await context.Database.EnsureCreatedAsync();
+            if (context.ItemInfo.Count() < 10)
             {
-                await context.AddRangeAsync(result);
-                await context.SaveChangesAsync();
+                Log.Information(
+                    "Database table ItemInfo has missing entries. Loading entries from Csv"
+                );
+                var path = ResourceFilePath(ResourceFileNameItemCsv);
+                var result = CsvInteractor<ItemInfoPoco>.LoadFile(path);
+                if (result.Any())
+                {
+                    await context.AddRangeAsync(result);
+                    await context.SaveChangesAsync();
+                    Log.Information(
+                        "Sucessfully saved {ResultCount} entries from Csv",
+                        result.Count()
+                    );
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
         }
     }
 
