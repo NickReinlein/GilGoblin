@@ -59,7 +59,7 @@ public class GoblinDatabase
 
             if (result.Any())
             {
-                // await context.AddRangeAsync(result);
+                await context.AddRangeAsync(result);
                 await context.SaveChangesAsync();
                 Log.Information(
                     "Sucessfully saved to table {TableName} {ResultCount} entries from Csv",
