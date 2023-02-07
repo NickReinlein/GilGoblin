@@ -1,8 +1,8 @@
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Ext;
+namespace GilGoblin.Extensions;
 
-public static class PricePocoExtension
+public static class PricePocoExtensions
 {
     public static int GetAverageSoldPrice(this PricePoco price, bool hq = false)
     {

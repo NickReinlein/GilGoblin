@@ -84,7 +84,7 @@ public class RecipeGrocer : IRecipeGrocer
                 var recipeIngredients = await BreakdownRecipe(ingredientRecipeID);
                 foreach (var ingredient in recipeIngredients)
                 {
-                    if (ingredient is null)
+                    if (ingredient is null || ingredient.Quantity == 0)
                         continue;
 
                     ingredient.Quantity *= ingredientRecipe.ResultQuantity;
