@@ -46,7 +46,6 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldHQ);
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldNQ);
         modelBuilder.Entity<PricePoco>().Property(t => t.Name);
-        modelBuilder.Entity<PricePoco>().Property(t => t.RegionName);
         modelBuilder.Entity<PricePoco>().HasKey(t => new { t.ItemID, t.WorldID });
 
         modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
