@@ -14,8 +14,6 @@ public class PriceGateway : IPriceRepository
             WorldID = worldID,
             AverageListingPrice = 100,
             AverageSold = 80,
-            Name = "TestItem",
-            RegionName = "TestRealm"
         };
     }
 

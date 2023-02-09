@@ -46,13 +46,15 @@ public class RecipeGrocer : IRecipeGrocer
 
             var itemID = ingredient.ItemID;
             _log.LogDebug("Breaking down item ID {ItemID}", itemID);
-            var breakdownIngredient = await BreakdownItem(itemID);
-            if (breakdownIngredient.Any(i => i is not null))
+            var breakdownIngredients = await BreakdownItem(itemID);
+            if (breakdownIngredients.Any(i => i is not null && i.Quantity > 0))
             {
-                _log.LogDebug("Found {IngCount} ingredients", breakdownIngredient.Count());
-                ingredientsBrokenDownList.AddRange(
-                    breakdownIngredient.Where(i => i is not null).ToList<IngredientPoco>()
-                );
+                _log.LogDebug("Found {IngCount} ingredients", breakdownIngredients.Count());
+                var ingredients = breakdownIngredients
+                    .Where(i => i is not null && i.Quantity > 0)
+                    .ToList<IngredientPoco>();
+                ingredients.ForEach(i => i.Quantity *= ingredient.Quantity);
+                ingredientsBrokenDownList.AddRange(ingredients);
             }
             else
             {

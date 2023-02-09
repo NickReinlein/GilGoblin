@@ -152,8 +152,7 @@ public class CraftingCalculatorTests
                 ItemID = ingredient.ItemID,
                 AverageListingPrice = 300,
                 AverageSold = 280,
-                WorldID = worldID,
-                Name = "TestItem" + ingredient.ItemID,
+                WorldID = worldID
             };
             _prices.Get(worldID, ingredient.ItemID).Returns(ingredientPrice);
         }
@@ -173,8 +172,7 @@ public class CraftingCalculatorTests
         _recipes.Get(recipe.ID).Returns(recipe);
     }
 
-    private static PricePoco GetNewPrice =>
-        new(1, _worldID, 1, "Iron Sword", "testRealm", 300, 200, 400, 600, 400, 800);
+    private static PricePoco GetNewPrice => new(1, _worldID, 1, 300, 200, 400, 600, 400, 800);
 
     private static RecipePoco NewRecipe =>
         new(

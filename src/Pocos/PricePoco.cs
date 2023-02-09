@@ -13,12 +13,6 @@ public class PricePoco
     // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
     public long LastUploadTime { get; set; }
 
-    // The DC name, if applicable.
-    public string? Name { get; set; }
-
-    // The region name, if applicable.
-    public string? RegionName { get; set; }
-
     // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
     public float AverageListingPrice { get; set; }
 
@@ -44,8 +38,6 @@ public class PricePoco
         int itemID,
         int worldID,
         long lastUploadTime,
-        string? name,
-        string? regionName,
         float averageListingPrice,
         float averageListingPriceNQ,
         float averageListingPriceHQ,
@@ -57,8 +49,6 @@ public class PricePoco
         this.ItemID = itemID;
         this.WorldID = worldID;
         this.LastUploadTime = lastUploadTime;
-        this.Name = name;
-        this.RegionName = regionName;
         this.AverageListingPrice = averageListingPrice;
         this.AverageListingPriceNQ = averageListingPriceNQ;
         this.AverageListingPriceHQ = averageListingPriceHQ;
@@ -72,8 +62,6 @@ public class PricePoco
         this.ItemID = copyMe.ItemID;
         this.WorldID = copyMe.WorldID;
         this.LastUploadTime = copyMe.LastUploadTime;
-        this.Name = copyMe.Name;
-        this.RegionName = copyMe.RegionName;
         this.AverageListingPrice = copyMe.AverageListingPrice;
         this.AverageListingPriceNQ = copyMe.AverageListingPriceNQ;
         this.AverageListingPriceHQ = copyMe.AverageListingPriceHQ;
