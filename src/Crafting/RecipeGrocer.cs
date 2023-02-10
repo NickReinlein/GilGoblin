@@ -15,7 +15,7 @@ public class RecipeGrocer : IRecipeGrocer
         _log = log;
     }
 
-    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipe(int recipeID)
+    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeID)
     {
         _log.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
         var recipe = await _recipes.Get(recipeID);
@@ -25,10 +25,11 @@ public class RecipeGrocer : IRecipeGrocer
             return Array.Empty<IngredientPoco>();
         }
 
-        var ingredientList = await BreakDownIngredientEntirely(recipe.Ingredients());
-
-        return ingredientList;
+        return await BreakdownRecipe(recipe);
     }
+
+    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipe(RecipePoco recipe) =>
+        await BreakDownIngredientEntirely(recipe.GetActiveIngredients());
 
     public async Task<IEnumerable<IngredientPoco?>> BreakDownIngredientEntirely(
         IEnumerable<IngredientPoco?> ingredientList
@@ -83,7 +84,7 @@ public class RecipeGrocer : IRecipeGrocer
             var ingredientRecipeID = ingredientRecipe.ID;
             if (CanMakeRecipe(ingredientRecipeID))
             {
-                var recipeIngredients = await BreakdownRecipe(ingredientRecipeID);
+                var recipeIngredients = await BreakdownRecipeById(ingredientRecipeID);
                 foreach (var ingredient in recipeIngredients)
                 {
                     if (ingredient is null || ingredient.Quantity == 0)

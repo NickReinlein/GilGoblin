@@ -6,7 +6,7 @@ namespace GilGoblin.Extension;
 
 public static class RecipePocoExtension
 {
-    public static List<IngredientPoco> Ingredients(this RecipePoco poco) =>
+    public static List<IngredientPoco> GetIngredientsList(this RecipePoco poco) =>
         new()
         {
             new IngredientPoco(poco.ItemIngredient0TargetID, poco.AmountIngredient0, poco.ID),
@@ -20,4 +20,7 @@ public static class RecipePocoExtension
             new IngredientPoco(poco.ItemIngredient8TargetID, poco.AmountIngredient8, poco.ID),
             new IngredientPoco(poco.ItemIngredient9TargetID, poco.AmountIngredient9, poco.ID)
         };
+
+    public static List<IngredientPoco> GetActiveIngredients(this RecipePoco poco) =>
+        poco.GetIngredientsList().Where(i => i != null && i.Quantity > 0).ToList();
 }

@@ -136,16 +136,16 @@ public class CraftingCalculatorTests
         var recipeID = recipe.ID;
         _recipes.GetRecipesForItem(recipeID).Returns(new List<RecipePoco>() { recipe });
         _recipes.Get(recipeID).Returns(recipe);
-        foreach (var ingredient in recipe.Ingredients())
+        foreach (var ingredient in recipe.GetActiveIngredients())
             _recipes.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
 
         _prices.Get(price.WorldID, price.ItemID).Returns(price);
-        _grocer.BreakdownRecipe(recipeID).Returns(recipe.Ingredients());
+        _grocer.BreakdownRecipeById(recipeID).Returns(recipe.GetActiveIngredients());
     }
 
     private void SetupPricesForIngredients(RecipePoco recipe, int worldID = 34)
     {
-        foreach (var ingredient in recipe.Ingredients())
+        foreach (var ingredient in recipe.GetActiveIngredients())
         {
             var ingredientPrice = new PricePoco()
             {
@@ -166,7 +166,7 @@ public class CraftingCalculatorTests
     {
         _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
         _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID).ReturnsForAnyArgs(market);
-        _grocer.BreakdownRecipe(recipe.ID).Returns(recipe.Ingredients());
+        _grocer.BreakdownRecipeById(recipe.ID).Returns(recipe.GetActiveIngredients());
         _recipes.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
         _recipes.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
         _recipes.Get(recipe.ID).Returns(recipe);
