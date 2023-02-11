@@ -6,11 +6,11 @@ namespace GilGoblin.Tests.Web;
 
 public class ItemInfoFetcherTests
 {
-    private readonly ItemInfoFetcher fetcher;
+    private readonly ItemInfoFetcher _fetcher;
 
     public ItemInfoFetcherTests()
     {
-        fetcher = new ItemInfoFetcher();
+        _fetcher = new ItemInfoFetcher();
     }
 
     [SetUp]

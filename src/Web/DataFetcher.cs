@@ -1,6 +1,6 @@
 namespace GilGoblin.Web;
 
-public class DataFetcher<T> where T : class
+public abstract class DataFetcher<T>
 {
     public static HttpClient Client { get; set; } = new();
 
@@ -12,19 +12,19 @@ public class DataFetcher<T> where T : class
         Client.Timeout = new TimeSpan(0, 0, 10);
     }
 
-    public virtual async Task<T?> GetAsync(string path)
+    protected virtual async Task<T?> GetAsync(string path)
     {
         var fullPath = string.Concat(_basePath, path);
 
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
-            return null;
+            return default;
 
         var result = await response.Content.ReadFromJsonAsync<T>();
         return result;
     }
 
-    public virtual async Task<IEnumerable<T>> GetAllAsync(string path)
+    protected virtual async Task<IEnumerable<T>> GetMultipleAsync(string path)
     {
         var fullPath = string.Concat(_basePath, path);
 

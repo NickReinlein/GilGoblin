@@ -22,7 +22,7 @@ public class PriceGateway : IPriceRepository
         var returnList = new List<PricePoco?>();
         foreach (var itemId in itemIDs)
         {
-            returnList.Add(await Get(worldID, itemId));
+            returnList.Add(await Get(worldID, itemId, GetWorldString()));
         }
         return returnList;
     }
