@@ -140,7 +140,7 @@ public class CraftingCalculator : ICraftingCalculator
         var result = new List<PricePoco>();
         foreach (var ingredientID in itemIDList)
         {
-            var ingredientPrice = await _prices.Get(worldID, ingredientID, _prices.GetWorldString());
+            var ingredientPrice = await _prices.Get(worldID, ingredientID);
             if (ingredientPrice is null)
                 continue;
             result.Add(ingredientPrice);

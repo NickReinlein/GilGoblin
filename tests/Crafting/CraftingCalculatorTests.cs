@@ -49,7 +49,7 @@ public class CraftingCalculatorTests
         var result = await _calc!.CalculateCraftingCostForItem(_worldID, inexistentItemID);
 
         await _recipes.Received(1).GetRecipesForItem(inexistentItemID);
-        await _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID, _prices.DidNotReceiveWithAnyArgs().GetWorldString());
+        await _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -77,8 +77,8 @@ public class CraftingCalculatorTests
 
         await _recipes.Received().GetRecipesForItem(itemID);
         await _recipes.Received().GetRecipesForItem(ingredientID);
-        await _prices.Received().Get(_worldID, itemID, _prices.Received().GetWorldString());
-        await _prices.Received().Get(_worldID, ingredientID, _prices.Received().GetWorldString());
+        await _prices.Received().Get(_worldID, itemID);
+        await _prices.Received().Get(_worldID, ingredientID);
         Assert.That(result, Is.LessThan(int.MaxValue));
         Assert.That(result, Is.GreaterThan(ingredientMarket.AverageSoldNQ));
     }
@@ -92,7 +92,7 @@ public class CraftingCalculatorTests
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
 
         await _recipes.Received().Get(inexistentRecipeID);
-        await _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentRecipeID, _prices.DidNotReceiveWithAnyArgs().GetWorldString());
+        await _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentRecipeID);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -102,12 +102,12 @@ public class CraftingCalculatorTests
         var recipe = NewRecipe;
         var recipeID = recipe.ID;
         _recipes.Get(recipeID).Returns(recipe);
-        _prices.Get(_worldID, Arg.Any<int>(), _prices.GetWorldString()).ReturnsNull();
+        _prices.Get(_worldID, Arg.Any<int>()).ReturnsNull();
 
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
         await _recipes.Received().Get(recipeID);
-        await _prices.ReceivedWithAnyArgs().Get(default, default!, _prices.ReceivedWithAnyArgs().GetWorldString());
+        await _prices.ReceivedWithAnyArgs().Get(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -126,7 +126,7 @@ public class CraftingCalculatorTests
         await _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetID);
         await _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetID);
         await _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
-        await _prices.Received().Get(_worldID, Arg.Any<int>(), _prices.Received().GetWorldString());
+        await _prices.Received().Get(_worldID, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(1000));
     }
@@ -139,8 +139,7 @@ public class CraftingCalculatorTests
         foreach (var ingredient in recipe.GetActiveIngredients())
             _recipes.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
 
-        _prices.Get(price.WorldID, price.ItemID,
-        _prices.GetWorldString()).Returns(price);
+        _prices.Get(price.WorldID, price.ItemID).Returns(price);
         _grocer.BreakdownRecipeById(recipeID).Returns(recipe.GetActiveIngredients());
     }
 
@@ -155,7 +154,7 @@ public class CraftingCalculatorTests
                 AverageSold = 280,
                 WorldID = worldID
             };
-            _prices.Get(worldID, ingredient.ItemID, _prices.GetWorldString()).Returns(ingredientPrice);
+            _prices.Get(worldID, ingredient.ItemID).Returns(ingredientPrice);
         }
     }
 
@@ -165,13 +164,15 @@ public class CraftingCalculatorTests
         PricePoco ingredientMarket
     )
     {
-        _prices.Get(market.WorldID, market.ItemID, _prices.GetWorldString()).ReturnsForAnyArgs(market);
-        _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID, _prices.GetWorldString()).ReturnsForAnyArgs(market);
+        _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
+        _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID).ReturnsForAnyArgs(market);
         _grocer.BreakdownRecipeById(recipe.ID).Returns(recipe.GetActiveIngredients());
         _recipes.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
         _recipes.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
         _recipes.Get(recipe.ID).Returns(recipe);
     }
+
+    private static string GetWorldString(int worldID) => $"{worldID}/";
 
     private static PricePoco GetNewPrice => new(1, _worldID, 1, 300, 200, 400, 600, 400, 800);
 

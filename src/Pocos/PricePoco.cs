@@ -38,35 +38,35 @@ public class PricePoco
         int itemID,
         int worldID,
         long lastUploadTime,
-        float averageListingPrice,
-        float averageListingPriceNQ,
-        float averageListingPriceHQ,
+        float currentAveragePrice,
+        float currentAveragePriceNQ,
+        float currentAveragePriceHQ,
         float averagePrice,
         float averagePriceNQ,
         float averagePriceHQ
     )
     {
-        this.ItemID = itemID;
-        this.WorldID = worldID;
-        this.LastUploadTime = lastUploadTime;
-        this.AverageListingPrice = averageListingPrice;
-        this.AverageListingPriceNQ = averageListingPriceNQ;
-        this.AverageListingPriceHQ = averageListingPriceHQ;
-        this.AverageSold = averagePrice;
-        this.AverageSoldNQ = averagePriceNQ;
-        this.AverageSoldHQ = averagePriceHQ;
+        ItemID = itemID;
+        WorldID = worldID;
+        LastUploadTime = lastUploadTime;
+        AverageListingPrice = currentAveragePrice;
+        AverageListingPriceNQ = currentAveragePriceNQ;
+        AverageListingPriceHQ = currentAveragePriceHQ;
+        AverageSold = averagePrice;
+        AverageSoldNQ = averagePriceNQ;
+        AverageSoldHQ = averagePriceHQ;
     }
 
     public PricePoco(PricePoco copyMe)
     {
-        this.ItemID = copyMe.ItemID;
-        this.WorldID = copyMe.WorldID;
-        this.LastUploadTime = copyMe.LastUploadTime;
-        this.AverageListingPrice = copyMe.AverageListingPrice;
-        this.AverageListingPriceNQ = copyMe.AverageListingPriceNQ;
-        this.AverageListingPriceHQ = copyMe.AverageListingPriceHQ;
-        this.AverageSold = copyMe.AverageSold;
-        this.AverageSoldNQ = copyMe.AverageSoldNQ;
-        this.AverageSoldHQ = copyMe.AverageSoldHQ;
+        ItemID = copyMe.ItemID;
+        WorldID = copyMe.WorldID;
+        LastUploadTime = copyMe.LastUploadTime;
+        AverageListingPrice = copyMe.AverageListingPrice;
+        AverageListingPriceNQ = copyMe.AverageListingPriceNQ;
+        AverageListingPriceHQ = copyMe.AverageListingPriceHQ;
+        AverageSold = copyMe.AverageSold;
+        AverageSoldNQ = copyMe.AverageSoldNQ;
+        AverageSoldHQ = copyMe.AverageSoldHQ;
     }
 }

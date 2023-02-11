@@ -45,7 +45,7 @@ public class PriceControllerTests
     [Test]
     public void GivenAController_WhenWeReceiveAGetRequest_ThenOneResultIsReturned()
     {
-        _repo.Get(_worldId, _itemId, _repo.GetWorldString()).Returns(new PricePoco());
+        _repo.Get(_worldId, _itemId).Returns(new PricePoco());
 
         var result = _controller.Get(_worldId, _itemId);
 

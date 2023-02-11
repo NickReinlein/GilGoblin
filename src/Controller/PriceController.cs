@@ -28,7 +28,7 @@ public class PriceController : ControllerBase, IPriceController
     public PricePoco? Get(int worldID, int id)
     {
         _logger.LogInformation($"Fetching market data world {worldID}, id: {id}");
-        return _priceRepo.Get(worldID, id, _priceRepo.GetWorldString()).Result;
+        return _priceRepo.Get(worldID, id).Result;
         ;
     }
 }
