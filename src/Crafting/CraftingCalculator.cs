@@ -8,14 +8,14 @@ namespace GilGoblin.Crafting;
 public class CraftingCalculator : ICraftingCalculator
 {
     private readonly IRecipeRepository _recipes;
-    private readonly IPriceRepository _prices;
+    private readonly IPriceRepository<PricePoco> _prices;
     private readonly IRecipeGrocer _grocer;
     private readonly ILogger<CraftingCalculator> _log;
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeRepository recipes,
-        IPriceRepository prices,
+        IPriceRepository<PricePoco> prices,
         IRecipeGrocer grocer,
         ILogger<CraftingCalculator> log
     )

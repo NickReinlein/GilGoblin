@@ -2,9 +2,9 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Repository;
 
-public interface IPriceRepository
+public interface IPriceRepository<T> where T : BasePricePoco
 {
-    Task<PricePoco?> Get(int worldID, int id);
-    Task<IEnumerable<PricePoco?>> GetMultiple(int worldID, IEnumerable<int> id);
-    Task<IEnumerable<PricePoco>> GetAll(int worldID);
+    Task<T?> Get(int worldID, int id);
+    Task<IEnumerable<T?>> GetMultiple(int worldID, IEnumerable<int> id);
+    Task<IEnumerable<T>> GetAll(int worldID);
 }

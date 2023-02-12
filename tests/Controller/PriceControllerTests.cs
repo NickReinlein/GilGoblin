@@ -11,7 +11,9 @@ namespace GilGoblin.Tests.Controller;
 public class PriceControllerTests
 {
     private PriceController _controller;
-    private readonly IPriceRepository _repo = Substitute.For<IPriceRepository>();
+    private readonly IPriceRepository<PricePoco> _repo = Substitute.For<
+        IPriceRepository<PricePoco>
+    >();
 
     private static readonly int _itemId = 108;
     private static readonly int _worldId = 34;

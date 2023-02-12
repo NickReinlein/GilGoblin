@@ -13,7 +13,10 @@ namespace GilGoblin.Tests.Crafting;
 public class CraftingCalculatorTests
 {
     private readonly IRecipeRepository _recipes = Substitute.For<IRecipeRepository>();
-    private readonly IPriceRepository _prices = Substitute.For<IPriceRepository>();
+
+    private readonly IPriceRepository<PricePoco> _prices = Substitute.For<
+        IPriceRepository<PricePoco>
+    >();
     private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
     private readonly ILogger<CraftingCalculator> _log =
         NullLoggerFactory.Instance.CreateLogger<CraftingCalculator>();

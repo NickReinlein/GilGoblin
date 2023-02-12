@@ -15,7 +15,7 @@ public class RecipeGrocerTests
 {
     private RecipeGrocer _grocer;
     private IRecipeRepository _recipes;
-    private IPriceRepository _prices;
+    private IPriceRepository<PricePoco> _prices;
     private ILogger<RecipeGrocer> _logger;
 
     private static readonly int _worldID = 34; // Brynnhildr
@@ -31,7 +31,7 @@ public class RecipeGrocerTests
     public void SetUp()
     {
         _recipes = Substitute.For<IRecipeRepository>();
-        _prices = Substitute.For<IPriceRepository>();
+        _prices = Substitute.For<IPriceRepository<PricePoco>>();
         _logger = Substitute.For<ILogger<RecipeGrocer>>();
         _grocer = new RecipeGrocer(_recipes, _logger);
     }

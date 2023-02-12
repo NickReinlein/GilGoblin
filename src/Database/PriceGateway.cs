@@ -4,7 +4,7 @@ using Serilog;
 
 namespace GilGoblin.Database;
 
-public class PriceGateway : IPriceRepository
+public class PriceGateway : IPriceRepository<PricePoco>
 {
     public async Task<PricePoco> Get(int worldID, int itemID)
     {

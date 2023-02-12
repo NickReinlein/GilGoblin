@@ -4,34 +4,46 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Web;
 
-public class PriceFetcher : DataFetcher<PricePoco>, IPriceRepository
+public class PriceFetcher : DataFetcher<PriceWebPoco>, IPriceRepository<PriceWebPoco>
 {
     public PriceFetcher() : base(_priceBaseUrl) { }
 
     public PriceFetcher(HttpClient client) : base(_priceBaseUrl, client) { }
 
-    public string GetWorldString(int worldID) => $"{worldID}/";
-
-    public async Task<PricePoco?> Get(int worldID, int id)
+    public async Task<PriceWebPoco?> Get(int worldID, int id)
     {
-        var idString = $"{id}";
         var worldString = GetWorldString(worldID);
+        var idString = $"{id}";
         var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsSingle });
+
         return await base.GetAsync(pathSuffix);
     }
 
-    public async Task<IEnumerable<PricePoco?>> GetMultiple(int worldID, IEnumerable<int> id)
+    public async Task<IEnumerable<PriceWebPoco?>> GetMultiple(int worldID, IEnumerable<int> ids)
     {
-        var idString = $"{id}";
+        var idString = string.Empty;
         var worldString = GetWorldString(worldID);
+        if (!ids.Any())
+            return Array.Empty<PriceWebPoco>();
+
+        foreach (var id in ids)
+        {
+            idString += id.ToString();
+            if (id != ids.Last())
+                idString += ",";
+        }
+
         var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsMulti });
+
         return await base.GetMultipleAsync(pathSuffix);
     }
 
-    public async Task<IEnumerable<PricePoco>> GetAll(int worldID)
+    public async Task<IEnumerable<PriceWebPoco>> GetAll(int worldID)
     {
         throw new NotImplementedException();
     }
+
+    public string GetWorldString(int worldID) => $"{worldID}/";
 
     private static readonly string _priceBaseUrl = $$"""https://universalis.app/api/v2/""";
     private static readonly string _selectiveColumnsMulti = $$"""
