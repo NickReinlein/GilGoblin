@@ -2,6 +2,12 @@ namespace GilGoblin.Pocos;
 
 public record PriceWebPoco : BasePricePoco
 {
+    public int ItemID { get; set; }
+    public int WorldID { get; set; }
+
+    // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
+    public long LastUploadTime { get; set; }
+
     // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
     public float CurrentAveragePrice { get; set; }
     public float CurrentAveragePriceNQ { get; set; }

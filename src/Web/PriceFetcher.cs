@@ -1,10 +1,11 @@
-using System.Text.Json;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
 namespace GilGoblin.Web;
 
-public class PriceFetcher : DataFetcher<PriceWebPoco>, IPriceRepository<PriceWebPoco>
+public class PriceFetcher
+    : DataFetcher<PriceWebResponsePoco, PriceWebPoco>,
+        IPriceRepository<PriceWebPoco>
 {
     public PriceFetcher() : base(_priceBaseUrl) { }
 
@@ -32,7 +33,6 @@ public class PriceFetcher : DataFetcher<PriceWebPoco>, IPriceRepository<PriceWeb
             if (id != ids.Last())
                 idString += ",";
         }
-
         var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsMulti });
 
         return await base.GetMultipleAsync(pathSuffix);
