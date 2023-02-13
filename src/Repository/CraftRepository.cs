@@ -40,7 +40,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 
     public async Task<IEnumerable<CraftSummaryPoco?>> GetBestCrafts(int worldId)
     {
-        // return Enumerable.Range(1, 5).Select(index => GetCraft(worldId, index)).ToArray();
         return Array.Empty<CraftSummaryPoco>();
     }
 }

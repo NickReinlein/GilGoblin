@@ -62,17 +62,20 @@ public class PriceFetcherTests
     [Test]
     public void WhenWeDeserializeResponseForMultiple_ThenWeSucceed()
     {
+        var ids = new[] { _itemID1, _itemID2 };
         var result = JsonSerializer.Deserialize<PriceWebResponsePoco>(
             _getItemJSONResponseMulti,
             GetSerializerOptions()
         );
 
         var prices = result.GetContentAsList();
+
+        Assert.That(prices.Count, Is.GreaterThan(0));
         foreach (var price in prices)
         {
             Assert.Multiple(() =>
             {
-                // Assert.That((new int[] { _itemID1, _itemID2 }).Contains(price.ItemID), Is.True);
+                Assert.That(ids, Does.Contain(price.ItemID));
                 Assert.That(price.WorldID, Is.EqualTo(_worldID));
                 Assert.That(price.CurrentAveragePrice, Is.GreaterThan(0));
                 Assert.That(price.CurrentAveragePriceHQ, Is.GreaterThan(0));
@@ -90,13 +93,12 @@ public class PriceFetcherTests
         var ids = new[] { _itemID1, _itemID2 };
         var result = await _fetcher.GetMultiple(_worldID, ids);
 
-        Assert.That(result, Is.Not.Null);
         Assert.That(result.Count, Is.GreaterThan(0));
         foreach (var price in result)
         {
             Assert.Multiple(() =>
             {
-                // Assert.That((new int[] { _itemID1, _itemID2 }).Contains(price.ItemID), Is.True);
+                Assert.That(ids, Does.Contain(price.ItemID));
                 Assert.That(price.WorldID, Is.EqualTo(_worldID));
                 Assert.That(price.CurrentAveragePrice, Is.GreaterThan(0));
                 Assert.That(price.CurrentAveragePriceHQ, Is.GreaterThan(0));
@@ -106,6 +108,19 @@ public class PriceFetcherTests
                 Assert.That(price.AveragePriceNQ, Is.GreaterThan(0));
             });
         }
+    }
+
+    [Test]
+    public async Task WhenWeGetAllPrices_ThenWeMakeBatchCalls()
+    {
+        var request = _handler
+            .When("https://universalis.app/api/v2/34/*")
+            .Respond("application/json", "{'name' : 'Test Return'}");
+
+        var result = await _fetcher.GetAll(_worldID);
+
+        var count = _handler.GetMatchCount(request);
+        Assert.That(count, Is.GreaterThan(2));
     }
 
     protected static JsonSerializerOptions GetSerializerOptions() =>

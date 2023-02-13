@@ -40,7 +40,7 @@ public class PriceFetcher
 
     public async Task<IEnumerable<PriceWebPoco>> GetAll(int worldID)
     {
-        throw new NotImplementedException();
+        return Array.Empty<PriceWebPoco>();
     }
 
     public string GetWorldString(int worldID) => $"{worldID}/";
