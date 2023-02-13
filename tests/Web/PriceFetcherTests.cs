@@ -62,12 +62,13 @@ public class PriceFetcherTests
     [Test]
     public void WhenWeDeserializeResponseForMultiple_ThenWeSucceed()
     {
-        var result = JsonSerializer.Deserialize<List<PriceWebPoco>>(
+        var result = JsonSerializer.Deserialize<PriceWebResponsePoco>(
             _getItemJSONResponseMulti,
             GetSerializerOptions()
         );
 
-        foreach (var price in result)
+        var prices = result.GetContentAsList();
+        foreach (var price in prices)
         {
             Assert.Multiple(() =>
             {
@@ -112,19 +113,19 @@ public class PriceFetcherTests
 
     private static readonly string _contentType = "application/json";
     private static readonly int _worldID = 34;
-    private static readonly int _itemID1 = 5059;
-    private static readonly int _itemID2 = 5060;
+    private static readonly int _itemID1 = 4211;
+    private static readonly int _itemID2 = 4222;
 
     private static readonly string _getItemJSONResponseMulti = $$$$"""
-{"items":{"5059":{"itemID":5059,"worldID":34,"lastUploadTime":1676225135585,"currentAveragePrice":1015.2222,"currentAveragePriceNQ":1004.7,"currentAveragePriceHQ":1067.8334,"averagePrice":763.2,"averagePriceNQ":748.17645,"averagePriceHQ":848.3333},"5060":{"itemID":5060,"worldID":34,"lastUploadTime":1676227379362,"currentAveragePrice":8422.68,"currentAveragePriceNQ":8596.647,"currentAveragePriceHQ":8053,"averagePrice":6693.4,"averagePriceNQ":6693.4,"averagePriceHQ":0}}}
+{"items":{"4211":{"itemID":4211,"worldID":34,"lastUploadTime":1676094405639,"currentAveragePrice":15752.5,"currentAveragePriceNQ":10504.333,"currentAveragePriceHQ":31497,"averagePrice":16676.4,"averagePriceNQ":13321.454,"averagePriceHQ":20776.889},"4222":{"itemID":4222,"worldID":34,"lastUploadTime":1675869178624,"currentAveragePrice":5986.5713,"currentAveragePriceNQ":2084.75,"currentAveragePriceHQ":11189,"averagePrice":1631.45,"averagePriceNQ":1652.909,"averagePriceHQ":1605.2222}}}
 """;
     private static readonly string _getItemJSONResponseSingle = $$"""
-{"itemID":5059,"worldID":34,"lastUploadTime":1676137718113,"currentAveragePrice":1159,"currentAveragePriceNQ":1130.909,"currentAveragePriceHQ":1313.5,"averagePrice":999.85,"averagePriceNQ":999.8,"averagePriceHQ":1000}
+{"itemID":4211,"worldID":34,"lastUploadTime":1676137718113,"currentAveragePrice":1159,"currentAveragePriceNQ":1130.909,"currentAveragePriceHQ":1313.5,"averagePrice":999.85,"averagePriceNQ":999.8,"averagePriceHQ":1000}
 """;
     private static readonly string _fullPathMulti = $"""
-https://universalis.app/api/v2/34/5059,5060?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ%2Citems.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ
+https://universalis.app/api/v2/34/4211,4222?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ%2Citems.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ
 """;
     private static readonly string _fullPathSingle = $"""
-https://universalis.app/api/v2/34/5059?listings=0&entries=0&fields=itemID,worldID,currentAveragePrice,currentAveragePriceNQ,currentAveragePriceHQ,averagePrice,averagePriceNQ,averagePriceHQ,lastUploadTime
+https://universalis.app/api/v2/34/4211?listings=0&entries=0&fields=itemID,worldID,currentAveragePrice,currentAveragePriceNQ,currentAveragePriceHQ,averagePrice,averagePriceNQ,averagePriceHQ,lastUploadTime
 """;
 }
