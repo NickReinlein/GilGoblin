@@ -40,10 +40,38 @@ public class PriceFetcher
 
     public async Task<IEnumerable<PriceWebPoco>> GetAll(int worldID)
     {
-        return Array.Empty<PriceWebPoco>();
+        var allIDs = await GetMarketableItemIDs();
+        if (!allIDs.Any())
+            return Array.Empty<PriceWebPoco>();
+
+        var results = await GetMultiple(worldID, allIDs);
+
+        var successes = results
+            .Cast<PriceWebPoco>()
+            .Where(i => i is not null && i.ItemID > 0)
+            .ToList();
+        return successes;
+    }
+
+    public async Task<List<int>> GetMarketableItemIDs()
+    {
+        var fullPath = string.Concat(_basePath, _marketableItemSuffix);
+        var response = await Client.GetAsync(fullPath);
+        if (!response.IsSuccessStatusCode)
+            return new List<int>();
+
+        var results = await response.Content.ReadFromJsonAsync<List<int>>();
+        if (results is null)
+            return new List<int>();
+
+        return results?.Cast<int>().Where(i => i > 0).ToList() ?? new List<int>();
     }
 
     public string GetWorldString(int worldID) => $"{worldID}/";
+
+    public int PricesPerPage { get; set; } = 100;
+
+    private static readonly string _marketableItemSuffix = "marketable";
 
     private static readonly string _priceBaseUrl = $$"""https://universalis.app/api/v2/""";
     private static readonly string _selectiveColumnsMulti = $$"""

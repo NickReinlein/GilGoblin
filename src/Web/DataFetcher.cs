@@ -18,20 +18,21 @@ public abstract class DataFetcher<T, U>
     protected virtual async Task<U?> GetAsync(string path)
     {
         var fullPath = string.Concat(_basePath, path);
+
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
             return default;
 
-        var result = await response.Content.ReadFromJsonAsync<U>();
-        return result;
+        return await response.Content.ReadFromJsonAsync<U>();
     }
 
     protected virtual async Task<IEnumerable<U>> GetMultipleAsync(string path)
     {
         var fullPath = string.Concat(_basePath, path);
+
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
-            return Array.Empty<U>();
+            return new List<U>();
 
         var list = await response.Content.ReadFromJsonAsync<T>();
         return list?.GetContentAsList() ?? new List<U>();
