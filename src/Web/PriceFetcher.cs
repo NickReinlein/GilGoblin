@@ -1,5 +1,6 @@
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Services;
 
 namespace GilGoblin.Web;
 
@@ -44,11 +45,20 @@ public class PriceFetcher
         if (!allIDs.Any())
             return Array.Empty<PriceWebPoco>();
 
-        var cumulativeResults = await GetMultipleInBatches(worldID, allIDs);
+        var batcher = new Batcher<int>(PricesPerPage);
+        var batches = batcher.SplitIntoBatchJobs(allIDs);
+
+        var cumulativeResults = new List<PriceWebPoco?>();
+        foreach (var batch in batches)
+        {
+            var batchResult = await GetMultiple(worldID, batch);
+            if (batchResult.Any())
+                cumulativeResults.AddRange(batchResult);
+        }
 
         var successes = cumulativeResults
-            .Cast<PriceWebPoco>()
             .Where(i => i is not null && i.ItemID > 0)
+            .Cast<PriceWebPoco>()
             .ToList();
         return successes;
     }
@@ -65,25 +75,6 @@ public class PriceFetcher
             return new List<int>();
 
         return results?.Cast<int>().Where(i => i > 0).ToList() ?? new List<int>();
-    }
-
-    private async Task<List<PriceWebPoco?>> GetMultipleInBatches(int worldID, List<int> allIDs)
-    {
-        var cumulativeResults = new HashSet<PriceWebPoco?>();
-        var idsQueue = new Queue<int>(allIDs);
-        while (idsQueue.Any())
-        {
-            var currentBatchIDs = new List<int>();
-            while (currentBatchIDs.Count < PricesPerPage && idsQueue.Any())
-            {
-                idsQueue.TryDequeue(out var id);
-                currentBatchIDs.Add(id);
-            }
-            var results = await GetMultiple(worldID, currentBatchIDs);
-            cumulativeResults.UnionWith(results);
-        }
-
-        return cumulativeResults.ToList();
     }
 
     public string GetWorldString(int worldID) => $"{worldID}/";
