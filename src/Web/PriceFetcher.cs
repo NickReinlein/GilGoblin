@@ -44,9 +44,9 @@ public class PriceFetcher
         if (!allIDs.Any())
             return Array.Empty<PriceWebPoco>();
 
-        var results = await GetMultiple(worldID, allIDs);
+        var cumulativeResults = await GetMultipleInBatches(worldID, allIDs);
 
-        var successes = results
+        var successes = cumulativeResults
             .Cast<PriceWebPoco>()
             .Where(i => i is not null && i.ItemID > 0)
             .ToList();
@@ -65,6 +65,25 @@ public class PriceFetcher
             return new List<int>();
 
         return results?.Cast<int>().Where(i => i > 0).ToList() ?? new List<int>();
+    }
+
+    private async Task<List<PriceWebPoco?>> GetMultipleInBatches(int worldID, List<int> allIDs)
+    {
+        var cumulativeResults = new HashSet<PriceWebPoco?>();
+        var idsQueue = new Queue<int>(allIDs);
+        while (idsQueue.Any())
+        {
+            var currentBatchIDs = new List<int>();
+            while (currentBatchIDs.Count < PricesPerPage && idsQueue.Any())
+            {
+                idsQueue.TryDequeue(out var id);
+                currentBatchIDs.Add(id);
+            }
+            var results = await GetMultiple(worldID, currentBatchIDs);
+            cumulativeResults.UnionWith(results);
+        }
+
+        return cumulativeResults.ToList();
     }
 
     public string GetWorldString(int worldID) => $"{worldID}/";
