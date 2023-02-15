@@ -1,1 +1,1 @@
-public record BasePricePoco { }
+public class BasePricePoco { }

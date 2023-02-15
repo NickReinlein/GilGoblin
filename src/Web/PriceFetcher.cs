@@ -4,16 +4,24 @@ using GilGoblin.Services;
 
 namespace GilGoblin.Web;
 
-public class PriceFetcher
-    : DataFetcher<PriceWebResponsePoco, PriceWebPoco>,
-        IPriceRepository<PriceWebPoco>
+public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPriceFetcher
 {
-    public PriceFetcher() : base(_priceBaseUrl) { }
+    private readonly ILogger<PriceFetcher> _logger;
 
-    public PriceFetcher(HttpClient client) : base(_priceBaseUrl, client) { }
+    public PriceFetcher(ILogger<PriceFetcher> logger) : base(_priceBaseUrl, null, logger)
+    {
+        _logger = logger;
+    }
+
+    public PriceFetcher(HttpClient client, ILogger<PriceFetcher> logger)
+        : base(_priceBaseUrl, client, logger)
+    {
+        _logger = logger;
+    }
 
     public async Task<PriceWebPoco?> Get(int worldID, int id)
     {
+        _logger.LogInformation("Fetching for world {World}, 1 item: {ID}", worldID, id);
         var worldString = GetWorldString(worldID);
         var idString = $"{id}";
         var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsSingle });
@@ -23,6 +31,7 @@ public class PriceFetcher
 
     public async Task<IEnumerable<PriceWebPoco?>> GetMultiple(int worldID, IEnumerable<int> ids)
     {
+        _logger.LogInformation("Fetching for world {World}, {Count} items", worldID, ids.Count());
         var idString = string.Empty;
         var worldString = GetWorldString(worldID);
         if (!ids.Any())
@@ -36,11 +45,14 @@ public class PriceFetcher
         }
         var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsMulti });
 
-        return await base.GetMultipleAsync(pathSuffix);
+        var response = await base.GetMultipleAsync(pathSuffix);
+
+        return response is not null ? response.GetContentAsList() : new List<PriceWebPoco>();
     }
 
     public async Task<IEnumerable<PriceWebPoco>> GetAll(int worldID)
     {
+        _logger.LogWarning("Fetching for world {World}, all items", worldID);
         var allIDs = await GetMarketableItemIDs();
         if (!allIDs.Any())
             return Array.Empty<PriceWebPoco>();
@@ -51,9 +63,21 @@ public class PriceFetcher
         var cumulativeResults = new List<PriceWebPoco?>();
         foreach (var batch in batches)
         {
+            _logger.LogInformation(
+                "Fetching for world {World}, batch of {Count} items",
+                worldID,
+                batch.Count
+            );
             var batchResult = await GetMultiple(worldID, batch);
             if (batchResult.Any())
+            {
+                _logger.LogInformation(
+                    "Received response for world {World} {Count} items",
+                    worldID,
+                    batch.Count
+                );
                 cumulativeResults.AddRange(batchResult);
+            }
         }
 
         var successes = cumulativeResults

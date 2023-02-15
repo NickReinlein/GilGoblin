@@ -1,6 +1,7 @@
 using System.Text.Json;
 using GilGoblin.Pocos;
 using GilGoblin.Web;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
@@ -12,6 +13,7 @@ public class PriceFetcherTests
     private PriceFetcher _fetcher;
     private MockHttpMessageHandler _handler;
     private HttpClient _client;
+    private ILogger<PriceFetcher> _logger;
 
     [SetUp]
     public void SetUp()
@@ -21,7 +23,8 @@ public class PriceFetcherTests
         _handler.When(_fullPathMulti).Respond(_contentType, _getItemJSONResponseMulti);
 
         _client = _handler.ToHttpClient();
-        _fetcher = new PriceFetcher(_client);
+        _logger = Substitute.For<ILogger<PriceFetcher>>();
+        _fetcher = new PriceFetcher(_client, _logger);
     }
 
     [Test]

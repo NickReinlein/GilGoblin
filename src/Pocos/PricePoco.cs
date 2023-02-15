@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace GilGoblin.Pocos;
 
-public record PricePoco : BasePricePoco
+public class PricePoco : BasePricePoco
 {
     public int ItemID { get; set; }
     public int WorldID { get; set; }

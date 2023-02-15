@@ -1,6 +1,6 @@
 namespace GilGoblin.Pocos;
 
-public record PriceWebPoco : BasePricePoco
+public class PriceWebPoco : BasePricePoco
 {
     public int ItemID { get; set; }
     public int WorldID { get; set; }
