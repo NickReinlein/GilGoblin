@@ -1,3 +1,4 @@
+using GilGoblin.Extension;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
@@ -14,37 +15,47 @@ public class RecipeGrocer : IRecipeGrocer
         _log = log;
     }
 
-    public IEnumerable<IngredientPoco> BreakdownRecipe(int recipeID)
+    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeID)
     {
         _log.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
-        var recipe = _recipes.Get(recipeID);
+        var recipe = await _recipes.Get(recipeID);
         if (recipe is null)
         {
             _log.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
             return Array.Empty<IngredientPoco>();
         }
 
-        var ingredientList = BreakDownIngredientEntirely(recipe.Ingredients);
-
-        return ingredientList;
+        return await BreakdownRecipe(recipe);
     }
 
-    public List<IngredientPoco> BreakDownIngredientEntirely(List<IngredientPoco> ingredientList)
+    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipe(RecipePoco recipe) =>
+        await BreakDownIngredientEntirely(recipe.GetActiveIngredients());
+
+    public async Task<IEnumerable<IngredientPoco?>> BreakDownIngredientEntirely(
+        IEnumerable<IngredientPoco?> ingredientList
+    )
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
         _log.LogInformation(
             "Breaking down {IngCount} ingredients in ingredient list",
-            ingredientList.Count
+            ingredientList.Count()
         );
         foreach (var ingredient in ingredientList)
         {
+            if (ingredient is null)
+                continue;
+
             var itemID = ingredient.ItemID;
             _log.LogDebug("Breaking down item ID {ItemID}", itemID);
-            var breakdownIngredient = BreakdownItem(itemID);
-            if (breakdownIngredient.Any())
+            var breakdownIngredients = await BreakdownItem(itemID);
+            if (breakdownIngredients.Any(i => i is not null && i.Quantity > 0))
             {
-                _log.LogDebug("Found {IngCount} ingredients", breakdownIngredient.Count());
-                ingredientsBrokenDownList.AddRange(breakdownIngredient);
+                _log.LogDebug("Found {IngCount} ingredients", breakdownIngredients.Count());
+                var ingredients = breakdownIngredients
+                    .Where(i => i is not null && i.Quantity > 0)
+                    .ToList<IngredientPoco>();
+                ingredients.ForEach(i => i.Quantity *= ingredient.Quantity);
+                ingredientsBrokenDownList.AddRange(ingredients);
             }
             else
             {
@@ -54,25 +65,31 @@ public class RecipeGrocer : IRecipeGrocer
         }
         _log.LogInformation(
             "Breakdown complete. {IngCount} ingredients returned",
-            ingredientList.Count
+            ingredientList.Count()
         );
         return ingredientsBrokenDownList;
     }
 
-    public IEnumerable<IngredientPoco> BreakdownItem(int itemID)
+    public async Task<IEnumerable<IngredientPoco?>> BreakdownItem(int itemID)
     {
         _log.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
-        var ingredientRecipes = _recipes.GetRecipesForItem(itemID);
+        var ingredientRecipes = await _recipes.GetRecipesForItem(itemID);
         _log.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
         foreach (var ingredientRecipe in ingredientRecipes)
         {
-            var ingredientRecipeID = ingredientRecipe.RecipeID;
+            if (ingredientRecipe is null)
+                continue;
+
+            var ingredientRecipeID = ingredientRecipe.ID;
             if (CanMakeRecipe(ingredientRecipeID))
             {
-                var recipeIngredients = BreakdownRecipe(ingredientRecipeID);
+                var recipeIngredients = await BreakdownRecipeById(ingredientRecipeID);
                 foreach (var ingredient in recipeIngredients)
                 {
+                    if (ingredient is null || ingredient.Quantity == 0)
+                        continue;
+
                     ingredient.Quantity *= ingredientRecipe.ResultQuantity;
                 }
                 return recipeIngredients;

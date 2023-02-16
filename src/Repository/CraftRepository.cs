@@ -6,14 +6,14 @@ namespace GilGoblin.Repository;
 public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 {
     private readonly ICraftingCalculator _calc;
-    private readonly IPriceRepository _priceRepo;
+    private readonly IPriceRepository<PricePoco> _priceRepo;
     private readonly IRecipeGrocer _recipeGrocer;
     private readonly IItemRepository _itemRepo;
     private readonly ILogger<CraftRepository> _logger;
 
     public CraftRepository(
         ICraftingCalculator calc,
-        IPriceRepository priceRepo,
+        IPriceRepository<PricePoco> priceRepo,
         IRecipeGrocer recipeGrocer,
         IItemRepository itemRepo,
         ILogger<CraftRepository> logger
@@ -26,17 +26,20 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _logger = logger;
     }
 
-    public CraftSummaryPoco GetCraft(int worldID, int itemID)
+    public async Task<CraftSummaryPoco?> GetCraft(int worldID, int itemID)
     {
-        var craftingCost = _calc.CalculateCraftingCostForItem(worldID, itemID);
-        var ingredients = _recipeGrocer.BreakdownItem(itemID);
-        var marketData = _priceRepo.Get(worldID, itemID);
-        var itemInfo = _itemRepo.Get(itemID);
-        return new CraftSummaryPoco(marketData, itemInfo, craftingCost, ingredients);
+        var craftingCost = await _calc.CalculateCraftingCostForItem(worldID, itemID);
+        var ingredients = await _recipeGrocer.BreakdownItem(itemID);
+        var price = await _priceRepo.Get(worldID, itemID);
+        var itemInfo = await _itemRepo.Get(itemID);
+        if (craftingCost is 0 || ingredients is null || price is null || itemInfo is null)
+            return null;
+
+        return new CraftSummaryPoco(price, itemInfo, craftingCost, ingredients);
     }
 
-    public IEnumerable<CraftSummaryPoco> GetBestCrafts(int worldId)
+    public async Task<IEnumerable<CraftSummaryPoco?>> GetBestCrafts(int worldId)
     {
-        return Enumerable.Range(1, 5).Select(index => GetCraft(worldId, index)).ToArray();
+        return Array.Empty<CraftSummaryPoco>();
     }
 }

@@ -25,13 +25,18 @@ public class CraftControllerTests
             _repo,
             NullLoggerFactory.Instance.CreateLogger<CraftController>()
         );
-        Assert.That(_controller, Is.Not.Null);
     }
 
     [TearDown]
     public void TearDown()
     {
         _repo.ClearReceivedCalls();
+    }
+
+    [Test]
+    public void WhenWeSetup_ControllerIsSucessfullyCreated()
+    {
+        Assert.That(_controller, Is.Not.Null);
     }
 
     [Test]

@@ -6,9 +6,9 @@ public class CraftPoco : CraftIngredientPoco
 
     public CraftPoco(
         IngredientPoco ingredient,
-        MarketDataPoco marketData,
+        PricePoco price,
         List<CraftIngredientPoco> ingredients
-    ) : base(ingredient, marketData)
+    ) : base(ingredient, price)
     {
         this.Ingredients = ingredients;
     }

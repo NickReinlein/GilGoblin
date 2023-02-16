@@ -8,5 +8,5 @@ public interface IDataController<T> where T : class
     IEnumerable<T> GetAll();
 
     [HttpGet("{id}")]
-    T Get(int id);
+    T? Get(int id);
 }

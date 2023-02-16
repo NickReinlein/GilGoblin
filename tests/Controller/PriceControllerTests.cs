@@ -11,7 +11,9 @@ namespace GilGoblin.Tests.Controller;
 public class PriceControllerTests
 {
     private PriceController _controller;
-    private readonly IPriceRepository _repo = Substitute.For<IPriceRepository>();
+    private readonly IPriceRepository<PricePoco> _repo = Substitute.For<
+        IPriceRepository<PricePoco>
+    >();
 
     private static readonly int _itemId = 108;
     private static readonly int _worldId = 34;
@@ -35,20 +37,20 @@ public class PriceControllerTests
     [Test]
     public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAnEnumerableResultIsReturned()
     {
-        _repo.GetAll(_worldId).Returns(new List<MarketDataPoco>());
+        _repo.GetAll(_worldId).Returns(new List<PricePoco>());
 
         var result = _controller.GetAll(_worldId);
 
-        Assert.That(result is IEnumerable<MarketDataPoco>);
+        Assert.That(result is IEnumerable<PricePoco>);
     }
 
     [Test]
     public void GivenAController_WhenWeReceiveAGetRequest_ThenOneResultIsReturned()
     {
-        _repo.Get(_worldId, _itemId).Returns(new MarketDataPoco());
+        _repo.Get(_worldId, _itemId).Returns(new PricePoco());
 
         var result = _controller.Get(_worldId, _itemId);
 
-        Assert.That(result is MarketDataPoco);
+        Assert.That(result is PricePoco);
     }
 }

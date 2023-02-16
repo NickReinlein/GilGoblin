@@ -2,11 +2,11 @@ using System;
 
 namespace GilGoblin.Exceptions;
 
-public class MarketDataNotFoundException : Exception
+public class DataNotFoundException : Exception
 {
-    public MarketDataNotFoundException() { }
+    public DataNotFoundException() { }
 
-    public MarketDataNotFoundException(string message) : base(message) { }
+    public DataNotFoundException(string message) : base(message) { }
 
-    public MarketDataNotFoundException(string message, Exception inner) : base(message, inner) { }
+    public DataNotFoundException(string message, Exception inner) : base(message, inner) { }
 }

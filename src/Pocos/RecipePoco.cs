@@ -1,21 +1,92 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using CsvHelper.Configuration.Attributes;
 
 namespace GilGoblin.Pocos;
 
 public class RecipePoco
 {
-    public int RecipeID { get; set; }
+    [Name("#")]
+    public int ID { get; set; }
+
+    [Name("Item{Result}")]
     public int TargetItemID { get; set; }
-    public int IconID { get; set; }
+
+    [Name("Amount{Result}")]
     public int ResultQuantity { get; set; }
     public bool CanHq { get; set; }
     public bool CanQuickSynth { get; set; }
-    public List<IngredientPoco> Ingredients { get; set; } = new List<IngredientPoco>();
+
+    [Name("Amount{Ingredient}[0]")]
+    public int AmountIngredient0 { get; set; }
+
+    [Name("Amount{Ingredient}[1]")]
+    public int AmountIngredient1 { get; set; }
+
+    [Name("Amount{Ingredient}[2]")]
+    public int AmountIngredient2 { get; set; }
+
+    [Name("Amount{Ingredient}[3]")]
+    public int AmountIngredient3 { get; set; }
+
+    [Name("Amount{Ingredient}[4]")]
+    public int AmountIngredient4 { get; set; }
+
+    [Name("Amount{Ingredient}[5]")]
+    public int AmountIngredient5 { get; set; }
+
+    [Name("Amount{Ingredient}[6]")]
+    public int AmountIngredient6 { get; set; }
+
+    [Name("Amount{Ingredient}[7]")]
+    public int AmountIngredient7 { get; set; }
+
+    [Name("Amount{Ingredient}[8]")]
+    public int AmountIngredient8 { get; set; }
+
+    [Name("Amount{Ingredient}[9]")]
+    public int AmountIngredient9 { get; set; }
+
+    [Name("Item{Ingredient}[0]")]
+    public int ItemIngredient0TargetID { get; set; }
+
+    [Name("Item{Ingredient}[1]")]
+    public int ItemIngredient1TargetID { get; set; }
+
+    [Name("Item{Ingredient}[2]")]
+    public int ItemIngredient2TargetID { get; set; }
+
+    [Name("Item{Ingredient}[3]")]
+    public int ItemIngredient3TargetID { get; set; }
+
+    [Name("Item{Ingredient}[4]")]
+    public int ItemIngredient4TargetID { get; set; }
+
+    [Name("Item{Ingredient}[5]")]
+    public int ItemIngredient5TargetID { get; set; }
+
+    [Name("Item{Ingredient}[6]")]
+    public int ItemIngredient6TargetID { get; set; }
+
+    [Name("Item{Ingredient}[7]")]
+    public int ItemIngredient7TargetID { get; set; }
+
+    [Name("Item{Ingredient}[8]")]
+    public int ItemIngredient8TargetID { get; set; }
+
+    [Name("Item{Ingredient}[9]")]
+    public int ItemIngredient9TargetID { get; set; }
+
     public RecipePoco() { }
 
     [JsonConstructor]
-    public RecipePoco(bool canQuickSynth, bool canHq, int itemResultTargetID, int id, int iconID, int amountResult,
-        int amountIngredient0, int amountIngredient1,
+    public RecipePoco(
+        bool canQuickSynth,
+        bool canHq,
+        int itemResultTargetID,
+        int id,
+        int amountResult,
+        int amountIngredient0,
+        int amountIngredient1,
         int amountIngredient2,
         int amountIngredient3,
         int amountIngredient4,
@@ -33,64 +104,33 @@ public class RecipePoco
         int itemIngredient6TargetID,
         int itemIngredient7TargetID,
         int itemIngredient8TargetID,
-        int itemIngredient9TargetID) : base()
+        int itemIngredient9TargetID
+    ) : base()
     {
-        this.CanHq = canHq;
-        this.IconID = iconID;
-        this.TargetItemID = itemResultTargetID;
-        this.RecipeID = id;
-        this.ResultQuantity = amountResult;
-        this.CanQuickSynth = canQuickSynth;
-        if (amountIngredient0 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient0TargetID, amountIngredient0, RecipeID));
-        }
-        if (amountIngredient1 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient1TargetID, amountIngredient1, RecipeID));
-        }
-        if (amountIngredient2 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient2TargetID, amountIngredient2, RecipeID));
-        }
-        if (amountIngredient3 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient3TargetID, amountIngredient3, RecipeID));
-        }
-        if (amountIngredient4 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient4TargetID, amountIngredient4, RecipeID));
-        }
-        if (amountIngredient5 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient5TargetID, amountIngredient5, RecipeID));
-        }
-        if (amountIngredient6 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient6TargetID, amountIngredient6, RecipeID));
-        }
-        if (amountIngredient7 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient7TargetID, amountIngredient7, RecipeID));
-        }
-        if (amountIngredient8 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient8TargetID, amountIngredient8, RecipeID));
-        }
-        if (amountIngredient9 > 0)
-        {
-            Ingredients.Add(new IngredientPoco(itemIngredient9TargetID, amountIngredient9, RecipeID));
-        }
-    }
-
-    public RecipePoco(RecipePoco old)
-    {
-        this.RecipeID = old.RecipeID;
-        this.TargetItemID = old.TargetItemID;
-        this.IconID = old.IconID;
-        this.ResultQuantity = old.ResultQuantity;
-        this.CanHq = old.CanHq;
-        this.CanQuickSynth = old.CanQuickSynth;
-        this.Ingredients = old.Ingredients;
+        CanHq = canHq;
+        TargetItemID = itemResultTargetID;
+        ID = id;
+        ResultQuantity = amountResult;
+        AmountIngredient0 = amountIngredient0;
+        AmountIngredient1 = amountIngredient1;
+        AmountIngredient2 = amountIngredient2;
+        AmountIngredient3 = amountIngredient3;
+        AmountIngredient4 = amountIngredient4;
+        AmountIngredient5 = amountIngredient5;
+        AmountIngredient6 = amountIngredient6;
+        AmountIngredient7 = amountIngredient7;
+        AmountIngredient8 = amountIngredient8;
+        AmountIngredient9 = amountIngredient9;
+        ItemIngredient0TargetID = itemIngredient0TargetID;
+        ItemIngredient1TargetID = itemIngredient1TargetID;
+        ItemIngredient2TargetID = itemIngredient2TargetID;
+        ItemIngredient3TargetID = itemIngredient3TargetID;
+        ItemIngredient4TargetID = itemIngredient4TargetID;
+        ItemIngredient5TargetID = itemIngredient5TargetID;
+        ItemIngredient6TargetID = itemIngredient6TargetID;
+        ItemIngredient7TargetID = itemIngredient7TargetID;
+        ItemIngredient8TargetID = itemIngredient8TargetID;
+        ItemIngredient9TargetID = itemIngredient9TargetID;
+        CanQuickSynth = canQuickSynth;
     }
 }

@@ -1,16 +1,16 @@
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Ext;
+namespace GilGoblin.Extensions;
 
-public static class MarketDataPocoExtension
+public static class PricePocoExtensions
 {
-    public static int GetAverageSoldPrice(this MarketDataPoco marketData, bool hq = false)
+    public static int GetAverageSoldPrice(this PricePoco price, bool hq = false)
     {
-        return hq ? (int)marketData.AverageSoldHQ : (int)marketData.AverageSoldNQ;
+        return hq ? (int)price.AverageSoldHQ : (int)price.AverageSoldNQ;
     }
 
-    public static int GetAverageListingPrice(this MarketDataPoco marketData, bool hq = false)
+    public static int GetAverageListingPrice(this PricePoco price, bool hq = false)
     {
-        return hq ? (int)marketData.AverageListingPriceHQ : (int)marketData.AverageListingPriceNQ;
+        return hq ? (int)price.AverageListingPriceHQ : (int)price.AverageListingPriceNQ;
     }
 }

@@ -1,13 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace GilGoblin.Pocos;
 
 public class IngredientPoco
 {
-    [Key]
-    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
     public int RecipeID { get; set; }
     public int ItemID { get; set; }
     public int Quantity { get; set; }

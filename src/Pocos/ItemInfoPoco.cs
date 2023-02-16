@@ -1,17 +1,26 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using CsvHelper.Configuration.Attributes;
 using Serilog;
 
 namespace GilGoblin.Pocos;
 
 public class ItemInfoPoco
 {
+    [Name("#")]
     public int ID { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
+
+    [Name("Icon")]
     public int IconID { get; set; }
+
+    [Name("Level{Item}")]
+    public int Level { get; set; }
+
+    [Name("Price{Mid}")]
     public int VendorPrice { get; set; }
     public int StackSize { get; set; }
-    public int GatheringID { get; set; }
+    public bool CanBeHq { get; set; }
 
     [JsonConstructor]
     public ItemInfoPoco(
@@ -19,51 +28,21 @@ public class ItemInfoPoco
         string name,
         string description,
         int iconID,
-        int vendorPrice,
+        int priceMid,
         int stackSize,
-        int gatheringID
+        int level,
+        bool canBeHq
     )
     {
-        this.ID = id;
-        this.IconID = iconID;
-        this.Description = description;
-        this.Name = name;
-        this.VendorPrice = vendorPrice;
-        this.StackSize = stackSize;
-        this.GatheringID = gatheringID;
+        ID = id;
+        IconID = iconID;
+        Description = description;
+        Name = name;
+        VendorPrice = priceMid;
+        StackSize = stackSize;
+        Level = level;
+        CanBeHq = canBeHq;
     }
 
     public ItemInfoPoco() { }
-
-    public ItemInfoPoco(ItemInfoPoco copyMe)
-    {
-        this.ID = copyMe.ID;
-        this.IconID = copyMe.IconID;
-        this.Description = copyMe.Description;
-        this.Name = copyMe.Name;
-        this.VendorPrice = copyMe.VendorPrice;
-        this.StackSize = copyMe.StackSize;
-        this.GatheringID = copyMe.GatheringID;
-    }
-
-    // TODO decouple from Poco
-    public static async Task<ItemInfoPoco?> FetchItemInfo(int itemId)
-    {
-        ItemInfoPoco? itemInfo;
-        try
-        {
-            var client = new HttpClient();
-            var url = "https://xivapi.com/Item/" + itemId;
-            var content = await client.GetAsync(url);
-
-            return itemInfo = JsonConvert.DeserializeObject<ItemInfoPoco>(
-                content.Content.ReadAsStringAsync().Result
-            );
-        }
-        catch (Exception ex)
-        {
-            Log.Error("Failed to convert item info from JSON:" + ex.Message);
-            return null;
-        }
-    }
 }
