@@ -20,7 +20,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPr
         _logger = logger;
     }
 
-    public async Task<PriceWebPoco?> Get(int worldID, int id)
+    public async Task<PriceWebPoco?> FetchPriceAsync(int worldID, int id)
     {
         _logger.LogInformation("Fetching for world {World}, 1 item: {ID}", worldID, id);
         var worldString = GetWorldString(worldID);
@@ -30,9 +30,17 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPr
         return await base.GetAsync(pathSuffix);
     }
 
-    public async Task<IEnumerable<PriceWebPoco?>> GetMultiple(int worldID, IEnumerable<int> ids)
+    public async Task<IEnumerable<PriceWebPoco?>> FetchMultiplePricesAsync(
+        int worldID,
+        IEnumerable<int> ids
+    )
     {
-        _logger.LogInformation("Fetching for world {World}, {Count} items", worldID, ids.Count());
+        _logger.LogInformation(
+            "Fetching for world {World}, {Count} items, starting with id: ",
+            worldID,
+            ids.Count(),
+            ids.FirstOrDefault()
+        );
         var idString = string.Empty;
         var worldString = GetWorldString(worldID);
         if (!ids.Any())
@@ -51,10 +59,10 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPr
         return response is not null ? response.GetContentAsList() : new List<PriceWebPoco>();
     }
 
-    public async Task<List<List<int>>> GetAllIDsAsBatchJobs(int worldID)
+    public async Task<List<List<int>>> GetAllIDsAsBatchJobsAsync(int worldID)
     {
         _logger.LogWarning("Fetching for world {World}, all items", worldID);
-        var allIDs = await GetMarketableItemIDs();
+        var allIDs = await GetMarketableItemIDsAsync();
         if (!allIDs.Any())
             return new List<List<int>>();
 
@@ -62,7 +70,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPr
         return batcher.SplitIntoBatchJobs(allIDs);
     }
 
-    public async Task<List<int>> GetMarketableItemIDs()
+    public async Task<List<int>> GetMarketableItemIDsAsync()
     {
         var fullPath = string.Concat(_basePath, _marketableItemSuffix);
         var response = await Client.GetAsync(fullPath);

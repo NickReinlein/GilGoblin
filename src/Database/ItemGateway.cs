@@ -38,5 +38,5 @@ public class ItemGateway : IItemRepository
             ?? new List<ItemInfoPoco>();
     }
 
-    private async Task<GilGoblinDbContext?> GetContext() => await _database.GetContext();
+    private async Task<GilGoblinDbContext?> GetContext() => await _database.GetContextAsync();
 }

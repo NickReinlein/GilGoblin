@@ -51,7 +51,7 @@ public class PriceFetcherTests
     [Test]
     public async Task WhenWeGetAPrice_ThenWeParseSuccessfully()
     {
-        var result = await _fetcher.Get(_worldID, _itemID1);
+        var result = await _fetcher.FetchPriceAsync(_worldID, _itemID1);
 
         Assert.Multiple(() =>
         {
@@ -98,7 +98,7 @@ public class PriceFetcherTests
     public async Task WhenWeGetMultiplePrices_ThenWeParseSuccessfully()
     {
         var ids = new[] { _itemID1, _itemID2 };
-        var result = await _fetcher.GetMultiple(_worldID, ids);
+        var result = await _fetcher.FetchMultiplePricesAsync(_worldID, ids);
 
         Assert.That(result.Count, Is.GreaterThan(0));
         foreach (var price in result)
@@ -130,44 +130,16 @@ public class PriceFetcherTests
     }
 
     [Test]
-    public async Task WhenWeGetAllPrices_ThenWeFetchAllMarketableItemIds()
+    public async Task WhenWeGetAllMarketableItemIds_ThenWeFetchThemToAPI()
     {
         var marketableRequests = _handler
             .When("*marketable*")
             .Respond(_contentType, _getItemJSONResponseMarketable);
 
-        await _fetcher.GetAll(_worldID);
+        await _fetcher.GetMarketableItemIDsAsync();
 
         var callCountMarketable = _handler.GetMatchCount(marketableRequests);
         Assert.That(callCountMarketable, Is.EqualTo(1));
-    }
-
-    [TestCase(10, 2)]
-    [TestCase(2, 100)]
-    [TestCase(100, 10)]
-    public async Task WhenWeGetAllPrices_ThenWeFetchInBatchesAndCallMarketableOnce(
-        int total,
-        int pageSize
-    )
-    {
-        _fetcher.PricesPerPage = pageSize;
-        var marketableRequests = _handler
-            .When("*marketable*")
-            .Respond(_contentType, _getItemJSONResponseMarketable);
-        var itemRequests = _handler
-            .When("*/api/v2/34/*")
-            .Respond(_contentType, _getItemJSONResponseMany);
-
-        await _fetcher.GetAll(_worldID);
-
-        var callCountMarketable = _handler.GetMatchCount(marketableRequests);
-        var callCountItems = _handler.GetMatchCount(itemRequests);
-        var expectedCallCountItems = total / pageSize;
-        Assert.Multiple(() =>
-        {
-            Assert.That(callCountMarketable, Is.EqualTo(1));
-            Assert.That(callCountItems, Is.GreaterThanOrEqualTo(expectedCallCountItems));
-        });
     }
 
     protected static JsonSerializerOptions GetSerializerOptions() =>

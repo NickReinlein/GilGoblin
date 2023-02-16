@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace GilGoblin.Pocos;
 
 public class PriceWebPoco : BasePricePoco
@@ -18,6 +20,7 @@ public class PriceWebPoco : BasePricePoco
     public float AveragePriceNQ { get; set; }
     public float AveragePriceHQ { get; set; }
 
+    [JsonConstructor]
     public PriceWebPoco(
         int itemID,
         int worldID,

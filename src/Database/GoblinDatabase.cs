@@ -5,6 +5,8 @@ using GilGoblin.Pocos;
 using GilGoblin.Extension;
 using System.Data;
 using GilGoblin.Web;
+using GilGoblin.Extensions;
+using System.Diagnostics;
 
 namespace GilGoblin.Database;
 
@@ -18,7 +20,7 @@ public class GoblinDatabase
         _priceFetcher = priceFetcher;
     }
 
-    public async Task<GilGoblinDbContext?> GetContext()
+    public async Task<GilGoblinDbContext?> GetContextAsync()
     {
         Connection ??= Connect();
         if (Connection is null || Connection.State != ConnectionState.Open)
@@ -40,13 +42,13 @@ public class GoblinDatabase
                 return;
             await context.Database.EnsureCreatedAsync();
 
-            if (context.ItemInfo.Count() < 10)
+            if (context.ItemInfo.Count() < 1000)
                 await FillTable<ItemInfoPoco>();
 
-            if (context.Recipe.Count() < 10)
+            if (context.Recipe.Count() < 1000)
                 await FillTable<RecipePoco>();
 
-            if (context.Price?.Count() < 10)
+            if (context.Price?.Count() < 1000)
                 await FetchPrices();
         }
         catch (Exception e)
@@ -59,40 +61,40 @@ public class GoblinDatabase
     {
         LogTaskStart<PriceWebPoco>("Fetching prices from API");
 
-        try
-        {
-            var batches = await _priceFetcher.GetAllIDsAsBatchJobs(TestWorldID);
+        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(TestWorldID);
 
-            foreach (var batch in batches)
-            {
-                var result = await _priceFetcher.GetMultipleAsync(TestWorldID, batch);
-                if (!result.Any())
-                    throw new HttpRequestException("Failed to fetch prices from Universalis API");
-
-                await SaveBatchResult(result);
-            }
-        }
-        catch (Exception e)
+        foreach (var batch in batches)
         {
-            Log.Error(e.Message);
+            var timer = new Stopwatch();
+            timer.Start();
+            var result = await _priceFetcher.FetchMultiplePricesAsync(TestWorldID, batch);
+
+            if (!result.Any())
+                throw new HttpRequestException("Failed to fetch prices from Universalis API");
+
+            await SaveBatchResult(result);
+
+            timer.Stop();
+            Log.Information("Total time for batch in ms: {Elapsed}", timer.ElapsedMilliseconds);
+            await Task.Delay(ApiSpamPreventionDelayInMS);
         }
     }
 
-    private static async Task SaveBatchResult(IEnumerable<PriceWebPoco> result)
+    private static async Task SaveBatchResult(IEnumerable<PriceWebPoco?> result)
     {
         using var context = GoblinDbContext;
 
-        result.ToList().ToPricePoco();
+        var pricesToSave = result.ToPricePocoList();
 
-        await context.AddRangeAsync(result);
+        await context.AddRangeAsync(pricesToSave);
         await context.SaveChangesAsync();
         Log.Information(
             "Sucessfully saved to {Count} prices entries from API call for prices",
-            result.Count()
+            pricesToSave.Count
         );
     }
 
-    private async Task FillTable<T>() where T : class
+    private static async Task FillTable<T>() where T : class
     {
         using var context = GoblinDbContext;
         if (context is null)
@@ -189,4 +191,5 @@ public class GoblinDatabase
 
     public const string DbName = "GilGoblin.db";
     private const int TestWorldID = 34;
+    public static readonly int ApiSpamPreventionDelayInMS = 100;
 }
