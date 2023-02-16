@@ -11,7 +11,7 @@ public static class DependencyInjectionExtensions
     public static void AddGoblinServices(this IServiceCollection services)
     {
         services.AddGoblinDatabases();
-        services.AddScoped<IPriceFetcher, PriceFetcher>();
+        services.AddScoped<IPriceDataFetcher, PriceFetcher>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();

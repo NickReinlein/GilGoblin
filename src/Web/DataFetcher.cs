@@ -19,26 +19,22 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
     public virtual async Task<T?> GetAsync(string path)
     {
         var fullPath = string.Concat(_basePath, path);
-        _logger.LogInformation("Beginning call to API endpoint: {Path}", path);
 
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
             return default;
 
-        _logger.LogInformation("Response received from API endpoint: {Path}", path);
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
     public virtual async Task<U?> GetMultipleAsync(string path)
     {
         var fullPath = string.Concat(_basePath, path);
-        _logger.LogInformation("Beginning call to API endpoint: {Path}", path);
 
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
             return default;
 
-        _logger.LogInformation("Response received from API endpoint: {Path}", path);
         return await response.Content.ReadFromJsonAsync<U>();
     }
 }

@@ -1,10 +1,11 @@
+using System.Diagnostics;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Services;
 
 namespace GilGoblin.Web;
 
-public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPriceFetcher
+public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPriceDataFetcher
 {
     private readonly ILogger<PriceFetcher> _logger;
 
@@ -50,41 +51,15 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPr
         return response is not null ? response.GetContentAsList() : new List<PriceWebPoco>();
     }
 
-    public async Task<IEnumerable<PriceWebPoco>> GetAll(int worldID)
+    public async Task<List<List<int>>> GetAllIDsAsBatchJobs(int worldID)
     {
         _logger.LogWarning("Fetching for world {World}, all items", worldID);
         var allIDs = await GetMarketableItemIDs();
         if (!allIDs.Any())
-            return Array.Empty<PriceWebPoco>();
+            return new List<List<int>>();
 
         var batcher = new Batcher<int>(PricesPerPage);
-        var batches = batcher.SplitIntoBatchJobs(allIDs);
-
-        var cumulativeResults = new List<PriceWebPoco?>();
-        foreach (var batch in batches)
-        {
-            _logger.LogInformation(
-                "Fetching for world {World}, batch of {Count} items",
-                worldID,
-                batch.Count
-            );
-            var batchResult = await GetMultiple(worldID, batch);
-            if (batchResult.Any())
-            {
-                _logger.LogInformation(
-                    "Received response for world {World} {Count} items",
-                    worldID,
-                    batch.Count
-                );
-                cumulativeResults.AddRange(batchResult);
-            }
-        }
-
-        var successes = cumulativeResults
-            .Where(i => i is not null && i.ItemID > 0)
-            .Cast<PriceWebPoco>()
-            .ToList();
-        return successes;
+        return batcher.SplitIntoBatchJobs(allIDs);
     }
 
     public async Task<List<int>> GetMarketableItemIDs()

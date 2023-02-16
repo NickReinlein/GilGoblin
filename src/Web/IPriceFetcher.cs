@@ -3,6 +3,8 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Web;
 
-public interface IPriceFetcher
-    : IDataFetcher<PriceWebPoco, PriceWebResponsePoco>,
-        IPriceRepository<PriceWebPoco> { }
+public interface IPriceDataFetcher : IDataFetcher<PriceWebPoco, PriceWebResponsePoco>
+{
+    Task<List<int>> GetMarketableItemIDs();
+    Task<List<List<int>>> GetAllIDsAsBatchJobs(int worldID);
+}

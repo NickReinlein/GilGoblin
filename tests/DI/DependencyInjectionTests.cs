@@ -9,23 +9,23 @@ namespace GilGoblin.Tests.DI;
 
 public class DependencyInjectionTests
 {
-    // [Test]
-    // public async Task WhenWeBuild_ThenTheDependenciesAreResolved()
-    // {
-    //     await using var application = new WebApplicationFactory<Program>().WithWebHostBuilder(
-    //         builder =>
-    //             builder.ConfigureServices(services =>
-    //             {
-    //                 services.AddControllers();
-    //                 services.AddEndpointsApiExplorer();
-    //                 services.AddGoblinServices();
-    //             })
-    //     );
+    [Test]
+    public async Task WhenWeBuild_ThenTheDependenciesAreResolved()
+    {
+        await using var application = new WebApplicationFactory<Program>().WithWebHostBuilder(
+            builder =>
+                builder.ConfigureServices(services =>
+                {
+                    services.AddControllers();
+                    services.AddEndpointsApiExplorer();
+                    services.AddGoblinServices();
+                })
+        );
 
-    //     var handler = application.Services.GetService<ICraftingCalculator>();
+        var handler = application.Services.GetService<ICraftingCalculator>();
 
-    //     Assert.That(handler, Is.Not.Null);
-    // }
+        Assert.That(handler, Is.Not.Null);
+    }
 
     [TestCase("/item/")]
     [TestCase("/item/100")]
