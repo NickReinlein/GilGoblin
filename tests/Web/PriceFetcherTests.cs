@@ -70,7 +70,7 @@ public class PriceFetcherTests
     public void WhenWeDeserializeResponseForMultiple_ThenWeSucceed()
     {
         var ids = new[] { _itemID1, _itemID2 };
-        var result = JsonSerializer.Deserialize<PriceWebResponsePoco>(
+        var result = JsonSerializer.Deserialize<PriceWebResponse>(
             _getItemJSONResponseMulti,
             GetSerializerOptions()
         );

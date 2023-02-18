@@ -40,7 +40,7 @@ public class CraftingCalculator : ICraftingCalculator
         {
             var recipe = await _recipes.Get(recipeID);
             var ingredients = await _grocer.BreakdownRecipeById(recipeID);
-            if (recipe is null || !ingredients.Any())
+            if (recipe is null || ingredients is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
             var ingredientPrices = await GetIngredientPrice(

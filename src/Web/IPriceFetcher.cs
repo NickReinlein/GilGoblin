@@ -1,9 +1,8 @@
 using GilGoblin.Pocos;
-using GilGoblin.Repository;
 
 namespace GilGoblin.Web;
 
-public interface IPriceDataFetcher : IDataFetcher<PriceWebPoco, PriceWebResponsePoco>
+public interface IPriceDataFetcher : IDataFetcher<PriceWebPoco, PriceWebResponse>
 {
     Task<List<int>> GetMarketableItemIDsAsync();
     Task<List<List<int>>> GetAllIDsAsBatchJobsAsync(int worldID);

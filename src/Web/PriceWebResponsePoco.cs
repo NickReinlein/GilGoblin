@@ -2,11 +2,11 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Web;
 
-public class PriceWebResponsePoco : IReponseToList<PriceWebPoco>
+public class PriceWebResponse : IReponseToList<PriceWebPoco>
 {
     public Dictionary<int, PriceWebPoco> Items { get; set; }
 
-    public PriceWebResponsePoco(Dictionary<int, PriceWebPoco> items)
+    public PriceWebResponse(Dictionary<int, PriceWebPoco> items)
     {
         Items = items;
     }

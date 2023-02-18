@@ -1,5 +1,5 @@
 using GilGoblin.Pocos;
-using GilGoblin.Services;
+using GilGoblin.Tests.Services;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Services;
