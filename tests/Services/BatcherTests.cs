@@ -1,3 +1,4 @@
+using GilGoblin.Services;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Services;
