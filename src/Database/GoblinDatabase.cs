@@ -49,7 +49,7 @@ public class GoblinDatabase
                 await FillTable<RecipePoco>();
 
             if (context.Price?.Count() < 1000)
-                await FetchPrices();
+                await FillTable<PricePoco>();
         }
         catch (Exception e)
         {
@@ -105,22 +105,31 @@ public class GoblinDatabase
         var path = ResourceFilePath(ResourceFilenameCsv(tableName));
         try
         {
-            var result = CsvInteractor<T>.LoadFile(path);
-
-            if (result.Any())
-            {
-                await context.AddRangeAsync(result);
-                await context.SaveChangesAsync();
-                Log.Information(
-                    "Sucessfully saved to table {TableName} {ResultCount} entries from CSV",
-                    tableName,
-                    result.Count()
-                );
-            }
+            await LoadCSVFileAndSaveResults<T>(context, tableName, path);
         }
         catch (Exception e)
         {
             Log.Error(e.Message);
+        }
+    }
+
+    private static async Task LoadCSVFileAndSaveResults<T>(
+        GilGoblinDbContext context,
+        string tableName,
+        string path
+    ) where T : class
+    {
+        var result = CsvInteractor<T>.LoadFile(path);
+
+        if (result.Any())
+        {
+            await context.AddRangeAsync(result);
+            await context.SaveChangesAsync();
+            Log.Information(
+                "Sucessfully saved to table {TableName} {ResultCount} entries from CSV",
+                tableName,
+                result.Count()
+            );
         }
     }
 

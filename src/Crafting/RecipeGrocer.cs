@@ -70,7 +70,7 @@ public class RecipeGrocer : IRecipeGrocer
         return ingredientsBrokenDownList;
     }
 
-    public async Task<IEnumerable<IngredientPoco?>> BreakdownItem(int itemID)
+    public async Task<IEnumerable<IngredientPoco>?> BreakdownItem(int itemID)
     {
         _log.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
         var ingredientRecipes = await _recipes.GetRecipesForItem(itemID);

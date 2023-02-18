@@ -41,5 +41,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     public async Task<IEnumerable<CraftSummaryPoco?>> GetBestCrafts(int worldId)
     {
         return Array.Empty<CraftSummaryPoco>();
+        // var allMarketableItemIds = _priceRepo.GetAll(worldId);
     }
 }

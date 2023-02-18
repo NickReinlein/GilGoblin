@@ -10,9 +10,10 @@ public class CsvInteractorTests
     public void SetUp() { }
 
     [Test]
-    public void WhenWeLoadAnItemTestFile_ThenWeDeserializeItems()
+    public void GivenAnItemTestFile_WhenWeLoadTheFile_ThenWeDeserializeItems()
     {
         var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath(ItemTestFileName));
+
         Assert.That(result.Count, Is.GreaterThan(10));
         var gilItemEntry = result.First(i => i.ID == 1);
         var lightningShardItemEntry = result.First(i => i.ID == 6);
@@ -29,9 +30,10 @@ public class CsvInteractorTests
     }
 
     [Test]
-    public void WhenWeLoadARecipeTestFile_ThenWeDeserializeRecipes()
+    public void GivenARecipesTestFile_WhenWeLoadTheFileThenWeDeserializeRecipes()
     {
         var result = CsvInteractor<RecipePoco>.LoadFile(ResourceFilePath(RecipeTestFileName));
+
         Assert.That(result.Count, Is.GreaterThan(10));
         var recipeSix = result.First<RecipePoco>(i => i.ID == 6);
         Assert.Multiple(() =>
@@ -47,6 +49,22 @@ public class CsvInteractorTests
     }
 
 
+    [Test]
+    public void GivenAPricesTestFile_WhenWeLoadTheFile_ThenWeDeserializePrices()
+    {
+        var result = CsvInteractor<PricePoco>.LoadFile(ResourceFilePath(PriceTestFileName));
+
+        Assert.That(result.Count, Is.GreaterThan(10));
+        var price = result.First<PricePoco>(i => i.ItemID == 31100);
+        Assert.Multiple(() =>
+        {
+            Assert.That(price.ItemID, Is.EqualTo(31100));
+            Assert.That(price.WorldID, Is.GreaterThan(0));
+            Assert.That(price.AverageListingPrice, Is.GreaterThan(0));
+            Assert.That(price.AverageSold, Is.GreaterThan(0));
+        });
+    }
+
     private static string ResourcesFolderPath = System.IO.Path.Combine(
         Directory
             .GetParent(System.IO.Directory.GetCurrentDirectory())
@@ -57,6 +75,7 @@ public class CsvInteractorTests
     private static string ResourceFilePath(string filename) =>
         System.IO.Path.Combine(ResourcesFolderPath, filename);
 
-    public const string ItemTestFileName = "ItemTest.csv";
+    public const string ItemTestFileName = "ItemInfoTest.csv";
     public const string RecipeTestFileName = "RecipeTest.csv";
+    public const string PriceTestFileName = "PriceTest.csv";
 }

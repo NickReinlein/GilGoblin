@@ -1,11 +1,9 @@
-using System.Diagnostics;
 using GilGoblin.Pocos;
-using GilGoblin.Repository;
 using GilGoblin.Services;
 
 namespace GilGoblin.Web;
 
-public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponsePoco>, IPriceDataFetcher
+public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceDataFetcher
 {
     private readonly ILogger<PriceFetcher> _logger;
 

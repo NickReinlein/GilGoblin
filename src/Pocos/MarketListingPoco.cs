@@ -16,10 +16,10 @@ internal class MarketListingPoco
 
     public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq) : base()
     {
-        this.Hq = hq;
-        this.Price = pricePerUnit;
-        this.Quantity = quantity;
-        this.Hq = hq;
+        Hq = hq;
+        Price = pricePerUnit;
+        Quantity = quantity;
+        Hq = hq;
         if (Timestamp.Equals(0))
         {
             Log.Error("Empty timestamp for web listing.");
@@ -28,7 +28,7 @@ internal class MarketListingPoco
         {
             try
             {
-                this.Timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
+                Timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
             }
             catch (Exception ex)
             {

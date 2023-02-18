@@ -29,9 +29,8 @@ public class CraftingCalculator : ICraftingCalculator
     public async Task<int> CalculateCraftingCostForItem(int worldID, int itemID)
     {
         var recipes = await _recipes.GetRecipesForItem(itemID);
-        var recipeCount = recipes.Count();
         var craftingCost = await GetLowestCraftingCost(worldID, recipes);
-        LogCraftingResult(worldID, itemID, recipeCount, craftingCost);
+        LogCraftingResult(worldID, itemID, recipes.Count(), craftingCost);
         return craftingCost;
     }
 
@@ -41,7 +40,7 @@ public class CraftingCalculator : ICraftingCalculator
         {
             var recipe = await _recipes.Get(recipeID);
             var ingredients = await _grocer.BreakdownRecipeById(recipeID);
-            if (recipe is null || !ingredients.Any())
+            if (recipe is null || ingredients is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
             var ingredientPrices = await GetIngredientPrice(
@@ -49,10 +48,7 @@ public class CraftingCalculator : ICraftingCalculator
                 recipe.TargetItemID,
                 ingredients
             );
-            IEnumerable<CraftIngredientPoco> craftIngredients = AddPricesToIngredients(
-                ingredients,
-                ingredientPrices
-            );
+            var craftIngredients = AddPricesToIngredients(ingredients, ingredientPrices);
 
             var craftingCost = await CalculateCraftingCostForIngredients(worldID, craftIngredients);
 
