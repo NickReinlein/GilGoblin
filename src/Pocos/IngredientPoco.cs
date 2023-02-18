@@ -8,15 +8,15 @@ public class IngredientPoco
 
     public IngredientPoco(int itemID, int quantity, int recipeID)
     {
-        this.ItemID = itemID;
-        this.Quantity = quantity;
-        this.RecipeID = recipeID;
+        ItemID = itemID;
+        Quantity = quantity;
+        RecipeID = recipeID;
     }
 
     public IngredientPoco(IngredientPoco copyMe)
     {
-        this.RecipeID = copyMe.RecipeID;
-        this.ItemID = copyMe.ItemID;
-        this.Quantity = copyMe.Quantity;
+        RecipeID = copyMe.RecipeID;
+        ItemID = copyMe.ItemID;
+        Quantity = copyMe.Quantity;
     }
 }

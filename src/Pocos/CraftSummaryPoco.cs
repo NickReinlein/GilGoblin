@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace GilGoblin.Pocos;
 
 public class CraftSummaryPoco

@@ -1,4 +1,5 @@
-using GilGoblin.Pocos;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GilGoblin.Repository;
 

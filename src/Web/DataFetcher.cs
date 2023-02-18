@@ -1,3 +1,9 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+
 namespace GilGoblin.Web;
 
 public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
