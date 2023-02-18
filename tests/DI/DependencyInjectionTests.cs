@@ -1,18 +1,13 @@
+using System.Net;
 using System.Reflection;
-using GilGoblin.Crafting;
+using GilGoblin.Api;
+using GilGoblin.Api.DI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
-using NUnit.Framework;
-using System.Net;
-using GilGoblin.Crafting;
-using GilGoblin.DI;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
@@ -65,9 +60,7 @@ public class DependencyInjectionTests
     {
         _services = new ServiceCollection();
 
-        _configuration = new ConfigurationBuilder()
-        //.AddApplicationConfigurationsSource<Startup>("tests")
-        .Build();
+        _configuration = new ConfigurationBuilder().Build();
 
         _environment = Substitute.For<IWebHostEnvironment>();
         _environment.EnvironmentName.Returns("production");
@@ -76,7 +69,7 @@ public class DependencyInjectionTests
     [Test]
     public void GivenAHostBuilder_WhenWeSetupHost_ThenWeSucceed()
     {
-        var hostBuilder = Bootstrap.CreateHostBuilder().Build();
+        var hostBuilder = Bootstrap.CreateHostBuilder("development").Build();
         Assert.That(hostBuilder, Is.Not.Null);
     }
 
