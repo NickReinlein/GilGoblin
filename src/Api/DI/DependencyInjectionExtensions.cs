@@ -9,13 +9,13 @@ namespace GilGoblin.Api.DI;
 
 public static class DependencyInjectionExtensions
 {
-    public static void AddServices(this IServiceCollection services)
+    public static void AddGoblinServices(this IServiceCollection services)
     {
-        services.AddGoblinServices();
+        services.AddGoblinCrafting();
         services.AddGoblinDatabases();
     }
 
-    public static void AddGoblinServices(this IServiceCollection services)
+    public static void AddGoblinCrafting(this IServiceCollection services)
     {
         services.AddScoped<IPriceDataFetcher, PriceFetcher>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();

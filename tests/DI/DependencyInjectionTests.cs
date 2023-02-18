@@ -12,6 +12,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
 
+[NonParallelizable]
 public class DependencyInjectionTests
 {
     private IConfiguration _configuration;
@@ -23,6 +24,17 @@ public class DependencyInjectionTests
             .GetAssembly(typeof(Program))
             ?.GetTypes()
             .Where(type => typeof(ControllerBase).IsAssignableFrom(type));
+
+    [SetUp]
+    public void SetUp()
+    {
+        _services = new ServiceCollection();
+
+        _configuration = new ConfigurationBuilder().Build();
+
+        _environment = Substitute.For<IWebHostEnvironment>();
+        _environment.EnvironmentName.Returns("production");
+    }
 
     [TestCase("/item/")]
     [TestCase("/item/100")]
@@ -55,28 +67,18 @@ public class DependencyInjectionTests
         Assert.True(acceptableResponseCodes.Contains(response.StatusCode));
     }
 
-    [SetUp]
-    public void SetUp()
-    {
-        _services = new ServiceCollection();
-
-        _configuration = new ConfigurationBuilder().Build();
-
-        _environment = Substitute.For<IWebHostEnvironment>();
-        _environment.EnvironmentName.Returns("production");
-    }
-
     [Test]
-    public void GivenAHostBuilder_WhenWeSetupHost_ThenWeSucceed()
+    public async Task GivenAHostBuilder_WhenWeSetupHost_ThenItIsNotNull()
     {
-        var hostBuilder = Bootstrap.CreateHostBuilder("development").Build();
+        var hostBuilder = Bootstrap.CreateHostBuilder(_environment.EnvironmentName).Build();
         Assert.That(hostBuilder, Is.Not.Null);
     }
 
     [Test]
-    public void GivenAGilGoblin_WhenWeRun_ThenWeSucceed()
+    public async Task GivenAHostBuilder_WhenWeSetupHost_ThenWeSucceed()
     {
-        var program = new Program();
-        Assert.That(program is not null);
+        var hostBuilder = Bootstrap.CreateHostBuilder(_environment.EnvironmentName).Build();
+
+        Assert.That(hostBuilder, Is.Not.Null);
     }
 }

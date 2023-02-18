@@ -13,7 +13,7 @@ public static class Bootstrap
             .ConfigureServices(
                 (hostContext, services) =>
                 {
-                    services.AddSingleton(hostContext.Configuration).AddServices();
+                    services.AddSingleton(hostContext.Configuration).AddGoblinServices();
                 }
             );
     }
