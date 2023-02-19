@@ -9,14 +9,17 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var builder = SetupBuilder(args);
+        var app = BuildAndSetupApp(builder);
+        app.Run();
+    }
+
+    public static WebApplication BuildAndSetupApp(WebApplicationBuilder builder) =>
+        builder.Build().AddAppGoblinServices();
+
+    public static WebApplicationBuilder SetupBuilder(string[] args)
+    {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddGoblinDatabases();
-        builder.Services.AddGoblinServices();
-
         builder.WebHost.UseDefaultServiceProvider(
             (_, options) =>
             {
@@ -24,12 +27,7 @@ public class Program
                 options.ValidateScopes = true;
             }
         );
-
-        var app = builder.Build();
-
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.MapControllers();
-        app.Run();
+        builder.Services.AddGoblinServices();
+        return builder;
     }
 }
