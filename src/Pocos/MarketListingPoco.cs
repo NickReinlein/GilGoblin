@@ -1,9 +1,9 @@
+using System;
 using GilGoblin.Services;
-using Serilog;
 
 namespace GilGoblin.Pocos;
 
-internal class MarketListingPoco
+public class MarketListingPoco
 {
     public int ItemID { get; set; }
     public int WorldID { get; set; }
@@ -20,21 +20,13 @@ internal class MarketListingPoco
         Price = pricePerUnit;
         Quantity = quantity;
         Hq = hq;
-        if (Timestamp.Equals(0))
+        try
         {
-            Log.Error("Empty timestamp for web listing.");
+            Timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
         }
-        else
+        catch (Exception)
         {
-            try
-            {
-                Timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error converting web listing's timestamp of:  {this.timestamp}");
-                Log.Error(ex.Message);
-            }
+            Timestamp = DateTime.Now.AddDays(-7);
         }
     }
 }

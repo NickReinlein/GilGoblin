@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <RootNamespace>GilGoblin.Crafting</RootNamespace>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.11.*" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.*" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.*" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="CsvHelper" Version="30.0.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Services/*Services.csproj" />
+    <ProjectReference Include="../Pocos/*Pocos.csproj" />
+    <ProjectReference Include="../Exceptions/*Exceptions.csproj" />
+    <ProjectReference Include="../Extensions/*Extensions.csproj" />
+    <ProjectReference Include="../Repository/*Repository.csproj" />
+  </ItemGroup>
+</Project>

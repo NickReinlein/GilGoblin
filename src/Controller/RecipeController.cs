@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Controller;
 

@@ -1,7 +1,11 @@
-using GilGoblin.Crafting;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
+using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Repository;
+namespace GilGoblin.Crafting;
 
 public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 {

@@ -1,8 +1,8 @@
-using System.Text.Json.Serialization;
-using CsvHelper.Configuration.Attributes;
+using System.Collections.Generic;
+using System.Linq;
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Extension;
+namespace GilGoblin.Extensions;
 
 public static class RecipePocoExtension
 {

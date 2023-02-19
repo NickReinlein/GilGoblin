@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace GilGoblin.Services;
 
 public interface IBatcher<T>

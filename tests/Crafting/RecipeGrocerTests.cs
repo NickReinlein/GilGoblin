@@ -1,5 +1,5 @@
 using GilGoblin.Crafting;
-using GilGoblin.Extension;
+using GilGoblin.Extensions;
 using GilGoblin.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;

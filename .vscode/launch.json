@@ -11,9 +11,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/bin/Debug/net7.0/GilGoblin.dll",
+            "program": "${workspaceFolder}/src/Api/bin/Debug/net7.0/Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/",
+            "cwd": "${workspaceFolder}/src/Api",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false,
