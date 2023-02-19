@@ -2,8 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <RootNamespace>GilGoblin.Api</RootNamespace>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>

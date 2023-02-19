@@ -1,19 +1,13 @@
-using System.Net;
-using System.Reflection;
 using GilGoblin.Api;
-using GilGoblin.Api.DI;
+using GilGoblin.Crafting;
+using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
 
-[NonParallelizable]
 public class DependencyInjectionTests
 {
     private WebApplicationBuilder _builder;
@@ -23,30 +17,6 @@ public class DependencyInjectionTests
     {
         _builder = Program.SetupBuilder(Array.Empty<string>());
     }
-
-    // [TestCase("/item/")]
-    // [TestCase("/item/100")]
-    // [TestCase("/recipe/")]
-    // [TestCase("/recipe/100")]
-    // [TestCase("/price/34/")]
-    // [TestCase("/price/34/100")]
-    // [TestCase("/craft/34/")]
-    // [TestCase("/craft/34/100")]
-    // public async Task WhenWeResolveEndpoints_ThenEachEndpointResponds(string endpoint)
-    // {
-    //     var builder = Program.SetupBuilder(Array.Empty<string>());
-    //     builder.Configuration.por
-    //     var application = builder.Build().AddAppGoblinServices();
-
-    //     await application.RunAsync();
-
-    //     var client = new HttpClient();
-    //     var response = await client.GetAsync(endpoint);
-
-    //     Assert.That(response, Is.Not.Null);
-    //     var acceptableResponseCodes = new[] { HttpStatusCode.OK, HttpStatusCode.NoContent };
-    //     Assert.True(acceptableResponseCodes.Contains(response.StatusCode));
-    // }
 
     [Test]
     public void GivenABuilder_WhenWeSetupBuilder_ThenItIsNotNull()
@@ -72,5 +42,20 @@ public class DependencyInjectionTests
         {
             Assert.That(service, Is.Not.Null);
         }
+    }
+
+    [TestCase(typeof(IItemRepository))]
+    [TestCase(typeof(IRecipeRepository))]
+    [TestCase(typeof(IPriceRepository<PricePoco>))]
+    [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
+    [TestCase(typeof(IRecipeGrocer))]
+    [TestCase(typeof(ICraftingCalculator))]
+    public void GivenAGoblinService_WhenWeRunTheApi_ThenServiceIsAvailable(Type type)
+    {
+        var app = _builder.Build();
+
+        var diCheck = app.Services.GetRequiredService(type);
+
+        Assert.That(diCheck, Is.Not.Null);
     }
 }
