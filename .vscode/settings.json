@@ -1,6 +1,11 @@
 {
   "dotnet-test-explorer.testProjectPath": "**/tests/*Tests.csproj",
   "dotnet-test-explorer.treeMode": "merged",
+  "dotnet-test-explorer.autoWatch": true,
+  "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura",
+  "coverage-gutters.showGutterCoverage": true,
+  "coverage-gutters.showLineCoverage": true,
+  "coverage-gutters.showRulerCoverage": true,
   "editor.formatOnSave": true,
   "prettier.enable": true,
   "prettier.printWidth": 160,
@@ -31,7 +36,5 @@
     "titleBar.inactiveBackground": "#2a024899",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "githubPullRequests.ignoredPullRequestBranches": [
-    "master"
-  ]
+  "githubPullRequests.ignoredPullRequestBranches": ["master"]
 }
