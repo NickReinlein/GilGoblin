@@ -13,8 +13,5 @@ public class PriceWebResponse : IReponseToList<PriceWebPoco>
         Items = items;
     }
 
-    public List<PriceWebPoco> GetContentAsList()
-    {
-        return Items.Values.ToList();
-    }
+    public List<PriceWebPoco> GetContentAsList() => Items.Values.ToList();
 }

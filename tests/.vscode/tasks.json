@@ -35,10 +35,10 @@
       },
       "args": [
         "test",
-        "${workspaceFolder}/GilGoblin.Tests.csproj",
         "/p:CollectCoverage=true",
         "/p:CoverletOutputFormat=lcov",
-        "/p:CoverletOutput=./lcov.info"
+        "/p:CoverletOutput=./lcov.info",
+        "${workspaceFolder}/GilGoblin.Tests.csproj"
       ],
       "problemMatcher": "$msCompile"
     },
