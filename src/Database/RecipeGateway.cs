@@ -10,9 +10,9 @@ namespace GilGoblin.Database;
 public class RecipeGateway : IRecipeRepository
 {
     private readonly GoblinDatabase _database;
-    private readonly ILogger<GoblinDatabase> _logger;
+    private readonly ILogger<RecipeGateway> _logger;
 
-    public RecipeGateway(GoblinDatabase database, ILogger<GoblinDatabase> logger)
+    public RecipeGateway(GoblinDatabase database, ILogger<RecipeGateway> logger)
     {
         _database = database;
         _logger = logger;

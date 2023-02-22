@@ -11,13 +11,13 @@ namespace GilGoblin.Tests.Controller;
 public class ItemControllerTests
 {
     private ItemController _controller;
-    private readonly IItemRepository _repo = Substitute.For<IItemRepository>();
-
-    private static readonly int _itemId = 108;
+    private IItemRepository _repo;
+    public static readonly int WorldID = 34;
 
     [SetUp]
     public void SetUp()
     {
+        _repo = Substitute.For<IItemRepository>();
         _controller = new ItemController(
             _repo,
             NullLoggerFactory.Instance.CreateLogger<ItemController>()
@@ -32,22 +32,49 @@ public class ItemControllerTests
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAnEnumerableResultIsReturned()
+    public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfItemsIsReturned()
     {
-        _repo.GetAll().Returns(new List<ItemInfoPoco>());
+        var poco1 = CreatePoco();
+        var poco2 = CreatePoco();
+        poco2.ID = poco1.ID + 100;
+        _repo.GetAll().Returns(new List<ItemInfoPoco>() { poco1, poco2 });
 
         var result = _controller.GetAll();
 
-        Assert.That(result is IEnumerable<ItemInfoPoco>);
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
+        Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetRequest_ThenOneResultIsReturned()
+    public void GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
     {
-        _repo.Get(_itemId).Returns(new ItemInfoPoco());
+        var poco1 = CreatePoco();
+        _repo.Get(poco1.ID).Returns(poco1);
 
-        var result = _controller.Get(_itemId);
+        var result = _controller.Get(poco1.ID);
 
-        Assert.That(result is ItemInfoPoco);
+        Assert.That(result, Is.EqualTo(poco1));
     }
+
+    [Test]
+    public void GivenAController_WhenWeReceiveAGetRequestForANonExistentItem_ThenNullIsReturned()
+    {
+        var result = _controller.Get(42);
+
+        Assert.That(result, Is.Null);
+    }
+
+    private static ItemInfoPoco CreatePoco() =>
+        new()
+        {
+            ID = 200,
+            CanBeHq = true,
+            IconID = 2332,
+            Description = "testDesc",
+            Level = 83,
+            Name = "testItem",
+            StackSize = 1,
+            VendorPrice = 3222
+        };
 }

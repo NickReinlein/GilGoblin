@@ -11,13 +11,12 @@ namespace GilGoblin.Tests.Controller;
 public class RecipeControllerTests
 {
     private RecipeController _controller;
-    private readonly IRecipeRepository _repo = Substitute.For<IRecipeRepository>();
-    private static readonly int _recipeID = 108;
-    private static readonly int _worldId = 34;
+    private IRecipeRepository _repo;
 
     [SetUp]
     public void SetUp()
     {
+        _repo = Substitute.For<IRecipeRepository>();
         _controller = new RecipeController(
             _repo,
             NullLoggerFactory.Instance.CreateLogger<RecipeController>()
@@ -34,20 +33,44 @@ public class RecipeControllerTests
     [Test]
     public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfRecipesIsReturned()
     {
-        _repo.GetAll().Returns(new List<RecipePoco>());
+        var poco1 = CreatePoco();
+        var poco2 = CreatePoco();
+        poco2.ID = poco1.ID + 100;
+        _repo.GetAll().Returns(new List<RecipePoco>() { poco1, poco2 });
 
         var result = _controller.GetAll();
 
-        Assert.That(result is not null);
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
+        Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
     }
 
     [Test]
     public void GivenAController_WhenWeReceiveAGetRequest_ThenARecipeIsReturned()
     {
-        _repo.Get(_recipeID).Returns(new RecipePoco());
+        var poco1 = CreatePoco();
+        _repo.Get(poco1.ID).Returns(poco1);
 
-        var result = _controller.Get(_recipeID);
+        var result = _controller.Get(poco1.ID);
 
-        Assert.That(result is not null);
+        Assert.That(result, Is.EqualTo(poco1));
     }
+
+    [Test]
+    public void GivenAController_WhenWeReceiveAGetRequestForANonExistentRecipe_ThenNullIsReturned()
+    {
+        var result = _controller.Get(42);
+
+        Assert.That(result, Is.Null);
+    }
+
+    private static RecipePoco CreatePoco() =>
+        new()
+        {
+            ID = 200,
+            TargetItemID = 100,
+            ResultQuantity = 1,
+            CanHq = true,
+            CanQuickSynth = true
+        };
 }
