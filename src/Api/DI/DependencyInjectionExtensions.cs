@@ -4,6 +4,7 @@ using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Web;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.DI;
@@ -21,19 +22,19 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddGoblinCrafting(this IServiceCollection services)
     {
         services.AddScoped<IPriceDataFetcher, PriceFetcher>();
-        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+        services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
         return services;
     }
 
     public static IServiceCollection AddGoblinDatabases(this IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>();
-        services.AddScoped<IItemRepository, ItemGateway>();
-        services.AddScoped<IRecipeRepository, RecipeGateway>();
-        services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
         services.AddScoped<GoblinDatabase>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
+        services.AddSingleton<IItemRepository, ItemGateway>();
+        services.AddSingleton<IRecipeRepository, RecipeGateway>();
         return services;
     }
 
@@ -51,5 +52,19 @@ public static class DependencyInjectionExtensions
         app.UseAuthorization();
         app.MapControllers();
         return app;
+    }
+
+    public static WebApplicationBuilder GetGoblinBuilder(this string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        builder.WebHost.UseDefaultServiceProvider(
+            (_, options) =>
+            {
+                options.ValidateOnBuild = true;
+                options.ValidateScopes = true;
+            }
+        );
+        builder.Services.AddGoblinServices();
+        return builder;
     }
 }
