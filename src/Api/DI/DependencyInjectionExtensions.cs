@@ -5,7 +5,6 @@ using GilGoblin.Repository;
 using GilGoblin.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -23,10 +22,9 @@ public static class DependencyInjectionExtensions
 
     public static IServiceCollection AddGoblinCrafting(this IServiceCollection services)
     {
-        services.AddScoped<IPriceDataFetcher, PriceFetcher>();
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
-        services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
+        services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
         services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
         return services;
     }
@@ -34,11 +32,8 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddGoblinDatabases(this IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>();
-        services.AddScoped<GoblinDatabase>();
-        services.AddScoped<GoblinDatabase>();
         services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
-        services.AddSingleton<IItemRepository, ItemGateway>();
-        services.AddSingleton<IRecipeRepository, RecipeGateway>();
+        services.AddSingleton<GoblinDatabase>();
         services.AddSingleton<IItemRepository, ItemGateway>();
         services.AddSingleton<IRecipeRepository, RecipeGateway>();
         return services;

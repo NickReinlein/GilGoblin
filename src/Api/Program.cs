@@ -8,6 +8,7 @@ public class Program
     {
         var builder = args.GetGoblinBuilder();
         var app = builder.Build();
+        app.AddAppGoblinServices();
         app.Run();
     }
 }

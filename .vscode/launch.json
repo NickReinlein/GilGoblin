@@ -12,11 +12,11 @@
       "program": "${workspaceFolder}/src/Api/bin/Debug/net7.0/Api.dll",
       "args": [
         "build",
-        "GilGoblin.sln",
+        "**/src/*.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "cwd": "${workspaceFolder}/src/Api",
+      "cwd": "${workspaceFolder}/src/Api/",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false

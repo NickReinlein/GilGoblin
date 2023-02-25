@@ -1,7 +1,5 @@
 using System.Net;
 using GilGoblin.Api.DI;
-using System.Net;
-using GilGoblin.Api.DI;
 using GilGoblin.Crafting;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -15,12 +13,14 @@ namespace GilGoblin.Tests.DI;
 public class DependencyInjectionTests
 {
     private WebApplicationBuilder _builder;
+    private WebApplication _app;
 
     [SetUp]
     public void SetUp()
     {
         _builder = Array.Empty<string>().GetGoblinBuilder();
-        _builder = Array.Empty<string>().GetGoblinBuilder();
+        _app = _builder.Build();
+        _app.AddAppGoblinServices();
     }
 
     [Test]
@@ -50,9 +50,7 @@ public class DependencyInjectionTests
     [TestCase(typeof(ICraftingCalculator))]
     public void GivenAGoblinService_WhenWeRunTheApi_ThenServiceIsAvailable(Type type)
     {
-        var app = _builder.Build();
-
-        var diCheck = app.Services.GetRequiredService(type);
+        var diCheck = _app.Services.GetRequiredService(type);
 
         Assert.That(diCheck, Is.Not.Null);
     }

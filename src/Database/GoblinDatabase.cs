@@ -193,8 +193,11 @@ public class GoblinDatabase
         }
     }
 
-    public static readonly string ResourcesFolderPath = System.IO.Path.Combine(
-        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName,
+    protected static string BaseFolderPath = Directory
+        .GetParent(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).ToString())
+        .ToString();
+    protected static string ResourcesFolderPath = System.IO.Path.Combine(
+        BaseFolderPath,
         "resources/"
     );
 

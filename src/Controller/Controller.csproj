@@ -2,7 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
-    <RootNamespace>GilGoblin.Controller</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>GilGoblin</RootNamespace>
+    <UserSecretsId>GilGoblin</UserSecretsId>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <ItemGroup>
@@ -23,5 +27,5 @@
     <ProjectReference Include="../Services/*Services.csproj" />
     <ProjectReference Include="../Repository/*Repository.csproj" />
     <ProjectReference Include="../Pocos/*Pocos.csproj" />
-  </ItemGroup>
+  </ItemGroup>  
 </Project>
