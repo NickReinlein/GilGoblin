@@ -1,5 +1,7 @@
 using System.Net;
 using GilGoblin.Api.DI;
+using System.Net;
+using GilGoblin.Api.DI;
 using GilGoblin.Crafting;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -17,6 +19,7 @@ public class DependencyInjectionTests
     [SetUp]
     public void SetUp()
     {
+        _builder = Array.Empty<string>().GetGoblinBuilder();
         _builder = Array.Empty<string>().GetGoblinBuilder();
     }
 
