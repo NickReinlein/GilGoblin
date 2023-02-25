@@ -2,10 +2,11 @@
 
 ## Summary
 
-GilGoblin is a REST API for FFXIV, written in C#. It calculates the most profitable items to craft based on market prices, vendor prices and crafting component costs. It stores the data in a Postgres database. The prices are refreshed by calling an API endpoint (admin process). The eventual goal is to have a website using this API's endpoints to display the top crafts for each crafting profession (specific to user-selected world)
+GilGoblin is a REST API for FFXIV, written in C#. It calculates the most profitable items to craft based on current market prices, vendor prices and crafting component costs. It stores recent prices in a local SQLite database. The prices are refreshed by a background service. 
+
+The long-term goal is to have a website using this API's endpoints to display the top crafts for each crafting profession (specific to the user-selected world)
 
 Eventually, features will includes the following:
-
 * Getting the vendor cost, if available via vendor
 * Getting the recipe to craft if the item can be crafted
 * Calculating the cost to craft from the components, based on the recipe in the previous step

@@ -6,6 +6,7 @@ using GilGoblin.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace GilGoblin.Api.DI;
 
@@ -64,6 +65,7 @@ public static class DependencyInjectionExtensions
                 options.ValidateScopes = true;
             }
         );
+
         builder.Services.AddGoblinServices();
         return builder;
     }

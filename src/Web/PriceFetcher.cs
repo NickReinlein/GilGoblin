@@ -41,7 +41,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
     )
     {
         _logger.LogInformation(
-            "Fetching for world {World}, {Count} items, starting with id: ",
+            "Fetching for world {World}, {Count} items, starting with id: {ID}",
             worldID,
             ids.Count(),
             ids.FirstOrDefault()

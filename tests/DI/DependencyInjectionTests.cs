@@ -54,29 +54,6 @@ public class DependencyInjectionTests
         Assert.That(diCheck, Is.Not.Null);
     }
 
-    // [TestCase("/item/")]
-    // [TestCase("/item/100")]
-    // [TestCase("/recipe/")]
-    // [TestCase("/recipe/100")]
-    // [TestCase("/price/34/")]
-    // [TestCase("/price/34/100")]
-    // [TestCase("/craft/34/")]
-    // [TestCase("/craft/34/100")]
-    // public async Task WhenWeResolveEndpoints_ThenEachEndpointResponds(string endpoint)
-    // {
-    //     var app = _builder.Build();
-    //     app.Urls.Add("http://localhost:9001");
-
-    //     await app.RunAsync();
-
-    //     var client = new HttpClient { Timeout = new TimeSpan(0, 0, 5) };
-    //     var response = await client.GetAsync(endpoint);
-
-    //     Assert.That(response, Is.Not.Null);
-    //     var acceptableResponseCodes = new[] { HttpStatusCode.OK, HttpStatusCode.NoContent };
-    //     Assert.True(acceptableResponseCodes.Contains(response.StatusCode));
-    // }
-
     private List<ServiceDescriptor> GetGoblinServicesList() =>
         _builder.Services
             .Where(

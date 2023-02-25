@@ -1,7 +1,7 @@
 {
   "dotnet-test-explorer.testProjectPath": "**/tests/*Tests.csproj",
   "dotnet-test-explorer.treeMode": "merged",
-  "dotnet-test-explorer.autoWatch": true,
+  "dotnet-test-explorer.autoWatch": false,
   "coverage-gutters.showGutterCoverage": true,
   "coverage-gutters.showLineCoverage": true,
   "coverage-gutters.showRulerCoverage": true,
