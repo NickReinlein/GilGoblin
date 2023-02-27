@@ -1,4 +1,4 @@
-using GilGoblin.Controller;
+using GilGoblin.Controllers;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;

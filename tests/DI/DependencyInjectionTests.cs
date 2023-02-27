@@ -1,4 +1,3 @@
-using System.Net;
 using GilGoblin.Api.DI;
 using GilGoblin.Crafting;
 using GilGoblin.Pocos;

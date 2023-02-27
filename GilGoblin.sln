@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20C167A9-802
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{8C30C5D8-0F88-4F24-B877-9C57D9EDBA1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "src\Controller\Controller.csproj", "{B6A34D91-8A40-4174-B591-A405FA462C48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "src\Controllers\Controllers.csproj", "{B6A34D91-8A40-4174-B591-A405FA462C48}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crafting", "src\Crafting\Crafting.csproj", "{76333644-BE39-4684-8CBA-4B33E665C68A}"
 EndProject

@@ -1,4 +1,4 @@
-using GilGoblin.Controller;
+using GilGoblin.Controllers;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
@@ -32,14 +32,14 @@ public class ItemControllerTests
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfItemsIsReturned()
+    public async Task GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfItemsIsReturned()
     {
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
         poco2.ID = poco1.ID + 100;
         _repo.GetAll().Returns(new List<ItemInfoPoco>() { poco1, poco2 });
 
-        var result = _controller.GetAll();
+        var result = await _controller.GetAll();
 
         Assert.That(result.Count, Is.EqualTo(2));
         Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
@@ -47,20 +47,20 @@ public class ItemControllerTests
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
+    public async Task GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
     {
         var poco1 = CreatePoco();
         _repo.Get(poco1.ID).Returns(poco1);
 
-        var result = _controller.Get(poco1.ID);
+        var result = await _controller.Get(poco1.ID);
 
         Assert.That(result, Is.EqualTo(poco1));
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetRequestForANonExistentItem_ThenNullIsReturned()
+    public async Task GivenAController_WhenWeReceiveAGetRequestForANonExistentItem_ThenNullIsReturned()
     {
-        var result = _controller.Get(42);
+        var result = await _controller.Get(42);
 
         Assert.That(result, Is.Null);
     }

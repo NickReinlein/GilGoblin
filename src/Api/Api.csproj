@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
-    <RootNamespace>GilGoblin</RootNamespace>
+    <RootNamespace>GilGoblin.Api</RootNamespace>
+    <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
@@ -24,7 +25,7 @@
     <ProjectReference Include="../Database/*Database.csproj" />
     <ProjectReference Include="../Pocos/*Pocos.csproj" />
     <ProjectReference Include="../Services/*Services.csproj" />
-    <ProjectReference Include="../Controller/*Controller.csproj" />
+    <ProjectReference Include="../Controllers/*Controllers.csproj" />
     <ProjectReference Include="../Crafting/*Crafting.csproj" />
     <ProjectReference Include="../Web/*Web.csproj" />
     <ProjectReference Include="../Repository/*Repository.csproj" />

@@ -4,7 +4,7 @@ using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Controller;
+namespace GilGoblin.Controllers;
 
 [ApiController]
 [Route("[controller]")]

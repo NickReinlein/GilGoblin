@@ -6,7 +6,7 @@ using GilGoblin.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.Api.DI;
 
@@ -49,8 +49,18 @@ public static class DependencyInjectionExtensions
 
     public static WebApplication AddAppGoblinServices(this WebApplication app)
     {
-        app.UseHttpsRedirection();
+        // if (app.Environment.IsDevelopment())
+        // {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        // }
+        //// app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.UseRouting();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
         app.MapControllers();
         return app;
     }

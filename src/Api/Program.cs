@@ -6,8 +6,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = args.GetGoblinBuilder();
-        var app = builder.Build();
+        var app = args.GetGoblinBuilder().Build();
         app.AddAppGoblinServices();
         app.Run();
     }

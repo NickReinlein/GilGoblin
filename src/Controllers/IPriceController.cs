@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using GilGoblin.Pocos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GilGoblin.Controller;
+namespace GilGoblin.Controllers;
 
 public interface IPriceController
 {

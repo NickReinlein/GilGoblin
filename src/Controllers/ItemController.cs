@@ -4,10 +4,10 @@ using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Controller;
+namespace GilGoblin.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[Controller]")]
 public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
 {
     private readonly IItemRepository _itemRepo;
@@ -20,16 +20,16 @@ public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
     }
 
     [HttpGet]
-    public IEnumerable<ItemInfoPoco> GetAll()
+    public async Task<IEnumerable<ItemInfoPoco>> GetAll()
     {
         _logger.LogInformation($"Fetching all item info data");
-        return _itemRepo.GetAll().Result;
+        return await _itemRepo.GetAll();
     }
 
     [HttpGet("{id}")]
-    public ItemInfoPoco? Get(int id)
+    public async Task<ItemInfoPoco?> Get(int id)
     {
         _logger.LogInformation($"Fetching item info id: {id}");
-        return _itemRepo.Get(id).Result;
+        return await _itemRepo.Get(id);
     }
 }

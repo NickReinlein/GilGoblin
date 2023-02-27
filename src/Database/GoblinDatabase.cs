@@ -38,7 +38,7 @@ public class GoblinDatabase
 
     private static GilGoblinDbContext GoblinDbContext => new(Connection ??= Connect());
 
-    private async Task FillTablesIfEmpty()
+    private static async Task FillTablesIfEmpty()
     {
         try
         {
@@ -66,13 +66,13 @@ public class GoblinDatabase
     {
         LogTaskStart<PriceWebPoco>("Fetching prices from API");
 
-        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(TestWorldID);
+        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(testWorldID);
 
         foreach (var batch in batches)
         {
             var timer = new Stopwatch();
             timer.Start();
-            var result = await _priceFetcher.FetchMultiplePricesAsync(TestWorldID, batch);
+            var result = await _priceFetcher.FetchMultiplePricesAsync(testWorldID, batch);
 
             if (!result.Any())
                 throw new HttpRequestException("Failed to fetch prices from Universalis API");
@@ -153,7 +153,7 @@ public class GoblinDatabase
 
         try
         {
-            var path = ResourceFilePath(DbName);
+            var path = ResourceFilePath(dbName);
             Connection ??= new SqliteConnection("Data Source=" + path);
 
             if (Connection.State == System.Data.ConnectionState.Open)
@@ -172,7 +172,7 @@ public class GoblinDatabase
         }
     }
 
-    public void Disconnect()
+    public static void Disconnect()
     {
         Connection?.Close();
         Connection?.Dispose();
@@ -193,11 +193,18 @@ public class GoblinDatabase
         }
     }
 
-    protected static string BaseFolderPath = Directory
-        .GetParent(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).ToString())
-        .ToString();
-    protected static string ResourcesFolderPath = System.IO.Path.Combine(
-        BaseFolderPath,
+    // protected static readonly string BaseFolderPath = Directory
+    //     .GetParent(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).ToString())
+    //     .ToString();
+    // protected static readonly string ResourcesFolderPath = System.IO.Path.Combine(
+    //     BaseFolderPath,
+    //     "resources/"
+    // );
+
+    private static string ResourcesFolderPath = System.IO.Path.Combine(
+        Directory
+            .GetParent(System.IO.Directory.GetCurrentDirectory())
+            .Parent.Parent.Parent.FullName,
         "resources/"
     );
 
@@ -206,7 +213,7 @@ public class GoblinDatabase
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 
-    public const string DbName = "GilGoblin.db";
-    private const int TestWorldID = 34;
+    public const string dbName = "GilGoblin.db";
+    private const int testWorldID = 34;
     public static readonly int ApiSpamPreventionDelayInMS = 100;
 }

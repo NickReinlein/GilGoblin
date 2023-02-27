@@ -4,7 +4,7 @@ using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Controller;
+namespace GilGoblin.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -20,16 +20,16 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
     }
 
     [HttpGet]
-    public IEnumerable<RecipePoco> GetAll()
+    public async Task<IEnumerable<RecipePoco>> GetAll()
     {
         _logger.LogInformation($"Fetching all recipes");
-        return _recipeRepo.GetAll().Result;
+        return await _recipeRepo.GetAll();
     }
 
     [HttpGet("{id}")]
-    public RecipePoco? Get(int id)
+    public async Task<RecipePoco?> Get(int id)
     {
         _logger.LogInformation($"Fetching recipe id: {id}");
-        return _recipeRepo.Get(id).Result;
+        return await _recipeRepo.Get(id);
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GilGoblin.Controller;
+namespace GilGoblin.Controllers;
 
 public interface ICraftController<T> where T : class
 {
