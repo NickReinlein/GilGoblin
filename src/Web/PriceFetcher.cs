@@ -14,13 +14,8 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 {
     private readonly ILogger<PriceFetcher> _logger;
 
-    public PriceFetcher(ILogger<PriceFetcher> logger) : base(_priceBaseUrl, null, logger)
-    {
-        _logger = logger;
-    }
-
-    public PriceFetcher(HttpClient client, ILogger<PriceFetcher> logger)
-        : base(_priceBaseUrl, client, logger)
+    public PriceFetcher(ILogger<PriceFetcher> logger)
+        : base(_priceBaseUrl)
     {
         _logger = logger;
     }
@@ -89,7 +84,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         return results?.Cast<int>().Where(i => i > 0).ToList() ?? new List<int>();
     }
 
-    public string GetWorldString(int worldID) => $"{worldID}/";
+    public static string GetWorldString(int worldID) => $"{worldID}/";
 
     public int PricesPerPage { get; set; } = 100;
 

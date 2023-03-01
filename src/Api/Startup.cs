@@ -88,12 +88,13 @@ public class Startup
         // }
 
         // app.UseHttpsRedirection();
-        // app.UseAuthorization();
+        app.UseAuthorization();
 
         app.UseRouting();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapSwagger();
         });
     }
 }

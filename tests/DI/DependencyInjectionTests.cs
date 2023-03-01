@@ -1,8 +1,12 @@
+using System.Reflection;
 using GilGoblin.Api;
 using GilGoblin.Crafting;
+using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Web;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -37,13 +41,23 @@ public class DependencyInjectionTests
     [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
-    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreResolved(Type serviceType)
+    [TestCase(typeof(IPriceDataFetcher))]
+    [TestCase(typeof(GoblinDatabase))]
+    [TestCase(typeof(GilGoblinDbContext))]
+    [TestCase(typeof(DataFetcher<PriceWebPoco, PriceWebResponse>))]
+    public void GivenAGoblinService_WhenWeSetup_TheServiceIsResolved(Type serviceType)
     {
         var provider = _services.BuildServiceProvider();
 
-        var scopedDependencyService = provider.GetRequiredService<IItemRepository>();
+        var scopedDependencyService = provider.GetRequiredService(serviceType);
 
         Assert.That(scopedDependencyService, Is.Not.Null);
+    }
+
+    [Test]
+    public void GivenGoblinControllers_WhenWeSetup_ThenTheyAreNotNull()
+    {
+        Assert.That(Controllers.All(i => i is not null), Is.True);
     }
 
     [Test]
@@ -52,10 +66,7 @@ public class DependencyInjectionTests
         var goblinServices = GetGoblinServicesList(_services);
 
         Assert.That(goblinServices, Is.Not.Empty);
-        foreach (var service in goblinServices)
-        {
-            Assert.That(service, Is.Not.Null);
-        }
+        Assert.That(goblinServices.All(i => i is not null), Is.True);
     }
 
     private static List<ServiceDescriptor> GetGoblinServicesList(IServiceCollection services) =>
@@ -67,4 +78,11 @@ public class DependencyInjectionTests
                     ?? false
             )
             .ToList();
+
+    private static IEnumerable<Type> Controllers =>
+        Assembly
+            .GetAssembly(typeof(Startup))
+            ?.GetTypes()
+            .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
+        ?? Enumerable.Empty<Type>();
 }
