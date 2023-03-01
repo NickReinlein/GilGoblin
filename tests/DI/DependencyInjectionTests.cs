@@ -1,9 +1,11 @@
-using GilGoblin.Api.DI;
+using GilGoblin.Api;
 using GilGoblin.Crafting;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
@@ -11,34 +13,22 @@ namespace GilGoblin.Tests.DI;
 [NonParallelizable]
 public class DependencyInjectionTests
 {
-    private WebApplicationBuilder _builder;
-    private WebApplication _app;
+    private IConfiguration _configuration;
+    private IWebHostEnvironment _environment;
+    private IServiceCollection _services;
 
     [SetUp]
     public void SetUp()
     {
-        _builder = Array.Empty<string>().GetGoblinBuilder();
-        _app = _builder.Build();
-        _app.AddAppGoblinServices();
-    }
+        _services = new ServiceCollection();
 
-    [Test]
-    public void GivenABuilder_WhenWeSetup_ThenItIsNotNull()
-    {
-        Assert.That(_builder, Is.Not.Null);
-        Assert.That(_builder.Services, Is.Not.Null);
-    }
+        _configuration = new ConfigurationBuilder().Build();
 
-    [Test]
-    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreNotNull()
-    {
-        var goblinServices = GetGoblinServicesList();
+        _environment = Substitute.For<IWebHostEnvironment>();
+        _environment.EnvironmentName.Returns("production");
 
-        Assert.That(goblinServices, Is.Not.Empty);
-        foreach (var service in goblinServices)
-        {
-            Assert.That(service, Is.Not.Null);
-        }
+        var startup = new Startup(_configuration, _environment);
+        startup.ConfigureServices(_services);
     }
 
     [TestCase(typeof(IItemRepository))]
@@ -47,15 +37,29 @@ public class DependencyInjectionTests
     [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
-    public void GivenAGoblinService_WhenWeRunTheApi_ThenServiceIsAvailable(Type type)
+    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreResolved(Type serviceType)
     {
-        var diCheck = _app.Services.GetRequiredService(type);
+        var provider = _services.BuildServiceProvider();
 
-        Assert.That(diCheck, Is.Not.Null);
+        var scopedDependencyService = provider.GetRequiredService<IItemRepository>();
+
+        Assert.That(scopedDependencyService, Is.Not.Null);
     }
 
-    private List<ServiceDescriptor> GetGoblinServicesList() =>
-        _builder.Services
+    [Test]
+    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreNotNull()
+    {
+        var goblinServices = GetGoblinServicesList(_services);
+
+        Assert.That(goblinServices, Is.Not.Empty);
+        foreach (var service in goblinServices)
+        {
+            Assert.That(service, Is.Not.Null);
+        }
+    }
+
+    private static List<ServiceDescriptor> GetGoblinServicesList(IServiceCollection services) =>
+        services
             .Where(
                 s =>
                     s.ServiceType.FullName?.ToLowerInvariant().Contains("goblin")

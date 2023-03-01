@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GilGoblin.Tests.Controller;
+namespace GilGoblin.Tests.Controllers;
 
 public class ItemControllerTests
 {

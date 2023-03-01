@@ -4,8 +4,7 @@
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>GilGoblin</RootNamespace>
-    <UserSecretsId>GilGoblin</UserSecretsId>
+    <RootNamespace>GilGoblin.Controllers</RootNamespace>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
