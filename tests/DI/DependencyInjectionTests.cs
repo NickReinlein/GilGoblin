@@ -57,7 +57,12 @@ public class DependencyInjectionTests
     [Test]
     public void GivenGoblinControllers_WhenWeSetup_ThenTheyAreNotNull()
     {
-        Assert.That(Controllers.All(i => i is not null), Is.True);
+        var provider = _services.BuildServiceProvider();
+        Assert.Multiple(() =>
+        {
+            Assert.That(Controllers.Count(i => i is not null), Is.GreaterThanOrEqualTo(1));
+            Assert.That(Controllers.All(i => i is not null), Is.True);
+        });
     }
 
     [Test]

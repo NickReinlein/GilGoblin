@@ -19,6 +19,7 @@ public class GoblinDatabase
 {
     private readonly IPriceDataFetcher _priceFetcher;
     private static SqliteConnection? Connection { get; set; }
+    private static GilGoblinDbContext GoblinDbContext => new(Connection ??= Connect());
 
     public GoblinDatabase(IPriceDataFetcher priceFetcher)
     {
@@ -35,8 +36,6 @@ public class GoblinDatabase
 
         return GoblinDbContext;
     }
-
-    private static GilGoblinDbContext GoblinDbContext => new(Connection ??= Connect());
 
     private static async Task FillTablesIfEmpty()
     {
@@ -202,9 +201,7 @@ public class GoblinDatabase
     // );
 
     private static string ResourcesFolderPath = System.IO.Path.Combine(
-        Directory
-            .GetParent(System.IO.Directory.GetCurrentDirectory())
-            .Parent.Parent.Parent.FullName,
+        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName,
         "resources/"
     );
 

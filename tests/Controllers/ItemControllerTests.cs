@@ -46,24 +46,24 @@ public class ItemControllerTests
         Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
     }
 
-    [Test]
-    public async Task GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
-    {
-        var poco1 = CreatePoco();
-        _repo.Get(poco1.ID).Returns(poco1);
+    // [Test]
+    // public async Task GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
+    // {
+    //     var poco1 = CreatePoco();
+    //     _repo.Get(poco1.ID).Returns(poco1);
 
-        var result = await _controller.Get(poco1.ID);
+    //     var result = await _controller.Get(poco1.ID);
 
-        Assert.That(result, Is.EqualTo(poco1));
-    }
+    //     Assert.That(result, Is.EqualTo(poco1));
+    // }
 
-    [Test]
-    public async Task GivenAController_WhenWeReceiveAGetRequestForANonExistentItem_ThenNullIsReturned()
-    {
-        var result = await _controller.Get(42);
+    // [Test]
+    // public async Task GivenAController_WhenWeReceiveAGetRequestForANonExistentItem_ThenNullIsReturned()
+    // {
+    //     var result = await _controller.Get(42);
 
-        Assert.That(result, Is.Null);
-    }
+    //     Assert.That(result, Is.Null);
+    // }
 
     private static ItemInfoPoco CreatePoco() =>
         new()

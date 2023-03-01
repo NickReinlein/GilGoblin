@@ -1,4 +1,6 @@
+using System;
 using GilGoblin.Api.DI;
+using GilGoblin.Controllers;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace GilGoblin.Api;
 
@@ -50,7 +53,17 @@ public class Startup
     {
         AddGoblinCrafting(services);
         AddGoblinDatabases(services);
+        AddGoblinControllers(services);
         AddBasicBuilderServices(services);
+    }
+
+    private static void AddGoblinControllers(IServiceCollection services)
+    {
+        services
+            .AddControllers()
+            .AddApplicationPart(typeof(ItemController).Assembly)
+            .AddApplicationPart(typeof(CraftController).Assembly)
+            .AddApplicationPart(typeof(PriceController).Assembly);
     }
 
     public static void AddGoblinCrafting(IServiceCollection services)
@@ -73,10 +86,12 @@ public class Startup
 
     public static void AddBasicBuilderServices(IServiceCollection services)
     {
-        services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
         services.AddLogging();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
+        });
     }
 
     public static void AddAppGoblinServices(IApplicationBuilder app)
