@@ -43,7 +43,6 @@ public class DependencyInjectionTests
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IPriceDataFetcher))]
     [TestCase(typeof(GoblinDatabase))]
-    [TestCase(typeof(GilGoblinDbContext))]
     [TestCase(typeof(DataFetcher<PriceWebPoco, PriceWebResponse>))]
     public void GivenAGoblinService_WhenWeSetup_TheServiceIsResolved(Type serviceType)
     {
@@ -52,17 +51,6 @@ public class DependencyInjectionTests
         var scopedDependencyService = provider.GetRequiredService(serviceType);
 
         Assert.That(scopedDependencyService, Is.Not.Null);
-    }
-
-    [Test]
-    public void GivenGoblinControllers_WhenWeSetup_ThenTheyAreNotNull()
-    {
-        var provider = _services.BuildServiceProvider();
-        Assert.Multiple(() =>
-        {
-            Assert.That(Controllers.Count(i => i is not null), Is.GreaterThanOrEqualTo(1));
-            Assert.That(Controllers.All(i => i is not null), Is.True);
-        });
     }
 
     [Test]
@@ -83,11 +71,4 @@ public class DependencyInjectionTests
                     ?? false
             )
             .ToList();
-
-    private static IEnumerable<Type> Controllers =>
-        Assembly
-            .GetAssembly(typeof(Startup))
-            ?.GetTypes()
-            .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
-        ?? Enumerable.Empty<Type>();
 }

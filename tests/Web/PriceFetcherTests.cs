@@ -46,26 +46,9 @@ public class PriceFetcherTests
             Assert.That(result.AveragePrice, Is.GreaterThan(0));
             Assert.That(result.AveragePriceHQ, Is.GreaterThan(0));
             Assert.That(result.AveragePriceNQ, Is.GreaterThan(0));
+            Assert.That(result.LastUploadTime, Is.GreaterThan(0));
         });
     }
-
-    // [Test]
-    // public async Task WhenWeGetAPrice_ThenWeParseSuccessfully()
-    // {
-    //     var result = await _fetcher.FetchPriceAsync(_worldID, _itemID1);
-
-    //     Assert.Multiple(() =>
-    //     {
-    //         Assert.That(result.ItemID, Is.EqualTo(_itemID1));
-    //         Assert.That(result.WorldID, Is.EqualTo(_worldID));
-    //         Assert.That(result.CurrentAveragePrice, Is.GreaterThan(0));
-    //         Assert.That(result.CurrentAveragePriceHQ, Is.GreaterThan(0));
-    //         Assert.That(result.CurrentAveragePriceNQ, Is.GreaterThan(0));
-    //         Assert.That(result.AveragePrice, Is.GreaterThan(0));
-    //         Assert.That(result.AveragePriceHQ, Is.GreaterThan(0));
-    //         Assert.That(result.AveragePriceNQ, Is.GreaterThan(0));
-    //     });
-    // }
 
     [Test]
     public void WhenWeDeserializeResponseForMultiple_ThenWeSucceed()
@@ -91,9 +74,28 @@ public class PriceFetcherTests
                 Assert.That(price.AveragePrice, Is.GreaterThan(0));
                 Assert.That(price.AveragePriceHQ, Is.GreaterThan(0));
                 Assert.That(price.AveragePriceNQ, Is.GreaterThan(0));
+                Assert.That(price.LastUploadTime, Is.GreaterThan(0));
             });
         }
     }
+
+    // [Test]
+    // public async Task WhenWeGetAPrice_ThenWeParseSuccessfully()
+    // {
+    //     var result = await _fetcher.FetchPriceAsync(_worldID, _itemID1);
+
+    //     Assert.Multiple(() =>
+    //     {
+    //         Assert.That(result.ItemID, Is.EqualTo(_itemID1));
+    //         Assert.That(result.WorldID, Is.EqualTo(_worldID));
+    //         Assert.That(result.CurrentAveragePrice, Is.GreaterThan(0));
+    //         Assert.That(result.CurrentAveragePriceHQ, Is.GreaterThan(0));
+    //         Assert.That(result.CurrentAveragePriceNQ, Is.GreaterThan(0));
+    //         Assert.That(result.AveragePrice, Is.GreaterThan(0));
+    //         Assert.That(result.AveragePriceHQ, Is.GreaterThan(0));
+    //         Assert.That(result.AveragePriceNQ, Is.GreaterThan(0));
+    //     });
+    // }
 
     // [Test]
     // public async Task WhenWeGetMultiplePrices_ThenWeParseSuccessfully()
@@ -118,18 +120,6 @@ public class PriceFetcherTests
     //     }
     // }
 
-    [Test]
-    public void WhenWeDeserializeResponseForMarketable_ThenWeSucceed()
-    {
-        var result = JsonSerializer.Deserialize<List<int>>(
-            _getItemJSONResponseMarketable,
-            GetSerializerOptions()
-        );
-
-        Assert.That(result.Count, Is.GreaterThan(50));
-        Assert.That(result.All(i => i > 0), Is.True);
-    }
-
     // [Test]
     // public async Task WhenWeGetAllMarketableItemIds_ThenWeFetchThemToAPI()
     // {
@@ -142,6 +132,18 @@ public class PriceFetcherTests
     //     var callCountMarketable = _handler.GetMatchCount(marketableRequests);
     //     Assert.That(callCountMarketable, Is.EqualTo(1));
     // }
+
+    [Test]
+    public void WhenWeDeserializeResponseForMarketable_ThenWeSucceed()
+    {
+        var result = JsonSerializer.Deserialize<List<int>>(
+            _getItemJSONResponseMarketable,
+            GetSerializerOptions()
+        );
+
+        Assert.That(result, Has.Count.GreaterThan(50));
+        Assert.That(result?.All(i => i > 0), Is.True);
+    }
 
     protected static JsonSerializerOptions GetSerializerOptions() =>
         new() { PropertyNameCaseInsensitive = true, IncludeFields = true, };

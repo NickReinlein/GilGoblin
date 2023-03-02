@@ -13,7 +13,6 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
     protected HttpClient Client { get; set; } = new HttpClient();
     protected string _basePath;
 
-    // public DataFetcher(string basePath, HttpClient? client, ILogger<DataFetcher<T, U>> logger)
     public DataFetcher(string basePath)
     {
         if (Client.Timeout == TimeSpan.Zero)

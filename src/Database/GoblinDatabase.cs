@@ -37,7 +37,7 @@ public class GoblinDatabase
         return GoblinDbContext;
     }
 
-    private static async Task FillTablesIfEmpty()
+    private async Task FillTablesIfEmpty()
     {
         try
         {
@@ -52,8 +52,11 @@ public class GoblinDatabase
             if (context.Recipe.Count() < 1000)
                 await FillTable<RecipePoco>();
 
+            // if (context.Price?.Count() < 1000)
+            //     await FillTable<PricePoco>();
+
             if (context.Price?.Count() < 1000)
-                await FillTable<PricePoco>();
+                await FetchPrices();
         }
         catch (Exception e)
         {
@@ -192,21 +195,13 @@ public class GoblinDatabase
         }
     }
 
-    // protected static readonly string BaseFolderPath = Directory
-    //     .GetParent(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).ToString())
-    //     .ToString();
-    // protected static readonly string ResourcesFolderPath = System.IO.Path.Combine(
-    //     BaseFolderPath,
-    //     "resources/"
-    // );
-
-    private static string ResourcesFolderPath = System.IO.Path.Combine(
+    private static readonly string _resourcesFolderPath = System.IO.Path.Combine(
         Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName,
         "resources/"
     );
 
     public static string ResourceFilePath(string resourceFilename) =>
-        System.IO.Path.Combine(ResourcesFolderPath, resourceFilename);
+        System.IO.Path.Combine(_resourcesFolderPath, resourceFilename);
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 

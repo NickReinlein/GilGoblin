@@ -14,8 +14,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 {
     private readonly ILogger<PriceFetcher> _logger;
 
-    public PriceFetcher(ILogger<PriceFetcher> logger)
-        : base(_priceBaseUrl)
+    public PriceFetcher(ILogger<PriceFetcher> logger) : base(_priceBaseUrl)
     {
         _logger = logger;
     }
@@ -92,7 +91,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     private static readonly string _priceBaseUrl = $$"""https://universalis.app/api/v2/""";
     private static readonly string _selectiveColumnsMulti = $$"""
-?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ%2Citems.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ
+?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime
 """;
 
     private static readonly string _selectiveColumnsSingle = $$"""

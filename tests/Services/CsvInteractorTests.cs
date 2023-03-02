@@ -48,7 +48,6 @@ public class CsvInteractorTests
         });
     }
 
-
     [Test]
     public void GivenAPricesTestFile_WhenWeLoadTheFile_ThenWeDeserializePrices()
     {
@@ -62,6 +61,7 @@ public class CsvInteractorTests
             Assert.That(price.WorldID, Is.GreaterThan(0));
             Assert.That(price.AverageListingPrice, Is.GreaterThan(0));
             Assert.That(price.AverageSold, Is.GreaterThan(0));
+            Assert.That(price.LastUploadTime, Is.GreaterThan(0));
         });
     }
 
