@@ -32,6 +32,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 
     public async Task<CraftSummaryPoco?> GetCraft(int worldID, int itemID)
     {
+        _logger.LogInformation("Getting craft {ItemID} for world {WorldID}", itemID, worldID);
         var craftingCost = await _calc.CalculateCraftingCostForItem(worldID, itemID);
         var ingredients = await _recipeGrocer.BreakdownItem(itemID);
         var price = await _priceRepo.Get(worldID, itemID);
@@ -42,8 +43,9 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         return new CraftSummaryPoco(price, itemInfo, craftingCost, ingredients);
     }
 
-    public async Task<IEnumerable<CraftSummaryPoco?>> GetBestCrafts(int worldId)
+    public async Task<IEnumerable<CraftSummaryPoco?>> GetBestCrafts(int worldID)
     {
+        _logger.LogInformation("Getting best crafts for world {WorldID}", worldID);
         return Array.Empty<CraftSummaryPoco>();
         // var allMarketableItemIds = _priceRepo.GetAll(worldId);
     }

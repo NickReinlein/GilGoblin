@@ -1,10 +1,15 @@
-using System.Net;
-using GilGoblin.Api.DI;
+using System.Reflection;
+using GilGoblin.Api;
 using GilGoblin.Crafting;
+using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using Microsoft.AspNetCore.Builder;
+using GilGoblin.Web;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
@@ -12,31 +17,22 @@ namespace GilGoblin.Tests.DI;
 [NonParallelizable]
 public class DependencyInjectionTests
 {
-    private WebApplicationBuilder _builder;
+    private IConfiguration _configuration;
+    private IWebHostEnvironment _environment;
+    private IServiceCollection _services;
 
     [SetUp]
     public void SetUp()
     {
-        _builder = Array.Empty<string>().GetGoblinBuilder();
-    }
+        _services = new ServiceCollection();
 
-    [Test]
-    public void GivenABuilder_WhenWeSetup_ThenItIsNotNull()
-    {
-        Assert.That(_builder, Is.Not.Null);
-        Assert.That(_builder.Services, Is.Not.Null);
-    }
+        _configuration = new ConfigurationBuilder().Build();
 
-    [Test]
-    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreNotNull()
-    {
-        var goblinServices = GetGoblinServicesList();
+        _environment = Substitute.For<IWebHostEnvironment>();
+        _environment.EnvironmentName.Returns("production");
 
-        Assert.That(goblinServices, Is.Not.Empty);
-        foreach (var service in goblinServices)
-        {
-            Assert.That(service, Is.Not.Null);
-        }
+        var startup = new Startup(_configuration, _environment);
+        startup.ConfigureServices(_services);
     }
 
     [TestCase(typeof(IItemRepository))]
@@ -45,40 +41,29 @@ public class DependencyInjectionTests
     [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
-    public void GivenAGoblinService_WhenWeRunTheApi_ThenServiceIsAvailable(Type type)
+    [TestCase(typeof(IPriceDataFetcher))]
+    [TestCase(typeof(GoblinDatabase))]
+    [TestCase(typeof(DataFetcher<PriceWebPoco, PriceWebResponse>))]
+    public void GivenAGoblinService_WhenWeSetup_TheServiceIsResolved(Type serviceType)
     {
-        var app = _builder.Build();
+        var provider = _services.BuildServiceProvider();
 
-        var diCheck = app.Services.GetRequiredService(type);
+        var scopedDependencyService = provider.GetRequiredService(serviceType);
 
-        Assert.That(diCheck, Is.Not.Null);
+        Assert.That(scopedDependencyService, Is.Not.Null);
     }
 
-    // [TestCase("/item/")]
-    // [TestCase("/item/100")]
-    // [TestCase("/recipe/")]
-    // [TestCase("/recipe/100")]
-    // [TestCase("/price/34/")]
-    // [TestCase("/price/34/100")]
-    // [TestCase("/craft/34/")]
-    // [TestCase("/craft/34/100")]
-    // public async Task WhenWeResolveEndpoints_ThenEachEndpointResponds(string endpoint)
-    // {
-    //     var app = _builder.Build();
-    //     app.Urls.Add("http://localhost:9001");
+    [Test]
+    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreNotNull()
+    {
+        var goblinServices = GetGoblinServicesList(_services);
 
-    //     await app.RunAsync();
+        Assert.That(goblinServices, Is.Not.Empty);
+        Assert.That(goblinServices.All(i => i is not null), Is.True);
+    }
 
-    //     var client = new HttpClient { Timeout = new TimeSpan(0, 0, 5) };
-    //     var response = await client.GetAsync(endpoint);
-
-    //     Assert.That(response, Is.Not.Null);
-    //     var acceptableResponseCodes = new[] { HttpStatusCode.OK, HttpStatusCode.NoContent };
-    //     Assert.True(acceptableResponseCodes.Contains(response.StatusCode));
-    // }
-
-    private List<ServiceDescriptor> GetGoblinServicesList() =>
-        _builder.Services
+    private static List<ServiceDescriptor> GetGoblinServicesList(IServiceCollection services) =>
+        services
             .Where(
                 s =>
                     s.ServiceType.FullName?.ToLowerInvariant().Contains("goblin")

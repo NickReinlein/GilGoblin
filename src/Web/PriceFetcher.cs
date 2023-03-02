@@ -14,13 +14,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 {
     private readonly ILogger<PriceFetcher> _logger;
 
-    public PriceFetcher(ILogger<PriceFetcher> logger) : base(_priceBaseUrl, null, logger)
-    {
-        _logger = logger;
-    }
-
-    public PriceFetcher(HttpClient client, ILogger<PriceFetcher> logger)
-        : base(_priceBaseUrl, client, logger)
+    public PriceFetcher(ILogger<PriceFetcher> logger) : base(_priceBaseUrl)
     {
         _logger = logger;
     }
@@ -41,7 +35,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
     )
     {
         _logger.LogInformation(
-            "Fetching for world {World}, {Count} items, starting with id: ",
+            "Fetching for world {World}, {Count} items, starting with id: {ID}",
             worldID,
             ids.Count(),
             ids.FirstOrDefault()
@@ -89,7 +83,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         return results?.Cast<int>().Where(i => i > 0).ToList() ?? new List<int>();
     }
 
-    public string GetWorldString(int worldID) => $"{worldID}/";
+    public static string GetWorldString(int worldID) => $"{worldID}/";
 
     public int PricesPerPage { get; set; } = 100;
 
@@ -97,7 +91,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     private static readonly string _priceBaseUrl = $$"""https://universalis.app/api/v2/""";
     private static readonly string _selectiveColumnsMulti = $$"""
-?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ%2Citems.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ
+?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime
 """;
 
     private static readonly string _selectiveColumnsSingle = $$"""

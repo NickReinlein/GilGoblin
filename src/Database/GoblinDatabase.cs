@@ -19,6 +19,7 @@ public class GoblinDatabase
 {
     private readonly IPriceDataFetcher _priceFetcher;
     private static SqliteConnection? Connection { get; set; }
+    private static GilGoblinDbContext GoblinDbContext => new(Connection ??= Connect());
 
     public GoblinDatabase(IPriceDataFetcher priceFetcher)
     {
@@ -36,8 +37,6 @@ public class GoblinDatabase
         return GoblinDbContext;
     }
 
-    private static GilGoblinDbContext GoblinDbContext => new(Connection ??= Connect());
-
     private async Task FillTablesIfEmpty()
     {
         try
@@ -53,8 +52,11 @@ public class GoblinDatabase
             if (context.Recipe.Count() < 1000)
                 await FillTable<RecipePoco>();
 
+            // if (context.Price?.Count() < 1000)
+            //     await FillTable<PricePoco>();
+
             if (context.Price?.Count() < 1000)
-                await FillTable<PricePoco>();
+                await FetchPrices();
         }
         catch (Exception e)
         {
@@ -66,13 +68,13 @@ public class GoblinDatabase
     {
         LogTaskStart<PriceWebPoco>("Fetching prices from API");
 
-        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(TestWorldID);
+        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(testWorldID);
 
         foreach (var batch in batches)
         {
             var timer = new Stopwatch();
             timer.Start();
-            var result = await _priceFetcher.FetchMultiplePricesAsync(TestWorldID, batch);
+            var result = await _priceFetcher.FetchMultiplePricesAsync(testWorldID, batch);
 
             if (!result.Any())
                 throw new HttpRequestException("Failed to fetch prices from Universalis API");
@@ -153,7 +155,7 @@ public class GoblinDatabase
 
         try
         {
-            var path = ResourceFilePath(DbName);
+            var path = ResourceFilePath(dbName);
             Connection ??= new SqliteConnection("Data Source=" + path);
 
             if (Connection.State == System.Data.ConnectionState.Open)
@@ -172,7 +174,7 @@ public class GoblinDatabase
         }
     }
 
-    public void Disconnect()
+    public static void Disconnect()
     {
         Connection?.Close();
         Connection?.Dispose();
@@ -193,17 +195,17 @@ public class GoblinDatabase
         }
     }
 
-    public static readonly string ResourcesFolderPath = System.IO.Path.Combine(
-        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName,
+    private static readonly string _resourcesFolderPath = System.IO.Path.Combine(
+        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName,
         "resources/"
     );
 
     public static string ResourceFilePath(string resourceFilename) =>
-        System.IO.Path.Combine(ResourcesFolderPath, resourceFilename);
+        System.IO.Path.Combine(_resourcesFolderPath, resourceFilename);
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 
-    public const string DbName = "GilGoblin.db";
-    private const int TestWorldID = 34;
+    public const string dbName = "GilGoblin.db";
+    private const int testWorldID = 34;
     public static readonly int ApiSpamPreventionDelayInMS = 100;
 }

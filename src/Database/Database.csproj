@@ -23,4 +23,9 @@
     <ProjectReference Include="../Repository/*Repository.csproj" />
     <ProjectReference Include="../Web/*Web.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
