@@ -9,8 +9,7 @@
         "build",
         "${workspaceFolder}/src/Api/Api.csproj",
         "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary",
-        "/property:GenerateFullPaths=true"
+        "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
     },
@@ -37,6 +36,51 @@
       "label": "echo",
       "command": "echo ${workspaceFolder}",
       "type": "shell"
+    },
+    {
+      "label": "test",
+      "command": "dotnet",
+      "type": "process",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "args": ["test", "${workspaceFolder}/tests/GilGoblin.Tests.csproj"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test-with-coverage",
+      "command": "dotnet",
+      "type": "process",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "args": [
+        "test",
+        "/p:CollectCoverage=true",
+        "/p:CoverletOutputFormat=lcov",
+        "/p:CoverletOutput=./lcov.info",
+        "${workspaceFolder}/tests/GilGoblin.Tests.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "print-coverage-report",
+      "command": "dotnet",
+      "type": "process",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "args": [
+        "reportgenerator",
+        "/p:reports=${workspaceFolder}/tests/coverage.json",
+        "/p:targetdir=coveragereport",
+        "/p:reporttypes=Html",
+        "${workspaceFolder}/tests/GilGoblin.Tests.csproj"
+      ],
+      "problemMatcher": "$msCompile"
     }
   ]
 }
