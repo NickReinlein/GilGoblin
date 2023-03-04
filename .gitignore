@@ -45,7 +45,7 @@ Generated\ Files/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 *coverage*.json*
-*/*coverageReports*/*
+*/*CodeCoverageReports*/**
 
 # NUnit
 *.VisualState.xml
