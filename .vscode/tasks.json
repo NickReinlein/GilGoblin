@@ -76,7 +76,7 @@
       "args": [
         "reportgenerator",
         "/p:reports=${workspaceFolder}/tests/coverage.json",
-        "/p:targetdir=coveragereport",
+        "/p:targetdir=CodeCoverageReports",
         "/p:reporttypes=Html",
         "${workspaceFolder}/tests/GilGoblin.Tests.csproj"
       ],

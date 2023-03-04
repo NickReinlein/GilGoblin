@@ -36,34 +36,6 @@
         "${workspaceFolder}/GilGoblin.Tests.csproj"
       ],
       "problemMatcher": "$msCompile"
-    },
-    {
-      "label": "test",
-      "command": "dotnet",
-      "type": "process",
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
-      "args": ["test", "${workspaceFolder}/GilGoblin.Tests.csproj"],
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "label": "test-with-coverage",
-      "command": "dotnet",
-      "type": "process",
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
-      "args": [
-        "test",
-        "/p:CollectCoverage=true",
-        "/p:CoverletOutputFormat=lcov",
-        "/p:CoverletOutput=./lcov.info",
-        "${workspaceFolder}/GilGoblin.Tests.csproj"
-      ],
-      "problemMatcher": "$msCompile"
     }
   ]
 }
