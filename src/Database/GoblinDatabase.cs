@@ -1,8 +1,6 @@
-using Microsoft.Data.Sqlite;
 using Serilog;
 using GilGoblin.Services;
 using GilGoblin.Pocos;
-using System.Data;
 using GilGoblin.Web;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -10,7 +8,6 @@ using System.Linq;
 using System;
 using System.Net.Http;
 using System.Collections.Generic;
-using System.IO;
 using GilGoblin.Extensions;
 
 namespace GilGoblin.Database;
@@ -18,30 +15,32 @@ namespace GilGoblin.Database;
 public class GoblinDatabase
 {
     private readonly IPriceDataFetcher _priceFetcher;
-    private static SqliteConnection? Connection { get; set; }
-    private static GilGoblinDbContext GoblinDbContext => new(Connection ??= Connect());
+
+    private static GilGoblinDbContext _dbContext;
 
     public GoblinDatabase(IPriceDataFetcher priceFetcher)
     {
         _priceFetcher = priceFetcher;
     }
 
-    public async Task<GilGoblinDbContext?> GetContextAsync()
+    public async Task<GilGoblinDbContext?> GetContextAsync() => _dbContext ?? await GetNewContext();
+
+    private async Task<GilGoblinDbContext> GetNewContext()
     {
-        Connection ??= Connect();
-        if (Connection is null || Connection.State != ConnectionState.Open)
+        GilGoblinDatabaseConnector.Connect();
+        if (GilGoblinDatabaseConnector.Connection is not { })
             return null;
 
         await FillTablesIfEmpty();
-
-        return GoblinDbContext;
+        _dbContext = new GilGoblinDbContext();
+        return _dbContext;
     }
 
     private async Task FillTablesIfEmpty()
     {
         try
         {
-            using var context = GoblinDbContext;
+            using var context = _dbContext;
             if (context is null || context.ItemInfo is null || context.Recipe is null)
                 return;
             await context.Database.EnsureCreatedAsync();
@@ -89,7 +88,7 @@ public class GoblinDatabase
 
     private static async Task SaveBatchResult(IEnumerable<PriceWebPoco?> result)
     {
-        using var context = GoblinDbContext;
+        using var context = _dbContext;
 
         var pricesToSave = result.ToPricePocoList();
 
@@ -101,15 +100,16 @@ public class GoblinDatabase
         );
     }
 
-    private static async Task FillTable<T>() where T : class
+    private static async Task FillTable<T>()
+        where T : class
     {
-        using var context = GoblinDbContext;
-        if (context is null)
-            throw new Exception("Critical error: unable to get database context");
-
+        using var context =
+            _dbContext ?? throw new Exception("Critical error: unable to get database context");
         var tableName = LogTaskStart<T>("Loading from CSV");
 
-        var path = ResourceFilePath(ResourceFilenameCsv(tableName));
+        var path = GilGoblinDatabaseConnector.ResourceFilePath(
+            GilGoblinDatabaseConnector.ResourceFilenameCsv(tableName)
+        );
         try
         {
             await LoadCSVFileAndSaveResults<T>(context, tableName, path);
@@ -124,7 +124,8 @@ public class GoblinDatabase
         GilGoblinDbContext context,
         string tableName,
         string path
-    ) where T : class
+    )
+        where T : class
     {
         var result = CsvInteractor<T>.LoadFile(path);
 
@@ -140,7 +141,8 @@ public class GoblinDatabase
         }
     }
 
-    private static string LogTaskStart<T>(string sourceSuffix) where T : class
+    private static string LogTaskStart<T>(string sourceSuffix)
+        where T : class
     {
         var pocoName = typeof(T).ToString().Split(".")[2];
         var tableName = pocoName.Remove(pocoName.Length - 4);
@@ -148,43 +150,11 @@ public class GoblinDatabase
         return tableName;
     }
 
-    public static SqliteConnection? Connect()
-    {
-        if (Connection is not null)
-            return Connection;
-
-        try
-        {
-            var path = ResourceFilePath(dbName);
-            Connection ??= new SqliteConnection("Data Source=" + path);
-
-            if (Connection.State == System.Data.ConnectionState.Open)
-                return Connection;
-
-            Connection.Open();
-            if (Connection.State == System.Data.ConnectionState.Open)
-                return Connection;
-
-            throw new Exception($"Connection not open. State is: {Connection?.State}");
-        }
-        catch (Exception ex)
-        {
-            Log.Error("failed connection:{Message}.", ex.Message);
-            return null;
-        }
-    }
-
-    public static void Disconnect()
-    {
-        Connection?.Close();
-        Connection?.Dispose();
-    }
-
     public static async Task Save()
     {
         try
         {
-            using var context = GoblinDbContext;
+            using var context = _dbContext;
             Log.Debug("Saving to database.");
             var savedEntries = await context.SaveChangesAsync();
             Log.Debug("Saved {saved} entries to the database.", savedEntries);
@@ -195,17 +165,6 @@ public class GoblinDatabase
         }
     }
 
-    private static readonly string _resourcesFolderPath = System.IO.Path.Combine(
-        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName,
-        "resources/"
-    );
-
-    public static string ResourceFilePath(string resourceFilename) =>
-        System.IO.Path.Combine(_resourcesFolderPath, resourceFilename);
-
-    public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
-
-    public const string dbName = "GilGoblin.db";
     private const int testWorldID = 34;
     public static readonly int ApiSpamPreventionDelayInMS = 100;
 }

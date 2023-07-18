@@ -16,20 +16,13 @@ public class GilGoblinDbContext : DbContext
     public GilGoblinDbContext()
         : base(
             new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .UseSqlite<GilGoblinDbContext>(GoblinDatabase.Connect())
-                .Options
-        ) { }
-
-    public GilGoblinDbContext(DbConnection connection)
-        : base(
-            new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .UseSqlite<GilGoblinDbContext>(connection)
+                .UseSqlite<GilGoblinDbContext>(GilGoblinDatabaseConnector.Connect())
                 .Options
         ) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        _conn = GoblinDatabase.Connect();
+        _conn = GilGoblinDatabaseConnector.Connection;
         optionsBuilder.UseSqlite(_conn);
     }
 

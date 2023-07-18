@@ -59,9 +59,9 @@ public class PriceFetcherTests
             GetSerializerOptions()
         );
 
-        var prices = result.GetContentAsList();
+        var prices = result?.GetContentAsList();
 
-        Assert.That(prices.Count, Is.GreaterThan(0));
+        Assert.That(prices, Is.Not.Empty);
         foreach (var price in prices)
         {
             Assert.Multiple(() =>
