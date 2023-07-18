@@ -6,7 +6,7 @@
 // namespace GilGoblin.Tests.Api;
 
 // [NonParallelizable]
-// public class AcceptableResponseCodes
+// public class EndpointTests
 // {
 //     private WebApplicationBuilder _builder;
 //     private WebApplication _app;
@@ -15,10 +15,8 @@
 //     [OneTimeSetUp]
 //     public void SetUp()
 //     {
-//         _builder = Array.Empty<string>().GetGoblinBuilder();
+//         _builder = GilGoblin.Api.Startup.GetGoblinBuilder(null);
 //         _app = _builder.Build();
-//         // var port = 6200 + DateTime.Now.Millisecond;
-//         // _app.Urls.Add($"http://localhost:6222");
 //         _app.Run();
 //         _client = new HttpClient { Timeout = new TimeSpan(0, 0, 3) };
 //     }
@@ -34,9 +32,11 @@
 //     public async Task WhenWeResolveEndpoints_ThenEachEndpointResponds(string endpoint)
 //     {
 //         using var response = await _client.GetAsync(endpoint);
-
-//         Assert.That(response, Is.Not.Null);
-//         Assert.That(GetAcceptableResponseCodes().Contains(response.StatusCode), Is.True);
+//         Assert.Multiple(() =>
+//         {
+//             Assert.That(response, Is.Not.Null);
+//             Assert.That(GetAcceptableResponseCodes(), Does.Contain(response.StatusCode));
+//         });
 //     }
 
 //     private static HttpStatusCode[] GetAcceptableResponseCodes() =>

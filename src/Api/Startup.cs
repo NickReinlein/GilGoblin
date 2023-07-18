@@ -36,9 +36,9 @@ public class Startup
         AddAppGoblinServices(app);
     }
 
-    public static WebApplicationBuilder GetGoblinBuilder(string[] args)
+    public static WebApplicationBuilder GetGoblinBuilder(string[]? args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args ?? Array.Empty<string>());
         builder.WebHost.UseDefaultServiceProvider(
             (_, options) =>
             {
