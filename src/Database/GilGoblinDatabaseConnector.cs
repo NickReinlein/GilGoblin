@@ -8,14 +8,16 @@ namespace GilGoblin.Database;
 public class GilGoblinDatabaseConnector
 {
     public static SqliteConnection? Connection { get; set; }
+    public static string? ResourceDirectory { get; set; } = null;
 
-    public static SqliteConnection? Connect()
+    public static SqliteConnection? Connect(string? resourceDirectory = null)
     {
         if (Connection is not null)
             return Connection;
 
         try
         {
+            ResourceDirectory = resourceDirectory;
             var path = ResourceFilePath(DbFileName);
             Connection = new SqliteConnection("Data Source=" + path);
 
@@ -41,13 +43,14 @@ public class GilGoblinDatabaseConnector
         Connection?.Dispose();
     }
 
-    private static readonly string _resourcesFolderPath = System.IO.Path.Combine(
-        Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName,
-        "resources/"
-    );
+    public static string GetBaseDirectory() =>
+        ResourceDirectory ?? Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+
+    public static string ResourcesFolderPath =>
+        System.IO.Path.Combine(GetBaseDirectory(), "resources/");
 
     public static string ResourceFilePath(string resourceFilename) =>
-        System.IO.Path.Combine(_resourcesFolderPath, resourceFilename);
+        System.IO.Path.Combine(ResourcesFolderPath, resourceFilename);
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 
