@@ -67,13 +67,13 @@ public class GoblinDatabase
     {
         LogTaskStart<PriceWebPoco>("Fetching prices from API");
 
-        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(testWorldID);
+        var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(TestWorldID);
 
         foreach (var batch in batches)
         {
             var timer = new Stopwatch();
             timer.Start();
-            var result = await _priceFetcher.FetchMultiplePricesAsync(testWorldID, batch);
+            var result = await _priceFetcher.FetchMultiplePricesAsync(TestWorldID, batch);
 
             if (!result.Any())
                 throw new HttpRequestException("Failed to fetch prices from Universalis API");
@@ -165,6 +165,6 @@ public class GoblinDatabase
         }
     }
 
-    private const int testWorldID = 34;
+    public static readonly int TestWorldID = 34;
     public static readonly int ApiSpamPreventionDelayInMS = 100;
 }

@@ -1,4 +1,3 @@
-using System.Data.Common;
 using GilGoblin.Pocos;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
