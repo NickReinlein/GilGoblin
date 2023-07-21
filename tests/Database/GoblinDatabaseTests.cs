@@ -13,6 +13,7 @@ public class GoblinDatabaseTests
     [SetUp]
     public void SetUp()
     {
+        // GilGoblinDatabaseConnector.ResourceDirectory = Database.DatabaseTests.GetTestDirectory();
         _priceFetcher = Substitute.For<IPriceDataFetcher>();
         _db = new GoblinDatabase(_priceFetcher);
     }

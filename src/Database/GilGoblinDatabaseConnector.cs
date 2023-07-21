@@ -6,7 +6,14 @@ using GilGoblin.Extensions;
 
 namespace GilGoblin.Database;
 
-public class GilGoblinDatabaseConnector
+public interface IDatabaseConnector
+{
+    public static abstract SqliteConnection? Connect(string? resourceDirectory);
+
+    public static abstract void Disconnect();
+}
+
+public class GilGoblinDatabaseConnector : IDatabaseConnector
 {
     public static SqliteConnection? Connection { get; set; }
     public static string? ResourceDirectory { get; set; } = null;
@@ -17,6 +24,12 @@ public class GilGoblinDatabaseConnector
             return Connection;
 
         return InitiateConnection(resourceDirectory);
+    }
+
+    public static void Disconnect()
+    {
+        Connection?.Close();
+        Connection?.Dispose();
     }
 
     private static SqliteConnection InitiateConnection(string? resourceDirectory)
@@ -41,12 +54,6 @@ public class GilGoblinDatabaseConnector
             Log.Error("Failed connection:{Message}.", ex.Message);
             return null;
         }
-    }
-
-    public static void Disconnect()
-    {
-        Connection?.Close();
-        Connection?.Dispose();
     }
 
     public static string GetBaseDirectory() =>

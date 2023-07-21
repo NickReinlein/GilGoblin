@@ -16,7 +16,6 @@ public class RecipeGrocerTests
     private IPriceRepository<PricePoco> _prices;
     private ILogger<RecipeGrocer> _logger;
 
-    private static readonly int _worldID = 34; // Brynnhildr
     private static readonly int _firstItemID = 554;
     private static readonly int _secondItemID = 668;
     private static readonly int _secondRecipeID = 2000;
@@ -75,8 +74,11 @@ public class RecipeGrocerTests
         await _recipes.Received(1).GetRecipesForItem(itemID);
         await _recipes.Received(1).GetRecipesForItem(_subItem0ID);
         await _recipes.Received(1).Get(recipeID);
-        Assert.That(result.GetIngredientsCount(), Is.EqualTo(2));
-        Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedTotalIngredients));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsCount(), Is.EqualTo(2));
+            Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedTotalIngredients));
+        });
     }
 
     [Test]
@@ -106,8 +108,11 @@ public class RecipeGrocerTests
         await _recipes.Received(1).GetRecipesForItem(_subItem0ID);
         await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
         await _recipes.Received(1).Get(recipeID);
-        Assert.That(result.GetIngredientsCount(), Is.EqualTo(2));
-        Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsCount(), Is.EqualTo(2));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
+        });
     }
 
     [Test]
@@ -136,11 +141,14 @@ public class RecipeGrocerTests
         await _recipes.Received(1).GetRecipesForItem(_subItem1ID);
         await _recipes.Received(1).GetRecipesForItem(_secondItemID);
         await _recipes.Received(1).Get(recipeID);
-        Assert.That(result.GetIngredientsCount(), Is.EqualTo(3));
-        Assert.That(
-            result.GetIngredientsSum(),
-            Is.EqualTo(recipe.GetActiveIngredients().GetIngredientsSum())
-        );
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsCount(), Is.EqualTo(3));
+            Assert.That(
+                result.GetIngredientsSum(),
+                Is.EqualTo(recipe.GetActiveIngredients().GetIngredientsSum())
+            );
+        });
 
         void SetupBreakingDown3ForItem(int itemID, RecipePoco recipe, int recipeID)
         {
@@ -185,8 +193,11 @@ public class RecipeGrocerTests
         await _recipes.Received(1).GetRecipesForItem(_secondItemID);
         await _recipes.Received(1).Get(_recipeID);
         await _recipes.Received(1).Get(_secondRecipeID);
-        Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedIngredients));
-        Assert.That(result.GetIngredientsCount(), Is.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedIngredients));
+            Assert.That(result.GetIngredientsCount(), Is.EqualTo(2));
+        });
     }
 
     [Test]
@@ -214,8 +225,11 @@ public class RecipeGrocerTests
         var result = await _grocer.BreakdownRecipeById(existentRecipeID);
 
         await _recipes.Received(1).Get(existentRecipeID);
-        Assert.That(result.GetIngredientsCount(), Is.EqualTo(1));
-        Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedTotalIngredients));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsCount(), Is.EqualTo(1));
+            Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedTotalIngredients));
+        });
     }
 
     [Test]
@@ -230,8 +244,11 @@ public class RecipeGrocerTests
 
         var resultTotalIngredients = result.GetIngredientsSum();
         await _recipes.Received(1).Get(existentRecipeID);
-        Assert.That(result.GetIngredientsCount(), Is.GreaterThanOrEqualTo(2));
-        Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsCount(), Is.GreaterThanOrEqualTo(2));
+            Assert.That(resultTotalIngredients, Is.EqualTo(expectedTotalIngredients));
+        });
     }
 
     [Test]
@@ -251,8 +268,11 @@ public class RecipeGrocerTests
         await _recipes.Received(1).Get(recipeID);
         await _recipes.Received(3).GetRecipesForItem(Arg.Is<int>(i => i > 0));
         Assert.That(result.GetIngredientsSum(), Is.EqualTo(expectedIngredientsSum));
-        Assert.That(result.GetIngredientsCount(), Is.GreaterThanOrEqualTo(3));
-        Assert.That(expectedIngredientsCount, Is.GreaterThanOrEqualTo(3));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GetIngredientsCount(), Is.GreaterThanOrEqualTo(3));
+            Assert.That(expectedIngredientsCount, Is.GreaterThanOrEqualTo(3));
+        });
     }
 
     [Test]

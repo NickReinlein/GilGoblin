@@ -12,8 +12,8 @@ namespace GilGoblin.Tests.Web;
 public class PriceFetcherTests
 {
     private PriceFetcher _fetcher;
-    private MockHttpMessageHandler _handler;
     private HttpClient _client;
+    private MockHttpMessageHandler _handler;
     private ILogger<PriceFetcher> _logger;
 
     [SetUp]
@@ -36,6 +36,7 @@ public class PriceFetcherTests
             GetSerializerOptions()
         );
 
+        Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
             Assert.That(result.ItemID, Is.EqualTo(_itemID1));

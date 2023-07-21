@@ -10,9 +10,7 @@ public class GilGoblinDatabaseConnectorTests
     [SetUp]
     public void SetUp()
     {
-        _testDirectory = Directory
-            ?.GetParent(Directory.GetCurrentDirectory())
-            ?.Parent?.Parent?.Parent?.FullName;
+        _testDirectory = DatabaseTests.GetTestDirectory();
     }
 
     [Test]
