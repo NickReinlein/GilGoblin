@@ -77,11 +77,12 @@ public class Startup
 
     public static void AddGoblinDatabases(IServiceCollection services)
     {
+        services.AddSingleton<GoblinDatabase>();
         services.AddDbContext<GilGoblinDbContext>();
         services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
-        services.AddSingleton<GoblinDatabase>();
         services.AddSingleton<IItemRepository, ItemGateway>();
         services.AddSingleton<IRecipeRepository, RecipeGateway>();
+        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
     }
 
     public static void AddBasicBuilderServices(IServiceCollection services)

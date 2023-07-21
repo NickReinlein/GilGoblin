@@ -15,7 +15,7 @@ public class GilGoblinDbContext : DbContext
     public GilGoblinDbContext()
         : base(
             new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .UseSqlite<GilGoblinDbContext>(GilGoblinDatabaseConnector.Connect())
+                .UseSqlite(new GilGoblinDatabaseConnector().Connect())
                 .Options
         ) { }
 

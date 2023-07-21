@@ -5,18 +5,19 @@ namespace GilGoblin.Tests.Database;
 
 public class GilGoblinDatabaseConnectorTests
 {
-    private string _testDirectory;
+    private GilGoblinDatabaseConnector _databaseConnector;
 
     [SetUp]
     public void SetUp()
     {
-        _testDirectory = DatabaseTests.GetTestDirectory();
+        GilGoblinDatabaseConnector.ResourceDirectory = DatabaseTests.GetTestDirectory();
+        _databaseConnector = new GilGoblinDatabaseConnector();
     }
 
     [Test]
     public void GivenAConnector_WhenConnectionSucceeds_ThenAnOpenConnectionIsReturned()
     {
-        var connection = GilGoblinDatabaseConnector.Connect(_testDirectory);
+        var connection = _databaseConnector.Connect();
 
         Assert.Multiple(() =>
         {
@@ -32,7 +33,7 @@ public class GilGoblinDatabaseConnectorTests
     [Test]
     public void GivenAConnector_WhenConnectionSucceeds_ThenTheConnectionIsStored()
     {
-        var connection = GilGoblinDatabaseConnector.Connect(_testDirectory);
+        var connection = _databaseConnector.Connect();
 
         Assert.Multiple(() =>
         {
@@ -48,10 +49,10 @@ public class GilGoblinDatabaseConnectorTests
     [Test]
     public void GivenAConnector_WhenConnectionExists_ThenDisconnectClosesTheConnection()
     {
-        GilGoblinDatabaseConnector.Connect(_testDirectory);
+        _databaseConnector.Connect();
         Assert.That(GilGoblinDatabaseConnector.ConnectionIsOpen);
 
-        GilGoblinDatabaseConnector.Disconnect();
+        _databaseConnector.Disconnect();
 
         Assert.That(GilGoblinDatabaseConnector.ConnectionIsOpen, Is.False);
     }
@@ -60,14 +61,16 @@ public class GilGoblinDatabaseConnectorTests
     public void GivenAConnector_WhenConnectionDoesNotExistAndDisconnectIsCalled_ThenNoExceptionIsThrown()
     {
         Assert.That(GilGoblinDatabaseConnector.ConnectionIsOpen, Is.False);
-        Assert.DoesNotThrow(GilGoblinDatabaseConnector.Disconnect);
+        Assert.DoesNotThrow(_databaseConnector.Disconnect);
     }
 
     [Test]
     public void GivenAConnector_WhenConnectionFails_ThenNullIsReturned()
     {
-        GilGoblinDatabaseConnector.Disconnect();
-        var result = GilGoblinDatabaseConnector.Connect("itsAFake");
+        _databaseConnector.Disconnect();
+        GilGoblinDatabaseConnector.ResourceDirectory = "itsAFake";
+
+        var result = _databaseConnector.Connect();
 
         Assert.That(result, Is.Null);
     }
@@ -75,10 +78,11 @@ public class GilGoblinDatabaseConnectorTests
     [Test]
     public void GivenAConnector_WhenConnectionExists_ThenItIsReturned()
     {
-        var connection = GilGoblinDatabaseConnector.Connect(_testDirectory);
+        var connection = _databaseConnector.Connect();
         Assert.That(GilGoblinDatabaseConnector.ConnectionIsOpen);
 
-        var tryAgain = GilGoblinDatabaseConnector.Connect();
+        GilGoblinDatabaseConnector.ResourceDirectory = "itsAFake";
+        var tryAgain = _databaseConnector.Connect();
 
         Assert.Multiple(() =>
         {

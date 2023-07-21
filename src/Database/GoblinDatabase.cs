@@ -15,20 +15,22 @@ namespace GilGoblin.Database;
 public class GoblinDatabase
 {
     private readonly IPriceDataFetcher _priceFetcher;
+    private readonly ISqlLiteDatabaseConnector _dbConnector;
 
     private static GilGoblinDbContext _dbContext;
 
-    public GoblinDatabase(IPriceDataFetcher priceFetcher)
+    public GoblinDatabase(IPriceDataFetcher priceFetcher, ISqlLiteDatabaseConnector dbConnector)
     {
         _priceFetcher = priceFetcher;
+        _dbConnector = dbConnector;
     }
 
     public async Task<GilGoblinDbContext?> GetContextAsync() => _dbContext ?? await GetNewContext();
 
     private async Task<GilGoblinDbContext> GetNewContext()
     {
-        GilGoblinDatabaseConnector.Connect();
-        if (GilGoblinDatabaseConnector.Connection is not { })
+        var connection = _dbConnector.Connect();
+        if (!connection.IsOpen())
             return null;
 
         await FillTablesIfEmpty();
@@ -100,15 +102,16 @@ public class GoblinDatabase
         );
     }
 
-    private static async Task FillTable<T>()
+    private async Task FillTable<T>()
         where T : class
     {
         using var context =
             _dbContext ?? throw new Exception("Critical error: unable to get database context");
         var tableName = LogTaskStart<T>("Loading from CSV");
 
+        // fix me
         var path = GilGoblinDatabaseConnector.ResourceFilePath(
-            GilGoblinDatabaseConnector.ResourceFilenameCsv(tableName)
+            _dbConnector.GilGoblinDatabaseConnector.ResourceFilenameCsv(tableName)
         );
         try
         {

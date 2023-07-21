@@ -1,5 +1,6 @@
 using GilGoblin.Database;
 using GilGoblin.Web;
+using Microsoft.Data.Sqlite;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -9,13 +10,15 @@ public class GoblinDatabaseTests
 {
     private GoblinDatabase _db;
     private IPriceDataFetcher _priceFetcher;
+    private ISqlLiteDatabaseConnector _dbConnector;
 
     [SetUp]
     public void SetUp()
     {
-        // GilGoblinDatabaseConnector.ResourceDirectory = Database.DatabaseTests.GetTestDirectory();
+        // _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
+        // _dbConnector.Connect().Returns(null);
         _priceFetcher = Substitute.For<IPriceDataFetcher>();
-        _db = new GoblinDatabase(_priceFetcher);
+        _db = new GoblinDatabase(_priceFetcher, _dbConnector);
     }
 
     [Test]
@@ -29,6 +32,8 @@ public class GoblinDatabaseTests
     [Test]
     public async Task GivenGetContextAsyncIsCalled_WhenConnectionSucceeds_ThenContextIsReturned()
     {
+        _dbConnector.Connect().Returns<SqliteConnection?>(null);
+
         var response = await _db.GetContextAsync();
 
         Assert.That(response, Is.TypeOf<GilGoblinDbContext>());
