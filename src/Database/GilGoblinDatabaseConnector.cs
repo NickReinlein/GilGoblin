@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 using Serilog;
+using GilGoblin.Extensions;
 
 namespace GilGoblin.Database;
 
@@ -12,27 +13,32 @@ public class GilGoblinDatabaseConnector
 
     public static SqliteConnection? Connect(string? resourceDirectory = null)
     {
-        if (Connection is not null)
+        if (ConnectionIsOpen)
             return Connection;
 
+        return InitiateConnection(resourceDirectory);
+    }
+
+    private static SqliteConnection InitiateConnection(string? resourceDirectory)
+    {
         try
         {
-            ResourceDirectory = resourceDirectory;
+            ResourceDirectory = resourceDirectory ?? GetBaseDirectory();
             var path = ResourceFilePath(DbFileName);
-            Connection = new SqliteConnection("Data Source=" + path);
 
-            if (Connection.State == System.Data.ConnectionState.Open)
+            Connection = new SqliteConnection("Data Source=" + path);
+            if (ConnectionIsOpen)
                 return Connection;
 
             Connection.Open();
-            if (Connection.State == System.Data.ConnectionState.Open)
+            if (ConnectionIsOpen)
                 return Connection;
 
             throw new Exception($"Connection not open. State is: {Connection?.State}");
         }
         catch (Exception ex)
         {
-            Log.Error("failed connection:{Message}.", ex.Message);
+            Log.Error("Failed connection:{Message}.", ex.Message);
             return null;
         }
     }
@@ -55,4 +61,6 @@ public class GilGoblinDatabaseConnector
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 
     public static readonly string DbFileName = "GilGoblin.db";
+
+    public static bool ConnectionIsOpen => Connection.IsOpen();
 }
