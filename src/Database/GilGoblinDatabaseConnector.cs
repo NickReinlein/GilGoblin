@@ -1,23 +1,35 @@
 using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
-using Serilog;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using GilGoblin.Extensions;
+using Serilog;
 
 namespace GilGoblin.Database;
 
 public interface ISqlLiteDatabaseConnector
 {
     public SqliteConnection? Connect();
-
     public void Disconnect();
     public string GetDatabasePath();
 }
 
 public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
 {
+    private readonly string ResourceDirectory;
+    private readonly ILogger<GilGoblinDatabaseConnector> _logger;
+
     public static SqliteConnection? Connection { get; set; }
-    public string? ResourceDirectory { get; set; }
+
+    public GilGoblinDatabaseConnector(
+        ILogger<GilGoblinDatabaseConnector> logger,
+        string? resourceDirectory = null
+    )
+    {
+        _logger = logger;
+        ResourceDirectory = resourceDirectory ?? GetBaseDirectory();
+    }
 
     public SqliteConnection? Connect()
     {
@@ -37,7 +49,6 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
     {
         try
         {
-            ResourceDirectory ??= GetBaseDirectory();
             var path = Path.Combine(ResourceDirectory, DbFileName);
 
             Connection = new SqliteConnection("Data Source=" + path);
@@ -52,20 +63,21 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
         }
         catch (Exception ex)
         {
-            Log.Error("Failed to initiate a connection: {Message}.", ex.Message);
+            _logger.LogError("Failed to initiate a connection: {Message}.", ex.Message);
             return null;
         }
     }
 
-    public string GetDatabasePath() => Path.Combine(ResourcesFolderPath, DbFileName);
-
     public string GetBaseDirectory() =>
         ResourceDirectory ?? Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-    public string ResourcesFolderPath => Path.Combine(GetBaseDirectory(), "resources/");
+    public string GetDatabasePath() => Path.Combine(GetResourcesFolderPath(), DbFileName);
+
+    public string GetResourcesFolderPath() => Path.Combine(GetBaseDirectory(), "resources/");
+
     public static bool IsConnectionOpen => Connection.IsOpen();
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 
-    public static readonly string DbFileName = "GilGoblin.db";
+    public static string DbFileName = "GilGoblin.db";
 }
