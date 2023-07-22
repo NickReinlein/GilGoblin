@@ -64,7 +64,6 @@ public class CraftControllerTests
         var result = _controller!.GetBestCrafts(_world);
 
         Assert.That(result is not null);
-        Assert.That(result is IEnumerable<CraftSummaryPoco>);
     }
 
     [Test]
@@ -75,6 +74,5 @@ public class CraftControllerTests
         var result = _controller!.GetCraft(_world, _craftId);
 
         Assert.That(result is not null);
-        Assert.That(result is CraftSummaryPoco);
     }
 }

@@ -1,6 +1,5 @@
 using GilGoblin.Database;
 using GilGoblin.Web;
-using Microsoft.Data.Sqlite;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -17,7 +16,9 @@ public class GoblinDatabaseTests
     {
         _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
         // _dbConnector.Connect().Returns(null);
+
         _priceFetcher = Substitute.For<IPriceDataFetcher>();
+
         _db = new GilGoblinDatabase(_priceFetcher, _dbConnector);
     }
 

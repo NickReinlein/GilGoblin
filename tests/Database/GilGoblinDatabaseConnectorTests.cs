@@ -10,8 +10,10 @@ public class GilGoblinDatabaseConnectorTests
     [SetUp]
     public void SetUp()
     {
-        _databaseConnector = new GilGoblinDatabaseConnector();
-        _databaseConnector.ResourceDirectory = DatabaseTests.GetTestDirectory();
+        _databaseConnector = new GilGoblinDatabaseConnector
+        {
+            ResourceDirectory = DatabaseTests.GetTestDirectory()
+        };
     }
 
     [Test]

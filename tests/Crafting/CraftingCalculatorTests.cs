@@ -175,8 +175,6 @@ public class CraftingCalculatorTests
         _recipes.Get(recipe.ID).Returns(recipe);
     }
 
-    private static string GetWorldString(int worldID) => $"{worldID}/";
-
     private static PricePoco GetNewPrice => new(1, _worldID, 1, 300, 200, 400, 600, 400, 800);
 
     private static RecipePoco NewRecipe =>

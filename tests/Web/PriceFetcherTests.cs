@@ -39,7 +39,7 @@ public class PriceFetcherTests
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.ItemID, Is.EqualTo(_itemID1));
+            Assert.That(result!.ItemID, Is.EqualTo(_itemID1));
             Assert.That(result.WorldID, Is.EqualTo(_worldID));
             Assert.That(result.CurrentAveragePrice, Is.GreaterThan(0));
             Assert.That(result.CurrentAveragePriceHQ, Is.GreaterThan(0));
@@ -62,9 +62,10 @@ public class PriceFetcherTests
 
         var prices = result?.GetContentAsList();
 
-        Assert.That(prices, Is.Not.Empty);
-        foreach (var price in prices)
+        Assert.That(prices, Is.Not.Null.And.Not.Empty);
+        foreach (var price in prices!)
         {
+            Assert.That(price, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(ids, Does.Contain(price.ItemID));

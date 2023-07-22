@@ -2,9 +2,9 @@
   "githubPullRequests.ignoredPullRequestBranches": ["master"],
   "dotnet.defaultSolution": "GilGoblin.sln",
   "dotnet-test-explorer.autoExpandTree": true,
-  "dotnet-test-explorer.testProjectPath": "**/tests/*Tests.csproj",
-  "dotnet-test-explorer.treeMode": "merged",
   "dotnet-test-explorer.autoWatch": false,
+  "dotnet-test-explorer.testProjectPath": "**/tests/*Tests.csproj",
+  "dotnet-test-explorer.treeMode": "full",
   "omnisharp.enableRoslynAnalyzers": true,
   "omnisharp.enableEditorConfigSupport": true,
   "workbench.colorCustomizations": {

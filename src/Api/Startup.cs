@@ -1,5 +1,4 @@
 using System;
-using GilGoblin.Api.DI;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace GilGoblin.Api;
@@ -31,7 +29,7 @@ public class Startup
         AddGoblinServices(services);
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app)
     {
         AddAppGoblinServices(app);
     }
@@ -97,13 +95,9 @@ public class Startup
 
     public static void AddAppGoblinServices(IApplicationBuilder app)
     {
-        // if (app.Environment.IsDevelopment())
-        // {
         app.UseSwagger();
         app.UseSwaggerUI();
-        // }
-
-        // app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
         app.UseAuthorization();
 
         app.UseRouting();
