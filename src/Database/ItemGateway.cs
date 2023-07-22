@@ -10,10 +10,10 @@ namespace GilGoblin.Database;
 
 public class ItemGateway : IItemRepository
 {
-    private readonly GoblinDatabase _database;
-    private readonly ILogger<GoblinDatabase> _logger;
+    private readonly GilGoblinDatabase _database;
+    private readonly ILogger<GilGoblinDatabase> _logger;
 
-    public ItemGateway(GoblinDatabase database, ILogger<GoblinDatabase> logger)
+    public ItemGateway(GilGoblinDatabase database, ILogger<GilGoblinDatabase> logger)
     {
         _database = database;
         _logger = logger;

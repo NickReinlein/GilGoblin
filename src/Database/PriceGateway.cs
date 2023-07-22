@@ -9,10 +9,10 @@ namespace GilGoblin.Database;
 
 public class PriceGateway : IPriceRepository<PricePoco>
 {
-    private readonly GoblinDatabase _database;
+    private readonly GilGoblinDatabase _database;
     private readonly ILogger<PriceGateway> _logger;
 
-    public PriceGateway(GoblinDatabase database, ILogger<PriceGateway> logger)
+    public PriceGateway(GilGoblinDatabase database, ILogger<PriceGateway> logger)
     {
         _database = database;
         _logger = logger;

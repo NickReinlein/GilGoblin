@@ -11,6 +11,7 @@ public interface ISqlLiteDatabaseConnector
     public SqliteConnection? Connect();
 
     public void Disconnect();
+    public string GetDatabasePath();
 }
 
 public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
@@ -20,7 +21,7 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
 
     public SqliteConnection? Connect()
     {
-        if (ConnectionIsOpen)
+        if (IsConnectionOpen)
             return Connection;
 
         return InitiateConnection();
@@ -37,34 +38,32 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
         try
         {
             ResourceDirectory ??= GetBaseDirectory();
-            var path = ResourceFilePath(ResourceDirectory, DbFileName);
+            var path = Path.Combine(ResourceDirectory, DbFileName);
 
             Connection = new SqliteConnection("Data Source=" + path);
-            if (ConnectionIsOpen)
+            if (IsConnectionOpen)
                 return Connection;
 
             Connection.Open();
-            if (ConnectionIsOpen)
+            if (IsConnectionOpen)
                 return Connection;
 
             throw new Exception($"Connection not open. State is: {Connection?.State}");
         }
         catch (Exception ex)
         {
-            Log.Error("Failed connection:{Message}.", ex.Message);
+            Log.Error("Failed to initiate a connection: {Message}.", ex.Message);
             return null;
         }
     }
 
-    public static bool ConnectionIsOpen => Connection.IsOpen();
+    public string GetDatabasePath() => Path.Combine(ResourcesFolderPath, DbFileName);
 
     public string GetBaseDirectory() =>
         ResourceDirectory ?? Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-    public string ResourcesFolderPath => System.IO.Path.Combine(GetBaseDirectory(), "resources/");
-
-    public static string ResourceFilePath(string path, string filename) =>
-        System.IO.Path.Combine(path, filename);
+    public string ResourcesFolderPath => Path.Combine(GetBaseDirectory(), "resources/");
+    public static bool IsConnectionOpen => Connection.IsOpen();
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 

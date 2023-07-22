@@ -12,14 +12,14 @@ using GilGoblin.Extensions;
 
 namespace GilGoblin.Database;
 
-public class GoblinDatabase
+public class GilGoblinDatabase
 {
     private readonly IPriceDataFetcher _priceFetcher;
     private readonly ISqlLiteDatabaseConnector _dbConnector;
 
     private static GilGoblinDbContext _dbContext;
 
-    public GoblinDatabase(IPriceDataFetcher priceFetcher, ISqlLiteDatabaseConnector dbConnector)
+    public GilGoblinDatabase(IPriceDataFetcher priceFetcher, ISqlLiteDatabaseConnector dbConnector)
     {
         _priceFetcher = priceFetcher;
         _dbConnector = dbConnector;
@@ -110,9 +110,8 @@ public class GoblinDatabase
         var tableName = LogTaskStart<T>("Loading from CSV");
 
         // fix me
-        var path = GilGoblinDatabaseConnector.ResourceFilePath(
-            _dbConnector.GilGoblinDatabaseConnector.ResourceFilenameCsv(tableName)
-        );
+
+        var path = _dbConnector.GetDatabasePath();
         try
         {
             await LoadCSVFileAndSaveResults<T>(context, tableName, path);

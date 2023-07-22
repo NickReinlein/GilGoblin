@@ -17,7 +17,8 @@ public class GilGoblinDbContext : DbContext
             new DbContextOptionsBuilder<GilGoblinDbContext>()
                 .UseSqlite(new GilGoblinDatabaseConnector().Connect())
                 .Options
-        ) { }
+        )
+    { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

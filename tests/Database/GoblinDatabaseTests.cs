@@ -8,17 +8,17 @@ namespace GilGoblin.Tests.Database;
 
 public class GoblinDatabaseTests
 {
-    private GoblinDatabase _db;
+    private GilGoblinDatabase _db;
     private IPriceDataFetcher _priceFetcher;
     private ISqlLiteDatabaseConnector _dbConnector;
 
     [SetUp]
     public void SetUp()
     {
-        // _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
+        _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
         // _dbConnector.Connect().Returns(null);
         _priceFetcher = Substitute.For<IPriceDataFetcher>();
-        _db = new GoblinDatabase(_priceFetcher, _dbConnector);
+        _db = new GilGoblinDatabase(_priceFetcher, _dbConnector);
     }
 
     [Test]
@@ -32,8 +32,6 @@ public class GoblinDatabaseTests
     [Test]
     public async Task GivenGetContextAsyncIsCalled_WhenConnectionSucceeds_ThenContextIsReturned()
     {
-        _dbConnector.Connect().Returns<SqliteConnection?>(null);
-
         var response = await _db.GetContextAsync();
 
         Assert.That(response, Is.TypeOf<GilGoblinDbContext>());

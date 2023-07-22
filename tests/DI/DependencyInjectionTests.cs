@@ -42,7 +42,7 @@ public class DependencyInjectionTests
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IPriceDataFetcher))]
-    [TestCase(typeof(GoblinDatabase))]
+    [TestCase(typeof(GilGoblinDatabase))]
     [TestCase(typeof(DataFetcher<PriceWebPoco, PriceWebResponse>))]
     public void GivenAGoblinService_WhenWeSetup_TheServiceIsResolved(Type serviceType)
     {

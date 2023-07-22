@@ -33,7 +33,7 @@ public static class DependencyInjectionExtensions
     {
         services.AddDbContext<GilGoblinDbContext>();
         services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
-        services.AddSingleton<GoblinDatabase>();
+        services.AddSingleton<GilGoblinDatabase>();
         services.AddSingleton<IItemRepository, ItemGateway>();
         services.AddSingleton<IRecipeRepository, RecipeGateway>();
         return services;

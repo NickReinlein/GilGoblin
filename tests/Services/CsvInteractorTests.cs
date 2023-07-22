@@ -68,12 +68,11 @@ public class CsvInteractorTests
     private static string ResourcesFolderPath => Path.Combine(GetCurrentDirectory(), "resources/");
 
     private static string GetCurrentDirectory() =>
-        Directory
-            .GetParent(System.IO.Directory.GetCurrentDirectory())
-            ?.Parent?.Parent?.Parent?.FullName ?? string.Empty;
+        Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.Parent?.FullName
+        ?? string.Empty;
 
     private static string ResourceFilePath(string filename) =>
-        System.IO.Path.Combine(ResourcesFolderPath, filename);
+        Path.Combine(ResourcesFolderPath, filename);
 
     public const string itemTestFileName = "ItemInfoTest.csv";
     public const string recipeTestFileName = "RecipeTest.csv";

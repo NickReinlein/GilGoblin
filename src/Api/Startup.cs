@@ -77,7 +77,7 @@ public class Startup
 
     public static void AddGoblinDatabases(IServiceCollection services)
     {
-        services.AddSingleton<GoblinDatabase>();
+        services.AddSingleton<GilGoblinDatabase>();
         services.AddDbContext<GilGoblinDbContext>();
         services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
         services.AddSingleton<IItemRepository, ItemGateway>();

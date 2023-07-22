@@ -1,21 +1,12 @@
 {
+  "githubPullRequests.ignoredPullRequestBranches": ["master"],
+  "dotnet.defaultSolution": "GilGoblin.sln",
+  "dotnet-test-explorer.autoExpandTree": true,
   "dotnet-test-explorer.testProjectPath": "**/tests/*Tests.csproj",
   "dotnet-test-explorer.treeMode": "merged",
   "dotnet-test-explorer.autoWatch": false,
-  "coverage-gutters.showGutterCoverage": false,
-  "coverage-gutters.showLineCoverage": true,
-  "coverage-gutters.showRulerCoverage": false,
-  "editor.formatOnSave": true,
-  "prettier.enable": true,
-  "prettier.printWidth": 160,
   "omnisharp.enableRoslynAnalyzers": true,
   "omnisharp.enableEditorConfigSupport": true,
-  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[vue]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#47037a",
     "activityBar.background": "#47037a",
@@ -34,9 +25,5 @@
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveBackground": "#2a024899",
     "titleBar.inactiveForeground": "#e7e7e799"
-  },
-  "githubPullRequests.ignoredPullRequestBranches": ["master"],
-  "dotnet.defaultSolution": "GilGoblin.sln",
-  "dotnet-test-explorer.autoExpandTree": true,
-  "testExplorer.sort": "byLocationWithSuitesFirst"
+  }
 }
