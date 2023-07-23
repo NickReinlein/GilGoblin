@@ -79,6 +79,7 @@ public class GilGoblinDatabaseConnectorTests
         var result = _databaseConnector.Connect();
 
         Assert.That(result, Is.Null);
+        _logger.Received(1).LogError(Arg.Any<string>());
         // Log.Error("Failed to initiate a connection: {Message}.", ex.Message);
     }
 

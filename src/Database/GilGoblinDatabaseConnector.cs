@@ -2,9 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using GilGoblin.Extensions;
-using Serilog;
 
 namespace GilGoblin.Database;
 
@@ -17,7 +15,7 @@ public interface ISqlLiteDatabaseConnector
 
 public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
 {
-    private readonly string ResourceDirectory;
+    private readonly string _resourceDirectory;
     private readonly ILogger<GilGoblinDatabaseConnector> _logger;
 
     public static SqliteConnection? Connection { get; set; }
@@ -28,7 +26,7 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
     )
     {
         _logger = logger;
-        ResourceDirectory = resourceDirectory ?? GetBaseDirectory();
+        _resourceDirectory = resourceDirectory ?? GetBaseDirectory();
     }
 
     public SqliteConnection? Connect()
@@ -49,7 +47,7 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
     {
         try
         {
-            var path = Path.Combine(ResourceDirectory, DbFileName);
+            var path = Path.Combine(_resourceDirectory, DbFileName);
 
             Connection = new SqliteConnection("Data Source=" + path);
             if (IsConnectionOpen)
@@ -69,7 +67,7 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
     }
 
     public string GetBaseDirectory() =>
-        ResourceDirectory ?? Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+        _resourceDirectory ?? Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
     public string GetDatabasePath() => Path.Combine(GetResourcesFolderPath(), DbFileName);
 

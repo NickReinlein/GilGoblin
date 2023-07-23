@@ -41,9 +41,12 @@ public class PriceControllerTests
 
         var result = _controller.GetAll(WorldID);
 
-        Assert.That(result.Count, Is.EqualTo(2));
-        Assert.That(result.Count(i => i.ItemID == poco1.ItemID), Is.EqualTo(1));
-        Assert.That(result.Count(i => i.ItemID == poco2.ItemID), Is.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result.Count(i => i.ItemID == poco1.ItemID), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.ItemID == poco2.ItemID), Is.EqualTo(1));
+        });
     }
 
     [Test]

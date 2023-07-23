@@ -40,9 +40,12 @@ public class RecipeControllerTests
 
         var result = await _controller.GetAll();
 
-        Assert.That(result.Count, Is.EqualTo(2));
-        Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
-        Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
+        });
     }
 
     [Test]
