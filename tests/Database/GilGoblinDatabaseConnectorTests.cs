@@ -9,15 +9,14 @@ public class GilGoblinDatabaseConnectorTests
 {
     private GilGoblinDatabaseConnector _databaseConnector;
     private ILogger<GilGoblinDatabaseConnector> _logger;
+    private string _resourceDirectory;
 
     [SetUp]
     public void SetUp()
     {
+        _resourceDirectory = DatabaseTests.GetTestDirectory();
         _logger = Substitute.For<ILogger<GilGoblinDatabaseConnector>>();
-        _databaseConnector = new GilGoblinDatabaseConnector(
-            _logger,
-            DatabaseTests.GetTestDirectory()
-        );
+        _databaseConnector = new GilGoblinDatabaseConnector(_logger, _resourceDirectory);
     }
 
     [Test]
@@ -74,13 +73,14 @@ public class GilGoblinDatabaseConnectorTests
     public void WhenConnectionFails_ThenAnErrorIsLoggedAndNullIsReturned()
     {
         _databaseConnector.Disconnect();
-        GilGoblinDatabaseConnector.DbFileName = "fake";
+        _databaseConnector = new GilGoblinDatabaseConnector(_logger, "fake");
 
         var result = _databaseConnector.Connect();
 
         Assert.That(result, Is.Null);
-        _logger.Received(1).LogError(Arg.Any<string>());
-        // Log.Error("Failed to initiate a connection: {Message}.", ex.Message);
+        var errorMessage =
+            "Failed to initiate a connection: SQLite Error 14: 'unable to open database file'.";
+        _logger.Received(1).LogError(errorMessage);
     }
 
     [Test]

@@ -15,7 +15,6 @@ public class GoblinDatabaseTests
     public void SetUp()
     {
         _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
-        // _dbConnector.Connect().Returns(null);
 
         _priceFetcher = Substitute.For<IPriceDataFetcher>();
 

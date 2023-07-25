@@ -61,7 +61,7 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
         }
         catch (Exception ex)
         {
-            _logger.LogError("Failed to initiate a connection: {Message}.", ex.Message);
+            _logger.LogError($"Failed to initiate a connection: {ex.Message}");
             return null;
         }
     }
@@ -77,5 +77,5 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
 
     public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
 
-    public static string DbFileName = "GilGoblin.db";
+    public static readonly string DbFileName = "GilGoblin.db";
 }
