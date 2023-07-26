@@ -1,4 +1,6 @@
+using System.Security.Cryptography.X509Certificates;
 using GilGoblin.Crafting;
+using GilGoblin.Exceptions;
 using GilGoblin.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -12,14 +14,11 @@ namespace GilGoblin.Tests.Crafting;
 
 public class CraftingCalculatorTests
 {
-    private readonly IRecipeRepository _recipes = Substitute.For<IRecipeRepository>();
+    private IRecipeRepository _recipes;
 
-    private readonly IPriceRepository<PricePoco> _prices = Substitute.For<
-        IPriceRepository<PricePoco>
-    >();
-    private readonly IRecipeGrocer _grocer = Substitute.For<IRecipeGrocer>();
-    private readonly ILogger<CraftingCalculator> _log =
-        NullLoggerFactory.Instance.CreateLogger<CraftingCalculator>();
+    private IPriceRepository<PricePoco> _prices;
+    private IRecipeGrocer _grocer;
+    private ILogger<CraftingCalculator> _logger;
     private CraftingCalculator? _calc;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
@@ -32,7 +31,11 @@ public class CraftingCalculatorTests
     [SetUp]
     public void SetUp()
     {
-        _calc = new CraftingCalculator(_recipes, _prices, _grocer, _log);
+        _recipes = Substitute.For<IRecipeRepository>();
+        _grocer = Substitute.For<IRecipeGrocer>();
+        _prices = Substitute.For<IPriceRepository<PricePoco>>();
+        _logger = Substitute.For<ILogger<CraftingCalculator>>();
+        _calc = new CraftingCalculator(_recipes, _prices, _grocer, _logger);
     }
 
     [TearDown]
@@ -44,7 +47,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task GivenACraftingCalculator_WhenCalculatingCraftingCostForItem_WhenNoRecipesExist_ThenReturnErrorCost()
+    public async Task WhenCalculatingCraftingCostForItemWhenNoRecipeExists_ThenReturnErrorCost()
     {
         var inexistentItemID = -200;
         _recipes.GetRecipesForItem(inexistentItemID).Returns(Array.Empty<RecipePoco>());
@@ -57,7 +60,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task GivenACraftingCalculator_WhenCalculatingCraftingCostForItem_WhenARecipeExists_ThenWeTheReturnCraftingCost()
+    public async Task WhenCalculatingCraftingCostForItemWhenARecipeExists_ThenWeTheReturnCraftingCost()
     {
         const int itemID = 1;
         const int ingredientID = 2;
@@ -87,7 +90,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task GivenACraftingCalculator_WhenCalculatingCraftingCostForRecipe_WhenNoRecipesExist_ThenReturnErrorCost()
+    public async Task WhenCalculatingCraftingCostForAnInexistantRecipe_ThenReturnErrorCost()
     {
         var inexistentRecipeID = -200;
         _recipes.Get(Arg.Any<int>()).ReturnsNull();
@@ -100,7 +103,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task GivenACraftingCalculator_WhenCalculatingCraftingCostForRecipe_WhenARecipeExists_WhenNoMarketDataFound_ThenReturnErrorCost()
+    public async Task WhenCalculatingCraftingCostForAnExistingRecipe_WhenNoMarketDataFound_ThenReturnErrorCost()
     {
         var recipe = NewRecipe;
         var recipeID = recipe.ID;
@@ -109,13 +112,14 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
-        await _recipes.Received().Get(recipeID);
-        await _prices.ReceivedWithAnyArgs().Get(default, default!);
         Assert.That(result, Is.EqualTo(_errorCost));
+        await _recipes.Received().Get(recipeID);
+        await _grocer.Received().BreakdownRecipeById(recipeID);
+        await _prices.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>());
     }
 
     [Test]
-    public async Task GivenACraftingCalculator_WhenCalculatingCraftingCostForRecipe_WhenARecipeExists__ThenReturnCraftingCost()
+    public async Task WhenCalculatingCraftingCostForAnExistingRecipe__ThenReturnCraftingCost()
     {
         var recipe = NewRecipe;
         var recipeID = recipe.ID;
@@ -132,6 +136,35 @@ public class CraftingCalculatorTests
         await _prices.Received().Get(_worldID, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(1000));
+    }
+
+    [Test]
+    public async Task WhenAnDataNotFoundExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
+    {
+        var recipeID = NewRecipe.ID;
+        _recipes.When(x => x.Get(recipeID)).Do(_ => throw new DataNotFoundException());
+
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
+
+        Assert.That(result, Is.EqualTo(_errorCost));
+        _logger
+            .Received()
+            .LogError(
+                $"Failed to find market data while calculating crafting cost for recipe {recipeID} in world {_worldID}"
+            );
+    }
+
+    [Test]
+    public async Task WhenAnUnexpectedExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
+    {
+        var recipeID = NewRecipe.ID;
+        var errorMessage = "testMessageHere";
+        _recipes.When(x => x.Get(recipeID)).Do(_ => throw new Exception(errorMessage));
+
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
+
+        Assert.That(result, Is.EqualTo(_errorCost));
+        _logger.Received().LogError($"Failed to calculate crafting cost: {errorMessage}");
     }
 
     private void SetupBasicTestCase(RecipePoco recipe, PricePoco price)

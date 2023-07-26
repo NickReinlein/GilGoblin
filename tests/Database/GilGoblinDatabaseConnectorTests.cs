@@ -52,6 +52,22 @@ public class GilGoblinDatabaseConnectorTests
     }
 
     [Test]
+    public void WhenConnectionExists_ThenItIsReturned()
+    {
+        var connection = _databaseConnector.Connect();
+        Assert.That(GilGoblinDatabaseConnector.IsConnectionOpen);
+
+        var tryAgain = _databaseConnector.Connect();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(tryAgain, Is.Not.Null);
+            Assert.That(tryAgain, Is.EqualTo(connection));
+            Assert.That(GilGoblinDatabaseConnector.Connection, Is.EqualTo(connection));
+        });
+    }
+
+    [Test]
     public void WhenConnectionExists_ThenDisconnectClosesTheConnection()
     {
         _databaseConnector.Connect();
@@ -65,7 +81,8 @@ public class GilGoblinDatabaseConnectorTests
     [Test]
     public void WhenConnectionDoesNotExistAndDisconnectIsCalled_ThenNoExceptionIsThrown()
     {
-        Assert.That(GilGoblinDatabaseConnector.IsConnectionOpen, Is.False);
+        Assert.That(!GilGoblinDatabaseConnector.IsConnectionOpen);
+
         Assert.DoesNotThrow(_databaseConnector.Disconnect);
     }
 
@@ -81,21 +98,5 @@ public class GilGoblinDatabaseConnectorTests
         var errorMessage =
             "Failed to initiate a connection: SQLite Error 14: 'unable to open database file'.";
         _logger.Received(1).LogError(errorMessage);
-    }
-
-    [Test]
-    public void WhenConnectionExists_ThenItIsReturned()
-    {
-        var connection = _databaseConnector.Connect();
-        Assert.That(GilGoblinDatabaseConnector.IsConnectionOpen);
-
-        var tryAgain = _databaseConnector.Connect();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(tryAgain, Is.Not.Null);
-            Assert.That(tryAgain, Is.EqualTo(connection));
-            Assert.That(GilGoblinDatabaseConnector.Connection, Is.EqualTo(connection));
-        });
     }
 }

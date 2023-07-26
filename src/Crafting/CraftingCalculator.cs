@@ -6,7 +6,6 @@ using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace GilGoblin.Crafting;
 
@@ -15,20 +14,20 @@ public class CraftingCalculator : ICraftingCalculator
     private readonly IRecipeRepository _recipes;
     private readonly IPriceRepository<PricePoco> _prices;
     private readonly IRecipeGrocer _grocer;
-    private readonly ILogger<CraftingCalculator> _log;
+    private readonly ILogger<CraftingCalculator> _logger;
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeRepository recipes,
         IPriceRepository<PricePoco> prices,
         IRecipeGrocer grocer,
-        ILogger<CraftingCalculator> log
+        ILogger<CraftingCalculator> logger
     )
     {
         _recipes = recipes;
         _prices = prices;
         _grocer = grocer;
-        _log = log;
+        _logger = logger;
     }
 
     public async Task<int> CalculateCraftingCostForItem(int worldID, int itemID)
@@ -57,7 +56,7 @@ public class CraftingCalculator : ICraftingCalculator
 
             var craftingCost = await CalculateCraftingCostForIngredients(worldID, craftIngredients);
 
-            Log.Information(
+            _logger.LogInformation(
                 "Successfully calculated crafting cost of {CraftCost} for recipe {RecipeID} world {WorldID} with {IngCount} ingredients",
                 craftingCost,
                 recipeID,
@@ -68,16 +67,14 @@ public class CraftingCalculator : ICraftingCalculator
         }
         catch (DataNotFoundException)
         {
-            Log.Error(
-                "Failed to find market data while calculating crafting cost for recipe {RecipeID} in world {WorldID} for item {ItemID}",
-                recipeID,
-                worldID
+            _logger.LogError(
+                $"Failed to find market data while calculating crafting cost for recipe {recipeID} in world {worldID}"
             );
             return ERROR_DEFAULT_COST;
         }
         catch (Exception e)
         {
-            Log.Error("Failed to calculate crafting cost: {e}", e.Message);
+            _logger.LogError($"Failed to calculate crafting cost: {e.Message}");
             return ERROR_DEFAULT_COST;
         }
     }
@@ -94,7 +91,7 @@ public class CraftingCalculator : ICraftingCalculator
             var craftingCost = await CalculateCraftingCostForItem(worldID, craft.ItemID);
             var minCost = Math.Min(averageSold, craftingCost);
 
-            Log.Information(
+            _logger.LogInformation(
                 "Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}",
                 minCost,
                 craft.ItemID,
@@ -172,9 +169,9 @@ public class CraftingCalculator : ICraftingCalculator
             LogSucessInfo(worldID, itemID, recipeCount, craftingCost);
     }
 
-    private static void LogSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
+    private void LogSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
     {
-        Log.Information(
+        _logger.LogInformation(
             "Successfully calculated crafting cost of {LowestCost} "
                 + "for item {ItemID} world {WorldID} with {RecipeCount} craftable recipes",
             craftingCost,
@@ -186,7 +183,7 @@ public class CraftingCalculator : ICraftingCalculator
 
     private void LogErrorCraftingCostForItem(int worldID, int ingredientID, int recipesCount)
     {
-        _log.LogError(
+        _logger.LogError(
             "Failed to calculate crafting cost of: world {worldID}, item {itemID} despite having {count} recipes",
             worldID,
             ingredientID,

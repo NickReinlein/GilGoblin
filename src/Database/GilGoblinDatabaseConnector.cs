@@ -47,17 +47,12 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
     {
         try
         {
-            var path = Path.Combine(_resourceDirectory, DbFileName);
-
-            Connection = new SqliteConnection("Data Source=" + path);
-            if (IsConnectionOpen)
-                return Connection;
+            var dbFilePath = Path.Combine(_resourceDirectory, DbFileName);
+            Connection = new SqliteConnection("Data Source=" + dbFilePath);
 
             Connection.Open();
-            if (IsConnectionOpen)
-                return Connection;
 
-            throw new Exception($"Connection not open. State is: {Connection?.State}");
+            return Connection;
         }
         catch (Exception ex)
         {

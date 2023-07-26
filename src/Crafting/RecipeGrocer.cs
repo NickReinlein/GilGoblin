@@ -12,21 +12,21 @@ namespace GilGoblin.Crafting;
 public class RecipeGrocer : IRecipeGrocer
 {
     private readonly IRecipeRepository _recipes;
-    private readonly ILogger<RecipeGrocer> _log;
+    private readonly ILogger<RecipeGrocer> _logger;
 
-    public RecipeGrocer(IRecipeRepository recipes, ILogger<RecipeGrocer> log)
+    public RecipeGrocer(IRecipeRepository recipes, ILogger<RecipeGrocer> logger)
     {
         _recipes = recipes;
-        _log = log;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeID)
     {
-        _log.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
+        _logger.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
         var recipe = await _recipes.Get(recipeID);
         if (recipe is null)
         {
-            _log.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
+            _logger.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
             return Array.Empty<IngredientPoco>();
         }
 
@@ -41,7 +41,7 @@ public class RecipeGrocer : IRecipeGrocer
     )
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
-        _log.LogInformation(
+        _logger.LogInformation(
             "Breaking down {IngCount} ingredients in ingredient list",
             ingredientList.Count()
         );
@@ -51,11 +51,11 @@ public class RecipeGrocer : IRecipeGrocer
                 continue;
 
             var itemID = ingredient.ItemID;
-            _log.LogDebug("Breaking down item ID {ItemID}", itemID);
+            _logger.LogDebug("Breaking down item ID {ItemID}", itemID);
             var breakdownIngredients = await BreakdownItem(itemID);
             if (breakdownIngredients.Any(i => i is not null && i.Quantity > 0))
             {
-                _log.LogDebug("Found {IngCount} ingredients", breakdownIngredients.Count());
+                _logger.LogDebug("Found {IngCount} ingredients", breakdownIngredients.Count());
                 var ingredients = breakdownIngredients
                     .Where(i => i is not null && i.Quantity > 0)
                     .ToList<IngredientPoco>();
@@ -64,11 +64,11 @@ public class RecipeGrocer : IRecipeGrocer
             }
             else
             {
-                _log.LogDebug("Did not find any items to break down item ID {ItemID}", itemID);
+                _logger.LogDebug("Did not find any items to break down item ID {ItemID}", itemID);
                 ingredientsBrokenDownList.Add(ingredient);
             }
         }
-        _log.LogInformation(
+        _logger.LogInformation(
             "Breakdown complete. {IngCount} ingredients returned",
             ingredientList.Count()
         );
@@ -77,9 +77,9 @@ public class RecipeGrocer : IRecipeGrocer
 
     public async Task<IEnumerable<IngredientPoco>?> BreakdownItem(int itemID)
     {
-        _log.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
+        _logger.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
         var ingredientRecipes = await _recipes.GetRecipesForItem(itemID);
-        _log.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
+        _logger.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
         foreach (var ingredientRecipe in ingredientRecipes)
         {
