@@ -1,11 +1,9 @@
-using System.Security.Cryptography.X509Certificates;
 using GilGoblin.Crafting;
 using GilGoblin.Exceptions;
 using GilGoblin.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;

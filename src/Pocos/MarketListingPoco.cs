@@ -14,7 +14,8 @@ public class MarketListingPoco
 
     public MarketListingPoco() { }
 
-    public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq) : base()
+    public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq)
+        : base()
     {
         Hq = hq;
         Price = pricePerUnit;
@@ -22,7 +23,7 @@ public class MarketListingPoco
         Hq = hq;
         try
         {
-            Timestamp = GeneralFunctions.ConvertLongUnixSecondsToDateTime(lastReviewTime);
+            Timestamp = GeneralFunctions.ConvertLongUnixMsToDateTime(lastReviewTime);
         }
         catch (Exception)
         {
