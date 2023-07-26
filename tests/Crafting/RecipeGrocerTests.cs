@@ -213,6 +213,35 @@ public class RecipeGrocerTests
     }
 
     [Test]
+    public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHasNullIngredients_ThenTheyAreIgnored()
+    {
+        var allIngredients = NewRecipe.GetIngredientsList().GetRange(0, 5);
+        allIngredients.Add(null);
+        allIngredients.Add(null);
+
+        var result = await _grocer.BreakDownIngredientEntirely(allIngredients);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(allIngredients.Count(i => i is null), Is.GreaterThan(0));
+            Assert.That(allIngredients.Count(i => i is not null), Is.GreaterThan(0));
+            Assert.That(result.Count(), Is.EqualTo(5));
+            Assert.That(result.Any(i => i is null), Is.False);
+        });
+    }
+
+    [Test]
+    public async Task GivenARecipeGrocer_WhenBreakingDownAnItem_WhenRecipeHasNullIngredients_ThenTheyAreIgnored()
+    {
+        var recipes = new List<RecipePoco> { null, null };
+        _recipes.GetRecipesForItem(_firstItemID).Returns(recipes);
+
+        var result = await _grocer.BreakdownItem(NewRecipe.ID);
+
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
     public async Task GivenARecipeGrocer_WhenBreakingDownARecipe_WhenItHas1Ingredient_ThenReturn1()
     {
         const int existentRecipeID = 1033;

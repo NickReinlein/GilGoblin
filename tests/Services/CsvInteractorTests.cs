@@ -10,6 +10,14 @@ public class CsvInteractorTests
     public void SetUp() { }
 
     [Test]
+    public void GivenAnyFile_WhenWeFailToLoadTheFile_ThenNoExceptionIsThrownAndAnEmptyArrayIsReturned()
+    {
+        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath("itsAFake"));
+
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
     public void GivenAnItemTestFile_WhenWeLoadTheFile_ThenWeDeserializeItems()
     {
         var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath(itemTestFileName));

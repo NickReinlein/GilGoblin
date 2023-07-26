@@ -81,20 +81,16 @@ public class RecipeGrocer : IRecipeGrocer
         var ingredientRecipes = await _recipes.GetRecipesForItem(itemID);
         _logger.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
-        foreach (var ingredientRecipe in ingredientRecipes)
+        foreach (var ingredientRecipe in ingredientRecipes.Where(ing => ing is not null))
         {
-            if (ingredientRecipe is null)
-                continue;
-
             var ingredientRecipeID = ingredientRecipe.ID;
             if (CanMakeRecipe(ingredientRecipeID))
             {
                 var recipeIngredients = await BreakdownRecipeById(ingredientRecipeID);
+                recipeIngredients.Where(ing => ing is not null && ing.Quantity is 0);
+
                 foreach (var ingredient in recipeIngredients)
                 {
-                    if (ingredient is null || ingredient.Quantity == 0)
-                        continue;
-
                     ingredient.Quantity *= ingredientRecipe.ResultQuantity;
                 }
                 return recipeIngredients;

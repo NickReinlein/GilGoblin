@@ -8,17 +8,17 @@ using CsvHelper.Configuration;
 
 namespace GilGoblin.Services;
 
-public static class CsvInteractor<T> where T : class
+public static class CsvInteractor<T>
+    where T : class
 {
     public static IEnumerable<T> LoadFile(string path)
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
-        using var reader = new StreamReader(path);
-        using var csv = new CsvReader(reader, config);
         try
         {
-            var records = csv.GetRecords<T>().ToList();
-            return records;
+            using var reader = new StreamReader(path);
+            using var csv = new CsvReader(reader, config);
+            return csv.GetRecords<T>().ToList();
         }
         catch (Exception)
         {
