@@ -90,7 +90,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task WhenCalculatingCraftingCostForAnInexistantRecipe_ThenReturnErrorCost()
+    public async Task WhenCalculatingCraftingCostForAnInexistentRecipe_ThenReturnErrorCost()
     {
         var inexistentRecipeID = -200;
         _recipes.Get(Arg.Any<int>()).ReturnsNull();
@@ -103,7 +103,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task WhenCalculatingCraftingCostForAnExistingRecipe_WhenNoMarketDataFound_ThenReturnErrorCost()
+    public async Task WhenCalculatingCraftingCostForAnExistingRecipeAndNoMarketDataIsFound_ThenReturnErrorCost()
     {
         var recipe = NewRecipe;
         var recipeID = recipe.ID;
@@ -119,7 +119,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task WhenCalculatingCraftingCostForAnExistingRecipe__ThenReturnCraftingCost()
+    public async Task WhenCalculatingCraftingCostForAnExistingRecipe_ThenReturnCraftingCost()
     {
         var recipe = NewRecipe;
         var recipeID = recipe.ID;
@@ -136,6 +136,37 @@ public class CraftingCalculatorTests
         await _prices.Received().Get(_worldID, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(1000));
+    }
+
+    [Test]
+    public void WhenAddingPricesToTheIngredientListWithPriceMatches_ThenTheResultContainsThePrice()
+    {
+        var testIngredient = NewRecipe.GetIngredientsList().First();
+        var ingredients = new List<IngredientPoco> { testIngredient };
+        var price = new PricePoco { ItemID = testIngredient.ItemID, WorldID = _worldID };
+        var prices = new List<PricePoco> { price };
+
+        var result = CraftingCalculator.AddPricesToIngredients(ingredients, prices);
+
+        var craftIngredient = result.First();
+        Assert.That(result.Count.Equals(1));
+        Assert.That(craftIngredient.ItemID, Is.EqualTo(testIngredient.ItemID));
+        Assert.That(craftIngredient.Quantity, Is.EqualTo(testIngredient.Quantity));
+        Assert.That(craftIngredient.Price, Is.EqualTo(price));
+    }
+
+    [Test]
+    public void WhenAddingPricesToTheIngredientListWithoutPriceMatches_ThenADataNotFoundExceptionIsThrown()
+    {
+        var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
+        var prices = new List<PricePoco>
+        {
+            new PricePoco { ItemID = 222, WorldID = _worldID }
+        };
+
+        Assert.Throws<InvalidOperationException>(
+            () => CraftingCalculator.AddPricesToIngredients(ingredients, prices)
+        );
     }
 
     [Test]

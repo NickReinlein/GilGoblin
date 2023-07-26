@@ -113,9 +113,7 @@ public class CraftingCalculator : ICraftingCalculator
         List<CraftIngredientPoco> crafts = new();
         foreach (var ingredient in ingredients)
         {
-            var market =
-                price.First(e => e.ItemID == ingredient.ItemID)
-                ?? throw new DataNotFoundException();
+            var market = price.First(e => e.ItemID == ingredient.ItemID);
             crafts.Add(new CraftIngredientPoco(ingredient, market));
         }
         return crafts;
