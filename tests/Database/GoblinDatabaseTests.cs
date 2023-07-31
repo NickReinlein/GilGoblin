@@ -29,11 +29,11 @@ public class GoblinDatabaseTests
         Assert.That(response, Is.Null);
     }
 
-    [Test, Ignore("To be fixed")]
-    public async Task GivenGetContextAsyncIsCalled_WhenConnectionSucceeds_ThenContextIsReturned()
-    {
-        var response = await _db.GetContextAsync();
+    // [Test]
+    // public async Task GivenGetContextAsyncIsCalled_WhenConnectionSucceeds_ThenContextIsReturned()
+    // {
+    //     var response = await _db.GetContextAsync();
 
-        Assert.That(response, Is.TypeOf<GilGoblinDbContext>());
-    }
+    //     Assert.That(response, Is.TypeOf<GilGoblinDbContext>());
+    // }
 }

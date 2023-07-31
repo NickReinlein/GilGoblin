@@ -1,3 +1,4 @@
+using System.Data.Common;
 using GilGoblin.Pocos;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,18 @@ public class GilGoblinDbContext : DbContext
     private SqliteConnection? _conn;
 
     public GilGoblinDbContext()
-        : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite().Options) { }
+        : base(
+            new DbContextOptionsBuilder<GilGoblinDbContext>()
+                .UseSqlite<GilGoblinDbContext>(GilGoblinDatabaseConnector.Connection)
+                .Options
+        ) { }
+
+    public GilGoblinDbContext(DbConnection connection)
+        : base(
+            new DbContextOptionsBuilder<GilGoblinDbContext>()
+                .UseSqlite<GilGoblinDbContext>(connection)
+                .Options
+        ) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

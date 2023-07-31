@@ -21,7 +21,7 @@ public class PriceGateway : IPriceRepository<PricePoco>
     public async Task<PricePoco?> Get(int worldID, int itemID)
     {
         _logger.LogInformation("Getting price for item {ID} for world {WorldID}", itemID, worldID);
-        using var context = await GetContext();
+        using var context = await _database.GetContextAsync();
         var price = context?.Price?.FirstOrDefault(x => x.ItemID == itemID && x.WorldID == worldID);
         return price;
     }
@@ -33,7 +33,7 @@ public class PriceGateway : IPriceRepository<PricePoco>
             itemIDs.Count(),
             worlID
         );
-        using var context = await GetContext();
+        using var context = await _database.GetContextAsync();
         return context
                 ?.Price?.Where(i => i.WorldID == worlID && itemIDs.Contains(i.ItemID))
                 .ToList() ?? new List<PricePoco>();
@@ -42,9 +42,7 @@ public class PriceGateway : IPriceRepository<PricePoco>
     public async Task<IEnumerable<PricePoco>> GetAll(int worldID)
     {
         _logger.LogInformation("Getting all prices for world {WorldID}", worldID);
-        using var context = await GetContext();
+        using var context = await _database.GetContextAsync();
         return context?.Price?.Where(p => p.WorldID == worldID).ToList() ?? new List<PricePoco>();
     }
-
-    private async Task<GilGoblinDbContext?> GetContext() => await _database.GetContextAsync();
 }
