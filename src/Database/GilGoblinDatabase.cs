@@ -6,7 +6,7 @@ using GilGoblin.Extensions;
 
 namespace GilGoblin.Database;
 
-public class GilGoblinDatabase : IContextFetcher
+public class GilGoblinDatabase
 {
     private readonly IPriceDataFetcher _priceFetcher;
     private readonly ISqlLiteDatabaseConnector _dbConnector;

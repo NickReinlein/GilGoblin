@@ -1,26 +1,23 @@
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
 public class ItemGateway : IItemRepository
 {
-    private readonly IItemRepository _recipes;
+    private readonly IItemRepository _items;
 
-    public ItemGateway(IItemRepository recipes)
+    public ItemGateway(IItemRepository items)
     {
-        _recipes = recipes;
+        _items = items;
     }
 
-    public async Task<ItemInfoPoco?> Get(int recipeID) => await _recipes.Get(recipeID);
+    public async Task<ItemInfoPoco?> Get(int itemID) => await _items.Get(itemID);
 
-    public async Task<IEnumerable<ItemInfoPoco?>> GetMultiple(IEnumerable<int> recipeIDs) =>
-        await _recipes.GetMultiple(recipeIDs);
+    public async Task<IEnumerable<ItemInfoPoco?>> GetMultiple(IEnumerable<int> itemIDs) =>
+        await _items.GetMultiple(itemIDs);
 
-    public async Task<IEnumerable<ItemInfoPoco>> GetAll() => await _recipes.GetAll();
+    public async Task<IEnumerable<ItemInfoPoco>> GetAll() => await _items.GetAll();
 }
