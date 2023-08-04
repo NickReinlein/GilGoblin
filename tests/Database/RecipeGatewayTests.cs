@@ -1,7 +1,5 @@
-using System.Data.Entity;
 using GilGoblin.Database;
-using GilGoblin.Pocos;
-using Microsoft.Extensions.Logging;
+using GilGoblin.Repository;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -10,24 +8,46 @@ namespace GilGoblin.Tests.Database;
 public class RecipeGatewayTests
 {
     private RecipeGateway _recipeGateway;
-    private IContextFetcher _contextFetcher;
-    private ILogger<RecipeGateway> _logger;
+    private IRecipeRepository _recipes;
 
     [SetUp]
     public void SetUp()
     {
-        _contextFetcher = Substitute.For<IContextFetcher>();
-        _logger = Substitute.For<ILogger<RecipeGateway>>();
+        _recipes = Substitute.For<IRecipeRepository>();
 
-        _recipeGateway = new RecipeGateway(_contextFetcher, _logger);
+        _recipeGateway = new RecipeGateway(_recipes);
     }
 
     [Test]
-    public async Task GivenACallToGet_WhenTheIDIsValid_ThenWeReturnARecipe()
+    public async Task GivenAGet_ThenTheRepositoryGetIsCalled()
     {
-        // _contextFetcher.GetContextAsync().Returns(null);
-        var result = await _recipeGateway.Get(1);
+        await _recipeGateway.Get(1);
 
-        Assert.That(result, Is.Not.Null);
+        await _recipes.Received(1).Get(1);
+    }
+
+    [Test]
+    public async Task GivenAGetRecipesForItem_ThenTheRepositoryGetRecipesForItemIsCalled()
+    {
+        await _recipeGateway.GetRecipesForItem(1);
+
+        await _recipes.Received(1).GetRecipesForItem(1);
+    }
+
+    [Test]
+    public async Task GivenAGetMultiple_ThenTheRepositoryGetMultipleIsCalled()
+    {
+        var multiple = Enumerable.Range(1, 10);
+        await _recipeGateway.GetMultiple(multiple);
+
+        await _recipes.Received(1).GetMultiple(multiple);
+    }
+
+    [Test]
+    public async Task GivenAGetGetAll_ThenTheRepositoryGetAllIsCalled()
+    {
+        await _recipeGateway.GetAll();
+
+        await _recipes.Received(1).GetAll();
     }
 }

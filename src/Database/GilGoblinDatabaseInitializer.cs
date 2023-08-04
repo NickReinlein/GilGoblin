@@ -9,46 +9,44 @@ using GilGoblin.Services;
 using GilGoblin.Web;
 using GilGoblin.Extensions;
 using Serilog;
+using System.Data.Entity;
 
 namespace GilGoblin.Database;
 
 public class GilGoblinDatabaseInitializer
 {
-    private readonly GilGoblinDbContext _dbContext;
     private readonly IPriceDataFetcher _priceFetcher;
     private readonly ISqlLiteDatabaseConnector _dbConnector;
 
     public GilGoblinDatabaseInitializer(
-        GilGoblinDbContext dbContext,
         IPriceDataFetcher priceFetcher,
         ISqlLiteDatabaseConnector dbConnector
     )
     {
-        _dbContext = dbContext;
         _priceFetcher = priceFetcher;
         _dbConnector = dbConnector;
     }
 
-    public async Task FillTablesIfEmpty()
+    public async Task FillTablesIfEmpty(GilGoblinDbContext dbContext)
     {
         try
         {
-            using var context = _dbContext;
+            using var context = dbContext;
             if (context is null || context.ItemInfo is null || context.Recipe is null)
                 return;
             await context.Database.EnsureCreatedAsync();
 
             if (context.ItemInfo.Count() < 1000)
-                await FillTable<ItemInfoPoco>();
+                await FillTable<ItemInfoPoco>(dbContext);
 
             if (context.Recipe.Count() < 1000)
-                await FillTable<RecipePoco>();
+                await FillTable<RecipePoco>(dbContext);
 
             // if (context.Price?.Count() < 1000)
             //     await FillTable<PricePoco>();
 
             if (context.Price?.Count() < 1000)
-                await FetchPrices();
+                await FetchPrices(dbContext);
         }
         catch (Exception e)
         {
@@ -56,7 +54,7 @@ public class GilGoblinDatabaseInitializer
         }
     }
 
-    private async Task FetchPrices()
+    private async Task FetchPrices(GilGoblinDbContext dbContext)
     {
         LogTaskStart<PriceWebPoco>("Fetching prices from API");
 
@@ -71,7 +69,7 @@ public class GilGoblinDatabaseInitializer
             if (!result.Any())
                 throw new HttpRequestException("Failed to fetch prices from Universalis API");
 
-            await SaveBatchResult(result);
+            await SaveBatchResult(dbContext, result);
 
             timer.Stop();
             Log.Information("Total time for batch in ms: {Elapsed}", timer.ElapsedMilliseconds);
@@ -79,9 +77,12 @@ public class GilGoblinDatabaseInitializer
         }
     }
 
-    public async Task SaveBatchResult(IEnumerable<PriceWebPoco?> result)
+    public async Task SaveBatchResult(
+        GilGoblinDbContext dbContext,
+        IEnumerable<PriceWebPoco?> result
+    )
     {
-        using var context = _dbContext;
+        using var context = dbContext;
 
         var pricesToSave = result.ToPricePocoList();
 
@@ -93,11 +94,9 @@ public class GilGoblinDatabaseInitializer
         );
     }
 
-    private async Task FillTable<T>()
+    private async Task FillTable<T>(GilGoblinDbContext dbContext)
         where T : class
     {
-        using var context =
-            _dbContext ?? throw new Exception("Critical error: unable to get database context");
         var tableName = LogTaskStart<T>("Loading from CSV");
 
         // fix me
@@ -105,7 +104,7 @@ public class GilGoblinDatabaseInitializer
         var path = _dbConnector.GetDatabasePath();
         try
         {
-            await LoadCSVFileAndSaveResults<T>(context, tableName, path);
+            await LoadCSVFileAndSaveResults<T>(dbContext, tableName, path);
         }
         catch (Exception e)
         {
