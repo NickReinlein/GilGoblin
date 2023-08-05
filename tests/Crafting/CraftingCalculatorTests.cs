@@ -52,7 +52,7 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForItem(_worldID, inexistentItemID);
 
-         _recipes.Received(1).GetRecipesForItem(inexistentItemID);
+        _recipes.Received(1).GetRecipesForItem(inexistentItemID);
         _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
@@ -79,8 +79,8 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForItem(_worldID, itemID);
 
-         _recipes.Received().GetRecipesForItem(itemID);
-         _recipes.Received().GetRecipesForItem(ingredientID);
+        _recipes.Received().GetRecipesForItem(itemID);
+        _recipes.Received().GetRecipesForItem(ingredientID);
         _prices.Received().Get(_worldID, itemID);
         _prices.Received().Get(_worldID, ingredientID);
         Assert.That(result, Is.LessThan(int.MaxValue));
@@ -95,7 +95,7 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
 
-         _recipes.Received().Get(inexistentRecipeID);
+        _recipes.Received().Get(inexistentRecipeID);
         _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentRecipeID);
         Assert.That(result, Is.EqualTo(_errorCost));
     }

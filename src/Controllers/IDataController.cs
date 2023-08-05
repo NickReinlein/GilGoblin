@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GilGoblin.Controllers;
 
-public interface IDataController<T> where T : class
+public interface IDataController<T>
+    where T : class
 {
     [HttpGet]
-    Task<IEnumerable<T>> GetAll();
+    IEnumerable<T> GetAll();
 
     [HttpGet("{id}")]
-    Task<T?> Get(int id);
+    T? Get(int id);
 }

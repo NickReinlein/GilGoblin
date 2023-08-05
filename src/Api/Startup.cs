@@ -60,7 +60,7 @@ public class Startup
         services
             .AddControllers()
             .AddApplicationPart(typeof(ItemController).Assembly)
-            .AddApplicationPart(typeof(CraftController).Assembly)
+            // .AddApplicationPart(typeof(CraftController).Assembly)
             .AddApplicationPart(typeof(PriceController).Assembly);
     }
 

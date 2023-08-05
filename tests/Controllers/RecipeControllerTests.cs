@@ -31,14 +31,14 @@ public class RecipeControllerTests
     }
 
     [Test]
-    public async Task GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfRecipesIsReturned()
+    public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfRecipesIsReturned()
     {
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
         poco2.ID = poco1.ID + 100;
         _repo.GetAll().Returns(new List<RecipePoco>() { poco1, poco2 });
 
-        var result = await _controller.GetAll();
+        var result = _controller.GetAll();
 
         Assert.Multiple(() =>
         {
@@ -49,20 +49,20 @@ public class RecipeControllerTests
     }
 
     [Test]
-    public async Task GivenAController_WhenWeReceiveAGetRequest_ThenARecipeIsReturned()
+    public void GivenAController_WhenWeReceiveAGetRequest_ThenARecipeIsReturned()
     {
         var poco1 = CreatePoco();
         _repo.Get(poco1.ID).Returns(poco1);
 
-        var result = await _controller.Get(poco1.ID);
+        var result = _controller.Get(poco1.ID);
 
         Assert.That(result, Is.EqualTo(poco1));
     }
 
     [Test]
-    public async Task GivenAController_WhenWeReceiveAGetRequestForANonExistentRecipe_ThenNullIsReturned()
+    public void GivenAController_WhenWeReceiveAGetRequestForANonExistentRecipe_ThenNullIsReturned()
     {
-        var result = await _controller.Get(42);
+        var result = _controller.Get(42);
 
         Assert.That(result, Is.Null);
     }
