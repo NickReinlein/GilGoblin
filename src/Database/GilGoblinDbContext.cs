@@ -1,6 +1,5 @@
 using System.Data.Common;
 using GilGoblin.Pocos;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace GilGoblin.Database;
@@ -11,30 +10,14 @@ public class GilGoblinDbContext : DbContext
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
 
-    private SqliteConnection? _conn;
-
     public GilGoblinDbContext()
-        : base() { }
+        : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite().Options) { }
 
-    // public GilGoblinDbContext()
-    //     : base(
-    //         new DbContextOptionsBuilder<GilGoblinDbContext>()
-    //             .UseSqlite<GilGoblinDbContext>()
-    //             .Options
-    //     ) { }
+    public GilGoblinDbContext(DbConnection connection)
+        : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(connection).Options) { }
 
-    // public GilGoblinDbContext(DbConnection connection)
-    //     : base(
-    //         new DbContextOptionsBuilder<GilGoblinDbContext>()
-    //             .UseSqlite<GilGoblinDbContext>(connection)
-    //             .Options
-    //     ) { }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // _conn = GilGoblinDatabaseConnector.Connect();
-        optionsBuilder.UseSqlite();
-    }
+    public GilGoblinDbContext(DbContextOptions options)
+        : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

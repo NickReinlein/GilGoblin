@@ -60,14 +60,14 @@ public class Startup
         services
             .AddControllers()
             .AddApplicationPart(typeof(ItemController).Assembly)
-            // .AddApplicationPart(typeof(CraftController).Assembly)
+            .AddApplicationPart(typeof(CraftController).Assembly)
             .AddApplicationPart(typeof(PriceController).Assembly);
     }
 
     public static void AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        // services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+        services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
         services.AddSingleton<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
         services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
         services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
