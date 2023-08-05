@@ -35,8 +35,8 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _logger.LogInformation("Getting craft {ItemID} for world {WorldID}", itemID, worldID);
         var craftingCost = await _calc.CalculateCraftingCostForItem(worldID, itemID);
         var ingredients = await _recipeGrocer.BreakdownItem(itemID);
-        var price = await _priceRepo.Get(worldID, itemID);
-        var itemInfo = await _itemRepo.Get(itemID);
+        var price = _priceRepo.Get(worldID, itemID);
+        var itemInfo = _itemRepo.Get(itemID);
         if (craftingCost is 0 || ingredients is null || price is null || itemInfo is null)
             return null;
 

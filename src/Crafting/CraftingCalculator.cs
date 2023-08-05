@@ -32,7 +32,7 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<int> CalculateCraftingCostForItem(int worldID, int itemID)
     {
-        var recipes = await _recipes.GetRecipesForItem(itemID);
+        var recipes = _recipes.GetRecipesForItem(itemID);
         var craftingCost = await GetLowestCraftingCost(worldID, recipes);
         LogCraftingResult(worldID, itemID, recipes.Count(), craftingCost);
         return craftingCost;
@@ -42,16 +42,12 @@ public class CraftingCalculator : ICraftingCalculator
     {
         try
         {
-            var recipe = await _recipes.Get(recipeID);
+            var recipe = _recipes.Get(recipeID);
             var ingredients = await _grocer.BreakdownRecipeById(recipeID);
             if (recipe is null || ingredients is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
-            var ingredientPrices = await GetIngredientPrice(
-                worldID,
-                recipe.TargetItemID,
-                ingredients
-            );
+            var ingredientPrices = GetIngredientPrice(worldID, recipe.TargetItemID, ingredients);
             var craftIngredients = AddPricesToIngredients(ingredients, ingredientPrices);
 
             var craftingCost = await CalculateCraftingCostForIngredients(worldID, craftIngredients);
@@ -119,10 +115,10 @@ public class CraftingCalculator : ICraftingCalculator
         return crafts;
     }
 
-    private async Task<IEnumerable<PricePoco?>> GetIngredientPrice(
+    private IEnumerable<PricePoco> GetIngredientPrice(
         int worldID,
         int itemID,
-        IEnumerable<IngredientPoco?> ingredients
+        IEnumerable<IngredientPoco> ingredients
     )
     {
         var itemIDList = ingredients
@@ -135,7 +131,7 @@ public class CraftingCalculator : ICraftingCalculator
         var result = new List<PricePoco>();
         foreach (var ingredientID in itemIDList)
         {
-            var ingredientPrice = await _prices.Get(worldID, ingredientID);
+            var ingredientPrice = _prices.Get(worldID, ingredientID);
             if (ingredientPrice is null)
                 continue;
             result.Add(ingredientPrice);

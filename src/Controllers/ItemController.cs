@@ -23,13 +23,13 @@ public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
     public async Task<IEnumerable<ItemInfoPoco>> GetAll()
     {
         _logger.LogInformation($"Fetching all item info data");
-        return await _itemRepo.GetAll();
+        return _itemRepo.GetAll();
     }
 
     [HttpGet("{id}")]
     public async Task<ItemInfoPoco?> Get(int id)
     {
         _logger.LogInformation($"Fetching item info id: {id}");
-        return await _itemRepo.Get(id);
+        return _itemRepo.Get(id);
     }
 }

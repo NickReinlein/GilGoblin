@@ -7,30 +7,33 @@ namespace GilGoblin.Database;
 
 public class GilGoblinDbContext : DbContext
 {
-    public DbSet<PricePoco>? Price { get; set; }
-    public DbSet<ItemInfoPoco>? ItemInfo { get; set; }
-    public DbSet<RecipePoco>? Recipe { get; set; }
+    public DbSet<PricePoco> Price { get; set; }
+    public DbSet<ItemInfoPoco> ItemInfo { get; set; }
+    public DbSet<RecipePoco> Recipe { get; set; }
 
     private SqliteConnection? _conn;
 
     public GilGoblinDbContext()
-        : base(
-            new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .UseSqlite<GilGoblinDbContext>()
-                .Options
-        ) { }
+        : base() { }
 
-    public GilGoblinDbContext(DbConnection connection)
-        : base(
-            new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .UseSqlite<GilGoblinDbContext>(connection)
-                .Options
-        ) { }
+    // public GilGoblinDbContext()
+    //     : base(
+    //         new DbContextOptionsBuilder<GilGoblinDbContext>()
+    //             .UseSqlite<GilGoblinDbContext>()
+    //             .Options
+    //     ) { }
+
+    // public GilGoblinDbContext(DbConnection connection)
+    //     : base(
+    //         new DbContextOptionsBuilder<GilGoblinDbContext>()
+    //             .UseSqlite<GilGoblinDbContext>(connection)
+    //             .Options
+    //     ) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        _conn = GilGoblinDatabaseConnector.Connection;
-        optionsBuilder.UseSqlite(_conn);
+        // _conn = GilGoblinDatabaseConnector.Connect();
+        optionsBuilder.UseSqlite();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

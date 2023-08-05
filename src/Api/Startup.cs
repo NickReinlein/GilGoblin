@@ -67,7 +67,7 @@ public class Startup
     public static void AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+        // services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
         services.AddSingleton<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
         services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
         services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
@@ -77,9 +77,9 @@ public class Startup
     {
         services.AddDbContext<GilGoblinDbContext>();
         services.AddSingleton<GilGoblinDatabase>();
-        services.AddScoped<IPriceRepository<PricePoco>, PriceGateway>();
-        services.AddSingleton<IItemRepository, ItemGateway>();
-        services.AddSingleton<IRecipeRepository, RecipeGateway>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        services.AddSingleton<IItemRepository, ItemRepository>();
+        services.AddSingleton<IRecipeRepository, RecipeRepository>();
         services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
     }
 

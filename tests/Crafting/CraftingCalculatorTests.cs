@@ -52,8 +52,8 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForItem(_worldID, inexistentItemID);
 
-        await _recipes.Received(1).GetRecipesForItem(inexistentItemID);
-        await _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
+         _recipes.Received(1).GetRecipesForItem(inexistentItemID);
+        _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -79,10 +79,10 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForItem(_worldID, itemID);
 
-        await _recipes.Received().GetRecipesForItem(itemID);
-        await _recipes.Received().GetRecipesForItem(ingredientID);
-        await _prices.Received().Get(_worldID, itemID);
-        await _prices.Received().Get(_worldID, ingredientID);
+         _recipes.Received().GetRecipesForItem(itemID);
+         _recipes.Received().GetRecipesForItem(ingredientID);
+        _prices.Received().Get(_worldID, itemID);
+        _prices.Received().Get(_worldID, ingredientID);
         Assert.That(result, Is.LessThan(int.MaxValue));
         Assert.That(result, Is.GreaterThan(ingredientMarket.AverageSoldNQ));
     }
@@ -95,8 +95,8 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
 
-        await _recipes.Received().Get(inexistentRecipeID);
-        await _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentRecipeID);
+         _recipes.Received().Get(inexistentRecipeID);
+        _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentRecipeID);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -111,9 +111,9 @@ public class CraftingCalculatorTests
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
         Assert.That(result, Is.EqualTo(_errorCost));
-        await _recipes.Received().Get(recipeID);
+        _recipes.Received().Get(recipeID);
         await _grocer.Received().BreakdownRecipeById(recipeID);
-        await _prices.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>());
+        _prices.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>());
     }
 
     [Test]
@@ -127,11 +127,11 @@ public class CraftingCalculatorTests
 
         var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
 
-        await _recipes.Received().Get(recipeID);
-        await _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetID);
-        await _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetID);
-        await _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
-        await _prices.Received().Get(_worldID, Arg.Any<int>());
+        _recipes.Received().Get(recipeID);
+        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetID);
+        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetID);
+        _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
+        _prices.Received().Get(_worldID, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(1000));
     }
@@ -147,10 +147,13 @@ public class CraftingCalculatorTests
         var result = CraftingCalculator.AddPricesToIngredients(ingredients, prices);
 
         var craftIngredient = result.First();
-        Assert.That(result.Count.Equals(1));
-        Assert.That(craftIngredient.ItemID, Is.EqualTo(testIngredient.ItemID));
-        Assert.That(craftIngredient.Quantity, Is.EqualTo(testIngredient.Quantity));
-        Assert.That(craftIngredient.Price, Is.EqualTo(price));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(craftIngredient.ItemID, Is.EqualTo(testIngredient.ItemID));
+            Assert.That(craftIngredient.Quantity, Is.EqualTo(testIngredient.Quantity));
+            Assert.That(craftIngredient.Price, Is.EqualTo(price));
+        });
     }
 
     [Test]

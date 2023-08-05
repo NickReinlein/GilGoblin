@@ -22,8 +22,7 @@ public class RecipeGrocer : IRecipeGrocer
 
     public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeID)
     {
-        _logger.LogInformation("Fetching recipe ID {RecipeID} from gateway", recipeID);
-        var recipe = await _recipes.Get(recipeID);
+        var recipe = _recipes.Get(recipeID);
         if (recipe is null)
         {
             _logger.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
@@ -52,6 +51,7 @@ public class RecipeGrocer : IRecipeGrocer
 
             var itemID = ingredient.ItemID;
             _logger.LogDebug("Breaking down item ID {ItemID}", itemID);
+
             var breakdownIngredients = await BreakdownItem(itemID);
             if (breakdownIngredients.Any(i => i is not null && i.Quantity > 0))
             {
@@ -77,8 +77,8 @@ public class RecipeGrocer : IRecipeGrocer
 
     public async Task<IEnumerable<IngredientPoco>?> BreakdownItem(int itemID)
     {
-        _logger.LogInformation("Fetching recipes for item ID {ItemID} from gateway", itemID);
-        var ingredientRecipes = await _recipes.GetRecipesForItem(itemID);
+        _logger.LogInformation("Fetching recipes for item ID {ItemID} from repo", itemID);
+        var ingredientRecipes = _recipes.GetRecipesForItem(itemID);
         _logger.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
         foreach (var ingredientRecipe in ingredientRecipes.Where(ing => ing is not null))
@@ -87,9 +87,9 @@ public class RecipeGrocer : IRecipeGrocer
             if (CanMakeRecipe(ingredientRecipeID))
             {
                 var recipeIngredients = await BreakdownRecipeById(ingredientRecipeID);
-                recipeIngredients.Where(ing => ing is not null && ing.Quantity is 0);
+                var slimList = recipeIngredients.Where(ing => ing is not null && ing.Quantity is 0);
 
-                foreach (var ingredient in recipeIngredients)
+                foreach (var ingredient in slimList)
                 {
                     ingredient.Quantity *= ingredientRecipe.ResultQuantity;
                 }
