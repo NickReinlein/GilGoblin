@@ -41,7 +41,7 @@ public class ItemRepositoryTests : RepositoryTests
     [TestCase(0)]
     [TestCase(-1)]
     [TestCase(100)]
-    public void GivenAGet_WhenTheIDIsInvalid_ThenTheRepositoryReturnsNull(int id)
+    public void GivenAGet_WhenIDIsInvalid_ThenTheRepositoryReturnsNull(int id)
     {
         using var context = new GilGoblinDbContext(_options);
         var itemRepo = new ItemRepository(context);
@@ -49,6 +49,59 @@ public class ItemRepositoryTests : RepositoryTests
         var result = itemRepo.Get(id);
 
         Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var itemRepo = new ItemRepository(context);
+
+        var result = itemRepo.GetMultiple(new int[] { 1, 2 });
+
+        Assert.Multiple(() =>
+        {
+            Assert.AreEqual(2, result.Count());
+            Assert.That(result.Any(p => p.ID == 1));
+            Assert.That(result.Any(p => p.ID == 2));
+        });
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var itemRepo = new ItemRepository(context);
+
+        var result = itemRepo.GetMultiple(new int[] { 1, 99 });
+
+        Assert.Multiple(() =>
+        {
+            Assert.AreEqual(1, result.Count());
+            Assert.That(result.Any(p => p.ID == 1));
+        });
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsAreInvalid_ThenNoEntriesAreReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var itemRepo = new ItemRepository(context);
+
+        var result = itemRepo.GetMultiple(new int[] { 33, 99 });
+
+        Assert.That(!result.Any());
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsEmpty_ThenNoEntriesAreReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var itemRepo = new ItemRepository(context);
+
+        var result = itemRepo.GetMultiple(new int[] { });
+
+        Assert.That(!result.Any());
     }
 
     [OneTimeSetUp]
@@ -64,21 +117,3 @@ public class ItemRepositoryTests : RepositoryTests
         context.SaveChanges();
     }
 }
-
-// [Test]
-// public void GivenAGetMultiple_ThenTheRepositoryGetMultipleIsCalled()
-// {
-//     var multiple = Enumerable.Range(1, 10);
-//     _itemRepository.GetMultiple(multiple);
-
-//     _itemRepository.Received(1).GetMultiple(multiple);
-// }
-
-// [Test]
-// public void GivenAGetGetAll_ThenTheRepositoryGetAllIsCalled()
-// {
-//     _itemRepository.GetAll();
-
-//     _itemRepository.Received(1).GetAll();
-// }
-// }
