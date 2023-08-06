@@ -1,49 +1,157 @@
-// using GilGoblin.Database;
-// using GilGoblin.Pocos;
-// using GilGoblin.Repository;
-// using NSubstitute;
-// using NUnit.Framework;
+using GilGoblin.Database;
+using GilGoblin.Pocos;
+using NUnit.Framework;
 
-// namespace GilGoblin.Tests.Database;
+namespace GilGoblin.Tests.Database;
 
-// public class PriceRepositoryTests
-// {
-//     private PriceRepository _priceGateway;
-//     private GilGoblinDbContext _context;
+public class PriceRepositoryTests : RepositoryTests
+{
+    [Test]
+    public void GivenAGetAll_WhenTheWorldIDExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
 
-//     [SetUp]
-//     public void SetUp()
-//     {
-//         _context = new GilGoblinDbContext();
-//         _context.Price.Add(new PricePoco { ItemID = 1, WorldID = 2 });
-//         _context.SaveChanges();
+        var result = priceRepo.GetAll(22);
 
-//         _priceGateway = new PriceRepository(_context);
-//     }
+        Assert.Multiple(() =>
+        {
+            Assert.AreEqual(2, result.Count());
+            Assert.That(result.Any(p => p.ItemID == 11));
+            Assert.That(result.Any(p => p.ItemID == 12));
+            Assert.That(!result.Any(p => p.WorldID != 22));
+        });
+    }
 
-//     [Test]
-//     public void GivenAGet_ThenTheRepositoryGetIsCalled()
-//     {
-//         var result = _priceGateway.Get(1, 2);
+    [Test]
+    public void GivenAGetAll_WhenTheWorldIDDoesNotExist_ThenAnEmptyResponseIsReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
 
-//         Assert.That(result, Is.Not.Null);
-//         // _context.Price.Received(1).FirstOrDefault<PricePoco>();
-//     }
+        var result = priceRepo.GetAll(999);
 
-//     // [Test]
-//     // public async Task GivenAGetMultiple_ThenTheRepositoryGetMultipleIsCalled()
-//     // {
-//     //     var multiple = Enumerable.Range(1, 10);
-//     //     await _priceGateway.GetMultiple(22, multiple);
+        Assert.That(!result.Any());
+    }
 
-//     //     await _context.Received(1).GetMultiple(22, multiple);
-//     // }
+    [TestCase(11)]
+    [TestCase(12)]
+    public void GivenAGet_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
 
-//     // [Test]
-//     // public async Task GivenAGetGetAll_ThenTheRepositoryGetAllIsCalled()
-//     // {
-//     //     await _priceGateway.GetAll(33);
+        var result = priceRepo.Get(22, id);
 
-//     //     await _context.Received(1).GetAll(33);
-//     // }
-// }
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.WorldID == 22);
+            Assert.That(result.ItemID == id);
+        });
+    }
+
+    [TestCase(11)]
+    [TestCase(12)]
+    public void GivenAGet_WhenTheIDIsValidButNotTheWorldID_ThenNullIsReturned(int id)
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.Get(854, id);
+
+        Assert.That(result, Is.Null);
+    }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    [TestCase(100)]
+    public void GivenAGet_WhenIDIsInvalid_ThenNullIsReturned(int id)
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.Get(22, id);
+
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.GetMultiple(22, new int[] { 11, 12 });
+
+        Assert.Multiple(() =>
+        {
+            Assert.AreEqual(2, result.Count());
+            Assert.That(result.Any(p => p.ItemID == 11));
+            Assert.That(result.Any(p => p.ItemID == 12));
+        });
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsAreValidButNotWorldID_ThenAnEmptyResponseIsReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.GetMultiple(33, new int[] { 11, 12 });
+
+        Assert.That(!result.Any());
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.GetMultiple(22, new int[] { 11, 99 });
+
+        Assert.Multiple(() =>
+        {
+            Assert.AreEqual(1, result.Count());
+            Assert.That(result.Any(p => p.ItemID == 11));
+            Assert.That(!result.Any(p => p.WorldID != 22));
+        });
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsAreInvalid_ThenAnEmptyResponseIsReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.GetMultiple(22, new int[] { 33, 99 });
+
+        Assert.That(!result.Any());
+    }
+
+    [Test]
+    public void GivenAGetMultiple_WhenIDsEmpty_ThenAnEmptyResponseIsReturned()
+    {
+        using var context = new GilGoblinDbContext(_options);
+        var priceRepo = new PriceRepository(context);
+
+        var result = priceRepo.GetMultiple(22, new int[] { });
+
+        Assert.That(!result.Any());
+    }
+
+    [OneTimeSetUp]
+    public override void OneTimeSetUp()
+    {
+        base.OneTimeSetUp();
+
+        var context = new GilGoblinDbContext(_options);
+        context.Price.AddRange(
+            new PricePoco { WorldID = 22, ItemID = 11 },
+            new PricePoco { WorldID = 22, ItemID = 12 },
+            new PricePoco { WorldID = 33, ItemID = 88 },
+            new PricePoco { WorldID = 44, ItemID = 99 }
+        );
+        context.SaveChanges();
+    }
+}
