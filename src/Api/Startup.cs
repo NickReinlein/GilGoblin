@@ -15,13 +15,13 @@ namespace GilGoblin.Api;
 
 public class Startup
 {
-    private IConfiguration Configuration { get; }
-    private IWebHostEnvironment Environment { get; }
+    public IConfiguration _configuration { get; }
+    public IWebHostEnvironment _environment { get; }
 
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
-        Configuration = configuration;
-        Environment = environment;
+        _configuration = configuration;
+        _environment = environment;
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -68,19 +68,19 @@ public class Startup
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
-        services.AddSingleton<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
-        services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
+        services.AddScoped<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
+        services.AddScoped<IPriceDataFetcher, PriceFetcher>();
+        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
     public static void AddGoblinDatabases(IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>();
-        services.AddSingleton<GilGoblinDatabase>();
+        // services.AddScoped<GilGoblinDatabase>();
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
-        services.AddSingleton<IItemRepository, ItemRepository>();
-        services.AddSingleton<IRecipeRepository, RecipeRepository>();
-        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
+        services.AddScoped<IItemRepository, ItemRepository>();
+        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
     }
 
     public static void AddBasicBuilderServices(IServiceCollection services)

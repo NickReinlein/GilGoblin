@@ -70,7 +70,5 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
 
     public static bool IsConnectionOpen => Connection.IsOpen();
 
-    public static string ResourceFilenameCsv(string filename) => string.Concat(filename, ".csv");
-
     public static readonly string DbFileName = "GilGoblin.db";
 }

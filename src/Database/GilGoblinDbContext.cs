@@ -1,23 +1,33 @@
 using System.Data.Common;
 using GilGoblin.Pocos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace GilGoblin.Database;
 
 public class GilGoblinDbContext : DbContext
 {
+    private readonly IConfiguration _configuration;
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
 
-    public GilGoblinDbContext()
-        : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite().Options) { }
+    public GilGoblinDbContext(
+        DbContextOptions<GilGoblinDbContext> options,
+        IConfiguration configuration
+    )
+        : base(options)
+    {
+        _configuration = configuration;
+    }
 
-    public GilGoblinDbContext(DbConnection connection)
-        : base(new DbContextOptionsBuilder<GilGoblinDbContext>().UseSqlite(connection).Options) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        var connection = _configuration.GetConnectionString("GilGoblin");
+        optionsBuilder.UseSqlite(connection);
 
-    public GilGoblinDbContext(DbContextOptions options)
-        : base(options) { }
+        base.OnConfiguring(optionsBuilder);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

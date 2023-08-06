@@ -9,14 +9,14 @@ public class RecipeRepositoryTests : RepositoryTests
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.GetAll();
 
         Assert.Multiple(() =>
         {
-            Assert.AreEqual(4, result.Count());
+            Assert.That(result.Count(), Is.EqualTo(4));
             Assert.That(result.Any(p => p.ID == 11));
             Assert.That(result.Any(p => p.ID == 22));
             Assert.That(result.Any(p => p.ID == 33));
@@ -30,7 +30,7 @@ public class RecipeRepositoryTests : RepositoryTests
     [TestCase(44)]
     public void GivenAGet_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.Get(id);
@@ -46,7 +46,7 @@ public class RecipeRepositoryTests : RepositoryTests
         int expectedResultsCount
     )
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.GetRecipesForItem(targetItemID);
@@ -59,7 +59,7 @@ public class RecipeRepositoryTests : RepositoryTests
     [TestCase(100)]
     public void GivenAGet_WhenIDIsInvalid_ThenTheRepositoryReturnsNull(int id)
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.Get(id);
@@ -70,14 +70,14 @@ public class RecipeRepositoryTests : RepositoryTests
     [Test]
     public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.GetMultiple(new int[] { 11, 33, 44 });
 
         Assert.Multiple(() =>
         {
-            Assert.AreEqual(3, result.Count());
+            Assert.That(result.Count(), Is.EqualTo(3));
             Assert.That(result.Any(p => p.ID == 11));
             Assert.That(result.Any(p => p.ID == 33));
             Assert.That(result.Any(p => p.ID == 44));
@@ -87,14 +87,14 @@ public class RecipeRepositoryTests : RepositoryTests
     [Test]
     public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.GetMultiple(new int[] { 22, 857 });
 
         Assert.Multiple(() =>
         {
-            Assert.AreEqual(1, result.Count());
+            Assert.That(result.Count(), Is.EqualTo(1));
             Assert.That(result.Any(p => p.ID == 22));
         });
     }
@@ -102,7 +102,7 @@ public class RecipeRepositoryTests : RepositoryTests
     [Test]
     public void GivenAGetMultiple_WhenIDsAreInvalid_ThenNoEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.GetMultiple(new int[] { 333, 999 });
@@ -113,7 +113,7 @@ public class RecipeRepositoryTests : RepositoryTests
     [Test]
     public void GivenAGetMultiple_WhenIDsEmpty_ThenNoEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context);
 
         var result = recipeRepo.GetMultiple(new int[] { });
@@ -126,7 +126,7 @@ public class RecipeRepositoryTests : RepositoryTests
     {
         base.OneTimeSetUp();
 
-        var context = new GilGoblinDbContext(_options);
+        var context = new GilGoblinDbContext(_options, _configuration);
         context.Recipe.AddRange(
             new RecipePoco { ID = 11, TargetItemID = 111 },
             new RecipePoco { ID = 22, TargetItemID = 111 },

@@ -99,4 +99,33 @@ public class GilGoblinDatabaseConnectorTests
             "Failed to initiate a connection: SQLite Error 14: 'unable to open database file'.";
         _logger.Received(1).LogError(errorMessage);
     }
+
+    [Test]
+    public void WhenGetDatabasePath_ThenACombinedPathWithDbNameIsReturned()
+    {
+        var path = _databaseConnector.GetDatabasePath();
+        var dbName = GilGoblinDatabaseConnector.DbFileName;
+
+        var result = _databaseConnector.GetDatabasePath();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Contains(dbName));
+            Assert.That(result.Contains(path));
+        });
+    }
+
+    [Test]
+    public void WhenGetResourcesFolderPath_ThenACombinedPathWithDbNameIsReturned()
+    {
+        var baseDirectory = _databaseConnector.GetBaseDirectory();
+
+        var result = _databaseConnector.GetResourcesFolderPath();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Contains("resources"));
+            Assert.That(result.Contains(baseDirectory));
+        });
+    }
 }
