@@ -23,7 +23,7 @@ public class GilGoblinDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connection = _configuration.GetConnectionString("GilGoblin");
+        var connection = _configuration.GetConnectionString(nameof(GilGoblinDbContext));
         optionsBuilder.UseSqlite(connection);
 
         base.OnConfiguring(optionsBuilder);
