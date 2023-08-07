@@ -14,7 +14,8 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 {
     private readonly ILogger<PriceFetcher> _logger;
 
-    public PriceFetcher(ILogger<PriceFetcher> logger) : base(_priceBaseUrl)
+    public PriceFetcher(ILogger<PriceFetcher> logger)
+        : base(_priceBaseUrl)
     {
         _logger = logger;
     }
@@ -71,7 +72,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     public async Task<List<int>> GetMarketableItemIDsAsync()
     {
-        var fullPath = string.Concat(_basePath, _marketableItemSuffix);
+        var fullPath = string.Concat(BasePath, _marketableItemSuffix);
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
             return new List<int>();

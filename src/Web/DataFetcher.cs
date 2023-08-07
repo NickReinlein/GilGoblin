@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -9,35 +8,40 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
     where T : class
     where U : class
 {
-    protected HttpClient Client { get; set; } = new HttpClient();
-    protected string _basePath;
+    protected readonly string BasePath;
+    protected HttpClient Client { get; set; }
 
     public DataFetcher(string basePath)
     {
-        if (Client.Timeout == TimeSpan.Zero)
-            Client.Timeout = new TimeSpan(0, 0, 10);
-        _basePath = basePath;
+        BasePath = basePath;
+        Client = new HttpClient();
+    }
+
+    public DataFetcher(string basePath, HttpClient client)
+    {
+        BasePath = basePath;
+        Client = client;
     }
 
     public virtual async Task<T?> GetAsync(string path)
     {
-        var fullPath = string.Concat(_basePath, path);
-
-        var response = await Client.GetAsync(fullPath);
-        if (!response.IsSuccessStatusCode)
-            return default;
-
-        return await response.Content.ReadFromJsonAsync<T>();
+        var response = await PerformGetAsync(path);
+        return response.IsSuccessStatusCode
+            ? await response.Content.ReadFromJsonAsync<T>()
+            : default;
     }
 
     public virtual async Task<U?> GetMultipleAsync(string path)
     {
-        var fullPath = string.Concat(_basePath, path);
+        var response = await PerformGetAsync(path);
+        return response.IsSuccessStatusCode
+            ? await response.Content.ReadFromJsonAsync<U>()
+            : default;
+    }
 
-        var response = await Client.GetAsync(fullPath);
-        if (!response.IsSuccessStatusCode)
-            return default;
-
-        return await response.Content.ReadFromJsonAsync<U>();
+    private async Task<HttpResponseMessage> PerformGetAsync(string path)
+    {
+        var fullPath = string.Concat(BasePath, path);
+        return await Client.GetAsync(fullPath);
     }
 }
