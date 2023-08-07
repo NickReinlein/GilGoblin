@@ -1,4 +1,3 @@
-using System.Reflection;
 using GilGoblin.Api;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
@@ -6,7 +5,6 @@ using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Web;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;

@@ -1,4 +1,3 @@
-using System;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
@@ -32,19 +31,6 @@ public class Startup
     public void Configure(IApplicationBuilder app)
     {
         AddAppGoblinServices(app);
-    }
-
-    public static WebApplicationBuilder GetGoblinBuilder(string[]? args)
-    {
-        var builder = WebApplication.CreateBuilder(args ?? Array.Empty<string>());
-        builder.WebHost.UseDefaultServiceProvider(
-            (_, options) =>
-            {
-                options.ValidateOnBuild = true;
-                options.ValidateScopes = true;
-            }
-        );
-        return builder;
     }
 
     public static void AddGoblinServices(IServiceCollection services)

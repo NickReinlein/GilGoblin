@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
 
-public class RecipeRepositoryTests : RepositoryTests
+public class RecipeRepositoryTests : InMemoryTestDb
 {
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()

@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
 
-public class RepositoryTests
+public class InMemoryTestDb
 {
     protected DbContextOptions<GilGoblinDbContext> _options;
     protected IConfiguration _configuration;
@@ -16,8 +16,9 @@ public class RepositoryTests
     {
         _configuration = Substitute.For<IConfiguration>();
 
+        _options = Substitute.For<DbContextOptions<GilGoblinDbContext>>();
         _options = new DbContextOptionsBuilder<GilGoblinDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDatabase")
+            .UseInMemoryDatabase(databaseName: "GilGoblinTest")
             .Options;
     }
 }

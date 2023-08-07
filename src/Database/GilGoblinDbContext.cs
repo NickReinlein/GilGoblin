@@ -1,4 +1,3 @@
-using System.Data.Common;
 using GilGoblin.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,9 +7,17 @@ namespace GilGoblin.Database;
 public class GilGoblinDbContext : DbContext
 {
     private readonly IConfiguration _configuration;
+    private readonly DbContextOptions<GilGoblinDbContext> _options;
+
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
+
+    public GilGoblinDbContext(DbContextOptions<GilGoblinDbContext> options)
+        : base(options)
+    {
+        _options = options;
+    }
 
     public GilGoblinDbContext(
         DbContextOptions<GilGoblinDbContext> options,
@@ -19,12 +26,17 @@ public class GilGoblinDbContext : DbContext
         : base(options)
     {
         _configuration = configuration;
+        _options = options;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connection = _configuration.GetConnectionString(nameof(GilGoblinDbContext));
-        optionsBuilder.UseSqlite(connection);
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString = _configuration.GetConnectionString(nameof(GilGoblinDbContext));
+            if (connectionString?.Length > 0)
+                optionsBuilder.UseSqlite(connectionString);
+        }
 
         base.OnConfiguring(optionsBuilder);
     }

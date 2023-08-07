@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
 
-public class PriceRepositoryTests : RepositoryTests
+public class PriceRepositoryTests : InMemoryTestDb
 {
     [Test]
     public void GivenAGetAll_WhenTheWorldIDExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()

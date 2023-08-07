@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
 
-public class ItemRepositoryTests : RepositoryTests
+public class ItemRepositoryTests : InMemoryTestDb
 {
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
@@ -109,7 +109,7 @@ public class ItemRepositoryTests : RepositoryTests
     {
         base.OneTimeSetUp();
 
-        var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new GilGoblinDbContext(_options, _configuration);
         context.ItemInfo.AddRange(
             new ItemInfoPoco { ID = 1, Name = "Item 1" },
             new ItemInfoPoco { ID = 2, Name = "Item 2" }

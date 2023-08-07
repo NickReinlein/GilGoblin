@@ -32,4 +32,10 @@
     <ProjectReference Include="../Services/*Services.csproj" />
     <ProjectReference Include="../Web/*Web.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
