@@ -26,17 +26,13 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
     public virtual async Task<T?> GetAsync(string path)
     {
         var response = await PerformGetAsync(path);
-        return response.IsSuccessStatusCode
-            ? await response.Content.ReadFromJsonAsync<T>()
-            : default;
+        return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<T>() : null;
     }
 
     public virtual async Task<U?> GetMultipleAsync(string path)
     {
         var response = await PerformGetAsync(path);
-        return response.IsSuccessStatusCode
-            ? await response.Content.ReadFromJsonAsync<U>()
-            : default;
+        return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<U>() : null;
     }
 
     private async Task<HttpResponseMessage> PerformGetAsync(string path)
