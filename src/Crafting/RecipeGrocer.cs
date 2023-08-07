@@ -75,33 +75,30 @@ public class RecipeGrocer : IRecipeGrocer
         return ingredientsBrokenDownList;
     }
 
-    public async Task<IEnumerable<IngredientPoco>?> BreakdownItem(int itemID)
+    public async Task<IEnumerable<IngredientPoco>> BreakdownItem(int itemID)
     {
-        _logger.LogInformation("Fetching recipes for item ID {ItemID} from repo", itemID);
         var ingredientRecipes = _recipes.GetRecipesForItem(itemID);
-        _logger.LogInformation("No recipe was found for item ID {ItemID} ", itemID);
 
         foreach (var ingredientRecipe in ingredientRecipes.Where(ing => ing is not null))
         {
-            var ingredientRecipeID = ingredientRecipe.ID;
-            if (CanMakeRecipe(ingredientRecipeID))
-            {
-                var recipeIngredients = await BreakdownRecipeById(ingredientRecipeID);
-                var slimList = recipeIngredients.Where(ing => ing is not null && ing.Quantity is 0);
-
-                foreach (var ingredient in slimList)
-                {
-                    ingredient.Quantity *= ingredientRecipe.ResultQuantity;
-                }
-                return recipeIngredients;
-            }
+            var recipeIngredients = await BreakdownRecipeById(ingredientRecipe.ID);
+            MultiplyQuantityProduced(recipeIngredients, ingredientRecipe.ResultQuantity);
+            return recipeIngredients;
+            // TODO are we returning early? what if we have 2 recipes
         }
         return Array.Empty<IngredientPoco>();
     }
 
-    public static bool CanMakeRecipe(int recipeID)
+    private static void MultiplyQuantityProduced(
+        IEnumerable<IngredientPoco> recipeIngredients,
+        int quantityMultiplier
+    )
     {
-        //add functionality here to check for crafting levels per recipe
-        return recipeID > 0;
+        foreach (
+            var ingredient in recipeIngredients.Where(ing => ing is not null && ing.Quantity is 0)
+        )
+        {
+            ingredient.Quantity *= quantityMultiplier;
+        }
     }
 }
