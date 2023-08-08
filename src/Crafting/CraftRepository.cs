@@ -33,21 +33,25 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 
     public async Task<CraftSummaryPoco?> GetBestCraft(int worldID, int itemID)
     {
-        _logger.LogInformation("Getting craft {ItemID} for world {WorldID}", itemID, worldID);
         var (recipeId, craftingCost) = await _calc.CalculateCraftingCostForItem(worldID, itemID);
+
         var recipe = _recipeRepository.Get(recipeId);
         var ingredients = recipe.GetActiveIngredients();
+
         var price = _priceRepository.Get(worldID, itemID);
         var itemInfo = _itemRepository.Get(itemID);
-        if (craftingCost is 0 || ingredients is null || price is null || itemInfo is null)
-            return null;
 
-        return new CraftSummaryPoco(price, itemInfo, craftingCost, ingredients);
+        if (craftingCost is 0 || ingredients is null || price is null || itemInfo is null)
+        {
+            _logger.LogWarning($"Error getting craft for item {itemID} in world {worldID}");
+            return null;
+        }
+
+        return new CraftSummaryPoco(price, itemInfo, craftingCost, recipe, ingredients);
     }
 
     public IEnumerable<CraftSummaryPoco> GetBestCrafts(int worldID)
     {
-        _logger.LogInformation("Getting best crafts for world {WorldID}", worldID);
         return Array.Empty<CraftSummaryPoco>();
     }
 }

@@ -3,11 +3,12 @@ using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
 
-public class CraftRepositoryTests : InMemoryTestDb
+public class CraftRepositoryTests
 {
     private CraftRepository _craftRepository;
 
@@ -17,134 +18,76 @@ public class CraftRepositoryTests : InMemoryTestDb
     private IItemRepository _itemRepository;
     private ILogger<CraftRepository> _logger;
 
-    [Test, Ignore("Re-enable when GetBestCraft is complete")]
-    public void GivenAGetBestCrafts_WhenTheWorldIdIsValid_ThenTheRepositoryReturnsBestCrafts()
-    {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+    public static readonly int WorldID = 22;
+    public static readonly int ItemID = 6400;
+    public static readonly int RecipeID = 444;
+    public static readonly float CraftingCost = 777;
+    public static readonly string ItemName = "Excalibur";
 
-        var result = _craftRepository.GetBestCrafts(22);
+    [Test]
+    public async Task GivenGetBestCraft_WhenResultIsValid_ThenOtherRepositoriesAreCalled()
+    {
+        await _craftRepository.GetBestCraft(WorldID, ItemID);
+
+        await _calc.Received().CalculateCraftingCostForItem(WorldID, ItemID);
+        _recipeRepository.Received().Get(RecipeID);
+        _priceRepository.Received().Get(WorldID, ItemID);
+        _itemRepository.Received().Get(ItemID);
+    }
+
+    [Test]
+    public async Task GivenGetBestCraft_WhenResultIsValid_ThenASummaryIsReturned()
+    {
+        var result = await _craftRepository.GetBestCraft(WorldID, ItemID);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.CraftingCost, Is.EqualTo(CraftingCost));
+            Assert.That(result.WorldID, Is.EqualTo(WorldID));
+            Assert.That(result.ItemID, Is.EqualTo(ItemID));
+            Assert.That(result.Recipe.ID, Is.EqualTo(RecipeID));
+            Assert.That(result.Name, Is.EqualTo(ItemName));
+        });
+    }
+
+    [Test]
+    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenAWarningIsLoggedANdNullIsReturned()
+    {
+        _calc.CalculateCraftingCostForItem(WorldID, ItemID).Returns((RecipeID, 0));
+
+        var result = await _craftRepository.GetBestCraft(WorldID, ItemID);
+
+        Assert.That(result, Is.Null);
+        _logger.Received(1).LogWarning($"Error getting craft for item {ItemID} in world {WorldID}");
+    }
+
+    [Test]
+    public void GivenGetBestCrafts_WhenUnderConstruction_ThenAnEmptyResultIsReturned()
+    {
+        var result = _craftRepository.GetBestCrafts(WorldID);
 
         Assert.That(result, Is.Empty);
     }
 
-    // [Test]
-    // public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-
-    //     var result = recipeRepo.GetAll();
-
-    //     Assert.Multiple(() =>
-    //     {
-    //         Assert.That(result.Count(), Is.EqualTo(4));
-    //         Assert.That(result.Any(p => p.ID == 11));
-    //         Assert.That(result.Any(p => p.ID == 22));
-    //         Assert.That(result.Any(p => p.ID == 33));
-    //         Assert.That(result.Any(p => p.ID == 44));
-    //     });
-    // }
-
-    // [TestCase(11)]
-    // [TestCase(22)]
-    // [TestCase(33)]
-    // [TestCase(44)]
-    // public void GivenAGet_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.Get(id);
-
-    //     Assert.That(result.ID == id);
-    // }
-
-    // [TestCase(111, 2)]
-    // [TestCase(222, 1)]
-    // [TestCase(333, 1)]
-    // public void GivenAGetCraftsForItem_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntries(
-    //     int targetItemID,
-    //     int expectedResultsCount
-    // )
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.GetCraftsForItem(targetItemID);
-
-    //     Assert.That(result.Count, Is.EqualTo(expectedResultsCount));
-    // }
-
-    // [TestCase(0)]
-    // [TestCase(-1)]
-    // [TestCase(100)]
-    // public void GivenAGet_WhenIDIsInvalid_ThenTheRepositoryReturnsNull(int id)
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.Get(id);
-
-    //     Assert.That(result, Is.Null);
-    // }
-
-    // [Test]
-    // public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.GetMultiple(new int[] { 11, 33, 44 });
-
-    //     Assert.Multiple(() =>
-    //     {
-    //         Assert.That(result.Count(), Is.EqualTo(3));
-    //         Assert.That(result.Any(p => p.ID == 11));
-    //         Assert.That(result.Any(p => p.ID == 33));
-    //         Assert.That(result.Any(p => p.ID == 44));
-    //     });
-    // }
-
-    // [Test]
-    // public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.GetMultiple(new int[] { 22, 857 });
-
-    //     Assert.Multiple(() =>
-    //     {
-    //         Assert.That(result.Count(), Is.EqualTo(1));
-    //         Assert.That(result.Any(p => p.ID == 22));
-    //     });
-    // }
-
-    // [Test]
-    // public void GivenAGetMultiple_WhenIDsAreInvalid_ThenNoEntriesAreReturned()
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.GetMultiple(new int[] { 333, 999 });
-
-    //     Assert.That(!result.Any());
-    // }
-
-    // [Test]
-    // public void GivenAGetMultiple_WhenIDsEmpty_ThenNoEntriesAreReturned()
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new CraftRepository(context);
-
-    //     var result = recipeRepo.GetMultiple(new int[] { });
-
-    //     Assert.That(!result.Any());
-    // }
+    [SetUp]
+    public void SetUp()
+    {
+        _calc.CalculateCraftingCostForItem(WorldID, ItemID).Returns((RecipeID, CraftingCost));
+        _recipeRepository.Get(RecipeID).Returns(new RecipePoco { ID = RecipeID });
+        _priceRepository
+            .Get(WorldID, ItemID)
+            .Returns(new PricePoco { WorldID = WorldID, ItemID = ItemID });
+        _itemRepository.Get(ItemID).Returns(new ItemInfoPoco { ID = ItemID, Name = ItemName });
+    }
 
     [OneTimeSetUp]
-    public override void OneTimeSetUp()
+    public void OneTimeSetUp()
     {
-        base.OneTimeSetUp();
+        _calc = Substitute.For<ICraftingCalculator>();
+        _priceRepository = Substitute.For<IPriceRepository<PricePoco>>();
+        _recipeRepository = Substitute.For<IRecipeRepository>();
+        _itemRepository = Substitute.For<IItemRepository>();
+        _logger = Substitute.For<ILogger<CraftRepository>>();
 
         _craftRepository = new CraftRepository(
             _calc,
@@ -153,26 +96,5 @@ public class CraftRepositoryTests : InMemoryTestDb
             _itemRepository,
             _logger
         );
-
-        using var context = new GilGoblinDbContext(_options, _configuration);
-        context.Recipe.AddRange(
-            new RecipePoco { ID = 111, TargetItemID = 11 },
-            new RecipePoco { ID = 112, TargetItemID = 11 },
-            new RecipePoco { ID = 888, TargetItemID = 88 },
-            new RecipePoco { ID = 999, TargetItemID = 99 }
-        );
-        context.ItemInfo.AddRange(
-            new ItemInfoPoco { ID = 11, Name = "Item 11" },
-            new ItemInfoPoco { ID = 12, Name = "Item 12" },
-            new ItemInfoPoco { ID = 88, Name = "Item 88" },
-            new ItemInfoPoco { ID = 99, Name = "Item 99" }
-        );
-        context.Price.AddRange(
-            new PricePoco { WorldID = 22, ItemID = 11 },
-            new PricePoco { WorldID = 22, ItemID = 12 },
-            new PricePoco { WorldID = 33, ItemID = 88 },
-            new PricePoco { WorldID = 44, ItemID = 99 }
-        );
-        context.SaveChanges();
     }
 }

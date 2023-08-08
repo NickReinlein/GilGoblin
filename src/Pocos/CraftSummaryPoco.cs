@@ -13,6 +13,7 @@ public class CraftSummaryPoco
     public float AverageListingPrice { get; set; }
     public float AverageSold { get; set; }
     public float CraftingCost { get; set; }
+    public RecipePoco Recipe { get; }
     public float CraftingProfitVsSold { get; set; }
     public float CraftingProfitVsListings { get; set; }
     public IEnumerable<IngredientPoco> Ingredients { get; set; } = new List<IngredientPoco>();
@@ -51,7 +52,8 @@ public class CraftSummaryPoco
     public CraftSummaryPoco(
         PricePoco price,
         ItemInfoPoco itemInfo,
-        int craftingCost,
+        float craftingCost,
+        RecipePoco recipe,
         IEnumerable<IngredientPoco> ingredients
     )
     {
@@ -64,6 +66,7 @@ public class CraftSummaryPoco
         AverageListingPrice = price.AverageListingPrice;
         AverageSold = price.AverageSold;
         CraftingCost = craftingCost;
+        Recipe = recipe;
         CraftingProfitVsListings = price.AverageListingPrice - craftingCost;
         CraftingProfitVsSold = price.AverageSold - craftingCost;
         Ingredients = ingredients;

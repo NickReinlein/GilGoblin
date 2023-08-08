@@ -30,7 +30,7 @@ public class CraftingCalculator : ICraftingCalculator
         _logger = logger;
     }
 
-    public async Task<(int, int)> CalculateCraftingCostForItem(int worldID, int itemID)
+    public async Task<(int, float)> CalculateCraftingCostForItem(int worldID, int itemID)
     {
         var recipes = _recipes.GetRecipesForItem(itemID);
         var (recipeID, lowestCraftingCost) = await GetLowestCraftingCost(worldID, recipes);
@@ -80,10 +80,10 @@ public class CraftingCalculator : ICraftingCalculator
         IEnumerable<CraftIngredientPoco> craftIngredients
     )
     {
-        var totalCraftingCost = 0;
+        var totalCraftingCost = 0f;
         foreach (var craft in craftIngredients)
         {
-            var averageSold = (int)craft.Price.AverageSold;
+            var averageSold = craft.Price.AverageSold;
             var (_, craftingCost) = await CalculateCraftingCostForItem(worldID, craft.ItemID);
             var minCost = Math.Min(averageSold, craftingCost);
 
@@ -98,7 +98,7 @@ public class CraftingCalculator : ICraftingCalculator
             totalCraftingCost += craft.Quantity * minCost;
         }
 
-        return totalCraftingCost;
+        return (int)totalCraftingCost;
     }
 
     public static List<CraftIngredientPoco> AddPricesToIngredients(
@@ -163,7 +163,7 @@ public class CraftingCalculator : ICraftingCalculator
         return (recipeId, lowestCost);
     }
 
-    private void LogCraftingResult(int worldID, int itemID, int recipeCount, int craftingCost)
+    private void LogCraftingResult(int worldID, int itemID, int recipeCount, float craftingCost)
     {
         if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
             LogErrorCraftingCostForItem(worldID, itemID, recipeCount);
@@ -171,7 +171,7 @@ public class CraftingCalculator : ICraftingCalculator
             LogSucessInfo(worldID, itemID, recipeCount, craftingCost);
     }
 
-    private void LogSucessInfo(int worldID, int itemID, int recipeCount, int craftingCost)
+    private void LogSucessInfo(int worldID, int itemID, int recipeCount, float craftingCost)
     {
         _logger.LogInformation(
             "Successfully calculated crafting cost of {LowestCost} "
