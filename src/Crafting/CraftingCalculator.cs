@@ -30,12 +30,12 @@ public class CraftingCalculator : ICraftingCalculator
         _logger = logger;
     }
 
-    public async Task<int> CalculateCraftingCostForItem(int worldID, int itemID)
+    public async Task<(int, int)> CalculateCraftingCostForItem(int worldID, int itemID)
     {
         var recipes = _recipes.GetRecipesForItem(itemID);
-        var craftingCost = await GetLowestCraftingCost(worldID, recipes);
-        LogCraftingResult(worldID, itemID, recipes.Count(), craftingCost);
-        return craftingCost;
+        var (recipeID, lowestCraftingCost) = await GetLowestCraftingCost(worldID, recipes);
+        LogCraftingResult(worldID, itemID, recipes.Count(), lowestCraftingCost);
+        return (recipeID, lowestCraftingCost);
     }
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID)
@@ -84,7 +84,7 @@ public class CraftingCalculator : ICraftingCalculator
         foreach (var craft in craftIngredients)
         {
             var averageSold = (int)craft.Price.AverageSold;
-            var craftingCost = await CalculateCraftingCostForItem(worldID, craft.ItemID);
+            var (_, craftingCost) = await CalculateCraftingCostForItem(worldID, craft.ItemID);
             var minCost = Math.Min(averageSold, craftingCost);
 
             _logger.LogInformation(
@@ -142,17 +142,25 @@ public class CraftingCalculator : ICraftingCalculator
         return result;
     }
 
-    private async Task<int> GetLowestCraftingCost(int worldID, IEnumerable<RecipePoco?> recipes)
+    private async Task<(int, int)> GetLowestCraftingCost(
+        int worldID,
+        IEnumerable<RecipePoco?> recipes
+    )
     {
         var lowestCost = ERROR_DEFAULT_COST;
+        var recipeId = -1;
         foreach (var recipe in recipes)
         {
             if (recipe is null)
                 continue;
             var recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.ID);
-            lowestCost = Math.Min(recipeCost, lowestCost);
+            if (recipeCost < lowestCost)
+            {
+                lowestCost = recipeCost;
+                recipeId = recipe.ID;
+            }
         }
-        return lowestCost;
+        return (recipeId, lowestCost);
     }
 
     private void LogCraftingResult(int worldID, int itemID, int recipeCount, int craftingCost)

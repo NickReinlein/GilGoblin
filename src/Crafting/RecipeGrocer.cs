@@ -77,28 +77,30 @@ public class RecipeGrocer : IRecipeGrocer
 
     public async Task<IEnumerable<IngredientPoco>> BreakdownItem(int itemID)
     {
-        var ingredientRecipes = _recipes.GetRecipesForItem(itemID);
+        var allIngredients = new List<IngredientPoco>();
+        var allRecipes = _recipes.GetRecipesForItem(itemID);
 
-        foreach (var ingredientRecipe in ingredientRecipes.Where(ing => ing is not null))
+        foreach (var recipe in allRecipes.Where(r => r is not null))
         {
-            var recipeIngredients = await BreakdownRecipeById(ingredientRecipe.ID);
-            MultiplyQuantityProduced(recipeIngredients, ingredientRecipe.ResultQuantity);
-            return recipeIngredients;
-            // TODO are we returning early? what if we have 2 recipes
+            var ingredients = await BreakdownRecipeById(recipe.ID);
+            MultiplyQuantityProduced(ingredients, recipe);
+            allIngredients.AddRange(ingredients);
         }
-        return Array.Empty<IngredientPoco>();
+        return allIngredients;
     }
 
     private static void MultiplyQuantityProduced(
         IEnumerable<IngredientPoco> recipeIngredients,
-        int quantityMultiplier
+        RecipePoco recipe
     )
     {
         foreach (
-            var ingredient in recipeIngredients.Where(ing => ing is not null && ing.Quantity is 0)
+            var ingredient in recipeIngredients.Where(
+                ing => ing is not null && ing.Quantity is not 0 && ing.RecipeID == recipe.ID
+            )
         )
         {
-            ingredient.Quantity *= quantityMultiplier;
+            ingredient.Quantity *= recipe.ResultQuantity;
         }
     }
 }

@@ -105,7 +105,8 @@ public class RecipePoco
         int itemIngredient7TargetID,
         int itemIngredient8TargetID,
         int itemIngredient9TargetID
-    ) : base()
+    )
+        : base()
     {
         CanHq = canHq;
         TargetItemID = itemResultTargetID;
