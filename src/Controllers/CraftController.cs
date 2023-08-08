@@ -33,6 +33,6 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
     public IEnumerable<CraftSummaryPoco> GetBestCrafts(int worldId)
     {
         _logger.LogInformation($"Fetching best crrafting result for world {worldId}");
-        return _craftRepo.GetBestWorldCrafts(worldId);
+        return _craftRepo.GetBestCrafts(worldId);
     }
 }

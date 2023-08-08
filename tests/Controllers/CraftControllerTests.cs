@@ -42,10 +42,10 @@ public class CraftControllerTests
     [Test]
     public void WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
     {
-        _repo.GetBestWorldCrafts(_world).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
         _ = _controller!.GetBestCrafts(_world);
 
-        _repo.GetBestWorldCrafts(_world);
+        _repo.GetBestCrafts(_world);
     }
 
     [Test]
@@ -59,7 +59,7 @@ public class CraftControllerTests
     [Test]
     public void WhenReceivingARequestGetBestCrafts_ThenTheAnEnumerableIsReturned()
     {
-        _repo.GetBestWorldCrafts(_world).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
 
         var result = _controller!.GetBestCrafts(_world);
 

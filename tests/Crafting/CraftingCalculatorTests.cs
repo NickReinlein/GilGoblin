@@ -50,11 +50,15 @@ public class CraftingCalculatorTests
         var inexistentItemID = -200;
         _recipes.GetRecipesForItem(inexistentItemID).Returns(Array.Empty<RecipePoco>());
 
-        var result = await _calc!.CalculateCraftingCostForItem(_worldID, inexistentItemID);
+        var (recipeId, cost) = await _calc!.CalculateCraftingCostForItem(
+            _worldID,
+            inexistentItemID
+        );
 
         _recipes.Received(1).GetRecipesForItem(inexistentItemID);
         _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
-        // Assert.That(result, Is.EqualTo(_errorCost));
+        Assert.That(recipeId, Is.LessThan(0));
+        Assert.That(cost, Is.EqualTo(_errorCost));
     }
 
     [Test]

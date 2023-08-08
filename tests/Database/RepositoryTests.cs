@@ -21,4 +21,14 @@ public class InMemoryTestDb
             .UseInMemoryDatabase(databaseName: "GilGoblinTest")
             .Options;
     }
+
+    [OneTimeTearDown]
+    public virtual void OneTimeTearDown()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        context.Price.RemoveRange(context.Price);
+        context.ItemInfo.RemoveRange(context.ItemInfo);
+        context.Recipe.RemoveRange(context.Recipe);
+        context.SaveChanges();
+    }
 }
