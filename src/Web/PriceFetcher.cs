@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Net.Http;
 using System;
+using System.Net.Http;
 
 namespace GilGoblin.Web;
 
@@ -15,7 +15,13 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
     private readonly ILogger<PriceFetcher> _logger;
 
     public PriceFetcher(ILogger<PriceFetcher> logger)
-        : base(_priceBaseUrl)
+        : base(PriceBaseUrl)
+    {
+        _logger = logger;
+    }
+
+    public PriceFetcher(HttpClient client, ILogger<PriceFetcher> logger)
+        : base(PriceBaseUrl, client)
     {
         _logger = logger;
     }
@@ -25,7 +31,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         _logger.LogInformation("Fetching for world {World}, 1 item: {ID}", worldID, id);
         var worldString = GetWorldString(worldID);
         var idString = $"{id}";
-        var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsSingle });
+        var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsSingle });
 
         return await base.GetAsync(pathSuffix);
     }
@@ -52,7 +58,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
             if (id != ids.Last())
                 idString += ",";
         }
-        var pathSuffix = string.Concat(new[] { worldString, idString, _selectiveColumnsMulti });
+        var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsMulti });
 
         var response = await base.GetMultipleAsync(pathSuffix);
 
@@ -72,7 +78,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     public async Task<List<int>> GetMarketableItemIDsAsync()
     {
-        var fullPath = string.Concat(BasePath, _marketableItemSuffix);
+        var fullPath = string.Concat(BasePath, MarketableItemSuffix);
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
             return new List<int>();
@@ -88,14 +94,14 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     public int PricesPerPage { get; set; } = 100;
 
-    private static readonly string _marketableItemSuffix = "marketable";
+    public static readonly string MarketableItemSuffix = "marketable";
 
-    private static readonly string _priceBaseUrl = $$"""https://universalis.app/api/v2/""";
-    private static readonly string _selectiveColumnsMulti = $$"""
+    public static readonly string PriceBaseUrl = $$"""https://universalis.app/api/v2/""";
+    public static readonly string SelectiveColumnsMulti = $$"""
 ?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime
 """;
 
-    private static readonly string _selectiveColumnsSingle = $$"""
+    public static readonly string SelectiveColumnsSingle = $$"""
 ?listings=0&entries=0&fields=itemID,worldID,currentAveragePrice,currentAveragePriceNQ,currentAveragePriceHQ,averagePrice,averagePriceNQ,averagePriceHQ,lastUploadTime
 """;
 }

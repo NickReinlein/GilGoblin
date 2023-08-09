@@ -12,7 +12,6 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
 
-[NonParallelizable]
 public class DependencyInjectionTests
 {
     private IConfiguration _configuration;

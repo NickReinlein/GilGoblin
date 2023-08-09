@@ -20,6 +20,8 @@ public class PriceWebPoco : BasePricePoco
     public float AveragePriceNQ { get; set; }
     public float AveragePriceHQ { get; set; }
 
+    public PriceWebPoco() { }
+
     [JsonConstructor]
     public PriceWebPoco(
         int itemID,

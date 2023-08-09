@@ -23,16 +23,26 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
         Client = client;
     }
 
-    public virtual async Task<T?> GetAsync(string path)
-    {
-        var response = await PerformGetAsync(path);
-        return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<T>() : null;
-    }
+    public virtual async Task<T?> GetAsync(string path) =>
+        await FetchAndSerializeDataAsync<T?>(path);
 
-    public virtual async Task<U?> GetMultipleAsync(string path)
+    public virtual async Task<U?> GetMultipleAsync(string path) =>
+        await FetchAndSerializeDataAsync<U?>(path);
+
+    private async Task<F?> FetchAndSerializeDataAsync<F>(string path)
     {
         var response = await PerformGetAsync(path);
-        return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<U>() : null;
+        if (!response.IsSuccessStatusCode)
+            return default;
+
+        try
+        {
+            return await response.Content.ReadFromJsonAsync<F>();
+        }
+        catch
+        {
+            return default;
+        }
     }
 
     private async Task<HttpResponseMessage> PerformGetAsync(string path)

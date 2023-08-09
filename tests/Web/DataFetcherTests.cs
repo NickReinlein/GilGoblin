@@ -7,27 +7,24 @@ using RichardSzalay.MockHttp;
 
 namespace GilGoblin.Tests.Web;
 
-public class DataFetcherTests
+public class DataFetcherTests : FetcherTests
 {
-    private const string BasePath = "http://localhost:55448/";
-    private HttpClient _client;
+    private readonly string _basePath = "http://localhost:55448/";
     private MockDataFetcher _fetcher;
-    private MockHttpMessageHandler _handler;
 
     [SetUp]
-    public void SetUp()
+    public override void SetUp()
     {
-        _handler = new MockHttpMessageHandler();
-        _client = _handler.ToHttpClient();
+        base.SetUp();
 
-        _fetcher = new MockDataFetcher(BasePath, _client);
+        _fetcher = new MockDataFetcher(_basePath, _client);
     }
 
     [Test]
     public async Task GivenAGetAsync_WhenThePathIsInvalid_ThenNullIsReturned()
     {
         var badPath = "/badPath";
-        _handler.When($"{BasePath}{badPath}").Respond(HttpStatusCode.NotFound, _contentType, "{}");
+        _handler.When($"{_basePath}{badPath}").Respond(HttpStatusCode.NotFound, ContentType, "{}");
 
         var result = await _fetcher.GetAsync(badPath);
 
@@ -38,19 +35,20 @@ public class DataFetcherTests
     public async Task GivenAGetAsync_WhenThePathIsValid_ThenAMappedObjectIsReturned()
     {
         var goodPath = "/goodPath";
-        var jsonObject = JsonSerializer.Serialize(new Apple { Id = 23 });
-        _handler.When($"{BasePath}{goodPath}").Respond(HttpStatusCode.OK, _contentType, jsonObject);
+        var appleId = 23;
+        var jsonObject = JsonSerializer.Serialize(new Apple { Id = appleId });
+        _handler.When($"{_basePath}{goodPath}").Respond(HttpStatusCode.OK, ContentType, jsonObject);
 
         var result = await _fetcher.GetAsync(goodPath);
 
-        Assert.That(result.Id, Is.EqualTo(23));
+        Assert.That(result.Id, Is.EqualTo(appleId));
     }
 
     [Test]
     public async Task GivenAGetMultipleAsync_WhenThePathIsInvalid_ThenNullIsReturned()
     {
         var badPath = "/badPath";
-        _handler.When($"{BasePath}{badPath}").Respond(HttpStatusCode.NotFound, _contentType, "{}");
+        _handler.When($"{_basePath}{badPath}").Respond(HttpStatusCode.NotFound, ContentType, "{}");
 
         var result = await _fetcher.GetMultipleAsync(badPath);
 
@@ -61,15 +59,14 @@ public class DataFetcherTests
     public async Task GivenAGetMultipleAsync_WhenThePathIsValid_ThenAMappedObjectIsReturned()
     {
         var goodPath = "/goodPath";
-        var jsonObject = JsonSerializer.Serialize(new Orange { Size = 324 });
-        _handler.When($"{BasePath}{goodPath}").Respond(HttpStatusCode.OK, _contentType, jsonObject);
+        var orangeSize = 324;
+        var jsonObject = JsonSerializer.Serialize(new Orange { Size = orangeSize });
+        _handler.When($"{_basePath}{goodPath}").Respond(HttpStatusCode.OK, ContentType, jsonObject);
 
         var result = await _fetcher.GetMultipleAsync(goodPath);
 
-        Assert.That(result.Size, Is.EqualTo(324));
+        Assert.That(result.Size, Is.EqualTo(orangeSize));
     }
-
-    private static readonly string _contentType = "application/json";
 }
 
 public class MockDataFetcher : DataFetcher<Apple, Orange>
