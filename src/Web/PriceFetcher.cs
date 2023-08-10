@@ -67,7 +67,6 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     public async Task<List<List<int>>> GetAllIDsAsBatchJobsAsync(int worldID)
     {
-        _logger.LogWarning("Fetching for world {World}, all items", worldID);
         var allIDs = await GetMarketableItemIDsAsync();
         if (!allIDs.Any())
             return new List<List<int>>();
@@ -83,11 +82,15 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         if (!response.IsSuccessStatusCode)
             return new List<int>();
 
-        var results = await response.Content.ReadFromJsonAsync<List<int>>();
-        if (results is null)
+        try
+        {
+            var returnedList = await response.Content.ReadFromJsonAsync<List<int>>();
+            return returnedList.Cast<int>().Where(i => i > 0).ToList();
+        }
+        catch
+        {
             return new List<int>();
-
-        return results?.Cast<int>().Where(i => i > 0).ToList() ?? new List<int>();
+        }
     }
 
     public static string GetWorldString(int worldID) => $"{worldID}/";
