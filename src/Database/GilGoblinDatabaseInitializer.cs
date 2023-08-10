@@ -1,147 +1,139 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Diagnostics;
-// using System.Linq;
-// using System.Net.Http;
-// using System.Threading.Tasks;
-// using GilGoblin.Pocos;
-// using GilGoblin.Services;
-// using GilGoblin.Web;
-// using GilGoblin.Extensions;
-// using Serilog;
-// using System.Data.Entity;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using GilGoblin.Pocos;
+using GilGoblin.Services;
+using GilGoblin.Web;
+using GilGoblin.Extensions;
+using Serilog;
 
-// namespace GilGoblin.Database;
+namespace GilGoblin.Database;
 
-// public class GilGoblinDatabaseInitializer
-// {
-//     private readonly IPriceDataFetcher _priceFetcher;
-//     private readonly ISqlLiteDatabaseConnector _dbConnector;
+public class GilGoblinDatabaseInitializer
+{
+    private readonly ISqlLiteDatabaseConnector _dbConnector;
+    private readonly ICsvInteractor _csvInteractor;
 
-//     public GilGoblinDatabaseInitializer(
-//         IPriceDataFetcher priceFetcher,
-//         ISqlLiteDatabaseConnector dbConnector
-//     )
-//     {
-//         _priceFetcher = priceFetcher;
-//         _dbConnector = dbConnector;
-//     }
+    public GilGoblinDatabaseInitializer(
+        ISqlLiteDatabaseConnector dbConnector,
+        ICsvInteractor csvInteractor
+    )
+    {
+        _dbConnector = dbConnector;
+        _csvInteractor = csvInteractor;
+    }
 
-//     public async Task FillTablesIfEmpty(GilGoblinDbContext dbContext)
-//     {
-//         try
-//         {
-//             using var context = dbContext;
-//             if (context is null || context.ItemInfo is null || context.Recipe is null)
-//                 return;
-//             await context.Database.EnsureCreatedAsync();
+    public async Task FillTablesIfEmpty(GilGoblinDbContext dbContext)
+    {
+        try
+        {
+            using var context = dbContext;
+            await context.Database.EnsureCreatedAsync();
 
-//             if (context.ItemInfo.Count() < 1000)
-//                 await FillTable<ItemInfoPoco>(dbContext);
+            if (context.ItemInfo.Count() < 1000)
+                await FillTable<ItemInfoPoco>(dbContext);
 
-//             if (context.Recipe.Count() < 1000)
-//                 await FillTable<RecipePoco>(dbContext);
+            if (context.Recipe.Count() < 1000)
+                await FillTable<RecipePoco>(dbContext);
 
-//             // if (context.Price?.Count() < 1000)
-//             //     await FillTable<PricePoco>();
+            if (context.Price?.Count() < 1000)
+                await FillTable<PricePoco>(dbContext);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
+        }
+    }
 
-//             if (context.Price?.Count() < 1000)
-//                 await FetchPrices(dbContext);
-//         }
-//         catch (Exception e)
-//         {
-//             Log.Error(e.Message);
-//         }
-//     }
+    // private async Task FetchPrices(GilGoblinDbContext dbContext)
+    // {
+    //     LogTaskStart<PriceWebPoco>("Fetching prices from API");
+    //     var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(TestWorldID);
 
-//     private async Task FetchPrices(GilGoblinDbContext dbContext)
-//     {
-//         LogTaskStart<PriceWebPoco>("Fetching prices from API");
+    //     foreach (var batch in batches)
+    //     {
+    //         var timer = new Stopwatch();
+    //         timer.Start();
+    //         var result = await _priceFetcher.FetchMultiplePricesAsync(TestWorldID, batch);
 
-//         var batches = await _priceFetcher.GetAllIDsAsBatchJobsAsync(TestWorldID);
+    //         if (!result.Any())
+    //             throw new HttpRequestException("Failed to fetch prices from Universalis API");
 
-//         foreach (var batch in batches)
-//         {
-//             var timer = new Stopwatch();
-//             timer.Start();
-//             var result = await _priceFetcher.FetchMultiplePricesAsync(TestWorldID, batch);
+    //         await SaveBatchResult(dbContext, result);
 
-//             if (!result.Any())
-//                 throw new HttpRequestException("Failed to fetch prices from Universalis API");
+    //         timer.Stop();
+    //         Log.Information("Total time for batch in ms: {Elapsed}", timer.ElapsedMilliseconds);
+    //         await Task.Delay(ApiSpamPreventionDelayInMS);
+    //     }
+    // }
 
-//             await SaveBatchResult(dbContext, result);
+    public async Task SaveBatchResult(
+        GilGoblinDbContext dbContext,
+        IEnumerable<PriceWebPoco?> result
+    )
+    {
+        using var context = dbContext;
+        var pricesToSave = result.ToPricePocoList();
 
-//             timer.Stop();
-//             Log.Information("Total time for batch in ms: {Elapsed}", timer.ElapsedMilliseconds);
-//             await Task.Delay(ApiSpamPreventionDelayInMS);
-//         }
-//     }
+        await context.AddRangeAsync(pricesToSave);
+        await context.SaveChangesAsync();
+        Log.Information(
+            "Sucessfully saved to {Count} prices entries from API call for prices",
+            pricesToSave.Count
+        );
+    }
 
-//     public async Task SaveBatchResult(
-//         GilGoblinDbContext dbContext,
-//         IEnumerable<PriceWebPoco?> result
-//     )
-//     {
-//         using var context = dbContext;
+    private async Task FillTable<T>(GilGoblinDbContext dbContext)
+        where T : class
+    {
+        var tableName = LogTaskStart<T>("Loading from CSV");
 
-//         var pricesToSave = result.ToPricePocoList();
+        // fix me
 
-//         await context.AddRangeAsync(pricesToSave);
-//         await context.SaveChangesAsync();
-//         Log.Information(
-//             "Sucessfully saved to {Count} prices entries from API call for prices",
-//             pricesToSave.Count
-//         );
-//     }
+        var path = _dbConnector.GetDatabasePath();
+        try
+        {
+            await LoadCSVFileAndSaveResults<T>(dbContext, tableName, path);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
+        }
+    }
 
-//     private async Task FillTable<T>(GilGoblinDbContext dbContext)
-//         where T : class
-//     {
-//         var tableName = LogTaskStart<T>("Loading from CSV");
+    private async Task LoadCSVFileAndSaveResults<T>(
+        GilGoblinDbContext context,
+        string tableName,
+        string path
+    )
+        where T : class
+    {
+        var result = _csvInteractor.LoadFile<T>(path);
 
-//         // fix me
+        if (result.Any())
+        {
+            await context.AddRangeAsync(result);
+            await context.SaveChangesAsync();
+            Log.Information(
+                "Sucessfully saved to table {TableName} {ResultCount} entries from CSV",
+                tableName,
+                result.Count()
+            );
+        }
+    }
 
-//         var path = _dbConnector.GetDatabasePath();
-//         try
-//         {
-//             await LoadCSVFileAndSaveResults<T>(dbContext, tableName, path);
-//         }
-//         catch (Exception e)
-//         {
-//             Log.Error(e.Message);
-//         }
-//     }
+    private static string LogTaskStart<T>(string sourceSuffix)
+        where T : class
+    {
+        var pocoName = typeof(T).ToString().Split(".")[2];
+        var tableName = pocoName.Remove(pocoName.Length - 4);
+        Log.Warning("Database table {TableName} has missing entries. " + sourceSuffix, tableName);
+        return tableName;
+    }
 
-//     private static async Task LoadCSVFileAndSaveResults<T>(
-//         GilGoblinDbContext context,
-//         string tableName,
-//         string path
-//     )
-//         where T : class
-//     {
-//         var result = CsvInteractor<T>.LoadFile(path);
-
-//         if (result.Any())
-//         {
-//             await context.AddRangeAsync(result);
-//             await context.SaveChangesAsync();
-//             Log.Information(
-//                 "Sucessfully saved to table {TableName} {ResultCount} entries from CSV",
-//                 tableName,
-//                 result.Count()
-//             );
-//         }
-//     }
-
-//     private static string LogTaskStart<T>(string sourceSuffix)
-//         where T : class
-//     {
-//         var pocoName = typeof(T).ToString().Split(".")[2];
-//         var tableName = pocoName.Remove(pocoName.Length - 4);
-//         Log.Warning("Database table {TableName} has missing entries. " + sourceSuffix, tableName);
-//         return tableName;
-//     }
-
-//     public static readonly int TestWorldID = 34;
-//     public static readonly int ApiSpamPreventionDelayInMS = 100;
-// }
+    public static readonly int TestWorldID = 34;
+    public static readonly int ApiSpamPreventionDelayInMS = 100;
+}

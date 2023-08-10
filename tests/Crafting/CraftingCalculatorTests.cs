@@ -36,14 +36,6 @@ public class CraftingCalculatorTests
         _calc = new CraftingCalculator(_recipes, _prices, _grocer, _logger);
     }
 
-    [TearDown]
-    public void TearDown()
-    {
-        _recipes.ClearReceivedCalls();
-        _prices.ClearReceivedCalls();
-        _grocer.ClearReceivedCalls();
-    }
-
     [Test]
     public async Task GivenCalculateCraftingCostForItem_WhenNoRecipeExists_ThenErrorCostIsReturned()
     {

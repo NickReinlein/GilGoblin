@@ -25,12 +25,6 @@ public class PriceControllerTests
         Assert.That(_controller, Is.Not.Null);
     }
 
-    [TearDown]
-    public void TearDown()
-    {
-        _repo.ClearReceivedCalls();
-    }
-
     [Test]
     public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfPricesIsReturned()
     {

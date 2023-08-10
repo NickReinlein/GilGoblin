@@ -3,6 +3,7 @@ using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Services;
 using GilGoblin.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -66,6 +67,7 @@ public class Startup
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
+        services.AddScoped<ICsvInteractor, CsvInteractor>();
     }
 
     public static void AddBasicBuilderServices(IServiceCollection services)

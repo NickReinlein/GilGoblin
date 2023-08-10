@@ -51,7 +51,7 @@ public class CraftRepositoryTests
     }
 
     [Test]
-    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenAWarningIsLoggedANdNullIsReturned()
+    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenAWarningIsLoggedAndNullIsReturned()
     {
         _calc.CalculateCraftingCostForItem(WorldID, ItemID).Returns((RecipeID, 0));
 

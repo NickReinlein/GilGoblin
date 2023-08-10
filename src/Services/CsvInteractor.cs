@@ -8,10 +8,14 @@ using CsvHelper.Configuration;
 
 namespace GilGoblin.Services;
 
-public static class CsvInteractor<T>
-    where T : class
+public interface ICsvInteractor
 {
-    public static IEnumerable<T> LoadFile(string path)
+    List<T> LoadFile<T>(string path);
+}
+
+public class CsvInteractor : ICsvInteractor
+{
+    public List<T> LoadFile<T>(string path)
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
         try
@@ -20,9 +24,9 @@ public static class CsvInteractor<T>
             using var csv = new CsvReader(reader, config);
             return csv.GetRecords<T>().ToList();
         }
-        catch (Exception)
+        catch
         {
-            return Array.Empty<T>();
+            return new List<T>();
         }
     }
 }

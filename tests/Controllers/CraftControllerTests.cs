@@ -11,9 +11,7 @@ namespace GilGoblin.Tests.Controllers;
 public class CraftControllerTests
 {
     private CraftController? _controller;
-    private readonly ICraftRepository<CraftSummaryPoco> _repo = Substitute.For<
-        ICraftRepository<CraftSummaryPoco>
-    >();
+    private ICraftRepository<CraftSummaryPoco> _repo;
 
     private static readonly int _world = 34;
     private static readonly int _craftId = 108;
@@ -21,16 +19,12 @@ public class CraftControllerTests
     [SetUp]
     public void SetUp()
     {
+        _repo = Substitute.For<ICraftRepository<CraftSummaryPoco>>();
+
         _controller = new CraftController(
             _repo,
             NullLoggerFactory.Instance.CreateLogger<CraftController>()
         );
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _repo.ClearReceivedCalls();
     }
 
     [Test]
@@ -43,6 +37,7 @@ public class CraftControllerTests
     public void WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
     {
         _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
+
         _ = _controller!.GetBestCrafts(_world);
 
         _repo.GetBestCrafts(_world);

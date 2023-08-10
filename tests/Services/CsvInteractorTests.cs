@@ -6,13 +6,18 @@ namespace GilGoblin.Tests.Services;
 
 public class CsvInteractorTests
 {
+    private CsvInteractor _interactor;
+
     [SetUp]
-    public void SetUp() { }
+    public void SetUp()
+    {
+        _interactor = new CsvInteractor();
+    }
 
     [Test]
     public void GivenAnyFile_WhenWeFailToLoadTheFile_ThenNoExceptionIsThrownAndAnEmptyArrayIsReturned()
     {
-        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath("itsAFake"));
+        var result = _interactor.LoadFile<ItemInfoPoco>(ResourceFilePath("itsAFake"));
 
         Assert.That(result, Is.Empty);
     }
@@ -20,7 +25,7 @@ public class CsvInteractorTests
     [Test]
     public void GivenAnItemTestFile_WhenWeLoadTheFile_ThenWeDeserializeItems()
     {
-        var result = CsvInteractor<ItemInfoPoco>.LoadFile(ResourceFilePath(itemTestFileName));
+        var result = _interactor.LoadFile<ItemInfoPoco>(ResourceFilePath(itemTestFileName));
 
         Assert.That(result.Count, Is.GreaterThan(10));
         var gilItemEntry = result.First(i => i.ID == 1);
@@ -40,7 +45,7 @@ public class CsvInteractorTests
     [Test]
     public void GivenARecipesTestFile_WhenWeLoadTheFileThenWeDeserializeRecipes()
     {
-        var result = CsvInteractor<RecipePoco>.LoadFile(ResourceFilePath(recipeTestFileName));
+        var result = _interactor.LoadFile<RecipePoco>(ResourceFilePath(recipeTestFileName));
 
         Assert.That(result.Count, Is.GreaterThan(10));
         var recipeSix = result.First<RecipePoco>(i => i.ID == 6);
@@ -59,7 +64,7 @@ public class CsvInteractorTests
     [Test]
     public void GivenAPricesTestFile_WhenWeLoadTheFile_ThenWeDeserializePrices()
     {
-        var result = CsvInteractor<PricePoco>.LoadFile(ResourceFilePath(priceTestFileName));
+        var result = _interactor.LoadFile<PricePoco>(ResourceFilePath(priceTestFileName));
 
         Assert.That(result.Count, Is.GreaterThan(10));
         var price = result.First<PricePoco>(i => i.ItemID == 31100);

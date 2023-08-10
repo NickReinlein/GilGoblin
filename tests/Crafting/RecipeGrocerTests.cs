@@ -34,13 +34,6 @@ public class RecipeGrocerTests
         _grocer = new RecipeGrocer(_recipes, _logger);
     }
 
-    [TearDown]
-    public void TearDown()
-    {
-        _recipes.ClearReceivedCalls();
-        _prices.ClearReceivedCalls();
-    }
-
     [Test]
     public async Task GivenABreakdownItem_WhenRecipeDoesNotExist_ThenReturnEmpty()
     {
