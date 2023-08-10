@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GilGoblin.Pocos;
 using GilGoblin.Services;
-using GilGoblin.Web;
 using GilGoblin.Extensions;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
@@ -16,14 +13,17 @@ public class GilGoblinDatabaseInitializer
 {
     private readonly ISqlLiteDatabaseConnector _dbConnector;
     private readonly ICsvInteractor _csvInteractor;
+    private readonly ILogger<GilGoblinDatabaseInitializer> _logger;
 
     public GilGoblinDatabaseInitializer(
         ISqlLiteDatabaseConnector dbConnector,
-        ICsvInteractor csvInteractor
+        ICsvInteractor csvInteractor,
+        ILogger<GilGoblinDatabaseInitializer> logger
     )
     {
         _dbConnector = dbConnector;
         _csvInteractor = csvInteractor;
+        _logger = logger;
     }
 
     public async Task FillTablesIfEmpty(GilGoblinDbContext dbContext)
@@ -44,7 +44,7 @@ public class GilGoblinDatabaseInitializer
         }
         catch (Exception e)
         {
-            Log.Error(e.Message);
+            _logger.LogError(e.Message);
         }
     }
 
@@ -80,9 +80,8 @@ public class GilGoblinDatabaseInitializer
 
         await context.AddRangeAsync(pricesToSave);
         await context.SaveChangesAsync();
-        Log.Information(
-            "Sucessfully saved to {Count} prices entries from API call for prices",
-            pricesToSave.Count
+        _logger.LogInformation(
+            $"Sucessfully saved to {pricesToSave.Count} prices entries from API call for prices"
         );
     }
 
@@ -94,14 +93,8 @@ public class GilGoblinDatabaseInitializer
         // fix me
 
         var path = _dbConnector.GetDatabasePath();
-        try
-        {
-            await LoadCSVFileAndSaveResults<T>(dbContext, tableName, path);
-        }
-        catch (Exception e)
-        {
-            Log.Error(e.Message);
-        }
+
+        await LoadCSVFileAndSaveResults<T>(dbContext, tableName, path);
     }
 
     private async Task LoadCSVFileAndSaveResults<T>(
@@ -117,20 +110,18 @@ public class GilGoblinDatabaseInitializer
         {
             await context.AddRangeAsync(result);
             await context.SaveChangesAsync();
-            Log.Information(
-                "Sucessfully saved to table {TableName} {ResultCount} entries from CSV",
-                tableName,
-                result.Count()
+            _logger.LogInformation(
+                $"Sucessfully saved to table {tableName} {result.Count()} entries from CSV"
             );
         }
     }
 
-    private static string LogTaskStart<T>(string sourceSuffix)
+    private string LogTaskStart<T>(string sourceSuffix)
         where T : class
     {
         var pocoName = typeof(T).ToString().Split(".")[2];
         var tableName = pocoName.Remove(pocoName.Length - 4);
-        Log.Warning("Database table {TableName} has missing entries. " + sourceSuffix, tableName);
+        _logger.LogWarning($"Database table {tableName} has missing entries {sourceSuffix}");
         return tableName;
     }
 
