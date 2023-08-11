@@ -14,10 +14,11 @@ public class ItemRepository : IItemRepository
         _dbContext = dbContext;
     }
 
-    public ItemInfoPoco? Get(int itemID) => _dbContext.ItemInfo.FirstOrDefault(i => i.ID == itemID);
+    public ItemInfoPoco? Get(int itemID) =>
+        _dbContext?.ItemInfo?.FirstOrDefault(i => i.ID == itemID);
 
     public IEnumerable<ItemInfoPoco> GetMultiple(IEnumerable<int> itemIDs) =>
-        _dbContext.ItemInfo.Where(i => itemIDs.Any(a => a == i.ID));
+        _dbContext?.ItemInfo?.Where(i => itemIDs.Any(a => a == i.ID));
 
-    public IEnumerable<ItemInfoPoco> GetAll() => _dbContext.ItemInfo;
+    public IEnumerable<ItemInfoPoco> GetAll() => _dbContext?.ItemInfo;
 }
