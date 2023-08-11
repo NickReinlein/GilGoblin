@@ -25,7 +25,12 @@ public class InMemoryTestDb
     [OneTimeTearDown]
     public virtual void OneTimeTearDown()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        DeleteAllEntries();
+    }
+
+    public void DeleteAllEntries()
+    {
+        var context = new GilGoblinDbContext(_options, _configuration);
         context.Price.RemoveRange(context.Price);
         context.ItemInfo.RemoveRange(context.ItemInfo);
         context.Recipe.RemoveRange(context.Recipe);

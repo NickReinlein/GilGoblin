@@ -10,39 +10,15 @@ namespace GilGoblin.Tests.Database;
 
 public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
 {
-    private ISqlLiteDatabaseConnector _dbConnector;
     private ICsvInteractor _csvInteractor;
+    private ISqlLiteDatabaseConnector _dbConnector;
     private ILogger<GilGoblinDatabaseInitializer> _logger;
 
     private GilGoblinDatabaseInitializer _databaseInitializer;
 
-    [SetUp]
-    public void SetUp()
-    {
-        _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
-        _csvInteractor = Substitute.For<ICsvInteractor>();
-        _logger = Substitute.For<ILogger<GilGoblinDatabaseInitializer>>();
-
-        _databaseInitializer = new GilGoblinDatabaseInitializer(
-            _dbConnector,
-            _csvInteractor,
-            _logger
-        );
-    }
-
     [Test]
-    public async Task GiveWeCallFillTablesIfEmpty_WhenNoEntriesExistForItems_ThenWeFillTheTable()
+    public async Task GiveWeCallFillTablesIfEmpty_WhenTableItemInfoIsEmpty_ThenWeFillTheTable()
     {
-        _dbConnector.GetDatabasePath().Returns("TestDatabase");
-        _csvInteractor
-            .LoadFile<ItemInfoPoco>("TestDatabase")
-            .Returns(
-                new List<ItemInfoPoco>()
-                {
-                    new ItemInfoPoco { ID = 123 },
-                    new ItemInfoPoco { ID = 456 }
-                }
-            );
         using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
@@ -52,26 +28,8 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GiveWeCallFillTablesIfEmpty_WhenNoEntriesExistForPrices_ThenWeFillTheTable()
+    public async Task GiveWeCallFillTablesIfEmpty_WhenTablePriceIsEmpty_ThenWeFillTheTable()
     {
-        _dbConnector.GetDatabasePath().Returns("TestDatabase");
-        _csvInteractor
-            .LoadFile<PricePoco>("TestDatabase")
-            .Returns(
-                new List<PricePoco>()
-                {
-                    new PricePoco(),
-                    new PricePoco()
-                    // {
-                    //     ItemID = 123,
-                    //     WorldID = 23,
-                    //     LastUploadTime = 1677798249750,
-                    //     AverageListingPrice = 256,
-                    //     AverageSold = 200,
-
-                    // }
-                }
-            );
         using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
@@ -81,28 +39,8 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GiveWeCallFillTablesIfEmpty_WhenNoEntriesExistForRecipes_ThenWeFillTheTable()
+    public async Task GiveWeCallFillTablesIfEmpty_WhenTableRecipeIsEmpty_ThenWeFillTheTable()
     {
-        _dbConnector.GetDatabasePath().Returns("TestDatabase");
-        _csvInteractor
-            .LoadFile<RecipePoco>("TestDatabase")
-            .Returns(
-                new List<RecipePoco>()
-                {
-                    new RecipePoco
-                    {
-                        ID = 123,
-                        TargetItemID = 33,
-                        ResultQuantity = 1
-                    },
-                    new RecipePoco
-                    {
-                        ID = 456,
-                        TargetItemID = 44,
-                        ResultQuantity = 1
-                    }
-                }
-            );
         using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
@@ -127,12 +65,160 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenAnExceptionIsThrown_ThenWeLogAnError()
     {
-        _dbConnector.GetDatabasePath().Returns("TestDatabase");
         _csvInteractor.LoadFile<ItemInfoPoco>("TestDatabase").Throws<Exception>();
         using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
 
         _logger.Received(1).LogError("Exception of type 'System.Exception' was thrown.");
+    }
+
+    [Test]
+    public async Task GiveWeCallSaveBatchResult_WhenPricesAreAllValid_ThenWeConvertAndSaveTheBatch()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var batchToSave = GenerateListOf2ValidPocos();
+
+        await _databaseInitializer.SaveBatchResult(context, batchToSave);
+
+        using var context2 = new GilGoblinDbContext(_options, _configuration);
+        Assert.That(context2.Price.Count, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task GiveWeCallSaveBatchResult_WhenSomePricesAreValid_ThenWeConvertAndSaveTheValidEntries()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var batchToSave = new List<PriceWebPoco?>()
+        {
+            new PriceWebPoco
+            {
+                ItemID = 456,
+                WorldID = 23,
+                LastUploadTime = 1677798249999,
+                AveragePrice = 512,
+                CurrentAveragePrice = 400,
+            },
+            null
+        };
+
+        await _databaseInitializer.SaveBatchResult(context, batchToSave);
+
+        using var context2 = new GilGoblinDbContext(_options, _configuration);
+        Assert.That(context2.Price.Count, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task GiveWeCallSaveBatchResult_WhenNoPricesAreValid_ThenDoNothing()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+
+        await _databaseInitializer.SaveBatchResult(
+            context,
+            new List<PriceWebPoco?>() { null, null }
+        );
+
+        using var context2 = new GilGoblinDbContext(_options, _configuration);
+        Assert.That(context2.Price.Count, Is.EqualTo(0));
+    }
+
+    [SetUp]
+    public void SetUp()
+    {
+        _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
+        _dbConnector.GetDatabasePath().Returns("TestDatabase");
+        SetupCsvInteractor();
+        _logger = Substitute.For<ILogger<GilGoblinDatabaseInitializer>>();
+
+        _databaseInitializer = new GilGoblinDatabaseInitializer(
+            _dbConnector,
+            _csvInteractor,
+            _logger
+        );
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        DeleteAllEntries();
+    }
+
+    private static List<PriceWebPoco> GenerateListOf2ValidPocos()
+    {
+        return new List<PriceWebPoco?>()
+        {
+            new PriceWebPoco
+            {
+                ItemID = 456,
+                WorldID = 23,
+                LastUploadTime = 1677798249999,
+                AveragePrice = 512,
+                CurrentAveragePrice = 400,
+            },
+            new PriceWebPoco
+            {
+                ItemID = 789,
+                WorldID = 23,
+                LastUploadTime = 1677798949999,
+                AveragePrice = 1024,
+                CurrentAveragePrice = 800,
+            },
+        };
+    }
+
+    private void SetupCsvInteractor()
+    {
+        _csvInteractor = Substitute.For<ICsvInteractor>();
+        _csvInteractor
+            .LoadFile<ItemInfoPoco>("TestDatabase")
+            .Returns(
+                new List<ItemInfoPoco>()
+                {
+                    new ItemInfoPoco { ID = 123 },
+                    new ItemInfoPoco { ID = 456 }
+                }
+            );
+        _csvInteractor
+            .LoadFile<RecipePoco>("TestDatabase")
+            .Returns(
+                new List<RecipePoco>()
+                {
+                    new RecipePoco
+                    {
+                        ID = 123,
+                        TargetItemID = 33,
+                        ResultQuantity = 1
+                    },
+                    new RecipePoco
+                    {
+                        ID = 456,
+                        TargetItemID = 44,
+                        ResultQuantity = 1
+                    }
+                }
+            );
+        _csvInteractor
+            .LoadFile<PricePoco>("TestDatabase")
+            .Returns(
+                new List<PricePoco>()
+                {
+                    new PricePoco
+                    {
+                        ItemID = 456,
+                        WorldID = 23,
+                        LastUploadTime = 1677798249999,
+                        AverageListingPrice = 512,
+                        AverageSold = 400,
+                    },
+                    new PricePoco
+                    {
+                        ItemID = 123,
+                        WorldID = 23,
+                        LastUploadTime = 1677798249750,
+                        AverageListingPrice = 256,
+                        AverageSold = 200,
+                    }
+                }
+            );
     }
 }

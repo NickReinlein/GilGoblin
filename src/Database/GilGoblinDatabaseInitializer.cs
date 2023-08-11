@@ -72,16 +72,18 @@ public class GilGoblinDatabaseInitializer
 
     public async Task SaveBatchResult(
         GilGoblinDbContext dbContext,
-        IEnumerable<PriceWebPoco?> result
+        IEnumerable<PriceWebPoco?> batchTosSave
     )
     {
-        using var context = dbContext;
-        var pricesToSave = result.ToPricePocoList();
+        var pricesToSave = batchTosSave.ToPricePocoList();
+        if (!pricesToSave.Any())
+            return;
 
+        using var context = dbContext;
         await context.AddRangeAsync(pricesToSave);
         await context.SaveChangesAsync();
         _logger.LogInformation(
-            $"Sucessfully saved to {pricesToSave.Count} prices entries from API call for prices"
+            $"Successfully saved to {pricesToSave.Count} prices to the database"
         );
     }
 
@@ -89,11 +91,7 @@ public class GilGoblinDatabaseInitializer
         where T : class
     {
         var tableName = LogTaskStart<T>("Loading from CSV");
-
-        // fix me
-
         var path = _dbConnector.GetDatabasePath();
-
         await LoadCSVFileAndSaveResults<T>(dbContext, tableName, path);
     }
 
