@@ -339,7 +339,7 @@ public class PriceFetcherTests : FetcherTests
         };
 
     protected static JsonSerializerOptions GetSerializerOptions() =>
-        new() { PropertyNameCaseInsensitive = true, IncludeFields = true, };
+        new() { PropertyNameCaseInsensitive = true, IncludeFields = true };
 
     private static readonly int _worldID = 34;
     private static readonly int _itemID1 = 4211;

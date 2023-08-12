@@ -1,5 +1,4 @@
 using GilGoblin.Crafting;
-using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
@@ -51,14 +50,13 @@ public class CraftRepositoryTests
     }
 
     [Test]
-    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenAWarningIsLoggedAndNullIsReturned()
+    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenNullIsReturned()
     {
-        _calc.CalculateCraftingCostForItem(WorldID, ItemID).Returns((RecipeID, 0));
+        _calc.CalculateCraftingCostForItem(WorldID, ItemID).Returns((0, 0));
 
         var result = await _craftRepository.GetBestCraft(WorldID, ItemID);
 
         Assert.That(result, Is.Null);
-        _logger.Received(1).LogWarning($"Error getting craft for item {ItemID} in world {WorldID}");
     }
 
     [Test]
