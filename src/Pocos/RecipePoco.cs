@@ -78,7 +78,6 @@ public class RecipePoco
 
     public RecipePoco() { }
 
-    [JsonConstructor]
     public RecipePoco(
         bool canQuickSynth,
         bool canHq,
