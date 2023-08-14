@@ -1,5 +1,3 @@
-using System.Net.Http.Json;
-using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;

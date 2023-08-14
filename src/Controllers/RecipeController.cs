@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +18,17 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
         _logger = logger;
     }
 
-    [HttpGet]
-    public IEnumerable<RecipePoco> GetAll()
-    {
-        _logger.LogInformation($"Fetching all recipes");
-        return _recipeRepo.GetAll();
-    }
-
     [HttpGet("{id}")]
     public RecipePoco? Get(int id)
     {
         _logger.LogInformation($"Fetching recipe id: {id}");
         return _recipeRepo.Get(id);
+    }
+
+    [HttpGet]
+    public IEnumerable<RecipePoco> GetAll()
+    {
+        _logger.LogInformation($"Fetching all recipes");
+        return _recipeRepo.GetAll();
     }
 }

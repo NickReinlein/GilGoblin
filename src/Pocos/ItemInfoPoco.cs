@@ -21,6 +21,7 @@ public class ItemInfoPoco
     public int StackSize { get; set; }
     public bool CanBeHq { get; set; }
 
+    [JsonConstructor]
     public ItemInfoPoco() { }
 
     public ItemInfoPoco(

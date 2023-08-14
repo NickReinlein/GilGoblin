@@ -14,6 +14,8 @@ public class ComponentTests
     protected WebApplicationFactory<Startup> _factory;
     protected HttpClient _client;
 
+    protected static readonly double MissingEntryPercentageThreshold = 0.85;
+
     [SetUp]
     public void SetUp()
     {
