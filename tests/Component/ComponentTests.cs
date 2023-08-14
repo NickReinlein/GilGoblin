@@ -1,3 +1,4 @@
+using System.Text.Json;
 using GilGoblin.Api;
 using GilGoblin.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -38,4 +39,7 @@ public class ComponentTests
         _client.Dispose();
         _factory.Dispose();
     }
+
+    protected static JsonSerializerOptions GetSerializerOptions() =>
+        new() { PropertyNameCaseInsensitive = true, IncludeFields = true, };
 }
