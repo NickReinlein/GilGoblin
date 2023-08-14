@@ -23,7 +23,6 @@ public class ItemInfoPoco
 
     public ItemInfoPoco() { }
 
-    [JsonConstructor]
     public ItemInfoPoco(
         int id,
         string name,

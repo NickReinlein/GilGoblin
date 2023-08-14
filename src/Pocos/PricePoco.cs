@@ -19,7 +19,6 @@ public class PricePoco : BasePricePoco
 
     public PricePoco() { }
 
-    [JsonConstructor]
     public PricePoco(
         int itemID,
         int worldID,
