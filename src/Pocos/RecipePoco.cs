@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using CsvHelper.Configuration.Attributes;
 
 namespace GilGoblin.Pocos;

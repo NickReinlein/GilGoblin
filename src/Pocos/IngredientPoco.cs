@@ -8,6 +8,8 @@ public class IngredientPoco : IComparable
     public int ItemID { get; set; }
     public int Quantity { get; set; }
 
+    public IngredientPoco() { }
+
     public IngredientPoco(int itemID, int quantity, int recipeID)
     {
         ItemID = itemID;

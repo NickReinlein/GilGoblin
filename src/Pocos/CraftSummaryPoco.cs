@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace GilGoblin.Pocos;
 
@@ -7,14 +6,14 @@ public class CraftSummaryPoco
 {
     public int WorldID { get; set; }
     public int ItemID { get; set; }
-    public string Name { get; set; } = "";
+    public string Name { get; set; }
     public int VendorPrice { get; set; }
     public int IconID { get; set; }
     public int StackSize { get; set; }
     public float AverageListingPrice { get; set; }
     public float AverageSold { get; set; }
     public float CraftingCost { get; set; }
-    public RecipePoco Recipe { get; }
+    public RecipePoco Recipe { get; set; }
     public float CraftingProfitVsSold { get; set; }
     public float CraftingProfitVsListings { get; set; }
     public IEnumerable<IngredientPoco> Ingredients { get; set; }
@@ -50,7 +49,6 @@ public class CraftSummaryPoco
         Ingredients = ingredients ?? new List<IngredientPoco>();
     }
 
-    [JsonConstructor]
     public CraftSummaryPoco(
         PricePoco price,
         ItemInfoPoco itemInfo,
