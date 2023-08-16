@@ -30,10 +30,14 @@ public class CraftingCalculator : ICraftingCalculator
         _logger = logger;
     }
 
-    public async Task<(int, float)> CalculateCraftingCostForItem(int worldID, int itemID)
+    public async Task<(int, int)> CalculateCraftingCostForItem(int worldID, int itemID)
     {
         var recipes = _recipes.GetRecipesForItem(itemID);
+        if (!recipes.Any())
+            return (-1, ERROR_DEFAULT_COST);
+
         var (recipeID, lowestCraftingCost) = await GetLowestCraftingCost(worldID, recipes);
+
         LogCraftingResult(worldID, itemID, recipes.Count(), lowestCraftingCost);
         return (recipeID, lowestCraftingCost);
     }
@@ -80,25 +84,15 @@ public class CraftingCalculator : ICraftingCalculator
         IEnumerable<CraftIngredientPoco> craftIngredients
     )
     {
-        var totalCraftingCost = 0f;
+        var totalCraftingCost = 0;
         foreach (var craft in craftIngredients)
         {
-            var averageSold = craft.Price.AverageSold;
             var (_, craftingCost) = await CalculateCraftingCostForItem(worldID, craft.ItemID);
-            var minCost = Math.Min(averageSold, craftingCost);
-
-            _logger.LogInformation(
-                "Calculated cost {MinCost} for {ItemID} in world {WorldID}, based on sell price {Sold} and crafting cost {CraftCost}",
-                minCost,
-                craft.ItemID,
-                worldID,
-                averageSold,
-                craftingCost
-            );
+            var minCost = (int)Math.Min(craft.Price.AverageSold, craftingCost);
             totalCraftingCost += craft.Quantity * minCost;
         }
 
-        return (int)totalCraftingCost;
+        return totalCraftingCost;
     }
 
     public static List<CraftIngredientPoco> AddPricesToIngredients(

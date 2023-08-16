@@ -1,6 +1,5 @@
 using GilGoblin.Crafting;
 using GilGoblin.Exceptions;
-using GilGoblin.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;

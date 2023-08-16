@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using GilGoblin.Pocos;
 using Microsoft.AspNetCore.Mvc;
 

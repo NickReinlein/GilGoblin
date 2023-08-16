@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using GilGoblin.Extensions;
 
 namespace GilGoblin.Database;
 
@@ -68,7 +67,7 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
 
     public string GetResourcesFolderPath() => Path.Combine(GetBaseDirectory(), "resources/");
 
-    public static bool IsConnectionOpen => Connection.IsOpen();
+    public static bool IsConnectionOpen => Connection?.State == System.Data.ConnectionState.Open;
 
     public static readonly string DbFileName = "GilGoblin.db";
 }

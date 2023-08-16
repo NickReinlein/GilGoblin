@@ -20,7 +20,7 @@ public class CraftRepositoryTests
     public static readonly int WorldID = 22;
     public static readonly int ItemID = 6400;
     public static readonly int RecipeID = 444;
-    public static readonly float CraftingCost = 777;
+    public static readonly int CraftingCost = 777;
     public static readonly string ItemName = "Excalibur";
 
     [Test]
@@ -60,9 +60,9 @@ public class CraftRepositoryTests
     }
 
     [Test]
-    public void GivenGetBestCrafts_WhenUnderConstruction_ThenAnEmptyResultIsReturned()
+    public async Task GivenGetBestCrafts_WhenUnderConstruction_ThenAnEmptyResultIsReturned()
     {
-        var result = _craftRepository.GetBestCrafts(WorldID);
+        var result = await _craftRepository.GetBestCrafts(WorldID);
 
         Assert.That(result, Is.Empty);
     }

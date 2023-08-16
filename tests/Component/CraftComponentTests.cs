@@ -8,7 +8,7 @@ namespace GilGoblin.Tests.Component;
 public class CraftComponentTests : ComponentTests
 {
     [Test]
-    public async Task GivenACallToGetCraft_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
+    public async Task GivenACallToGetBestCraft_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
         var fullEndpoint = $"http://localhost:55448/craft/34/1614";
 
@@ -32,7 +32,43 @@ public class CraftComponentTests : ComponentTests
     }
 
     [Test]
-    public async Task GivenACallToGetCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    {
+        var fullEndpoint = $"http://localhost:55448/craft/34/1614654";
+
+        using var response = await _client.GetAsync(fullEndpoint);
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+    }
+
+    [Test, Timeout(8000)]
+    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
+    {
+        var fullEndpoint = $"http://localhost:55448/craft/34";
+
+        using var response = await _client.GetAsync(fullEndpoint);
+
+        var crafts = await response.Content.ReadFromJsonAsync<IEnumerable<CraftSummaryPoco>>(
+            GetSerializerOptions()
+        );
+        Assert.Multiple(() =>
+        {
+            Assert.That(crafts.Count(), Is.GreaterThan(5));
+            Assert.That(crafts.All(r => r.WorldID == 34));
+            Assert.That(crafts.All(r => r.ItemID > 0));
+            Assert.That(crafts.All(r => r.AverageSold > 0));
+            Assert.That(crafts.All(r => r.IconID > 0));
+            Assert.That(crafts.All(r => r.StackSize > 0));
+            Assert.That(crafts.All(r => r.VendorPrice > 0));
+            Assert.That(crafts.All(r => r.Recipe.ID > 0));
+            Assert.That(crafts.All(r => r.Recipe.TargetItemID > 0));
+            Assert.That(crafts.All(r => r.Recipe.ResultQuantity > 0));
+            Assert.That(crafts.All(r => r.Ingredients.Count() > 0));
+        });
+    }
+
+    [Test]
+    public async Task GivenACallToGetBestCrafts_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
         var fullEndpoint = $"http://localhost:55448/craft/34/1614654";
 

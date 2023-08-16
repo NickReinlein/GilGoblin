@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace GilGoblin.Pocos;
 
-public class CraftSummaryPoco
+public class CraftSummaryPoco : IComparable
 {
     public int WorldID { get; set; }
     public int ItemID { get; set; }
@@ -70,5 +71,38 @@ public class CraftSummaryPoco
         CraftingProfitVsListings = price.AverageListingPrice - craftingCost;
         CraftingProfitVsSold = price.AverageSold - craftingCost;
         Ingredients = ingredients ?? new List<IngredientPoco>();
+    }
+
+    public int CompareTo(object obj)
+    {
+        if (obj == null)
+            return 1;
+
+        if (obj is CraftSummaryPoco otherCraftSummary)
+        {
+            var worldIDComparison = WorldID.CompareTo(otherCraftSummary.WorldID);
+            if (worldIDComparison != 0)
+                return worldIDComparison;
+
+            var profitVsSoldComparison = CraftingProfitVsSold.CompareTo(
+                otherCraftSummary.CraftingProfitVsSold
+            );
+            if (profitVsSoldComparison != 0)
+                return profitVsSoldComparison;
+
+            var profitVsListingsComparison = CraftingProfitVsListings.CompareTo(
+                otherCraftSummary.CraftingProfitVsListings
+            );
+            if (profitVsListingsComparison != 0)
+                return profitVsListingsComparison;
+
+            var vendorPriceComparison = VendorPrice.CompareTo(otherCraftSummary.VendorPrice);
+            if (vendorPriceComparison != 0)
+                return vendorPriceComparison;
+
+            return ItemID.CompareTo(otherCraftSummary.ItemID);
+        }
+
+        return 0;
     }
 }

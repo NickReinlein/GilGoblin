@@ -1,6 +1,4 @@
-using GilGoblin.Pocos;
-
-namespace GilGoblin.Extensions;
+namespace GilGoblin.Pocos;
 
 public static class PricePocoExtensions
 {

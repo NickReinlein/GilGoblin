@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using GilGoblin.Pocos;
 
-namespace GilGoblin.Extensions;
+namespace GilGoblin.Pocos;
 
 public static class PriceWebPocoExtensions
 {

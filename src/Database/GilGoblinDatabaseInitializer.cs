@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Pocos;
 using GilGoblin.Services;
-using GilGoblin.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;

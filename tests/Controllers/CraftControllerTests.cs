@@ -34,40 +34,40 @@ public class CraftControllerTests
     }
 
     [Test]
-    public void WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
+    public async Task WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
     {
         _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
 
-        _ = _controller!.GetBestCrafts(_world);
+        _ = await _controller!.GetBestCrafts(_world);
 
-        _repo.GetBestCrafts(_world);
+        await _repo.Received(1).GetBestCrafts(_world);
     }
 
     [Test]
-    public void WhenReceivingARequestGetCraft_ThenTheRepositoryIsCalled()
+    public async Task WhenReceivingARequestGetBestCraft_ThenTheRepositoryIsCalled()
     {
-        _ = _controller!.GetCraft(_world, _craftId);
+        _ = await _controller!.GetBestCraft(_world, _craftId);
 
-        _repo.Received(1).GetBestCraft(_world, _craftId);
+        await _repo.Received(1).GetBestCraft(_world, _craftId);
     }
 
     [Test]
-    public void WhenReceivingARequestGetBestCrafts_ThenTheAnEnumerableIsReturned()
+    public async Task WhenReceivingARequestGetBestCrafts_ThenAnEnumerableIsReturned()
     {
         _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
 
-        var result = _controller!.GetBestCrafts(_world);
+        var result = await _controller!.GetBestCrafts(_world);
 
         Assert.That(result is not null);
     }
 
     [Test]
-    public void WhenReceivingARequestGetCraft_ThenAPocoIsReturned()
+    public async Task WhenReceivingARequestGetBestCraft_ThenASummaryIsReturned()
     {
         _repo.GetBestCraft(_world, _craftId).Returns(new CraftSummaryPoco());
 
-        var result = _controller!.GetCraft(_world, _craftId);
+        var result = await _controller!.GetBestCraft(_world, _craftId);
 
-        Assert.That(result is not null);
+        Assert.That(result, Is.TypeOf<CraftSummaryPoco>());
     }
 }
