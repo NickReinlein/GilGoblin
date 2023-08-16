@@ -20,7 +20,6 @@
     <ProjectReference Include="../Services/*Services.csproj" />
     <ProjectReference Include="../Pocos/*Pocos.csproj" />
     <ProjectReference Include="../Exceptions/*Exceptions.csproj" />
-    <ProjectReference Include="../Extensions/*Extensions.csproj" />
     <ProjectReference Include="../Repository/*Repository.csproj" />
   </ItemGroup>
 </Project>

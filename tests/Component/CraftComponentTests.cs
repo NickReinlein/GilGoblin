@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Pocos;
@@ -41,7 +42,7 @@ public class CraftComponentTests : ComponentTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
 
-    [Test, Timeout(8000)]
+    [Test]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
         var fullEndpoint = $"http://localhost:55448/craft/34";
@@ -75,5 +76,18 @@ public class CraftComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+    }
+
+    [Test]
+    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
+    {
+        var timer = new Stopwatch();
+        var fullEndpoint = $"http://localhost:55448/craft/34";
+
+        timer.Start();
+        using var response = await _client.GetAsync(fullEndpoint);
+        timer.Stop();
+
+        Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
     }
 }

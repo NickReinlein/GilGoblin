@@ -53,7 +53,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             .GetAll()
             .Select(r => r.TargetItemID)
             .Distinct()
-            .Take(10) // temporary
+            .Take(100) // temporary
             .Order()
             .ToList();
 
