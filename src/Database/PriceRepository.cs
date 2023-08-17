@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
@@ -9,10 +9,12 @@ namespace GilGoblin.Database;
 public class PriceRepository : IPriceRepository<PricePoco>
 {
     private readonly GilGoblinDbContext _dbContext;
+    private readonly IPriceCache _cache;
 
-    public PriceRepository(GilGoblinDbContext dbContext)
+    public PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache)
     {
         _dbContext = dbContext;
+        _cache = cache;
     }
 
     public PricePoco? Get(int worldID, int id) =>

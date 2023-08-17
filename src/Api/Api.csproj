@@ -22,6 +22,7 @@
     <PackageReference Include="CsvHelper" Version="30.0.*" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../Cache/*Cache.csproj" />
     <ProjectReference Include="../Controllers/*Controllers.csproj" />
     <ProjectReference Include="../Crafting/*Crafting.csproj" />
     <ProjectReference Include="../Database/*Database.csproj" />

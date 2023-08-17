@@ -122,17 +122,18 @@ public class CraftingCalculator : ICraftingCalculator
             .ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
+
         var result = new List<PricePoco>();
         foreach (var ingredientID in itemIDList)
         {
             var ingredientPrice = _prices.Get(worldID, ingredientID);
-            if (ingredientPrice is null)
-                continue;
-            result.Add(ingredientPrice);
+            if (ingredientPrice is not null)
+                result.Add(ingredientPrice);
         }
 
         if (!result.Any())
             throw new DataNotFoundException();
+
         return result;
     }
 
@@ -143,10 +144,8 @@ public class CraftingCalculator : ICraftingCalculator
     {
         var lowestCost = ERROR_DEFAULT_COST;
         var recipeId = -1;
-        foreach (var recipe in recipes)
+        foreach (var recipe in recipes.Where(recipe => recipe is not null))
         {
-            if (recipe is null)
-                continue;
             var recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.ID);
             if (recipeCost < lowestCost)
             {

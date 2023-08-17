@@ -81,8 +81,8 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
     {
-        var timer = new Stopwatch();
         var fullEndpoint = $"http://localhost:55448/craft/34";
+        var timer = new Stopwatch();
 
         timer.Start();
         using var response = await _client.GetAsync(fullEndpoint);

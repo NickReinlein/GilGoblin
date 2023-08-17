@@ -2,37 +2,36 @@ using System.Collections.Generic;
 
 namespace GilGoblin.Cache;
 
-public class DataCache<T> : IDataCache<T>
-    where T : class
+public class DataCache<T, U> : IDataCache<T, U>
+    where U : class
 {
-    protected Dictionary<int, T> _cache = new();
+    protected Dictionary<T, U> _cache = new();
 
-    public void Add(int id, T item)
+    public void Add(T key, U item)
     {
-        _cache[id] = item;
+        _cache[key] = item;
     }
 
-    public T? Get(int id)
+    public U? Get(T key)
     {
-        if (_cache.TryGetValue(id, out var value))
+        if (_cache.TryGetValue(key, out var value))
             return value;
 
         return null;
     }
 
-    public IEnumerable<T> GetMultiple(IEnumerable<int> ids)
+    public IEnumerable<U> GetMultiple(IEnumerable<T> keys)
     {
-        foreach (var id in ids)
+        foreach (var key in keys)
         {
-            if (_cache.TryGetValue(id, out var value))
+            if (_cache.TryGetValue(key, out var value))
             {
                 yield return value;
             }
         }
     }
 
-    public IEnumerable<T> GetAll()
-    {
-        return _cache.Values;
-    }
+    public IEnumerable<U> GetAll() => _cache.Values;
+
+    public IEnumerable<T> GetKeys() => _cache.Keys;
 }

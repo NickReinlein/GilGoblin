@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Cache;
 
-public class DataCacheTests : DataCache<Pizza>
+public class DataCacheTests : DataCache<int, Pizza>
 {
     [Test]
     public void GivenACallToAdd_WhenTheValuesAreValid_ThenTheyAreStored()

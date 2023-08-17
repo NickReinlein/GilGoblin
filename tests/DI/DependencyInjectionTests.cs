@@ -1,4 +1,5 @@
 using GilGoblin.Api;
+using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
@@ -36,6 +37,9 @@ public class DependencyInjectionTests
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
+    [TestCase(typeof(IPriceCache))]
+    [TestCase(typeof(IRecipeCache))]
+    [TestCase(typeof(IItemCache))]
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IPriceDataFetcher))]
