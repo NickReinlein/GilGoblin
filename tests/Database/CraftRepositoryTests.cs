@@ -74,14 +74,14 @@ public class CraftRepositoryTests
         _ = await _craftRepository.GetBestCraft(WorldID, ItemID);
 
         _cache.Received(1).Get((WorldID, ItemID));
-        // _cache
-        //     .Received(1)
-        //     .Add(
-        //         (WorldID, ItemID),
-        //         Arg.Is<CraftSummaryPoco>(
-        //             craft => craft.WorldID == WorldID && craft.ItemID == ItemID
-        //         )
-        //     );
+        _cache
+            .Received(1)
+            .Add(
+                (WorldID, ItemID),
+                Arg.Is<CraftSummaryPoco>(
+                    craft => craft.WorldID == WorldID && craft.ItemID == ItemID
+                )
+            );
     }
 
     [SetUp]

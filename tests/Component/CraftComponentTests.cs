@@ -88,6 +88,8 @@ public class CraftComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
         timer.Stop();
 
+        // 1.2s 30
+        // 9s 500
         Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
     }
 }

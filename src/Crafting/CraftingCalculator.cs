@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GilGoblin.Cache;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Crafting;
@@ -14,6 +16,8 @@ public class CraftingCalculator : ICraftingCalculator
     private readonly IRecipeRepository _recipes;
     private readonly IPriceRepository<PricePoco> _prices;
     private readonly IRecipeGrocer _grocer;
+    private readonly ICostCache _recipeCache;
+    private readonly ICostCache _itemCache;
     private readonly ILogger<CraftingCalculator> _logger;
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
@@ -21,12 +25,16 @@ public class CraftingCalculator : ICraftingCalculator
         IRecipeRepository recipes,
         IPriceRepository<PricePoco> prices,
         IRecipeGrocer grocer,
+        ICostCache recipeCache,
+        ICostCache itemCache,
         ILogger<CraftingCalculator> logger
     )
     {
         _recipes = recipes;
         _prices = prices;
         _grocer = grocer;
+        _recipeCache = recipeCache;
+        _itemCache = itemCache;
         _logger = logger;
     }
 
@@ -44,6 +52,10 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID)
     {
+        var cached = _recipeCache.Get((worldID, recipeID));
+        if (cached is not null)
+            return cached.Cost;
+
         try
         {
             var recipe = _recipes.Get(recipeID);
@@ -55,13 +67,18 @@ public class CraftingCalculator : ICraftingCalculator
             var craftIngredients = AddPricesToIngredients(ingredients, ingredientPrices);
 
             var craftingCost = await CalculateCraftingCostForIngredients(worldID, craftIngredients);
-
-            _logger.LogInformation(
-                "Successfully calculated crafting cost of {CraftCost} for recipe {RecipeID} world {WorldID} with {IngCount} ingredients",
-                craftingCost,
-                recipeID,
-                worldID,
-                ingredients.Count()
+            var lastUpdated = ingredientPrices
+                .FirstOrDefault()
+                .LastUploadTime.ConvertLongUnixMsToDateTime();
+            _recipeCache.Add(
+                (worldID, recipeID),
+                new CostPoco
+                {
+                    Key = (worldID, recipeID),
+                    Cost = craftingCost,
+                    Created = DateTimeOffset.Now,
+                    Updated = lastUpdated
+                }
             );
             return craftingCost;
         }
@@ -91,7 +108,6 @@ public class CraftingCalculator : ICraftingCalculator
             var minCost = (int)Math.Min(craft.Price.AverageSold, craftingCost);
             totalCraftingCost += craft.Quantity * minCost;
         }
-
         return totalCraftingCost;
     }
 
