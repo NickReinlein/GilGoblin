@@ -153,7 +153,7 @@ public class PriceRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.Get(_worldID, _itemID);
+        _ = priceRepo.Get(_worldID, _itemID);
 
         _cache.Received(1).Get((_worldID, _itemID));
         _cache
@@ -169,9 +169,6 @@ public class PriceRepositoryTests : InMemoryTestDb
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
-        _cache
-            .Get((_worldID, _itemID))
-            .Returns(null, new PricePoco() { WorldID = _worldID, ItemID = _itemID });
 
         _ = priceRepo.Get(_worldID, _itemID);
         _ = priceRepo.Get(_worldID, _itemID);
@@ -185,16 +182,12 @@ public class PriceRepositoryTests : InMemoryTestDb
             );
     }
 
-    [SetUp]
-    public void Setup()
-    {
-        _cache = Substitute.For<IPriceCache>();
-    }
-
     [OneTimeSetUp]
     public override void OneTimeSetUp()
     {
         base.OneTimeSetUp();
+
+        _cache = Substitute.For<PriceCache>();
 
         var context = new GilGoblinDbContext(_options, _configuration);
         context.Price.AddRange(

@@ -21,5 +21,5 @@ public static class RecipePocoExtension
         };
 
     public static List<IngredientPoco> GetActiveIngredients(this RecipePoco poco) =>
-        poco.GetIngredientsList().Where(i => i != null && i.Quantity > 0).ToList();
+        poco.GetIngredientsList().Where(i => i?.Quantity > 0).ToList();
 }

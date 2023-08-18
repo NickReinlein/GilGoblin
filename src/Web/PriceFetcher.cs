@@ -28,7 +28,6 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     public async Task<PriceWebPoco?> FetchPriceAsync(int worldID, int id)
     {
-        _logger.LogInformation("Fetching for world {World}, 1 item: {ID}", worldID, id);
         var worldString = GetWorldString(worldID);
         var idString = $"{id}";
         var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsSingle });
@@ -41,12 +40,6 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         IEnumerable<int> ids
     )
     {
-        _logger.LogInformation(
-            "Fetching for world {World}, {Count} items, starting with id: {ID}",
-            worldID,
-            ids.Count(),
-            ids.FirstOrDefault()
-        );
         var idString = string.Empty;
         var worldString = GetWorldString(worldID);
         if (!ids.Any())

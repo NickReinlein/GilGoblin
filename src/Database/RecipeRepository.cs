@@ -9,29 +9,51 @@ namespace GilGoblin.Database;
 public class RecipeRepository : IRecipeRepository
 {
     private readonly GilGoblinDbContext _dbContext;
-    private readonly IRecipeCache _cache;
+    private readonly IRecipeCache _recipeCache;
+    private readonly IItemRecipeCache _itemCache;
 
-    public RecipeRepository(GilGoblinDbContext recipes, IRecipeCache cache)
+    public RecipeRepository(
+        GilGoblinDbContext recipes,
+        IRecipeCache cache,
+        IItemRecipeCache itemCache
+    )
     {
         _dbContext = recipes;
-        _cache = cache;
+        _recipeCache = cache;
+        _itemCache = itemCache;
     }
 
     public RecipePoco? Get(int recipeID)
     {
-        var cached = _cache.Get(recipeID);
+        if (recipeID < 1)
+            return null;
+
+        var cached = _recipeCache.Get(recipeID);
         if (cached is not null)
             return cached;
 
         var item = _dbContext?.Recipe?.FirstOrDefault(i => i.ID == recipeID);
         if (item is not null)
-            _cache.Add(item.ID, item);
+            _recipeCache.Add(item.ID, item);
 
         return item;
     }
 
-    public IEnumerable<RecipePoco> GetRecipesForItem(int itemID) =>
-        _dbContext.Recipe.Where(r => r.TargetItemID == itemID);
+    public IEnumerable<RecipePoco> GetRecipesForItem(int itemID)
+    {
+        if (itemID < 1)
+            return Enumerable.Empty<RecipePoco>();
+
+        var cached = _itemCache.Get(itemID);
+        if (cached is not null)
+            return cached;
+
+        var recipesForItem = _dbContext.Recipe.Where(r => r.TargetItemID == itemID).ToList();
+        if (recipesForItem.Any())
+            _itemCache.Add(itemID, recipesForItem);
+
+        return recipesForItem;
+    }
 
     public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> recipeIDs) =>
         _dbContext.Recipe.Where(r => recipeIDs.Any(a => a == r.ID));

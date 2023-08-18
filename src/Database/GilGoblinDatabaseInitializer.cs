@@ -108,7 +108,7 @@ public class GilGoblinDatabaseInitializer
             await context.AddRangeAsync(result);
             await context.SaveChangesAsync();
             _logger.LogInformation(
-                $"Sucessfully saved to table {tableName} {result.Count()} entries from CSV"
+                $"Sucessfully saved to table {tableName} {result.Count} entries from CSV"
             );
         }
     }

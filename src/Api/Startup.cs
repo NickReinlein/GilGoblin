@@ -47,8 +47,10 @@ public class Startup
     private static void AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
-        services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IPriceCache, PriceCache>();
+        services.AddScoped<IRecipeCache, RecipeCache>();
+        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        services.AddScoped<ICraftCache, CraftCache>();
     }
 
     private static void AddGoblinControllers(IServiceCollection services)

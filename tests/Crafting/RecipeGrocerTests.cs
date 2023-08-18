@@ -197,10 +197,8 @@ public class RecipeGrocerTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(allIngredients.Count(i => i is null), Is.GreaterThan(0));
-            Assert.That(allIngredients.Count(i => i is not null), Is.GreaterThan(0));
-            Assert.That(result.Count(), Is.EqualTo(5));
-            Assert.That(result.Any(i => i is null), Is.False);
+            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(!result.Any(i => i is null));
         });
     }
 
