@@ -4,6 +4,7 @@ using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using GilGoblin.Cache;
 
 namespace GilGoblin.Crafting;
 
@@ -13,6 +14,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     private readonly IPriceRepository<PricePoco> _priceRepository;
     private readonly IRecipeRepository _recipeRepository;
     private readonly IItemRepository _itemRepository;
+    private readonly ICraftCache _cache;
     private readonly ILogger<CraftRepository> _logger;
 
     public CraftRepository(
@@ -20,6 +22,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         IPriceRepository<PricePoco> priceRepo,
         IRecipeRepository recipeRepository,
         IItemRepository itemRepository,
+        ICraftCache cache,
         ILogger<CraftRepository> logger
     )
     {
@@ -28,10 +31,15 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _recipeRepository = recipeRepository;
         _itemRepository = itemRepository;
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<CraftSummaryPoco?> GetBestCraft(int worldID, int itemID)
     {
+        var cached = _cache.Get((worldID, itemID));
+        if (cached is not null)
+            return cached;
+
         var (recipeId, craftingCost) = await _calc.CalculateCraftingCostForItem(worldID, itemID);
         if (recipeId is < 1 || craftingCost.IsErrorCost())
             return null;
@@ -44,7 +52,15 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         var price = _priceRepository.Get(worldID, itemID);
         var itemInfo = _itemRepository.Get(itemID);
 
-        return new CraftSummaryPoco(price, itemInfo, craftingCost, recipe, ingredients);
+        var craftSummaryPoco = new CraftSummaryPoco(
+            price,
+            itemInfo,
+            craftingCost,
+            recipe,
+            ingredients
+        );
+        _cache.Add((worldID, itemID), craftSummaryPoco);
+        return craftSummaryPoco;
     }
 
     public async Task<IEnumerable<CraftSummaryPoco>> GetBestCrafts(int worldID)
@@ -53,8 +69,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             .GetAll()
             .Select(r => r.TargetItemID)
             .Distinct()
-            .Take(10) // temporary
-            .Order()
+            .Take(30) // temporary
             .ToList();
 
         var bestCraftPerItem = new List<CraftSummaryPoco>();
@@ -74,6 +89,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             }
         }
 
+        // Sort by profit
         bestCraftPerItem.Sort();
         return bestCraftPerItem;
     }

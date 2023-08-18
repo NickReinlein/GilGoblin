@@ -23,7 +23,7 @@ public class MarketListingPoco
         Hq = hq;
         try
         {
-            Timestamp = GeneralFunctions.ConvertLongUnixMsToDateTime(lastReviewTime);
+            Timestamp = lastReviewTime.ConvertLongUnixMsToDateTime();
         }
         catch (Exception)
         {

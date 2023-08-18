@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
@@ -9,14 +9,26 @@ namespace GilGoblin.Database;
 public class PriceRepository : IPriceRepository<PricePoco>
 {
     private readonly GilGoblinDbContext _dbContext;
+    private readonly IPriceCache _cache;
 
-    public PriceRepository(GilGoblinDbContext dbContext)
+    public PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache)
     {
         _dbContext = dbContext;
+        _cache = cache;
     }
 
-    public PricePoco? Get(int worldID, int id) =>
-        _dbContext.Price.FirstOrDefault(p => p.WorldID == worldID && p.ItemID == id);
+    public PricePoco? Get(int worldID, int id)
+    {
+        var cached = _cache.Get((worldID, id));
+        if (cached is not null)
+            return cached;
+
+        var price = _dbContext.Price.FirstOrDefault(p => p.WorldID == worldID && p.ItemID == id);
+        if (price is not null)
+            _cache.Add((price.WorldID, price.ItemID), price);
+
+        return price;
+    }
 
     public IEnumerable<PricePoco> GetMultiple(int worldID, IEnumerable<int> ids) =>
         _dbContext.Price.Where(p => p.WorldID == worldID && ids.Any(i => i == p.ItemID));

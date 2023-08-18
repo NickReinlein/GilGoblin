@@ -1,3 +1,4 @@
+using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
@@ -39,7 +40,18 @@ public class Startup
         AddGoblinCrafting(services);
         AddGoblinDatabases(services);
         AddGoblinControllers(services);
+        AddGoblinCaches(services);
         AddBasicBuilderServices(services);
+    }
+
+    private static void AddGoblinCaches(IServiceCollection services)
+    {
+        services.AddScoped<IItemCache, ItemCache>();
+        services.AddScoped<IPriceCache, PriceCache>();
+        services.AddScoped<IRecipeCache, RecipeCache>();
+        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        services.AddScoped<ICraftCache, CraftCache>();
+        services.AddScoped<ICostCache, CostCache>();
     }
 
     private static void AddGoblinControllers(IServiceCollection services)

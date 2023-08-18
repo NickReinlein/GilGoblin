@@ -1,16 +1,23 @@
+using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
 
 public class PriceRepositoryTests : InMemoryTestDb
 {
+    private IPriceCache _cache;
+
+    private static readonly int _worldID = 33;
+    private static readonly int _itemID = 88;
+
     [Test]
     public void GivenAGetAll_WhenTheWorldIDExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.GetAll(22);
 
@@ -27,7 +34,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGetAll_WhenTheWorldIDDoesNotExist_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.GetAll(999);
 
@@ -39,7 +46,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGet_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.Get(22, id);
 
@@ -55,7 +62,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGet_WhenTheIDIsValidButNotTheWorldID_ThenNullIsReturned(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.Get(854, id);
 
@@ -68,7 +75,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGet_WhenIDIsInvalid_ThenNullIsReturned(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.Get(22, id);
 
@@ -79,7 +86,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.GetMultiple(22, new int[] { 11, 12 });
 
@@ -95,9 +102,9 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGetMultiple_WhenIDsAreValidButNotWorldID_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(33, new int[] { 11, 12 });
+        var result = priceRepo.GetMultiple(_worldID, new int[] { 11, 12 });
 
         Assert.That(!result.Any());
     }
@@ -106,7 +113,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
         var result = priceRepo.GetMultiple(22, new int[] { 11, 99 });
 
@@ -122,9 +129,9 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGetMultiple_WhenIDsAreInvalid_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(22, new int[] { 33, 99 });
+        var result = priceRepo.GetMultiple(22, new int[] { _worldID, 99 });
 
         Assert.That(!result.Any());
     }
@@ -133,11 +140,46 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGetMultiple_WhenIDsEmpty_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var priceRepo = new PriceRepository(context);
+        var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(22, new int[] { });
+        var result = priceRepo.GetMultiple(22, Array.Empty<int>());
 
         Assert.That(!result.Any());
+    }
+
+    [Test]
+    public void GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var priceRepo = new PriceRepository(context, _cache);
+
+        _ = priceRepo.Get(_worldID, _itemID);
+
+        _cache.Received(1).Get((_worldID, _itemID));
+        _cache
+            .Received(1)
+            .Add(
+                (_worldID, _itemID),
+                Arg.Is<PricePoco>(price => price.WorldID == _worldID && price.ItemID == _itemID)
+            );
+    }
+
+    [Test]
+    public void GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var priceRepo = new PriceRepository(context, _cache);
+
+        _ = priceRepo.Get(_worldID, _itemID);
+        _ = priceRepo.Get(_worldID, _itemID);
+
+        _cache.Received(2).Get((_worldID, _itemID));
+        _cache
+            .Received(1)
+            .Add(
+                (_worldID, _itemID),
+                Arg.Is<PricePoco>(price => price.WorldID == _worldID && price.ItemID == _itemID)
+            );
     }
 
     [OneTimeSetUp]
@@ -145,11 +187,13 @@ public class PriceRepositoryTests : InMemoryTestDb
     {
         base.OneTimeSetUp();
 
+        _cache = Substitute.For<PriceCache>();
+
         var context = new GilGoblinDbContext(_options, _configuration);
         context.Price.AddRange(
             new PricePoco { WorldID = 22, ItemID = 11 },
             new PricePoco { WorldID = 22, ItemID = 12 },
-            new PricePoco { WorldID = 33, ItemID = 88 },
+            new PricePoco { WorldID = _worldID, ItemID = _itemID },
             new PricePoco { WorldID = 44, ItemID = 99 }
         );
         context.SaveChanges();

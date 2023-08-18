@@ -5,12 +5,11 @@ namespace GilGoblin.Services;
 
 public static class GeneralFunctions
 {
-    public static DateTime ConvertLongUnixMsToDateTime(long elapsed_time)
+    public static DateTime ConvertLongUnixMsToDateTime(this long elapsed_time)
     {
         try
         {
-            var date = DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
-            return date;
+            return DateTimeOffset.FromUnixTimeMilliseconds(elapsed_time).LocalDateTime;
         }
         catch (Exception ex)
         {

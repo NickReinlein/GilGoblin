@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace GilGoblin.Pocos;
 
 public class PricePoco : BasePricePoco

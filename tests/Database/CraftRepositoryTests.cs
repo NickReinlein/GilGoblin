@@ -1,3 +1,4 @@
+using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -15,8 +16,8 @@ public class CraftRepositoryTests
     private IPriceRepository<PricePoco> _priceRepository;
     private IRecipeRepository _recipeRepository;
     private IItemRepository _itemRepository;
+    private ICraftCache _cache;
     private ILogger<CraftRepository> _logger;
-
     public static readonly int WorldID = 22;
     public static readonly int ItemID = 6400;
     public static readonly int RecipeID = 444;
@@ -67,6 +68,22 @@ public class CraftRepositoryTests
         Assert.That(result, Is.Empty);
     }
 
+    [Test]
+    public async Task GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    {
+        _ = await _craftRepository.GetBestCraft(WorldID, ItemID);
+
+        _cache.Received(1).Get((WorldID, ItemID));
+        _cache
+            .Received(1)
+            .Add(
+                (WorldID, ItemID),
+                Arg.Is<CraftSummaryPoco>(
+                    craft => craft.WorldID == WorldID && craft.ItemID == ItemID
+                )
+            );
+    }
+
     [SetUp]
     public void SetUp()
     {
@@ -76,6 +93,9 @@ public class CraftRepositoryTests
             .Get(WorldID, ItemID)
             .Returns(new PricePoco { WorldID = WorldID, ItemID = ItemID });
         _itemRepository.Get(ItemID).Returns(new ItemInfoPoco { ID = ItemID, Name = ItemName });
+        _cache
+            .Get((WorldID, ItemID))
+            .Returns(null, new CraftSummaryPoco() { ItemID = ItemID, Name = ItemName });
     }
 
     [OneTimeSetUp]
@@ -85,6 +105,7 @@ public class CraftRepositoryTests
         _priceRepository = Substitute.For<IPriceRepository<PricePoco>>();
         _recipeRepository = Substitute.For<IRecipeRepository>();
         _itemRepository = Substitute.For<IItemRepository>();
+        _cache = Substitute.For<ICraftCache>();
         _logger = Substitute.For<ILogger<CraftRepository>>();
 
         _craftRepository = new CraftRepository(
@@ -92,6 +113,7 @@ public class CraftRepositoryTests
             _priceRepository,
             _recipeRepository,
             _itemRepository,
+            _cache,
             _logger
         );
     }

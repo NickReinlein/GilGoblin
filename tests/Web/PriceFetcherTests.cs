@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Net;
 using System.Text.Json;
 using GilGoblin.Pocos;
@@ -10,6 +9,7 @@ using RichardSzalay.MockHttp;
 
 namespace GilGoblin.Tests.Web;
 
+[NonParallelizable]
 public class PriceFetcherTests : FetcherTests
 {
     private PriceFetcher _fetcher;
@@ -110,7 +110,7 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenNoIDsAreProvided_ThenWeReturnAnEmptyList()
     {
-        var result = await _fetcher.FetchMultiplePricesAsync(_worldID, new int[] { });
+        var result = await _fetcher.FetchMultiplePricesAsync(_worldID, Array.Empty<int>());
 
         Assert.That(result, Is.Empty);
     }
@@ -330,7 +330,7 @@ public class PriceFetcherTests : FetcherTests
     }
 
     protected static PriceWebPoco GetNewPoco() =>
-        new PriceWebPoco
+        new()
         {
             ItemID = _itemID1,
             WorldID = _worldID,

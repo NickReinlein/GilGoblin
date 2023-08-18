@@ -1,3 +1,4 @@
+using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
@@ -17,6 +18,8 @@ public class CraftingCalculatorTests
     private IRecipeGrocer _grocer;
     private ILogger<CraftingCalculator> _logger;
     private CraftingCalculator? _calc;
+    private ICostCache _recipeCache;
+    private ICostCache _itemCache;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
     private static readonly int _worldID = 34; // Brynnhildr
@@ -31,8 +34,17 @@ public class CraftingCalculatorTests
         _recipes = Substitute.For<IRecipeRepository>();
         _grocer = Substitute.For<IRecipeGrocer>();
         _prices = Substitute.For<IPriceRepository<PricePoco>>();
+        _recipeCache = Substitute.For<ICostCache>();
+        _itemCache = Substitute.For<ICostCache>();
         _logger = Substitute.For<ILogger<CraftingCalculator>>();
-        _calc = new CraftingCalculator(_recipes, _prices, _grocer, _logger);
+        _calc = new CraftingCalculator(
+            _recipes,
+            _prices,
+            _grocer,
+            _recipeCache,
+            _itemCache,
+            _logger
+        );
     }
 
     [Test]
@@ -46,8 +58,8 @@ public class CraftingCalculatorTests
             inexistentItemID
         );
 
-        _recipes.Received(1).GetRecipesForItem(inexistentItemID);
-        _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
+        _recipes.DidNotReceive().GetRecipesForItem(inexistentItemID);
+        _prices.DidNotReceive().Get(_worldID, inexistentItemID);
         Assert.That(recipeId, Is.LessThan(0));
         Assert.That(cost, Is.EqualTo(_errorCost));
     }
@@ -150,7 +162,7 @@ public class CraftingCalculatorTests
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
         var prices = new List<PricePoco>
         {
-            new PricePoco { ItemID = 222, WorldID = _worldID }
+            new PricePoco { WorldID = _worldID, ItemID = 222 }
         };
 
         Assert.Throws<InvalidOperationException>(

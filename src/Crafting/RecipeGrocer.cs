@@ -22,13 +22,7 @@ public class RecipeGrocer : IRecipeGrocer
     public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeID)
     {
         var recipe = _recipes.Get(recipeID);
-        if (recipe is null)
-        {
-            _logger.LogInformation("No recipe was found with ID {RecipeID} ", recipeID);
-            return Array.Empty<IngredientPoco>();
-        }
-
-        return await BreakdownRecipe(recipe);
+        return recipe is null ? Array.Empty<IngredientPoco>() : await BreakdownRecipe(recipe);
     }
 
     public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipe(RecipePoco recipe) =>
@@ -39,38 +33,18 @@ public class RecipeGrocer : IRecipeGrocer
     )
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
-        _logger.LogInformation(
-            "Breaking down {IngCount} ingredients in ingredient list",
-            ingredientList.Count()
-        );
-        foreach (var ingredient in ingredientList)
+        foreach (var ingredient in ingredientList.Where(i => i?.Quantity > 0))
         {
-            if (ingredient is null)
-                continue;
-
-            var itemID = ingredient.ItemID;
-            _logger.LogDebug("Breaking down item ID {ItemID}", itemID);
-
-            var breakdownIngredients = await BreakdownItem(itemID);
-            if (breakdownIngredients.Any(i => i is not null && i.Quantity > 0))
+            var breakdownIngredients = await BreakdownItem(ingredient.ItemID);
+            if (!breakdownIngredients.Any())
             {
-                _logger.LogDebug("Found {IngCount} ingredients", breakdownIngredients.Count());
-                var ingredients = breakdownIngredients
-                    .Where(i => i is not null && i.Quantity > 0)
-                    .ToList<IngredientPoco>();
-                ingredients.ForEach(i => i.Quantity *= ingredient.Quantity);
-                ingredientsBrokenDownList.AddRange(ingredients);
-            }
-            else
-            {
-                _logger.LogDebug("Did not find any items to break down item ID {ItemID}", itemID);
                 ingredientsBrokenDownList.Add(ingredient);
+                continue;
             }
+
+            breakdownIngredients.ToList().ForEach(i => i.Quantity *= ingredient.Quantity);
+            ingredientsBrokenDownList.AddRange(breakdownIngredients);
         }
-        _logger.LogInformation(
-            "Breakdown complete. {IngCount} ingredients returned",
-            ingredientList.Count()
-        );
         return ingredientsBrokenDownList;
     }
 

@@ -1,4 +1,5 @@
 using GilGoblin.Api;
+using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
@@ -26,7 +27,7 @@ public class DependencyInjectionTests
         _configuration = new ConfigurationBuilder().Build();
 
         _environment = Substitute.For<IWebHostEnvironment>();
-        _environment.EnvironmentName.Returns("production");
+        // _environment.EnvironmentName.Returns("production");
 
         var startup = new Startup(_configuration, _environment);
         startup.ConfigureServices(_services);
@@ -36,6 +37,10 @@ public class DependencyInjectionTests
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
+    [TestCase(typeof(IPriceCache))]
+    [TestCase(typeof(IRecipeCache))]
+    [TestCase(typeof(IItemCache))]
+    [TestCase(typeof(IItemRecipeCache))]
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IPriceDataFetcher))]
