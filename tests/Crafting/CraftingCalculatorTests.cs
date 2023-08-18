@@ -58,8 +58,8 @@ public class CraftingCalculatorTests
             inexistentItemID
         );
 
-        _recipes.Received(1).GetRecipesForItem(inexistentItemID);
-        _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentItemID);
+        _recipes.DidNotReceive().GetRecipesForItem(inexistentItemID);
+        _prices.DidNotReceive().Get(_worldID, inexistentItemID);
         Assert.That(recipeId, Is.LessThan(0));
         Assert.That(cost, Is.EqualTo(_errorCost));
     }

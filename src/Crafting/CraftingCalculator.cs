@@ -40,9 +40,17 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<(int, int)> CalculateCraftingCostForItem(int worldID, int itemID)
     {
+        var errorReturn = (-1, ERROR_DEFAULT_COST);
+        if (worldID < 1 || itemID < 1)
+            return errorReturn;
+
+        var cached = _itemCache.Get((worldID, itemID));
+        if (cached is not null)
+            return (cached.RecipeID, cached.Cost);
+
         var recipes = _recipes.GetRecipesForItem(itemID);
         if (!recipes.Any())
-            return (-1, ERROR_DEFAULT_COST);
+            return errorReturn;
 
         var (recipeID, lowestCraftingCost) = await GetLowestCraftingCost(worldID, recipes);
 
