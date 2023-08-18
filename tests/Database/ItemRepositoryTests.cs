@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
@@ -9,7 +8,7 @@ namespace GilGoblin.Tests.Database;
 
 public class ItemRepositoryTests : InMemoryTestDb
 {
-    private ItemCache _cache;
+    private IItemCache _cache;
 
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
@@ -122,15 +121,23 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndCached_ThenTheRepositoryReturnsTheCachedEntry()
+    public void GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
+        _cache.Get(2).Returns(null, new ItemInfoPoco() { ID = 2 });
         _ = itemRepo.Get(2);
 
         var item = itemRepo.Get(2);
 
         _cache.Received(2).Get(2);
+        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.ID == 2));
+    }
+
+    [SetUp]
+    public void Setup()
+    {
+        _cache = Substitute.For<IItemCache>();
     }
 
     [OneTimeSetUp]
@@ -138,7 +145,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     {
         base.OneTimeSetUp();
 
-        _cache = Substitute.For<ItemCache>();
+        _cache = Substitute.For<IItemCache>();
 
         using var context = new GilGoblinDbContext(_options, _configuration);
         context.ItemInfo.AddRange(

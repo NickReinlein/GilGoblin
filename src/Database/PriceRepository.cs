@@ -17,8 +17,18 @@ public class PriceRepository : IPriceRepository<PricePoco>
         _cache = cache;
     }
 
-    public PricePoco? Get(int worldID, int id) =>
-        _dbContext.Price.FirstOrDefault(p => p.WorldID == worldID && p.ItemID == id);
+    public PricePoco? Get(int worldID, int id)
+    {
+        var cached = _cache.Get((worldID, id));
+        if (cached is not null)
+            return cached;
+
+        var price = _dbContext.Price.FirstOrDefault(p => p.WorldID == worldID && p.ItemID == id);
+        if (price is not null)
+            _cache.Add((price.WorldID, price.ItemID), price);
+
+        return price;
+    }
 
     public IEnumerable<PricePoco> GetMultiple(int worldID, IEnumerable<int> ids) =>
         _dbContext.Price.Where(p => p.WorldID == worldID && ids.Any(i => i == p.ItemID));
