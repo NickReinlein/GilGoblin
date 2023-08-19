@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
 namespace GilGoblin.Database;
 
-public class RecipeRepository : IRecipeRepository
+public class RecipeRepository : IRecipeRepository, IRepositoryCache
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IRecipeCache _recipeCache;
@@ -59,4 +61,19 @@ public class RecipeRepository : IRecipeRepository
         _dbContext.Recipe.Where(r => recipeIDs.Any(a => a == r.ID));
 
     public IEnumerable<RecipePoco> GetAll() => _dbContext.Recipe;
+
+    public void FillCache()
+    {
+        var recipes = _dbContext.Recipe.ToList();
+        recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
+
+        var itemIDs = recipes.Select(r => r.TargetItemID).Distinct().ToList();
+        itemIDs.ForEach(
+            itemID =>
+                _itemCache.Add(
+                    itemID,
+                    recipes.Where(itemRecipe => itemRecipe.ID == itemID).ToList()
+                )
+        );
+    }
 }

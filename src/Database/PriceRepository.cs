@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
 namespace GilGoblin.Database;
 
-public class PriceRepository : IPriceRepository<PricePoco>
+public class PriceRepository : IPriceRepository<PricePoco>, IRepositoryCache
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IPriceCache _cache;
@@ -35,4 +37,10 @@ public class PriceRepository : IPriceRepository<PricePoco>
 
     public IEnumerable<PricePoco> GetAll(int worldID) =>
         _dbContext.Price.Where(p => p.WorldID == worldID);
+
+    public void FillCache()
+    {
+        var items = _dbContext?.Price?.ToList();
+        items.ForEach(price => _cache.Add((price.WorldID, price.ItemID), price));
+    }
 }

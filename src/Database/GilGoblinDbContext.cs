@@ -9,9 +9,11 @@ public class GilGoblinDbContext : DbContext
     private readonly IConfiguration _configuration;
     private readonly DbContextOptions<GilGoblinDbContext> _options;
 
-    public DbSet<PricePoco> Price { get; set; }
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
+    public DbSet<PricePoco> Price { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
+
+    // public DbSet<CostPoco> RecipeCost { get; set; }
 
     public GilGoblinDbContext(DbContextOptions<GilGoblinDbContext> options)
         : base(options)
@@ -43,6 +45,16 @@ public class GilGoblinDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
+        modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ID);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Name);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.IconID);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.VendorPrice);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.StackSize);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Level);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.CanBeHq);
+
         modelBuilder.Entity<PricePoco>().ToTable("Price");
         modelBuilder.Entity<PricePoco>().Property(t => t.ItemID);
         modelBuilder.Entity<PricePoco>().Property(t => t.WorldID);
@@ -54,16 +66,6 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldHQ);
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldNQ);
         modelBuilder.Entity<PricePoco>().HasKey(t => new { t.ItemID, t.WorldID });
-
-        modelBuilder.Entity<ItemInfoPoco>().ToTable("ItemInfo");
-        modelBuilder.Entity<ItemInfoPoco>().HasKey(t => t.ID);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Name);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.IconID);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.VendorPrice);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.StackSize);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Level);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.CanBeHq);
 
         modelBuilder.Entity<RecipePoco>().ToTable("Recipe");
         modelBuilder.Entity<RecipePoco>().HasKey(t => t.ID);
@@ -90,6 +92,8 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient6TargetID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient7TargetID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient8TargetID);
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient9TargetID);
+
+        // modelBuilder.Entity<CostPoco>().ToTable("RecipeCost");
+        // modelBuilder.Entity<CostPoco>().HasKey(t => t.ID);
     }
 }

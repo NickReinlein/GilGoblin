@@ -23,11 +23,12 @@ public class ComponentTests
         {
             builder.ConfigureTestServices(services =>
             {
+                Startup.AddGoblinServices(services);
                 var options = new DbContextOptionsBuilder<GilGoblinDbContext>()
                     .UseSqlite($"Data Source=../../../../resources/GilGoblin.db;")
                     .Options;
-
                 services.AddSingleton(_ => new GilGoblinDbContext(options));
+                Startup.FillCaches(services);
             });
         });
 

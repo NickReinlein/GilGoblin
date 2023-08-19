@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
@@ -42,6 +43,7 @@ public class Startup
         AddGoblinControllers(services);
         AddGoblinCaches(services);
         AddBasicBuilderServices(services);
+        FillCaches(services);
     }
 
     private static void AddGoblinCaches(IServiceCollection services)
@@ -105,5 +107,12 @@ public class Startup
             endpoints.MapControllers();
             endpoints.MapSwagger();
         });
+    }
+
+    public static void FillCaches(IServiceCollection services)
+    {
+        var serviceProvider = services.BuildServiceProvider();
+        var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
+        itemRepository.FillCache();
     }
 }
