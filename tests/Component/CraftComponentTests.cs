@@ -78,23 +78,26 @@ public class CraftComponentTests : ComponentTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
 
-    // [Test]
-    // public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
-    // {
-    //     var fullEndpoint = $"http://localhost:55448/craft/34";
-    //     _ = await _client.GetAsync(fullEndpoint);
+    [Test]
+    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
+    {
+        var fullEndpoint = $"http://localhost:55448/craft/34";
+        _ = await _client.GetAsync(fullEndpoint);
 
-    //     var timer = new Stopwatch();
-    //     timer.Start();
-    //     using var response = await _client.GetAsync(fullEndpoint);
-    //     timer.Stop();
+        var timer = new Stopwatch();
+        timer.Start();
+        using var response = await _client.GetAsync(fullEndpoint);
+        timer.Stop();
 
-    //     // 1.2s 30
-    //     // 9s 500
-    //     // 466s all
+        // 1.2s 30
+        // 9s 500
+        // 466s all
 
-    //     // now 6.9s 500
-    //     // 78s all
-    //     Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
-    // }
+        // now 6.9s 500
+        // 78s all
+
+        // now 5.4s 500 fillcacheItem
+        // 72s all
+        Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
+    }
 }

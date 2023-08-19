@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Pocos;
@@ -92,5 +93,19 @@ public class ItemInfoComponentTests : ComponentTests
                 "Missing a suspicicious number of entries that can be High Quality"
             );
         });
+    }
+
+    [Test]
+    public async Task GivenACallGetAll_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
+    {
+        var fullEndpoint = $"http://localhost:55448/items";
+        _ = await _client.GetAsync(fullEndpoint);
+
+        var timer = new Stopwatch();
+        timer.Start();
+        using var response = await _client.GetAsync(fullEndpoint);
+        timer.Stop();
+
+        Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
     }
 }

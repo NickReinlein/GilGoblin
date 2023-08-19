@@ -69,7 +69,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             .GetAll()
             .Select(r => r.TargetItemID)
             .Distinct()
-            .Take(30) // temporary
+            .Take(50) // temporary
             .ToList();
 
         var bestCraftPerItem = new List<CraftSummaryPoco>();
