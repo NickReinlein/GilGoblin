@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
@@ -43,10 +42,10 @@ public class Startup
         AddGoblinControllers(services);
         AddGoblinCaches(services);
         AddBasicBuilderServices(services);
-        FillCaches(services);
+        FillGoblinCaches(services);
     }
 
-    private static void AddGoblinCaches(IServiceCollection services)
+    public static void AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
         services.AddScoped<IPriceCache, PriceCache>();
@@ -54,6 +53,9 @@ public class Startup
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<ICostCache, CostCache>();
+        services.AddScoped<IRepositoryCache, ItemRepository>();
+        services.AddScoped<IRepositoryCache, PriceRepository>();
+        services.AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
     private static void AddGoblinControllers(IServiceCollection services)
@@ -109,10 +111,12 @@ public class Startup
         });
     }
 
-    public static void FillCaches(IServiceCollection services)
+    public static void FillGoblinCaches(IServiceCollection services)
     {
         var serviceProvider = services.BuildServiceProvider();
         var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
-        itemRepository.FillCache();
+        var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+        if (dbContextService.Database?.CanConnect() == true)
+            itemRepository.FillCache();
     }
 }

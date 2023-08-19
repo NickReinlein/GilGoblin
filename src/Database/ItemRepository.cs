@@ -1,14 +1,12 @@
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
 namespace GilGoblin.Database;
 
-public class ItemRepository : IItemRepository
+public class ItemRepository : IItemRepository, IRepositoryCache
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IItemCache _cache;
