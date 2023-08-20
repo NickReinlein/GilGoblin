@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using GilGoblin.Cache;
 
 namespace GilGoblin.Repository;
 
-public interface IPriceRepository<T>
+public interface IPriceRepository<T> : IRepositoryCache
     where T : class
 {
     T? Get(int worldID, int id);

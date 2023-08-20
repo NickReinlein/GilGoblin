@@ -95,6 +95,9 @@ public class CraftComponentTests : ComponentTests
 
         // now 6.9s 500
         // 78s all
+
+        // now 5.4s 500 fillcacheItem
+        // 72s all
         Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
     }
 }

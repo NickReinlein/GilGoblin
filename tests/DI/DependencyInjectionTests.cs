@@ -1,38 +1,16 @@
-using GilGoblin.Api;
 using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Web;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DI;
 
-public class DependencyInjectionTests
+public class DependencyInjectionTests : TestWithDatabase
 {
-    private IConfiguration _configuration;
-    private IWebHostEnvironment _environment;
-    private IServiceCollection _services;
-
-    [SetUp]
-    public void SetUp()
-    {
-        _services = new ServiceCollection();
-
-        _configuration = new ConfigurationBuilder().Build();
-
-        _environment = Substitute.For<IWebHostEnvironment>();
-        // _environment.EnvironmentName.Returns("production");
-
-        var startup = new Startup(_configuration, _environment);
-        startup.ConfigureServices(_services);
-    }
-
     [TestCase(typeof(IItemRepository))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
@@ -44,9 +22,10 @@ public class DependencyInjectionTests
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IPriceDataFetcher))]
+    [TestCase(typeof(IRepositoryCache))]
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
     [TestCase(typeof(DataFetcher<PriceWebPoco, PriceWebResponse>))]
-    public void GivenAGoblinService_WhenWeSetup_TheServiceIsResolved(Type serviceType)
+    public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         var provider = _services.BuildServiceProvider();
 

@@ -35,4 +35,10 @@ public class PriceRepository : IPriceRepository<PricePoco>
 
     public IEnumerable<PricePoco> GetAll(int worldID) =>
         _dbContext.Price.Where(p => p.WorldID == worldID);
+
+    public void FillCache()
+    {
+        var items = _dbContext?.Price?.ToList();
+        items.ForEach(price => _cache.Add((price.WorldID, price.ItemID), price));
+    }
 }

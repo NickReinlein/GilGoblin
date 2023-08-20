@@ -53,7 +53,6 @@ public class CraftingCalculator : ICraftingCalculator
             return errorReturn;
 
         var (recipeID, lowestCraftingCost) = await GetLowestCraftingCost(worldID, recipes);
-
         LogCraftingResult(worldID, itemID, recipes.Count(), lowestCraftingCost);
         return (recipeID, lowestCraftingCost);
     }
@@ -141,7 +140,6 @@ public class CraftingCalculator : ICraftingCalculator
     {
         var itemIDList = ingredients
             .Where(i => i is not null)
-            .ToList()
             .Select(e => e!.ItemID)
             .ToList();
         itemIDList.Add(itemID);

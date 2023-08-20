@@ -34,4 +34,10 @@ public class ItemRepository : IItemRepository
         _dbContext?.ItemInfo?.Where(i => itemIDs.Any(a => a == i.ID));
 
     public IEnumerable<ItemInfoPoco> GetAll() => _dbContext?.ItemInfo;
+
+    public void FillCache()
+    {
+        var items = _dbContext?.ItemInfo?.ToList();
+        items.ForEach(item => _cache.Add(item.ID, item));
+    }
 }
