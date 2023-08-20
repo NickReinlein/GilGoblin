@@ -115,8 +115,14 @@ public class Startup
     {
         var serviceProvider = services.BuildServiceProvider();
         var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
+        var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+        var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
         var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
         if (dbContextService.Database?.CanConnect() == true)
+        {
             itemRepository.FillCache();
+            priceRepository.FillCache();
+            recipeRepository.FillCache();
+        }
     }
 }

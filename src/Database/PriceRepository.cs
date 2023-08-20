@@ -6,7 +6,7 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Database;
 
-public class PriceRepository : IPriceRepository<PricePoco>, IRepositoryCache
+public class PriceRepository : IPriceRepository<PricePoco>
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IPriceCache _cache;

@@ -6,7 +6,7 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Database;
 
-public class ItemRepository : IItemRepository, IRepositoryCache
+public class ItemRepository : IItemRepository
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IItemCache _cache;
