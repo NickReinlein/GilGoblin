@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GilGoblin.Cache;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -15,26 +14,23 @@ public class CraftingCalculator : ICraftingCalculator
 {
     private readonly IRecipeRepository _recipes;
     private readonly IPriceRepository<PricePoco> _prices;
+    private readonly IRecipeCostRepository _recipeCosts;
     private readonly IRecipeGrocer _grocer;
-    private readonly ICostCache _recipeCache;
-    private readonly ICostCache _itemCache;
     private readonly ILogger<CraftingCalculator> _logger;
     public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeRepository recipes,
         IPriceRepository<PricePoco> prices,
+        IRecipeCostRepository recipeCosts,
         IRecipeGrocer grocer,
-        ICostCache recipeCache,
-        ICostCache itemCache,
         ILogger<CraftingCalculator> logger
     )
     {
         _recipes = recipes;
         _prices = prices;
         _grocer = grocer;
-        _recipeCache = recipeCache;
-        _itemCache = itemCache;
+        _recipeCosts = recipeCosts;
         _logger = logger;
     }
 
@@ -43,10 +39,6 @@ public class CraftingCalculator : ICraftingCalculator
         var errorReturn = (-1, ERROR_DEFAULT_COST);
         if (worldID < 1 || itemID < 1)
             return errorReturn;
-
-        var cached = _itemCache.Get((worldID, itemID));
-        if (cached is not null)
-            return (cached.RecipeID, cached.Cost);
 
         var recipes = _recipes.GetRecipesForItem(itemID);
         if (!recipes.Any())
@@ -59,9 +51,9 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID)
     {
-        var cached = _recipeCache.Get((worldID, recipeID));
-        if (cached is not null)
-            return cached.Cost;
+        var calculated = _recipeCosts.Get(worldID, recipeID);
+        if (calculated is not null)
+            return calculated.Cost;
 
         try
         {
@@ -77,11 +69,11 @@ public class CraftingCalculator : ICraftingCalculator
             var lastUpdated = ingredientPrices
                 .FirstOrDefault()
                 .LastUploadTime.ConvertLongUnixMsToDateTime();
-            _recipeCache.Add(
-                (worldID, recipeID),
-                new CostPoco
+            await _recipeCosts.Add(
+                new RecipeCostPoco
                 {
-                    Key = (worldID, recipeID),
+                    RecipeID = recipeID,
+                    WorldID = worldID,
                     Cost = craftingCost,
                     Created = DateTimeOffset.Now,
                     Updated = lastUpdated
@@ -94,13 +86,12 @@ public class CraftingCalculator : ICraftingCalculator
             _logger.LogError(
                 $"Failed to find market data while calculating crafting cost for recipe {recipeID} in world {worldID}"
             );
-            return ERROR_DEFAULT_COST;
         }
         catch (Exception e)
         {
             _logger.LogError($"Failed to calculate crafting cost: {e.Message}");
-            return ERROR_DEFAULT_COST;
         }
+        return ERROR_DEFAULT_COST;
     }
 
     public async Task<int> CalculateCraftingCostForIngredients(
@@ -138,10 +129,7 @@ public class CraftingCalculator : ICraftingCalculator
         IEnumerable<IngredientPoco> ingredients
     )
     {
-        var itemIDList = ingredients
-            .Where(i => i is not null)
-            .Select(e => e!.ItemID)
-            .ToList();
+        var itemIDList = ingredients.Where(i => i is not null).Select(e => e!.ItemID).ToList();
         itemIDList.Add(itemID);
         itemIDList.Sort();
 
@@ -168,7 +156,28 @@ public class CraftingCalculator : ICraftingCalculator
         var recipeId = -1;
         foreach (var recipe in recipes.Where(recipe => recipe is not null))
         {
-            var recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.ID);
+            var cached = _recipeCosts.Get(worldID, recipe.ID);
+            var recipeCost = ERROR_DEFAULT_COST;
+            if (cached is not null)
+                recipeCost = cached.Cost;
+            else
+            {
+                recipeCost = await CalculateCraftingCostForRecipe(worldID, recipe.ID);
+                if (ERROR_DEFAULT_COST - recipeCost < 1000)
+                    continue;
+
+                await _recipeCosts.Add(
+                    new RecipeCostPoco
+                    {
+                        RecipeID = recipe.ID,
+                        WorldID = worldID,
+                        Cost = recipeCost,
+                        Created = DateTimeOffset.Now,
+                        Updated = DateTimeOffset.Now,
+                    }
+                );
+            }
+
             if (recipeCost < lowestCost)
             {
                 lowestCost = recipeCost;

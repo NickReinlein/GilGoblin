@@ -12,8 +12,7 @@ public class GilGoblinDbContext : DbContext
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
-
-    // public DbSet<CostPoco> RecipeCost { get; set; }
+    public DbSet<RecipeCostPoco> RecipeCost { get; set; }
 
     public GilGoblinDbContext(DbContextOptions<GilGoblinDbContext> options)
         : base(options)
@@ -56,6 +55,7 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.CanBeHq);
 
         modelBuilder.Entity<PricePoco>().ToTable("Price");
+        modelBuilder.Entity<PricePoco>().HasKey(t => new { t.ItemID, t.WorldID });
         modelBuilder.Entity<PricePoco>().Property(t => t.ItemID);
         modelBuilder.Entity<PricePoco>().Property(t => t.WorldID);
         modelBuilder.Entity<PricePoco>().Property(t => t.LastUploadTime);
@@ -65,7 +65,6 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSold);
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldHQ);
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSoldNQ);
-        modelBuilder.Entity<PricePoco>().HasKey(t => new { t.ItemID, t.WorldID });
 
         modelBuilder.Entity<RecipePoco>().ToTable("Recipe");
         modelBuilder.Entity<RecipePoco>().HasKey(t => t.ID);
@@ -93,7 +92,12 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient7TargetID);
         modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient8TargetID);
 
-        // modelBuilder.Entity<CostPoco>().ToTable("RecipeCost");
-        // modelBuilder.Entity<CostPoco>().HasKey(t => t.ID);
+        modelBuilder.Entity<RecipeCostPoco>().ToTable("RecipeCost");
+        modelBuilder.Entity<RecipeCostPoco>().HasKey(t => new { t.RecipeID, t.WorldID });
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeID);
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.WorldID);
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Cost);
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Created);
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Updated);
     }
 }

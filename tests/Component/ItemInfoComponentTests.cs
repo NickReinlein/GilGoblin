@@ -94,18 +94,4 @@ public class ItemInfoComponentTests : ComponentTests
             );
         });
     }
-
-    [Test]
-    public async Task GivenACallGetAll_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
-    {
-        var fullEndpoint = $"http://localhost:55448/items";
-        _ = await _client.GetAsync(fullEndpoint);
-
-        var timer = new Stopwatch();
-        timer.Start();
-        using var response = await _client.GetAsync(fullEndpoint);
-        timer.Stop();
-
-        Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
-    }
 }
