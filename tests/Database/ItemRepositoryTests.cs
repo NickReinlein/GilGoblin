@@ -18,11 +18,12 @@ public class ItemRepositoryTests : InMemoryTestDb
 
         var result = itemRepo.GetAll();
 
+        var allItems = context.ItemInfo.ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.Name == "Item 1"));
-            Assert.That(result.Any(p => p.Name == "Item 2"));
+            Assert.That(result.Count(), Is.EqualTo(allItems.Count));
+            allItems.ForEach(item => result.SingleOrDefault(p => p.Name == item.Name));
+            allItems.ForEach(item => result.SingleOrDefault(p => p.ID == item.ID));
         });
     }
 
@@ -141,7 +142,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         var itemRepo = new ItemRepository(context, _cache);
         var allItems = context.ItemInfo.ToList();
 
-        await itemRepo.FillCache();
+        itemRepo.FillCache();
 
         allItems.ForEach(item => _cache.Received(1).Add(item.ID, item));
     }
@@ -154,7 +155,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         context.SaveChanges();
         var itemRepo = new ItemRepository(context, _cache);
 
-        await itemRepo.FillCache();
+        itemRepo.FillCache();
 
         _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemInfoPoco>());
         FillTable();
@@ -175,10 +176,12 @@ public class ItemRepositoryTests : InMemoryTestDb
 
     private void FillTable()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        var context = new GilGoblinDbContext(_options, _configuration);
         context.ItemInfo.AddRange(
             new ItemInfoPoco { ID = 1, Name = "Item 1" },
-            new ItemInfoPoco { ID = 2, Name = "Item 2" }
+            new ItemInfoPoco { ID = 2, Name = "Item 2" },
+            new ItemInfoPoco { ID = 3, Name = "Item 3" },
+            new ItemInfoPoco { ID = 22, Name = "Item 22" }
         );
         context.SaveChanges();
     }

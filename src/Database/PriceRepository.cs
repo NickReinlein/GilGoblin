@@ -40,7 +40,7 @@ public class PriceRepository : IPriceRepository<PricePoco>
 
     public async Task FillCache()
     {
-        var items =  _dbContext?.Price?.ToList();
+        var items = await _dbContext?.Price?.ToListAsync();
         items.ForEach(price => _cache.Add((price.WorldID, price.ItemID), price));
     }
 }

@@ -39,7 +39,7 @@ public class ItemRepository : IItemRepository
 
     public async Task FillCache()
     {
-        var items = _dbContext?.ItemInfo?.ToList();
+        var items = await _dbContext?.ItemInfo?.ToListAsync();
         items.ForEach(item => _cache.Add(item.ID, item));
     }
 }

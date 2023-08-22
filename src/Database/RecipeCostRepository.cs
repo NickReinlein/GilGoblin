@@ -19,7 +19,7 @@ public class RecipeCostRepository : IRecipeCostRepository
         _cache ??= cache;
     }
 
-    public async Task<RecipeCostPoco?> Get(int worldID, int recipeID)
+    public async Task<RecipeCostPoco?> GetAsync(int worldID, int recipeID)
     {
         var cached = _cache.Get((worldID, recipeID));
         if (cached is not null)
@@ -61,7 +61,7 @@ public class RecipeCostRepository : IRecipeCostRepository
 
     public async Task FillCache()
     {
-        var items = _dbContext?.RecipeCost?.ToList();
+        var items = await _dbContext?.RecipeCost?.ToListAsync();
         items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
     }
 }

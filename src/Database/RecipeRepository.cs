@@ -64,7 +64,7 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
 
     public async Task FillCache()
     {
-        var recipes = _dbContext.Recipe.ToList();
+        var recipes = await _dbContext.Recipe.AsQueryable().ToListAsync();
         recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
 
         var itemIDs = recipes.Select(r => r.TargetItemID).Distinct().ToList();
