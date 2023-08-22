@@ -182,6 +182,32 @@ public class PriceRepositoryTests : InMemoryTestDb
             );
     }
 
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var priceRepo = new PriceRepository(context, _cache);
+        var allPrices = context.Price.ToList();
+
+        await priceRepo.FillCache();
+
+        allPrices.ForEach(price => _cache.Received(1).Add((price.WorldID, price.ItemID), price));
+    }
+
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        context.Price.RemoveRange(context.Price);
+        context.SaveChanges();
+        var priceRepo = new PriceRepository(context, _cache);
+
+        await priceRepo.FillCache();
+
+        _cache.DidNotReceive().Add((Arg.Any<int>(), Arg.Any<int>()), Arg.Any<PricePoco>());
+        FillTable();
+    }
+
     [OneTimeSetUp]
     public override void OneTimeSetUp()
     {
@@ -189,7 +215,12 @@ public class PriceRepositoryTests : InMemoryTestDb
 
         _cache = Substitute.For<PriceCache>();
 
-        var context = new GilGoblinDbContext(_options, _configuration);
+        FillTable();
+    }
+
+    private void FillTable()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
         context.Price.AddRange(
             new PricePoco { WorldID = 22, ItemID = 11 },
             new PricePoco { WorldID = 22, ItemID = 12 },

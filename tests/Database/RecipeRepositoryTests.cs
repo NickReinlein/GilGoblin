@@ -153,6 +153,32 @@ public class RecipeRepositoryTests : InMemoryTestDb
         _recipeCache.Received(1).Add(recipeID, Arg.Is<RecipePoco>(recipe => recipe.ID == recipeID));
     }
 
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
+        var allRecipes = context.Recipe.ToList();
+
+        await recipeRepo.FillCache();
+
+        allRecipes.ForEach(recipe => _recipeCache.Received(1).Add(recipe.ID, recipe));
+    }
+
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        context.Recipe.RemoveRange(context.Recipe);
+        context.SaveChanges();
+        var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
+
+        await recipeRepo.FillCache();
+
+        _recipeCache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<RecipePoco>());
+        FillTable();
+    }
+
     [SetUp]
     public void Setup()
     {
@@ -164,7 +190,11 @@ public class RecipeRepositoryTests : InMemoryTestDb
     public override void OneTimeSetUp()
     {
         base.OneTimeSetUp();
+        FillTable();
+    }
 
+    private void FillTable()
+    {
         var context = new GilGoblinDbContext(_options, _configuration);
         context.Recipe.AddRange(
             new RecipePoco { ID = 11, TargetItemID = 111 },

@@ -134,6 +134,32 @@ public class ItemRepositoryTests : InMemoryTestDb
         _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.ID == 2));
     }
 
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var itemRepo = new ItemRepository(context, _cache);
+        var allItems = context.ItemInfo.ToList();
+
+        await itemRepo.FillCache();
+
+        allItems.ForEach(item => _cache.Received(1).Add(item.ID, item));
+    }
+
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        context.ItemInfo.RemoveRange(context.ItemInfo);
+        context.SaveChanges();
+        var itemRepo = new ItemRepository(context, _cache);
+
+        await itemRepo.FillCache();
+
+        _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemInfoPoco>());
+        FillTable();
+    }
+
     [SetUp]
     public void Setup()
     {
@@ -144,9 +170,11 @@ public class ItemRepositoryTests : InMemoryTestDb
     public override void OneTimeSetUp()
     {
         base.OneTimeSetUp();
+        FillTable();
+    }
 
-        _cache = Substitute.For<IItemInfoCache>();
-
+    private void FillTable()
+    {
         using var context = new GilGoblinDbContext(_options, _configuration);
         context.ItemInfo.AddRange(
             new ItemInfoPoco { ID = 1, Name = "Item 1" },

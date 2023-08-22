@@ -34,6 +34,7 @@ public class InMemoryTestDb
         context.Price.RemoveRange(context.Price);
         context.ItemInfo.RemoveRange(context.ItemInfo);
         context.Recipe.RemoveRange(context.Recipe);
+        context.RecipeCost.RemoveRange(context.RecipeCost);
         context.SaveChanges();
     }
 }
