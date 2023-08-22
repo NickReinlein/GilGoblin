@@ -5,7 +5,6 @@
     <RootNamespace>GilGoblin.Api</RootNamespace>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.11.*" />

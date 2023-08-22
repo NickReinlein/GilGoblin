@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -35,9 +37,9 @@ public class ItemRepository : IItemRepository
 
     public IEnumerable<ItemInfoPoco> GetAll() => _dbContext?.ItemInfo;
 
-    public void FillCache()
+    public async Task FillCache()
     {
-        var items = _dbContext?.ItemInfo?.ToList();
+        var items = await _dbContext?.ItemInfo?.ToListAsync();
         items.ForEach(item => _cache.Add(item.ID, item));
     }
 }

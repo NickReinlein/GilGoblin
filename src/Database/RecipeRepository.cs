@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -60,9 +62,9 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
 
     public IEnumerable<RecipePoco> GetAll() => _dbContext.Recipe;
 
-    public void FillCache()
+    public async Task FillCache()
     {
-        var recipes = _dbContext.Recipe.ToList();
+        var recipes = await _dbContext.Recipe.ToListAsync();
         recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
 
         var itemIDs = recipes.Select(r => r.TargetItemID).Distinct().ToList();

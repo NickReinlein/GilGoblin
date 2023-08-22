@@ -135,7 +135,7 @@ public class CraftingCalculatorTests
         var price = new PricePoco { ItemID = testIngredient.ItemID, WorldID = _worldID };
         var prices = new List<PricePoco> { price };
 
-        var result = CraftingCalculator.AddPricesToIngredients(ingredients, prices);
+        var result = _calc.AddPricesToIngredients(ingredients, prices);
 
         var craftIngredient = result.First();
         Assert.Multiple(() =>
@@ -148,7 +148,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public void WhenAddingPricesToTheIngredientListWithoutPriceMatches_ThenADataNotFoundExceptionIsThrown()
+    public void WhenAddingPricesToTheIngredientListWithoutPriceMatches_ThenNullIsReturnedAndTheErrorLogged()
     {
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
         var prices = new List<PricePoco>
@@ -156,9 +156,14 @@ public class CraftingCalculatorTests
             new PricePoco { WorldID = _worldID, ItemID = 222 }
         };
 
-        Assert.Throws<InvalidOperationException>(
-            () => CraftingCalculator.AddPricesToIngredients(ingredients, prices)
-        );
+        var result = _calc.AddPricesToIngredients(ingredients, prices);
+
+        Assert.That(result, Is.Empty);
+        _logger
+            .Received(1)
+            .LogError(
+                "Failed to match market prices to ingredients: Sequence contains no matching element"
+            );
     }
 
     [Test]

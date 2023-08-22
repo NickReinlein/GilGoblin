@@ -7,7 +7,7 @@ namespace GilGoblin.Repository;
 
 public interface IRecipeCostRepository : IRepositoryCache
 {
-    RecipeCostPoco? Get(int worldID, int recipeID);
+    Task<RecipeCostPoco?> Get(int worldID, int recipeID);
     IEnumerable<RecipeCostPoco> GetMultiple(int worldID, IEnumerable<int> recipeIDs);
     IEnumerable<RecipeCostPoco> GetAll(int worldID);
     Task Add(RecipeCostPoco entity);

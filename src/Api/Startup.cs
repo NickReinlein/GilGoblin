@@ -6,6 +6,7 @@ using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Services;
 using GilGoblin.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -53,9 +54,9 @@ public class Startup
         services.AddSingleton<IItemRecipeCache, ItemRecipeCache>();
         services.AddSingleton<ICraftCache, CraftCache>();
         services.AddSingleton<IRecipeCostCache, RecipeCostCache>();
-        services.AddScoped<IRepositoryCache, ItemRepository>();
-        services.AddScoped<IRepositoryCache, PriceRepository>();
-        services.AddScoped<IRepositoryCache, RecipeRepository>();
+        services.AddSingleton<IRepositoryCache, ItemRepository>();
+        services.AddSingleton<IRepositoryCache, PriceRepository>();
+        services.AddSingleton<IRepositoryCache, RecipeRepository>();
     }
 
     private static void AddGoblinControllers(IServiceCollection services)
@@ -70,22 +71,22 @@ public class Startup
 
     public static void AddGoblinCrafting(IServiceCollection services)
     {
-        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
-        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
+        services.AddSingleton<ICraftingCalculator, CraftingCalculator>();
+        services.AddSingleton<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+        services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
         services.AddSingleton<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
         services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
     }
 
     public static void AddGoblinDatabases(IServiceCollection services)
     {
-        services.AddDbContext<GilGoblinDbContext>();
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
-        services.AddScoped<IItemRepository, ItemRepository>();
-        services.AddScoped<IRecipeRepository, RecipeRepository>();
-        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        services.AddScoped<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
-        services.AddScoped<ICsvInteractor, CsvInteractor>();
+        services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
+        services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
+        services.AddSingleton<IItemRepository, ItemRepository>();
+        services.AddSingleton<IRecipeRepository, RecipeRepository>();
+        services.AddSingleton<IRecipeCostRepository, RecipeCostRepository>();
+        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
+        services.AddSingleton<ICsvInteractor, CsvInteractor>();
     }
 
     public static void AddBasicBuilderServices(IServiceCollection services)
@@ -113,20 +114,22 @@ public class Startup
         });
     }
 
-    public static void FillGoblinCaches(IServiceCollection services)
+    public static async void FillGoblinCaches(IServiceCollection services)
     {
         var serviceProvider = services.BuildServiceProvider();
+        var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+        if (dbContextService.Database?.CanConnect() != true)
+            return;
+
         var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
         var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
         var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
         var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
-        var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
-        if (dbContextService.Database?.CanConnect() == true)
-        {
-            itemRepository.FillCache();
-            priceRepository.FillCache();
-            recipeRepository.FillCache();
-            recipeCostRepository.FillCache();
-        }
+
+        var itemTask = itemRepository.FillCache();
+        var priceTask = priceRepository.FillCache();
+        var recipeTask = recipeRepository.FillCache();
+        var recipeCostTask = recipeCostRepository.FillCache();
+        await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask);
     }
 }

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Services;
-using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Crafting;
 
@@ -51,7 +51,7 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID)
     {
-        var calculated = _recipeCosts.Get(worldID, recipeID);
+        var calculated = await _recipeCosts.Get(worldID, recipeID);
         if (calculated is not null)
             return calculated.Cost;
 
@@ -109,16 +109,23 @@ public class CraftingCalculator : ICraftingCalculator
         return totalCraftingCost;
     }
 
-    public static List<CraftIngredientPoco> AddPricesToIngredients(
+    public List<CraftIngredientPoco> AddPricesToIngredients(
         IEnumerable<IngredientPoco> ingredients,
         IEnumerable<PricePoco> price
     )
     {
         List<CraftIngredientPoco> crafts = new();
-        foreach (var ingredient in ingredients)
+        try
         {
-            var market = price.First(e => e.ItemID == ingredient.ItemID);
-            crafts.Add(new CraftIngredientPoco(ingredient, market));
+            foreach (var ingredient in ingredients)
+            {
+                var market = price.First(e => e.ItemID == ingredient.ItemID);
+                crafts.Add(new CraftIngredientPoco(ingredient, market));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Failed to match market prices to ingredients: {ex.Message}");
         }
         return crafts;
     }
@@ -156,8 +163,8 @@ public class CraftingCalculator : ICraftingCalculator
         var recipeId = -1;
         foreach (var recipe in recipes.Where(recipe => recipe is not null))
         {
-            var cached = _recipeCosts.Get(worldID, recipe.ID);
             var recipeCost = ERROR_DEFAULT_COST;
+            var cached = await _recipeCosts.Get(worldID, recipe.ID);
             if (cached is not null)
                 recipeCost = cached.Cost;
             else

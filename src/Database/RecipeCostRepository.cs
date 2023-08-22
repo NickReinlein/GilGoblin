@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Cache;
@@ -18,7 +19,7 @@ public class RecipeCostRepository : IRecipeCostRepository
         _cache ??= cache;
     }
 
-    public RecipeCostPoco? Get(int worldID, int recipeID)
+    public async Task<RecipeCostPoco?> Get(int worldID, int recipeID)
     {
         var cached = _cache.Get((worldID, recipeID));
         if (cached is not null)
@@ -28,7 +29,7 @@ public class RecipeCostRepository : IRecipeCostRepository
             p => p.WorldID == worldID && p.RecipeID == recipeID
         );
         if (recipeCost is not null)
-            _cache.Add((recipeCost.WorldID, recipeCost.RecipeID), recipeCost);
+            await Add(recipeCost);
 
         return recipeCost;
     }
@@ -39,9 +40,9 @@ public class RecipeCostRepository : IRecipeCostRepository
     public IEnumerable<RecipeCostPoco> GetAll(int worldID) =>
         _dbContext.RecipeCost.Where(p => p.WorldID == worldID);
 
-    public void FillCache()
+    public async Task FillCache()
     {
-        var items = _dbContext?.RecipeCost?.ToList();
+        var items = await _dbContext?.RecipeCost?.ToListAsync();
         items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
     }
 
