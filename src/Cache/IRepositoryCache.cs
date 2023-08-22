@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace GilGoblin.Cache
 {
     public interface IRepositoryCache
     {
-        void FillCache();
+        public Task FillCache();
     }
 }

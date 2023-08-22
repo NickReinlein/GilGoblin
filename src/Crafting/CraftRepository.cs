@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using GilGoblin.Cache;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using GilGoblin.Cache;
 
 namespace GilGoblin.Crafting;
 
@@ -69,7 +69,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             .GetAll()
             .Select(r => r.TargetItemID)
             .Distinct()
-            .Take(50) // temporary
             .ToList();
 
         var bestCraftPerItem = new List<CraftSummaryPoco>();
@@ -89,7 +88,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             }
         }
 
-        // Sort by profit
+        // Sort by profit decreasingly vs previouslySold
         bestCraftPerItem.Sort();
         return bestCraftPerItem;
     }

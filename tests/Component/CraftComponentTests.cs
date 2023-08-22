@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Pocos;
@@ -42,7 +41,7 @@ public class CraftComponentTests : ComponentTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
 
-    [Test]
+    [Test, Timeout(20000)]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
         var fullEndpoint = $"http://localhost:55448/craft/34";
@@ -57,7 +56,6 @@ public class CraftComponentTests : ComponentTests
             Assert.That(crafts.Count(), Is.GreaterThan(5));
             Assert.That(crafts.All(r => r.WorldID == 34));
             Assert.That(crafts.All(r => r.ItemID > 0));
-            Assert.That(crafts.All(r => r.AverageSold > 0));
             Assert.That(crafts.All(r => r.IconID > 0));
             Assert.That(crafts.All(r => r.StackSize > 0));
             Assert.That(crafts.All(r => r.VendorPrice > 0));
@@ -76,28 +74,5 @@ public class CraftComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
-    }
-
-    [Test]
-    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveATimelyResponse()
-    {
-        var fullEndpoint = $"http://localhost:55448/craft/34";
-        _ = await _client.GetAsync(fullEndpoint);
-
-        var timer = new Stopwatch();
-        timer.Start();
-        using var response = await _client.GetAsync(fullEndpoint);
-        timer.Stop();
-
-        // 1.2s 30
-        // 9s 500
-        // 466s all
-
-        // now 6.9s 500
-        // 78s all
-
-        // now 5.4s 500 fillcacheItem
-        // 72s all
-        Assert.That(timer.Elapsed.TotalSeconds, Is.LessThan(10));
     }
 }

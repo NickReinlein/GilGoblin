@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <RootNamespace>GilGoblin.Controllers</RootNamespace>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.11.*" />

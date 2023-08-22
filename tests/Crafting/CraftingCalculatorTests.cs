@@ -1,4 +1,3 @@
-using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
@@ -12,14 +11,13 @@ namespace GilGoblin.Tests.Crafting;
 
 public class CraftingCalculatorTests
 {
-    private IRecipeRepository _recipes;
+    private CraftingCalculator? _calc;
 
+    private IRecipeRepository _recipes;
     private IPriceRepository<PricePoco> _prices;
     private IRecipeGrocer _grocer;
+    private IRecipeCostRepository _recipeCosts;
     private ILogger<CraftingCalculator> _logger;
-    private CraftingCalculator? _calc;
-    private ICostCache _recipeCache;
-    private ICostCache _itemCache;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
     private static readonly int _worldID = 34; // Brynnhildr
@@ -34,17 +32,10 @@ public class CraftingCalculatorTests
         _recipes = Substitute.For<IRecipeRepository>();
         _grocer = Substitute.For<IRecipeGrocer>();
         _prices = Substitute.For<IPriceRepository<PricePoco>>();
-        _recipeCache = Substitute.For<ICostCache>();
-        _itemCache = Substitute.For<ICostCache>();
+        _recipeCosts = Substitute.For<IRecipeCostRepository>();
         _logger = Substitute.For<ILogger<CraftingCalculator>>();
-        _calc = new CraftingCalculator(
-            _recipes,
-            _prices,
-            _grocer,
-            _recipeCache,
-            _itemCache,
-            _logger
-        );
+
+        _calc = new CraftingCalculator(_recipes, _prices, _recipeCosts, _grocer, _logger);
     }
 
     [Test]
@@ -144,7 +135,7 @@ public class CraftingCalculatorTests
         var price = new PricePoco { ItemID = testIngredient.ItemID, WorldID = _worldID };
         var prices = new List<PricePoco> { price };
 
-        var result = CraftingCalculator.AddPricesToIngredients(ingredients, prices);
+        var result = _calc.AddPricesToIngredients(ingredients, prices);
 
         var craftIngredient = result.First();
         Assert.Multiple(() =>
@@ -157,7 +148,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public void WhenAddingPricesToTheIngredientListWithoutPriceMatches_ThenADataNotFoundExceptionIsThrown()
+    public void WhenAddingPricesToTheIngredientListWithoutPriceMatches_ThenNullIsReturnedAndTheErrorLogged()
     {
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
         var prices = new List<PricePoco>
@@ -165,9 +156,14 @@ public class CraftingCalculatorTests
             new PricePoco { WorldID = _worldID, ItemID = 222 }
         };
 
-        Assert.Throws<InvalidOperationException>(
-            () => CraftingCalculator.AddPricesToIngredients(ingredients, prices)
-        );
+        var result = _calc.AddPricesToIngredients(ingredients, prices);
+
+        Assert.That(result, Is.Empty);
+        _logger
+            .Received(1)
+            .LogError(
+                "Failed to match market prices to ingredients: Sequence contains no matching element"
+            );
     }
 
     [Test]
