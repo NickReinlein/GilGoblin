@@ -40,12 +40,6 @@ public class RecipeCostRepository : IRecipeCostRepository
     public IEnumerable<RecipeCostPoco> GetAll(int worldID) =>
         _dbContext.RecipeCost.Where(p => p.WorldID == worldID);
 
-    public async Task FillCache()
-    {
-        var items = await _dbContext?.RecipeCost?.ToListAsync();
-        items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
-    }
-
     public async Task Add(RecipeCostPoco entity)
     {
         (int, int) key = (entity.WorldID, entity.RecipeID);
@@ -63,5 +57,11 @@ public class RecipeCostRepository : IRecipeCostRepository
 
         _dbContext?.Add(entity);
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task FillCache()
+    {
+        var items = _dbContext?.RecipeCost?.ToList();
+        items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
     }
 }

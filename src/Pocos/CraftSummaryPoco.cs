@@ -88,17 +88,17 @@ public class CraftSummaryPoco : IComparable
                 otherCraftSummary.CraftingProfitVsSold
             );
             if (profitVsSoldComparison != 0)
-                return profitVsSoldComparison;
+                return -1 * profitVsSoldComparison;
 
             var profitVsListingsComparison = CraftingProfitVsListings.CompareTo(
                 otherCraftSummary.CraftingProfitVsListings
             );
             if (profitVsListingsComparison != 0)
-                return profitVsListingsComparison;
+                return -1 * profitVsListingsComparison;
 
             var vendorPriceComparison = VendorPrice.CompareTo(otherCraftSummary.VendorPrice);
             if (vendorPriceComparison != 0)
-                return vendorPriceComparison;
+                return -1 * vendorPriceComparison;
 
             return ItemID.CompareTo(otherCraftSummary.ItemID);
         }

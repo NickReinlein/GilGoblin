@@ -12,17 +12,17 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IRecipeCache _recipeCache;
-    private readonly IItemRecipeCache _itemCache;
+    private readonly IItemRecipeCache _itemRecipesCache;
 
     public RecipeRepository(
         GilGoblinDbContext recipes,
         IRecipeCache cache,
-        IItemRecipeCache itemCache
+        IItemRecipeCache itemRecipeCache
     )
     {
         _dbContext = recipes;
         _recipeCache = cache;
-        _itemCache = itemCache;
+        _itemRecipesCache = itemRecipeCache;
     }
 
     public RecipePoco? Get(int recipeID)
@@ -46,13 +46,13 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
         if (itemID < 1)
             return Enumerable.Empty<RecipePoco>();
 
-        var cached = _itemCache.Get(itemID);
+        var cached = _itemRecipesCache.Get(itemID);
         if (cached is not null)
             return cached;
 
         var recipesForItem = _dbContext.Recipe.Where(r => r.TargetItemID == itemID).ToList();
         if (recipesForItem.Any())
-            _itemCache.Add(itemID, recipesForItem);
+            _itemRecipesCache.Add(itemID, recipesForItem);
 
         return recipesForItem;
     }
@@ -64,13 +64,13 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
 
     public async Task FillCache()
     {
-        var recipes = await _dbContext.Recipe.ToListAsync();
+        var recipes = _dbContext.Recipe.ToList();
         recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
 
         var itemIDs = recipes.Select(r => r.TargetItemID).Distinct().ToList();
         itemIDs.ForEach(
             itemID =>
-                _itemCache.Add(
+                _itemRecipesCache.Add(
                     itemID,
                     recipes.Where(itemRecipe => itemRecipe.ID == itemID).ToList()
                 )

@@ -8,7 +8,7 @@ namespace GilGoblin.Tests.Database;
 
 public class ItemRepositoryTests : InMemoryTestDb
 {
-    private IItemCache _cache;
+    private IItemInfoCache _cache;
 
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
@@ -137,7 +137,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     [SetUp]
     public void Setup()
     {
-        _cache = Substitute.For<IItemCache>();
+        _cache = Substitute.For<IItemInfoCache>();
     }
 
     [OneTimeSetUp]
@@ -145,7 +145,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     {
         base.OneTimeSetUp();
 
-        _cache = Substitute.For<IItemCache>();
+        _cache = Substitute.For<IItemInfoCache>();
 
         using var context = new GilGoblinDbContext(_options, _configuration);
         context.ItemInfo.AddRange(

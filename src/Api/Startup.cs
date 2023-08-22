@@ -48,7 +48,7 @@ public class Startup
 
     public static void AddGoblinCaches(IServiceCollection services)
     {
-        services.AddSingleton<IItemCache, ItemCache>();
+        services.AddSingleton<IItemInfoCache, ItemInfoCache>();
         services.AddSingleton<IPriceCache, PriceCache>();
         services.AddSingleton<IRecipeCache, RecipeCache>();
         services.AddSingleton<IItemRecipeCache, ItemRecipeCache>();
