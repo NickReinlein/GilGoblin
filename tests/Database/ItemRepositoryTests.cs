@@ -142,7 +142,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         var itemRepo = new ItemRepository(context, _cache);
         var allItems = context.ItemInfo.ToList();
 
-        itemRepo.FillCache();
+        await itemRepo.FillCache();
 
         allItems.ForEach(item => _cache.Received(1).Add(item.ID, item));
     }
@@ -155,7 +155,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         context.SaveChanges();
         var itemRepo = new ItemRepository(context, _cache);
 
-        itemRepo.FillCache();
+        await itemRepo.FillCache();
 
         _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemInfoPoco>());
         FillTable();

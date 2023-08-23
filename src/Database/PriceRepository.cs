@@ -38,9 +38,10 @@ public class PriceRepository : IPriceRepository<PricePoco>
     public IEnumerable<PricePoco> GetAll(int worldID) =>
         _dbContext.Price.Where(p => p.WorldID == worldID);
 
-    public async Task FillCache()
+    public Task FillCache()
     {
-        var items = await _dbContext?.Price?.ToListAsync();
+        var items = _dbContext?.Price?.ToList();
         items.ForEach(price => _cache.Add((price.WorldID, price.ItemID), price));
+        return Task.CompletedTask;
     }
 }

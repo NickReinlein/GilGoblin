@@ -59,9 +59,10 @@ public class RecipeCostRepository : IRecipeCostRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task FillCache()
+    public Task FillCache()
     {
-        var items = await _dbContext?.RecipeCost?.ToListAsync();
+        var items = _dbContext?.RecipeCost?.ToList();
         items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
+        return Task.CompletedTask;
     }
 }

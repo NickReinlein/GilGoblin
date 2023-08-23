@@ -62,9 +62,9 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
 
     public IEnumerable<RecipePoco> GetAll() => _dbContext.Recipe;
 
-    public async Task FillCache()
+    public Task FillCache()
     {
-        var recipes = await _dbContext.Recipe.AsQueryable().ToListAsync();
+        var recipes = _dbContext.Recipe.ToList();
         recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
 
         var itemIDs = recipes.Select(r => r.TargetItemID).Distinct().ToList();
@@ -75,5 +75,6 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
                     recipes.Where(itemRecipe => itemRecipe.ID == itemID).ToList()
                 )
         );
+        return Task.CompletedTask;
     }
 }
