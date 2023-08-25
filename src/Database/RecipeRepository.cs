@@ -34,11 +34,11 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
         if (cached is not null)
             return cached;
 
-        var item = _dbContext?.Recipe?.FirstOrDefault(i => i.ID == recipeID);
-        if (item is not null)
-            _recipeCache.Add(item.ID, item);
+        var recipe = _dbContext?.Recipe?.FirstOrDefault(i => i.ID == recipeID);
+        if (recipe is not null)
+            _recipeCache.Add(recipe.ID, recipe);
 
-        return item;
+        return recipe;
     }
 
     public IEnumerable<RecipePoco> GetRecipesForItem(int itemID)

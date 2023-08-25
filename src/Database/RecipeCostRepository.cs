@@ -55,7 +55,7 @@ public class RecipeCostRepository : IRecipeCostRepository
         )
             return;
 
-        _dbContext?.Add(entity);
+        _dbContext.Add(entity);
         await _dbContext.SaveChangesAsync();
     }
 
