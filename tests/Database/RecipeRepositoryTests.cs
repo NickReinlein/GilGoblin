@@ -183,8 +183,8 @@ public class RecipeRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
         var recipeID = 44;
+        _recipeCache.Get(recipeID).Returns((RecipePoco)null, new RecipePoco { ID = recipeID });
 
-        _ = recipeRepo.Get(recipeID);
         _ = recipeRepo.Get(recipeID);
 
         _recipeCache.Received(2).Get(recipeID);
