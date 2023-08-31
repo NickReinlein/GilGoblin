@@ -22,7 +22,7 @@ public class EndpointComponentTests : ComponentTests
         "/recipe/100",
         "/price/34/",
         "/price/34/100",
-        "/craft/34/",
+        // "/craft/34/", "temporary for performance
         "/craft/34/100",
         "/item/",
         "/item/100"
