@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Cache;
@@ -61,8 +60,8 @@ public class RecipeCostRepository : IRecipeCostRepository
 
     public Task FillCache()
     {
-        var items = _dbContext?.RecipeCost?.ToList();
-        items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
+        var costs = _dbContext?.RecipeCost?.ToList();
+        costs.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
         return Task.CompletedTask;
     }
 }

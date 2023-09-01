@@ -77,21 +77,23 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     public async Task GiveWeCallSaveBatchResult_WhenPricesAreAllValid_ThenWeConvertAndSaveTheBatch()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
+        var initialCount = context.Price.Count();
         var batchToSave = GenerateListOf2ValidPocos();
 
         await _databaseInitializer.SaveBatchResult(context, batchToSave);
 
         using var context2 = new GilGoblinDbContext(_options, _configuration);
-        Assert.That(context2.Price.Count, Is.EqualTo(2));
+        Assert.That(context2.Price.Count, Is.EqualTo(initialCount + batchToSave.Count));
     }
 
     [Test]
     public async Task GiveWeCallSaveBatchResult_WhenSomePricesAreValid_ThenWeConvertAndSaveTheValidEntries()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
+        var initialCount = context.Price.Count();
         var batchToSave = new List<PriceWebPoco?>()
         {
-            new PriceWebPoco
+            new()
             {
                 ItemID = 456,
                 WorldID = 23,
@@ -105,13 +107,14 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         await _databaseInitializer.SaveBatchResult(context, batchToSave);
 
         using var context2 = new GilGoblinDbContext(_options, _configuration);
-        Assert.That(context2.Price.Count, Is.EqualTo(1));
+        Assert.That(context2.Price.Count, Is.EqualTo(initialCount + batchToSave.Count - 1));
     }
 
     [Test]
     public async Task GiveWeCallSaveBatchResult_WhenNoPricesAreValid_ThenDoNothing()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
+        var initialCount = context.Price.Count();
 
         await _databaseInitializer.SaveBatchResult(
             context,
@@ -119,12 +122,14 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         );
 
         using var context2 = new GilGoblinDbContext(_options, _configuration);
-        Assert.That(context2.Price.Count, Is.EqualTo(0));
+        Assert.That(context2.Price.Count, Is.EqualTo(initialCount));
     }
 
     [SetUp]
-    public void SetUp()
+    public override void SetUp()
     {
+        base.SetUp();
+
         _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
         _dbConnector.GetDatabasePath().Returns("TestDatabase");
         SetupCsvInteractor();
@@ -135,12 +140,6 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
             _csvInteractor,
             _logger
         );
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        DeleteAllEntries();
     }
 
     private static List<PriceWebPoco> GenerateListOf2ValidPocos()

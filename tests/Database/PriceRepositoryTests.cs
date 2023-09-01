@@ -168,6 +168,8 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
+        var poco = new PricePoco { WorldID = _worldID, ItemID = _itemID };
+        _cache.Get((_worldID, _itemID)).Returns((PricePoco)null, poco);
         var priceRepo = new PriceRepository(context, _cache);
 
         _ = priceRepo.Get(_worldID, _itemID);
@@ -204,29 +206,13 @@ public class PriceRepositoryTests : InMemoryTestDb
 
         await priceRepo.FillCache();
 
-        _cache.DidNotReceive().Add((Arg.Any<int>(), Arg.Any<int>()), Arg.Any<PricePoco>());
-        FillTable();
+        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<PricePoco>());
     }
 
-    [OneTimeSetUp]
-    public override void OneTimeSetUp()
+    [SetUp]
+    public override void SetUp()
     {
-        base.OneTimeSetUp();
-
-        _cache = Substitute.For<PriceCache>();
-
-        FillTable();
-    }
-
-    private void FillTable()
-    {
-        using var context = new GilGoblinDbContext(_options, _configuration);
-        context.Price.AddRange(
-            new PricePoco { WorldID = 22, ItemID = 11 },
-            new PricePoco { WorldID = 22, ItemID = 12 },
-            new PricePoco { WorldID = _worldID, ItemID = _itemID },
-            new PricePoco { WorldID = 44, ItemID = 99 }
-        );
-        context.SaveChanges();
+        base.SetUp();
+        _cache = Substitute.For<IPriceCache>();
     }
 }

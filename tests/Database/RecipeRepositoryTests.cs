@@ -2,6 +2,7 @@ using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using NSubstitute;
+using NSubstitute.Extensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
@@ -70,8 +71,8 @@ public class RecipeRepositoryTests : InMemoryTestDb
     )
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var pocos = context.Recipe.Where(r => r.TargetItemID == targetItemID).ToList();
-        _itemRecipeCache.Get(targetItemID).Returns(pocos);
+        var recipes = context.Recipe.Where(r => r.TargetItemID == targetItemID).ToList();
+        _itemRecipeCache.Configure().Get(Arg.Is(targetItemID)).Returns(recipes);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetRecipesForItem(targetItemID);
@@ -169,7 +170,6 @@ public class RecipeRepositoryTests : InMemoryTestDb
     {
         var recipeID = 44;
         using var context = new GilGoblinDbContext(_options, _configuration);
-        _recipeCache = Substitute.For<IRecipeCache>();
         _recipeCache.Get(recipeID).Returns((RecipePoco)null);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
@@ -208,28 +208,10 @@ public class RecipeRepositoryTests : InMemoryTestDb
     }
 
     [SetUp]
-    public void Setup()
+    public override void SetUp()
     {
+        base.SetUp();
         _recipeCache = Substitute.For<IRecipeCache>();
         _itemRecipeCache = Substitute.For<IItemRecipeCache>();
-    }
-
-    [OneTimeSetUp]
-    public override void OneTimeSetUp()
-    {
-        base.OneTimeSetUp();
-        FillTable();
-    }
-
-    private void FillTable()
-    {
-        var context = new GilGoblinDbContext(_options, _configuration);
-        context.Recipe.AddRange(
-            new RecipePoco { ID = 11, TargetItemID = 111 },
-            new RecipePoco { ID = 22, TargetItemID = 111 },
-            new RecipePoco { ID = 33, TargetItemID = 222 },
-            new RecipePoco { ID = 44, TargetItemID = 333 }
-        );
-        context.SaveChanges();
     }
 }

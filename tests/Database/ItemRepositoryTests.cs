@@ -158,31 +158,12 @@ public class ItemRepositoryTests : InMemoryTestDb
         await itemRepo.FillCache();
 
         _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemInfoPoco>());
-        FillTable();
     }
 
     [SetUp]
-    public void Setup()
+    public override void SetUp()
     {
+        base.SetUp();
         _cache = Substitute.For<IItemInfoCache>();
-    }
-
-    [OneTimeSetUp]
-    public override void OneTimeSetUp()
-    {
-        base.OneTimeSetUp();
-        FillTable();
-    }
-
-    private void FillTable()
-    {
-        var context = new GilGoblinDbContext(_options, _configuration);
-        context.ItemInfo.AddRange(
-            new ItemInfoPoco { ID = 1, Name = "Item 1" },
-            new ItemInfoPoco { ID = 2, Name = "Item 2" },
-            new ItemInfoPoco { ID = 3, Name = "Item 3" },
-            new ItemInfoPoco { ID = 22, Name = "Item 22" }
-        );
-        context.SaveChanges();
     }
 }

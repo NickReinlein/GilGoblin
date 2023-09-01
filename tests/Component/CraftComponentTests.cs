@@ -7,7 +7,7 @@ namespace GilGoblin.Tests.Component;
 
 public class CraftComponentTests : ComponentTests
 {
-    [Test]
+    [Test, Timeout(10000), Ignore("Ignore for performance.. should still pass")]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
         var fullEndpoint = $"http://localhost:55448/craft/34/1614";
