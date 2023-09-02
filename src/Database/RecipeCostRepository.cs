@@ -15,7 +15,7 @@ public class RecipeCostRepository : IRecipeCostRepository
     public RecipeCostRepository(GilGoblinDbContext dbContext, IRecipeCostCache cache)
     {
         _dbContext = dbContext;
-        _cache ??= cache;
+        _cache = cache;
     }
 
     public async Task<RecipeCostPoco?> GetAsync(int worldID, int recipeID)

@@ -2,7 +2,6 @@ using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using NSubstitute;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database;
@@ -152,8 +151,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     public async Task GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        // _costCache = Substitute.For<IRecipeCostCache>();
-        // _costCache.Get(Arg.Any<(int, int)>()).Returns((RecipeCostPoco)null);
+        _costCache.Get(Arg.Any<(int, int)>()).Returns((RecipeCostPoco)null);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         _ = await recipeCostRepo.GetAsync(_worldID, _recipeID);
@@ -169,28 +167,28 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
             );
     }
 
-    // [Test]
-    // public async Task GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
-    // {
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     var recipeCost = new RecipeCostPoco { WorldID = _worldID, RecipeID = _recipeID };
-    //     _costCache = Substitute.For<IRecipeCostCache>();
-    //     // _costCache.Get((_worldID, _recipeID)).Returns((RecipeCostPoco)null, recipeCost);
-    //     var recipeCostRepo = new RecipeCostRepository(context, _costCache);
+    [Test]
+    public async Task GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var recipeCost = new RecipeCostPoco { WorldID = _worldID, RecipeID = _recipeID };
+        _costCache = Substitute.For<IRecipeCostCache>();
+        _costCache.Get((_worldID, _recipeID)).Returns((RecipeCostPoco)null, recipeCost);
+        var recipeCostRepo = new RecipeCostRepository(context, _costCache);
+        await recipeCostRepo.FillCache();
 
-    //     _ = await recipeCostRepo.GetAsync(_worldID, _recipeID);
-    //     _ = await recipeCostRepo.GetAsync(_worldID, _recipeID);
+        _ = await recipeCostRepo.GetAsync(_worldID, _recipeID);
 
-    //     _costCache.Received(2).Get((_worldID, _recipeID));
-    //     _costCache
-    //         .Received(1)
-    //         .Add(
-    //             (_worldID, _recipeID),
-    //             Arg.Is<RecipeCostPoco>(
-    //                 recipeCost => recipeCost.WorldID == _worldID && recipeCost.RecipeID == _recipeID
-    //             )
-    //         );
-    // }
+        _costCache.Received(2).Get((_worldID, _recipeID));
+        _costCache
+            .Received(1)
+            .Add(
+                (_worldID, _recipeID),
+                Arg.Is<RecipeCostPoco>(
+                    recipeCost => recipeCost.WorldID == _worldID && recipeCost.RecipeID == _recipeID
+                )
+            );
+    }
 
     [Test]
     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
@@ -201,13 +199,12 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
 
         await recipeCostRepo.FillCache();
 
-        _costCache.Received().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeCostPoco>());
-        // allRecipeCosts.ForEach(
-        //     recipe =>
-        //         _costCache
-        //             .Received(1)
-        //             .Add((recipe.WorldID, recipe.RecipeID), Arg.Any<RecipeCostPoco>())
-        // );
+        allRecipeCosts.ForEach(
+            recipe =>
+                _costCache
+                    .Received(1)
+                    .Add((recipe.WorldID, recipe.RecipeID), Arg.Any<RecipeCostPoco>())
+        );
     }
 
     [Test]
@@ -223,33 +220,33 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         _costCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeCostPoco>());
     }
 
-    // [Test]
-    // public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
-    // {
-    //     var poco = new RecipeCostPoco { WorldID = _worldID, RecipeID = _recipeID };
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     // _cache.Get((_worldID, _recipeID)).Returns(poco);
-    //     var recipeCostRepo = new RecipeCostRepository(context, _costCache);
+    [Test]
+    public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
+    {
+        var poco = new RecipeCostPoco { WorldID = _worldID, RecipeID = _recipeID };
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        _costCache.Get((_worldID, _recipeID)).Returns(poco);
+        var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-    //     await recipeCostRepo.Add(poco);
+        await recipeCostRepo.Add(poco);
 
-    //     _costCache.Received(1).Get((_worldID, _recipeID));
-    //     _costCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeCostPoco>());
-    // }
+        _costCache.Received(1).Get((_worldID, _recipeID));
+        _costCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeCostPoco>());
+    }
 
-    // [Test]
-    // public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
-    // {
-    //     var poco = new RecipeCostPoco { WorldID = _worldID, RecipeID = _recipeID };
-    //     using var context = new GilGoblinDbContext(_options, _configuration);
-    //     _costCache.Get((_worldID, _recipeID)).Returns((RecipeCostPoco)null);
-    //     var recipeCostRepo = new RecipeCostRepository(context, _costCache);
+    [Test]
+    public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
+    {
+        var poco = new RecipeCostPoco { WorldID = _worldID, RecipeID = _recipeID };
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        _costCache.Get((_worldID, _recipeID)).Returns((RecipeCostPoco)null);
+        var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-    //     await recipeCostRepo.Add(poco);
+        await recipeCostRepo.Add(poco);
 
-    //     _costCache.Received(1).Get((_worldID, _recipeID));
-    //     _costCache.Received(1).Add((_worldID, _recipeID), poco);
-    // }
+        _costCache.Received(1).Get((_worldID, _recipeID));
+        _costCache.Received(1).Add((_worldID, _recipeID), poco);
+    }
 
     [Test]
     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeSaveItToTheDatabase()
