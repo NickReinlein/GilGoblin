@@ -17,6 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="../Cache/*Cache.csproj" />
     <ProjectReference Include="../Pocos/*Pocos.csproj" />
-    <ProjectReference Include="../Services/*Services.csproj" />
   </ItemGroup>
 </Project>
