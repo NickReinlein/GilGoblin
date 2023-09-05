@@ -148,7 +148,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    public async Task GivenAGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         _costCache.Get((_worldID, _recipeID)).Returns((RecipeCostPoco)null);

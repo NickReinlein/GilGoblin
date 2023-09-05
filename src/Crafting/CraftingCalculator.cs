@@ -130,7 +130,7 @@ public class CraftingCalculator : ICraftingCalculator
         return crafts;
     }
 
-    private IEnumerable<PricePoco> GetIngredientPrice(
+    public IEnumerable<PricePoco> GetIngredientPrice(
         int worldID,
         int itemID,
         IEnumerable<IngredientPoco> ingredients
@@ -154,7 +154,7 @@ public class CraftingCalculator : ICraftingCalculator
         return result;
     }
 
-    private async Task<(int, int)> GetLowestCraftingCost(
+    public async Task<(int, int)> GetLowestCraftingCost(
         int worldID,
         IEnumerable<RecipePoco?> recipes
     )

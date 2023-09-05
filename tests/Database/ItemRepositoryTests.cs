@@ -110,7 +110,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    public void GivenAGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);

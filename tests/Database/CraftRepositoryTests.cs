@@ -62,35 +62,62 @@ public class CraftRepositoryTests
     }
 
     [Test]
-    public async Task GivenGetBestCrafts_WhenUnderConstruction_ThenAnEmptyResultIsReturned()
+    public async Task GivenGetBestCrafts_WhenThereAreMultipleResults_ThenEachOneIsProcessed()
     {
+        var crafts = GetCrafts();
+        var secondItemID = crafts[1].TargetItemID;
+        var secondRecipeID = crafts[1].ID;
+        _calc.CalculateCraftingCostForItem(_worldID, secondItemID).Returns((secondRecipeID, _craftingCost + 100));
+        _priceRepository.Get(_worldID, secondItemID).Returns(new PricePoco { WorldID = _worldID, ItemID = secondItemID });
+        _recipeRepository.Get(secondRecipeID).Returns(new RecipePoco { ID = secondRecipeID, TargetItemID = secondItemID });
+        _itemRepository.Get(secondItemID).Returns(new ItemInfoPoco { ID = secondItemID, Name = _itemName });
+
         var result = await _craftRepository.GetBestCrafts(_worldID);
 
-        Assert.That(result, Is.Empty);
+        Assert.That(result.Count, Is.EqualTo(2));
+        await _calc.Received(1).CalculateCraftingCostForItem(_worldID, _itemID);
+        await _calc.Received(1).CalculateCraftingCostForItem(_worldID, secondItemID);
+        _recipeRepository.Received(1).Get(_recipeID);
+        _recipeRepository.Received(1).Get(secondRecipeID);
+        _priceRepository.Received(1).Get(_worldID, _itemID);
+        _priceRepository.Received(1).Get(_worldID, secondItemID);
+        _itemRepository.Received(1).Get(_itemID);
+        _itemRepository.Received(1).Get(secondItemID);
     }
 
-    // [Test]
-    // public async Task GivenGetBestCrafts_WhenARecipeThrowsAnExeption_ThenAnErrorIsLoggedAndOthersRecipesAreReturned()
-    // {
-    //     var crafts = new List<RecipePoco>
-    //     {
-    //         new RecipePoco { ID = 1, TargetItemID = 111 },
-    //         new RecipePoco { ID = 2, TargetItemID = 222 }
-    //     };
-    //     _recipeRepository.GetAll().Returns(crafts);
-    //     _cache.Get((_worldID, crafts[1].ID)).Throws<ArithmeticException>();
-    //     _calc.CalculateCraftingCostForItem(_worldID, crafts[0].TargetItemID).Returns((_worldID, 55));
-    //     _calc.CalculateCraftingCostForItem(_worldID, crafts[1].TargetItemID).Returns((_worldID, 66));
-    //     _recipeRepository.Get(crafts[0].ID).Returns(crafts[0]);
-    //     _recipeRepository.Get(crafts[1].ID).Returns(crafts[1]);
+    [Test]
+    public async Task GivenGetBestCrafts_WhenARecipeThrowsAnExeption_ThenAnErrorIsLoggedAndOthersRecipesAreReturned()
+    {
+        var crafts = GetCrafts();
+        var goodRecipe = crafts[0];
+        var badRecipe = crafts[1];
+        _calc.CalculateCraftingCostForItem(_worldID, badRecipe.TargetItemID).Throws<ArithmeticException>();
 
-    //     var result = await _craftRepository.GetBestCrafts(_worldID);
+        var result = await _craftRepository.GetBestCrafts(_worldID);
 
-    //     // _logger
-    //     //     .Received(1)
-    //     //     .LogError($"Failed to calculate best craft for item {3} in world {_worldID}");
-    //     Assert.That(result.Count, Is.EqualTo(1));
-    // }
+        await _calc.Received(1).CalculateCraftingCostForItem(_worldID, goodRecipe.TargetItemID);
+        await _calc.Received(1).CalculateCraftingCostForItem(_worldID, badRecipe.TargetItemID);
+        Assert.That(result.Count, Is.EqualTo(1));
+        _recipeRepository.Received(1).Get(goodRecipe.ID);
+        _logger
+           .DidNotReceive()
+           .LogError($"Failed to calculate best craft for item {goodRecipe.TargetItemID} in world {_worldID}");
+        _logger
+            .Received(1)
+            .LogError($"Failed to calculate best craft for item {badRecipe.TargetItemID} in world {_worldID}");
+    }
+
+    [Test]
+    public async Task GivenAGetBestCraft_WhenTheIDIsValidAndUncached_ThenWeCacheTheNewEntry()
+    {
+        _cache.Get((_worldID, _itemID)).Returns((CraftSummaryPoco)null);
+
+        _ = await _craftRepository.GetBestCraft(_worldID, _itemID);
+
+        _cache.Received(1).Get((_worldID, _itemID));
+        _cache.Received(1).Add((_worldID, _itemID), Arg.Is<CraftSummaryPoco>(s => s.ItemID == _itemID && s.WorldID == _worldID));
+    }
+
 
     [Test]
     public async Task GivenAGetBestCraft_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
@@ -119,25 +146,26 @@ public class CraftRepositoryTests
     [SetUp]
     public void SetUp()
     {
+        _calc = Substitute.For<ICraftingCalculator>();
         _calc.CalculateCraftingCostForItem(_worldID, _itemID).Returns((_recipeID, _craftingCost));
-        _recipeRepository.Get(_recipeID).Returns(new RecipePoco { ID = _recipeID });
+
+        _priceRepository = Substitute.For<IPriceRepository<PricePoco>>();
         _priceRepository
             .Get(_worldID, _itemID)
             .Returns(new PricePoco { WorldID = _worldID, ItemID = _itemID });
+
+        _recipeRepository = Substitute.For<IRecipeRepository>();
+        _recipeRepository.Get(_recipeID).Returns(new RecipePoco { ID = _recipeID, TargetItemID = _itemID });
+        _recipeRepository.GetAll().Returns(GetCrafts());
+
+        _itemRepository = Substitute.For<IItemRepository>();
         _itemRepository.Get(_itemID).Returns(new ItemInfoPoco { ID = _itemID, Name = _itemName });
+
+        _cache = Substitute.For<ICraftCache>();
         _cache
             .Get((_worldID, _itemID))
             .Returns(null, new CraftSummaryPoco() { ItemID = _itemID, Name = _itemName });
-    }
 
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
-    {
-        _calc = Substitute.For<ICraftingCalculator>();
-        _priceRepository = Substitute.For<IPriceRepository<PricePoco>>();
-        _recipeRepository = Substitute.For<IRecipeRepository>();
-        _itemRepository = Substitute.For<IItemRepository>();
-        _cache = Substitute.For<ICraftCache>();
         _logger = Substitute.For<ILogger<CraftRepository>>();
 
         _craftRepository = new CraftRepository(
@@ -149,4 +177,10 @@ public class CraftRepositoryTests
             _logger
         );
     }
+
+    private List<RecipePoco> GetCrafts() => new()
+    {
+            new() { ID = _recipeID, TargetItemID = _itemID },
+            new() { ID = _recipeID + 1, TargetItemID = _itemID + 1 }
+        };
 }

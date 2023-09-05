@@ -166,7 +166,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenWeGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    public void GivenWeGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
     {
         var recipeID = 44;
         using var context = new GilGoblinDbContext(_options, _configuration);
