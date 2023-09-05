@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Cache;
@@ -34,11 +33,11 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
         if (cached is not null)
             return cached;
 
-        var item = _dbContext?.Recipe?.FirstOrDefault(i => i.ID == recipeID);
-        if (item is not null)
-            _recipeCache.Add(item.ID, item);
+        var recipe = _dbContext?.Recipe?.FirstOrDefault(i => i.ID == recipeID);
+        if (recipe is not null)
+            _recipeCache.Add(recipe.ID, recipe);
 
-        return item;
+        return recipe;
     }
 
     public IEnumerable<RecipePoco> GetRecipesForItem(int itemID)
@@ -62,7 +61,7 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
 
     public IEnumerable<RecipePoco> GetAll() => _dbContext.Recipe;
 
-    public async Task FillCache()
+    public Task FillCache()
     {
         var recipes = _dbContext.Recipe.ToList();
         recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
@@ -75,5 +74,6 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
                     recipes.Where(itemRecipe => itemRecipe.ID == itemID).ToList()
                 )
         );
+        return Task.CompletedTask;
     }
 }

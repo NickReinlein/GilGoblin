@@ -51,7 +51,7 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldID, int recipeID)
     {
-        var calculated = await _recipeCosts.Get(worldID, recipeID);
+        var calculated = await _recipeCosts.GetAsync(worldID, recipeID);
         if (calculated is not null)
             return calculated.Cost;
 
@@ -130,7 +130,7 @@ public class CraftingCalculator : ICraftingCalculator
         return crafts;
     }
 
-    private IEnumerable<PricePoco> GetIngredientPrice(
+    public IEnumerable<PricePoco> GetIngredientPrice(
         int worldID,
         int itemID,
         IEnumerable<IngredientPoco> ingredients
@@ -154,7 +154,7 @@ public class CraftingCalculator : ICraftingCalculator
         return result;
     }
 
-    private async Task<(int, int)> GetLowestCraftingCost(
+    public async Task<(int, int)> GetLowestCraftingCost(
         int worldID,
         IEnumerable<RecipePoco?> recipes
     )
@@ -164,7 +164,7 @@ public class CraftingCalculator : ICraftingCalculator
         foreach (var recipe in recipes.Where(recipe => recipe is not null))
         {
             var recipeCost = ERROR_DEFAULT_COST;
-            var cached = await _recipeCosts.Get(worldID, recipe.ID);
+            var cached = await _recipeCosts.GetAsync(worldID, recipe.ID);
             if (cached is not null)
                 recipeCost = cached.Cost;
             else

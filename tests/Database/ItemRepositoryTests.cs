@@ -18,11 +18,12 @@ public class ItemRepositoryTests : InMemoryTestDb
 
         var result = itemRepo.GetAll();
 
+        var allItems = context.ItemInfo.ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.Name == "Item 1"));
-            Assert.That(result.Any(p => p.Name == "Item 2"));
+            Assert.That(result.Count(), Is.EqualTo(allItems.Count));
+            allItems.ForEach(item => result.SingleOrDefault(p => p.Name == item.Name));
+            allItems.ForEach(item => result.SingleOrDefault(p => p.ID == item.ID));
         });
     }
 
@@ -109,7 +110,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    public void GivenAGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -134,24 +135,35 @@ public class ItemRepositoryTests : InMemoryTestDb
         _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.ID == 2));
     }
 
-    [SetUp]
-    public void Setup()
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        _cache = Substitute.For<IItemInfoCache>();
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var itemRepo = new ItemRepository(context, _cache);
+        var allItems = context.ItemInfo.ToList();
+
+        await itemRepo.FillCache();
+
+        allItems.ForEach(item => _cache.Received(1).Add(item.ID, item));
     }
 
-    [OneTimeSetUp]
-    public override void OneTimeSetUp()
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
     {
-        base.OneTimeSetUp();
-
-        _cache = Substitute.For<IItemInfoCache>();
-
         using var context = new GilGoblinDbContext(_options, _configuration);
-        context.ItemInfo.AddRange(
-            new ItemInfoPoco { ID = 1, Name = "Item 1" },
-            new ItemInfoPoco { ID = 2, Name = "Item 2" }
-        );
+        context.ItemInfo.RemoveRange(context.ItemInfo);
         context.SaveChanges();
+        var itemRepo = new ItemRepository(context, _cache);
+
+        await itemRepo.FillCache();
+
+        _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemInfoPoco>());
+    }
+
+    [SetUp]
+    public override void SetUp()
+    {
+        base.SetUp();
+        _cache = Substitute.For<IItemInfoCache>();
     }
 }

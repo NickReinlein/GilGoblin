@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Cache;
@@ -16,10 +15,10 @@ public class RecipeCostRepository : IRecipeCostRepository
     public RecipeCostRepository(GilGoblinDbContext dbContext, IRecipeCostCache cache)
     {
         _dbContext = dbContext;
-        _cache ??= cache;
+        _cache = cache;
     }
 
-    public async Task<RecipeCostPoco?> Get(int worldID, int recipeID)
+    public async Task<RecipeCostPoco?> GetAsync(int worldID, int recipeID)
     {
         var cached = _cache.Get((worldID, recipeID));
         if (cached is not null)
@@ -55,13 +54,14 @@ public class RecipeCostRepository : IRecipeCostRepository
         )
             return;
 
-        _dbContext?.Add(entity);
+        _dbContext.Add(entity);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task FillCache()
+    public Task FillCache()
     {
-        var items = _dbContext?.RecipeCost?.ToList();
-        items.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
+        var costs = _dbContext?.RecipeCost?.ToList();
+        costs.ForEach(cost => _cache.Add((cost.WorldID, cost.RecipeID), cost));
+        return Task.CompletedTask;
     }
 }

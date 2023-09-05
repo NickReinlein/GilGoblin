@@ -182,6 +182,43 @@ public class CraftingCalculatorTests
             );
     }
 
+
+    [Test]
+    public void GivenGetIngredientPrice_WhenThereIsNoResult_ThenAnExceptionIsThrown()
+    {
+        _prices.Get(Arg.Any<int>(), Arg.Any<int>()).Returns((PricePoco)null);
+
+        Assert.Throws<DataNotFoundException>(() =>
+            _calc.GetIngredientPrice(_worldID, _firstItemID, NewRecipe.GetIngredientsList()));
+    }
+
+    [Test]
+    public async Task GivenCalculateCraftingCostForRecipe_WhenTheCostIsCached_ThenItIsReturnedImmediately()
+    {
+        var poco = new RecipeCostPoco { RecipeID = _recipeID, WorldID = _worldID, Cost = 9001 };
+        _recipeCosts.GetAsync(_worldID, _recipeID).Returns(poco);
+
+        var result = await _calc.CalculateCraftingCostForRecipe(_worldID, _recipeID);
+
+        Assert.That(result, Is.EqualTo(poco.Cost));
+        await _recipeCosts.Received(1).GetAsync(_worldID, _recipeID);
+        _recipes.DidNotReceive().Get(Arg.Any<int>());
+    }
+
+    [Test]
+    public async Task GivenGetLowestCraftingCost_WhenTheCostIsCached_ThenItIsReturnedImmediately()
+    {
+        var poco = new RecipeCostPoco { RecipeID = _recipeID, WorldID = _worldID, Cost = 9001 };
+        _recipeCosts.GetAsync(_worldID, _recipeID).Returns(poco);
+
+        var result = await _calc.GetLowestCraftingCost(_worldID, new List<RecipePoco>() { NewRecipe });
+
+        Assert.That(result.Item1, Is.EqualTo(poco.RecipeID));
+        Assert.That(result.Item2, Is.EqualTo(poco.Cost));
+        await _recipeCosts.Received(1).GetAsync(_worldID, _recipeID);
+        _recipes.DidNotReceive().Get(Arg.Any<int>());
+    }
+
     [Test]
     public async Task WhenAnUnexpectedExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
     {

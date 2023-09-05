@@ -107,7 +107,7 @@ public class DataCacheTests : DataCache<int, Pizza>
     }
 
     [SetUp]
-    public void Setup()
+    public void SetUp()
     {
         _cache.Clear();
         _cache.Add(1, new Pizza { Id = 1, IngredientsCount = 10 });

@@ -2,7 +2,7 @@
   "githubPullRequests.ignoredPullRequestBranches": ["master"],
   "dotnet.defaultSolution": "GilGoblin.sln",
   "dotnet-test-explorer.testProjectPath": "**/tests/*Tests.csproj",
-  "omnisharp.enableRoslynAnalyzers": true,
+  "testExplorer.useNativeTesting": true,
   "omnisharp.enableEditorConfigSupport": true,
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#47037a",

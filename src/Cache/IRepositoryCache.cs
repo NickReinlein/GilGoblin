@@ -4,6 +4,6 @@ namespace GilGoblin.Cache
 {
     public interface IRepositoryCache
     {
-        public Task FillCache();
+        Task FillCache();
     }
 }

@@ -37,9 +37,10 @@ public class ItemRepository : IItemRepository
 
     public IEnumerable<ItemInfoPoco> GetAll() => _dbContext?.ItemInfo;
 
-    public async Task FillCache()
+    public Task FillCache()
     {
         var items = _dbContext?.ItemInfo?.ToList();
         items.ForEach(item => _cache.Add(item.ID, item));
+        return Task.CompletedTask;
     }
 }

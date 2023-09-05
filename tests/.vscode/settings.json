@@ -2,6 +2,7 @@
   "dotnet-test-explorer.autoExpandTree": false,
   "dotnet-test-explorer.autoWatch": false,
   "dotnet-test-explorer.treeMode": "full",
+  "testExplorer.useNativeTesting": true,
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#47037a",
     "activityBar.background": "#47037a",

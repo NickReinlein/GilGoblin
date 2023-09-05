@@ -148,7 +148,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndNotCached_ThenWeCacheTheEntry()
+    public void GivenAGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -168,6 +168,8 @@ public class PriceRepositoryTests : InMemoryTestDb
     public void GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
+        var poco = new PricePoco { WorldID = _worldID, ItemID = _itemID };
+        _cache.Get((_worldID, _itemID)).Returns((PricePoco)null, poco);
         var priceRepo = new PriceRepository(context, _cache);
 
         _ = priceRepo.Get(_worldID, _itemID);
@@ -182,20 +184,35 @@ public class PriceRepositoryTests : InMemoryTestDb
             );
     }
 
-    [OneTimeSetUp]
-    public override void OneTimeSetUp()
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        base.OneTimeSetUp();
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        var priceRepo = new PriceRepository(context, _cache);
+        var allPrices = context.Price.ToList();
 
-        _cache = Substitute.For<PriceCache>();
+        await priceRepo.FillCache();
 
-        var context = new GilGoblinDbContext(_options, _configuration);
-        context.Price.AddRange(
-            new PricePoco { WorldID = 22, ItemID = 11 },
-            new PricePoco { WorldID = 22, ItemID = 12 },
-            new PricePoco { WorldID = _worldID, ItemID = _itemID },
-            new PricePoco { WorldID = 44, ItemID = 99 }
-        );
+        allPrices.ForEach(price => _cache.Received(1).Add((price.WorldID, price.ItemID), price));
+    }
+
+    [Test]
+    public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
+    {
+        using var context = new GilGoblinDbContext(_options, _configuration);
+        context.Price.RemoveRange(context.Price);
         context.SaveChanges();
+        var priceRepo = new PriceRepository(context, _cache);
+
+        await priceRepo.FillCache();
+
+        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<PricePoco>());
+    }
+
+    [SetUp]
+    public override void SetUp()
+    {
+        base.SetUp();
+        _cache = Substitute.For<IPriceCache>();
     }
 }
