@@ -71,10 +71,10 @@ public class GilGoblinDatabaseInitializer
 
     public async Task SaveBatchResult(
         GilGoblinDbContext dbContext,
-        IEnumerable<PriceWebPoco?> batchTosSave
+        IEnumerable<PriceWebPoco?> batchToSave
     )
     {
-        var pricesToSave = batchTosSave.ToPricePocoList();
+        var pricesToSave = batchToSave.ToPricePocoList();
         if (!pricesToSave.Any())
             return;
 

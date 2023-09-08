@@ -29,7 +29,7 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
     public virtual async Task<U?> GetMultipleAsync(string path) =>
         await FetchAndSerializeDataAsync<U?>(path);
 
-    private async Task<F?> FetchAndSerializeDataAsync<F>(string path)
+    protected async Task<F?> FetchAndSerializeDataAsync<F>(string path)
     {
         var response = await PerformGetAsync(path);
         if (!response.IsSuccessStatusCode)
@@ -45,7 +45,7 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
         }
     }
 
-    private async Task<HttpResponseMessage> PerformGetAsync(string path)
+    protected async Task<HttpResponseMessage> PerformGetAsync(string path)
     {
         var fullPath = string.Concat(BasePath, path);
         return await Client.GetAsync(fullPath);
