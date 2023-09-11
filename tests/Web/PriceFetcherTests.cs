@@ -251,7 +251,7 @@ public class PriceFetcherTests : FetcherTests
 
         var result = await _fetcher.GetAllIDsAsBatchJobsAsync();
 
-        Assert.That(result.Count, Is.EqualTo(expectedPages));
+        Assert.That(result, Has.Count.EqualTo(expectedPages));
     }
     #endregion
 
