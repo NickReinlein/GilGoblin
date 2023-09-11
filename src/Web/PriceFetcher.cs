@@ -32,7 +32,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         var idString = $"{id}";
         var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsSingle });
 
-        return await base.GetAsync(pathSuffix);
+        return await GetAsync(pathSuffix);
     }
 
     public async Task<IEnumerable<PriceWebPoco?>> FetchMultiplePricesAsync(
@@ -53,12 +53,12 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         }
         var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsMulti });
 
-        var response = await base.GetMultipleAsync(pathSuffix);
+        var response = await GetMultipleAsync(pathSuffix);
 
         return response is not null ? response.GetContentAsList() : new List<PriceWebPoco>();
     }
 
-    public async Task<List<List<int>>> GetAllIDsAsBatchJobsAsync(int worldID)
+    public async Task<List<List<int>>> GetAllIDsAsBatchJobsAsync()
     {
         var allIDs = await GetMarketableItemIDsAsync();
         if (!allIDs.Any())
@@ -71,6 +71,7 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
     public async Task<List<int>> GetMarketableItemIDsAsync()
     {
         var fullPath = string.Concat(BasePath, MarketableItemSuffix);
+
         var response = await Client.GetAsync(fullPath);
         if (!response.IsSuccessStatusCode)
             return new List<int>();

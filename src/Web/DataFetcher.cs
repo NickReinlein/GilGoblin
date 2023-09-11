@@ -6,7 +6,7 @@ namespace GilGoblin.Web;
 
 public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
     where T : class
-    where U : class
+    where U : class, IReponseToList<T>
 {
     protected readonly string BasePath;
     protected HttpClient Client { get; set; }

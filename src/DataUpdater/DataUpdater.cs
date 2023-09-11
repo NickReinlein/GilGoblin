@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -5,70 +7,88 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Web;
+using GilGoblin.Services;
+using GilGoblin.Database;
 
 namespace GilGoblin.Services.DataUpdater;
 
-public interface IDataUpdater<T> where T : class
+public interface IDataUpdater<T>
+    where T : class
 {
     Task UpdateAsync();
-    Task GetEntriesToUpdateAsync(DbContext dbContext);
+    Task SaveUpdatedAsync(IEnumerable<T> updated);
 }
 
-public class DataUpdater<T, U> : IDataUpdater<T> where T : class where U : class
+public abstract class DataUpdater<T, U> : IDataUpdater<T>
+    where T : class
+    where U : class, IReponseToList<T>
 {
-    private readonly Timer timer;
-    private readonly IBatcher<T> _batcher;
     private readonly IDataFetcher<T, U> _fetcher;
+    private readonly GilGoblinDbContext _dbContext;
     private readonly ILogger<DataUpdater<T, U>> _logger;
+    private readonly Timer timer;
 
-    public DataUpdater(IBatcher<T> batcher, IDataFetcher<T, U> fetcher, ILogger<DataUpdater<T, U>> logger)
+    public DataUpdater(
+        GilGoblinDbContext dbContext,
+        IDataFetcher<T, U> fetcher,
+        ILogger<DataUpdater<T, U>> logger
+    )
     {
-        _batcher = batcher;
+        _dbContext = dbContext;
         _fetcher = fetcher;
         _logger = logger;
-        timer = new Timer(async _ => await UpdateAsync(), null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+        timer = new Timer(
+            async _ => await UpdateAsync(),
+            null,
+            TimeSpan.Zero,
+            TimeSpan.FromMinutes(5)
+        );
     }
-
-    public virtual async Task GetEntriesToUpdateAsync(DbContext dbContext) => throw new NotImplementedException();
 
     public async Task UpdateAsync()
     {
         try
         {
-            var entries = new List<T>();
-            var batchJobs = _batcher.SplitIntoBatchJobs(entries);
+            var entriesToUpdate = await GetEntriesToUpdateAsync();
+            if (!entriesToUpdate.Any())
+                return;
 
-            foreach (var job in batchJobs)
-            {
-                var response = await _fetcher.GetMultipleAsync("");
+            var result = await FetchUpdateForEntries(entriesToUpdate);
 
-                if (!response?.IsSuccessStatusCode)
-                {
-                    _logger.LogError($"API call failed with status code: {response.StatusCode}");
-                    continue;
-                }
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-
-                if (responseBody is not null) // add safety checks
-                    SaveUpdateResult(responseBody);
-            }
-
+            await SaveUpdatedAsync(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError($"An exception occured during the Api call with error message: {ex.message}");
+            _logger.LogError($"An exception occured during the Api call: {ex.Message}");
         }
     }
 
-    public async Task SaveUpdateResult(DbContext dbContext, IEnumerable<T> results)
+    public async Task SaveUpdatedAsync(IEnumerable<T> updated)
     {
-        if (!results.Any())
+        if (!updated.Any())
             return;
 
-        using var context = dbContext;
-        await context.AddRangeAsync(results);
+        using var context = _dbContext; // todo check this
+        await context.AddRangeAsync(updated);
         await context.SaveChangesAsync();
-        _logger.LogInformation($"Saved {results.Count} entries for type {typeof(T).Name}");
+        _logger.LogInformation($"Saved {updated.Count()} entries for type {typeof(T).Name}");
     }
+
+    protected virtual async Task<IEnumerable<T>> FetchUpdateForEntries(
+        IEnumerable<T> entriesToUpdate
+    )
+    {
+        var apiUrl = await GetUrlPathFromEntries(entriesToUpdate);
+
+        var response = await _fetcher.GetMultipleAsync(apiUrl);
+        if (response is null)
+            throw new HttpRequestException($"Failed to fetch the apiUrl: {apiUrl}");
+
+        return response.GetContentAsList();
+    }
+
+    protected virtual async Task<IEnumerable<T>> GetEntriesToUpdateAsync() => Enumerable.Empty<T>();
+
+    protected virtual async Task<string> GetUrlPathFromEntries(IEnumerable<T> entries) =>
+        string.Empty;
 }

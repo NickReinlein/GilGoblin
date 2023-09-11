@@ -59,17 +59,20 @@ public class DataFetcherTests : FetcherTests
     public async Task GivenAGetMultipleAsync_WhenThePathIsValid_ThenAMappedObjectIsReturned()
     {
         var goodPath = "/goodPath";
-        var orangeSize = 324;
-        var jsonObject = JsonSerializer.Serialize(new Orange { Size = orangeSize });
+        var appleID = 324;
+        var appleList = new List<Apple>() { new Apple() { Id = appleID } };
+        var appleResponse = new AppleReponse(appleList);
+        var jsonObject = JsonSerializer.Serialize(appleResponse);
         _handler.When($"{_basePath}{goodPath}").Respond(HttpStatusCode.OK, ContentType, jsonObject);
 
         var result = await _fetcher.GetMultipleAsync(goodPath);
 
-        Assert.That(result.Size, Is.EqualTo(orangeSize));
+        var resultList = result.GetContentAsList();
+        Assert.That(resultList.First().Id, Is.EqualTo(appleID));
     }
 }
 
-public class MockDataFetcher : DataFetcher<Apple, Orange>
+public class MockDataFetcher : DataFetcher<Apple, AppleReponse>
 {
     public MockDataFetcher(string basePath, HttpClient client)
         : base(basePath, client) { }
@@ -80,7 +83,14 @@ public class Apple
     public int Id { get; set; }
 }
 
-public class Orange
+public class AppleReponse : IReponseToList<Apple>
 {
-    public int Size { get; set; }
+    public List<Apple> Apples { get; set; }
+
+    public AppleReponse(List<Apple> apples)
+    {
+        Apples = apples;
+    }
+
+    public List<Apple> GetContentAsList() => Apples;
 }

@@ -208,7 +208,7 @@ public class PriceFetcherTests : FetcherTests
     {
         _handler.When(_getMarketableItemIDsAsyncUrl).Respond(HttpStatusCode.OK, ContentType, "{}");
 
-        var result = await _fetcher.GetAllIDsAsBatchJobsAsync(_worldID);
+        var result = await _fetcher.GetAllIDsAsBatchJobsAsync();
 
         Assert.That(result, Is.Empty);
     }
@@ -224,7 +224,7 @@ public class PriceFetcherTests : FetcherTests
                 JsonSerializer.Serialize(new List<int> { 1, 2, 3 })
             );
 
-        var result = await _fetcher.GetAllIDsAsBatchJobsAsync(_worldID);
+        var result = await _fetcher.GetAllIDsAsBatchJobsAsync();
 
         Assert.Multiple(() =>
         {
@@ -249,7 +249,7 @@ public class PriceFetcherTests : FetcherTests
             .When(_getMarketableItemIDsAsyncUrl)
             .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(idList));
 
-        var result = await _fetcher.GetAllIDsAsBatchJobsAsync(_worldID);
+        var result = await _fetcher.GetAllIDsAsBatchJobsAsync();
 
         Assert.That(result.Count, Is.EqualTo(expectedPages));
     }

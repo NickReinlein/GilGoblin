@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace GilGoblin.Api;
 
@@ -41,9 +42,16 @@ public class Startup
         AddGoblinCrafting(services);
         AddGoblinDatabases(services);
         AddGoblinControllers(services);
-        AddGoblinCaches(services);
+        AddGoblinUpdateServices(services);
         AddBasicBuilderServices(services);
+        AddGoblinCaches(services);
         FillGoblinCaches(services);
+    }
+
+    private static void AddGoblinUpdateServices(IServiceCollection services)
+    {
+        // services.AddSingleton<IDataUpdater, DataUpdater>();
+        // services.AddSingleton<DataUpdater<T, U>, TUpdater>();
     }
 
     public static void AddGoblinCaches(IServiceCollection services)
