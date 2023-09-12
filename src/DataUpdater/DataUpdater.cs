@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Linq;
 using System;
 using System.Net.Http;
@@ -7,10 +6,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Web;
-using GilGoblin.Services;
 using GilGoblin.Database;
 
-namespace GilGoblin.Services.DataUpdater;
+namespace GilGoblin.DataUpdater;
 
 public interface IDataUpdater<T>
     where T : class
@@ -68,7 +66,7 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
         if (!updated.Any())
             return;
 
-        using var context = _dbContext; // todo check this
+        using var context = _dbContext;
         await context.AddRangeAsync(updated);
         await context.SaveChangesAsync();
         _logger.LogInformation($"Saved {updated.Count()} entries for type {typeof(T).Name}");
@@ -87,8 +85,6 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
         return response.GetContentAsList();
     }
 
-    protected virtual async Task<IEnumerable<T>> GetEntriesToUpdateAsync() => Enumerable.Empty<T>();
-
-    protected virtual async Task<string> GetUrlPathFromEntries(IEnumerable<T> entries) =>
-        string.Empty;
+    protected virtual async Task<IEnumerable<T>> GetEntriesToUpdateAsync() => await Task.Run(() => Enumerable.Empty<T>());
+    protected virtual async Task<string> GetUrlPathFromEntries(IEnumerable<T> entries) => await Task.Run(() => string.Empty);
 }

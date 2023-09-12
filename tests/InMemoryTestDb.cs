@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GilGoblin.Tests.Database;
+namespace GilGoblin.Tests;
 
 public class InMemoryTestDb
 {
