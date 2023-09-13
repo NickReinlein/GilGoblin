@@ -14,7 +14,6 @@ public interface IDataUpdater<T>
     where T : class
 {
     Task UpdateAsync();
-    Task SaveUpdatedAsync(IEnumerable<T> updated);
 }
 
 public abstract class DataUpdater<T, U> : IDataUpdater<T>
@@ -24,7 +23,7 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
     private readonly IDataFetcher<T, U> _fetcher;
     private readonly GilGoblinDbContext _dbContext;
     private readonly ILogger<DataUpdater<T, U>> _logger;
-    private readonly Timer timer;
+    private readonly Timer _timer;
 
     public DataUpdater(
         GilGoblinDbContext dbContext,
@@ -35,7 +34,7 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
         _dbContext = dbContext;
         _fetcher = fetcher;
         _logger = logger;
-        timer = new Timer(
+        _timer = new Timer(
             async _ => await UpdateAsync(),
             null,
             TimeSpan.Zero,
@@ -61,7 +60,7 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
         }
     }
 
-    public async Task SaveUpdatedAsync(IEnumerable<T> updated)
+    protected async Task SaveUpdatedAsync(IEnumerable<T> updated)
     {
         if (!updated.Any())
             return;
@@ -80,11 +79,15 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
 
         var response = await _fetcher.GetMultipleAsync(apiUrl);
         if (response is null)
-            throw new HttpRequestException($"Failed to fetch the apiUrl: {apiUrl}");
+        {
+            _logger.LogError($"Failed to fetch the apiUrl: {apiUrl}");
+            return Enumerable.Empty<T>();
+        }
 
         return response.GetContentAsList();
     }
 
     protected virtual async Task<IEnumerable<T>> GetEntriesToUpdateAsync() => await Task.Run(() => Enumerable.Empty<T>());
-    protected virtual async Task<string> GetUrlPathFromEntries(IEnumerable<T> entries) => await Task.Run(() => string.Empty);
+    protected virtual async Task<string> GetUrlPathFromEntries(IEnumerable<T> entries) =>
+        await Task.Run(() => string.Empty);
 }

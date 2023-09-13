@@ -1,13 +1,14 @@
 using GilGoblin.Database;
-using GilGoblin.DataUpdater;
 using GilGoblin.Web;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DataUpdater;
 
-public class DataUpdaterTests : InMemoryTestDb
+public partial class DataUpdaterTests : InMemoryTestDb
 {
     private TestDataUpdater _updater;
     private GilGoblinDbContext _dbContext;
@@ -21,56 +22,75 @@ public class DataUpdaterTests : InMemoryTestDb
     {
         base.SetUp();
 
+        _housesToUpdate = new List<House> { new() { CivicNumber = 123 } };
+        _urlToUse = "www.baseurl.com";
+
         _dbContext = new GilGoblinDbContext(_options, _configuration);
         _fetcher = Substitute.For<IDataFetcher<House, HouseResponse>>();
+        _fetcher.GetMultipleAsync(Arg.Is<string>(x => x.Contains(_urlToUse))).Returns(new HouseResponse()
+        {
+            Houses = _housesToUpdate
+        });
         _logger = Substitute.For<ILogger<TestDataUpdater>>();
-        _housesToUpdate = new List<House>();
-        _urlToUse = "www.baseUrl.com";
 
         _updater = new TestDataUpdater(_dbContext, _fetcher, _logger, _housesToUpdate, _urlToUse);
     }
 
     [Test]
-    public async Task GivenUpdateAsync_WhenThereAreNoEntriesToUpdate_WeDoNotMakeAnyCalls()
+    public async Task GivenUpdateAsync_WhenThereAreNoEntriesToUpdate_ThenWeDoNotMakeAnyCalls()
     {
+        _housesToUpdate = new List<House>();
+        _fetcher = Substitute.For<IDataFetcher<House, HouseResponse>>();
+        _updater = new TestDataUpdater(_dbContext, _fetcher, _logger, _housesToUpdate, _urlToUse);
+
         await _updater.UpdateAsync();
 
         await _fetcher.DidNotReceive().GetMultipleAsync(Arg.Any<string>());
     }
 
     [Test]
-    public async Task GivenUpdateAsync_WhenThereAreEntriesToUpdate_WeFetchUpdatesForThoseEntries()
+    public async Task GivenUpdateAsync_WhenThereAreNoEntriesToUpdate()
     {
-        _housesToUpdate.Add(new House { CivicNumber = 123, StreetName = "Elm Street" });
-        _fetcher.GetMultipleAsync(Arg.Is<string>(x => x.Contains(_urlToUse))).Returns(new HouseResponse()
-        {
-            Houses = _housesToUpdate
-        });
+        _housesToUpdate = new List<House>();
+        _fetcher = Substitute.For<IDataFetcher<House, HouseResponse>>();
+        _updater = new TestDataUpdater(_dbContext, _fetcher, _logger, _housesToUpdate, _urlToUse);
 
+        await _updater.UpdateAsync();
+
+        await _fetcher.DidNotReceive().GetMultipleAsync(Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task GivenUpdateAsync_WhenThereAreEntriesToUpdate_ThenWeFetchUpdatesForThoseEntries()
+    {
         await _updater.UpdateAsync();
 
         await _fetcher.Received().GetMultipleAsync(Arg.Is<string>(x => x.Contains(_urlToUse)));
     }
 
     [Test]
-    public async Task GivenUpdateAsync_WhenThereAreEntriesToUpdate_WeSaveTheUpdatesForThoseEntries()
+    public async Task GivenUpdateAsync_WhenUpdatingThrowsAnException_ThenWeCatchAndLogTheError()
     {
-        _housesToUpdate.Add(new House { CivicNumber = 123, StreetName = "Elm Street" });
-        _fetcher.GetMultipleAsync(Arg.Is<string>(x => x.Contains(_urlToUse))).Returns(new HouseResponse()
-        {
-            Houses = _housesToUpdate
-        });
+        _fetcher.GetMultipleAsync(_urlToUse).Throws<ConnectionAbortedException>();
 
-        await _updater.UpdateAsync();
+        Assert.DoesNotThrowAsync(async () => await _updater.UpdateAsync());
 
-        using var context = new GilGoblinDbContext(_options, _configuration);
-        Assert.That(context.)
+        _logger.Received().LogError($"An exception occured during the Api call: The connection was aborted");
+    }
+
+    [Test]
+    public async Task GivenFetchUpdateForEntries_WhenFetchingReturnsNull_ThenWeDoNotThrowAndLogTheError()
+    {
+        _fetcher.GetMultipleAsync(_urlToUse).Returns((HouseResponse)null);
+
+        Assert.DoesNotThrowAsync(async () => await _updater.UpdateAsync());
+
+        _logger.Received().LogError($"Failed to fetch the apiUrl: {_urlToUse}");
     }
 
     public class House
     {
         public int CivicNumber { get; set; }
-        public string StreetName { get; set; }
     }
 
     public class HouseResponse : IReponseToList<House>
@@ -78,25 +98,5 @@ public class DataUpdaterTests : InMemoryTestDb
         public List<House> Houses { get; set; }
 
         public List<House> GetContentAsList() => Houses;
-    }
-
-    public class TestDataUpdater : DataUpdater<House, HouseResponse>
-    {
-        private IEnumerable<House> _housesToUpdate;
-        private string _urlToUse;
-
-        public TestDataUpdater(
-            GilGoblinDbContext dbContext,
-            IDataFetcher<House, HouseResponse> fetcher,
-            ILogger<DataUpdater<House, HouseResponse>> logger,
-            IEnumerable<House> housesToUpdate,
-            string urlToUse) : base(dbContext, fetcher, logger)
-        {
-            _housesToUpdate = housesToUpdate;
-            _urlToUse = urlToUse;
-        }
-
-        protected override async Task<IEnumerable<House>> GetEntriesToUpdateAsync() => await Task.Run(() => _housesToUpdate);
-        protected override async Task<string> GetUrlPathFromEntries(IEnumerable<House> entries) => await Task.Run(() => _urlToUse);
     }
 }
