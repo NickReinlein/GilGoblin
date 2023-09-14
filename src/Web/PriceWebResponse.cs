@@ -10,8 +10,8 @@ public class PriceWebResponse : IReponseToList<PriceWebPoco>
 
     public PriceWebResponse(Dictionary<int, PriceWebPoco> items)
     {
-        Items = items;
+        Items = items ?? new Dictionary<int, PriceWebPoco>();
     }
 
-    public List<PriceWebPoco> GetContentAsList() => Items.Values.ToList();
+    public List<PriceWebPoco> GetContentAsList() => Items?.Values?.ToList();
 }

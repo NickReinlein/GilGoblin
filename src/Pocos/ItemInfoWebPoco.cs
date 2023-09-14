@@ -1,10 +1,9 @@
 namespace GilGoblin.Pocos;
 
-public class ItemInfoPoco : BaseItemInfoPoco
+public class ItemInfoWebPoco : BaseItemInfoPoco
 {
-    public ItemInfoPoco() : base() { }
-
-    public ItemInfoPoco(
+    public ItemInfoWebPoco() : base() { }
+    public ItemInfoWebPoco(
         int id,
         string name,
         string description,
