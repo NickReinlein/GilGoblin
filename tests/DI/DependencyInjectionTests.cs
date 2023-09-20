@@ -1,6 +1,7 @@
 using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
+using GilGoblin.DataUpdater;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Web;
@@ -23,9 +24,12 @@ public class DependencyInjectionTests : TestWithDatabase
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IPriceDataFetcher))]
+    [TestCase(typeof(IItemInfoFetcher))]
     [TestCase(typeof(IRepositoryCache))]
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
-    [TestCase(typeof(DataFetcher<PriceWebPoco, PriceWebResponse>))]
+    [TestCase(typeof(IDataFetcher<PriceWebPoco, PriceWebResponse>))]
+    [TestCase(typeof(IDataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>))]
+    [TestCase(typeof(IDataUpdater<ItemInfoWebPoco>))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         var provider = _services.BuildServiceProvider();
@@ -36,7 +40,7 @@ public class DependencyInjectionTests : TestWithDatabase
     }
 
     [Test]
-    public void GivenGoblinServices_WhenWeSetup_ThenTheyAreNotNull()
+    public void GivenGoblinServices_WhenWeSetup_ThenNoneAreNull()
     {
         var goblinServices = GetGoblinServicesList(_services);
 

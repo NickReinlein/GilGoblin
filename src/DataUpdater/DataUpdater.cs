@@ -6,23 +6,18 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Web;
 using GilGoblin.Database;
+using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
 
-public interface IDataUpdater<T>
-    where T : class
-{
-    Task UpdateAsync();
-}
-
-public abstract class DataUpdater<T, U> : IDataUpdater<T>
+public class DataUpdater<T, U> : BackgroundService
     where T : class
     where U : class, IReponseToList<T>
 {
-    private readonly IDataFetcher<T, U> _fetcher;
-    private readonly GilGoblinDbContext _dbContext;
-    private readonly ILogger<DataUpdater<T, U>> _logger;
-    private readonly Timer _timer;
+    protected readonly IDataFetcher<T, U> _fetcher;
+    protected readonly GilGoblinDbContext _dbContext;
+    protected readonly ILogger<DataUpdater<T, U>> _logger;
+    protected readonly Timer _timer;
 
     public DataUpdater(
         GilGoblinDbContext dbContext,
@@ -33,30 +28,37 @@ public abstract class DataUpdater<T, U> : IDataUpdater<T>
         _dbContext = dbContext;
         _fetcher = fetcher;
         _logger = logger;
-        _timer = new Timer(
-            async _ => await UpdateAsync(),
-            null,
-            TimeSpan.Zero,
-            TimeSpan.FromMinutes(5)
-        );
     }
 
-    public async Task UpdateAsync()
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        try
+        while (!ct.IsCancellationRequested)
         {
-            var entriesToUpdate = await GetEntriesToUpdateAsync();
-            if (!entriesToUpdate.Any())
-                return;
+            try
+            {
+                var updated = await FetchUpdateAsync();
 
-            var result = await FetchUpdateForEntries(entriesToUpdate);
-
-            await SaveUpdatedAsync(result);
+                await SaveUpdatedAsync(updated);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An exception occured during the Api call: {ex.Message}");
+            }
+            await Task.Delay(TimeSpan.FromMinutes(5), ct);
         }
-        catch (Exception ex)
+    }
+
+    protected virtual async Task<IEnumerable<T>> FetchUpdateAsync()
+    {
+        var entriesToUpdate = await GetEntriesToUpdateAsync();
+        if (!entriesToUpdate.Any())
         {
-            _logger.LogError($"An exception occured during the Api call: {ex.Message}");
+            _logger.LogInformation($"No entries need to be updated for {nameof(T)}");
+            return Enumerable.Empty<T>();
         }
+
+        _logger.LogInformation($"Fetching updates for {entriesToUpdate.Count()} {nameof(T)} entries");
+        return await FetchUpdateForEntries(entriesToUpdate);
     }
 
     protected async Task SaveUpdatedAsync(IEnumerable<T> updated)

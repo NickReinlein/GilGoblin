@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using System;
+using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Api;
 
@@ -29,7 +29,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        AddGoblinServices(services);
+        Task add = AddGoblinServices(services);
+        add.Wait();
     }
 
     public void Configure(IApplicationBuilder app)
@@ -37,21 +38,25 @@ public class Startup
         AddAppGoblinServices(app);
     }
 
-    public static void AddGoblinServices(IServiceCollection services)
+    public static async Task AddGoblinServices(IServiceCollection services)
     {
         AddGoblinCrafting(services);
         AddGoblinDatabases(services);
         AddGoblinControllers(services);
-        AddGoblinUpdateServices(services);
+        AddGoblinUpdaterServices(services);
         AddBasicBuilderServices(services);
         AddGoblinCaches(services);
-        FillGoblinCaches(services);
+        await FillGoblinCaches(services);
     }
 
-    private static void AddGoblinUpdateServices(IServiceCollection services)
+    private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
-        // services.AddSingleton<IDataUpdater, DataUpdater>();
-        // services.AddSingleton<DataUpdater<T, U>, TUpdater>();
+        services.AddHttpClient();
+        services.AddSingleton<IDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
+        services.AddSingleton<IDataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>, ItemInfoFetcher>();
+        services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
+        services.AddSingleton<IItemInfoFetcher, ItemInfoFetcher>();
+        services.AddSingleton<ItemInfoUpdater>();
     }
 
     public static void AddGoblinCaches(IServiceCollection services)
@@ -82,8 +87,7 @@ public class Startup
         services.AddSingleton<ICraftingCalculator, CraftingCalculator>();
         services.AddSingleton<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
         services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
-        services.AddSingleton<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
+
     }
 
     public static void AddGoblinDatabases(IServiceCollection services)
@@ -122,7 +126,7 @@ public class Startup
         });
     }
 
-    public static async void FillGoblinCaches(IServiceCollection services)
+    public static async Task FillGoblinCaches(IServiceCollection services)
     {
         var serviceProvider = services.BuildServiceProvider();
         var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();

@@ -50,4 +50,6 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T, U>
         var fullPath = string.Concat(BasePath, path);
         return await Client.GetAsync(fullPath);
     }
+
+    public string GetBasePath() => BasePath;
 }
