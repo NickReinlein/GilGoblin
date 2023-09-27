@@ -13,5 +13,15 @@ public class ItemInfoWebResponse : IReponseToList<ItemInfoWebPoco>
         Items = items ?? new Dictionary<int, ItemInfoWebPoco>();
     }
 
-    public List<ItemInfoWebPoco> GetContentAsList() => Items?.Values?.ToList();
+    public ItemInfoWebResponse(IEnumerable<ItemInfoPoco> items)
+    {
+        Items = new Dictionary<int, ItemInfoWebPoco>();
+        foreach (var item in items)
+        {
+            var converted = new ItemInfoWebPoco(item);
+            Items.Add(converted.ID, converted);
+        }
+    }
+
+    public List<ItemInfoWebPoco> GetContentAsList() => Items?.Values.ToList();
 }

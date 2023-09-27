@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,14 +13,18 @@ namespace GilGoblin.DataUpdater;
 public class ItemInfoUpdater : DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>
 {
     protected new IItemInfoFetcher _fetcher;
-    public ItemInfoUpdater(GilGoblinDbContext dbContext, IItemInfoFetcher fetcher, ILogger<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>> logger) : base(dbContext, fetcher, logger)
+
+    public ItemInfoUpdater(
+        GilGoblinDbContext dbContext,
+        IItemInfoFetcher fetcher,
+        ILogger<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>> logger)
+        : base(dbContext, fetcher, logger)
     {
         _fetcher = fetcher;
     }
 
     protected override async Task<IEnumerable<ItemInfoWebPoco>> FetchUpdateAsync()
     {
-
         var idsToUpdate = await GetIdsToUpdateAsync();
         if (!idsToUpdate.Any())
         {
@@ -38,20 +42,28 @@ public class ItemInfoUpdater : DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>
         if (!allIDs.Any())
             return Enumerable.Empty<int>();
 
-        var existingIDs = await _dbContext?.ItemInfo?.Select(i => i.ID).ToListAsync();
-
+        var existingIDs = _dbContext.ItemInfo.Select(i => i.ID).ToList();
         return allIDs.Except(existingIDs);
     }
 
     private async Task<IEnumerable<ItemInfoWebPoco>> FetchUpdatesForIDs(IEnumerable<int> idsToUpdate)
     {
-        var timer = new Stopwatch();
-        timer.Start();
-        var updated = await _fetcher.FetchMultipleItemInfosAsync(idsToUpdate);
-        timer.Stop();
-        var callTime = timer.Elapsed.TotalMilliseconds;
+        try
+        {
+            var timer = new Stopwatch();
+            timer.Start();
+            var updated = await _fetcher.FetchMultipleItemsAsync(idsToUpdate);
+            timer.Stop();
+            var callTime = timer.Elapsed.TotalMilliseconds;
 
-        _logger.LogInformation($"Received updates for {updated.Count()} {nameof(ItemInfoWebPoco)} entries in {callTime}ms");
-        return updated;
+            _logger.LogInformation($"Received updates for {updated.Count} {nameof(ItemInfoWebPoco)} entries");
+            _logger.LogInformation($"Total call time: {callTime}");
+            return updated;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to fetch updates for {nameof(ItemInfoWebPoco)}: {e.Message}");
+            return Enumerable.Empty<ItemInfoWebPoco>();
+        }
     }
 }

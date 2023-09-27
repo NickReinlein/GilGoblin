@@ -9,5 +9,5 @@ public interface IItemInfoFetcher : IDataFetcher<ItemInfoWebPoco, ItemInfoWebRes
     Task<List<int>> GetMarketableItemIDsAsync();
     Task<List<List<int>>> GetAllIDsAsBatchJobsAsync();
     Task<ItemInfoWebPoco> FetchItemInfoAsync(int id);
-    Task<IEnumerable<ItemInfoWebPoco?>> FetchMultipleItemInfosAsync(IEnumerable<int> ids);
+    Task<List<ItemInfoWebPoco?>> FetchMultipleItemsAsync(IEnumerable<int> ids);
 }

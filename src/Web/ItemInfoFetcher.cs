@@ -34,10 +34,10 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
         return await GetAsync(pathSuffix);
     }
 
-    public async Task<IEnumerable<ItemInfoWebPoco?>> FetchMultipleItemInfosAsync(IEnumerable<int> ids)
+    public async Task<List<ItemInfoWebPoco?>> FetchMultipleItemsAsync(IEnumerable<int> ids)
     {
         if (!ids.Any())
-            return Array.Empty<ItemInfoWebPoco>();
+            return new List<ItemInfoWebPoco>();
 
         var path = GetPathFromIDs(ids);
 
@@ -55,6 +55,7 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
             if (id != ids.Last())
                 idString.Concat(",");
         }
+
         return string.Concat(new[] { idString, SelectiveColumnsMulti });
     }
 
@@ -91,12 +92,9 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
 
     public static readonly string MarketableItemSuffix = "marketable";
 
-    public static readonly string ItemInfoBaseUrl = $$"""https://universalis.app/api/v2/""";
-    public static readonly string SelectiveColumnsMulti = $$"""
-?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAverageItemInfo%2Citems.currentAverageItemInfoNQ%2Citems.currentAverageItemInfoHQ,items.averageItemInfo%2Citems.averageItemInfoNQ%2Citems.averageItemInfoHQ%2Citems.lastUploadTime
-""";
+    public static readonly string ItemInfoBaseUrl = $"https://universalis.app/api/v2/";
 
-    public static readonly string SelectiveColumnsSingle = $$"""
-?listings=0&entries=0&fields=itemID,worldID,currentAverageItemInfo,currentAverageItemInfoNQ,currentAverageItemInfoHQ,averageItemInfo,averageItemInfoNQ,averageItemInfoHQ,lastUploadTime
-""";
+    public static readonly string SelectiveColumnsMulti = $"?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAverageItemInfo%2Citems.currentAverageItemInfoNQ%2Citems.currentAverageItemInfoHQ,items.averageItemInfo%2Citems.averageItemInfoNQ%2Citems.averageItemInfoHQ%2Citems.lastUploadTime";
+
+    public static readonly string SelectiveColumnsSingle = $"?listings=0&entries=0&fields=itemID,worldID,currentAverageItemInfo,currentAverageItemInfoNQ,currentAverageItemInfoHQ,averageItemInfo,averageItemInfoNQ,averageItemInfoHQ,lastUploadTime";
 }

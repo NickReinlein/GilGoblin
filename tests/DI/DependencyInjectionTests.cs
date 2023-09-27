@@ -29,7 +29,7 @@ public class DependencyInjectionTests : TestWithDatabase
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
     [TestCase(typeof(IDataFetcher<PriceWebPoco, PriceWebResponse>))]
     [TestCase(typeof(IDataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>))]
-    [TestCase(typeof(IDataUpdater<ItemInfoWebPoco>))]
+    [TestCase(typeof(ItemInfoUpdater))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         var provider = _services.BuildServiceProvider();

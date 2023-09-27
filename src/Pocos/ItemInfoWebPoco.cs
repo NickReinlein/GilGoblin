@@ -3,6 +3,7 @@ namespace GilGoblin.Pocos;
 public class ItemInfoWebPoco : BaseItemInfoPoco
 {
     public ItemInfoWebPoco() : base() { }
+
     public ItemInfoWebPoco(
         int id,
         string name,
@@ -22,5 +23,17 @@ public class ItemInfoWebPoco : BaseItemInfoPoco
         StackSize = stackSize;
         Level = level;
         CanBeHq = canBeHq;
+    }
+
+    public ItemInfoWebPoco(ItemInfoPoco poco)
+    {
+        ID = poco.ID;
+        Description = poco.Description;
+        Name = poco.Name;
+        Level = poco.Level;
+        StackSize = poco.StackSize;
+        VendorPrice = poco.VendorPrice;
+        CanBeHq = poco.CanBeHq;
+        IconID = poco.IconID;
     }
 }

@@ -17,7 +17,6 @@ public class DataUpdater<T, U> : BackgroundService
     protected readonly IDataFetcher<T, U> _fetcher;
     protected readonly GilGoblinDbContext _dbContext;
     protected readonly ILogger<DataUpdater<T, U>> _logger;
-    protected readonly Timer _timer;
 
     public DataUpdater(
         GilGoblinDbContext dbContext,
@@ -29,7 +28,6 @@ public class DataUpdater<T, U> : BackgroundService
         _fetcher = fetcher;
         _logger = logger;
     }
-
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
