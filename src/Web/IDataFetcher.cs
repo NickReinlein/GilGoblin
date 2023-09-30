@@ -1,11 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Web;
 
-public interface IDataFetcher<T, U>
-    where T : class
-    where U : class
+public interface IDataFetcher<T> where T : class, IIdentifiable
 {
-    Task<T?> GetAsync(string path);
-    Task<U?> GetMultipleAsync(string path);
+    Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null);
 }

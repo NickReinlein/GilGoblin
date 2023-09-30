@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
 using CsvHelper.Configuration.Attributes;
+using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Pocos;
 
-public class BaseItemInfoPoco
+public class BaseItemInfoPoco: IIdentifiable
 {
     [Name("#")]
     public int ID { get; set; }
@@ -43,4 +44,5 @@ public class BaseItemInfoPoco
         StackSize = stackSize;
         CanBeHq = canBeHq;
     }
+    public int GetId() => ID;
 }

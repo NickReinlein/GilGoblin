@@ -4,7 +4,7 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Web;
 
-public class ItemInfoWebResponse : IReponseToList<ItemInfoWebPoco>
+public class ItemInfoWebResponse : IResponseToList<ItemInfoWebPoco>
 {
     public Dictionary<int, ItemInfoWebPoco> Items { get; set; }
 

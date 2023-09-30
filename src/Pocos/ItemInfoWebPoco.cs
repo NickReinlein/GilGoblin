@@ -1,6 +1,8 @@
+using GilGoblin.DataUpdater;
+
 namespace GilGoblin.Pocos;
 
-public class ItemInfoWebPoco : BaseItemInfoPoco
+public class ItemInfoWebPoco : BaseItemInfoPoco, IIdentifiable
 {
     public ItemInfoWebPoco() : base() { }
 
@@ -25,7 +27,7 @@ public class ItemInfoWebPoco : BaseItemInfoPoco
         CanBeHq = canBeHq;
     }
 
-    public ItemInfoWebPoco(ItemInfoPoco poco)
+    public ItemInfoWebPoco(BaseItemInfoPoco poco)
     {
         ID = poco.ID;
         Description = poco.Description;

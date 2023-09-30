@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using System;
 using System.Net.Http;
+using System.Text;
 
 namespace GilGoblin.Web;
 
@@ -14,52 +14,28 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
 {
     private readonly ILogger<ItemInfoFetcher> _logger;
 
-    public ItemInfoFetcher(ILogger<ItemInfoFetcher> logger)
-        : base(ItemInfoBaseUrl)
-    {
-        _logger = logger;
-    }
-
     public ItemInfoFetcher(HttpClient client, ILogger<ItemInfoFetcher> logger)
-        : base(ItemInfoBaseUrl, client)
+        : base(ItemInfoBaseUrl, logger, client)
     {
         _logger = logger;
     }
 
-    public async Task<ItemInfoWebPoco?> FetchItemInfoAsync(int id)
+    protected override string GetUrlPathFromEntries(IEnumerable<int> ids)
     {
-        var idString = $"{id}";
-        var pathSuffix = string.Concat(new[] { idString, SelectiveColumnsSingle });
+        var sb = new StringBuilder();
 
-        return await GetAsync(pathSuffix);
-    }
-
-    public async Task<List<ItemInfoWebPoco?>> FetchMultipleItemsAsync(IEnumerable<int> ids)
-    {
-        if (!ids.Any())
-            return new List<ItemInfoWebPoco>();
-
-        var path = GetPathFromIDs(ids);
-
-        var response = await GetMultipleAsync(path);
-
-        return response is not null ? response.GetContentAsList() : new List<ItemInfoWebPoco>();
-    }
-
-    public static string GetPathFromIDs(IEnumerable<int> ids)
-    {
-        var idString = string.Empty;
-        foreach (var id in ids)
+        var idList = ids.ToList();
+        foreach (var id in idList)
         {
-            idString += id.ToString();
-            if (id != ids.Last())
-                idString.Concat(",");
+            sb.Append(id);
+            if (id != idList.Last())
+                sb.Append(',');
         }
 
-        return string.Concat(new[] { idString, SelectiveColumnsMulti });
+        return string.Concat(new[] { sb.ToString(), SelectiveColumnsMulti });
     }
 
-    public async Task<List<List<int>>> GetAllIDsAsBatchJobsAsync()
+    public async Task<List<List<int>>> GetIdsAsBatchJobsAsync()
     {
         var allIDs = await GetMarketableItemIDsAsync();
         if (!allIDs.Any())
@@ -80,7 +56,7 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
         try
         {
             var returnedList = await response.Content.ReadFromJsonAsync<List<int>>();
-            return returnedList.Cast<int>().Where(i => i > 0).ToList();
+            return returnedList.Where(i => i > 0).ToList();
         }
         catch
         {
@@ -92,9 +68,8 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
 
     public static readonly string MarketableItemSuffix = "marketable";
 
-    public static readonly string ItemInfoBaseUrl = $"https://universalis.app/api/v2/";
+    public static readonly string ItemInfoBaseUrl = "https://universalis.app/api/v2/";
 
-    public static readonly string SelectiveColumnsMulti = $"?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAverageItemInfo%2Citems.currentAverageItemInfoNQ%2Citems.currentAverageItemInfoHQ,items.averageItemInfo%2Citems.averageItemInfoNQ%2Citems.averageItemInfoHQ%2Citems.lastUploadTime";
-
-    public static readonly string SelectiveColumnsSingle = $"?listings=0&entries=0&fields=itemID,worldID,currentAverageItemInfo,currentAverageItemInfoNQ,currentAverageItemInfoHQ,averageItemInfo,averageItemInfoNQ,averageItemInfoHQ,lastUploadTime";
+    public static readonly string SelectiveColumnsMulti =
+        "?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAverageItemInfo%2Citems.currentAverageItemInfoNQ%2Citems.currentAverageItemInfoHQ,items.averageItemInfo%2Citems.averageItemInfoNQ%2Citems.averageItemInfoHQ%2Citems.lastUploadTime";
 }

@@ -18,13 +18,13 @@ namespace GilGoblin.Api;
 
 public class Startup
 {
-    public IConfiguration _configuration { get; }
-    public IWebHostEnvironment _environment { get; }
+    public IConfiguration Configuration { get; }
+    public IWebHostEnvironment Environment { get; }
 
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
-        _configuration = configuration;
-        _environment = environment;
+        Configuration = configuration;
+        Environment = environment;
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -52,11 +52,12 @@ public class Startup
     private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddSingleton<IDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        services.AddSingleton<IDataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>, ItemInfoFetcher>();
+        services.AddSingleton<IDataFetcher<PriceWebPoco>, PriceFetcher>();
+        services.AddSingleton<IDataFetcher<ItemInfoWebPoco>, ItemInfoFetcher>();
         services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
         services.AddSingleton<IItemInfoFetcher, ItemInfoFetcher>();
-        services.AddSingleton<ItemInfoUpdater>();
+        services.AddSingleton<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>, ItemInfoUpdater>();
+        services.AddSingleton<IDataSaver<ItemInfoWebPoco>, DataSaver<ItemInfoWebPoco>>();
     }
 
     public static void AddGoblinCaches(IServiceCollection services)
@@ -87,7 +88,6 @@ public class Startup
         services.AddSingleton<ICraftingCalculator, CraftingCalculator>();
         services.AddSingleton<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
         services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
-
     }
 
     public static void AddGoblinDatabases(IServiceCollection services)
@@ -130,7 +130,7 @@ public class Startup
     {
         var serviceProvider = services.BuildServiceProvider();
         var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
-        if (dbContextService.Database?.CanConnect() != true)
+        if (await dbContextService.Database.CanConnectAsync() != true)
             return;
 
         var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();

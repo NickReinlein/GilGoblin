@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Net.Http;
+using System.Text;
 
 namespace GilGoblin.Web;
 
@@ -15,52 +16,46 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
     private readonly ILogger<PriceFetcher> _logger;
 
     public PriceFetcher(ILogger<PriceFetcher> logger)
-        : base(PriceBaseUrl)
+        : base(PriceBaseUrl, logger)
     {
         _logger = logger;
     }
 
     public PriceFetcher(HttpClient client, ILogger<PriceFetcher> logger)
-        : base(PriceBaseUrl, client)
+        : base(PriceBaseUrl, logger, client)
     {
         _logger = logger;
     }
 
-    public async Task<PriceWebPoco?> FetchPriceAsync(int worldID, int id)
-    {
-        var worldString = GetWorldString(worldID);
-        var idString = $"{id}";
-        var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsSingle });
-
-        return await GetAsync(pathSuffix);
-    }
-
-    public async Task<IEnumerable<PriceWebPoco?>> FetchMultiplePricesAsync(
-        int worldID,
+    public async Task<IEnumerable<PriceWebPoco?>> FetchPricesAsync(
+        int worldId,
         IEnumerable<int> ids
     )
     {
         var idString = string.Empty;
-        var worldString = GetWorldString(worldID);
-        if (!ids.Any())
+        var worldString = GetWorldString(worldId);
+        var idList = ids.ToList();
+        if (!idList.Any())
             return Array.Empty<PriceWebPoco>();
 
-        foreach (var id in ids)
+        var sb = new StringBuilder();
+        foreach (var id in idList)
         {
-            idString += id.ToString();
-            if (id != ids.Last())
-                idString += ",";
+            sb.Append(id);
+            if (id != idList.Last())
+                sb.Append(',');
         }
+
         var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsMulti });
 
-        var response = await GetMultipleAsync(pathSuffix);
+        var response = await FetchAndSerializeDataAsync(pathSuffix);
 
         return response is not null ? response.GetContentAsList() : new List<PriceWebPoco>();
     }
 
-    public async Task<List<List<int>>> GetAllIDsAsBatchJobsAsync()
+    public async Task<List<List<int>>> GetIdsAsBatchJobsAsync()
     {
-        var allIDs = await GetMarketableItemIDsAsync();
+        var allIDs = await GetMarketableItemIdsAsync();
         if (!allIDs.Any())
             return new List<List<int>>();
 
@@ -68,21 +63,25 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         return batcher.SplitIntoBatchJobs(allIDs);
     }
 
-    public async Task<List<int>> GetMarketableItemIDsAsync()
+    public async Task<List<int>> GetMarketableItemIdsAsync()
     {
-        var fullPath = string.Concat(BasePath, MarketableItemSuffix);
-
-        var response = await Client.GetAsync(fullPath);
-        if (!response.IsSuccessStatusCode)
-            return new List<int>();
-
         try
         {
+            var fullPath = string.Concat(BasePath, MarketableItemSuffix);
+
+            var response = await Client.GetAsync(fullPath);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failure response to get marketable item Ids");
+                return new List<int>();
+            }
+
             var returnedList = await response.Content.ReadFromJsonAsync<List<int>>();
-            return returnedList.Cast<int>().Where(i => i > 0).ToList();
+            return returnedList.Where(i => i > 0).ToList();
         }
         catch
         {
+            _logger.LogError("Failure during call to get marketable item Ids");
             return new List<int>();
         }
     }
@@ -93,12 +92,8 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
 
     public static readonly string MarketableItemSuffix = "marketable";
 
-    public static readonly string PriceBaseUrl = $$"""https://universalis.app/api/v2/""";
-    public static readonly string SelectiveColumnsMulti = $$"""
-?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime
-""";
+    public static readonly string PriceBaseUrl = $"https://universalis.app/api/v2/";
 
-    public static readonly string SelectiveColumnsSingle = $$"""
-?listings=0&entries=0&fields=itemID,worldID,currentAveragePrice,currentAveragePriceNQ,currentAveragePriceHQ,averagePrice,averagePriceNQ,averagePriceHQ,lastUploadTime
-""";
+    public static readonly string SelectiveColumnsMulti =
+        $"?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime";
 }

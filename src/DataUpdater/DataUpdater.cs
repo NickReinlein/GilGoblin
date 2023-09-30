@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Web;
 using GilGoblin.Database;
@@ -11,82 +12,98 @@ using Microsoft.Extensions.Hosting;
 namespace GilGoblin.DataUpdater;
 
 public class DataUpdater<T, U> : BackgroundService
-    where T : class
-    where U : class, IReponseToList<T>
+    where T : class, IIdentifiable
+    where U : class, IResponseToList<T>
 {
-    protected readonly IDataFetcher<T, U> _fetcher;
-    protected readonly GilGoblinDbContext _dbContext;
-    protected readonly ILogger<DataUpdater<T, U>> _logger;
+    protected readonly IDataFetcher<T> Fetcher;
+    protected readonly IDataSaver<T> Saver;
+    private readonly ILogger<DataUpdater<T, U>> _logger;
 
-    public DataUpdater(
-        GilGoblinDbContext dbContext,
-        IDataFetcher<T, U> fetcher,
-        ILogger<DataUpdater<T, U>> logger
-    )
+    public DataUpdater(IDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T, U>> logger)
     {
-        _dbContext = dbContext;
-        _fetcher = fetcher;
+        Fetcher = fetcher;
+        Saver = saver;
         _logger = logger;
     }
+
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
         {
             try
             {
-                var updated = await FetchUpdateAsync();
-
-                await SaveUpdatedAsync(updated);
+                await SaveAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An exception occured during the Api call: {ex.Message}");
             }
+
             await Task.Delay(TimeSpan.FromMinutes(5), ct);
         }
     }
 
-    protected virtual async Task<IEnumerable<T>> FetchUpdateAsync()
+    protected virtual async Task SaveAsync()
     {
         var entriesToUpdate = await GetEntriesToUpdateAsync();
         if (!entriesToUpdate.Any())
         {
             _logger.LogInformation($"No entries need to be updated for {nameof(T)}");
-            return Enumerable.Empty<T>();
-        }
-
-        _logger.LogInformation($"Fetching updates for {entriesToUpdate.Count()} {nameof(T)} entries");
-        return await FetchUpdateForEntries(entriesToUpdate);
-    }
-
-    protected async Task SaveUpdatedAsync(IEnumerable<T> updated)
-    {
-        if (!updated.Any())
             return;
-
-        using var context = _dbContext;
-        await context.AddRangeAsync(updated);
-        await context.SaveChangesAsync();
-        _logger.LogInformation($"Saved {updated.Count()} entries for type {typeof(T).Name}");
-    }
-
-    protected virtual async Task<IEnumerable<T>> FetchUpdateForEntries(
-        IEnumerable<T> entriesToUpdate
-    )
-    {
-        var apiUrl = await GetUrlPathFromEntries(entriesToUpdate);
-
-        var response = await _fetcher.GetMultipleAsync(apiUrl);
-        if (response is null)
-        {
-            _logger.LogError($"Failed to fetch the apiUrl: {apiUrl}");
-            return Enumerable.Empty<T>();
         }
 
-        return response.GetContentAsList();
+        var updated = await FetchUpdates(entriesToUpdate);
+        if (updated.Any())
+            await Saver.SaveAsync(updated);
     }
 
-    protected virtual async Task<IEnumerable<T>> GetEntriesToUpdateAsync() => await Task.Run(() => Enumerable.Empty<T>());
-    protected virtual async Task<string> GetUrlPathFromEntries(IEnumerable<T> entries) =>
-        await Task.Run(() => string.Empty);
+    private async Task<List<T>> FetchUpdates(IReadOnlyCollection<T> entriesToUpdate)
+    {
+        var idsToUpdate = entriesToUpdate.Select(i => i.GetId());
+        _logger.LogInformation($"Fetching updates for {entriesToUpdate.Count} {nameof(T)} entries");
+        var updated = await FetchUpdateAsync(idsToUpdate);
+        return updated;
+    }
+
+    private async Task<List<T>> FetchUpdateAsync(IEnumerable<int> entriesToUpdate)
+    {
+        var entriesList = entriesToUpdate.ToList();
+        if (!entriesList.Any())
+        {
+            _logger.LogInformation($"No entries need to be updated for {nameof(T)}");
+            return new List<T>();
+        }
+
+        var response = await FetchUpdatesForIDsAsync(entriesList);
+        if (response is not null)
+            return response.ToList();
+
+        _logger.LogError($"Failed to fetch updates for {entriesList.Count} entries of {nameof(T)}");
+        return new List<T>();
+    }
+
+    private async Task<IEnumerable<T>> FetchUpdatesForIDsAsync(IEnumerable<int> idsToUpdate, int worldId = 0)
+    {
+        try
+        {
+            var timer = new Stopwatch();
+            timer.Start();
+            var updated = await Fetcher.FetchByIdsAsync(idsToUpdate, worldId);
+            timer.Stop();
+            var callTime = timer.Elapsed.TotalMilliseconds;
+
+            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
+            _logger.LogInformation($"Received updates for {updated.Count} {nameof(T)} entries {worldString}");
+            _logger.LogInformation($"Total call time: {callTime}");
+            return updated;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
+            return Enumerable.Empty<T>();
+        }
+    }
+
+    protected virtual async Task<List<T>> GetEntriesToUpdateAsync() =>
+        await Task.Run(() => new List<T>());
 }

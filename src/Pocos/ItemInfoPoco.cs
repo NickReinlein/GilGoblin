@@ -2,7 +2,9 @@ namespace GilGoblin.Pocos;
 
 public class ItemInfoPoco : BaseItemInfoPoco
 {
-    public ItemInfoPoco() : base() { }
+    public ItemInfoPoco()
+    {
+    }
 
     public ItemInfoPoco(
         int id,
@@ -24,4 +26,6 @@ public class ItemInfoPoco : BaseItemInfoPoco
         Level = level;
         CanBeHq = canBeHq;
     }
+
+    public int GetId() => ID;
 }

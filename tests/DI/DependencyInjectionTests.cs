@@ -27,9 +27,10 @@ public class DependencyInjectionTests : TestWithDatabase
     [TestCase(typeof(IItemInfoFetcher))]
     [TestCase(typeof(IRepositoryCache))]
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
-    [TestCase(typeof(IDataFetcher<PriceWebPoco, PriceWebResponse>))]
-    [TestCase(typeof(IDataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>))]
-    [TestCase(typeof(ItemInfoUpdater))]
+    [TestCase(typeof(IDataFetcher<PriceWebPoco>))]
+    [TestCase(typeof(IDataFetcher<ItemInfoWebPoco>))]
+    [TestCase(typeof(IDataSaver<ItemInfoWebPoco>))]
+    [TestCase(typeof(DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         var provider = _services.BuildServiceProvider();
