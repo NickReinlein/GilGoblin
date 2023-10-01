@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Web;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
 public class ItemInfoUpdater : DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>
 {
-    // protected readonly IItemInfoFetcher Fetcher;
+    protected new readonly IItemInfoFetcher Fetcher;
+
     public ItemInfoUpdater(
         IItemInfoFetcher fetcher,
         IDataSaver<ItemInfoWebPoco> saver,
         ILogger<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>> logger)
         : base(fetcher, saver, logger)
     {
+        Fetcher = fetcher;
     }
     //
     // protected override async Task<List<ItemInfoWebPoco>> FetchUpdateAsync(
@@ -34,17 +37,7 @@ public class ItemInfoUpdater : DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>
     //     _logger.LogInformation($"Fetching updates for {idsToUpdate.Count()} {nameof(ItemInfoWebPoco)} entries");
     //     return await FetchUpdatesForIDsAsync(idsToUpdate);
     // }
-    //
-    // protected async Task<List<int>> GetIdsToUpdateAsync()
-    // {
-    //     var allIDs = await Fetcher.GetMarketableItemIDsAsync();
-    //     if (!allIDs.Any())
-    //         return new List<int>();
-    //
-    //     var existingIDs = DbContext.ItemInfo.Select(i => i.ID).ToList();
-    //     return allIDs.Except(existingIDs).ToList();
-    // }
-    //
+    
     // private async Task<List<ItemInfoWebPoco>> FetchUpdatesForIDsAsync(IEnumerable<int> idsToUpdate)
     // {
     //     try

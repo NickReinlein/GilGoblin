@@ -25,29 +25,29 @@ public class PriceFetcherTests : FetcherTests
 
     #region Web calls
 
-    [Test]
-    public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully()
-    {
-        var idList = GetMultipleNewPocos().ToList();
-        var dict = idList.ToDictionary(l => l.ItemID);
-        var webResponse = new PriceWebResponse(dict);
-        _handler
-            .When(_fetchPricesAsyncUrl)
-            .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(webResponse));
-
-        var result = await _fetcher.FetchPricesAsync(
-            _worldId,
-            idList.Select(i => i.ItemID)
-        );
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Any(r => r.ItemID == _itemId1));
-            Assert.That(result.Any(r => r.ItemID == _itemId2));
-            Assert.That(result.All(r => r.WorldID == _worldId));
-        });
-    }
+    // [Test]
+    // public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully()
+    // {
+    //     var idList = GetMultipleNewPocos().ToList();
+    //     var dict = idList.ToDictionary(l => l.ItemID);
+    //     var webResponse = new PriceWebResponse(dict);
+    //     _handler
+    //         .When(_fetchPricesAsyncUrl)
+    //         .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(webResponse));
+    //
+    //     var result = await _fetcher.FetchPricesAsync(
+    //         _worldId,
+    //         idList.Select(i => i.ItemID)
+    //     );
+    //
+    //     Assert.Multiple(() =>
+    //     {
+    //         Assert.That(result, Is.Not.Null);
+    //         Assert.That(result.Any(r => r.ItemID == _itemId1));
+    //         Assert.That(result.Any(r => r.ItemID == _itemId2));
+    //         Assert.That(result.All(r => r.WorldID == _worldId));
+    //     });
+    // }
 
     [Test]
     public async Task

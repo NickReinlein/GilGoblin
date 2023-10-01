@@ -2,7 +2,7 @@ using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Pocos;
 
-public class ItemInfoWebPoco : BaseItemInfoPoco, IIdentifiable
+public class ItemInfoWebPoco : BaseItemInfoPoco
 {
     public ItemInfoWebPoco() : base() { }
 

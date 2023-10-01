@@ -45,16 +45,19 @@ public class DataUpdater<T, U> : BackgroundService
 
     protected virtual async Task SaveAsync()
     {
-        var entriesToUpdate = await GetEntriesToUpdateAsync();
-        if (!entriesToUpdate.Any())
+        var batchesToUpdate = await GetEntriesToUpdateAsync();
+        if (!batchesToUpdate.Any())
         {
             _logger.LogInformation($"No entries need to be updated for {nameof(T)}");
             return;
         }
 
-        var updated = await FetchUpdates(entriesToUpdate);
-        if (updated.Any())
-            await Saver.SaveAsync(updated);
+        foreach (var batch in batchesToUpdate)
+        {
+            var updated = await FetchUpdates(batch);
+            if (updated.Any())
+                await Saver.SaveAsync(updated);
+        }
     }
 
     private async Task<List<T>> FetchUpdates(IReadOnlyCollection<T> entriesToUpdate)
@@ -104,6 +107,6 @@ public class DataUpdater<T, U> : BackgroundService
         }
     }
 
-    protected virtual async Task<List<T>> GetEntriesToUpdateAsync() =>
-        await Task.Run(() => new List<T>());
+    protected virtual async Task<List<List<T>>> GetEntriesToUpdateAsync() =>
+        await Task.Run(() => new List<List<T>>());
 }

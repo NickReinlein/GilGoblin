@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using GilGoblin.DataUpdater;
 using Microsoft.Extensions.Logging;
@@ -52,5 +53,19 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T>
         }
     }
 
-    protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids) => BasePath;
+    protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids)
+    {
+        var idList = ids.ToList();
+        var sb = new StringBuilder();
+        sb.Append(BasePath);
+
+        foreach (var id in idList)
+        {
+            sb.Append(id);
+            if (id != idList.Last())
+                sb.Append(',');
+        }
+
+        return sb.ToString();
+    }
 }

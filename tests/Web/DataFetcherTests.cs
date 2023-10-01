@@ -24,7 +24,7 @@ public class DataFetcherTests : FetcherTests
     }
 
     [Test]
-    public async Task GivenAGetAsync_WhenThePathIsInvalid_ThenNullIsReturned()
+    public async Task GivenAFetchAndSerializeDataAsync_WhenThePathIsInvalid_ThenNullIsReturned()
     {
         var badPath = "/badPath";
         _handler.When($"{_basePath}{badPath}").Respond(HttpStatusCode.NotFound, ContentType, "{}");
@@ -35,49 +35,38 @@ public class DataFetcherTests : FetcherTests
     }
 
     [Test]
-    public async Task GivenAGetAsync_WhenThePathIsValid_ThenAMappedObjectIsReturned()
+    public async Task GivenAFetchByIdsAsync_WhenThePathIsValid_ThenAValidResponseIsReturned()
     {
-        var goodPath = "/goodPath";
-        var appleId = 23;
-        var jsonObject = JsonSerializer.Serialize(new Apple { Id = appleId });
-        _handler.When($"{_basePath}{goodPath}").Respond(HttpStatusCode.OK, ContentType, jsonObject);
+        const int appleId1 = 23;
+        const int appleId2 = 78;
+        var idList = new List<int> { appleId1, appleId2 };
+        SetupValidResponse(appleId1, appleId2);
 
-        var result = await _fetcher.FetchAndSerializeDataAsync(goodPath);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
-        Assert.That(result?.GetContentAsList().First().Id, Is.EqualTo(appleId));
+        Assert.That(result, Is.Not.Null.Or.Empty);
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result[0].Id, Is.EqualTo(appleId1));
+        Assert.That(result[1].Id, Is.EqualTo(appleId2));
     }
 
-    [Test]
-    public async Task GivenAGetMultipleAsync_WhenThePathIsInvalid_ThenNullIsReturned()
+    private void SetupValidResponse(int appleId1, int? appleId2 = null)
     {
-        var badPath = "/badPath";
-        _handler.When($"{_basePath}{badPath}").Respond(HttpStatusCode.NotFound, ContentType, "{}");
-
-        var result = await _fetcher.FetchAndSerializeDataAsync(badPath);
-
-        Assert.That(result, Is.Null);
-    }
-
-    [Test]
-    public async Task GivenAGetMultipleAsync_WhenThePathIsValid_ThenAMappedObjectIsReturned()
-    {
-        var goodPath = "/goodPath";
-        var appleID = 324;
-        var appleList = new List<Apple> { new() { Id = appleID } };
-        var appleResponse = new AppleResponse(appleList);
-        var jsonObject = JsonSerializer.Serialize(appleResponse);
-        _handler.When($"{_basePath}{goodPath}").Respond(HttpStatusCode.OK, ContentType, jsonObject);
-
-        var result = await _fetcher.FetchAndSerializeDataAsync(goodPath);
-
-        var resultList = result?.GetContentAsList();
-        Assert.That(resultList?.First().Id, Is.EqualTo(appleID));
+        var appleList = new List<Apple> { new(appleId1) };
+        if (appleId2 is not null)
+            appleList.Add(new Apple(appleId2.Value));
+        var responseObject = new AppleResponse(appleList);
+        var jsonObject = JsonSerializer.Serialize(responseObject);
+        _handler.When($"{_basePath}{appleId1},{appleId2}").Respond(HttpStatusCode.OK, ContentType, jsonObject);
     }
 }
 
 public class MockDataFetcher : DataFetcher<Apple, AppleResponse>
 {
-    public MockDataFetcher(string basePath, ILogger<DataFetcher<Apple, AppleResponse>> logger, HttpClient client)
+    public MockDataFetcher(
+        string basePath,
+        ILogger<DataFetcher<Apple, AppleResponse>> logger,
+        HttpClient client)
         : base(basePath, logger, client)
     {
     }
@@ -86,6 +75,12 @@ public class MockDataFetcher : DataFetcher<Apple, AppleResponse>
 public class Apple : IIdentifiable
 {
     public int Id { get; set; }
+
+    public Apple(int id)
+    {
+        Id = id;
+    }
+
     public int GetId() => Id;
 }
 
