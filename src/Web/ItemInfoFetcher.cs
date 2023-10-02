@@ -24,7 +24,7 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
         _logger = logger;
     }
 
-    protected override string GetUrlPathFromEntries(IEnumerable<int> ids)
+    protected override string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {
         var sb = new StringBuilder();
         var idList = ids.ToList();
@@ -35,7 +35,8 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
                 sb.Append(',');
         }
 
-        return string.Concat(new[] { sb.ToString(), SelectiveColumnsMulti });
+        sb.Append(SelectiveColumnsMulti);
+        return sb.ToString();
     }
 
     public async Task<List<List<int>>> GetIdsAsBatchJobsAsync()

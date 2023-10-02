@@ -30,21 +30,23 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T>
         if (!idList.Any())
             return new List<T>();
 
-        var path = GetUrlPathFromEntries(idList);
+        var path = GetUrlPathFromEntries(idList, world);
 
         var response = await FetchAndSerializeDataAsync(path);
 
         return response is not null ? response.GetContentAsList() : new List<T>();
     }
 
-    public async Task<U?> FetchAndSerializeDataAsync(string path)
+    protected async Task<U?> FetchAndSerializeDataAsync(string path)
     {
         try
         {
             var response = await Client.GetAsync(path);
-            return response.IsSuccessStatusCode
-                ? await response.Content.ReadFromJsonAsync<U>()
-                : null;
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var result = await response.Content.ReadFromJsonAsync<U>();
+            return result;
         }
         catch
         {
@@ -53,11 +55,15 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T>
         }
     }
 
-    protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids)
+    protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {
-        var idList = ids.ToList();
         var sb = new StringBuilder();
         sb.Append(BasePath);
+
+        if (worldId is not null)
+            sb.Append($"{worldId}/");
+
+        var idList = ids.ToList();
 
         foreach (var id in idList)
         {

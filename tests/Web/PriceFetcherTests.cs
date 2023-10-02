@@ -25,43 +25,34 @@ public class PriceFetcherTests : FetcherTests
 
     #region Web calls
 
-    // [Test]
-    // public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully()
-    // {
-    //     var idList = GetMultipleNewPocos().ToList();
-    //     var dict = idList.ToDictionary(l => l.ItemID);
-    //     var webResponse = new PriceWebResponse(dict);
-    //     _handler
-    //         .When(_fetchPricesAsyncUrl)
-    //         .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(webResponse));
-    //
-    //     var result = await _fetcher.FetchPricesAsync(
-    //         _worldId,
-    //         idList.Select(i => i.ItemID)
-    //     );
-    //
-    //     Assert.Multiple(() =>
-    //     {
-    //         Assert.That(result, Is.Not.Null);
-    //         Assert.That(result.Any(r => r.ItemID == _itemId1));
-    //         Assert.That(result.Any(r => r.ItemID == _itemId2));
-    //         Assert.That(result.All(r => r.WorldID == _worldId));
-    //     });
-    // }
+    [Test]
+    public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully()
+    {
+        var idList = SetupResponse();
+
+        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Any(r => r.ItemID == _itemId1));
+            Assert.That(result.Any(r => r.ItemID == _itemId2));
+            Assert.That(result.All(r => r.WorldID == _worldId));
+        });
+    }
+
 
     [Test]
     public async Task
         GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsStatusCodeIsUnsuccessful_ThenWeReturnAnEmptyList()
     {
-        var returnedList = GetMultipleNewPocos();
+        var returnedList = GetMultipleNewPocos().ToList();
+        var idList = returnedList.Select(i => i.ItemID);
         _handler
             .When(_fetchPricesAsyncUrl)
-            .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(returnedList));
+            .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
-        var result = await _fetcher.FetchPricesAsync(
-            _worldId,
-            returnedList.Select(i => i.ItemID)
-        );
+        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -69,14 +60,16 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenNoIDsAreProvided_ThenWeReturnAnEmptyList()
     {
-        var result = await _fetcher.FetchPricesAsync(_worldId, Array.Empty<int>());
+        var result = await _fetcher.FetchByIdsAsync(Array.Empty<int>(), _worldId);
 
+        Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
     }
 
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsInvalid_ThenWeReturnAnEmptyList()
     {
+        var idList = GetMultipleNewPocos().Select(i => i.ItemID).ToList();
         _handler
             .When(_fetchPricesAsyncUrl)
             .Respond(
@@ -85,10 +78,7 @@ public class PriceFetcherTests : FetcherTests
                 JsonSerializer.Serialize(GetMultipleNewPocos())
             );
 
-        var result = await _fetcher.FetchPricesAsync(
-            _worldId,
-            GetMultipleNewPocos().Select(i => i.ItemID)
-        );
+        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -96,14 +86,12 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsNull_ThenWeReturnAnEmptyList()
     {
+        var idList = GetMultipleNewPocos().Select(i => i.ItemID).ToList();
         _handler
             .When(_fetchPricesAsyncUrl)
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchPricesAsync(
-            _worldId,
-            GetMultipleNewPocos().Select(i => i.ItemID)
-        );
+        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -128,10 +116,7 @@ public class PriceFetcherTests : FetcherTests
     public async Task
         GivenWeCallGetMarketableItemIDsAsync_WhenTheResponseIsStatusCodeIsUnsuccessful_ThenWeReturnAnEmptyList()
     {
-        var idList = GetMultipleNewPocos().Select(i => i.ItemID);
-        _handler
-            .When(_getMarketableItemIDsAsyncUrl)
-            .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(idList));
+        SetupResponse(success: false, statusCode: HttpStatusCode.NotFound);
 
         var result = await _fetcher.GetMarketableItemIdsAsync();
 
@@ -263,6 +248,23 @@ public class PriceFetcherTests : FetcherTests
 
     #endregion
 
+    private IEnumerable<int> SetupResponse(bool success = true, HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        var pocoList = GetMultipleNewPocos().ToList();
+        var idList = pocoList.Select(i => i.ItemID).ToList();
+        var dict = pocoList.ToDictionary(l => l.ItemID);
+        var webResponse = new PriceWebResponse(dict);
+        var responseContent
+            = success
+                ? JsonSerializer.Serialize(webResponse)
+                : JsonSerializer.Serialize(idList);
+
+        _handler
+            .When(_fetchPricesAsyncUrl)
+            .Respond(statusCode, ContentType, responseContent);
+        return idList;
+    }
+
     protected static IEnumerable<PriceWebPoco> GetMultipleNewPocos()
     {
         var poco1 = new PriceWebPoco { ItemID = _itemId1, WorldID = _worldId };
@@ -280,6 +282,7 @@ public class PriceFetcherTests : FetcherTests
 
     private static readonly string _fetchPricesAsyncUrl =
         """"https://universalis.app/api/v2/34/4211,4222?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime"""";
+    // https://universalis.app/api/v2/34/4211,4222
 
     private static readonly string _getMarketableItemIDsAsyncUrl =
         """https://universalis.app/api/v2/marketable""";

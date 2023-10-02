@@ -5,9 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using System;
 using System.Net.Http;
-using System.Text;
 
 namespace GilGoblin.Web;
 
@@ -27,30 +25,10 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         _logger = logger;
     }
 
-    public async Task<IEnumerable<PriceWebPoco?>> FetchPricesAsync(
-        int worldId,
-        IEnumerable<int> ids
-    )
+    protected override string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {
-        var idString = string.Empty;
-        var worldString = GetWorldString(worldId);
-        var idList = ids.ToList();
-        if (!idList.Any())
-            return Array.Empty<PriceWebPoco>();
-
-        var sb = new StringBuilder();
-        foreach (var id in idList)
-        {
-            sb.Append(id);
-            if (id != idList.Last())
-                sb.Append(',');
-        }
-
-        var pathSuffix = string.Concat(new[] { worldString, idString, SelectiveColumnsMulti });
-
-        var response = await FetchAndSerializeDataAsync(pathSuffix);
-
-        return response is not null ? response.GetContentAsList() : new List<PriceWebPoco>();
+        var basePath = base.GetUrlPathFromEntries(ids, worldId);
+        return string.Concat(new[] { basePath, SelectiveColumnsMulti });
     }
 
     public async Task<List<List<int>>> GetIdsAsBatchJobsAsync()
@@ -86,14 +64,11 @@ public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceD
         }
     }
 
-    public static string GetWorldString(int worldID) => $"{worldID}/";
-
     public int PricesPerPage { get; set; } = 100;
 
-    public static readonly string MarketableItemSuffix = "marketable";
+    private static string MarketableItemSuffix => "marketable";
+    private static string PriceBaseUrl => "https://universalis.app/api/v2/";
 
-    public static readonly string PriceBaseUrl = $"https://universalis.app/api/v2/";
-
-    public static readonly string SelectiveColumnsMulti =
-        $"?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime";
+    private static string SelectiveColumnsMulti =>
+        "?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime";
 }

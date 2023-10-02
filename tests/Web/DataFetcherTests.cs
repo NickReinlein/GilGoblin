@@ -23,19 +23,35 @@ public class DataFetcherTests : FetcherTests
         _fetcher = new MockDataFetcher(_basePath, _logger, _client);
     }
 
+    // [Test]
+    // public async Task GivenAFetchAndSerializeDataAsync_WhenThePathIsInvalid_ThenNullIsReturned()
+    // {
+    //     var badPath = "/badPath";
+    //     _handler.When($"{Ar").Respond(HttpStatusCode.NotFound, ContentType, "{
+    //     }
+    //     ");
+    //
+    //     var result = await _fetcher.FetchByIdsAsync(badPath);
+    //
+    //     Assert.That(result, Is.Null);
+    // }
+
     [Test]
-    public async Task GivenAFetchAndSerializeDataAsync_WhenThePathIsInvalid_ThenNullIsReturned()
+    public async Task GivenAFetchByIdsAsync_WhenReceivingASingleValidEntry_ThenThatEntryIsReturned()
     {
-        var badPath = "/badPath";
-        _handler.When($"{_basePath}{badPath}").Respond(HttpStatusCode.NotFound, ContentType, "{}");
+        const int appleId1 = 23;
+        var idList = new List<int> { appleId1 };
+        SetupValidResponse(appleId1);
 
-        var result = await _fetcher.FetchAndSerializeDataAsync(badPath);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
-        Assert.That(result, Is.Null);
+        Assert.That(result, Is.Not.Null.Or.Empty);
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result[0].Id, Is.EqualTo(appleId1));
     }
 
     [Test]
-    public async Task GivenAFetchByIdsAsync_WhenThePathIsValid_ThenAValidResponseIsReturned()
+    public async Task GivenAFetchByIdsAsync_WhenReceivingMultipleValidEntries_ThenThoseEntriesAreReturned()
     {
         const int appleId1 = 23;
         const int appleId2 = 78;
@@ -62,36 +78,39 @@ public class DataFetcherTests : FetcherTests
 }
 
 public class MockDataFetcher : DataFetcher<Apple, AppleResponse>
+
 {
-    public MockDataFetcher(
-        string basePath,
-        ILogger<DataFetcher<Apple, AppleResponse>> logger,
-        HttpClient client)
-        : base(basePath, logger, client)
-    {
-    }
+public MockDataFetcher(
+    string basePath,
+    ILogger<DataFetcher<Apple, AppleResponse>> logger,
+    HttpClient client)
+    : base(basePath, logger, client)
+{
+}
 }
 
 public class Apple : IIdentifiable
+
 {
-    public int Id { get; set; }
+public int Id { get; set; }
 
-    public Apple(int id)
-    {
-        Id = id;
-    }
+public Apple(int id)
+{
+    Id = id;
+}
 
-    public int GetId() => Id;
+public int GetId() => Id;
 }
 
 public class AppleResponse : IResponseToList<Apple>
+
 {
-    public List<Apple> Apples { get; set; }
+public List<Apple> Apples { get; set; }
 
-    public AppleResponse(List<Apple> apples)
-    {
-        Apples = apples;
-    }
+public AppleResponse(List<Apple> apples)
+{
+    Apples = apples;
+}
 
-    public List<Apple> GetContentAsList() => Apples;
+public List<Apple> GetContentAsList() => Apples;
 }
