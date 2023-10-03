@@ -10,16 +10,16 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Web;
 
-public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>, IItemInfoFetcher
+public class ItemInfoSingleFetcher : SingleDataFetcher<ItemInfoWebPoco>, IItemInfoSingleFetcher
 {
     private readonly IMarketableItemIdsFetcher _marketableFetcher;
     private readonly IItemRepository _repo;
-    private readonly ILogger<ItemInfoFetcher> _logger;
+    private readonly ILogger<ItemInfoSingleFetcher> _logger;
 
-    public ItemInfoFetcher(
+    public ItemInfoSingleFetcher(
         IItemRepository repo,
         IMarketableItemIdsFetcher fetcher,
-        ILogger<ItemInfoFetcher> logger,
+        ILogger<ItemInfoSingleFetcher> logger,
         HttpClient? client = null)
         : base(BaseUrl, logger, client)
     {
@@ -28,15 +28,12 @@ public class ItemInfoFetcher : DataFetcher<ItemInfoWebPoco, ItemInfoWebResponse>
         _logger = logger;
     }
 
-    protected override string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
+    protected override string GetUrlPathFromEntry(int id, int? worldId = null)
     {
         var sb = new StringBuilder();
         sb.Append(BaseUrl);
-
-        sb.Append(ids.First());
-
+        sb.Append(id);
         sb.Append(ColumnsSuffix);
-
         return sb.ToString();
     }
 

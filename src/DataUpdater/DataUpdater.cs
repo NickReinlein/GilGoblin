@@ -15,11 +15,11 @@ public abstract class DataUpdater<T, U> : BackgroundService
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
-    protected readonly IDataFetcher<T> Fetcher;
+    protected readonly IBulkDataFetcher<T> Fetcher;
     protected readonly IDataSaver<T> Saver;
     private readonly ILogger<DataUpdater<T, U>> _logger;
 
-    public DataUpdater(IDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T, U>> logger)
+    public DataUpdater(IBulkDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T, U>> logger)
     {
         Fetcher = fetcher;
         Saver = saver;

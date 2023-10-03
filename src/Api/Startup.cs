@@ -29,7 +29,7 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        Task add = AddGoblinServices(services);
+        var add = AddGoblinServices(services);
         add.Wait();
     }
 
@@ -52,14 +52,16 @@ public class Startup
     private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddSingleton<IDataFetcher<PriceWebPoco>, PriceFetcher>();
-        services.AddSingleton<IDataFetcher<ItemInfoWebPoco>, ItemInfoFetcher>();
+        services.AddSingleton<ISingleDataFetcher<ItemInfoWebPoco>, ItemInfoSingleFetcher>();
+        services.AddSingleton<IItemInfoSingleFetcher, ItemInfoSingleFetcher>();
 
-        services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
-        services.AddSingleton<IItemInfoFetcher, ItemInfoFetcher>();
+        services.AddSingleton<IBulkDataFetcher<PriceWebPoco>, PriceBulkFetcher>();
+        services.AddSingleton<IPriceBulkDataFetcher, PriceBulkFetcher>();
+
+        services.AddSingleton<IItemInfoSingleFetcher, ItemInfoSingleFetcher>();
         services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
 
-        services.AddSingleton<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>, ItemInfoUpdater>();
+        // services.AddSingleton<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>, ItemInfoUpdater>();
 
         services.AddSingleton<IDataSaver<ItemInfoWebPoco>, DataSaver<ItemInfoWebPoco>>();
     }

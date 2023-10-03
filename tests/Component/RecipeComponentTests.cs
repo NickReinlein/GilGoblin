@@ -65,7 +65,7 @@ public class RecipeComponentTests : ComponentTests
             Assert.That(recipes.All(p => p.AmountIngredient0 > 0), "Missing AmountIngredient0");
             Assert.That(
                 recipes.All(p => p.ItemIngredient0TargetId > 0),
-                "Missing ItemIngredient0TargetID"
+                "Missing ItemIngredient0TargetId"
             );
             Assert.That(
                 recipes.Count(p => p.AmountIngredient0 > 1),

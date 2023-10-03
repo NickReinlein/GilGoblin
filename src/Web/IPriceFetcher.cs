@@ -2,6 +2,6 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Web;
 
-public interface IPriceDataFetcher : IDataFetcher<PriceWebPoco>
+public interface IPriceBulkDataFetcher : IBulkDataFetcher<PriceWebPoco>
 {
 }

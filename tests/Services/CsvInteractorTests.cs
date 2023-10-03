@@ -1,5 +1,7 @@
 using GilGoblin.Pocos;
 using GilGoblin.Services;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Services;
@@ -7,19 +9,22 @@ namespace GilGoblin.Tests.Services;
 public class CsvInteractorTests
 {
     private CsvInteractor _interactor;
+    private ILogger<CsvInteractor> _logger;
 
     [SetUp]
     public void SetUp()
     {
-        _interactor = new CsvInteractor();
+        _logger = Substitute.For<ILogger<CsvInteractor>>();
+        _interactor = new CsvInteractor(_logger);
     }
 
     [Test]
-    public void GivenAnyFile_WhenWeFailToLoadTheFile_ThenNoExceptionIsThrownAndAnEmptyArrayIsReturned()
+    public void GivenAFile_WhenWeFailToLoadTheFile_ThenWeLogAnErrorAndReturnAnEmptyArray()
     {
         var result = _interactor.LoadFile<ItemInfoPoco>(ResourceFilePath("itsAFake"));
 
         Assert.That(result, Is.Empty);
+        _logger.ReceivedWithAnyArgs(1).LogError(default);
     }
 
     [Test]

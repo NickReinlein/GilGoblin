@@ -12,16 +12,16 @@ namespace GilGoblin.Tests.Web;
 public class DataFetcherTests : FetcherTests
 {
     private const string basePath = "http://localhost:55448/";
-    private MockDataFetcher _fetcher;
-    private ILogger<DataFetcher<Apple, AppleResponse>> _logger;
+    private MockBulkDataFetcher _fetcher;
+    private ILogger<BulkDataFetcher<Apple, AppleResponse>> _logger;
 
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
-        _logger = Substitute.For<ILogger<DataFetcher<Apple, AppleResponse>>>();
+        _logger = Substitute.For<ILogger<BulkDataFetcher<Apple, AppleResponse>>>();
 
-        _fetcher = new MockDataFetcher(basePath, _logger, _client);
+        _fetcher = new MockBulkDataFetcher(basePath, _logger, _client);
     }
 
     [Test]
@@ -67,12 +67,12 @@ public class DataFetcherTests : FetcherTests
     }
 }
 
-public class MockDataFetcher : DataFetcher<Apple, AppleResponse>
+public class MockBulkDataFetcher : BulkDataFetcher<Apple, AppleResponse>
 
 {
-    public MockDataFetcher(
+    public MockBulkDataFetcher(
         string basePath,
-        ILogger<DataFetcher<Apple, AppleResponse>> logger,
+        ILogger<BulkDataFetcher<Apple, AppleResponse>> logger,
         HttpClient client)
         : base(basePath, logger, client)
     {

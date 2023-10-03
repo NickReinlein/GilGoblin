@@ -4,7 +4,7 @@ using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Web;
 
-public interface IDataFetcher<T> where T : class, IIdentifiable
+public interface IBulkDataFetcher<T> where T : class, IIdentifiable
 {
     Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null);
 }

@@ -29,7 +29,7 @@ public class ItemRepositoryTests : InMemoryTestDb
 
     [TestCase(1)]
     [TestCase(2)]
-    public void GivenAGet_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
+    public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -46,7 +46,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     [TestCase(0)]
     [TestCase(-1)]
     [TestCase(100)]
-    public void GivenAGet_WhenIDIsInvalid_ThenTheRepositoryReturnsNull(int id)
+    public void GivenAGet_WhenIdIsInvalid_ThenTheRepositoryReturnsNull(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -110,7 +110,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
+    public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -122,7 +122,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
+    public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);

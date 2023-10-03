@@ -8,14 +8,14 @@ using System.Net.Http;
 
 namespace GilGoblin.Web;
 
-public class PriceFetcher : DataFetcher<PriceWebPoco, PriceWebResponse>, IPriceDataFetcher
+public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceBulkDataFetcher
 {
     private readonly IMarketableItemIdsFetcher _marketableFetcher;
-    private readonly ILogger<PriceFetcher> _logger;
+    private readonly ILogger<PriceBulkFetcher> _logger;
 
-    public PriceFetcher(
+    public PriceBulkFetcher(
         IMarketableItemIdsFetcher marketableFetcher,
-        ILogger<PriceFetcher> logger,
+        ILogger<PriceBulkFetcher> logger,
         HttpClient? client = null)
         : base(PriceBaseUrl, logger, client)
     {

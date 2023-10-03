@@ -9,15 +9,15 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Web;
 
-public abstract class DataFetcher<T, U> : IDataFetcher<T>
+public abstract class BulkDataFetcher<T, U> : IBulkDataFetcher<T>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
     protected string BasePath { get; set; }
     protected HttpClient Client { get; set; }
-    private readonly ILogger<DataFetcher<T, U>> _logger;
+    private readonly ILogger<BulkDataFetcher<T, U>> _logger;
 
-    public DataFetcher(string basePath, ILogger<DataFetcher<T, U>> logger, HttpClient? client = null)
+    public BulkDataFetcher(string basePath, ILogger<BulkDataFetcher<T, U>> logger, HttpClient? client = null)
     {
         BasePath = basePath;
         Client = client ?? new HttpClient();
@@ -45,8 +45,7 @@ public abstract class DataFetcher<T, U> : IDataFetcher<T>
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            var result = await response.Content.ReadFromJsonAsync<U>();
-            return result;
+            return await response.Content.ReadFromJsonAsync<U>();
         }
         catch
         {

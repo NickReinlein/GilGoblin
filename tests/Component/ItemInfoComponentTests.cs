@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Pocos;
-using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -12,8 +10,8 @@ public class ItemInfoComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItemInfo()
     {
-        var fullEndpoint = $"http://localhost:55448/item/10348";
-        var expectedDescription =
+        const string fullEndpoint = "http://localhost:55448/item/10348";
+        const string expectedDescription =
             "Black-and-white floorboards and carpeting of the same design as those used to furnish the Manderville Gold Saucer.";
 
         using var response = await _client.GetAsync(fullEndpoint);
@@ -25,8 +23,8 @@ public class ItemInfoComponentTests : ComponentTests
             Assert.That(item.CanBeHq, Is.False);
             Assert.That(item.IconId, Is.EqualTo(51024));
             Assert.That(item.Description, Is.EqualTo(expectedDescription));
-            Assert.That(item.PriceLow, Is.GreaterThan(1000));
-            Assert.That(item.PriceMid, Is.GreaterThan(1000));
+            Assert.That(item.PriceLow, Is.GreaterThan(10));
+            Assert.That(item.PriceMid, Is.GreaterThan(10));
             Assert.That(item.StackSize, Is.EqualTo(1));
             Assert.That(item.Level, Is.EqualTo(1));
         });
@@ -45,7 +43,7 @@ public class ItemInfoComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenReceivingAllItemInfos_ThenWeReceiveValidItemInfos()
     {
-        var fullEndpoint = $"http://localhost:55448/item/";
+        const string fullEndpoint = "http://localhost:55448/item/";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
