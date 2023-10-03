@@ -20,11 +20,11 @@ public class CraftingCalculatorTests
     private ILogger<CraftingCalculator> _logger;
 
     private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
-    private static readonly int _worldID = 34; // Brynnhildr
-    private static readonly int _firstItemID = 554;
-    private static readonly int _secondItemID = 668;
-    private static readonly int _recipeID = 6044;
-    private static readonly int _targetItemID = 955;
+    private static readonly int _worldId = 34; // Brynnhildr
+    private static readonly int _firstItemId = 554;
+    private static readonly int _secondItemId = 668;
+    private static readonly int _recipeId = 6044;
+    private static readonly int _targetItemId = 955;
 
     [SetUp]
     public void SetUp()
@@ -41,16 +41,16 @@ public class CraftingCalculatorTests
     [Test]
     public async Task GivenCalculateCraftingCostForItem_WhenNoRecipeExists_ThenErrorCostIsReturned()
     {
-        var inexistentItemID = -200;
-        _recipes.GetRecipesForItem(inexistentItemID).Returns(Array.Empty<RecipePoco>());
+        var inexistentItemId = -200;
+        _recipes.GetRecipesForItem(inexistentItemId).Returns(Array.Empty<RecipePoco>());
 
         var (recipeId, cost) = await _calc!.CalculateCraftingCostForItem(
-            _worldID,
-            inexistentItemID
+            _worldId,
+            inexistentItemId
         );
 
-        _recipes.DidNotReceive().GetRecipesForItem(inexistentItemID);
-        _prices.DidNotReceive().Get(_worldID, inexistentItemID);
+        _recipes.DidNotReceive().GetRecipesForItem(inexistentItemId);
+        _prices.DidNotReceive().Get(_worldId, inexistentItemId);
         Assert.That(recipeId, Is.LessThan(0));
         Assert.That(cost, Is.EqualTo(_errorCost));
     }
@@ -58,21 +58,21 @@ public class CraftingCalculatorTests
     [Test]
     public async Task GivenCalculateCraftingCostForItem_WhenARecipeExists_ThenCraftingCostIsReturned()
     {
-        var itemID = NewRecipe.TargetItemID;
-        var ingredientID = NewRecipe.ItemIngredient0TargetID;
+        var itemId = NewRecipe.TargetItemId;
+        var ingredientId = NewRecipe.ItemIngredient0TargetId;
         var recipe = NewRecipe;
         var ingredientMarketPrice = GetNewPrice;
         SetupForBasicItemCraftingCostCase(recipe, ingredientMarketPrice);
 
-        var (recipeId, cost) = await _calc!.CalculateCraftingCostForItem(_worldID, itemID);
+        var (recipeId, cost) = await _calc!.CalculateCraftingCostForItem(_worldId, itemId);
 
-        _recipes.Received().GetRecipesForItem(itemID);
-        _recipes.Received().GetRecipesForItem(ingredientID);
-        _prices.Received().Get(_worldID, itemID);
-        _prices.Received().Get(_worldID, ingredientID);
+        _recipes.Received().GetRecipesForItem(itemId);
+        _recipes.Received().GetRecipesForItem(ingredientId);
+        _prices.Received().Get(_worldId, itemId);
+        _prices.Received().Get(_worldId, ingredientId);
         Assert.Multiple(() =>
         {
-            Assert.That(recipeId, Is.EqualTo(recipe.ID));
+            Assert.That(recipeId, Is.EqualTo(recipe.Id));
             Assert.That(cost, Is.LessThan(int.MaxValue));
             Assert.That(cost, Is.GreaterThan(ingredientMarketPrice.AverageSoldNQ));
         });
@@ -81,13 +81,13 @@ public class CraftingCalculatorTests
     [Test]
     public async Task WhenCalculatingCraftingCostForAnInexistentRecipe_ThenReturnErrorCost()
     {
-        var inexistentRecipeID = -200;
+        var inexistentRecipeId = -200;
         _recipes.Get(Arg.Any<int>()).ReturnsNull();
 
-        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, inexistentRecipeID);
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldId, inexistentRecipeId);
 
-        _recipes.Received().Get(inexistentRecipeID);
-        _prices.DidNotReceiveWithAnyArgs().Get(_worldID, inexistentRecipeID);
+        _recipes.Received().Get(inexistentRecipeId);
+        _prices.DidNotReceiveWithAnyArgs().Get(_worldId, inexistentRecipeId);
         Assert.That(result, Is.EqualTo(_errorCost));
     }
 
@@ -95,15 +95,15 @@ public class CraftingCalculatorTests
     public async Task WhenCalculatingCraftingCostForAnExistingRecipeAndNoMarketDataIsFound_ThenReturnErrorCost()
     {
         var recipe = NewRecipe;
-        var recipeID = recipe.ID;
-        _recipes.Get(recipeID).Returns(recipe);
-        _prices.Get(_worldID, Arg.Any<int>()).ReturnsNull();
+        var recipeId = recipe.Id;
+        _recipes.Get(recipeId).Returns(recipe);
+        _prices.Get(_worldId, Arg.Any<int>()).ReturnsNull();
 
-        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldId, recipeId);
 
         Assert.That(result, Is.EqualTo(_errorCost));
-        _recipes.Received().Get(recipeID);
-        await _grocer.Received().BreakdownRecipeById(recipeID);
+        _recipes.Received().Get(recipeId);
+        await _grocer.Received().BreakdownRecipeById(recipeId);
         _prices.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>());
     }
 
@@ -111,18 +111,18 @@ public class CraftingCalculatorTests
     public async Task WhenCalculatingCraftingCostForAnExistingRecipe_ThenReturnCraftingCost()
     {
         var recipe = NewRecipe;
-        var recipeID = recipe.ID;
+        var recipeId = recipe.Id;
         var price = GetNewPrice;
         SetupBasicTestCase(recipe, price);
         SetupPricesForIngredients(recipe);
 
-        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldId, recipeId);
 
-        _recipes.Received().Get(recipeID);
-        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetID);
-        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetID);
-        _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemID);
-        _prices.Received().Get(_worldID, Arg.Any<int>());
+        _recipes.Received().Get(recipeId);
+        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetId);
+        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetId);
+        _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemId);
+        _prices.Received().Get(_worldId, Arg.Any<int>());
         Assert.That(result, Is.LessThan(100000000));
         Assert.That(result, Is.GreaterThan(1000));
     }
@@ -132,7 +132,7 @@ public class CraftingCalculatorTests
     {
         var testIngredient = NewRecipe.GetIngredientsList().First();
         var ingredients = new List<IngredientPoco> { testIngredient };
-        var price = new PricePoco { ItemID = testIngredient.ItemID, WorldID = _worldID };
+        var price = new PricePoco { ItemId = testIngredient.ItemId, WorldId = _worldId };
         var prices = new List<PricePoco> { price };
 
         var result = _calc.AddPricesToIngredients(ingredients, prices);
@@ -141,7 +141,7 @@ public class CraftingCalculatorTests
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(craftIngredient.ItemID, Is.EqualTo(testIngredient.ItemID));
+            Assert.That(craftIngredient.ItemId, Is.EqualTo(testIngredient.ItemId));
             Assert.That(craftIngredient.Quantity, Is.EqualTo(testIngredient.Quantity));
             Assert.That(craftIngredient.Price, Is.EqualTo(price));
         });
@@ -153,7 +153,7 @@ public class CraftingCalculatorTests
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
         var prices = new List<PricePoco>
         {
-            new PricePoco { WorldID = _worldID, ItemID = 222 }
+            new PricePoco { WorldId = _worldId, ItemId = 222 }
         };
 
         var result = _calc.AddPricesToIngredients(ingredients, prices);
@@ -169,16 +169,16 @@ public class CraftingCalculatorTests
     [Test]
     public async Task WhenAnDataNotFoundExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
     {
-        var recipeID = NewRecipe.ID;
-        _recipes.When(x => x.Get(recipeID)).Do(_ => throw new DataNotFoundException());
+        var recipeId = NewRecipe.Id;
+        _recipes.When(x => x.Get(recipeId)).Do(_ => throw new DataNotFoundException());
 
-        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldId, recipeId);
 
         Assert.That(result, Is.EqualTo(_errorCost));
         _logger
             .Received()
             .LogError(
-                $"Failed to find market data while calculating crafting cost for recipe {recipeID} in world {_worldID}"
+                $"Failed to find market data while calculating crafting cost for recipe {recipeId} in world {_worldId}"
             );
     }
 
@@ -189,44 +189,44 @@ public class CraftingCalculatorTests
         _prices.Get(Arg.Any<int>(), Arg.Any<int>()).Returns((PricePoco)null);
 
         Assert.Throws<DataNotFoundException>(() =>
-            _calc.GetIngredientPrice(_worldID, _firstItemID, NewRecipe.GetIngredientsList()));
+            _calc.GetIngredientPrice(_worldId, _firstItemId, NewRecipe.GetIngredientsList()));
     }
 
     [Test]
     public async Task GivenCalculateCraftingCostForRecipe_WhenTheCostIsCached_ThenItIsReturnedImmediately()
     {
-        var poco = new RecipeCostPoco { RecipeID = _recipeID, WorldID = _worldID, Cost = 9001 };
-        _recipeCosts.GetAsync(_worldID, _recipeID).Returns(poco);
+        var poco = new RecipeCostPoco { RecipeId = _recipeId, WorldId = _worldId, Cost = 9001 };
+        _recipeCosts.GetAsync(_worldId, _recipeId).Returns(poco);
 
-        var result = await _calc.CalculateCraftingCostForRecipe(_worldID, _recipeID);
+        var result = await _calc.CalculateCraftingCostForRecipe(_worldId, _recipeId);
 
         Assert.That(result, Is.EqualTo(poco.Cost));
-        await _recipeCosts.Received(1).GetAsync(_worldID, _recipeID);
+        await _recipeCosts.Received(1).GetAsync(_worldId, _recipeId);
         _recipes.DidNotReceive().Get(Arg.Any<int>());
     }
 
     [Test]
     public async Task GivenGetLowestCraftingCost_WhenTheCostIsCached_ThenItIsReturnedImmediately()
     {
-        var poco = new RecipeCostPoco { RecipeID = _recipeID, WorldID = _worldID, Cost = 9001 };
-        _recipeCosts.GetAsync(_worldID, _recipeID).Returns(poco);
+        var poco = new RecipeCostPoco { RecipeId = _recipeId, WorldId = _worldId, Cost = 9001 };
+        _recipeCosts.GetAsync(_worldId, _recipeId).Returns(poco);
 
-        var result = await _calc.GetLowestCraftingCost(_worldID, new List<RecipePoco>() { NewRecipe });
+        var result = await _calc.GetLowestCraftingCost(_worldId, new List<RecipePoco>() { NewRecipe });
 
-        Assert.That(result.Item1, Is.EqualTo(poco.RecipeID));
+        Assert.That(result.Item1, Is.EqualTo(poco.RecipeId));
         Assert.That(result.Item2, Is.EqualTo(poco.Cost));
-        await _recipeCosts.Received(1).GetAsync(_worldID, _recipeID);
+        await _recipeCosts.Received(1).GetAsync(_worldId, _recipeId);
         _recipes.DidNotReceive().Get(Arg.Any<int>());
     }
 
     [Test]
     public async Task WhenAnUnexpectedExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
     {
-        var recipeID = NewRecipe.ID;
+        var recipeId = NewRecipe.Id;
         var errorMessage = "testMessageHere";
-        _recipes.When(x => x.Get(recipeID)).Do(_ => throw new Exception(errorMessage));
+        _recipes.When(x => x.Get(recipeId)).Do(_ => throw new Exception(errorMessage));
 
-        var result = await _calc!.CalculateCraftingCostForRecipe(_worldID, recipeID);
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldId, recipeId);
 
         Assert.That(result, Is.EqualTo(_errorCost));
         _logger.Received().LogError($"Failed to calculate crafting cost: {errorMessage}");
@@ -234,28 +234,28 @@ public class CraftingCalculatorTests
 
     private void SetupBasicTestCase(RecipePoco recipe, PricePoco price)
     {
-        var recipeID = recipe.ID;
-        _recipes.GetRecipesForItem(recipeID).Returns(new List<RecipePoco>() { recipe });
-        _recipes.Get(recipeID).Returns(recipe);
+        var recipeId = recipe.Id;
+        _recipes.GetRecipesForItem(recipeId).Returns(new List<RecipePoco>() { recipe });
+        _recipes.Get(recipeId).Returns(recipe);
         foreach (var ingredient in recipe.GetActiveIngredients())
-            _recipes.GetRecipesForItem(ingredient.ItemID).Returns(_ => Array.Empty<RecipePoco>());
+            _recipes.GetRecipesForItem(ingredient.ItemId).Returns(_ => Array.Empty<RecipePoco>());
 
-        _prices.Get(price.WorldID, price.ItemID).Returns(price);
-        _grocer.BreakdownRecipeById(recipeID).Returns(recipe.GetActiveIngredients());
+        _prices.Get(price.WorldId, price.ItemId).Returns(price);
+        _grocer.BreakdownRecipeById(recipeId).Returns(recipe.GetActiveIngredients());
     }
 
-    private void SetupPricesForIngredients(RecipePoco recipe, int worldID = 34)
+    private void SetupPricesForIngredients(RecipePoco recipe, int worldId = 34)
     {
         foreach (var ingredient in recipe.GetActiveIngredients())
         {
             var ingredientPrice = new PricePoco()
             {
-                ItemID = ingredient.ItemID,
+                ItemId = ingredient.ItemId,
                 AverageListingPrice = 300,
                 AverageSold = 280,
-                WorldID = worldID
+                WorldId = worldId
             };
-            _prices.Get(worldID, ingredient.ItemID).Returns(ingredientPrice);
+            _prices.Get(worldId, ingredient.ItemId).Returns(ingredientPrice);
         }
     }
 
@@ -265,12 +265,12 @@ public class CraftingCalculatorTests
         PricePoco ingredientMarket
     )
     {
-        _prices.Get(market.WorldID, market.ItemID).ReturnsForAnyArgs(market);
-        _prices.Get(ingredientMarket.WorldID, ingredientMarket.ItemID).ReturnsForAnyArgs(market);
-        _grocer.BreakdownRecipeById(recipe.ID).Returns(recipe.GetActiveIngredients());
-        _recipes.GetRecipesForItem(market.ItemID).Returns(new List<RecipePoco>() { recipe });
-        _recipes.GetRecipesForItem(ingredientMarket.ItemID).Returns(Array.Empty<RecipePoco>());
-        _recipes.Get(recipe.ID).Returns(recipe);
+        _prices.Get(market.WorldId, market.ItemId).ReturnsForAnyArgs(market);
+        _prices.Get(ingredientMarket.WorldId, ingredientMarket.ItemId).ReturnsForAnyArgs(market);
+        _grocer.BreakdownRecipeById(recipe.Id).Returns(recipe.GetActiveIngredients());
+        _recipes.GetRecipesForItem(market.ItemId).Returns(new List<RecipePoco>() { recipe });
+        _recipes.GetRecipesForItem(ingredientMarket.ItemId).Returns(Array.Empty<RecipePoco>());
+        _recipes.Get(recipe.Id).Returns(recipe);
     }
 
     private void SetupForBasicItemCraftingCostCase(
@@ -278,29 +278,29 @@ public class CraftingCalculatorTests
         PricePoco ingredientMarketPrice
     )
     {
-        var itemID = recipe.TargetItemID;
-        var ingredientID = recipe.ItemIngredient0TargetID;
+        var itemId = recipe.TargetItemId;
+        var ingredientId = recipe.ItemIngredient0TargetId;
         var market = GetNewPrice;
-        market.ItemID = itemID;
-        recipe.TargetItemID = itemID;
+        market.ItemId = itemId;
+        recipe.TargetItemId = itemId;
         recipe.ResultQuantity = 1;
-        ingredientMarketPrice.ItemID = ingredientID;
-        recipe.ItemIngredient0TargetID = ingredientID;
+        ingredientMarketPrice.ItemId = ingredientId;
+        recipe.ItemIngredient0TargetId = ingredientId;
         recipe.AmountIngredient0 = 10;
-        var itemIDList = new List<int>() { itemID, ingredientID };
-        itemIDList.Sort();
+        var itemIdList = new List<int>() { itemId, ingredientId };
+        itemIdList.Sort();
         MockReposForSingularTest(market, recipe, ingredientMarketPrice);
         SetupPricesForIngredients(recipe);
     }
 
-    private static PricePoco GetNewPrice => new(1, _worldID, 1, 300, 200, 400, 600, 400, 800);
+    private static PricePoco GetNewPrice => new(1, _worldId, 1, 300, 200, 400, 600, 400, 800);
 
     private static RecipePoco NewRecipe =>
         new(
             true,
             true,
-            _targetItemID,
-            _recipeID,
+            _targetItemId,
+            _recipeId,
             1,
             3,
             4,
@@ -312,8 +312,8 @@ public class CraftingCalculatorTests
             0,
             0,
             0,
-            _firstItemID,
-            _secondItemID,
+            _firstItemId,
+            _secondItemId,
             0,
             0,
             0,

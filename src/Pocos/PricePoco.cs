@@ -13,8 +13,8 @@ public class PricePoco : BasePricePoco
     public PricePoco() { }
 
     public PricePoco(
-        int itemID,
-        int worldID,
+        int itemId,
+        int worldId,
         long lastUploadTime,
         float currentAveragePrice,
         float currentAveragePriceNQ,
@@ -24,8 +24,8 @@ public class PricePoco : BasePricePoco
         float averagePriceHQ
     )
     {
-        ItemID = itemID;
-        WorldID = worldID;
+        ItemId = itemId;
+        WorldId = worldId;
         LastUploadTime = lastUploadTime;
         AverageListingPrice = currentAveragePrice;
         AverageListingPriceNQ = currentAveragePriceNQ;
@@ -37,8 +37,8 @@ public class PricePoco : BasePricePoco
 
     public PricePoco(PriceWebPoco webPoco)
     {
-        ItemID = webPoco.ItemID;
-        WorldID = webPoco.WorldID;
+        ItemId = webPoco.ItemId;
+        WorldId = webPoco.WorldId;
         LastUploadTime = webPoco.LastUploadTime;
         AverageListingPrice = webPoco.CurrentAveragePrice;
         AverageListingPriceNQ = webPoco.CurrentAveragePriceNQ;

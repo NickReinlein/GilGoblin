@@ -10,11 +10,11 @@ public class PriceRepositoryTests : InMemoryTestDb
 {
     private IPriceCache _cache;
 
-    private static readonly int _worldID = 33;
-    private static readonly int _itemID = 88;
+    private static readonly int _worldId = 33;
+    private static readonly int _itemId = 88;
 
     [Test]
-    public void GivenAGetAll_WhenTheWorldIDExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
+    public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -24,14 +24,14 @@ public class PriceRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.ItemID == 11));
-            Assert.That(result.Any(p => p.ItemID == 12));
-            Assert.That(!result.Any(p => p.WorldID != 22));
+            Assert.That(result.Any(p => p.ItemId == 11));
+            Assert.That(result.Any(p => p.ItemId == 12));
+            Assert.That(!result.Any(p => p.WorldId != 22));
         });
     }
 
     [Test]
-    public void GivenAGetAll_WhenTheWorldIDDoesNotExist_ThenAnEmptyResponseIsReturned()
+    public void GivenAGetAll_WhenTheWorldIdDoesNotExist_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -43,7 +43,7 @@ public class PriceRepositoryTests : InMemoryTestDb
 
     [TestCase(11)]
     [TestCase(12)]
-    public void GivenAGet_WhenTheIDIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
+    public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -52,14 +52,14 @@ public class PriceRepositoryTests : InMemoryTestDb
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.WorldID == 22);
-            Assert.That(result.ItemID == id);
+            Assert.That(result.WorldId == 22);
+            Assert.That(result.ItemId == id);
         });
     }
 
     [TestCase(11)]
     [TestCase(12)]
-    public void GivenAGet_WhenTheIDIsValidButNotTheWorldID_ThenNullIsReturned(int id)
+    public void GivenAGet_WhenTheIdIsValidButNotTheWorldId_ThenNullIsReturned(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -72,7 +72,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     [TestCase(0)]
     [TestCase(-1)]
     [TestCase(100)]
-    public void GivenAGet_WhenIDIsInvalid_ThenNullIsReturned(int id)
+    public void GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -83,7 +83,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
+    public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -93,24 +93,24 @@ public class PriceRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.ItemID == 11));
-            Assert.That(result.Any(p => p.ItemID == 12));
+            Assert.That(result.Any(p => p.ItemId == 11));
+            Assert.That(result.Any(p => p.ItemId == 12));
         });
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsAreValidButNotWorldID_ThenAnEmptyResponseIsReturned()
+    public void GivenAGetMultiple_WhenIdsAreValidButNotWorldId_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(_worldID, new int[] { 11, 12 });
+        var result = priceRepo.GetMultiple(_worldId, new int[] { 11, 12 });
 
         Assert.That(!result.Any());
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
+    public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -120,24 +120,24 @@ public class PriceRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.Any(p => p.ItemID == 11));
-            Assert.That(!result.Any(p => p.WorldID != 22));
+            Assert.That(result.Any(p => p.ItemId == 11));
+            Assert.That(!result.Any(p => p.WorldId != 22));
         });
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsAreInvalid_ThenAnEmptyResponseIsReturned()
+    public void GivenAGetMultiple_WhenIdsAreInvalid_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(22, new int[] { _worldID, 99 });
+        var result = priceRepo.GetMultiple(22, new int[] { _worldId, 99 });
 
         Assert.That(!result.Any());
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsEmpty_ThenAnEmptyResponseIsReturned()
+    public void GivenAGetMultiple_WhenIdsEmpty_ThenAnEmptyResponseIsReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
@@ -148,39 +148,39 @@ public class PriceRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndUncached_ThenWeCacheTheEntry()
+    public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        _ = priceRepo.Get(_worldID, _itemID);
+        _ = priceRepo.Get(_worldId, _itemId);
 
-        _cache.Received(1).Get((_worldID, _itemID));
+        _cache.Received(1).Get((_worldId, _itemId));
         _cache
             .Received(1)
             .Add(
-                (_worldID, _itemID),
-                Arg.Is<PricePoco>(price => price.WorldID == _worldID && price.ItemID == _itemID)
+                (_worldId, _itemId),
+                Arg.Is<PricePoco>(price => price.WorldId == _worldId && price.ItemId == _itemId)
             );
     }
 
     [Test]
-    public void GivenAGet_WhenTheIDIsValidAndCached_ThenWeReturnTheCachedEntry()
+    public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
-        var poco = new PricePoco { WorldID = _worldID, ItemID = _itemID };
-        _cache.Get((_worldID, _itemID)).Returns((PricePoco)null, poco);
+        var poco = new PricePoco { WorldId = _worldId, ItemId = _itemId };
+        _cache.Get((_worldId, _itemId)).Returns((PricePoco)null, poco);
         var priceRepo = new PriceRepository(context, _cache);
 
-        _ = priceRepo.Get(_worldID, _itemID);
-        _ = priceRepo.Get(_worldID, _itemID);
+        _ = priceRepo.Get(_worldId, _itemId);
+        _ = priceRepo.Get(_worldId, _itemId);
 
-        _cache.Received(2).Get((_worldID, _itemID));
+        _cache.Received(2).Get((_worldId, _itemId));
         _cache
             .Received(1)
             .Add(
-                (_worldID, _itemID),
-                Arg.Is<PricePoco>(price => price.WorldID == _worldID && price.ItemID == _itemID)
+                (_worldId, _itemId),
+                Arg.Is<PricePoco>(price => price.WorldId == _worldId && price.ItemId == _itemId)
             );
     }
 
@@ -193,7 +193,7 @@ public class PriceRepositoryTests : InMemoryTestDb
 
         await priceRepo.FillCache();
 
-        allPrices.ForEach(price => _cache.Received(1).Add((price.WorldID, price.ItemID), price));
+        allPrices.ForEach(price => _cache.Received(1).Add((price.WorldId, price.ItemId), price));
     }
 
     [Test]

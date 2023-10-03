@@ -11,7 +11,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
 
-public class DataUpdater<T, U> : BackgroundService
+public abstract class DataUpdater<T, U> : BackgroundService
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
@@ -77,7 +77,7 @@ public class DataUpdater<T, U> : BackgroundService
             return new List<T>();
         }
 
-        var response = await FetchUpdatesForIDsAsync(entriesList);
+        var response = await FetchUpdatesForIdsAsync(entriesList);
         if (response is not null)
             return response.ToList();
 
@@ -85,7 +85,7 @@ public class DataUpdater<T, U> : BackgroundService
         return new List<T>();
     }
 
-    private async Task<IEnumerable<T>> FetchUpdatesForIDsAsync(IEnumerable<int> idsToUpdate, int worldId = 0)
+    private async Task<IEnumerable<T>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate, int worldId = 0)
     {
         try
         {

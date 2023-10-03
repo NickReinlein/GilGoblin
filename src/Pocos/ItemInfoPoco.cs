@@ -2,30 +2,36 @@ namespace GilGoblin.Pocos;
 
 public class ItemInfoPoco : BaseItemInfoPoco
 {
-    public ItemInfoPoco()
-    {
-    }
+    public ItemInfoPoco() { }
 
     public ItemInfoPoco(
         int id,
         string name,
         string description,
-        int iconID,
+        int iconId,
+        int level,
+        int priceLow,
         int priceMid,
         int stackSize,
-        int level,
         bool canBeHq
-    ) : base(id, name, description, iconID, priceMid, stackSize, level, canBeHq)
+    ) : base(
+        id,
+        name,
+        description,
+        iconId,
+        level,
+        priceLow,
+        priceMid,
+        stackSize,
+        canBeHq)
     {
-        ID = id;
-        IconID = iconID;
+        Id = id;
+        IconId = iconId;
         Description = description;
         Name = name;
-        VendorPrice = priceMid;
+        PriceMid = priceMid;
         StackSize = stackSize;
         Level = level;
         CanBeHq = canBeHq;
     }
-
-    public int GetId() => ID;
 }

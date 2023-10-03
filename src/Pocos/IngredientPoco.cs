@@ -4,23 +4,23 @@ namespace GilGoblin.Pocos;
 
 public class IngredientPoco : IComparable
 {
-    public int RecipeID { get; set; }
-    public int ItemID { get; set; }
+    public int RecipeId { get; set; }
+    public int ItemId { get; set; }
     public int Quantity { get; set; }
 
     public IngredientPoco() { }
 
-    public IngredientPoco(int itemID, int quantity, int recipeID)
+    public IngredientPoco(int itemId, int quantity, int recipeId)
     {
-        ItemID = itemID;
+        ItemId = itemId;
         Quantity = quantity;
-        RecipeID = recipeID;
+        RecipeId = recipeId;
     }
 
     public IngredientPoco(IngredientPoco copyMe)
     {
-        RecipeID = copyMe.RecipeID;
-        ItemID = copyMe.ItemID;
+        RecipeId = copyMe.RecipeId;
+        ItemId = copyMe.ItemId;
         Quantity = copyMe.Quantity;
     }
 
@@ -31,11 +31,11 @@ public class IngredientPoco : IComparable
 
         if (obj is IngredientPoco otherIngredient)
         {
-            var recipeIdComparison = RecipeID.CompareTo(otherIngredient.RecipeID);
+            var recipeIdComparison = RecipeId.CompareTo(otherIngredient.RecipeId);
             if (recipeIdComparison != 0)
                 return recipeIdComparison;
 
-            var itemIdComparison = ItemID.CompareTo(otherIngredient.ItemID);
+            var itemIdComparison = ItemId.CompareTo(otherIngredient.ItemId);
             if (itemIdComparison != 0)
                 return itemIdComparison;
 

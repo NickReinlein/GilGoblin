@@ -5,11 +5,11 @@ namespace GilGoblin.Pocos;
 
 public class CraftSummaryPoco : IComparable
 {
-    public int WorldID { get; set; }
-    public int ItemID { get; set; }
+    public int WorldId { get; set; }
+    public int ItemId { get; set; }
     public string Name { get; set; }
     public int VendorPrice { get; set; }
-    public int IconID { get; set; }
+    public int IconId { get; set; }
     public int StackSize { get; set; }
     public float AverageListingPrice { get; set; }
     public float AverageSold { get; set; }
@@ -22,11 +22,11 @@ public class CraftSummaryPoco : IComparable
     public CraftSummaryPoco() { }
 
     public CraftSummaryPoco(
-        int worldID,
-        int itemID,
+        int worldId,
+        int itemId,
         string name,
         int vendorPrice,
-        int iconID,
+        int iconId,
         int stackSize,
         float averageListingPrice,
         float averageSold,
@@ -36,11 +36,11 @@ public class CraftSummaryPoco : IComparable
         IEnumerable<IngredientPoco> ingredients
     )
     {
-        WorldID = worldID;
-        ItemID = itemID;
+        WorldId = worldId;
+        ItemId = itemId;
         Name = name;
         VendorPrice = vendorPrice;
-        IconID = iconID;
+        IconId = iconId;
         StackSize = stackSize;
         AverageListingPrice = averageListingPrice;
         AverageSold = averageSold;
@@ -58,11 +58,11 @@ public class CraftSummaryPoco : IComparable
         IEnumerable<IngredientPoco> ingredients
     )
     {
-        WorldID = price.WorldID;
-        ItemID = price.ItemID;
+        WorldId = price.WorldId;
+        ItemId = price.ItemId;
         Name = itemInfo.Name;
-        VendorPrice = itemInfo.VendorPrice;
-        IconID = itemInfo.IconID;
+        VendorPrice = itemInfo.PriceLow;
+        IconId = itemInfo.IconId;
         StackSize = itemInfo.StackSize;
         AverageListingPrice = price.AverageListingPrice;
         AverageSold = price.AverageSold;
@@ -80,9 +80,9 @@ public class CraftSummaryPoco : IComparable
 
         if (obj is CraftSummaryPoco otherCraftSummary)
         {
-            var worldIDComparison = WorldID.CompareTo(otherCraftSummary.WorldID);
-            if (worldIDComparison != 0)
-                return worldIDComparison;
+            var worldIdComparison = WorldId.CompareTo(otherCraftSummary.WorldId);
+            if (worldIdComparison != 0)
+                return worldIdComparison;
 
             var profitVsSoldComparison = CraftingProfitVsSold.CompareTo(
                 otherCraftSummary.CraftingProfitVsSold
@@ -100,7 +100,7 @@ public class CraftSummaryPoco : IComparable
             if (vendorPriceComparison != 0)
                 return -1 * vendorPriceComparison;
 
-            return ItemID.CompareTo(otherCraftSummary.ItemID);
+            return ItemId.CompareTo(otherCraftSummary.ItemId);
         }
 
         return 0;

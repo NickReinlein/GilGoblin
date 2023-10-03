@@ -10,32 +10,35 @@ public class ItemInfoWebPoco : BaseItemInfoPoco
         int id,
         string name,
         string description,
-        int iconID,
+        int iconId,
+        int priceLow,
         int priceMid,
         int stackSize,
         int level,
         bool canBeHq
-    ) : base(id, name, description, iconID, priceMid, stackSize, level, canBeHq)
+    ) : base(
+        id,
+        name,
+        description,
+        iconId,
+        priceLow,
+        priceMid,
+        stackSize,
+        level,
+        canBeHq)
     {
-        ID = id;
-        IconID = iconID;
-        Description = description;
-        Name = name;
-        VendorPrice = priceMid;
-        StackSize = stackSize;
-        Level = level;
-        CanBeHq = canBeHq;
     }
 
     public ItemInfoWebPoco(BaseItemInfoPoco poco)
     {
-        ID = poco.ID;
+        Id = poco.Id;
         Description = poco.Description;
         Name = poco.Name;
         Level = poco.Level;
         StackSize = poco.StackSize;
-        VendorPrice = poco.VendorPrice;
+        PriceLow = poco.PriceLow;
+        PriceMid = poco.PriceMid;
         CanBeHq = poco.CanBeHq;
-        IconID = poco.IconID;
+        IconId = poco.IconId;
     }
 }

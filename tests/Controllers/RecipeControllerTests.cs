@@ -29,7 +29,7 @@ public class RecipeControllerTests
     {
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
-        poco2.ID = poco1.ID + 100;
+        poco2.Id = poco1.Id + 100;
         _repo.GetAll().Returns(new List<RecipePoco>() { poco1, poco2 });
 
         var result = _controller.GetAll();
@@ -37,8 +37,8 @@ public class RecipeControllerTests
         Assert.Multiple(() =>
         {
             Assert.That(result.Count, Is.EqualTo(2));
-            Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
-            Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.Id == poco1.Id), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.Id == poco2.Id), Is.EqualTo(1));
         });
     }
 
@@ -46,9 +46,9 @@ public class RecipeControllerTests
     public void GivenAController_WhenWeReceiveAGetRequest_ThenARecipeIsReturned()
     {
         var poco1 = CreatePoco();
-        _repo.Get(poco1.ID).Returns(poco1);
+        _repo.Get(poco1.Id).Returns(poco1);
 
-        var result = _controller.Get(poco1.ID);
+        var result = _controller.Get(poco1.Id);
 
         Assert.That(result, Is.EqualTo(poco1));
     }
@@ -64,8 +64,8 @@ public class RecipeControllerTests
     private static RecipePoco CreatePoco() =>
         new()
         {
-            ID = 200,
-            TargetItemID = 100,
+            Id = 200,
+            TargetItemId = 100,
             ResultQuantity = 1,
             CanHq = true,
             CanQuickSynth = true

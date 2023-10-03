@@ -23,7 +23,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         {
             Assert.That(result.Count(), Is.EqualTo(allItems.Count));
             allItems.ForEach(item => result.SingleOrDefault(p => p.Name == item.Name));
-            allItems.ForEach(item => result.SingleOrDefault(p => p.ID == item.ID));
+            allItems.ForEach(item => result.SingleOrDefault(p => p.Id == item.Id));
         });
     }
 
@@ -39,7 +39,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Name == $"Item {id}");
-            Assert.That(result.ID == id);
+            Assert.That(result.Id == id);
         });
     }
 
@@ -57,7 +57,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsAreValid_ThenTheCorrectEntriesAreReturned()
+    public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -67,13 +67,13 @@ public class ItemRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.ID == 1));
-            Assert.That(result.Any(p => p.ID == 2));
+            Assert.That(result.Any(p => p.Id == 1));
+            Assert.That(result.Any(p => p.Id == 2));
         });
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenSomeIDsAreValid_ThenTheValidEntriesAreReturned()
+    public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -83,12 +83,12 @@ public class ItemRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.Any(p => p.ID == 1));
+            Assert.That(result.Any(p => p.Id == 1));
         });
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsAreInvalid_ThenNoEntriesAreReturned()
+    public void GivenAGetMultiple_WhenIdsAreInvalid_ThenNoEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -99,7 +99,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenAGetMultiple_WhenIDsEmpty_ThenNoEntriesAreReturned()
+    public void GivenAGetMultiple_WhenIdsEmpty_ThenNoEntriesAreReturned()
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
@@ -118,7 +118,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         _ = itemRepo.Get(2);
 
         _cache.Received(1).Get(2);
-        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.ID == 2));
+        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.Id == 2));
     }
 
     [Test]
@@ -126,13 +126,13 @@ public class ItemRepositoryTests : InMemoryTestDb
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
-        _cache.Get(2).Returns(null, new ItemInfoPoco() { ID = 2 });
+        _cache.Get(2).Returns(null, new ItemInfoPoco() { Id = 2 });
         _ = itemRepo.Get(2);
 
         var item = itemRepo.Get(2);
 
         _cache.Received(2).Get(2);
-        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.ID == 2));
+        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.Id == 2));
     }
 
     [Test]
@@ -144,7 +144,7 @@ public class ItemRepositoryTests : InMemoryTestDb
 
         await itemRepo.FillCache();
 
-        allItems.ForEach(item => _cache.Received(1).Add(item.ID, item));
+        allItems.ForEach(item => _cache.Received(1).Add(item.Id, item));
     }
 
     [Test]

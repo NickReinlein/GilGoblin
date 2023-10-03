@@ -19,28 +19,28 @@ public class ItemRepository : IItemRepository
         _cache = cache;
     }
 
-    public ItemInfoPoco? Get(int itemID)
+    public ItemInfoPoco? Get(int recipeId)
     {
-        var cached = _cache.Get(itemID);
+        var cached = _cache.Get(recipeId);
         if (cached is not null)
             return cached;
 
-        var item = _dbContext?.ItemInfo?.FirstOrDefault(i => i.ID == itemID);
+        var item = _dbContext?.ItemInfo?.FirstOrDefault(i => i.Id == recipeId);
         if (item is not null)
-            _cache.Add(item.ID, item);
+            _cache.Add(item.Id, item);
 
         return item;
     }
 
-    public IEnumerable<ItemInfoPoco> GetMultiple(IEnumerable<int> itemIDs) =>
-        _dbContext?.ItemInfo?.Where(i => itemIDs.Any(a => a == i.ID));
+    public IEnumerable<ItemInfoPoco> GetMultiple(IEnumerable<int> recipeIds) =>
+        _dbContext?.ItemInfo?.Where(i => recipeIds.Any(a => a == i.Id));
 
     public IEnumerable<ItemInfoPoco> GetAll() => _dbContext?.ItemInfo;
 
     public Task FillCache()
     {
         var items = _dbContext?.ItemInfo?.ToList();
-        items.ForEach(item => _cache.Add(item.ID, item));
+        items.ForEach(item => _cache.Add(item.Id, item));
         return Task.CompletedTask;
     }
 }

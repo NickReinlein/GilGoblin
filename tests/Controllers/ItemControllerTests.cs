@@ -12,7 +12,6 @@ public class ItemControllerTests
 {
     private ItemController _controller;
     private IItemRepository _repo;
-    public static readonly int WorldID = 34;
 
     [SetUp]
     public void SetUp()
@@ -30,7 +29,7 @@ public class ItemControllerTests
     {
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
-        poco2.ID = poco1.ID + 100;
+        poco2.Id = poco1.Id + 100;
         _repo.GetAll().Returns(new List<ItemInfoPoco>() { poco1, poco2 });
 
         var result = _controller.GetAll();
@@ -38,8 +37,8 @@ public class ItemControllerTests
         Assert.Multiple(() =>
         {
             Assert.That(result.Count, Is.EqualTo(2));
-            Assert.That(result.Count(i => i.ID == poco1.ID), Is.EqualTo(1));
-            Assert.That(result.Count(i => i.ID == poco2.ID), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.Id == poco1.Id), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.Id == poco2.Id), Is.EqualTo(1));
         });
     }
 
@@ -47,9 +46,9 @@ public class ItemControllerTests
     public void GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
     {
         var poco1 = CreatePoco();
-        _repo.Get(poco1.ID).Returns(poco1);
+        _repo.Get(poco1.Id).Returns(poco1);
 
-        var result = _controller.Get(poco1.ID);
+        var result = _controller.Get(poco1.Id);
 
         Assert.That(result, Is.EqualTo(poco1));
     }
@@ -65,13 +64,14 @@ public class ItemControllerTests
     private static ItemInfoPoco CreatePoco() =>
         new()
         {
-            ID = 200,
+            Id = 200,
             CanBeHq = true,
-            IconID = 2332,
+            IconId = 2332,
             Description = "testDesc",
             Level = 83,
             Name = "testItem",
             StackSize = 1,
-            VendorPrice = 3222
+            PriceLow = 322,
+            PriceMid = 4222
         };
 }

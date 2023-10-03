@@ -54,9 +54,13 @@ public class Startup
         services.AddHttpClient();
         services.AddSingleton<IDataFetcher<PriceWebPoco>, PriceFetcher>();
         services.AddSingleton<IDataFetcher<ItemInfoWebPoco>, ItemInfoFetcher>();
+
         services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
         services.AddSingleton<IItemInfoFetcher, ItemInfoFetcher>();
+        services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
+
         services.AddSingleton<DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>, ItemInfoUpdater>();
+
         services.AddSingleton<IDataSaver<ItemInfoWebPoco>, DataSaver<ItemInfoWebPoco>>();
     }
 

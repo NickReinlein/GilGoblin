@@ -26,6 +26,7 @@ public class DependencyInjectionTests : TestWithDatabase
     [TestCase(typeof(IPriceDataFetcher))]
     [TestCase(typeof(IItemInfoFetcher))]
     [TestCase(typeof(IRepositoryCache))]
+    [TestCase(typeof(IMarketableItemIdsFetcher))]
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
     [TestCase(typeof(IDataFetcher<PriceWebPoco>))]
     [TestCase(typeof(IDataFetcher<ItemInfoWebPoco>))]

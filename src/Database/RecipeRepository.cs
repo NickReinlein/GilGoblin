@@ -24,54 +24,54 @@ public class RecipeRepository : IRecipeRepository, IRepositoryCache
         _itemRecipesCache = itemRecipeCache;
     }
 
-    public RecipePoco? Get(int recipeID)
+    public RecipePoco? Get(int recipeId)
     {
-        if (recipeID < 1)
+        if (recipeId < 1)
             return null;
 
-        var cached = _recipeCache.Get(recipeID);
+        var cached = _recipeCache.Get(recipeId);
         if (cached is not null)
             return cached;
 
-        var recipe = _dbContext?.Recipe?.FirstOrDefault(i => i.ID == recipeID);
+        var recipe = _dbContext?.Recipe?.FirstOrDefault(i => i.Id == recipeId);
         if (recipe is not null)
-            _recipeCache.Add(recipe.ID, recipe);
+            _recipeCache.Add(recipe.Id, recipe);
 
         return recipe;
     }
 
-    public IEnumerable<RecipePoco> GetRecipesForItem(int itemID)
+    public IEnumerable<RecipePoco> GetRecipesForItem(int itemId)
     {
-        if (itemID < 1)
+        if (itemId < 1)
             return Enumerable.Empty<RecipePoco>();
 
-        var cached = _itemRecipesCache.Get(itemID);
+        var cached = _itemRecipesCache.Get(itemId);
         if (cached is not null)
             return cached;
 
-        var recipesForItem = _dbContext.Recipe.Where(r => r.TargetItemID == itemID).ToList();
+        var recipesForItem = _dbContext.Recipe.Where(r => r.TargetItemId == itemId).ToList();
         if (recipesForItem.Any())
-            _itemRecipesCache.Add(itemID, recipesForItem);
+            _itemRecipesCache.Add(itemId, recipesForItem);
 
         return recipesForItem;
     }
 
-    public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> recipeIDs) =>
-        _dbContext.Recipe.Where(r => recipeIDs.Any(a => a == r.ID));
+    public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> recipeIds) =>
+        _dbContext.Recipe.Where(r => recipeIds.Any(a => a == r.Id));
 
     public IEnumerable<RecipePoco> GetAll() => _dbContext.Recipe;
 
     public Task FillCache()
     {
         var recipes = _dbContext.Recipe.ToList();
-        recipes.ForEach(recipe => _recipeCache.Add(recipe.ID, recipe));
+        recipes.ForEach(recipe => _recipeCache.Add(recipe.Id, recipe));
 
-        var itemIDs = recipes.Select(r => r.TargetItemID).Distinct().ToList();
-        itemIDs.ForEach(
-            itemID =>
+        var ids = recipes.Select(r => r.TargetItemId).Distinct().ToList();
+        ids.ForEach(
+            itemId =>
                 _itemRecipesCache.Add(
-                    itemID,
-                    recipes.Where(itemRecipe => itemRecipe.ID == itemID).ToList()
+                    itemId,
+                    recipes.Where(itemRecipe => itemRecipe.Id == itemId).ToList()
                 )
         );
         return Task.CompletedTask;

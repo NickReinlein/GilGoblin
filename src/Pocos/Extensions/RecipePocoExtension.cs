@@ -8,16 +8,16 @@ public static class RecipePocoExtension
     public static List<IngredientPoco> GetIngredientsList(this RecipePoco poco) =>
         new()
         {
-            new IngredientPoco(poco.ItemIngredient0TargetID, poco.AmountIngredient0, poco.ID),
-            new IngredientPoco(poco.ItemIngredient1TargetID, poco.AmountIngredient1, poco.ID),
-            new IngredientPoco(poco.ItemIngredient2TargetID, poco.AmountIngredient2, poco.ID),
-            new IngredientPoco(poco.ItemIngredient3TargetID, poco.AmountIngredient3, poco.ID),
-            new IngredientPoco(poco.ItemIngredient4TargetID, poco.AmountIngredient4, poco.ID),
-            new IngredientPoco(poco.ItemIngredient5TargetID, poco.AmountIngredient5, poco.ID),
-            new IngredientPoco(poco.ItemIngredient6TargetID, poco.AmountIngredient6, poco.ID),
-            new IngredientPoco(poco.ItemIngredient7TargetID, poco.AmountIngredient7, poco.ID),
-            new IngredientPoco(poco.ItemIngredient8TargetID, poco.AmountIngredient8, poco.ID),
-            new IngredientPoco(poco.ItemIngredient9TargetID, poco.AmountIngredient9, poco.ID)
+            new IngredientPoco(poco.ItemIngredient0TargetId, poco.AmountIngredient0, poco.Id),
+            new IngredientPoco(poco.ItemIngredient1TargetId, poco.AmountIngredient1, poco.Id),
+            new IngredientPoco(poco.ItemIngredient2TargetId, poco.AmountIngredient2, poco.Id),
+            new IngredientPoco(poco.ItemIngredient3TargetId, poco.AmountIngredient3, poco.Id),
+            new IngredientPoco(poco.ItemIngredient4TargetId, poco.AmountIngredient4, poco.Id),
+            new IngredientPoco(poco.ItemIngredient5TargetId, poco.AmountIngredient5, poco.Id),
+            new IngredientPoco(poco.ItemIngredient6TargetId, poco.AmountIngredient6, poco.Id),
+            new IngredientPoco(poco.ItemIngredient7TargetId, poco.AmountIngredient7, poco.Id),
+            new IngredientPoco(poco.ItemIngredient8TargetId, poco.AmountIngredient8, poco.Id),
+            new IngredientPoco(poco.ItemIngredient9TargetId, poco.AmountIngredient9, poco.Id)
         };
 
     public static List<IngredientPoco> GetActiveIngredients(this RecipePoco poco) =>

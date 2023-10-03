@@ -58,7 +58,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
                 GilGoblinDatabaseInitializer.ApiSpamPreventionDelayInMS,
                 Is.GreaterThan(10)
             );
-            Assert.That(GilGoblinDatabaseInitializer.TestWorldID, Is.GreaterThan(0));
+            Assert.That(GilGoblinDatabaseInitializer.TestWorldId, Is.GreaterThan(0));
         });
     }
 
@@ -95,8 +95,8 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         {
             new()
             {
-                ItemID = 456,
-                WorldID = 23,
+                ItemId = 456,
+                WorldId = 23,
                 LastUploadTime = 1677798249999,
                 AveragePrice = 512,
                 CurrentAveragePrice = 400,
@@ -148,16 +148,16 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         {
             new PriceWebPoco
             {
-                ItemID = 456,
-                WorldID = 23,
+                ItemId = 456,
+                WorldId = 23,
                 LastUploadTime = 1677798249999,
                 AveragePrice = 512,
                 CurrentAveragePrice = 400,
             },
             new PriceWebPoco
             {
-                ItemID = 789,
-                WorldID = 23,
+                ItemId = 789,
+                WorldId = 23,
                 LastUploadTime = 1677798949999,
                 AveragePrice = 1024,
                 CurrentAveragePrice = 800,
@@ -173,8 +173,8 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
             .Returns(
                 new List<ItemInfoPoco>()
                 {
-                    new ItemInfoPoco { ID = 123 },
-                    new ItemInfoPoco { ID = 456 }
+                    new ItemInfoPoco { Id = 123 },
+                    new ItemInfoPoco { Id = 456 }
                 }
             );
         _csvInteractor
@@ -184,14 +184,14 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
                 {
                     new RecipePoco
                     {
-                        ID = 123,
-                        TargetItemID = 33,
+                        Id = 123,
+                        TargetItemId = 33,
                         ResultQuantity = 1
                     },
                     new RecipePoco
                     {
-                        ID = 456,
-                        TargetItemID = 44,
+                        Id = 456,
+                        TargetItemId = 44,
                         ResultQuantity = 1
                     }
                 }
@@ -203,16 +203,16 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
                 {
                     new PricePoco
                     {
-                        ItemID = 456,
-                        WorldID = 23,
+                        ItemId = 456,
+                        WorldId = 23,
                         LastUploadTime = 1677798249999,
                         AverageListingPrice = 512,
                         AverageSold = 400,
                     },
                     new PricePoco
                     {
-                        ItemID = 123,
-                        WorldID = 23,
+                        ItemId = 123,
+                        WorldId = 23,
                         LastUploadTime = 1677798249750,
                         AverageListingPrice = 256,
                         AverageSold = 200,

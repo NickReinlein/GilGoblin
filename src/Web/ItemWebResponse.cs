@@ -10,16 +10,16 @@ public class ItemInfoWebResponse : IResponseToList<ItemInfoWebPoco>
 
     public ItemInfoWebResponse(Dictionary<int, ItemInfoWebPoco> items)
     {
-        Items = items ?? new Dictionary<int, ItemInfoWebPoco>();
+        Items = items;
     }
 
-    public ItemInfoWebResponse(IEnumerable<ItemInfoPoco> items)
+    public ItemInfoWebResponse(IEnumerable<ItemInfoPoco> dbItems)
     {
         Items = new Dictionary<int, ItemInfoWebPoco>();
-        foreach (var item in items)
+        foreach (var item in dbItems)
         {
             var converted = new ItemInfoWebPoco(item);
-            Items.Add(converted.ID, converted);
+            Items.Add(converted.Id, converted);
         }
     }
 

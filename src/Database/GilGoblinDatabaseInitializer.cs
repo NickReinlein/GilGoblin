@@ -122,6 +122,6 @@ public class GilGoblinDatabaseInitializer
         return tableName;
     }
 
-    public static readonly int TestWorldID = 34;
+    public static readonly int TestWorldId = 34;
     public static readonly int ApiSpamPreventionDelayInMS = 100;
 }

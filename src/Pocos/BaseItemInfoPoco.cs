@@ -4,21 +4,18 @@ using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Pocos;
 
-public class BaseItemInfoPoco: IIdentifiable
+public class BaseItemInfoPoco : IIdentifiable
 {
-    [Name("#")]
-    public int ID { get; set; }
+    [Name("#")] public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
 
-    [Name("Icon")]
-    public int IconID { get; set; }
+    [Name("Icon")] public int IconId { get; set; }
 
-    [Name("Level{Item}")]
-    public int Level { get; set; }
+    [Name("Level{Item}")] public int Level { get; set; }
 
-    [Name("Price{Mid}")]
-    public int VendorPrice { get; set; }
+    public int PriceLow { get; set; }
+    public int PriceMid { get; set; }
     public int StackSize { get; set; }
     public bool CanBeHq { get; set; }
 
@@ -29,20 +26,23 @@ public class BaseItemInfoPoco: IIdentifiable
         int id,
         string name = "",
         string description = "",
-        int iconID = 0,
+        int iconId = 0,
         int level = 0,
-        int vendorPrice = 0,
+        int priceLow = 0,
+        int priceMid = 0,
         int stackSize = 0,
         bool canBeHq = false)
     {
-        ID = id;
+        Id = id;
         Name = name;
         Description = description;
-        IconID = iconID;
+        IconId = iconId;
         Level = level;
-        VendorPrice = vendorPrice;
+        PriceMid = priceMid;
+        PriceLow = priceLow;
         StackSize = stackSize;
         CanBeHq = canBeHq;
     }
-    public int GetId() => ID;
+
+    public int GetId() => Id;
 }

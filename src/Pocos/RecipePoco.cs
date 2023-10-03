@@ -4,83 +4,60 @@ namespace GilGoblin.Pocos;
 
 public class RecipePoco
 {
-    [Name("#")]
-    public int ID { get; set; }
+    [Name("#")] public int Id { get; set; }
 
-    [Name("Item{Result}")]
-    public int TargetItemID { get; set; }
+    [Name("Item{Result}")] public int TargetItemId { get; set; }
 
-    [Name("Amount{Result}")]
-    public int ResultQuantity { get; set; }
+    [Name("Amount{Result}")] public int ResultQuantity { get; set; }
     public bool CanHq { get; set; }
     public bool CanQuickSynth { get; set; }
 
-    [Name("Amount{Ingredient}[0]")]
-    public int AmountIngredient0 { get; set; }
+    [Name("Amount{Ingredient}[0]")] public int AmountIngredient0 { get; set; }
 
-    [Name("Amount{Ingredient}[1]")]
-    public int AmountIngredient1 { get; set; }
+    [Name("Amount{Ingredient}[1]")] public int AmountIngredient1 { get; set; }
 
-    [Name("Amount{Ingredient}[2]")]
-    public int AmountIngredient2 { get; set; }
+    [Name("Amount{Ingredient}[2]")] public int AmountIngredient2 { get; set; }
 
-    [Name("Amount{Ingredient}[3]")]
-    public int AmountIngredient3 { get; set; }
+    [Name("Amount{Ingredient}[3]")] public int AmountIngredient3 { get; set; }
 
-    [Name("Amount{Ingredient}[4]")]
-    public int AmountIngredient4 { get; set; }
+    [Name("Amount{Ingredient}[4]")] public int AmountIngredient4 { get; set; }
 
-    [Name("Amount{Ingredient}[5]")]
-    public int AmountIngredient5 { get; set; }
+    [Name("Amount{Ingredient}[5]")] public int AmountIngredient5 { get; set; }
 
-    [Name("Amount{Ingredient}[6]")]
-    public int AmountIngredient6 { get; set; }
+    [Name("Amount{Ingredient}[6]")] public int AmountIngredient6 { get; set; }
 
-    [Name("Amount{Ingredient}[7]")]
-    public int AmountIngredient7 { get; set; }
+    [Name("Amount{Ingredient}[7]")] public int AmountIngredient7 { get; set; }
 
-    [Name("Amount{Ingredient}[8]")]
-    public int AmountIngredient8 { get; set; }
+    [Name("Amount{Ingredient}[8]")] public int AmountIngredient8 { get; set; }
 
-    [Name("Amount{Ingredient}[9]")]
-    public int AmountIngredient9 { get; set; }
+    [Name("Amount{Ingredient}[9]")] public int AmountIngredient9 { get; set; }
 
-    [Name("Item{Ingredient}[0]")]
-    public int ItemIngredient0TargetID { get; set; }
+    [Name("Item{Ingredient}[0]")] public int ItemIngredient0TargetId { get; set; }
 
-    [Name("Item{Ingredient}[1]")]
-    public int ItemIngredient1TargetID { get; set; }
+    [Name("Item{Ingredient}[1]")] public int ItemIngredient1TargetId { get; set; }
 
-    [Name("Item{Ingredient}[2]")]
-    public int ItemIngredient2TargetID { get; set; }
+    [Name("Item{Ingredient}[2]")] public int ItemIngredient2TargetId { get; set; }
 
-    [Name("Item{Ingredient}[3]")]
-    public int ItemIngredient3TargetID { get; set; }
+    [Name("Item{Ingredient}[3]")] public int ItemIngredient3TargetId { get; set; }
 
-    [Name("Item{Ingredient}[4]")]
-    public int ItemIngredient4TargetID { get; set; }
+    [Name("Item{Ingredient}[4]")] public int ItemIngredient4TargetId { get; set; }
 
-    [Name("Item{Ingredient}[5]")]
-    public int ItemIngredient5TargetID { get; set; }
+    [Name("Item{Ingredient}[5]")] public int ItemIngredient5TargetId { get; set; }
 
-    [Name("Item{Ingredient}[6]")]
-    public int ItemIngredient6TargetID { get; set; }
+    [Name("Item{Ingredient}[6]")] public int ItemIngredient6TargetId { get; set; }
 
-    [Name("Item{Ingredient}[7]")]
-    public int ItemIngredient7TargetID { get; set; }
+    [Name("Item{Ingredient}[7]")] public int ItemIngredient7TargetId { get; set; }
 
-    [Name("Item{Ingredient}[8]")]
-    public int ItemIngredient8TargetID { get; set; }
+    [Name("Item{Ingredient}[8]")] public int ItemIngredient8TargetId { get; set; }
 
-    [Name("Item{Ingredient}[9]")]
-    public int ItemIngredient9TargetID { get; set; }
+    [Name("Item{Ingredient}[9]")] public int ItemIngredient9TargetId { get; set; }
 
     public RecipePoco() { }
 
     public RecipePoco(
         bool canQuickSynth,
         bool canHq,
-        int itemResultTargetID,
+        int itemResultTargetId,
         int id,
         int amountResult,
         int amountIngredient0,
@@ -93,22 +70,21 @@ public class RecipePoco
         int amountIngredient7,
         int amountIngredient8,
         int amountIngredient9,
-        int itemIngredient0TargetID,
-        int itemIngredient1TargetID,
-        int itemIngredient2TargetID,
-        int itemIngredient3TargetID,
-        int itemIngredient4TargetID,
-        int itemIngredient5TargetID,
-        int itemIngredient6TargetID,
-        int itemIngredient7TargetID,
-        int itemIngredient8TargetID,
-        int itemIngredient9TargetID
+        int itemIngredient0TargetId,
+        int itemIngredient1TargetId,
+        int itemIngredient2TargetId,
+        int itemIngredient3TargetId,
+        int itemIngredient4TargetId,
+        int itemIngredient5TargetId,
+        int itemIngredient6TargetId,
+        int itemIngredient7TargetId,
+        int itemIngredient8TargetId,
+        int itemIngredient9TargetId
     )
-        : base()
     {
         CanHq = canHq;
-        TargetItemID = itemResultTargetID;
-        ID = id;
+        TargetItemId = itemResultTargetId;
+        Id = id;
         ResultQuantity = amountResult;
         AmountIngredient0 = amountIngredient0;
         AmountIngredient1 = amountIngredient1;
@@ -120,16 +96,16 @@ public class RecipePoco
         AmountIngredient7 = amountIngredient7;
         AmountIngredient8 = amountIngredient8;
         AmountIngredient9 = amountIngredient9;
-        ItemIngredient0TargetID = itemIngredient0TargetID;
-        ItemIngredient1TargetID = itemIngredient1TargetID;
-        ItemIngredient2TargetID = itemIngredient2TargetID;
-        ItemIngredient3TargetID = itemIngredient3TargetID;
-        ItemIngredient4TargetID = itemIngredient4TargetID;
-        ItemIngredient5TargetID = itemIngredient5TargetID;
-        ItemIngredient6TargetID = itemIngredient6TargetID;
-        ItemIngredient7TargetID = itemIngredient7TargetID;
-        ItemIngredient8TargetID = itemIngredient8TargetID;
-        ItemIngredient9TargetID = itemIngredient9TargetID;
+        ItemIngredient0TargetId = itemIngredient0TargetId;
+        ItemIngredient1TargetId = itemIngredient1TargetId;
+        ItemIngredient2TargetId = itemIngredient2TargetId;
+        ItemIngredient3TargetId = itemIngredient3TargetId;
+        ItemIngredient4TargetId = itemIngredient4TargetId;
+        ItemIngredient5TargetId = itemIngredient5TargetId;
+        ItemIngredient6TargetId = itemIngredient6TargetId;
+        ItemIngredient7TargetId = itemIngredient7TargetId;
+        ItemIngredient8TargetId = itemIngredient8TargetId;
+        ItemIngredient9TargetId = itemIngredient9TargetId;
         CanQuickSynth = canQuickSynth;
     }
 }

@@ -19,16 +19,16 @@ public class PriceController : ControllerBase, IPriceController
     }
 
     [HttpGet("{worldId}/{id}")]
-    public PricePoco? Get(int worldID, int id)
+    public PricePoco? Get(int worldId, int id)
     {
-        _logger.LogInformation($"Fetching market data world {worldID}, id: {id}");
-        return _priceRepo.Get(worldID, id);
+        _logger.LogInformation($"Fetching market data world {worldId}, id: {id}");
+        return _priceRepo.Get(worldId, id);
     }
 
     [HttpGet("{worldId}")]
-    public IEnumerable<PricePoco> GetAll(int worldID)
+    public IEnumerable<PricePoco> GetAll(int worldId)
     {
-        _logger.LogInformation($"Fetching all market data for world {worldID}");
-        return _priceRepo.GetAll(worldID);
+        _logger.LogInformation($"Fetching all market data for world {worldId}");
+        return _priceRepo.GetAll(worldId);
     }
 }

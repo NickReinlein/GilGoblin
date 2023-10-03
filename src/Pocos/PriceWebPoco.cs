@@ -18,8 +18,8 @@ public class PriceWebPoco : BasePricePoco
 
     [JsonConstructor]
     public PriceWebPoco(
-        int itemID,
-        int worldID,
+        int itemId,
+        int worldId,
         long lastUploadTime,
         float currentAveragePrice,
         float currentAveragePriceNQ,
@@ -29,8 +29,8 @@ public class PriceWebPoco : BasePricePoco
         float averagePriceHQ
     )
     {
-        ItemID = itemID;
-        WorldID = worldID;
+        ItemId = itemId;
+        WorldId = worldId;
         LastUploadTime = lastUploadTime;
         CurrentAveragePrice = currentAveragePrice;
         CurrentAveragePriceNQ = currentAveragePriceNQ;

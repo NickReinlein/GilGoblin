@@ -49,28 +49,28 @@ public class InMemoryTestDb
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         context.RecipeCost.AddRange(
-            new RecipeCostPoco { WorldID = 22, RecipeID = 11 },
-            new RecipeCostPoco { WorldID = 22, RecipeID = 12 },
-            new RecipeCostPoco { WorldID = 33, RecipeID = 88 },
-            new RecipeCostPoco { WorldID = 44, RecipeID = 99 }
+            new RecipeCostPoco { WorldId = 22, RecipeId = 11 },
+            new RecipeCostPoco { WorldId = 22, RecipeId = 12 },
+            new RecipeCostPoco { WorldId = 33, RecipeId = 88 },
+            new RecipeCostPoco { WorldId = 44, RecipeId = 99 }
         );
         context.Recipe.AddRange(
-            new RecipePoco { ID = 11, TargetItemID = 111 },
-            new RecipePoco { ID = 22, TargetItemID = 111 },
-            new RecipePoco { ID = 33, TargetItemID = 222 },
-            new RecipePoco { ID = 44, TargetItemID = 333 }
+            new RecipePoco { Id = 11, TargetItemId = 111 },
+            new RecipePoco { Id = 22, TargetItemId = 111 },
+            new RecipePoco { Id = 33, TargetItemId = 222 },
+            new RecipePoco { Id = 44, TargetItemId = 333 }
         );
         context.Price.AddRange(
-            new PricePoco { WorldID = 22, ItemID = 11 },
-            new PricePoco { WorldID = 22, ItemID = 12 },
-            new PricePoco { WorldID = 33, ItemID = 88 },
-            new PricePoco { WorldID = 44, ItemID = 99 }
+            new PricePoco { WorldId = 22, ItemId = 11 },
+            new PricePoco { WorldId = 22, ItemId = 12 },
+            new PricePoco { WorldId = 33, ItemId = 88 },
+            new PricePoco { WorldId = 44, ItemId = 99 }
         );
         context.ItemInfo.AddRange(
-            new ItemInfoPoco { ID = 1, Name = "Item 1" },
-            new ItemInfoPoco { ID = 2, Name = "Item 2" },
-            new ItemInfoPoco { ID = 3, Name = "Item 3" },
-            new ItemInfoPoco { ID = 22, Name = "Item 22" }
+            new ItemInfoPoco { Id = 1, Name = "Item 1" },
+            new ItemInfoPoco { Id = 2, Name = "Item 2" },
+            new ItemInfoPoco { Id = 3, Name = "Item 3" },
+            new ItemInfoPoco { Id = 22, Name = "Item 22" }
         );
         context.SaveChanges();
     }

@@ -21,11 +21,12 @@ public class ItemInfoComponentTests : ComponentTests
         var item = await response.Content.ReadFromJsonAsync<ItemInfoPoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
-            Assert.That(item.ID, Is.EqualTo(10348));
+            Assert.That(item.Id, Is.EqualTo(10348));
             Assert.That(item.CanBeHq, Is.False);
-            Assert.That(item.IconID, Is.EqualTo(51024));
+            Assert.That(item.IconId, Is.EqualTo(51024));
             Assert.That(item.Description, Is.EqualTo(expectedDescription));
-            Assert.That(item.VendorPrice, Is.EqualTo(15000));
+            Assert.That(item.PriceLow, Is.GreaterThan(1000));
+            Assert.That(item.PriceMid, Is.GreaterThan(1000));
             Assert.That(item.StackSize, Is.EqualTo(1));
             Assert.That(item.Level, Is.EqualTo(1));
         });
@@ -56,11 +57,11 @@ public class ItemInfoComponentTests : ComponentTests
         Assert.Multiple(() =>
         {
             Assert.That(itemCount, Is.GreaterThan(1000), "Not enough entries received");
-            Assert.That(items.All(p => p.ID > 0), "ID is invalid");
+            Assert.That(items.All(p => p.Id > 0), "Id is invalid");
             Assert.That(
-                items.Count(p => p.IconID > 0),
+                items.Count(p => p.IconId > 0),
                 Is.GreaterThan(missingEntryThreshold),
-                "IconID is invalid"
+                "IconId is invalid"
             );
             Assert.That(
                 items.Count(p => p.Level > 0),
@@ -78,19 +79,24 @@ public class ItemInfoComponentTests : ComponentTests
                 "StackSize is above 999999999 invalid"
             );
             Assert.That(
-                items.Count(p => p.VendorPrice > 0),
+                items.Count(p => p.PriceLow > 0),
                 Is.GreaterThan(missingEntryThreshold),
-                "Missing VendorPrice"
+                "Missing PriceLow"
+            );
+            Assert.That(
+                items.Count(p => p.PriceMid > 0),
+                Is.GreaterThan(missingEntryThreshold),
+                "Missing PriceMid"
             );
             Assert.That(
                 items.Count(p => p.Description == string.Empty),
                 Is.LessThan(missingEntryThreshold),
-                "Missing a suspicicious number of descriptions"
+                "Missing a suspicious number of descriptions"
             );
             Assert.That(
                 items.Count(p => p.CanBeHq),
                 Is.GreaterThan(itemCount * (1.0f - MissingEntryPercentageThreshold)),
-                "Missing a suspicicious number of entries that can be High Quality"
+                "Missing a suspicious number of entries that can be High Quality"
             );
         });
     }
