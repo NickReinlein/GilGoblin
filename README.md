@@ -21,6 +21,7 @@ Eventually, features will includes the following:
 ## Special Thanks & References
 Support:
 * Jetbrains IDEs ( https://www.jetbrains.com/ )
+
 Other Projects:
 * XIVAPI: A FINAL FANTASY XIV: Online REST API ( https://xivapi.com/ )
 * Universalis: A crowdsourced market board aggregator for the game FFXIV ( https://github.com/Universalis-FFXIV/Universalis )
