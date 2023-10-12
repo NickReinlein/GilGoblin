@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Web;
 using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;

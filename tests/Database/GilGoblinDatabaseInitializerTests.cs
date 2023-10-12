@@ -19,7 +19,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenTableItemInfoIsEmpty_ThenWeFillTheTable()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
 
@@ -30,22 +30,22 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenTablePriceIsEmpty_ThenWeFillTheTable()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
 
-        using var context2 = new GilGoblinDbContext(_options, _configuration);
+        await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.Price.Count, Is.GreaterThan(0));
     }
 
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenTableRecipeIsEmpty_ThenWeFillTheTable()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
 
-        using var context2 = new GilGoblinDbContext(_options, _configuration);
+        await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.Recipe.Count, Is.GreaterThan(0));
     }
 
@@ -66,7 +66,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     public async Task GiveWeCallFillTablesIfEmpty_WhenAnExceptionIsThrown_ThenWeLogAnError()
     {
         _csvInteractor.LoadFile<ItemInfoPoco>("TestDatabase").Throws<Exception>();
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
 
         await _databaseInitializer.FillTablesIfEmpty(context);
 

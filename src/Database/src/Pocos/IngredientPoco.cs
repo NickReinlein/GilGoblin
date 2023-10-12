@@ -1,6 +1,6 @@
 using System;
 
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos;
 
 public class IngredientPoco : IComparable
 {

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Pocos;
 

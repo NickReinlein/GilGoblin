@@ -1,7 +1,6 @@
 using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
-using GilGoblin.DataUpdater;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Web;
@@ -25,6 +24,8 @@ public class DependencyInjectionTests : TestWithDatabase
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
+    [TestCase(typeof(IGilGoblinDatabaseInitializer))]
+    [TestCase(typeof(ICsvInteractor))]
     [TestCase(typeof(IBulkDataFetcher<PriceWebPoco>))]
     [TestCase(typeof(ISingleDataFetcher<ItemInfoWebPoco>))]
     [TestCase(typeof(IPriceBulkDataFetcher))]

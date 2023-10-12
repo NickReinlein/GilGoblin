@@ -1,4 +1,4 @@
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos;
 
 public class ItemInfoPoco : BaseItemInfoPoco
 {
@@ -8,11 +8,11 @@ public class ItemInfoPoco : BaseItemInfoPoco
         int id,
         string name,
         string description,
-        int iconId,
-        int level,
-        int priceLow,
-        int priceMid,
-        int stackSize,
+        int? iconId,
+        int? level,
+        int? priceLow,
+        int? priceMid,
+        int? stackSize,
         bool canBeHq
     ) : base(
         id,

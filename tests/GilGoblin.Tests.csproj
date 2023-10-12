@@ -24,11 +24,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Api\Api.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="../src/Api/Api.csproj" />
   </ItemGroup>
 </Project>

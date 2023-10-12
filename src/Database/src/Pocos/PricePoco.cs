@@ -1,4 +1,4 @@
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos;
 
 public class PricePoco : BasePricePoco
 {
@@ -33,18 +33,5 @@ public class PricePoco : BasePricePoco
         AverageSold = averagePrice;
         AverageSoldNQ = averagePriceNQ;
         AverageSoldHQ = averagePriceHQ;
-    }
-
-    public PricePoco(PriceWebPoco webPoco)
-    {
-        ItemId = webPoco.ItemId;
-        WorldId = webPoco.WorldId;
-        LastUploadTime = webPoco.LastUploadTime;
-        AverageListingPrice = webPoco.CurrentAveragePrice;
-        AverageListingPriceNQ = webPoco.CurrentAveragePriceNQ;
-        AverageListingPriceHQ = webPoco.CurrentAveragePriceHQ;
-        AverageSold = webPoco.AveragePrice;
-        AverageSoldNQ = webPoco.AveragePriceNQ;
-        AverageSoldHQ = webPoco.AveragePriceHQ;
     }
 }

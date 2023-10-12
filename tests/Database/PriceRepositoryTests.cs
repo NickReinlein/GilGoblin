@@ -1,6 +1,7 @@
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -88,7 +89,7 @@ public class PriceRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(22, new int[] { 11, 12 });
+        var result = priceRepo.GetMultiple(22, new [] { 11, 12 });
 
         Assert.Multiple(() =>
         {
@@ -104,7 +105,7 @@ public class PriceRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(_worldId, new int[] { 11, 12 });
+        var result = priceRepo.GetMultiple(_worldId, new [] { 11, 12 });
 
         Assert.That(!result.Any());
     }
@@ -115,7 +116,7 @@ public class PriceRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(22, new int[] { 11, 99 });
+        var result = priceRepo.GetMultiple(22, new [] { 11, 99 });
 
         Assert.Multiple(() =>
         {
@@ -131,7 +132,7 @@ public class PriceRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(22, new int[] { _worldId, 99 });
+        var result = priceRepo.GetMultiple(22, new [] { _worldId, 99 });
 
         Assert.That(!result.Any());
     }
@@ -169,7 +170,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var poco = new PricePoco { WorldId = _worldId, ItemId = _itemId };
-        _cache.Get((_worldId, _itemId)).Returns((PricePoco)null, poco);
+        _cache.Get((_worldId, _itemId)).Returns(null, poco);
         var priceRepo = new PriceRepository(context, _cache);
 
         _ = priceRepo.Get(_worldId, _itemId);

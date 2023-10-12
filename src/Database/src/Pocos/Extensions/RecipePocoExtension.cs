@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos.Extensions;
 
 public static class RecipePocoExtension
 {

@@ -1,4 +1,3 @@
-using GilGoblin.Api;
 using GilGoblin.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -11,20 +10,19 @@ namespace GilGoblin.Tests;
 public class TestWithDatabase
 {
     protected IServiceCollection _services;
-    protected WebApplicationFactory<Startup> _factory;
     protected HttpClient _client;
+    private WebApplicationFactory<Api.Startup> _factory;
 
     [SetUp]
     public virtual void SetUp()
     {
-        _factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(builder =>
+        _factory = new WebApplicationFactory<Api.Startup>().WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
             {
                 var options = new DbContextOptionsBuilder<GilGoblinDbContext>()
-                    .UseSqlite($"Data Source=../../../../resources/GilGoblin.db;")
+                    .UseSqlite("Data Source=../../../../resources/GilGoblin.db;")
                     .Options;
-
                 services.AddSingleton(_ => new GilGoblinDbContext(options));
                 _services = services;
             });

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Pocos;
 

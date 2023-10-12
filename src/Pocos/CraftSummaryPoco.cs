@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Pocos;
 
 public class CraftSummaryPoco : IComparable
 {
-    public int WorldId { get; set; }
     public int ItemId { get; set; }
+    public int WorldId { get; set; }
     public string Name { get; set; }
-    public int VendorPrice { get; set; }
-    public int IconId { get; set; }
-    public int StackSize { get; set; }
+    public int? IconId { get; set; }
+    public int? ItemLevel { get; set; }
+    public int? StackSize { get; set; }
+    public int? PriceMid { get; set; }
+    public int? PriceLow { get; set; }
     public float AverageListingPrice { get; set; }
     public float AverageSold { get; set; }
     public float CraftingCost { get; set; }
@@ -25,9 +28,11 @@ public class CraftSummaryPoco : IComparable
         int worldId,
         int itemId,
         string name,
-        int vendorPrice,
-        int iconId,
-        int stackSize,
+        int? iconId,
+        int? itemLevel,
+        int? priceMid,
+        int? priceLow,
+        int? stackSize,
         float averageListingPrice,
         float averageSold,
         float craftingCost,
@@ -39,9 +44,11 @@ public class CraftSummaryPoco : IComparable
         WorldId = worldId;
         ItemId = itemId;
         Name = name;
-        VendorPrice = vendorPrice;
         IconId = iconId;
+        PriceMid = priceMid;
+        PriceLow = priceLow;
         StackSize = stackSize;
+        ItemLevel = itemLevel;
         AverageListingPrice = averageListingPrice;
         AverageSold = averageSold;
         CraftingCost = craftingCost;
@@ -61,8 +68,10 @@ public class CraftSummaryPoco : IComparable
         WorldId = price.WorldId;
         ItemId = price.ItemId;
         Name = itemInfo.Name;
-        VendorPrice = itemInfo.PriceLow;
         IconId = itemInfo.IconId;
+        ItemLevel = itemInfo.Level;
+        PriceMid = itemInfo.PriceMid;
+        PriceLow = itemInfo.PriceLow;
         StackSize = itemInfo.StackSize;
         AverageListingPrice = price.AverageListingPrice;
         AverageSold = price.AverageSold;
@@ -96,9 +105,13 @@ public class CraftSummaryPoco : IComparable
             if (profitVsListingsComparison != 0)
                 return -1 * profitVsListingsComparison;
 
-            var vendorPriceComparison = VendorPrice.CompareTo(otherCraftSummary.VendorPrice);
-            if (vendorPriceComparison != 0)
-                return -1 * vendorPriceComparison;
+            var priceMidComparison = CraftingProfitVsListings.CompareTo(otherCraftSummary.PriceMid);
+            if (priceMidComparison != 0)
+                return -1 * priceMidComparison;
+
+            var priceLowComparison = CraftingProfitVsListings.CompareTo(otherCraftSummary.PriceLow);
+            if (priceLowComparison != 0)
+                return -1 * priceLowComparison;
 
             return ItemId.CompareTo(otherCraftSummary.ItemId);
         }

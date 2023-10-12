@@ -1,6 +1,6 @@
-using GilGoblin.Pocos;
 using GilGoblin.Cache;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Repository;
 
-public interface IItemRepository : IDataRepository<ItemInfoPoco>, IRepositoryCache { }
+public interface IItemRepository : IDataRepository<ItemInfoPoco> { }

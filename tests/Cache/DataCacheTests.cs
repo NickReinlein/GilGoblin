@@ -30,7 +30,7 @@ public class DataCacheTests : DataCache<int, Pizza>
     {
         var result = Get(id);
 
-        Assert.That(result.Id, Is.EqualTo(id));
+        Assert.That(result!.Id, Is.EqualTo(id));
         Assert.That(result.IngredientsCount, Is.EqualTo(10 * id));
     }
 
@@ -40,14 +40,14 @@ public class DataCacheTests : DataCache<int, Pizza>
     {
         var result = Get(id);
 
-        Assert.That(result.Id, Is.EqualTo(id));
+        Assert.That(result!.Id, Is.EqualTo(id));
         Assert.That(result.IngredientsCount, Is.EqualTo(10 * id));
     }
 
     [Test]
     public void GivenACallToGetMultiple_WhenTheValuesAreAllNew_ThenWeReturnEmptyResponse()
     {
-        var result = GetMultiple(new int[] { 2000, 2001 });
+        var result = GetMultiple(new [] { 2000, 2001 });
 
         Assert.That(result, Is.Empty);
     }

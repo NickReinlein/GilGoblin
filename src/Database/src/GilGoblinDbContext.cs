@@ -1,4 +1,4 @@
-using GilGoblin.Pocos;
+using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -6,37 +6,32 @@ namespace GilGoblin.Database;
 
 public class GilGoblinDbContext : DbContext
 {
-    private readonly IConfiguration _configuration;
     private readonly DbContextOptions<GilGoblinDbContext> _options;
+    private readonly IConfiguration? _configuration;
+    // private readonly IGilGoblinDatabaseInitializer? _initializer;
 
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
     public DbSet<RecipeCostPoco> RecipeCost { get; set; }
 
-    public GilGoblinDbContext(DbContextOptions<GilGoblinDbContext> options)
-        : base(options)
-    {
-        _options = options;
-    }
-
     public GilGoblinDbContext(
         DbContextOptions<GilGoblinDbContext> options,
-        IConfiguration configuration
-    )
+        IConfiguration? configuration = null)
+        // IGilGoblinDatabaseInitializer? initializer = null)
         : base(options)
     {
-        _configuration = configuration;
         _options = options;
+        _configuration = configuration;
+        // _initializer = initializer;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
-            var connectionString = _configuration.GetConnectionString(nameof(GilGoblinDbContext));
-            if (connectionString?.Length > 0)
-                optionsBuilder.UseSqlite(connectionString);
+            var connectionString = _configuration?.GetConnectionString(nameof(GilGoblinDbContext));
+            optionsBuilder.UseSqlite(connectionString);
         }
 
         base.OnConfiguring(optionsBuilder);
@@ -50,7 +45,7 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.IconId);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Description);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.PriceMid);
-        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.PriceMid);
+        modelBuilder.Entity<ItemInfoPoco>().Property(t => t.PriceLow);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.StackSize);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.Level);
         modelBuilder.Entity<ItemInfoPoco>().Property(t => t.CanBeHq);

@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Cache;
+using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
-namespace GilGoblin.Database;
+namespace GilGoblin.Repository;
 
 public class PriceRepository : IPriceRepository<PricePoco>
 {
@@ -24,7 +26,7 @@ public class PriceRepository : IPriceRepository<PricePoco>
         if (cached is not null)
             return cached;
 
-        var price = _dbContext.Price.FirstOrDefault(p => p.WorldId == worldId && p.ItemId == id);
+        var price = _dbContext.Price.First(p => p.WorldId == worldId && p.ItemId == id);
         if (price is not null)
             _cache.Add((price.WorldId, price.ItemId), price);
 

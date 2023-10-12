@@ -5,18 +5,18 @@
     <RootNamespace>GilGoblin.Web</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.11.*" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.*" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.*" />
-    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*" />
-    <PackageReference Include="EntityFramework" Version="6.4.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*" />
+    <PackageReference Include="Serilog" Version="3.0.*"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
+    <PackageReference Include="EntityFramework" Version="6.4.*"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Pocos/*Pocos.csproj" />
-    <ProjectReference Include="../Services/*Services.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
+    <ProjectReference Include="../Pocos/*Pocos.csproj"/>
+    <ProjectReference Include="../Services/*Services.csproj"/>
+    <ProjectReference Include="../Repository/Repository.csproj"/>
   </ItemGroup>
 </Project>

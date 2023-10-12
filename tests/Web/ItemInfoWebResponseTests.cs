@@ -1,6 +1,5 @@
 using GilGoblin.Pocos;
 using GilGoblin.Web;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Web;

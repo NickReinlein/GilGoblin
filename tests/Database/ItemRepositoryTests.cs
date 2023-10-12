@@ -1,6 +1,7 @@
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -62,7 +63,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new int[] { 1, 2 });
+        var result = itemRepo.GetMultiple(new [] { 1, 2 });
 
         Assert.Multiple(() =>
         {
@@ -78,7 +79,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new int[] { 1, 99 });
+        var result = itemRepo.GetMultiple(new [] { 1, 99 });
 
         Assert.Multiple(() =>
         {
@@ -93,7 +94,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new int[] { 33, 99 });
+        var result = itemRepo.GetMultiple(new [] { 33, 99 });
 
         Assert.That(!result.Any());
     }
@@ -129,7 +130,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         _cache.Get(2).Returns(null, new ItemInfoPoco() { Id = 2 });
         _ = itemRepo.Get(2);
 
-        var item = itemRepo.Get(2);
+        itemRepo.Get(2);
 
         _cache.Received(2).Get(2);
         _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.Id == 2));

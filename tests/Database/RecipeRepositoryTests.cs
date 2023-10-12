@@ -1,6 +1,7 @@
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using NSubstitute;
 using NSubstitute.Extensions;
 using NUnit.Framework;

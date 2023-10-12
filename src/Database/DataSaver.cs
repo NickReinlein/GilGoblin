@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Database;
+namespace GilGoblin.Database.Services;
 
 public class DataSaver<T> : IDataSaver<T> where T : class
 {

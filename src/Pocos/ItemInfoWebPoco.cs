@@ -1,4 +1,4 @@
-using GilGoblin.DataUpdater;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Pocos;
 

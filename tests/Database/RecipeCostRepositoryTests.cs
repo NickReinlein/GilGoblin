@@ -1,6 +1,7 @@
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
+using GilGoblin.Repository;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -52,7 +53,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.WorldId == 22);
+            Assert.That(result?.WorldId == 22);
             Assert.That(result.RecipeId == id);
         });
     }
@@ -74,7 +75,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [TestCase(100)]
     public async Task GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = await recipeCostRepo.GetAsync(22, id);
@@ -88,7 +89,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, new int[] { 11, 12 });
+        var result = recipeCostRepo.GetMultiple(22, new[] { 11, 12 });
 
         Assert.Multiple(() =>
         {
@@ -104,7 +105,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(_worldId, new int[] { 11, 12 });
+        var result = recipeCostRepo.GetMultiple(_worldId, new[] { 11, 12 });
 
         Assert.That(!result.Any());
     }
@@ -115,7 +116,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, new int[] { 11, 99 });
+        var result = recipeCostRepo.GetMultiple(22, new[] { 11, 99 });
 
         Assert.Multiple(() =>
         {
@@ -131,7 +132,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, new int[] { _worldId, 99 });
+        var result = recipeCostRepo.GetMultiple(22, new[] { _worldId, 99 });
 
         Assert.That(!result.Any());
     }

@@ -1,11 +1,11 @@
-using GilGoblin.DataUpdater;
+using CsvHelper.Configuration.Attributes;
 
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos;
 
 public class BasePricePoco : IIdentifiable
 {
-    public int WorldId { get; set; }
-    public int ItemId { get; set; }
+    [Name("WorldID")] public int WorldId { get; set; }
+    [Name("ItemID")] public int ItemId { get; set; }
 
     // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
     public long LastUploadTime { get; set; }

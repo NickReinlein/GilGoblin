@@ -1,4 +1,4 @@
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos.Extensions;
 
 public static class PricePocoExtensions
 {

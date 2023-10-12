@@ -1,4 +1,4 @@
-namespace GilGoblin.DataUpdater;
+namespace GilGoblin.Database.Pocos;
 
 public interface IIdentifiable
 {

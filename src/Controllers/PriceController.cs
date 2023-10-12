@@ -1,4 +1,4 @@
-using GilGoblin.Pocos;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

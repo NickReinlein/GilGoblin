@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Web;

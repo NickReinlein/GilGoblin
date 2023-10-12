@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using NUnit.Framework;
 
@@ -55,18 +56,17 @@ public class RecipeComponentTests : ComponentTests
         var recipes = await response.Content.ReadFromJsonAsync<IEnumerable<RecipePoco>>(
             GetSerializerOptions()
         );
-        var recipeCount = recipes.Count();
+
+        var recipeList = recipes.ToList();
+        var recipeCount = recipeList.Count();
         Assert.Multiple(() =>
         {
             Assert.That(recipeCount, Is.GreaterThan(1000), "Not enough entries received");
-            Assert.That(recipes.All(p => p.Id > 0), "ItemId is invalid");
-            Assert.That(recipes.All(p => p.ResultQuantity > 0), "ItemId is invalid");
-            Assert.That(recipes.All(p => p.TargetItemId > 0), "TargetItemId is invalid");
-            Assert.That(recipes.All(p => p.AmountIngredient0 > 0), "Missing AmountIngredient0");
-            Assert.That(
-                recipes.All(p => p.ItemIngredient0TargetId > 0),
-                "Missing ItemIngredient0TargetId"
-            );
+            Assert.That(recipeList.All(p => p.Id > 0), "ItemId is invalid");
+            Assert.That(recipeList.All(p => p.ResultQuantity > 0), "ItemId is invalid");
+            Assert.That(recipeList.All(p => p.TargetItemId > 0), "TargetItemId is invalid");
+            Assert.That(recipeList.All(p => p.AmountIngredient0 > 0), "Missing AmountIngredient0");
+            Assert.That(recipeList.All(p => p.ItemIngredient0TargetId > 0), "Missing ItemIngredient0TargetId");
             Assert.That(
                 recipes.Count(p => p.AmountIngredient0 > 1),
                 Is.GreaterThan(recipeCount * (1.0f - MissingEntryPercentageThreshold)),

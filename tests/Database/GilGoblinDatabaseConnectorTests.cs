@@ -9,14 +9,12 @@ public class GilGoblinDatabaseConnectorTests
 {
     private GilGoblinDatabaseConnector _databaseConnector;
     private ILogger<GilGoblinDatabaseConnector> _logger;
-    private string _resourceDirectory;
 
     [SetUp]
     public void SetUp()
     {
-        _resourceDirectory = DatabaseTests.GetTestDirectory();
         _logger = Substitute.For<ILogger<GilGoblinDatabaseConnector>>();
-        _databaseConnector = new GilGoblinDatabaseConnector(_logger, _resourceDirectory);
+        _databaseConnector = new GilGoblinDatabaseConnector(_logger);
     }
 
     [Test]
@@ -27,9 +25,9 @@ public class GilGoblinDatabaseConnectorTests
         Assert.Multiple(() =>
         {
             Assert.That(connection, Is.Not.Null);
-            Assert.That(connection?.State, Is.EqualTo(System.Data.ConnectionState.Open));
+            Assert.That(connection.State, Is.EqualTo(System.Data.ConnectionState.Open));
             Assert.That(
-                connection?.DataSource,
+                connection.DataSource,
                 Does.Contain(GilGoblinDatabaseConnector.DbFileName)
             );
         });
@@ -90,7 +88,7 @@ public class GilGoblinDatabaseConnectorTests
     public void WhenConnectionFails_ThenAnErrorIsLoggedAndNullIsReturned()
     {
         _databaseConnector.Disconnect();
-        _databaseConnector = new GilGoblinDatabaseConnector(_logger, "fake");
+        _databaseConnector = new GilGoblinDatabaseConnector(_logger);
 
         var result = _databaseConnector.Connect();
 
@@ -114,18 +112,21 @@ public class GilGoblinDatabaseConnectorTests
             Assert.That(result.Contains(path));
         });
     }
-
-    [Test]
-    public void WhenGetResourcesFolderPath_ThenACombinedPathWithDbNameIsReturned()
-    {
-        var baseDirectory = _databaseConnector.GetBaseDirectory();
-
-        var result = _databaseConnector.GetResourcesFolderPath();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.Contains("resources"));
-            Assert.That(result.Contains(baseDirectory));
-        });
-    }
 }
+
+//     private static string ResourcesFolderPath => Path.Combine(GetCurrentDirectory(), "resources/");
+//
+//     private static string GetCurrentDirectory() =>
+//         Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.Parent?.FullName
+//         ?? string.Empty;
+// }
+
+// public class GilGoblinDatabaseConnectorTestClass : GilGoblinDatabaseConnector
+// {
+//     public new static string DbFileName = "GilGoblin.db";
+//
+//     public GilGoblinDatabaseConnectorTestClass(ILogger<GilGoblinDatabaseConnector> logger)
+//         : base(logger)
+//     {
+//     }
+// }

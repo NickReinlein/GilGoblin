@@ -1,10 +1,10 @@
+using GilGoblin.Database;
 using GilGoblin.Pocos;
-using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GilGoblin.Tests.Services;
+namespace GilGoblin.Tests.Database;
 
 public class CsvInteractorTests
 {
@@ -52,7 +52,7 @@ public class CsvInteractorTests
         var result = _interactor.LoadFile<RecipePoco>(ResourceFilePath(recipeTestFileName));
 
         Assert.That(result.Count, Is.GreaterThan(10));
-        var recipeSix = result.First<RecipePoco>(i => i.Id == 6);
+        var recipeSix = result.First(i => i.Id == 6);
         Assert.Multiple(() =>
         {
             Assert.That(recipeSix.Id, Is.EqualTo(6));
@@ -71,9 +71,9 @@ public class CsvInteractorTests
         var result = _interactor.LoadFile<PricePoco>(ResourceFilePath(priceTestFileName));
 
         Assert.That(result.Count, Is.GreaterThan(10));
-        var price = result.First<PricePoco>(i => i.ItemId == 31100);
         Assert.Multiple(() =>
         {
+            var price = result.First(i => i.ItemId == 31100);
             Assert.That(price.ItemId, Is.EqualTo(31100));
             Assert.That(price.WorldId, Is.GreaterThan(0));
             Assert.That(price.AverageListingPrice, Is.GreaterThan(0));

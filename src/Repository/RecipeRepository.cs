@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Cache;
+using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
-namespace GilGoblin.Database;
+namespace GilGoblin.Repository;
 
 public class RecipeRepository : IRecipeRepository, IRepositoryCache
 {

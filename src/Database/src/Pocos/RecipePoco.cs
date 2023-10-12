@@ -1,6 +1,6 @@
 using CsvHelper.Configuration.Attributes;
 
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Database.Pocos;
 
 public class RecipePoco
 {

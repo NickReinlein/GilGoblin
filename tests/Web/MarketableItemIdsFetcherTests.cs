@@ -138,13 +138,6 @@ public class MarketableItemIdsFetcherTests : FetcherTests
         return new List<ItemInfoWebPoco> { poco1, poco2 };
     }
 
-    private static IEnumerable<ItemInfoPoco> GetMultipleDbPocos()
-    {
-        var poco1 = new ItemInfoPoco { Id = ItemId1 };
-        var poco2 = new ItemInfoPoco { Id = ItemId2 };
-        return new List<ItemInfoPoco> { poco1, poco2 };
-    }
-
     private static int ItemId1 => 10972;
     private static int ItemId2 => 10973;
     private static string GetUrl => "https://universalis.app/api/v2/marketable";
