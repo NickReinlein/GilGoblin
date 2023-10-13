@@ -8,13 +8,11 @@ using GilGoblin.Services;
 using GilGoblin.Web;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Database.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using GilGoblin.DataUpdater;
 
 namespace GilGoblin.Api;
 
@@ -100,8 +98,8 @@ public class Startup
     private static void AddGoblinDatabases(IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
-        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
         services.AddSingleton<ICsvInteractor, CsvInteractor>();
+        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
         services.AddSingleton<IGilGoblinDatabaseInitializer, GilGoblinDatabaseInitializer>();
 
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();

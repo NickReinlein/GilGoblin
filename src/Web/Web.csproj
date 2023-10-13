@@ -17,6 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="../Pocos/*Pocos.csproj"/>
     <ProjectReference Include="../Services/*Services.csproj"/>
-    <ProjectReference Include="../Repository/Repository.csproj"/>
+    <ProjectReference Include="../Repository/*Repository.csproj"/>
   </ItemGroup>
 </Project>

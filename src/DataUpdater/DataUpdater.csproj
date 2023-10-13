@@ -12,6 +12,7 @@
     <PackageReference Include="EntityFramework" Version="6.4.*"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
   </ItemGroup>
   <ItemGroup>

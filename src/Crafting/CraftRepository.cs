@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Cache;
+using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 

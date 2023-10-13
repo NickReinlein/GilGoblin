@@ -1,5 +1,6 @@
 using GilGoblin.Cache;
 using GilGoblin.Crafting;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;

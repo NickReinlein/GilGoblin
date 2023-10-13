@@ -1,5 +1,7 @@
 using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
+using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;

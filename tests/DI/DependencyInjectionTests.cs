@@ -1,8 +1,10 @@
 using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Services;
 using GilGoblin.Web;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

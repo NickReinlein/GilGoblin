@@ -1,3 +1,4 @@
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,3 +1,4 @@
+using GilGoblin.Api;
 using GilGoblin.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

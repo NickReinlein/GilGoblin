@@ -1,5 +1,6 @@
 using GilGoblin.Cache;
 using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using NSubstitute;

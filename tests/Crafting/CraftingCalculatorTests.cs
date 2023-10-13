@@ -1,4 +1,6 @@
 using GilGoblin.Crafting;
+using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
@@ -151,10 +153,7 @@ public class CraftingCalculatorTests
     public void WhenAddingPricesToTheIngredientListWithoutPriceMatches_ThenNullIsReturnedAndTheErrorLogged()
     {
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
-        var prices = new List<PricePoco>
-        {
-            new PricePoco { WorldId = _worldId, ItemId = 222 }
-        };
+        var prices = new List<PricePoco> { new PricePoco { WorldId = _worldId, ItemId = 222 } };
 
         var result = _calc.AddPricesToIngredients(ingredients, prices);
 
@@ -250,10 +249,7 @@ public class CraftingCalculatorTests
         {
             var ingredientPrice = new PricePoco()
             {
-                ItemId = ingredient.ItemId,
-                AverageListingPrice = 300,
-                AverageSold = 280,
-                WorldId = worldId
+                ItemId = ingredient.ItemId, AverageListingPrice = 300, AverageSold = 280, WorldId = worldId
             };
             _prices.Get(worldId, ingredient.ItemId).Returns(ingredientPrice);
         }

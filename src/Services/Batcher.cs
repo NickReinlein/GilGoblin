@@ -25,11 +25,11 @@ public class Batcher<T> : IBatcher<T>
             var entry = queue.Dequeue();
             tempList.Add(entry);
 
-            if (tempList.Count != PageSize)
-                continue;
-
-            cumulativeList.Add(tempList);
-            tempList = new List<T>();
+            if (tempList.Count == PageSize)
+            {
+                cumulativeList.Add(tempList);
+                tempList = new List<T>();
+            }
         }
 
         if (tempList.Any())

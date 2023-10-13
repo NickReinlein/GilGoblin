@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using GilGoblin.DataUpdater;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Web;
