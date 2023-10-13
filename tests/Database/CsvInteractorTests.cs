@@ -1,8 +1,8 @@
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -11,11 +11,13 @@ namespace GilGoblin.Tests.Database;
 public class CsvInteractorTests
 {
     private CsvInteractor _interactor;
+    private GilGoblinDatabaseConnector _connector;
     private ILogger<CsvInteractor> _logger;
 
     [SetUp]
     public void SetUp()
     {
+        _connector = new GilGoblinDatabaseConnector(NullLogger<GilGoblinDatabaseConnector>.Instance);
         _logger = Substitute.For<ILogger<CsvInteractor>>();
         _interactor = new CsvInteractor(_logger);
     }
@@ -84,16 +86,10 @@ public class CsvInteractorTests
         });
     }
 
-    private static string ResourcesFolderPath => Path.Combine(GetCurrentDirectory(), "resources/");
+    private string ResourceFilePath(string filename) =>
+        Path.Combine(_connector.GetResourcesPath(), filename);
 
-    private static string GetCurrentDirectory() =>
-        Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.Parent?.FullName
-        ?? string.Empty;
-
-    private static string ResourceFilePath(string filename) =>
-        Path.Combine(ResourcesFolderPath, filename);
-
-    public const string itemTestFileName = "ItemInfoTest.csv";
-    public const string recipeTestFileName = "RecipeTest.csv";
-    public const string priceTestFileName = "PriceTest.csv";
+    private const string itemTestFileName = "ItemInfoTest.csv";
+    private const string recipeTestFileName = "RecipeTest.csv";
+    private const string priceTestFileName = "PriceTest.csv";
 }

@@ -189,7 +189,7 @@ public class PriceRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
         var allPrices = context.Price.ToList();
 

@@ -25,9 +25,10 @@ public class CsvInteractor : ICsvInteractor
 
     public List<T> LoadFile<T>(string path)
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
         try
         {
+            var absolutePath = Path.GetFullPath(path);
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
             using var reader = new StreamReader(path);
             using var csv = new CsvReader(reader, config);
             return csv.GetRecords<T>().ToList();

@@ -1,6 +1,5 @@
 using System.Linq;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Services;
@@ -8,21 +7,21 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
-public interface IGilGoblinDatabaseInitializer
+public interface IDatabaseLoader
 {
     Task FillTablesIfEmpty(GilGoblinDbContext dbContext);
 }
 
-public class GilGoblinDatabaseInitializer : IGilGoblinDatabaseInitializer
+public class DatabaseLoader : IDatabaseLoader
 {
     private readonly ISqlLiteDatabaseConnector _dbConnector;
     private readonly ICsvInteractor _csvInteractor;
-    private readonly ILogger<GilGoblinDatabaseInitializer> _logger;
+    private readonly ILogger<DatabaseLoader> _logger;
 
-    public GilGoblinDatabaseInitializer(
+    public DatabaseLoader(
         ISqlLiteDatabaseConnector dbConnector,
         ICsvInteractor csvInteractor,
-        ILogger<GilGoblinDatabaseInitializer> logger
+        ILogger<DatabaseLoader> logger
     )
     {
         _dbConnector = dbConnector;
@@ -95,8 +94,8 @@ public class GilGoblinDatabaseInitializer : IGilGoblinDatabaseInitializer
         where T : class
     {
         var tableName = LogTaskStart<T>("Loading from CSV");
-        var path = _dbConnector.GetDatabasePath();
-        await LoadCsvFileAndSaveResults<T>(dbContext, tableName, path);
+        var csvPath = _dbConnector.GetResourcesPath();
+        await LoadCsvFileAndSaveResults<T>(dbContext, tableName, csvPath);
     }
 
     private async Task LoadCsvFileAndSaveResults<T>(
@@ -106,22 +105,30 @@ public class GilGoblinDatabaseInitializer : IGilGoblinDatabaseInitializer
     )
         where T : class
     {
-        var result = _csvInteractor.LoadFile<T>(path);
-
-        if (result.Any())
+        try
         {
+            var result = _csvInteractor.LoadFile<T>(path);
+
+            if (!result.Any())
+                throw new Exception($"No entries loaded for file of {nameof(T)}");
+
             await context.AddRangeAsync(result);
             await context.SaveChangesAsync();
             _logger.LogInformation(
-                $"Sucessfully saved to table {tableName} {result.Count} entries from CSV"
+                $"Successfully saved to table {tableName} {result.Count} entries from CSV"
             );
         }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to load CSV file: {e.Message}");
+        }
     }
+
 
     private string LogTaskStart<T>(string sourceSuffix)
         where T : class
     {
-        var pocoName = typeof(T).ToString().Split(".")[2];
+        var pocoName = typeof(T).ToString().Split(".").Last();
         var tableName = pocoName.Remove(pocoName.Length - 4);
         _logger.LogWarning($"Database table {tableName} has missing entries {sourceSuffix}");
         return tableName;

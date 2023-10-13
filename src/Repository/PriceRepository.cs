@@ -26,11 +26,16 @@ public class PriceRepository : IPriceRepository<PricePoco>
         if (cached is not null)
             return cached;
 
-        var price = _dbContext.Price.First(p => p.WorldId == worldId && p.ItemId == id);
-        if (price is not null)
+        try
+        {
+            var price = _dbContext.Price.First(p => p.WorldId == worldId && p.ItemId == id);
             _cache.Add((price.WorldId, price.ItemId), price);
-
-        return price;
+            return price;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids) =>

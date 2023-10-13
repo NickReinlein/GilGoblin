@@ -26,7 +26,7 @@ public class DependencyInjectionTests : TestWithDatabase
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
     [TestCase(typeof(ISqlLiteDatabaseConnector))]
-    [TestCase(typeof(IGilGoblinDatabaseInitializer))]
+    [TestCase(typeof(IDatabaseLoader))]
     [TestCase(typeof(ICsvInteractor))]
     [TestCase(typeof(IBulkDataFetcher<PriceWebPoco>))]
     [TestCase(typeof(ISingleDataFetcher<ItemInfoWebPoco>))]

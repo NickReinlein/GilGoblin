@@ -14,16 +14,24 @@ public class TestWithDatabase
     protected HttpClient _client;
     private WebApplicationFactory<Api.Startup> _factory;
 
-    [SetUp]
-    public virtual void SetUp()
+    [OneTimeSetUp]
+    public virtual void OneTimeSetUp()
     {
         _factory = new WebApplicationFactory<Api.Startup>().WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
             {
+                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var relativePath = "../../../../resources/GilGoblin.db";
+                var fullPath = Path.Combine(baseDirectory, relativePath);
+
+                var absolutePath = Path.GetFullPath(fullPath);
+                Console.WriteLine("Absolute Path: " + absolutePath);
+
                 var options = new DbContextOptionsBuilder<GilGoblinDbContext>()
-                    .UseSqlite("Data Source=../../../../resources/GilGoblin.db;")
+                    .UseSqlite($"Data Source={fullPath}")
                     .Options;
+
                 services.AddSingleton(_ => new GilGoblinDbContext(options));
                 _services = services;
             });

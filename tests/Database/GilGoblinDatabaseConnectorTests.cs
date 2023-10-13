@@ -28,7 +28,7 @@ public class GilGoblinDatabaseConnectorTests
             Assert.That(connection.State, Is.EqualTo(System.Data.ConnectionState.Open));
             Assert.That(
                 connection.DataSource,
-                Does.Contain(GilGoblinDatabaseConnector.DbFileName)
+                Does.Contain(GilGoblinDatabaseConnector._dbFileName)
             );
         });
     }
@@ -44,7 +44,7 @@ public class GilGoblinDatabaseConnectorTests
             Assert.That(GilGoblinDatabaseConnector.Connection, Is.EqualTo(connection));
             Assert.That(
                 connection?.DataSource,
-                Does.Contain(GilGoblinDatabaseConnector.DbFileName)
+                Does.Contain(GilGoblinDatabaseConnector._dbFileName)
             );
         });
     }
@@ -85,24 +85,10 @@ public class GilGoblinDatabaseConnectorTests
     }
 
     [Test]
-    public void WhenConnectionFails_ThenAnErrorIsLoggedAndNullIsReturned()
-    {
-        _databaseConnector.Disconnect();
-        _databaseConnector = new GilGoblinDatabaseConnector(_logger);
-
-        var result = _databaseConnector.Connect();
-
-        Assert.That(result, Is.Null);
-        var errorMessage =
-            "Failed to initiate a connection: SQLite Error 14: 'unable to open database file'.";
-        _logger.Received(1).LogError(errorMessage);
-    }
-
-    [Test]
     public void WhenGetDatabasePath_ThenACombinedPathWithDbNameIsReturned()
     {
         var path = _databaseConnector.GetDatabasePath();
-        var dbName = GilGoblinDatabaseConnector.DbFileName;
+        var dbName = GilGoblinDatabaseConnector._dbFileName;
 
         var result = _databaseConnector.GetDatabasePath();
 

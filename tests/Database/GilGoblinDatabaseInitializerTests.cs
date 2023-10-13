@@ -13,16 +13,16 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
 {
     private ICsvInteractor _csvInteractor;
     private ISqlLiteDatabaseConnector _dbConnector;
-    private ILogger<GilGoblinDatabaseInitializer> _logger;
+    private ILogger<DatabaseLoader> _logger;
 
-    private GilGoblinDatabaseInitializer _databaseInitializer;
+    private DatabaseLoader _databaseLoader;
 
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenTableItemInfoIsEmpty_ThenWeFillTheTable()
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseInitializer.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty(context);
 
         await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.ItemInfo.Count, Is.GreaterThan(0));
@@ -33,7 +33,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseInitializer.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty(context);
 
         await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.Price.Count, Is.GreaterThan(0));
@@ -44,7 +44,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseInitializer.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty(context);
 
         await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.Recipe.Count, Is.GreaterThan(0));
@@ -56,22 +56,23 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(
-                GilGoblinDatabaseInitializer.ApiSpamPreventionDelayInMS,
+                DatabaseLoader.ApiSpamPreventionDelayInMS,
                 Is.GreaterThan(10)
             );
-            Assert.That(GilGoblinDatabaseInitializer.TestWorldId, Is.GreaterThan(0));
+            Assert.That(DatabaseLoader.TestWorldId, Is.GreaterThan(0));
         });
     }
 
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenAnExceptionIsThrown_ThenWeLogAnError()
     {
+        _dbConnector.GetResourcesPath().Returns("garbage");
         _csvInteractor.LoadFile<ItemInfoPoco>("TestDatabase").Throws<Exception>();
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseInitializer.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty(context);
 
-        _logger.Received(1).LogError("Exception of type 'System.Exception' was thrown.");
+        _logger.Received().LogError("Failed to load CSV file: Value cannot be null. (Parameter 'source')");
     }
 
     // [Test]
@@ -134,9 +135,9 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
         _dbConnector.GetDatabasePath().Returns("TestDatabase");
         SetupCsvInteractor();
-        _logger = Substitute.For<ILogger<GilGoblinDatabaseInitializer>>();
+        _logger = Substitute.For<ILogger<DatabaseLoader>>();
 
-        _databaseInitializer = new GilGoblinDatabaseInitializer(
+        _databaseLoader = new DatabaseLoader(
             _dbConnector,
             _csvInteractor,
             _logger
@@ -145,9 +146,9 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
 
     private static List<PriceWebPoco> GenerateListOf2ValidPocos()
     {
-        return new List<PriceWebPoco?>()
+        return new List<PriceWebPoco?>
         {
-            new PriceWebPoco
+            new()
             {
                 ItemId = 456,
                 WorldId = 23,
@@ -155,7 +156,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
                 AveragePrice = 512,
                 CurrentAveragePrice = 400,
             },
-            new PriceWebPoco
+            new()
             {
                 ItemId = 789,
                 WorldId = 23,
@@ -172,15 +173,15 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         _csvInteractor
             .LoadFile<ItemInfoPoco>("TestDatabase")
             .Returns(
-                new List<ItemInfoPoco>() { new ItemInfoPoco { Id = 123 }, new ItemInfoPoco { Id = 456 } }
+                new List<ItemInfoPoco>() { new() { Id = 123 }, new() { Id = 456 } }
             );
         _csvInteractor
             .LoadFile<RecipePoco>("TestDatabase")
             .Returns(
                 new List<RecipePoco>()
                 {
-                    new RecipePoco { Id = 123, TargetItemId = 33, ResultQuantity = 1 },
-                    new RecipePoco { Id = 456, TargetItemId = 44, ResultQuantity = 1 }
+                    new() { Id = 123, TargetItemId = 33, ResultQuantity = 1 },
+                    new() { Id = 456, TargetItemId = 44, ResultQuantity = 1 }
                 }
             );
         _csvInteractor
@@ -188,7 +189,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
             .Returns(
                 new List<PricePoco>()
                 {
-                    new PricePoco
+                    new()
                     {
                         ItemId = 456,
                         WorldId = 23,
@@ -196,7 +197,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
                         AverageListingPrice = 512,
                         AverageSold = 400,
                     },
-                    new PricePoco
+                    new()
                     {
                         ItemId = 123,
                         WorldId = 23,

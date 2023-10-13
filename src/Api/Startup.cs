@@ -36,6 +36,17 @@ public class Startup
     public void Configure(IApplicationBuilder app)
     {
         AddAppGoblinServices(app);
+        DatabaseValidation(app);
+    }
+
+    private static void DatabaseValidation(IApplicationBuilder app)
+    {
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        var context = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        context.Database.EnsureCreated();
+
+        var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
+        loader.FillTablesIfEmpty(context);
     }
 
     private static void AddGoblinServices(IServiceCollection services)
@@ -100,7 +111,7 @@ public class Startup
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
         services.AddSingleton<ICsvInteractor, CsvInteractor>();
         services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
-        services.AddSingleton<IGilGoblinDatabaseInitializer, GilGoblinDatabaseInitializer>();
+        services.AddSingleton<IDatabaseLoader, DatabaseLoader>();
 
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddSingleton<IItemRepository, ItemRepository>();

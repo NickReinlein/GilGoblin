@@ -13,12 +13,12 @@
 12,A crystalline manifestation of aetheric lightning energy.,Lightning Crystal,20011,25,9999,229,0,False
 13,A crystalline manifestation of aetheric water energy.,Water Crystal,20008,25,9999,229,0,False
 14,A large crystalline manifestation of aetheric fire energy.,Fire Cluster,20013,50,9999,990,0,False
-15,,,,,,,,
+15,,,,,,,,False
 16,A large crystalline manifestation of aetheric ice energy.,Ice Cluster,20015,50,9999,990,0,False
 17,A large crystalline manifestation of aetheric wind energy.,Wind Cluster,20016,50,9999,990,0,False
 18,A large crystalline manifestation of aetheric earth energy.,Earth Cluster,20018,50,9999,990,0,False
 19,A large crystalline manifestation of aetheric lightning energy.,Lightning Cluster,20017,50,9999,990,0,False
-20,,,,,,,,
+20,,,,,,,,False
 21,A large crystalline manifestation of aetheric water energy.,Water Cluster,20014,50,9999,990,0,False
 22,Grand Company currency printed and distributed by the Maelstrom.,Storm Seal,65004,1,200000,1,0,False
 23,Grand Company currency printed and distributed by the Order of the Twin Adder.,Serpent Seal,65005,1,200000,1,0,False
