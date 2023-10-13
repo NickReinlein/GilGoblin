@@ -99,20 +99,3 @@ public class GilGoblinDatabaseConnectorTests
         });
     }
 }
-
-//     private static string ResourcesFolderPath => Path.Combine(GetCurrentDirectory(), "resources/");
-//
-//     private static string GetCurrentDirectory() =>
-//         Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.Parent?.FullName
-//         ?? string.Empty;
-// }
-
-// public class GilGoblinDatabaseConnectorTestClass : GilGoblinDatabaseConnector
-// {
-//     public new static string DbFileName = "GilGoblin.db";
-//
-//     public GilGoblinDatabaseConnectorTestClass(ILogger<GilGoblinDatabaseConnector> logger)
-//         : base(logger)
-//     {
-//     }
-// }

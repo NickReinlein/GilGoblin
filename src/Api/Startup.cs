@@ -1,3 +1,4 @@
+using System;
 using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
@@ -41,12 +42,19 @@ public class Startup
 
     private static void DatabaseValidation(IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-        var context = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        context.Database.EnsureCreated();
+        try
+        {
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            context.Database.EnsureCreated();
 
-        var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
-        loader.FillTablesIfEmpty(context);
+            var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
+            loader.FillTablesIfEmpty(context);
+        }
+        catch
+        {
+            Console.WriteLine("Failed to validate database");
+        }
     }
 
     private static void AddGoblinServices(IServiceCollection services)
