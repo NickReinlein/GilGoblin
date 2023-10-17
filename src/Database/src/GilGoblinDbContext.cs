@@ -8,7 +8,6 @@ public class GilGoblinDbContext : DbContext
 {
     private readonly DbContextOptions<GilGoblinDbContext> _options;
     private readonly IConfiguration? _configuration;
-    // private readonly IGilGoblinDatabaseInitializer? _initializer;
 
     public DbSet<ItemInfoPoco> ItemInfo { get; set; }
     public DbSet<PricePoco> Price { get; set; }
@@ -18,12 +17,10 @@ public class GilGoblinDbContext : DbContext
     public GilGoblinDbContext(
         DbContextOptions<GilGoblinDbContext> options,
         IConfiguration? configuration = null)
-        // IGilGoblinDatabaseInitializer? initializer = null)
         : base(options)
     {
         _options = options;
         _configuration = configuration;
-        // _initializer = initializer;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

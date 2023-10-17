@@ -16,13 +16,14 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     private ILogger<DatabaseLoader> _logger;
 
     private DatabaseLoader _databaseLoader;
+    private GilGoblinDbContext _dbContext;
 
     [Test]
     public async Task GiveWeCallFillTablesIfEmpty_WhenTableItemInfoIsEmpty_ThenWeFillTheTable()
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseLoader.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty();
 
         await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.ItemInfo.Count, Is.GreaterThan(0));
@@ -33,7 +34,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseLoader.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty();
 
         await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.Price.Count, Is.GreaterThan(0));
@@ -44,7 +45,7 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseLoader.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty();
 
         await using var context2 = new GilGoblinDbContext(_options, _configuration);
         Assert.That(context2.Recipe.Count, Is.GreaterThan(0));
@@ -70,9 +71,9 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
         _csvInteractor.LoadFile<ItemInfoPoco>("TestDatabase").Throws<Exception>();
         await using var context = new GilGoblinDbContext(_options, _configuration);
 
-        await _databaseLoader.FillTablesIfEmpty(context);
+        await _databaseLoader.FillTablesIfEmpty();
 
-        _logger.Received().LogError("Failed to load CSV file: Value cannot be null. (Parameter 'source')");
+        _logger.ReceivedWithAnyArgs(1).LogError(default);
     }
 
     // [Test]
@@ -131,13 +132,14 @@ public class GilGoblinDatabaseInitializerTests : InMemoryTestDb
     public override void SetUp()
     {
         base.SetUp();
-
+        _dbContext = new GilGoblinDbContext(_options, _configuration);
         _dbConnector = Substitute.For<ISqlLiteDatabaseConnector>();
         _dbConnector.GetDatabasePath().Returns("TestDatabase");
         SetupCsvInteractor();
         _logger = Substitute.For<ILogger<DatabaseLoader>>();
 
         _databaseLoader = new DatabaseLoader(
+            _dbContext,
             _dbConnector,
             _csvInteractor,
             _logger

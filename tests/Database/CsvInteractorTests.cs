@@ -87,7 +87,7 @@ public class CsvInteractorTests
     }
 
     private string ResourceFilePath(string filename) =>
-        Path.Combine(_connector.GetResourcesPath(), filename);
+        Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../resources/"), filename);
 
     private const string itemTestFileName = "ItemInfoTest.csv";
     private const string recipeTestFileName = "RecipeTest.csv";

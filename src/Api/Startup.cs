@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
@@ -45,11 +46,8 @@ public class Startup
         try
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            context.Database.EnsureCreated();
-
             var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
-            loader.FillTablesIfEmpty(context);
+            loader.FillTablesIfEmpty();
         }
         catch
         {
@@ -92,6 +90,7 @@ public class Startup
         services.AddSingleton<IItemRecipeCache, ItemRecipeCache>();
         services.AddSingleton<ICraftCache, CraftCache>();
         services.AddSingleton<IRecipeCostCache, RecipeCostCache>();
+
         services.AddSingleton<IRepositoryCache, ItemRepository>();
         services.AddSingleton<IRepositoryCache, PriceRepository>();
         services.AddSingleton<IRepositoryCache, RecipeRepository>();

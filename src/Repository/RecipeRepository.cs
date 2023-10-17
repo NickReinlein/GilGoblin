@@ -4,12 +4,10 @@ using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
-using GilGoblin.Repository;
 
 namespace GilGoblin.Repository;
 
-public class RecipeRepository : IRecipeRepository, IRepositoryCache
+public class RecipeRepository : IRecipeRepository
 {
     private readonly GilGoblinDbContext _dbContext;
     private readonly IRecipeCache _recipeCache;

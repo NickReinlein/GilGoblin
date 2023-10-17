@@ -28,7 +28,7 @@ public class GilGoblinDatabaseConnectorTests
             Assert.That(connection.State, Is.EqualTo(System.Data.ConnectionState.Open));
             Assert.That(
                 connection.DataSource,
-                Does.Contain(GilGoblinDatabaseConnector._dbFileName)
+                Does.Contain(GilGoblinDatabaseConnector.DbFileName)
             );
         });
     }
@@ -44,7 +44,7 @@ public class GilGoblinDatabaseConnectorTests
             Assert.That(GilGoblinDatabaseConnector.Connection, Is.EqualTo(connection));
             Assert.That(
                 connection?.DataSource,
-                Does.Contain(GilGoblinDatabaseConnector._dbFileName)
+                Does.Contain(GilGoblinDatabaseConnector.DbFileName)
             );
         });
     }
@@ -79,6 +79,8 @@ public class GilGoblinDatabaseConnectorTests
     [Test]
     public void WhenConnectionDoesNotExistAndDisconnectIsCalled_ThenNoExceptionIsThrown()
     {
+        if (GilGoblinDatabaseConnector.IsConnectionOpen)
+            _databaseConnector.Disconnect();
         Assert.That(!GilGoblinDatabaseConnector.IsConnectionOpen);
 
         Assert.DoesNotThrow(_databaseConnector.Disconnect);
@@ -88,7 +90,7 @@ public class GilGoblinDatabaseConnectorTests
     public void WhenGetDatabasePath_ThenACombinedPathWithDbNameIsReturned()
     {
         var path = _databaseConnector.GetDatabasePath();
-        var dbName = GilGoblinDatabaseConnector._dbFileName;
+        var dbName = GilGoblinDatabaseConnector.DbFileName;
 
         var result = _databaseConnector.GetDatabasePath();
 

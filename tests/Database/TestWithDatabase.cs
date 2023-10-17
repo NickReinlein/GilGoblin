@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace GilGoblin.Tests;
+namespace GilGoblin.Tests.Database;
 
 public class TestWithDatabase
 {
     protected IServiceCollection _services;
     protected HttpClient _client;
-    private WebApplicationFactory<Api.Startup> _factory;
+    private WebApplicationFactory<Startup> _factory;
 
     [OneTimeSetUp]
     public virtual void OneTimeSetUp()
     {
-        _factory = new WebApplicationFactory<Api.Startup>().WithWebHostBuilder(builder =>
+        _factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
             {
@@ -29,7 +29,7 @@ public class TestWithDatabase
                 Console.WriteLine("Absolute Path: " + absolutePath);
 
                 var options = new DbContextOptionsBuilder<GilGoblinDbContext>()
-                    .UseSqlite($"Data Source={fullPath}")
+                    .UseSqlite($"Data Source={absolutePath}")
                     .Options;
 
                 services.AddSingleton(_ => new GilGoblinDbContext(options));
@@ -39,10 +39,9 @@ public class TestWithDatabase
         _client = _factory.CreateClient();
     }
 
-    [TearDown]
+    [OneTimeTearDown]
     public virtual void OneTimeTearDown()
     {
-        _client?.CancelPendingRequests();
         _client?.Dispose();
         _factory?.Dispose();
     }

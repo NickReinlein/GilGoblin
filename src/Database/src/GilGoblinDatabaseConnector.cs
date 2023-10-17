@@ -36,7 +36,9 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
     {
         try
         {
-            Connection = new SqliteConnection("Data Source=" + GetDatabasePath());
+            var databasePath = GetDatabasePath();
+            var absolutePath = Path.GetFullPath(databasePath);
+            Connection = new SqliteConnection("Data Source=" + databasePath);
             Connection.Open();
             if (Connection.State == ConnectionState.Open)
                 return Connection;
@@ -50,8 +52,8 @@ public class GilGoblinDatabaseConnector : ISqlLiteDatabaseConnector
         }
     }
 
-    public string GetDatabasePath() => Path.Combine(GetResourcesPath(), _dbFileName);
+    public string GetDatabasePath() => Path.Combine(GetResourcesPath(), DbFileName);
     public string GetResourcesPath() => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../resources/");
-    public static bool IsConnectionOpen => Connection?.State == System.Data.ConnectionState.Open;
-    public static readonly string _dbFileName = "GilGoblin.db";
+    public static bool IsConnectionOpen => Connection?.State == ConnectionState.Open;
+    public static readonly string DbFileName = "GilGoblin.db";
 }
