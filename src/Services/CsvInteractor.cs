@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Services;
@@ -23,15 +24,17 @@ public class CsvInteractor : ICsvInteractor
         _logger = logger;
     }
 
-    public List<T> LoadFile<T>(string path)
+    public List<T> LoadFile<T>(string tableName)
     {
         try
         {
-            var absolutePath = Path.GetFullPath(path);
+            var filePath = GetResourceFilePath(tableName);
+            var absolutePath = Path.GetFullPath(filePath);
             var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
-            using var reader = new StreamReader(path);
+            using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
-            return csv.GetRecords<T>().ToList();
+            var list = csv.GetRecords<T>().ToList();
+            return list;
         }
         catch (Exception e)
         {
@@ -39,4 +42,7 @@ public class CsvInteractor : ICsvInteractor
             return new List<T>();
         }
     }
+
+    private string GetResourceFilePath(string filename) =>
+        Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../resources/"), filename);
 }

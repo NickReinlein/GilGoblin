@@ -34,7 +34,7 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/craft/34/1614654";
+        var fullEndpoint = "http://localhost:55448/craft/34/1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
@@ -16,17 +17,18 @@ public interface IDatabaseLoader
 public class DatabaseLoader : IDatabaseLoader
 {
     private readonly GilGoblinDbContext _dbContext;
-    private readonly ISqlLiteDatabaseConnector _dbConnector;
+
+    // private readonly IDatabaseConnector _dbConnector;
     private readonly ICsvInteractor _csvInteractor;
     private readonly ILogger<DatabaseLoader> _logger;
 
     public DatabaseLoader(
         GilGoblinDbContext dbContext,
-        ISqlLiteDatabaseConnector dbConnector,
+        // IDatabaseConnector dbConnector,
         ICsvInteractor csvInteractor,
         ILogger<DatabaseLoader> logger)
     {
-        _dbConnector = dbConnector;
+        // _dbConnector = dbConnector;
         _csvInteractor = csvInteractor;
         _logger = logger;
         _dbContext = dbContext;
@@ -36,22 +38,26 @@ public class DatabaseLoader : IDatabaseLoader
     {
         try
         {
-            await using var context = _dbContext;
-            var sqliteConnection = _dbConnector?.Connect();
-            if (sqliteConnection?.State != ConnectionState.Open)
+            await using var canConnect = _dbContext;
+            if (!await canConnect.Database.CanConnectAsync())
                 throw new Exception("Unable to establish a connection to the database");
 
-            await context.Database.EnsureCreatedAsync();
+            await using var context = _dbContext;
+            await context.Database.EnsureDeletedAsync();
+            var existsAsync = await context.Database.EnsureCreatedAsync();
+            if (!existsAsync)
+                throw new Exception("Database does not exist and could not be created");
 
             if (context.ItemInfo.Count() < 1000)
-                await FillTable<ItemInfoPoco>(_dbContext);
+                await FillTable<ItemInfoPoco>();
 
             // if (context.Recipe.Count() < 1000)
             //     await FillTable<RecipePoco>(dbContext);
             //
             // if (context.Price.Count() < 1000)
             //     await FillTable<PricePoco>(dbContext);
-            // await context.SaveChangesAsync();
+
+            await context.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -59,30 +65,26 @@ public class DatabaseLoader : IDatabaseLoader
         }
     }
 
-    private async Task FillTable<T>(GilGoblinDbContext dbContext)
-        where T : class
+    private async Task FillTable<T>() where T : class
     {
-        var tableName = LogTaskStart<T>("Loading from CSV");
-        var csvPath = _dbConnector.GetResourcesPath();
-        await LoadCsvFileAndSaveResults<T>(dbContext, tableName, csvPath);
+        var pocoName = typeof(T).ToString().Split(".").Last();
+        var tableName = pocoName.Remove(pocoName.Length - 4);
+        var message = $"Database table {tableName} has missing entries. Populating with entries from csv file";
+        _logger.LogWarning(message);
+        await LoadCsvFileAndSaveResults<T>(tableName);
     }
 
-    private async Task LoadCsvFileAndSaveResults<T>(
-        GilGoblinDbContext context,
-        string tableName,
-        string path
-    )
-        where T : class
+    private async Task LoadCsvFileAndSaveResults<T>(string tableName) where T : class
     {
         try
         {
-            var result = _csvInteractor.LoadFile<T>(path);
-
+            var result = _csvInteractor.LoadFile<T>(tableName);
             if (!result.Any())
                 throw new Exception($"No entries loaded for file of {nameof(T)}");
 
-            await context.AddRangeAsync(result);
-            await context.SaveChangesAsync();
+            await using var dbContext = _dbContext;
+            await dbContext.AddRangeAsync(result);
+            await dbContext.SaveChangesAsync();
             _logger.LogInformation(
                 $"Successfully saved to table {tableName} {result.Count} entries from CSV"
             );
@@ -91,16 +93,6 @@ public class DatabaseLoader : IDatabaseLoader
         {
             _logger.LogError($"Failed to load CSV file: {e.Message}");
         }
-    }
-
-
-    private string LogTaskStart<T>(string sourceSuffix)
-        where T : class
-    {
-        var pocoName = typeof(T).ToString().Split(".").Last();
-        var tableName = pocoName.Remove(pocoName.Length - 4);
-        _logger.LogWarning($"Database table {tableName} has missing entries {sourceSuffix}");
-        return tableName;
     }
 
     public static readonly int TestWorldId = 34;

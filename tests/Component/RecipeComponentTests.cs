@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -11,7 +10,7 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveARecipe()
     {
-        var fullEndpoint = $"http://localhost:55448/recipe/32635";
+        var fullEndpoint = "http://localhost:55448/recipe/32635";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -39,7 +38,7 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/recipe/32655454";
+        var fullEndpoint = "http://localhost:55448/recipe/32655454";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -49,7 +48,7 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenReceivingAllRecipes_ThenWeReceiveValidRecipes()
     {
-        var fullEndpoint = $"http://localhost:55448/recipe/";
+        var fullEndpoint = "http://localhost:55448/recipe/";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

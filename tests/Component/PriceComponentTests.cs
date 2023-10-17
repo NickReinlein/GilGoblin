@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -11,7 +10,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice()
     {
-        var fullEndpoint = $"http://localhost:55448/price/34/10348";
+        var fullEndpoint = "http://localhost:55448/price/34/10348";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -39,7 +38,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsValid_ThenWeReceiveAllValidPrices()
     {
-        var fullEndpoint = $"http://localhost:55448/price/34";
+        var fullEndpoint = "http://localhost:55448/price/34";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -72,7 +71,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/price/9999";
+        var fullEndpoint = "http://localhost:55448/price/9999";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

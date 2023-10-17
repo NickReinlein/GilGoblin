@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -41,19 +41,6 @@ public class Startup
         DatabaseValidation(app);
     }
 
-    private static void DatabaseValidation(IApplicationBuilder app)
-    {
-        try
-        {
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
-            loader.FillTablesIfEmpty();
-        }
-        catch
-        {
-            Console.WriteLine("Failed to validate database");
-        }
-    }
 
     private static void AddGoblinServices(IServiceCollection services)
     {
@@ -117,7 +104,7 @@ public class Startup
     {
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
         services.AddSingleton<ICsvInteractor, CsvInteractor>();
-        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
+        // services.AddSingleton<IDatabaseConnector, GilGoblinDatabaseConnector>();
         services.AddSingleton<IDatabaseLoader, DatabaseLoader>();
 
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
@@ -151,22 +138,47 @@ public class Startup
         });
     }
 
+    private void DatabaseValidation(IApplicationBuilder app)
+    {
+        try
+        {
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            if (dbContextService.Database.CanConnect() != true)
+                throw new Exception("Failed to connect to the database");
+            var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
+            loader.FillTablesIfEmpty().Wait();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to validate database during startup: {e.Message}");
+        }
+    }
+
     private static async Task FillGoblinCaches(IServiceCollection services)
     {
-        var serviceProvider = services.BuildServiceProvider();
-        var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
-        if (await dbContextService.Database.CanConnectAsync() != true)
-            return;
-
-        var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
-        var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
-        var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
-        var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
-
-        var itemTask = itemRepository.FillCache();
-        var priceTask = priceRepository.FillCache();
-        var recipeTask = recipeRepository.FillCache();
-        var recipeCostTask = recipeCostRepository.FillCache();
-        await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask);
+        try
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            
+            var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+            if (await dbContextService.Database.CanConnectAsync() != true)
+                throw new Exception("Failed to connect to the database");
+        
+            var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
+            var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
+            var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
+        
+            var itemTask = itemRepository.FillCache();
+            var priceTask = priceRepository.FillCache();
+            var recipeTask = recipeRepository.FillCache();
+            var recipeCostTask = recipeCostRepository.FillCache();
+            await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to fill caches during startup: {e.Message}");
+        }
     }
 }

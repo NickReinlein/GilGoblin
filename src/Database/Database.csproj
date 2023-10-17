@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
     <PackageReference Include="CsvHelper" Version="30.0.*"/>
     <ProjectReference Include="../Services/*Services.csproj"/>

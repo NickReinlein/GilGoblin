@@ -11,13 +11,16 @@ namespace GilGoblin.Tests.Database;
 public class CsvInteractorTests
 {
     private CsvInteractor _interactor;
-    private GilGoblinDatabaseConnector _connector;
+    private IDatabaseConnector _connector;
     private ILogger<CsvInteractor> _logger;
 
     [SetUp]
     public void SetUp()
     {
-        _connector = new GilGoblinDatabaseConnector(NullLogger<GilGoblinDatabaseConnector>.Instance);
+        _connector =
+            Substitute
+                .For<
+                    IDatabaseConnector>(); //new GilGoblinDatabaseConnector(NullLogger<GilGoblinDatabaseConnector>.Instance);
         _logger = Substitute.For<ILogger<CsvInteractor>>();
         _interactor = new CsvInteractor(_logger);
     }
