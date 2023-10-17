@@ -24,7 +24,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(allItems.Count));
-            allItems.ForEach(item => result.SingleOrDefault(p => p.Name == item.Name));
+            allItems.ForEach(item => result.Single(p => p.Name == item.Name));
             allItems.ForEach(item => result.SingleOrDefault(p => p.Id == item.Id));
         });
     }
@@ -64,7 +64,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new [] { 1, 2 });
+        var result = itemRepo.GetMultiple(new[] { 1, 2 });
 
         Assert.Multiple(() =>
         {
@@ -80,7 +80,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new [] { 1, 99 });
+        var result = itemRepo.GetMultiple(new[] { 1, 99 });
 
         Assert.Multiple(() =>
         {
@@ -95,7 +95,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new [] { 33, 99 });
+        var result = itemRepo.GetMultiple(new[] { 33, 99 });
 
         Assert.That(!result.Any());
     }
@@ -140,7 +140,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
         var allItems = context.ItemInfo.ToList();
 
@@ -152,9 +152,9 @@ public class ItemRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new GilGoblinDbContext(_options, _configuration);
         context.ItemInfo.RemoveRange(context.ItemInfo);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var itemRepo = new ItemRepository(context, _cache);
 
         await itemRepo.FillCache();

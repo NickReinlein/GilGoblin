@@ -1,10 +1,8 @@
 using System.Linq;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
@@ -17,18 +15,14 @@ public interface IDatabaseLoader
 public class DatabaseLoader : IDatabaseLoader
 {
     private readonly GilGoblinDbContext _dbContext;
-
-    // private readonly IDatabaseConnector _dbConnector;
     private readonly ICsvInteractor _csvInteractor;
     private readonly ILogger<DatabaseLoader> _logger;
 
     public DatabaseLoader(
         GilGoblinDbContext dbContext,
-        // IDatabaseConnector dbConnector,
         ICsvInteractor csvInteractor,
         ILogger<DatabaseLoader> logger)
     {
-        // _dbConnector = dbConnector;
         _csvInteractor = csvInteractor;
         _logger = logger;
         _dbContext = dbContext;
@@ -38,10 +32,6 @@ public class DatabaseLoader : IDatabaseLoader
     {
         try
         {
-            await using var canConnect = _dbContext;
-            if (!await canConnect.Database.CanConnectAsync())
-                throw new Exception("Unable to establish a connection to the database");
-
             await using var context = _dbContext;
             await context.Database.EnsureDeletedAsync();
             var existsAsync = await context.Database.EnsureCreatedAsync();

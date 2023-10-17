@@ -20,13 +20,13 @@ namespace GilGoblin.Api;
 
 public class Startup
 {
-    public IConfiguration Configuration { get; }
-    public IWebHostEnvironment Environment { get; }
+    public IConfiguration _configuration;
+    public IWebHostEnvironment _environment;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
-        Configuration = configuration;
-        Environment = environment;
+        _configuration = configuration;
+        _environment = environment;
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -104,7 +104,6 @@ public class Startup
     {
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
         services.AddSingleton<ICsvInteractor, CsvInteractor>();
-        // services.AddSingleton<IDatabaseConnector, GilGoblinDatabaseConnector>();
         services.AddSingleton<IDatabaseLoader, DatabaseLoader>();
 
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
@@ -143,9 +142,7 @@ public class Startup
         try
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            if (dbContextService.Database.CanConnect() != true)
-                throw new Exception("Failed to connect to the database");
+            ValidateCanConnectToDatabase(serviceScope);
             var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
             loader.FillTablesIfEmpty().Wait();
         }
@@ -155,21 +152,29 @@ public class Startup
         }
     }
 
+    private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
+    {
+        var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var canConnect = dbContextService.Database.CanConnect();
+        if (canConnect != true)
+            throw new Exception("Failed to connect to the database");
+    }
+
     private static async Task FillGoblinCaches(IServiceCollection services)
     {
         try
         {
             var serviceProvider = services.BuildServiceProvider();
-            
+
             var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
             if (await dbContextService.Database.CanConnectAsync() != true)
                 throw new Exception("Failed to connect to the database");
-        
+
             var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
             var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
             var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
-        
+
             var itemTask = itemRepository.FillCache();
             var priceTask = priceRepository.FillCache();
             var recipeTask = recipeRepository.FillCache();

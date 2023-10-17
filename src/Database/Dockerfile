@@ -1,0 +1,7 @@
+﻿FROM postgres:latest
+
+ENV POSTGRES_DB gilgoblin
+ENV POSTGRES_USER gilgoblin
+ENV POSTGRES_PASSWORD gilgoblin
+
+EXPOSE 5432

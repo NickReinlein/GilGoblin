@@ -21,8 +21,6 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.*"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*"/>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
     <PackageReference Include="CsvHelper" Version="30.0.*"/>
@@ -34,5 +32,10 @@
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="resources/icon.png" Pack="true" PackagePath="/"/>
     <Folder Include="publish/"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 </Project>
