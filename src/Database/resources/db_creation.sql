@@ -7,7 +7,7 @@ create table item
     Level       INTEGER not null,
     VendorPrice INTEGER not null,
     StackSize   INTEGER not null,
-    CanBeHq     INTEGER not null
+    CanBeHq     BOOLEAN not null
 );
 
 create table price
@@ -30,8 +30,8 @@ create table recipe
     Id                      SERIAL PRIMARY KEY,
     TargetItemId            INTEGER not null,
     ResultQuantity          INTEGER not null,
-    CanHq                   INTEGER not null,
-    CanQuickSynth           INTEGER not null,
+    CanHq                   BOOLEAN not null,
+    CanQuickSynth           BOOLEAN not null,
     AmountIngredient0       INTEGER not null,
     AmountIngredient1       INTEGER not null,
     AmountIngredient2       INTEGER not null,

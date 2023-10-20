@@ -10,6 +10,11 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: gilgoblin
       PGDATA: /var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "su postgres -c \"pg_isready -U admin\"" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5      
     ports:
       - "5432:5432"
     volumes:
@@ -22,5 +27,5 @@ services:
     restart: unless-stopped
 
 volumes:
-#  postgres:
+  postgres:
   pgdata:
