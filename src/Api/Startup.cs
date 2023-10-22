@@ -104,7 +104,7 @@ public class Startup
     {
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
         services.AddSingleton<ICsvInteractor, CsvInteractor>();
-        services.AddSingleton<IDatabaseLoader, DatabaseLoader>();
+        // services.AddSingleton<IDatabaseLoader, DatabaseLoader>();
 
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddSingleton<IItemRepository, ItemRepository>();
@@ -143,8 +143,8 @@ public class Startup
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             ValidateCanConnectToDatabase(serviceScope);
-            var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
-            loader.FillTablesIfEmpty().Wait();
+            // var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
+            // loader.FillTablesIfEmpty().Wait();
         }
         catch (Exception e)
         {

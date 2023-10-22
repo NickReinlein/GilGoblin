@@ -8,40 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cbef183c-f500-4318-a8b0-3651231372ea" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Pocos/PriceWebPocoExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CsvInteractor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/DataSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GilGoblinDatabaseConnector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/GilGoblinDatabaseConnector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GilGoblinDatabaseInitializer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/BaseItemInfoPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/BaseItemInfoPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/BasePricePoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/BasePricePoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/CraftIngredientPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/CraftIngredientPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/CraftPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/CraftPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/CraftSummaryPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/Extensions/IngredientPocoExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Extensions/IngredientPocoExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/Extensions/MarketDataPocoExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Extensions/PricePocoExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/Extensions/PriceWebPocoExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/Extensions/RecipePocoExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Extensions/RecipePocoExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/IIdentifiable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/IIdentifiable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/IngredientPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/IngredientPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/ItemInfoPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/ItemInfoPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/ItemInfoWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/ItemInfoWebPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/Pocos.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/PricePoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/PricePoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/PriceWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/PriceWebPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/RecipeCostPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/RecipeCostPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/RecipePoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/RecipePoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/IItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/IItemRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/IRecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/IRecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/IRecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/IRecipeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/ItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/ItemRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/PriceRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/PriceRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/RecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/RecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DatabaseLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DatabaseLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Services/CsvInteractor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CsvInteractor.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +66,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dockerize-database&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dockerize-postgresql-database&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -105,6 +75,9 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ],
     &quot;rider.external.source.directories&quot;: [
       &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
       &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
@@ -166,7 +139,26 @@
       <workItem from="1696611187588" duration="4905000" />
       <workItem from="1696684595057" duration="2076000" />
       <workItem from="1696688388546" duration="324000" />
+      <workItem from="1697824043857" duration="4015000" />
+      <workItem from="1698008100344" duration="5000" />
     </task>
+    <task id="LOCAL-00001" summary="database startup works">
+      <option name="closed" value="true" />
+      <created>1697825780445</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1697825780445</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fixed  healthcheck">
+      <option name="closed" value="true" />
+      <created>1697828084122</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1697828084123</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,5 +167,8 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="database startup works" />
+    <MESSAGE value="fixed  healthcheck" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed  healthcheck" />
   </component>
 </project>

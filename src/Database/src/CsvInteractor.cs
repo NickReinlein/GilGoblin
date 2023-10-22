@@ -5,10 +5,9 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Services;
+namespace GilGoblin.Database;
 
 public interface ICsvInteractor
 {

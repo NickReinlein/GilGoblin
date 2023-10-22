@@ -1,6 +1,6 @@
-create table item
+create table if not exists item
 (
-    Id          SERIAL PRIMARY KEY,
+    Id          INTEGER PRIMARY KEY,
     Name        TEXT,
     Description TEXT,
     IconId      INTEGER not null,
@@ -10,11 +10,11 @@ create table item
     CanBeHq     BOOLEAN not null
 );
 
-create table price
+create table if not exists price
 (
     ItemId                INTEGER not null,
     WorldId               INTEGER not null,
-    LastUploadTime        INTEGER not null,
+    LastUploadTime        BIGINT not null,
     AverageListingPrice   REAL    not null,
     AverageListingPriceNQ REAL    not null,
     AverageListingPriceHQ REAL    not null,
@@ -25,9 +25,9 @@ create table price
         primary key (ItemId, WorldId)
 );
 
-create table recipe
+create table if not exists recipe
 (
-    Id                      SERIAL PRIMARY KEY,
+    Id                      INTEGER PRIMARY KEY,
     TargetItemId            INTEGER not null,
     ResultQuantity          INTEGER not null,
     CanHq                   BOOLEAN not null,
@@ -54,11 +54,11 @@ create table recipe
     ItemIngredient9TargetId INTEGER not null
 );
 
-create table recipe_cost
+create table if not exists recipe_cost
 (
-    RecipeId INT            not null,
-    WorldId  INT            not null,
-    Cost     INT            not null,
+    RecipeId INTEGER            not null,
+    WorldId  INTEGER            not null,
+    Cost     INTEGER            not null,
     Created  TIMESTAMP WITH TIME ZONE NOT NULL,
     Updated  TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (RecipeId, WorldId)

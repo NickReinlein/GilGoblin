@@ -24,14 +24,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/src/Database/resources/ItemInfo.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/src/Database/resources/RecipeNotebookList.csv">
+        <entry key="/src/Database/resources/item.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
