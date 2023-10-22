@@ -103,9 +103,6 @@ public class Startup
     private static void AddGoblinDatabases(IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
-        services.AddSingleton<ICsvInteractor, CsvInteractor>();
-        // services.AddSingleton<IDatabaseLoader, DatabaseLoader>();
-
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddSingleton<IItemRepository, ItemRepository>();
         services.AddSingleton<IRecipeRepository, RecipeRepository>();
@@ -143,8 +140,6 @@ public class Startup
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             ValidateCanConnectToDatabase(serviceScope);
-            // var loader = serviceScope.ServiceProvider.GetRequiredService<IDatabaseLoader>();
-            // loader.FillTablesIfEmpty().Wait();
         }
         catch (Exception e)
         {
