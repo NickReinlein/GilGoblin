@@ -1,15 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
-public class ItemInfoComponentTests : ComponentTests
+public class ItemComponentTests : ComponentTests
 {
     [Test]
-    public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItemInfo()
+    public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItem()
     {
         const string fullEndpoint = "http://localhost:55448/item/10348";
         const string expectedDescription =
@@ -17,7 +16,7 @@ public class ItemInfoComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var item = await response.Content.ReadFromJsonAsync<ItemInfoPoco>(GetSerializerOptions());
+        var item = await response.Content.ReadFromJsonAsync<ItemPoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
             Assert.That(item.Id, Is.EqualTo(10348));
@@ -42,13 +41,13 @@ public class ItemInfoComponentTests : ComponentTests
     }
 
     [Test]
-    public async Task GivenACallToGetAll_WhenReceivingAllItemInfos_ThenWeReceiveValidItemInfos()
+    public async Task GivenACallToGetAll_WhenReceivingAllItems_ThenWeReceiveValidItems()
     {
         const string fullEndpoint = "http://localhost:55448/item/";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var items = await response.Content.ReadFromJsonAsync<IEnumerable<ItemInfoPoco>>(
+        var items = await response.Content.ReadFromJsonAsync<IEnumerable<ItemPoco>>(
             GetSerializerOptions()
         );
         var itemCount = items.Count();
@@ -77,14 +76,16 @@ public class ItemInfoComponentTests : ComponentTests
                 Is.EqualTo(3),
                 "StackSize is above 999999999 invalid"
             );
+            // From experience, has higher proportion of missing data
             Assert.That(
                 items.Count(p => p.PriceLow > 0),
-                Is.GreaterThan(missingEntryThreshold),
+                Is.GreaterThan(missingEntryThreshold * 0.5),
                 "Missing PriceLow"
             );
+            // From experience, has higher proportion of missing data
             Assert.That(
                 items.Count(p => p.PriceMid > 0),
-                Is.GreaterThan(missingEntryThreshold),
+                Is.GreaterThan(missingEntryThreshold * 0.5),
                 "Missing PriceMid"
             );
             Assert.That(

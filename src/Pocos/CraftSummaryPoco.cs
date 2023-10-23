@@ -59,7 +59,7 @@ public class CraftSummaryPoco : IComparable
 
     public CraftSummaryPoco(
         PricePoco price,
-        ItemInfoPoco itemInfo,
+        ItemPoco item,
         float craftingCost,
         RecipePoco recipe,
         IEnumerable<IngredientPoco> ingredients
@@ -67,12 +67,12 @@ public class CraftSummaryPoco : IComparable
     {
         WorldId = price.WorldId;
         ItemId = price.ItemId;
-        Name = itemInfo.Name;
-        IconId = itemInfo.IconId;
-        ItemLevel = itemInfo.Level;
-        PriceMid = itemInfo.PriceMid;
-        PriceLow = itemInfo.PriceLow;
-        StackSize = itemInfo.StackSize;
+        Name = item.Name;
+        IconId = item.IconId;
+        ItemLevel = item.Level;
+        PriceMid = item.PriceMid;
+        PriceLow = item.PriceLow;
+        StackSize = item.StackSize;
         AverageListingPrice = price.AverageListingPrice;
         AverageSold = price.AverageSold;
         CraftingCost = craftingCost;

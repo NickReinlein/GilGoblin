@@ -10,35 +10,35 @@ namespace GilGoblin.Repository;
 public class ItemRepository : IItemRepository
 {
     private readonly GilGoblinDbContext _dbContext;
-    private readonly IItemInfoCache _cache;
+    private readonly IItemCache _cache;
 
-    public ItemRepository(GilGoblinDbContext dbContext, IItemInfoCache cache)
+    public ItemRepository(GilGoblinDbContext dbContext, IItemCache cache)
     {
         _dbContext = dbContext;
         _cache = cache;
     }
 
-    public ItemInfoPoco? Get(int recipeId)
+    public ItemPoco? Get(int recipeId)
     {
         var cached = _cache.Get(recipeId);
         if (cached is not null)
             return cached;
 
-        var item = _dbContext?.ItemInfo?.FirstOrDefault(i => i.Id == recipeId);
+        var item = _dbContext?.Item?.FirstOrDefault(i => i.Id == recipeId);
         if (item is not null)
             _cache.Add(item.Id, item);
 
         return item;
     }
 
-    public IEnumerable<ItemInfoPoco> GetMultiple(IEnumerable<int> recipeIds) =>
-        _dbContext?.ItemInfo?.Where(i => recipeIds.Any(a => a == i.Id));
+    public IEnumerable<ItemPoco> GetMultiple(IEnumerable<int> recipeIds) =>
+        _dbContext?.Item?.Where(i => recipeIds.Any(a => a == i.Id));
 
-    public IEnumerable<ItemInfoPoco> GetAll() => _dbContext?.ItemInfo;
+    public IEnumerable<ItemPoco> GetAll() => _dbContext?.Item;
 
     public Task FillCache()
     {
-        var items = _dbContext?.ItemInfo?.ToList();
+        var items = _dbContext?.Item?.ToList();
         items?.ForEach(item => _cache.Add(item.Id, item));
         return Task.CompletedTask;
     }

@@ -5,9 +5,9 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Web;
 
-public class ItemInfoWebResponseTests
+public class ItemWebResponseTests
 {
-    public List<ItemInfoWebPoco> _pocos = new();
+    public List<ItemWebPoco> _pocos = new();
 
     [SetUp]
     public void SetUp()
@@ -16,11 +16,11 @@ public class ItemInfoWebResponseTests
     }
 
     [Test]
-    public void GivenANewItemInfoWebResponse_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
+    public void GivenANewItemWebResponse_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
     {
         var dict = _pocos.ToDictionary(l => l.Id);
 
-        var result = new ItemInfoWebResponse(dict);
+        var result = new ItemWebResponse(dict);
 
         Assert.Multiple(() =>
         {
@@ -32,11 +32,11 @@ public class ItemInfoWebResponseTests
     }
 
     [Test]
-    public void GivenANewItemInfoWebResponse_WhenAnEmptyDictionaryIsProvided_ThenWeHaveEmptyResponseContent()
+    public void GivenANewItemWebResponse_WhenAnEmptyDictionaryIsProvided_ThenWeHaveEmptyResponseContent()
     {
-        var dict = new Dictionary<int, ItemInfoWebPoco>();
+        var dict = new Dictionary<int, ItemWebPoco>();
 
-        var result = new ItemInfoWebResponse(dict);
+        var result = new ItemWebResponse(dict);
 
         Assert.Multiple(() =>
         {
@@ -50,7 +50,7 @@ public class ItemInfoWebResponseTests
     public void GivenGetContentAsList_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
     {
         var dict = _pocos.ToDictionary(l => l.Id);
-        var response = new ItemInfoWebResponse(dict);
+        var response = new ItemWebResponse(dict);
 
         var content = response.GetContentAsList();
 
@@ -63,13 +63,13 @@ public class ItemInfoWebResponseTests
     }
 
     [Test]
-    public void GivenANewItemInfoWebResponse_WhenDatabaseListIsProvided_ThenWeStoreEntriesCorrectly()
+    public void GivenANewItemWebResponse_WhenDatabaseListIsProvided_ThenWeStoreEntriesCorrectly()
     {
-        var poco1 = new ItemInfoPoco() { Id = _itemId1 };
-        var poco2 = new ItemInfoPoco { Id = _itemId2 };
-        var pocoList = new List<ItemInfoPoco> { poco1, poco2 };
+        var poco1 = new ItemPoco() { Id = _itemId1 };
+        var poco2 = new ItemPoco { Id = _itemId2 };
+        var pocoList = new List<ItemPoco> { poco1, poco2 };
 
-        var result = new ItemInfoWebResponse(pocoList);
+        var result = new ItemWebResponse(pocoList);
 
         Assert.Multiple(() =>
         {
@@ -80,9 +80,9 @@ public class ItemInfoWebResponseTests
     }
 
     [Test]
-    public void GivenANewItemInfoWebResponse_WhenAnEmptyDatabaseListIsProvided_ThenWeStoreEntriesCorrectly()
+    public void GivenANewItemWebResponse_WhenAnEmptyDatabaseListIsProvided_ThenWeStoreEntriesCorrectly()
     {
-        var result = new ItemInfoWebResponse(new List<ItemInfoPoco>());
+        var result = new ItemWebResponse(new List<ItemPoco>());
 
         Assert.Multiple(() =>
         {
@@ -95,10 +95,10 @@ public class ItemInfoWebResponseTests
     [Test]
     public void GivenGetContentAsList_WhenDatabaseListIsProvided_ThenWeReturnEntriesCorrectly()
     {
-        var poco1 = new ItemInfoPoco() { Id = _itemId1 };
-        var poco2 = new ItemInfoPoco { Id = _itemId2 };
-        var pocoList = new List<ItemInfoPoco> { poco1, poco2 };
-        var response = new ItemInfoWebResponse(pocoList);
+        var poco1 = new ItemPoco() { Id = _itemId1 };
+        var poco2 = new ItemPoco { Id = _itemId2 };
+        var pocoList = new List<ItemPoco> { poco1, poco2 };
+        var response = new ItemWebResponse(pocoList);
 
         var content = response.GetContentAsList();
 
@@ -110,11 +110,11 @@ public class ItemInfoWebResponseTests
         });
     }
 
-    protected static List<ItemInfoWebPoco> GetMultipleNewPocos()
+    protected static List<ItemWebPoco> GetMultipleNewPocos()
     {
-        var poco1 = new ItemInfoWebPoco() { Id = _itemId1 };
-        var poco2 = new ItemInfoWebPoco { Id = _itemId2 };
-        return new List<ItemInfoWebPoco> { poco1, poco2 };
+        var poco1 = new ItemWebPoco() { Id = _itemId1 };
+        var poco2 = new ItemWebPoco { Id = _itemId2 };
+        return new List<ItemWebPoco> { poco1, poco2 };
     }
 
     private static readonly int _itemId1 = 65711;

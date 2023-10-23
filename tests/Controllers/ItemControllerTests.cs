@@ -31,7 +31,7 @@ public class ItemControllerTests
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
         poco2.Id = poco1.Id + 100;
-        _repo.GetAll().Returns(new List<ItemInfoPoco>() { poco1, poco2 });
+        _repo.GetAll().Returns(new List<ItemPoco>() { poco1, poco2 });
 
         var result = _controller.GetAll();
 
@@ -62,7 +62,7 @@ public class ItemControllerTests
         Assert.That(result, Is.Null);
     }
 
-    private static ItemInfoPoco CreatePoco() =>
+    private static ItemPoco CreatePoco() =>
         new()
         {
             Id = 200,

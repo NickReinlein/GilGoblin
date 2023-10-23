@@ -39,7 +39,7 @@ public class InMemoryTestDb
     {
         var context = new GilGoblinDbContext(_options, _configuration);
         context.Price.RemoveRange(context.Price);
-        context.ItemInfo.RemoveRange(context.ItemInfo);
+        context.Item.RemoveRange(context.Item);
         context.Recipe.RemoveRange(context.Recipe);
         context.RecipeCost.RemoveRange(context.RecipeCost);
         context.SaveChanges();
@@ -66,11 +66,11 @@ public class InMemoryTestDb
             new PricePoco { WorldId = 33, ItemId = 88 },
             new PricePoco { WorldId = 44, ItemId = 99 }
         );
-        context.ItemInfo.AddRange(
-            new ItemInfoPoco { Id = 1, Name = "Item 1" },
-            new ItemInfoPoco { Id = 2, Name = "Item 2" },
-            new ItemInfoPoco { Id = 3, Name = "Item 3" },
-            new ItemInfoPoco { Id = 22, Name = "Item 22" }
+        context.Item.AddRange(
+            new ItemPoco { Id = 1, Name = "Item 1" },
+            new ItemPoco { Id = 2, Name = "Item 2" },
+            new ItemPoco { Id = 3, Name = "Item 3" },
+            new ItemPoco { Id = 22, Name = "Item 22" }
         );
         context.SaveChanges();
     }

@@ -71,7 +71,7 @@ public class CraftRepositoryTests
         _calc.CalculateCraftingCostForItem(_worldId, secondItemId).Returns((secondRecipeId, _craftingCost + 100));
         _priceRepository.Get(_worldId, secondItemId).Returns(new PricePoco { WorldId = _worldId, ItemId = secondItemId });
         _recipeRepository.Get(secondRecipeId).Returns(new RecipePoco { Id = secondRecipeId, TargetItemId = secondItemId });
-        _itemRepository.Get(secondItemId).Returns(new ItemInfoPoco { Id = secondItemId, Name = _itemName });
+        _itemRepository.Get(secondItemId).Returns(new ItemPoco { Id = secondItemId, Name = _itemName });
 
         var result = await _craftRepository.GetBestCrafts(_worldId);
 
@@ -160,7 +160,7 @@ public class CraftRepositoryTests
         _recipeRepository.GetAll().Returns(GetCrafts());
 
         _itemRepository = Substitute.For<IItemRepository>();
-        _itemRepository.Get(_itemId).Returns(new ItemInfoPoco { Id = _itemId, Name = _itemName });
+        _itemRepository.Get(_itemId).Returns(new ItemPoco { Id = _itemId, Name = _itemName });
 
         _cache = Substitute.For<ICraftCache>();
         _cache

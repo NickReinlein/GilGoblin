@@ -131,11 +131,11 @@ public class MarketableItemIdsFetcherTests : FetcherTests
             .Respond(statusCode, ContentType, responseContent);
     }
 
-    public static IEnumerable<ItemInfoWebPoco> GetMultipleNewPocos()
+    public static IEnumerable<ItemWebPoco> GetMultipleNewPocos()
     {
-        var poco1 = new ItemInfoWebPoco { Id = ItemId1 };
-        var poco2 = new ItemInfoWebPoco { Id = ItemId2 };
-        return new List<ItemInfoWebPoco> { poco1, poco2 };
+        var poco1 = new ItemWebPoco { Id = ItemId1 };
+        var poco2 = new ItemWebPoco { Id = ItemId2 };
+        return new List<ItemWebPoco> { poco1, poco2 };
     }
 
     private static int ItemId1 => 10972;

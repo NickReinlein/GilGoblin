@@ -5,24 +5,24 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Web;
 
-public class ItemInfoWebResponse : IResponseToList<ItemInfoWebPoco>
+public class ItemWebResponse : IResponseToList<ItemWebPoco>
 {
-    public Dictionary<int, ItemInfoWebPoco> Items { get; set; }
+    public Dictionary<int, ItemWebPoco> Items { get; set; }
 
-    public ItemInfoWebResponse(Dictionary<int, ItemInfoWebPoco> items)
+    public ItemWebResponse(Dictionary<int, ItemWebPoco> items)
     {
         Items = items;
     }
 
-    public ItemInfoWebResponse(IEnumerable<ItemInfoPoco> dbItems)
+    public ItemWebResponse(IEnumerable<ItemPoco> dbItems)
     {
-        Items = new Dictionary<int, ItemInfoWebPoco>();
+        Items = new Dictionary<int, ItemWebPoco>();
         foreach (var item in dbItems)
         {
-            var converted = new ItemInfoWebPoco(item);
+            var converted = new ItemWebPoco(item);
             Items.Add(converted.Id, converted);
         }
     }
 
-    public List<ItemInfoWebPoco> GetContentAsList() => Items?.Values.ToList();
+    public List<ItemWebPoco> GetContentAsList() => Items?.Values.ToList();
 }

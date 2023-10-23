@@ -1,56 +1,35 @@
-using CsvHelper.Configuration.Attributes;
-
 namespace GilGoblin.Database.Pocos;
 
 public class RecipePoco
 {
-    [Name("#")] public int Id { get; set; }
-
-    [Name("Item{Result}")] public int TargetItemId { get; set; }
-
-    [Name("Amount{Result}")] public int ResultQuantity { get; set; }
+    public int Id { get; set; }
+    public int CraftType { get; set; }
+    public int RecipeLevelTable { get; set; }
+    public int TargetItemId { get; set; }
+    public int ResultQuantity { get; set; }
     public bool CanHq { get; set; }
     public bool CanQuickSynth { get; set; }
+    public int ItemIngredient0TargetId { get; set; }
+    public int AmountIngredient0 { get; set; }
+    public int ItemIngredient1TargetId { get; set; }
+    public int AmountIngredient1 { get; set; }
+    public int ItemIngredient2TargetId { get; set; }
+    public int AmountIngredient2 { get; set; }
+    public int ItemIngredient3TargetId { get; set; }
+    public int AmountIngredient3 { get; set; }
+    public int ItemIngredient4TargetId { get; set; }
+    public int AmountIngredient4 { get; set; }
+    public int ItemIngredient5TargetId { get; set; }
+    public int AmountIngredient5 { get; set; }
+    public int ItemIngredient6TargetId { get; set; }
+    public int AmountIngredient6 { get; set; }
+    public int ItemIngredient7TargetId { get; set; }
+    public int AmountIngredient7 { get; set; }
+    public int ItemIngredient8TargetId { get; set; }
+    public int AmountIngredient8 { get; set; }
+    public int ItemIngredient9TargetId { get; set; }
+    public int AmountIngredient9 { get; set; }
 
-    [Name("Amount{Ingredient}[0]")] public int AmountIngredient0 { get; set; }
-
-    [Name("Amount{Ingredient}[1]")] public int AmountIngredient1 { get; set; }
-
-    [Name("Amount{Ingredient}[2]")] public int AmountIngredient2 { get; set; }
-
-    [Name("Amount{Ingredient}[3]")] public int AmountIngredient3 { get; set; }
-
-    [Name("Amount{Ingredient}[4]")] public int AmountIngredient4 { get; set; }
-
-    [Name("Amount{Ingredient}[5]")] public int AmountIngredient5 { get; set; }
-
-    [Name("Amount{Ingredient}[6]")] public int AmountIngredient6 { get; set; }
-
-    [Name("Amount{Ingredient}[7]")] public int AmountIngredient7 { get; set; }
-
-    [Name("Amount{Ingredient}[8]")] public int AmountIngredient8 { get; set; }
-
-    [Name("Amount{Ingredient}[9]")] public int AmountIngredient9 { get; set; }
-
-    [Name("Item{Ingredient}[0]")] public int ItemIngredient0TargetId { get; set; }
-
-    [Name("Item{Ingredient}[1]")] public int ItemIngredient1TargetId { get; set; }
-
-    [Name("Item{Ingredient}[2]")] public int ItemIngredient2TargetId { get; set; }
-
-    [Name("Item{Ingredient}[3]")] public int ItemIngredient3TargetId { get; set; }
-
-    [Name("Item{Ingredient}[4]")] public int ItemIngredient4TargetId { get; set; }
-
-    [Name("Item{Ingredient}[5]")] public int ItemIngredient5TargetId { get; set; }
-
-    [Name("Item{Ingredient}[6]")] public int ItemIngredient6TargetId { get; set; }
-
-    [Name("Item{Ingredient}[7]")] public int ItemIngredient7TargetId { get; set; }
-
-    [Name("Item{Ingredient}[8]")] public int ItemIngredient8TargetId { get; set; }
-
-    [Name("Item{Ingredient}[9]")] public int ItemIngredient9TargetId { get; set; }
 
     public RecipePoco() { }
 
@@ -82,9 +61,10 @@ public class RecipePoco
         int itemIngredient9TargetId
     )
     {
+        Id = id;
         CanHq = canHq;
         TargetItemId = itemResultTargetId;
-        Id = id;
+        CanQuickSynth = canQuickSynth;
         ResultQuantity = amountResult;
         AmountIngredient0 = amountIngredient0;
         AmountIngredient1 = amountIngredient1;
@@ -106,6 +86,5 @@ public class RecipePoco
         ItemIngredient7TargetId = itemIngredient7TargetId;
         ItemIngredient8TargetId = itemIngredient8TargetId;
         ItemIngredient9TargetId = itemIngredient9TargetId;
-        CanQuickSynth = canQuickSynth;
     }
 }

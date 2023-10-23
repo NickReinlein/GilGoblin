@@ -8,10 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cbef183c-f500-4318-a8b0-3651231372ea" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DatabaseLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DatabaseLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Services/CsvInteractor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/CsvInteractor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/.~lock.priceTest.csv#" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DatabaseLoader.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GilGoblinDatabaseConnector.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/BaseItemInfoPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/BaseItemInfoPoco.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +141,7 @@
       <workItem from="1696688388546" duration="324000" />
       <workItem from="1697824043857" duration="4015000" />
       <workItem from="1698008100344" duration="5000" />
+      <workItem from="1698074453512" duration="1007000" />
     </task>
     <task id="LOCAL-00001" summary="database startup works">
       <option name="closed" value="true" />
@@ -165,10 +166,40 @@
     <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="database startup works" />
     <MESSAGE value="fixed  healthcheck" />
     <option name="LAST_COMMIT_MESSAGE" value="fixed  healthcheck" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/GilGoblinDbContext.cs</url>
+          <line>26</line>
+          <properties documentPath="$PROJECT_DIR$/src/GilGoblinDbContext.cs" initialLine="26" containingFunctionPresentation="Method 'OnConfiguring'">
+            <startOffsets>
+              <option value="923" />
+            </startOffsets>
+            <endOffsets>
+              <option value="966" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

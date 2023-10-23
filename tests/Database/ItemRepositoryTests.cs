@@ -10,7 +10,7 @@ namespace GilGoblin.Tests.Database;
 
 public class ItemRepositoryTests : InMemoryTestDb
 {
-    private IItemInfoCache _cache;
+    private IItemCache _cache;
 
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
@@ -20,7 +20,7 @@ public class ItemRepositoryTests : InMemoryTestDb
 
         var result = itemRepo.GetAll();
 
-        var allItems = context.ItemInfo.ToList();
+        var allItems = context.Item.ToList();
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(allItems.Count));
@@ -120,7 +120,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         _ = itemRepo.Get(2);
 
         _cache.Received(1).Get(2);
-        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.Id == 2));
+        _cache.Received(1).Add(2, Arg.Is<ItemPoco>(item => item.Id == 2));
     }
 
     [Test]
@@ -128,13 +128,13 @@ public class ItemRepositoryTests : InMemoryTestDb
     {
         using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
-        _cache.Get(2).Returns(null, new ItemInfoPoco() { Id = 2 });
+        _cache.Get(2).Returns(null, new ItemPoco() { Id = 2 });
         _ = itemRepo.Get(2);
 
         itemRepo.Get(2);
 
         _cache.Received(2).Get(2);
-        _cache.Received(1).Add(2, Arg.Is<ItemInfoPoco>(item => item.Id == 2));
+        _cache.Received(1).Add(2, Arg.Is<ItemPoco>(item => item.Id == 2));
     }
 
     [Test]
@@ -142,7 +142,7 @@ public class ItemRepositoryTests : InMemoryTestDb
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
-        var allItems = context.ItemInfo.ToList();
+        var allItems = context.Item.ToList();
 
         await itemRepo.FillCache();
 
@@ -153,19 +153,19 @@ public class ItemRepositoryTests : InMemoryTestDb
     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
-        context.ItemInfo.RemoveRange(context.ItemInfo);
+        context.Item.RemoveRange(context.Item);
         await context.SaveChangesAsync();
         var itemRepo = new ItemRepository(context, _cache);
 
         await itemRepo.FillCache();
 
-        _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemInfoPoco>());
+        _cache.DidNotReceive().Add(Arg.Any<int>(), Arg.Any<ItemPoco>());
     }
 
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
-        _cache = Substitute.For<IItemInfoCache>();
+        _cache = Substitute.For<IItemCache>();
     }
 }

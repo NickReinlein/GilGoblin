@@ -8,12 +8,14 @@ namespace GilGoblin.Tests.Component;
 public class ComponentTests
 {
     protected HttpClient _client;
+    protected IServiceProvider _services;
     private WebApplicationFactory<Startup> _factory;
 
     [OneTimeSetUp]
     public virtual void OneTimeSetUp()
     {
         _factory = new WebApplicationFactory<Startup>();
+        _services = _factory.Services;
         _client = _factory.CreateClient();
     }
 

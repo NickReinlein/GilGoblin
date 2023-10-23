@@ -2,6 +2,6 @@ using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Cache;
 
-public interface IItemInfoCache : IDataCache<int, ItemInfoPoco> { }
+public interface IItemCache : IDataCache<int, ItemPoco> { }
 
-public class ItemInfoCache : DataCache<int, ItemInfoPoco>, IItemInfoCache { }
+public class ItemCache : DataCache<int, ItemPoco>, IItemCache { }

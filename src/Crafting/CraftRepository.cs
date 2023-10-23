@@ -52,11 +52,11 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         var ingredients = recipe.GetActiveIngredients();
 
         var price = _priceRepository.Get(worldId, itemId);
-        var itemInfo = _itemRepository.Get(itemId);
+        var item = _itemRepository.Get(itemId);
 
         var craftSummaryPoco = new CraftSummaryPoco(
             price,
-            itemInfo,
+            item,
             craftingCost,
             recipe,
             ingredients
