@@ -1,5 +1,4 @@
 #,CraftType,RecipeLevelTable,Item{Result},Amount{Result},Item{Ingredient}[0],Amount{Ingredient}[0],Item{Ingredient}[1],Amount{Ingredient}[1],Item{Ingredient}[2],Amount{Ingredient}[2],Item{Ingredient}[3],Amount{Ingredient}[3],Item{Ingredient}[4],Amount{Ingredient}[4],Item{Ingredient}[5],Amount{Ingredient}[5],Item{Ingredient}[6],Amount{Ingredient}[6],Item{Ingredient}[7],Amount{Ingredient}[7],Item{Ingredient}[8],Amount{Ingredient}[8],Item{Ingredient}[9],Amount{Ingredient}[9],CanQuickSynth,CanHq
-0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,-1,0,True,True
 1,1,1,5056,1,5106,2,5107,1,0,0,0,0,0,0,0,0,0,0,0,0,2,1,-1,0,True,True
 2,1,1,2546,1,5056,1,5361,1,0,0,0,0,0,0,0,0,0,0,0,0,2,1,5,1,True,True
 3,1,2,1602,1,5056,1,5361,1,5432,1,0,0,0,0,0,0,0,0,0,0,2,1,5,1,True,True

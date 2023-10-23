@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;

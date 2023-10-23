@@ -8,11 +8,11 @@ public class BaseItemPoco : IIdentifiable
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
 
-    public int? IconId { get; set; }
-    public int? Level { get; set; }
-    public int? StackSize { get; set; }
-    public int? PriceMid { get; set; }
-    public int? PriceLow { get; set; }
+    public int IconId { get; set; }
+    public int Level { get; set; }
+    public int StackSize { get; set; }
+    public int PriceMid { get; set; }
+    public int PriceLow { get; set; }
     public bool CanBeHq { get; set; }
 
     [JsonConstructor]
@@ -22,11 +22,11 @@ public class BaseItemPoco : IIdentifiable
         int id,
         string name,
         string description,
-        int? iconId,
-        int? level,
-        int? priceLow,
-        int? priceMid,
-        int? stackSize,
+        int iconId,
+        int level,
+        int priceMid,
+        int priceLow,
+        int stackSize,
         bool canBeHq = false)
     {
         Id = id;

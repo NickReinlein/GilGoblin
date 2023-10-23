@@ -62,7 +62,7 @@ public class CraftComponentTests : ComponentTests
             Assert.That(crafts.All(r => r.Recipe.Id > 0));
             Assert.That(crafts.All(r => r.Recipe.TargetItemId > 0));
             Assert.That(crafts.All(r => r.Recipe.ResultQuantity > 0));
-            Assert.That(crafts.All(r => r.Ingredients.Count() > 0));
+            Assert.That(crafts.All(r => r.Ingredients.Any()));
         });
     }
 
