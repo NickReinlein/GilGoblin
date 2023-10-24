@@ -1,7 +1,6 @@
 version: "3.7"
 
 services:
-
   gilgoblindb:
     image: postgres:alpine
     container_name: gilgoblindb
