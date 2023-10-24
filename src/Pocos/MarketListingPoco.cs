@@ -5,8 +5,8 @@ namespace GilGoblin.Pocos;
 
 public class MarketListingPoco
 {
-    public int ItemID { get; set; }
-    public int WorldID { get; set; }
+    public int ItemId { get; set; }
+    public int WorldId { get; set; }
     public DateTime Timestamp { get; set; }
     public bool Hq { get; set; }
     public int Price { get; set; }

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Cache;
+using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 
@@ -34,13 +36,13 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _cache = cache;
     }
 
-    public async Task<CraftSummaryPoco?> GetBestCraft(int worldID, int itemID)
+    public async Task<CraftSummaryPoco?> GetBestCraft(int worldId, int itemId)
     {
-        var cached = _cache.Get((worldID, itemID));
+        var cached = _cache.Get((worldId, itemId));
         if (cached is not null)
             return cached;
 
-        var (recipeId, craftingCost) = await _calc.CalculateCraftingCostForItem(worldID, itemID);
+        var (recipeId, craftingCost) = await _calc.CalculateCraftingCostForItem(worldId, itemId);
         if (recipeId is < 1 || craftingCost.IsErrorCost())
             return null;
 
@@ -49,41 +51,41 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             return null;
         var ingredients = recipe.GetActiveIngredients();
 
-        var price = _priceRepository.Get(worldID, itemID);
-        var itemInfo = _itemRepository.Get(itemID);
+        var price = _priceRepository.Get(worldId, itemId);
+        var item = _itemRepository.Get(itemId);
 
         var craftSummaryPoco = new CraftSummaryPoco(
             price,
-            itemInfo,
+            item,
             craftingCost,
             recipe,
             ingredients
         );
-        _cache.Add((worldID, itemID), craftSummaryPoco);
+        _cache.Add((worldId, itemId), craftSummaryPoco);
         return craftSummaryPoco;
     }
 
-    public async Task<IEnumerable<CraftSummaryPoco>> GetBestCrafts(int worldID)
+    public async Task<IEnumerable<CraftSummaryPoco>> GetBestCrafts(int worldId)
     {
         var allItemsWithRecipes = _recipeRepository
             .GetAll()
-            .Select(r => r.TargetItemID)
+            .Select(r => r.TargetItemId)
             .Distinct()
             .ToList();
 
         var bestCraftPerItem = new List<CraftSummaryPoco>();
-        foreach (var itemID in allItemsWithRecipes)
+        foreach (var itemId in allItemsWithRecipes)
         {
             try
             {
-                var result = await GetBestCraft(worldID, itemID);
+                var result = await GetBestCraft(worldId, itemId);
                 if (result is not null)
                     bestCraftPerItem.Add(result);
             }
             catch
             {
                 _logger.LogError(
-                    $"Failed to calculate best craft for item {itemID} in world {worldID}"
+                    $"Failed to calculate best craft for item {itemId} in world {worldId}"
                 );
             }
         }

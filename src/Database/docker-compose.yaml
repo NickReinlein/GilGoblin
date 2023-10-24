@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  gilgoblindb:
+    image: postgres:alpine
+    container_name: gilgoblindb
+    environment:
+      POSTGRES_DB: gilgoblin
+      POSTGRES_USER: gilgoblin
+      POSTGRES_PASSWORD: gilgoblin
+      PGUSER: gilgoblin
+      PGDATA: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5 
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./resources:/docker-entrypoint-initdb.d
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped
+
+volumes:
+  postgres:
+  pgdata:

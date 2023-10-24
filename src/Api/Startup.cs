@@ -1,3 +1,4 @@
+using System;
 using GilGoblin.Cache;
 using GilGoblin.Controllers;
 using GilGoblin.Crafting;
@@ -7,8 +8,10 @@ using GilGoblin.Repository;
 using GilGoblin.Services;
 using GilGoblin.Web;
 using System.Threading.Tasks;
+using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -17,8 +20,8 @@ namespace GilGoblin.Api;
 
 public class Startup
 {
-    public IConfiguration _configuration { get; }
-    public IWebHostEnvironment _environment { get; }
+    public IConfiguration _configuration;
+    public IWebHostEnvironment _environment;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
@@ -29,31 +32,50 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         AddGoblinServices(services);
+        FillGoblinCaches(services).Wait();
     }
 
     public void Configure(IApplicationBuilder app)
     {
         AddAppGoblinServices(app);
+        DatabaseValidation(app);
     }
 
-    public static void AddGoblinServices(IServiceCollection services)
+
+    private static void AddGoblinServices(IServiceCollection services)
     {
         AddGoblinCrafting(services);
         AddGoblinDatabases(services);
         AddGoblinControllers(services);
-        AddGoblinCaches(services);
+        AddGoblinUpdaterServices(services);
         AddBasicBuilderServices(services);
-        FillGoblinCaches(services);
+        AddGoblinCaches(services);
     }
 
-    public static void AddGoblinCaches(IServiceCollection services)
+    private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
-        services.AddSingleton<IItemInfoCache, ItemInfoCache>();
+        services.AddHttpClient();
+        services.AddSingleton<ISingleDataFetcher<ItemWebPoco>, ItemSingleFetcher>();
+        services.AddSingleton<IItemSingleFetcher, ItemSingleFetcher>();
+
+        services.AddSingleton<IBulkDataFetcher<PriceWebPoco>, PriceBulkFetcher>();
+        services.AddSingleton<IPriceBulkDataFetcher, PriceBulkFetcher>();
+
+        services.AddSingleton<IItemSingleFetcher, ItemSingleFetcher>();
+        services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
+
+        services.AddSingleton<IDataSaver<ItemWebPoco>, DataSaver<ItemWebPoco>>();
+    }
+
+    private static void AddGoblinCaches(IServiceCollection services)
+    {
+        services.AddSingleton<IItemCache, ItemCache>();
         services.AddSingleton<IPriceCache, PriceCache>();
         services.AddSingleton<IRecipeCache, RecipeCache>();
         services.AddSingleton<IItemRecipeCache, ItemRecipeCache>();
         services.AddSingleton<ICraftCache, CraftCache>();
         services.AddSingleton<IRecipeCostCache, RecipeCostCache>();
+
         services.AddSingleton<IRepositoryCache, ItemRepository>();
         services.AddSingleton<IRepositoryCache, PriceRepository>();
         services.AddSingleton<IRepositoryCache, RecipeRepository>();
@@ -69,27 +91,23 @@ public class Startup
             .AddApplicationPart(typeof(RecipeController).Assembly);
     }
 
-    public static void AddGoblinCrafting(IServiceCollection services)
+    private static void AddGoblinCrafting(IServiceCollection services)
     {
         services.AddSingleton<ICraftingCalculator, CraftingCalculator>();
         services.AddSingleton<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
         services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
-        services.AddSingleton<DataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        services.AddSingleton<IPriceDataFetcher, PriceFetcher>();
     }
 
-    public static void AddGoblinDatabases(IServiceCollection services)
+    private static void AddGoblinDatabases(IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
         services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddSingleton<IItemRepository, ItemRepository>();
         services.AddSingleton<IRecipeRepository, RecipeRepository>();
         services.AddSingleton<IRecipeCostRepository, RecipeCostRepository>();
-        services.AddSingleton<ISqlLiteDatabaseConnector, GilGoblinDatabaseConnector>();
-        services.AddSingleton<ICsvInteractor, CsvInteractor>();
     }
 
-    public static void AddBasicBuilderServices(IServiceCollection services)
+    private static void AddBasicBuilderServices(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddLogging();
@@ -99,7 +117,7 @@ public class Startup
         });
     }
 
-    public static void AddAppGoblinServices(IApplicationBuilder app)
+    private static void AddAppGoblinServices(IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI();
@@ -114,22 +132,51 @@ public class Startup
         });
     }
 
-    public static async void FillGoblinCaches(IServiceCollection services)
+    private void DatabaseValidation(IApplicationBuilder app)
     {
-        var serviceProvider = services.BuildServiceProvider();
-        var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
-        if (dbContextService.Database?.CanConnect() != true)
-            return;
+        try
+        {
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            ValidateCanConnectToDatabase(serviceScope);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to validate database during startup: {e.Message}");
+        }
+    }
 
-        var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
-        var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
-        var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
-        var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
+    private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
+    {
+        var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var canConnect = dbContextService.Database.CanConnect();
+        if (canConnect != true)
+            throw new Exception("Failed to connect to the database");
+    }
 
-        var itemTask = itemRepository.FillCache();
-        var priceTask = priceRepository.FillCache();
-        var recipeTask = recipeRepository.FillCache();
-        var recipeCostTask = recipeCostRepository.FillCache();
-        await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask);
+    private static async Task FillGoblinCaches(IServiceCollection services)
+    {
+        try
+        {
+            var serviceProvider = services.BuildServiceProvider();
+
+            var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+            if (await dbContextService.Database.CanConnectAsync() != true)
+                throw new Exception("Failed to connect to the database");
+
+            var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
+            var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
+            var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
+
+            var itemTask = itemRepository.FillCache();
+            var priceTask = priceRepository.FillCache();
+            var recipeTask = recipeRepository.FillCache();
+            var recipeCostTask = recipeCostRepository.FillCache();
+            await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to fill caches during startup: {e.Message}");
+        }
     }
 }

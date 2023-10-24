@@ -1,3 +1,4 @@
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace GilGoblin.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
+public class ItemController : ControllerBase, IDataController<ItemPoco>
 {
     private readonly IItemRepository _itemRepo;
     private readonly ILogger<ItemController> _logger;
@@ -19,14 +20,14 @@ public class ItemController : ControllerBase, IDataController<ItemInfoPoco>
     }
 
     [HttpGet("{id}")]
-    public ItemInfoPoco? Get(int id)
+    public ItemPoco? Get(int id)
     {
         _logger.LogInformation($"Fetching item info id: {id}");
         return _itemRepo.Get(id);
     }
 
     [HttpGet]
-    public IEnumerable<ItemInfoPoco> GetAll()
+    public IEnumerable<ItemPoco> GetAll()
     {
         _logger.LogInformation($"Fetching all item info data");
         return _itemRepo.GetAll();

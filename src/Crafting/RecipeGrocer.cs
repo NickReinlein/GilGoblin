@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
@@ -19,9 +21,9 @@ public class RecipeGrocer : IRecipeGrocer
         _logger = logger;
     }
 
-    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeID)
+    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipeById(int recipeId)
     {
-        var recipe = _recipes.Get(recipeID);
+        var recipe = _recipes.Get(recipeId);
         return recipe is null ? Array.Empty<IngredientPoco>() : await BreakdownRecipe(recipe);
     }
 
@@ -35,7 +37,7 @@ public class RecipeGrocer : IRecipeGrocer
         var ingredientsBrokenDownList = new List<IngredientPoco>();
         foreach (var ingredient in ingredientList.Where(i => i?.Quantity > 0))
         {
-            var breakdownIngredients = await BreakdownItem(ingredient.ItemID);
+            var breakdownIngredients = await BreakdownItem(ingredient.ItemId);
             if (!breakdownIngredients.Any())
             {
                 ingredientsBrokenDownList.Add(ingredient);
@@ -48,14 +50,14 @@ public class RecipeGrocer : IRecipeGrocer
         return ingredientsBrokenDownList;
     }
 
-    public async Task<IEnumerable<IngredientPoco>> BreakdownItem(int itemID)
+    public async Task<IEnumerable<IngredientPoco>> BreakdownItem(int itemId)
     {
         var allIngredients = new List<IngredientPoco>();
-        var allRecipes = _recipes.GetRecipesForItem(itemID);
+        var allRecipes = _recipes.GetRecipesForItem(itemId);
 
         foreach (var recipe in allRecipes.Where(r => r is not null))
         {
-            var ingredients = await BreakdownRecipeById(recipe.ID);
+            var ingredients = await BreakdownRecipeById(recipe.Id);
             MultiplyQuantityProduced(ingredients, recipe);
             allIngredients.AddRange(ingredients);
         }
@@ -69,7 +71,7 @@ public class RecipeGrocer : IRecipeGrocer
     {
         foreach (
             var ingredient in recipeIngredients.Where(
-                ing => ing is not null && ing.Quantity is not 0 && ing.RecipeID == recipe.ID
+                ing => ing is not null && ing.Quantity is not 0 && ing.RecipeId == recipe.Id
             )
         )
         {

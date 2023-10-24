@@ -10,31 +10,31 @@ public class CraftComponentTests : ComponentTests
     [Test, Timeout(10000), Ignore("Ignore for performance.. should still pass")]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
-        var fullEndpoint = $"http://localhost:55448/craft/34/1614";
+        const string fullEndpoint = "http://localhost:55448/craft/34/1614";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var craft = await response.Content.ReadFromJsonAsync<CraftSummaryPoco>(
-            GetSerializerOptions()
-        );
+        var craft = await response.Content.ReadFromJsonAsync<CraftSummaryPoco>(GetSerializerOptions());
+
         Assert.Multiple(() =>
         {
-            Assert.That(craft.WorldID, Is.EqualTo(34));
-            Assert.That(craft.ItemID, Is.EqualTo(1614));
+            Assert.That(craft.WorldId, Is.EqualTo(34));
+            Assert.That(craft.ItemId, Is.EqualTo(1614));
             Assert.That(craft.Name, Is.EqualTo("Iron Shortsword"));
             Assert.That(craft.CraftingCost, Is.GreaterThan(100).And.LessThan(50000));
             Assert.That(craft.AverageSold, Is.GreaterThan(100).And.LessThan(50000));
             Assert.That(craft.AverageListingPrice, Is.GreaterThan(100).And.LessThan(50000));
-            Assert.That(craft.VendorPrice, Is.EqualTo(1297));
-            Assert.That(craft.Recipe.TargetItemID, Is.EqualTo(1614));
-            Assert.That(craft.Recipe.ID, Is.EqualTo(74));
+            Assert.That(craft.PriceMid, Is.GreaterThan(0));
+            Assert.That(craft.PriceLow, Is.GreaterThan(0));
+            Assert.That(craft.Recipe.TargetItemId, Is.EqualTo(1614));
+            Assert.That(craft.Recipe.Id, Is.EqualTo(74));
         });
     }
 
     [Test]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/craft/34/1614654";
+        var fullEndpoint = "http://localhost:55448/craft/34/1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -44,32 +44,32 @@ public class CraftComponentTests : ComponentTests
     [Test, Timeout(20000), Ignore("Ignore for performance.. should still pass")]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
-        var fullEndpoint = $"http://localhost:55448/craft/34";
+        var fullEndpoint = "http://localhost:55448/craft/34";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var crafts = await response.Content.ReadFromJsonAsync<IEnumerable<CraftSummaryPoco>>(
-            GetSerializerOptions()
-        );
+        var craftsRaw = await response.Content.ReadFromJsonAsync<IEnumerable<CraftSummaryPoco>>(GetSerializerOptions());
+        var crafts = craftsRaw.ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(crafts.Count(), Is.GreaterThan(5));
-            Assert.That(crafts.All(r => r.WorldID == 34));
-            Assert.That(crafts.All(r => r.ItemID > 0));
-            Assert.That(crafts.All(r => r.IconID > 0));
+            Assert.That(crafts, Has.Count.GreaterThan(5));
+            Assert.That(crafts.All(r => r.WorldId == 34));
+            Assert.That(crafts.All(r => r.ItemId > 0));
+            Assert.That(crafts.All(r => r.IconId > 0));
             Assert.That(crafts.All(r => r.StackSize > 0));
-            Assert.That(crafts.All(r => r.VendorPrice > 0));
-            Assert.That(crafts.All(r => r.Recipe.ID > 0));
-            Assert.That(crafts.All(r => r.Recipe.TargetItemID > 0));
+            Assert.That(crafts.All(r => r.PriceMid > 0));
+            Assert.That(crafts.All(r => r.PriceLow > 0));
+            Assert.That(crafts.All(r => r.Recipe.Id > 0));
+            Assert.That(crafts.All(r => r.Recipe.TargetItemId > 0));
             Assert.That(crafts.All(r => r.Recipe.ResultQuantity > 0));
-            Assert.That(crafts.All(r => r.Ingredients.Count() > 0));
+            Assert.That(crafts.All(r => r.Ingredients.Any()));
         });
     }
 
     [Test]
     public async Task GivenACallToGetBestCrafts_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/craft/34/1614654";
+        var fullEndpoint = "http://localhost:55448/craft/34/1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
