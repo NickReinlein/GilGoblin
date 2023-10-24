@@ -5,11 +5,11 @@
     <RootNamespace>GilGoblin.Cache</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.11.*" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.*" />
+    <PackageReference Include="Serilog" Version="3.0.*" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*" />
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="EntityFramework" Version="6.4.*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*" />
   </ItemGroup>
   <ItemGroup>

@@ -18,13 +18,8 @@ public class EndpointComponentTests : ComponentTests
 
     private static string[] AllEndPoints =
     {
-        "/recipe/",
-        "/recipe/100",
-        "/price/34/",
-        "/price/34/100",
+        "/recipe/", "/recipe/100", "/price/34/", "/price/34/100",
         // "/craft/34/", "temporary for performance
-        "/craft/34/100",
-        "/item/",
-        "/item/100"
+        "/craft/34/100", "/item/", "/item/100"
     };
 }

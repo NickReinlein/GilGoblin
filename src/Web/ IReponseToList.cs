@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace GilGoblin.Web;
 
-public interface IReponseToList<T> where T : class
+public interface IResponseToList<T> where T : class
 {
     List<T> GetContentAsList();
 }

@@ -1,15 +1,10 @@
 using System.Text.Json.Serialization;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Pocos;
 
 public class PriceWebPoco : BasePricePoco
 {
-    public int ItemID { get; set; }
-    public int WorldID { get; set; }
-
-    // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
-    public long LastUploadTime { get; set; }
-
     // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
     public float CurrentAveragePrice { get; set; }
     public float CurrentAveragePriceNQ { get; set; }
@@ -24,8 +19,8 @@ public class PriceWebPoco : BasePricePoco
 
     [JsonConstructor]
     public PriceWebPoco(
-        int itemID,
-        int worldID,
+        int itemId,
+        int worldId,
         long lastUploadTime,
         float currentAveragePrice,
         float currentAveragePriceNQ,
@@ -35,8 +30,8 @@ public class PriceWebPoco : BasePricePoco
         float averagePriceHQ
     )
     {
-        ItemID = itemID;
-        WorldID = worldID;
+        ItemId = itemId;
+        WorldId = worldId;
         LastUploadTime = lastUploadTime;
         CurrentAveragePrice = currentAveragePrice;
         CurrentAveragePriceNQ = currentAveragePriceNQ;

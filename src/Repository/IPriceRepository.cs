@@ -6,7 +6,7 @@ namespace GilGoblin.Repository;
 public interface IPriceRepository<T> : IRepositoryCache
     where T : class
 {
-    T? Get(int worldID, int id);
-    IEnumerable<T> GetMultiple(int worldID, IEnumerable<int> ids);
-    IEnumerable<T> GetAll(int worldID);
+    T? Get(int worldId, int id);
+    IEnumerable<T> GetMultiple(int worldId, IEnumerable<int> ids);
+    IEnumerable<T> GetAll(int worldId);
 }

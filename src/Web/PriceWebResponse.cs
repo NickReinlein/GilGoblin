@@ -4,14 +4,14 @@ using GilGoblin.Pocos;
 
 namespace GilGoblin.Web;
 
-public class PriceWebResponse : IReponseToList<PriceWebPoco>
+public class PriceWebResponse : IResponseToList<PriceWebPoco>
 {
     public Dictionary<int, PriceWebPoco> Items { get; set; }
 
     public PriceWebResponse(Dictionary<int, PriceWebPoco> items)
     {
-        Items = items;
+        Items = items ?? new Dictionary<int, PriceWebPoco>();
     }
 
-    public List<PriceWebPoco> GetContentAsList() => Items.Values.ToList();
+    public List<PriceWebPoco> GetContentAsList() => Items?.Values?.ToList();
 }

@@ -24,7 +24,7 @@ indent_size = 2
 indent_size = 4
 
 # Namespace settings
-csharp_style_namespace_declarations= file_scoped:suggestion
+csharp_style_namespace_declarations = file_scoped:suggestion
 
 # IDE0055: Fix formatting
 dotnet_diagnostic.IDE0055.severity = warning
@@ -42,10 +42,7 @@ dotnet_diagnostic.CS8618.severity = none
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 # Avoid "this." and "Me." if not necessary
-dotnet_style_qualification_for_field = false:refactoring
-dotnet_style_qualification_for_property = false:refactoring
-dotnet_style_qualification_for_method = false:refactoring
-dotnet_style_qualification_for_event = false:refactoring
+
 
 # Use language keywords instead of framework type names for type references
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
@@ -76,7 +73,6 @@ dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_field
 dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
 dotnet_naming_symbols.instance_fields.applicable_kinds = field
 dotnet_naming_style.instance_field_style.capitalization = camel_case
-dotnet_naming_style.instance_field_style.required_prefix = _
 
 # Locals and parameters are camelCase
 dotnet_naming_rule.locals_should_be_camel_case.severity = suggestion
@@ -89,12 +85,8 @@ dotnet_naming_style.camel_case_style.capitalization = camel_case
 dotnet_naming_rule.constants_should_be_camel_case.severity = suggestion
 dotnet_naming_rule.constants_should_be_camel_case.symbols = constants
 dotnet_naming_rule.constants_should_be_camel_case.style = constant_style
-dotnet_naming_symbols.constants.applicable_kinds = field, local
-dotnet_naming_symbols.constants.required_modifiers = const
-dotnet_naming_style.constant_style.capitalization = camel_case
 
 # Private Constants are CamelCase
-dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
 dotnet_naming_rule.dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
 .symbols = constants
 dotnet_naming_rule.dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
@@ -189,7 +181,6 @@ csharp_space_after_dot = false
 csharp_space_after_keywords_in_control_flow_statements = true
 csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = do_not_ignore
 csharp_space_before_colon_in_inheritance_clause = true
 csharp_space_before_comma = false
 csharp_space_before_dot = false

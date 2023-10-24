@@ -1,4 +1,5 @@
 using GilGoblin.Controllers;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ public class PriceControllerTests
 {
     private PriceController _controller;
     private IPriceRepository<PricePoco> _repo;
-    public static readonly int WorldID = 34;
+    public static readonly int WorldId = 34;
 
     [SetUp]
     public void SetUp()
@@ -30,16 +31,16 @@ public class PriceControllerTests
     {
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
-        poco2.ItemID = poco1.ItemID + 100;
-        _repo.GetAll(WorldID).Returns(new List<PricePoco>() { poco1, poco2 });
+        poco2.ItemId = poco1.ItemId + 100;
+        _repo.GetAll(WorldId).Returns(new List<PricePoco>() { poco1, poco2 });
 
-        var result = _controller.GetAll(WorldID);
+        var result = _controller.GetAll(WorldId);
 
         Assert.Multiple(() =>
         {
             Assert.That(result.Count, Is.EqualTo(2));
-            Assert.That(result.Count(i => i.ItemID == poco1.ItemID), Is.EqualTo(1));
-            Assert.That(result.Count(i => i.ItemID == poco2.ItemID), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.ItemId == poco1.ItemId), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.ItemId == poco2.ItemId), Is.EqualTo(1));
         });
     }
 
@@ -47,9 +48,9 @@ public class PriceControllerTests
     public void GivenAController_WhenWeReceiveAGetRequest_ThenAPriceIsReturned()
     {
         var poco1 = CreatePoco();
-        _repo.Get(WorldID, poco1.ItemID).Returns(poco1);
+        _repo.Get(WorldId, poco1.ItemId).Returns(poco1);
 
-        var result = _controller.Get(WorldID, poco1.ItemID);
+        var result = _controller.Get(WorldId, poco1.ItemId);
 
         Assert.That(result, Is.EqualTo(poco1));
     }
@@ -57,7 +58,7 @@ public class PriceControllerTests
     [Test]
     public void GivenAController_WhenWeReceiveAGetRequestForANonExistentPrice_ThenNullIsReturned()
     {
-        var result = _controller.Get(WorldID, 42);
+        var result = _controller.Get(WorldId, 42);
 
         Assert.That(result, Is.Null);
     }
@@ -65,9 +66,9 @@ public class PriceControllerTests
     private static PricePoco CreatePoco() =>
         new()
         {
-            ItemID = 200,
+            ItemId = 200,
             AverageSold = 333,
             AverageListingPrice = 555,
-            WorldID = 34
+            WorldId = 34
         };
 }
