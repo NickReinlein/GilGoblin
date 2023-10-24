@@ -6,24 +6,24 @@ namespace GilGoblin.Database;
 
 public class GilGoblinDbContext : DbContext
 {
-    private readonly DbContextOptions<GilGoblinDbContext> _options;
-    private readonly IConfiguration _configuration;
+    protected readonly DbContextOptions Options;
+    protected readonly IConfiguration Configuration;
 
     public DbSet<ItemPoco> Item { get; set; }
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
     public DbSet<RecipeCostPoco> RecipeCost { get; set; }
 
-    public GilGoblinDbContext(DbContextOptions<GilGoblinDbContext> options, IConfiguration configuration)
+    public GilGoblinDbContext(DbContextOptions options, IConfiguration configuration)
         : base(options)
     {
-        _options = options;
-        _configuration = configuration;
+        Options = options;
+        Configuration = configuration;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connectionString = _configuration.GetConnectionString(nameof(GilGoblinDbContext));
+        var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
         optionsBuilder.UseNpgsql(connectionString);
 
         base.OnConfiguring(optionsBuilder);

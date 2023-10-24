@@ -1,5 +1,6 @@
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Tests.Component;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -9,7 +10,7 @@ namespace GilGoblin.Tests;
 
 public class InMemoryTestDb
 {
-    protected DbContextOptions<GilGoblinDbContext> _options;
+    protected DbContextOptions<TestGilGoblinDbContext> _options;
     protected IConfiguration _configuration;
 
     [OneTimeSetUp]
@@ -17,10 +18,8 @@ public class InMemoryTestDb
     {
         _configuration = Substitute.For<IConfiguration>();
 
-        _options = Substitute.For<DbContextOptions<GilGoblinDbContext>>();
-        _options = new DbContextOptionsBuilder<GilGoblinDbContext>()
-            .UseInMemoryDatabase(databaseName: "GilGoblinTest")
-            .Options;
+        _options = Substitute.For<DbContextOptions<TestGilGoblinDbContext>>();
+        _options = new DbContextOptionsBuilder<TestGilGoblinDbContext>().Options;
     }
 
     [SetUp]
@@ -37,7 +36,7 @@ public class InMemoryTestDb
 
     private void DeleteAllEntries()
     {
-        var context = new GilGoblinDbContext(_options, _configuration);
+        var context = new TestGilGoblinDbContext(_options, _configuration);
         context.Price.RemoveRange(context.Price);
         context.Item.RemoveRange(context.Item);
         context.Recipe.RemoveRange(context.Recipe);
@@ -47,7 +46,7 @@ public class InMemoryTestDb
 
     private void CreateAllEntries()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.RecipeCost.AddRange(
             new RecipeCostPoco { WorldId = 22, RecipeId = 11 },
             new RecipeCostPoco { WorldId = 22, RecipeId = 12 },

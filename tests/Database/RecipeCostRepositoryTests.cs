@@ -3,6 +3,7 @@ using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Tests.Component;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -18,7 +19,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetAll(22);
@@ -35,7 +36,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetAll_WhenTheWorldIdDoesNotExist_ThenAnEmptyResponseIsReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetAll(999);
@@ -47,7 +48,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [TestCase(12)]
     public async Task GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = await recipeCostRepo.GetAsync(22, id);
@@ -63,7 +64,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [TestCase(12)]
     public async Task GivenAGet_WhenTheIdIsValidButNotTheWorldId_ThenNullIsReturned(int id)
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = await recipeCostRepo.GetAsync(854, id);
@@ -76,7 +77,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [TestCase(100)]
     public async Task GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
     {
-        await using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = await recipeCostRepo.GetAsync(22, id);
@@ -87,7 +88,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetMultiple(22, new[] { 11, 12 });
@@ -103,7 +104,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetMultiple_WhenIdsAreValidButNotWorldId_ThenAnEmptyResponseIsReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetMultiple(_worldId, new[] { 11, 12 });
@@ -114,7 +115,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetMultiple(22, new[] { 11, 99 });
@@ -130,7 +131,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetMultiple_WhenIdsAreInvalid_ThenAnEmptyResponseIsReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetMultiple(22, new[] { _worldId, 99 });
@@ -141,7 +142,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenAGetMultiple_WhenIdsEmpty_ThenAnEmptyResponseIsReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = recipeCostRepo.GetMultiple(22, Array.Empty<int>());
@@ -152,7 +153,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         _costCache.Get((_worldId, _recipeId)).Returns((RecipeCostPoco)null);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
@@ -172,7 +173,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCost = new RecipeCostPoco { WorldId = _worldId, RecipeId = _recipeId };
         _costCache.Get((_worldId, _recipeId)).Returns(recipeCost);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
@@ -186,7 +187,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
         var allRecipeCosts = context.RecipeCost.ToList();
 
@@ -203,7 +204,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.RecipeCost.RemoveRange(context.RecipeCost);
         context.SaveChanges();
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
@@ -217,7 +218,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
     {
         var poco = new RecipeCostPoco { WorldId = _worldId, RecipeId = _recipeId };
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         _costCache.Get((_worldId, _recipeId)).Returns(poco);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
@@ -231,7 +232,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
     {
         var poco = new RecipeCostPoco { WorldId = _worldId, RecipeId = _recipeId };
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         _costCache.Get((_worldId, _recipeId)).Returns((RecipeCostPoco)null);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
@@ -244,7 +245,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeSaveItToTheDatabase()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
         var poco = new RecipeCostPoco { WorldId = 77, RecipeId = 999 };
         await recipeCostRepo.Add(poco);

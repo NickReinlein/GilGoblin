@@ -1,8 +1,7 @@
 using GilGoblin.Cache;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using GilGoblin.Repository;
+using GilGoblin.Tests.Component;
 using NSubstitute;
 using NSubstitute.Extensions;
 using NUnit.Framework;
@@ -17,7 +16,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenWeGetAll_ThenTheRepositoryReturnsAllEntries()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetAll();
@@ -38,7 +37,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [TestCase(44)]
     public void GivenWeGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.Get(id);
@@ -54,7 +53,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         int expectedResultsCount
     )
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetRecipesForItem(targetItemId);
@@ -72,7 +71,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         int expectedResultsCount
     )
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipes = context.Recipe.Where(r => r.TargetItemId == targetItemId).ToList();
         _itemRecipeCache.Configure().Get(Arg.Is(targetItemId)).Returns(recipes);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
@@ -90,7 +89,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         int targetItemId
     )
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetRecipesForItem(targetItemId);
@@ -105,7 +104,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [TestCase(99999)]
     public void GivenWeGet_WhenIdIsInvalid_ThenTheRepositoryReturnsNull(int id)
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.Get(id);
@@ -116,7 +115,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenWeGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetMultiple(new int[] { 11, 33, 44 });
@@ -133,7 +132,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenWeGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetMultiple(new int[] { 22, 857 });
@@ -148,7 +147,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenWeGetMultiple_WhenIdsAreInvalid_ThenNoEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetMultiple(new int[] { 333, 999 });
@@ -159,7 +158,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenWeGetMultiple_WhenIdsEmpty_ThenNoEntriesAreReturned()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetMultiple(new int[] { });
@@ -171,7 +170,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     public void GivenWeGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
         var recipeId = 44;
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         _recipeCache.Get(recipeId).Returns((RecipePoco)null);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
@@ -184,7 +183,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public void GivenWeGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeId = 44;
         var poco = new RecipePoco { Id = recipeId };
         _recipeCache.Get(recipeId).Returns(poco);
@@ -200,7 +199,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenWeFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
         var allRecipes = context.Recipe.ToList();
 
