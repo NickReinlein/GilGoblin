@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Net.Http;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
 public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceBulkDataFetcher
 {

@@ -4,6 +4,7 @@ namespace GilGoblin.Pocos;
 
 public class ItemWebPoco : BaseItemPoco
 {
+    private int _canBeHq = 0;
     public ItemWebPoco() : base() { }
 
     public ItemWebPoco(
@@ -15,7 +16,7 @@ public class ItemWebPoco : BaseItemPoco
         int priceMid,
         int stackSize,
         int level,
-        bool canBeHq
+        int canBeHq
     ) : base(
         id,
         name,
@@ -25,8 +26,9 @@ public class ItemWebPoco : BaseItemPoco
         priceMid,
         stackSize,
         level,
-        canBeHq)
+        canBeHq > 0)
     {
+        _canBeHq = canBeHq;
     }
 
     public ItemWebPoco(BaseItemPoco poco)

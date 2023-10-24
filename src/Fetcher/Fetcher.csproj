@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
-    <RootNamespace>GilGoblin.Web</RootNamespace>
+    <RootNamespace>GilGoblin.Fetcher</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.0.*"/>
@@ -11,8 +11,6 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.*"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*"/>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Pocos/*Pocos.csproj"/>

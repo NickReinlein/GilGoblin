@@ -5,13 +5,12 @@ using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using GilGoblin.Services;
-using GilGoblin.Web;
+using GilGoblin.Fetcher;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using GilGoblin.DataUpdater;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -55,16 +54,13 @@ public class Startup
     private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddSingleton<ISingleDataFetcher<ItemWebPoco>, ItemSingleFetcher>();
-        services.AddSingleton<IItemSingleFetcher, ItemSingleFetcher>();
-
-        services.AddSingleton<IBulkDataFetcher<PriceWebPoco>, PriceBulkFetcher>();
-        services.AddSingleton<IPriceBulkDataFetcher, PriceBulkFetcher>();
-
-        services.AddSingleton<IItemSingleFetcher, ItemSingleFetcher>();
         services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
 
+        services.AddSingleton<IItemSingleFetcher, ItemSingleFetcher>();
+        services.AddSingleton<IDataUpdater<ItemWebPoco>, ItemUpdater>();
         services.AddSingleton<IDataSaver<ItemWebPoco>, DataSaver<ItemWebPoco>>();
+
+        services.AddSingleton<IPriceBulkDataFetcher, PriceBulkFetcher>();
     }
 
     private static void AddGoblinCaches(IServiceCollection services)

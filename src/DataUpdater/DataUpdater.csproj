@@ -10,16 +10,15 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.*"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.*"/>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.2.0-alpha"/>
+
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Database/*Database.csproj"/>
     <ProjectReference Include="../Pocos/*Pocos.csproj"/>
     <ProjectReference Include="../Services/*Services.csproj"/>
-    <ProjectReference Include="../Web/*Web.csproj"/>
+    <ProjectReference Include="../Fetcher/*Fetcher.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

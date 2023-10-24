@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "src\Repositor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "src\Services\Services.csproj", "{B961BCB9-3F82-4B4F-974F-FF8DD1E67013}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "src\Web\Web.csproj", "{79DDC3CD-75E0-4528-9346-69A50F1BF600}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fetcher", "src\Fetcher\Fetcher.csproj", "{79DDC3CD-75E0-4528-9346-69A50F1BF600}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "src\Controllers\Controllers.csproj", "{C6AE4B16-EA28-4EC0-9E5B-FCB8CD7BC516}"
 EndProject

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
 public interface IMarketableItemIdsFetcher
 {

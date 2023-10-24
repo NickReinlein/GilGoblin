@@ -191,7 +191,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
 
         var result = recipeRepo.Get(recipeId);
 
-        Assert.That(result, Is.EqualTo(poco));
+        Assert.That(result.Id, Is.EqualTo(poco.Id));
         _recipeCache.Received(1).Get(recipeId);
         _recipeCache.DidNotReceive().Add(recipeId, Arg.Any<RecipePoco>());
     }

@@ -12,7 +12,6 @@
     <PackageReference Include="NUnit" Version="3.13.*"/>
     <PackageReference Include="NUnit.Analyzers" Version="3.6.*"/>
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.*"/>
-    <PackageReference Include="CsvHelper" Version="30.0.*"/>
     <PackageReference Include="OpenCover" Version="4.7.*"/>
     <PackageReference Include="RichardSzalay.MockHttp" Version="6.0.*"/>
     <PackageReference Include="coverlet.msbuild" Version="3.2.*"/>

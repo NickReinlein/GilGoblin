@@ -1,9 +1,9 @@
 using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
-using GilGoblin.Web;
+using GilGoblin.Fetcher;
 using NUnit.Framework;
 
-namespace GilGoblin.Tests.Web;
+namespace GilGoblin.Tests.Fetcher;
 
 public class ItemWebResponseTests
 {

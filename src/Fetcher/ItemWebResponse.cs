@@ -3,7 +3,7 @@ using System.Linq;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
 public class ItemWebResponse : IResponseToList<ItemWebPoco>
 {

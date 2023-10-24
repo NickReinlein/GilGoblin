@@ -9,7 +9,50 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="a">
+      <change afterPath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Fetcher/DataFetcher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Fetcher/IBulkDataFetcher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Fetcher/IItemSingleFetcher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Fetcher/ItemSingleFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/Controllers.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/Controllers.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/Crafting.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/Crafting.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/ItemInfoUpdater.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/Repository.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/Services.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Services.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/ IReponseToList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ IReponseToList.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/BulkPriceFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkPriceFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/IBulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/IDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/IItemSingleFetcher.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/IPriceFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/IPriceFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/ISingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ISingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/ItemSingleFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ItemSingleFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/ItemWebResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ItemWebResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/MarketableItemIdsFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/PriceWebResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/PriceWebResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Web/Web.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/RecipeRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Web/DataFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/DataFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Web/FetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/FetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Web/ItemInfoFetcherTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Web/ItemInfoWebResponseTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/ItemInfoWebResponseTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Web/MarketableItemIdsFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/MarketableItemIdsFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +66,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dockerize-postgresql-database" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -81,11 +124,22 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/de860391f4bca1b51f9f824458f1ed099c6b4eb6b8133b2ca76f1f8ad16357/IDatabaseCreator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eaf74182ad7c943aaf043fd9e7bbb1d564713c6bd276e62966aaa618e9/LoggerExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Database/src/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Web/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Web/ItemSingleFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Web/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/InMemoryTestDb.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/DataUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/ItemInfoUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/ItemInfoUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/IItemSingleFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Web/BulkDataFetcher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Database/RecipeRepositoryTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Fetcher/FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://FetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -103,37 +157,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Rider.SolutionAnalysis.ShowPreview&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/Database&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Rider.SolutionAnalysis.ShowPreview": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "dockerize-updater",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Database",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Markdown&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Markdown"
     ],
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
-      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
-      &quot;/home/lemoneleven/.local/share/Symbols/src&quot;
+    "rider.external.source.directories": [
+      "/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
+      "/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache",
+      "/home/lemoneleven/.local/share/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Api: https">
     <configuration name="Publish Database to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/src/Database/bin/Release/net7.0/publish" target_framework="net7.0" uuid_high="1523818118304254509" uuid_low="-7370053201059395975" />
@@ -219,6 +273,7 @@
       <workItem from="1698008106756" duration="2316000" />
       <workItem from="1698075462234" duration="13658000" />
       <workItem from="1698154379549" duration="4026000" />
+      <workItem from="1698169972866" duration="7542000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -436,7 +491,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698169849729</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="a">
+      <option name="closed" value="true" />
+      <created>1698169998991</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1698169998991</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -497,7 +560,6 @@
     <MESSAGE value="Nuking ID -&gt; Id&#10;Fixing tests" />
     <MESSAGE value="WIP fix tests and change db schema ID -&gt; Id" />
     <MESSAGE value="WIP dockerizing the db" />
-    <MESSAGE value="a" />
     <MESSAGE value="WIP decoupling database and pocos" />
     <MESSAGE value="WIP still not working" />
     <MESSAGE value="WIP merging 2 branches" />
@@ -514,13 +576,14 @@
     <MESSAGE value="updated ER diagram" />
     <MESSAGE value="working API &amp; passing tests" />
     <MESSAGE value="Cleanup csproj" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleanup csproj" />
+    <MESSAGE value="a" />
+    <option name="LAST_COMMIT_MESSAGE" value="a" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs</url>
+          <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
           <line>45</line>
           <properties documentPath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" initialLine="38" containingFunctionPresentation="Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
             <startOffsets>
@@ -533,7 +596,7 @@
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs</url>
+          <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
           <line>49</line>
           <properties documentPath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" initialLine="42" containingFunctionPresentation="Lambda expression inside Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
             <startOffsets>
@@ -564,18 +627,6 @@
           <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Services/CsvInteractor.cs</url>
-          <line>40</line>
-          <properties documentPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" initialLine="36" containingFunctionPresentation="Method 'LoadFile'" />
-          <option name="timeStamp" value="127" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Services/CsvInteractor.cs</url>
-          <line>35</line>
-          <properties documentPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" initialLine="32" containingFunctionPresentation="Method 'LoadFile'" />
-          <option name="timeStamp" value="140" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs</url>
           <line>70</line>
           <properties documentPath="$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs" initialLine="109" containingFunctionPresentation="Method 'LoadCsvFileAndSaveResults'" />
@@ -598,12 +649,6 @@
           <line>41</line>
           <properties documentPath="$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs" initialLine="46" containingFunctionPresentation="Method 'FillTablesIfEmpty'" />
           <option name="timeStamp" value="208" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Services/CsvInteractor.cs</url>
-          <line>33</line>
-          <properties documentPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" initialLine="31" containingFunctionPresentation="Method 'LoadFile'" />
-          <option name="timeStamp" value="209" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs</url>
@@ -631,13 +676,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/Startup.cs</url>
-          <line>121</line>
+          <line>148</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/Startup.cs" initialLine="154" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
             <startOffsets>
-              <option value="5316" />
+              <option value="-1" />
             </startOffsets>
             <endOffsets>
-              <option value="5373" />
+              <option value="-1" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="239" />
@@ -645,15 +690,47 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs</url>
           <line>63</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs" initialLine="63" containingFunctionPresentation="Constructor 'RecipePoco'">
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs" initialLine="63" containingFunctionPresentation="Constructor 'RecipePoco'" />
+          <option name="timeStamp" value="243" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Fetcher/ItemSingleFetcherTests.cs</url>
+          <line>60</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" initialLine="60" containingFunctionPresentation="Lambda expression inside Method 'GivenWeCallFetchMultipleItemsAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
             <startOffsets>
-              <option value="2221" />
+              <option value="1850" />
             </startOffsets>
             <endOffsets>
-              <option value="2229" />
+              <option value="1896" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="243" />
+          <option name="timeStamp" value="244" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Fetcher/ItemSingleFetcherTests.cs</url>
+          <line>55</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" initialLine="55" containingFunctionPresentation="Method 'GivenWeCallFetchMultipleItemsAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
+            <startOffsets>
+              <option value="1698" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1750" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="245" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <line>33</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="33" containingFunctionPresentation="Constructor 'ItemWebPoco'">
+            <startOffsets>
+              <option value="594" />
+            </startOffsets>
+            <endOffsets>
+              <option value="607" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="246" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

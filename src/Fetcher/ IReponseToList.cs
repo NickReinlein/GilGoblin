@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
 public interface IResponseToList<T> where T : class
 {

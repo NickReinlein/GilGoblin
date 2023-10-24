@@ -1,42 +1,44 @@
-// using System.Net;
+//  using System.Net;
 // using System.Text.Json;
 // using GilGoblin.Pocos;
-// using GilGoblin.Web;
+// using GilGoblin.Fetcher;
 // using Microsoft.Extensions.Logging;
 // using NSubstitute;
 // using NUnit.Framework;
 // using RichardSzalay.MockHttp;
 //
-// namespace GilGoblin.Tests.Web;
+// namespace GilGoblin.Tests.Fetcher;
 //
-// public class PriceFetcherTests : FetcherTests
+// public class PriceBulkFetcherTests : FetcherTests
 // {
-//     private PriceFetcher _fetcher;
-//     private ILogger<PriceFetcher> _logger;
+//     private IPriceBulkDataFetcher _fetcher;
+//     private IMarketableItemIdsFetcher _marketableItemIdsFetcher;
+//     private ILogger<PriceBulkFetcher> _logger;
 //
 //     [SetUp]
 //     public override void SetUp()
 //     {
 //         base.SetUp();
-//         _logger = Substitute.For<ILogger<PriceFetcher>>();
-//         _fetcher = new PriceFetcher(_client, _logger);
+//         _logger = Substitute.For<ILogger<PriceBulkFetcher>>();
+//         _marketableItemIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
+//         _fetcher = new PriceBulkFetcher(_marketableItemIdsFetcher, _logger, _client);
 //     }
 //
 //     #region Basic
 //
 //     [Test]
-//     public void GivenWeCreateAPriceFetcher_WhenTheClientIsNotProvided_ThenWeCanUseADefaultClientInstead()
+//     public void GivenWeCreateAPriceBulkFetcher_WhenTheClientIsNotProvided_ThenWeCanUseADefaultClientInstead()
 //     {
 //         var defaultPrices = _fetcher.PricesPerPage;
 //
-//         _fetcher = new PriceFetcher(_logger);
+//         _fetcher = new PriceBulkFetcher(_logger);
 //
 //         Assert.That(_fetcher.PricesPerPage, Is.GreaterThanOrEqualTo(defaultPrices));
 //     }
 //
 //     #endregion
 //
-//     #region Web calls
+//     #region Fetcher calls
 //
 //     [Test]
 //     public async Task GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully()

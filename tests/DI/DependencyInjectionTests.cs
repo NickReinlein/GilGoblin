@@ -2,10 +2,11 @@ using GilGoblin.Cache;
 using GilGoblin.Crafting;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.DataUpdater;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Tests.Component;
-using GilGoblin.Web;
+using GilGoblin.Fetcher;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -25,13 +26,11 @@ public class DependencyInjectionTests : ComponentTests
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
-    [TestCase(typeof(IBulkDataFetcher<PriceWebPoco>))]
-    [TestCase(typeof(ISingleDataFetcher<ItemWebPoco>))]
     [TestCase(typeof(IPriceBulkDataFetcher))]
     [TestCase(typeof(IItemSingleFetcher))]
     [TestCase(typeof(IMarketableItemIdsFetcher))]
     [TestCase(typeof(IDataSaver<ItemWebPoco>))]
-    // [TestCase(typeof(DataUpdater<ItemInfoWebPoco, ItemInfoWebResponse>))]
+    [TestCase(typeof(IDataUpdater<ItemWebPoco>))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         var scopedDependencyService = _services.GetRequiredService(serviceType);

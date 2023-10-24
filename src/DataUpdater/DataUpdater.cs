@@ -5,26 +5,31 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using GilGoblin.Web;
+using GilGoblin.Fetcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
 
-public abstract class DataUpdater<T, U> : BackgroundService
+public interface IDataUpdater<T> where T : class, IIdentifiable
+{
+    Task FetchAsync();
+}
+
+public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
-    protected readonly IBulkDataFetcher<T> Fetcher;
+    protected readonly IDataFetcher<T> Fetcher;
     protected readonly IDataSaver<T> Saver;
-    private readonly ILogger<DataUpdater<T, U>> _logger;
+    protected readonly ILogger<DataUpdater<T, U>> Logger;
 
-    public DataUpdater(IBulkDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T, U>> logger)
+    public DataUpdater(IDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T, U>> logger)
     {
         Fetcher = fetcher;
         Saver = saver;
-        _logger = logger;
+        Logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -33,23 +38,23 @@ public abstract class DataUpdater<T, U> : BackgroundService
         {
             try
             {
-                await SaveAsync();
+                await FetchAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An exception occured during the Api call: {ex.Message}");
+                Logger.LogError($"An exception occured during the Api call: {ex.Message}");
             }
 
             await Task.Delay(TimeSpan.FromMinutes(5), ct);
         }
     }
 
-    protected virtual async Task SaveAsync()
+    public async Task FetchAsync()
     {
         var batchesToUpdate = await GetEntriesToUpdateAsync();
         if (!batchesToUpdate.Any())
         {
-            _logger.LogInformation($"No entries need to be updated for {nameof(T)}");
+            Logger.LogInformation($"No entries need to be updated for {nameof(T)}");
             return;
         }
 
@@ -64,7 +69,7 @@ public abstract class DataUpdater<T, U> : BackgroundService
     private async Task<List<T>> FetchUpdates(IReadOnlyCollection<T> entriesToUpdate)
     {
         var idsToUpdate = entriesToUpdate.Select(i => i.GetId());
-        _logger.LogInformation($"Fetching updates for {entriesToUpdate.Count} {nameof(T)} entries");
+        Logger.LogInformation($"Fetching updates for {entriesToUpdate.Count} {nameof(T)} entries");
         var updated = await FetchUpdateAsync(idsToUpdate);
         return updated;
     }
@@ -74,7 +79,7 @@ public abstract class DataUpdater<T, U> : BackgroundService
         var entriesList = entriesToUpdate.ToList();
         if (!entriesList.Any())
         {
-            _logger.LogInformation($"No entries need to be updated for {nameof(T)}");
+            Logger.LogInformation($"No entries need to be updated for {nameof(T)}");
             return new List<T>();
         }
 
@@ -82,7 +87,7 @@ public abstract class DataUpdater<T, U> : BackgroundService
         if (response is not null)
             return response.ToList();
 
-        _logger.LogError($"Failed to fetch updates for {entriesList.Count} entries of {nameof(T)}");
+        Logger.LogError($"Failed to fetch updates for {entriesList.Count} entries of {nameof(T)}");
         return new List<T>();
     }
 
@@ -97,13 +102,13 @@ public abstract class DataUpdater<T, U> : BackgroundService
             var callTime = timer.Elapsed.TotalMilliseconds;
 
             var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
-            _logger.LogInformation($"Received updates for {updated.Count} {nameof(T)} entries {worldString}");
-            _logger.LogInformation($"Total call time: {callTime}");
+            Logger.LogInformation($"Received updates for {updated.Count} {nameof(T)} entries {worldString}");
+            Logger.LogInformation($"Total call time: {callTime}");
             return updated;
         }
         catch (Exception e)
         {
-            _logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
+            Logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
             return Enumerable.Empty<T>();
         }
     }

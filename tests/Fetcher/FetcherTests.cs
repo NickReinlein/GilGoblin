@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 
-namespace GilGoblin.Tests.Web;
+namespace GilGoblin.Tests.Fetcher;
 
 public class FetcherTests
 {

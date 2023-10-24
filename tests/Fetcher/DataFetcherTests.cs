@@ -2,13 +2,13 @@ using System.Net;
 using System.Text.Json;
 using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
-using GilGoblin.Web;
+using GilGoblin.Fetcher;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 
-namespace GilGoblin.Tests.Web;
+namespace GilGoblin.Tests.Fetcher;
 
 public class DataFetcherTests : FetcherTests
 {

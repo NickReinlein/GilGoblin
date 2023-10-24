@@ -7,21 +7,15 @@ using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
-public abstract class BulkDataFetcher<T, U> : IBulkDataFetcher<T>
+public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
-    protected string BasePath { get; set; }
-    protected HttpClient Client { get; set; }
-    private readonly ILogger<BulkDataFetcher<T, U>> _logger;
-
     public BulkDataFetcher(string basePath, ILogger<BulkDataFetcher<T, U>> logger, HttpClient? client = null)
+        : base(basePath, logger, client)
     {
-        BasePath = basePath;
-        Client = client ?? new HttpClient();
-        _logger = logger;
     }
 
     public async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null)
@@ -37,7 +31,7 @@ public abstract class BulkDataFetcher<T, U> : IBulkDataFetcher<T>
         return response is not null ? response.GetContentAsList() : new List<T>();
     }
 
-    protected async Task<U?> FetchAndSerializeDataAsync(string path)
+    private async Task<U?> FetchAndSerializeDataAsync(string path)
     {
         try
         {
@@ -49,7 +43,7 @@ public abstract class BulkDataFetcher<T, U> : IBulkDataFetcher<T>
         }
         catch
         {
-            _logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");
+            Logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");
             return null;
         }
     }

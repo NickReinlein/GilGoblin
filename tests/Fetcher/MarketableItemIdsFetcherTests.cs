@@ -1,13 +1,13 @@
 using System.Net;
 using System.Text.Json;
+using GilGoblin.Fetcher;
 using GilGoblin.Pocos;
-using GilGoblin.Web;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 
-namespace GilGoblin.Tests.Web;
+namespace GilGoblin.Tests.Fetcher;
 
 public class MarketableItemIdsFetcherTests : FetcherTests
 {

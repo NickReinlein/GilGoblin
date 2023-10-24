@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using GilGoblin.Repository;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
 public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetcher
 {

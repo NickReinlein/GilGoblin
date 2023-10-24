@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -5,20 +7,27 @@ using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Web;
+namespace GilGoblin.Fetcher;
 
-public abstract class SingleDataFetcher<T> : ISingleDataFetcher<T>
+public abstract class SingleDataFetcher<T> : DataFetcher, ISingleDataFetcher<T>
     where T : class, IIdentifiable
 {
-    protected string BasePath { get; set; }
-    protected HttpClient Client { get; set; }
-    private readonly ILogger<SingleDataFetcher<T>> _logger;
-
     public SingleDataFetcher(string basePath, ILogger<SingleDataFetcher<T>> logger, HttpClient? client = null)
+        : base(basePath, logger, client)
     {
-        BasePath = basePath;
-        Client = client ?? new HttpClient();
-        _logger = logger;
+    }
+
+    public async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null)
+    {
+        var result = new List<T>();
+        foreach (var id in ids.ToList())
+        {
+            var fetched = await FetchByIdAsync(id, world);
+            if (fetched is not null)
+                result.Add(fetched);
+        }
+
+        return result;
     }
 
     public async Task<T?> FetchByIdAsync(int id, int? world = null)
@@ -31,19 +40,18 @@ public abstract class SingleDataFetcher<T> : ISingleDataFetcher<T>
         return await FetchAndSerializeDataAsync(path);
     }
 
-    protected async Task<T?> FetchAndSerializeDataAsync(string path)
+    private async Task<T?> FetchAndSerializeDataAsync(string path)
     {
         try
         {
             var response = await Client.GetAsync(path);
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            return await response.Content.ReadFromJsonAsync<T>();
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<T>()
+                : null;
         }
         catch
         {
-            _logger.LogError($"Failed GET call for {nameof(T)} with path: {path}");
+            Logger.LogError($"Failed GET call for {nameof(T)} with path: {path}");
             return null;
         }
     }
