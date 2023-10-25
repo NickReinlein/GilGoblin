@@ -13,5 +13,5 @@ public class PriceWebResponse : IResponseToList<PriceWebPoco>
         Items = items ?? new Dictionary<int, PriceWebPoco>();
     }
 
-    public List<PriceWebPoco> GetContentAsList() => Items?.Values?.ToList();
+    public List<PriceWebPoco> GetContentAsList() => Items?.Values.ToList();
 }

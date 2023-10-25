@@ -8,16 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccfe5020-3b22-4efb-b7d7-bb6f258315b0" name="Changes" comment="changed property name canbehq -&gt; canhq to be consistent">
-      <change afterPath="$PROJECT_DIR$/../../tests/Fetcher/ItemWebPocoConverter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/DataUpdater.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Fetcher/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/SingleDataFetcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/ItemWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/ItemWebPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Pocos/Pocos.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/Repository.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Fetcher/ItemSingleFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Fetcher/ItemSingleFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Fetcher/PriceFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Fetcher/PriceFetcherTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

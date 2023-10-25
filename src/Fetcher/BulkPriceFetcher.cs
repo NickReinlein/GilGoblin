@@ -33,11 +33,13 @@ public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>,
         if (!allIds.Any())
             return new List<List<int>>();
 
-        var batcher = new Batcher<int>(PricesPerPage);
+        var batcher = new Batcher<int>(_pricesPerPage);
         return batcher.SplitIntoBatchJobs(allIds);
     }
 
-    public int PricesPerPage { get; set; } = 100;
+    public int GetEntriesPerPage() => _pricesPerPage;
+    public void SetEntriesPerPage(int count) => _pricesPerPage = count;
+    private int _pricesPerPage = 100;
 
     private static string PriceBaseUrl => "https://universalis.app/api/v2/";
 

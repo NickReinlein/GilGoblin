@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T>
+public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
@@ -39,13 +39,19 @@ public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T>
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<U>();
+            var data = ReadResponseContentAsync(response.Content);
+            return data;
         }
         catch
         {
             Logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");
             return null;
         }
+    }
+
+    protected virtual U ReadResponseContentAsync(HttpContent content)
+    {
+        return content.ReadFromJsonAsync<U>().Result;
     }
 
     protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
