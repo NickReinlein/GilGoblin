@@ -1,4 +1,3 @@
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.Component;
 using Microsoft.EntityFrameworkCore;

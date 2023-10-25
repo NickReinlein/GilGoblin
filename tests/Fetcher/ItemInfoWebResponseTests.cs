@@ -112,7 +112,7 @@ public class ItemWebResponseTests
 
     protected static List<ItemWebPoco> GetMultipleNewPocos()
     {
-        var poco1 = new ItemWebPoco() { Id = _itemId1 };
+        var poco1 = new ItemWebPoco { Id = _itemId1 };
         var poco2 = new ItemWebPoco { Id = _itemId2 };
         return new List<ItemWebPoco> { poco1, poco2 };
     }

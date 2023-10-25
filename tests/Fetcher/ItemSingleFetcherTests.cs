@@ -175,7 +175,7 @@ public class ItemSingleFetcherTests : FetcherTests
 
     protected static List<ItemWebPoco> GetMultipleWebPocos()
     {
-        var poco1 = new ItemWebPoco() { Id = ItemId1 };
+        var poco1 = new ItemWebPoco { Id = ItemId1 };
         var poco2 = new ItemWebPoco { Id = ItemId2 };
         return new List<ItemWebPoco> { poco1, poco2 };
     }

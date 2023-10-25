@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
-using GilGoblin.Repository;
 
 namespace GilGoblin.Repository;
 
@@ -47,7 +45,7 @@ public class PriceRepository : IPriceRepository<PricePoco>
     public Task FillCache()
     {
         var items = _dbContext?.Price?.ToList();
-        items.ForEach(price => _cache.Add((price.WorldId, price.ItemId), price));
+        items?.ForEach(price => _cache.Add((price.WorldId, price.ItemId), price));
         return Task.CompletedTask;
     }
 }

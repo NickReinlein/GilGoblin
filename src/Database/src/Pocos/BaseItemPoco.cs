@@ -15,7 +15,6 @@ public class BaseItemPoco : IIdentifiable
     public int PriceLow { get; set; }
     public bool CanHq { get; set; }
 
-    [JsonConstructor]
     public BaseItemPoco() { }
 
     public BaseItemPoco(

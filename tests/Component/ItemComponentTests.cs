@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -21,7 +20,7 @@ public class ItemComponentTests : ComponentTests
         Assert.Multiple(() =>
         {
             Assert.That(item.Id, Is.EqualTo(10348));
-            Assert.That(item.CanBeHq, Is.False);
+            Assert.That(item.CanHq, Is.False);
             Assert.That(item.IconId, Is.EqualTo(51024));
             Assert.That(item.Description, Is.EqualTo(expectedDescription));
             Assert.That(item.PriceLow, Is.GreaterThan(10));
@@ -95,7 +94,7 @@ public class ItemComponentTests : ComponentTests
                 "Missing a suspicious number of descriptions"
             );
             Assert.That(
-                items.Count(p => p.CanBeHq),
+                items.Count(p => p.CanHq),
                 Is.GreaterThan(itemCount * (1.0f - MissingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries that can be High Quality"
             );

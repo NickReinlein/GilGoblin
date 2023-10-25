@@ -1,6 +1,5 @@
 using GilGoblin.Controllers;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -66,7 +65,7 @@ public class ItemControllerTests
         new()
         {
             Id = 200,
-            CanBeHq = true,
+            CanHq = true,
             IconId = 2332,
             Description = "testDesc",
             Level = 83,

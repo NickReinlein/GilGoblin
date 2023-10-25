@@ -15,7 +15,6 @@ public class MarketListingPoco
     public MarketListingPoco() { }
 
     public MarketListingPoco(int pricePerUnit, int quantity, long lastReviewTime, bool hq)
-        : base()
     {
         Hq = hq;
         Price = pricePerUnit;

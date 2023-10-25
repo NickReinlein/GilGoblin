@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using GilGoblin.Database.Pocos;
-using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

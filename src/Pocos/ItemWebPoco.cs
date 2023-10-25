@@ -5,32 +5,31 @@ namespace GilGoblin.Pocos;
 
 public class ItemWebPoco : BaseItemPoco
 {
-    public ItemWebPoco() : base() { }
+    public ItemWebPoco() { }
 
-    [JsonConstructor]
-    public ItemWebPoco(
-        int id,
-        string name,
-        string description,
-        int iconId,
-        int priceLow,
-        int priceMid,
-        int stackSize,
-        int level,
-        int canBeHq
-    ) : base(
-        id,
-        name,
-        description,
-        iconId,
-        priceLow,
-        priceMid,
-        stackSize,
-        level,
-        canBeHq > 0)
-    {
-        _canBeHq = canBeHq;
-    }
+    // [JsonConstructor]
+    // public ItemWebPoco(
+    //     int id,
+    //     string name,
+    //     string description,
+    //     int iconId,
+    //     int priceLow,
+    //     int priceMid,
+    //     int stackSize,
+    //     int level,
+    //     int canBeHq
+    // ) : base(
+    //     id,
+    //     name,
+    //     description,
+    //     iconId,
+    //     priceLow,
+    //     priceMid,
+    //     stackSize,
+    //     level,
+    //     canBeHq > 0)
+    // {
+    // }
 
     public ItemWebPoco(BaseItemPoco poco)
     {
@@ -41,7 +40,7 @@ public class ItemWebPoco : BaseItemPoco
         StackSize = poco.StackSize;
         PriceLow = poco.PriceLow;
         PriceMid = poco.PriceMid;
-        CanBeHq = poco.CanBeHq;
+        CanHq = poco.CanHq;
         IconId = poco.IconId;
     }
 }

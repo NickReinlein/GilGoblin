@@ -118,7 +118,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
-        var result = recipeRepo.GetMultiple(new int[] { 11, 33, 44 });
+        var result = recipeRepo.GetMultiple(new[] { 11, 33, 44 });
 
         Assert.Multiple(() =>
         {
@@ -135,7 +135,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
-        var result = recipeRepo.GetMultiple(new int[] { 22, 857 });
+        var result = recipeRepo.GetMultiple(new [] { 22, 857 });
 
         Assert.Multiple(() =>
         {
@@ -150,7 +150,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
-        var result = recipeRepo.GetMultiple(new int[] { 333, 999 });
+        var result = recipeRepo.GetMultiple(new [] { 333, 999 });
 
         Assert.That(!result.Any());
     }

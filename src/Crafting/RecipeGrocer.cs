@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
-using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
 
@@ -37,16 +36,18 @@ public class RecipeGrocer : IRecipeGrocer
         var ingredientsBrokenDownList = new List<IngredientPoco>();
         foreach (var ingredient in ingredientList.Where(i => i?.Quantity > 0))
         {
-            var breakdownIngredients = await BreakdownItem(ingredient.ItemId);
+            var breakdown = await BreakdownItem(ingredient.ItemId);
+            var breakdownIngredients = breakdown.ToList();
             if (!breakdownIngredients.Any())
             {
                 ingredientsBrokenDownList.Add(ingredient);
                 continue;
             }
 
-            breakdownIngredients.ToList().ForEach(i => i.Quantity *= ingredient.Quantity);
+            breakdownIngredients.ForEach(i => i.Quantity *= ingredient.Quantity);
             ingredientsBrokenDownList.AddRange(breakdownIngredients);
         }
+
         return ingredientsBrokenDownList;
     }
 
@@ -61,6 +62,7 @@ public class RecipeGrocer : IRecipeGrocer
             MultiplyQuantityProduced(ingredients, recipe);
             allIngredients.AddRange(ingredients);
         }
+
         return allIngredients;
     }
 

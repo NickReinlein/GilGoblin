@@ -11,14 +11,37 @@
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="a">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/IPriceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/IPriceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/ItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/ItemController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/IRecipeGrocer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/IRecipeGrocer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/RecipeGrocer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/RecipeGrocer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/BaseItemPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/BaseItemPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/BulkPriceFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkPriceFetcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/IItemSingleFetcher.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/ItemSingleFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ItemSingleFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/IngredientPocoExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/IngredientPocoExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/MarketListingPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/MarketListingPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IItemRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IRecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IRecipeCostRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IRecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IRecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/PriceRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/PriceRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/Repository.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Controllers/ItemControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Controllers/ItemControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Controllers/PriceControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Controllers/PriceControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Controllers/RecipeControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Controllers/RecipeControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Crafting/CraftingCalculatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Crafting/CraftingCalculatorTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Crafting/RecipeGrocerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Crafting/RecipeGrocerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/ItemRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/ItemRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeCostRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/RecipeCostRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/RecipeRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Fetcher/DataFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/DataFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Fetcher/ItemInfoWebResponseTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/ItemInfoWebResponseTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Fetcher/ItemSingleFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/ItemSingleFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +89,8 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/a1/6fd7eda0/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/14/3c4e49cd/ConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/f1/65b763ea/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/93/7b1223d3/ReadStack.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/da/4ce6d9e2/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/fb/358eef35/JsonConstructorAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4f51393d52474b41b977486340c7905963600/be/a61684f6/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5537e977a5534805963c484d304d8d457e00/da/a4678abc/BaseItemPoco.cs" root0="SKIP_HIGHLIGHTING" />
@@ -236,7 +261,7 @@
       <workItem from="1698075462234" duration="13658000" />
       <workItem from="1698154379549" duration="4026000" />
       <workItem from="1698169972866" duration="7542000" />
-      <workItem from="1698249696882" duration="5141000" />
+      <workItem from="1698249696882" duration="7637000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -647,10 +672,10 @@
           <line>20</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="19" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="425" />
+              <option value="416" />
             </startOffsets>
             <endOffsets>
-              <option value="429" />
+              <option value="420" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="257" />
@@ -660,10 +685,10 @@
           <line>35</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="35" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="654" />
+              <option value="645" />
             </startOffsets>
             <endOffsets>
-              <option value="667" />
+              <option value="658" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="258" />
@@ -697,15 +722,67 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
           <line>7</line>
-          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="6" containingFunctionPresentation="Constructor 'ItemWebPoco'">
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="8" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
               <option value="168" />
             </startOffsets>
             <endOffsets>
-              <option value="172" />
+              <option value="169" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="265" />
+          <option name="timeStamp" value="267" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/da/4ce6d9e2/JsonSerializer.cs</url>
+          <line>1879</line>
+          <properties documentPath="$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/da/4ce6d9e2/JsonSerializer.cs" initialLine="1879" containingFunctionPresentation="Method 'ReadFromSpan'">
+            <startOffsets>
+              <option value="113993" />
+            </startOffsets>
+            <endOffsets>
+              <option value="114101" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="269" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/da/4ce6d9e2/JsonSerializer.cs</url>
+          <line>1885</line>
+          <properties documentPath="$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/da/4ce6d9e2/JsonSerializer.cs" initialLine="1885" containingFunctionPresentation="Method 'ReadFromSpan'">
+            <startOffsets>
+              <option value="114179" />
+            </startOffsets>
+            <endOffsets>
+              <option value="114192" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="270" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="30" containingFunctionPresentation="Constructor 'ItemWebPoco'">
+            <startOffsets>
+              <option value="580" />
+            </startOffsets>
+            <endOffsets>
+              <option value="581" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="271" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <line>31</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="31" containingFunctionPresentation="Constructor 'ItemWebPoco'">
+            <startOffsets>
+              <option value="586" />
+            </startOffsets>
+            <endOffsets>
+              <option value="587" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="272" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

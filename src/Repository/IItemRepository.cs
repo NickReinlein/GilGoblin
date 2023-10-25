@@ -1,4 +1,3 @@
-using GilGoblin.Cache;
 using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Repository;

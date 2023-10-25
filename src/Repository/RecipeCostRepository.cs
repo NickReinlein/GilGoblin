@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using GilGoblin.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
-using GilGoblin.Repository;
 
 namespace GilGoblin.Repository;
 
@@ -63,7 +61,7 @@ public class RecipeCostRepository : IRecipeCostRepository
     public Task FillCache()
     {
         var costs = _dbContext?.RecipeCost?.ToList();
-        costs.ForEach(cost => _cache.Add((cost.WorldId, cost.RecipeId), cost));
+        costs?.ForEach(cost => _cache.Add((cost.WorldId, cost.RecipeId), cost));
         return Task.CompletedTask;
     }
 }

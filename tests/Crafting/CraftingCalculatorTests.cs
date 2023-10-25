@@ -2,7 +2,6 @@ using GilGoblin.Crafting;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Exceptions;
-using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -137,7 +136,7 @@ public class CraftingCalculatorTests
         var price = new PricePoco { ItemId = testIngredient.ItemId, WorldId = _worldId };
         var prices = new List<PricePoco> { price };
 
-        var result = _calc.AddPricesToIngredients(ingredients, prices);
+        var result = _calc!.AddPricesToIngredients(ingredients, prices);
 
         var craftIngredient = result.First();
         Assert.Multiple(() =>
@@ -155,7 +154,7 @@ public class CraftingCalculatorTests
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
         var prices = new List<PricePoco> { new PricePoco { WorldId = _worldId, ItemId = 222 } };
 
-        var result = _calc.AddPricesToIngredients(ingredients, prices);
+        var result = _calc!.AddPricesToIngredients(ingredients, prices);
 
         Assert.That(result, Is.Empty);
         _logger
@@ -188,7 +187,7 @@ public class CraftingCalculatorTests
         _prices.Get(Arg.Any<int>(), Arg.Any<int>()).Returns((PricePoco)null);
 
         Assert.Throws<DataNotFoundException>(() =>
-            _calc.GetIngredientPrice(_worldId, _firstItemId, NewRecipe.GetIngredientsList()));
+            _calc!.GetIngredientPrice(_worldId, _firstItemId, NewRecipe.GetIngredientsList()));
     }
 
     [Test]
@@ -197,7 +196,7 @@ public class CraftingCalculatorTests
         var poco = new RecipeCostPoco { RecipeId = _recipeId, WorldId = _worldId, Cost = 9001 };
         _recipeCosts.GetAsync(_worldId, _recipeId).Returns(poco);
 
-        var result = await _calc.CalculateCraftingCostForRecipe(_worldId, _recipeId);
+        var result = await _calc!.CalculateCraftingCostForRecipe(_worldId, _recipeId);
 
         Assert.That(result, Is.EqualTo(poco.Cost));
         await _recipeCosts.Received(1).GetAsync(_worldId, _recipeId);
@@ -210,7 +209,7 @@ public class CraftingCalculatorTests
         var poco = new RecipeCostPoco { RecipeId = _recipeId, WorldId = _worldId, Cost = 9001 };
         _recipeCosts.GetAsync(_worldId, _recipeId).Returns(poco);
 
-        var result = await _calc.GetLowestCraftingCost(_worldId, new List<RecipePoco>() { NewRecipe });
+        var result = await _calc!.GetLowestCraftingCost(_worldId, new List<RecipePoco>() { NewRecipe });
 
         Assert.That(result.Item1, Is.EqualTo(poco.RecipeId));
         Assert.That(result.Item2, Is.EqualTo(poco.Cost));

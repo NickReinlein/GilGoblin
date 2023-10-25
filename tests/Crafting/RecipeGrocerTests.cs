@@ -1,7 +1,6 @@
 using GilGoblin.Crafting;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
-using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -14,7 +13,6 @@ public class RecipeGrocerTests
 {
     private RecipeGrocer _grocer;
     private IRecipeRepository _recipes;
-    private IPriceRepository<PricePoco> _prices;
     private ILogger<RecipeGrocer> _logger;
 
     private static readonly int _firstRecipeId = 6044;
@@ -30,7 +28,7 @@ public class RecipeGrocerTests
     public void SetUp()
     {
         _recipes = Substitute.For<IRecipeRepository>();
-        _prices = Substitute.For<IPriceRepository<PricePoco>>();
+        Substitute.For<IPriceRepository<PricePoco>>();
         _logger = Substitute.For<ILogger<RecipeGrocer>>();
         _grocer = new RecipeGrocer(_recipes, _logger);
     }
@@ -354,7 +352,7 @@ public class RecipeGrocerTests
             .GetRecipesForItem(secondRecipe.ItemIngredient0TargetId)
             .Returns(Array.Empty<RecipePoco>());
         return firstRecipe.AmountIngredient0
-            + (firstRecipe.AmountIngredient1 * secondRecipe.AmountIngredient0);
+               + (firstRecipe.AmountIngredient1 * secondRecipe.AmountIngredient0);
     }
 
     private void Setup2RecipesTest()
