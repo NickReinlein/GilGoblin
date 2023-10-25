@@ -11,7 +11,6 @@ namespace GilGoblin.Fetcher;
 public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceBulkDataFetcher
 {
     private readonly IMarketableItemIdsFetcher _marketableFetcher;
-    private readonly ILogger<PriceBulkFetcher> _logger;
 
     public PriceBulkFetcher(
         IMarketableItemIdsFetcher marketableFetcher,
@@ -19,7 +18,6 @@ public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>,
         HttpClient? client = null)
         : base(PriceBaseUrl, logger, client)
     {
-        _logger = logger;
         _marketableFetcher = marketableFetcher;
     }
 

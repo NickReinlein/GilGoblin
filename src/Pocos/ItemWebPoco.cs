@@ -1,12 +1,13 @@
+using System.Text.Json.Serialization;
 using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Pocos;
 
 public class ItemWebPoco : BaseItemPoco
 {
-    private int _canBeHq = 0;
     public ItemWebPoco() : base() { }
 
+    [JsonConstructor]
     public ItemWebPoco(
         int id,
         string name,

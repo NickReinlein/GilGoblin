@@ -1,5 +1,4 @@
 using GilGoblin.Pocos;
-using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,11 +9,15 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Fetcher;
 
+public interface IItemSingleFetcher : ISingleDataFetcher<ItemWebPoco>
+{
+    Task<List<int>> GetAllMissingIds();
+}
+
 public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetcher
 {
     private readonly IMarketableItemIdsFetcher _marketableFetcher;
     private readonly IItemRepository _repo;
-    private readonly ILogger<ItemSingleFetcher> _logger;
 
     public ItemSingleFetcher(
         IItemRepository repo,
@@ -25,7 +28,6 @@ public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetc
     {
         _repo = repo;
         _marketableFetcher = fetcher;
-        _logger = logger;
     }
 
     protected override string GetUrlPathFromEntry(int id, int? worldId = null)
@@ -37,17 +39,7 @@ public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetc
         return sb.ToString();
     }
 
-    public async Task<List<List<int>>> GetIdsAsBatchJobsAsync()
-    {
-        var missingIds = await GetAllMissingIds();
-        if (!missingIds.Any())
-            return new List<List<int>>();
-
-        var batcher = new Batcher<int>(ItemsPerPage);
-        return batcher.SplitIntoBatchJobs(missingIds);
-    }
-
-    private async Task<List<int>> GetAllMissingIds()
+    public async Task<List<int>> GetAllMissingIds()
     {
         var allIds = await _marketableFetcher.GetMarketableItemIdsAsync();
         if (!allIds.Any())
@@ -57,9 +49,7 @@ public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetc
         return allIds.Except(existingIds).ToList();
     }
 
-    public int ItemsPerPage { get; set; } = 1;
-
-    public static readonly string BaseUrl = "https://xivapi.com/item";
+    public static readonly string BaseUrl = "https://xivapi.com/item/";
 
     public static readonly string ColumnsSuffix =
         "?columns=ID,Name,Description,IconID,PriceMid,PriceLow,StackSize,LevelItem,CanBeHq";

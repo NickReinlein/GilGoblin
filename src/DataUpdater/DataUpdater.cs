@@ -17,15 +17,14 @@ public interface IDataUpdater<T> where T : class, IIdentifiable
     Task FetchAsync();
 }
 
-public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T>
+public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
     where T : class, IIdentifiable
-    where U : class, IResponseToList<T>
 {
     protected readonly IDataFetcher<T> Fetcher;
     protected readonly IDataSaver<T> Saver;
-    protected readonly ILogger<DataUpdater<T, U>> Logger;
+    protected readonly ILogger<DataUpdater<T>> Logger;
 
-    public DataUpdater(IDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T, U>> logger)
+    public DataUpdater(IDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T>> logger)
     {
         Fetcher = fetcher;
         Saver = saver;
@@ -51,30 +50,14 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T>
 
     public async Task FetchAsync()
     {
-        var batchesToUpdate = await GetEntriesToUpdateAsync();
-        if (!batchesToUpdate.Any())
-        {
-            Logger.LogInformation($"No entries need to be updated for {nameof(T)}");
-            return;
-        }
+        var updateIdList = await GetIdsToUpdateAsync();
 
-        foreach (var batch in batchesToUpdate)
-        {
-            var updated = await FetchUpdates(batch);
-            if (updated.Any())
-                await Saver.SaveAsync(updated);
-        }
+        var updated = await FetchUpdateAsync(updateIdList);
+        if (updated.Any())
+            await Saver.SaveAsync(updated);
     }
 
-    private async Task<List<T>> FetchUpdates(IReadOnlyCollection<T> entriesToUpdate)
-    {
-        var idsToUpdate = entriesToUpdate.Select(i => i.GetId());
-        Logger.LogInformation($"Fetching updates for {entriesToUpdate.Count} {nameof(T)} entries");
-        var updated = await FetchUpdateAsync(idsToUpdate);
-        return updated;
-    }
-
-    private async Task<List<T>> FetchUpdateAsync(IEnumerable<int> entriesToUpdate)
+    private async Task<List<T>> FetchUpdateAsync(IEnumerable<int> entriesToUpdate, int worldId = 0)
     {
         var entriesList = entriesToUpdate.ToList();
         if (!entriesList.Any())
@@ -83,7 +66,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T>
             return new List<T>();
         }
 
-        var response = await FetchUpdatesForIdsAsync(entriesList);
+        var response = await FetchUpdatesForIdsAsync(entriesList, worldId);
         if (response is not null)
             return response.ToList();
 
@@ -113,6 +96,6 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T>
         }
     }
 
-    protected virtual async Task<List<List<T>>> GetEntriesToUpdateAsync() =>
-        await Task.Run(() => new List<List<T>>());
+    protected virtual async Task<List<int>> GetIdsToUpdateAsync() =>
+        await Task.Run(() => new List<int>());
 }

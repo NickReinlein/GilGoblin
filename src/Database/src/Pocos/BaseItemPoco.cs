@@ -13,7 +13,7 @@ public class BaseItemPoco : IIdentifiable
     public int StackSize { get; set; }
     public int PriceMid { get; set; }
     public int PriceLow { get; set; }
-    public bool CanBeHq { get; set; }
+    public bool CanHq { get; set; }
 
     [JsonConstructor]
     public BaseItemPoco() { }
@@ -23,11 +23,11 @@ public class BaseItemPoco : IIdentifiable
         string name,
         string description,
         int iconId,
-        int level,
         int priceMid,
         int priceLow,
         int stackSize,
-        bool canBeHq = false)
+        int level,
+        bool canHq)
     {
         Id = id;
         Name = name;
@@ -37,7 +37,7 @@ public class BaseItemPoco : IIdentifiable
         PriceMid = priceMid;
         PriceLow = priceLow;
         StackSize = stackSize;
-        CanBeHq = canBeHq;
+        CanHq = canHq;
     }
 
     public int GetId() => Id;

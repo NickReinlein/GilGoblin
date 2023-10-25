@@ -32,20 +32,6 @@ public class ItemSingleFetcherTests : FetcherTests
         _fetcher = new ItemSingleFetcher(_repo, _marketableIdsFetcher, _logger, _client);
     }
 
-    #region Basic
-
-    [Test]
-    public void GivenWeCreateAItemFetcher_WhenTheClientIsNotProvided_ThenWeCanUseADefaultClientInstead()
-    {
-        var defaultItems = _fetcher.ItemsPerPage;
-
-        _fetcher = new ItemSingleFetcher(_repo, _marketableIdsFetcher, _logger);
-
-        Assert.That(_fetcher.ItemsPerPage, Is.GreaterThanOrEqualTo(defaultItems));
-    }
-
-    #endregion
-
     #region Fetcher calls
 
     [Test]
@@ -57,7 +43,7 @@ public class ItemSingleFetcherTests : FetcherTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.EqualTo(idList.Count()));
             Assert.That(result.Any(r => r.Id == ItemId1));
             Assert.That(result.Any(r => r.Id == ItemId2));
         });
@@ -69,9 +55,9 @@ public class ItemSingleFetcherTests : FetcherTests
         GivenWeCallFetchMultipleItemsAsync_WhenTheResponseIsStatusCodeIsUnsuccessful_ThenWeReturnAnEmptyList()
     {
         var returnedList = GetMultipleWebPocos().ToList();
-        var idList = returnedList.Select(i => i.Id);
+        var idList = returnedList.Select(i => i.Id).ToList();
         _handler
-            .When(GetUrl)
+            .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
         var result = await _fetcher.FetchByIdsAsync(idList);
@@ -93,11 +79,11 @@ public class ItemSingleFetcherTests : FetcherTests
     {
         var idList = GetMultipleWebPocos().Select(i => i.Id).ToList();
         _handler
-            .When(GetUrl)
+            .When(GetUrl(idList[0]))
             .Respond(
                 HttpStatusCode.OK,
                 ContentType,
-                JsonSerializer.Serialize(GetMultipleWebPocos())
+                JsonSerializer.Serialize("{}")
             );
 
         var result = await _fetcher.FetchByIdsAsync(idList);
@@ -110,64 +96,12 @@ public class ItemSingleFetcherTests : FetcherTests
     {
         var idList = GetMultipleWebPocos().Select(i => i.Id).ToList();
         _handler
-            .When(GetUrl)
+            .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
         var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
-    }
-
-
-    [Test]
-    public async Task GivenWeCallGetAllIdsAsBatchJobsAsync_WhenTheIDListReturnedIsEmpty_ThenWeReturnAnEmptyResult()
-    {
-        _handler.When(Arg.Any<string>()).Respond(HttpStatusCode.OK, ContentType, "{}");
-
-        var result = await _fetcher.GetIdsAsBatchJobsAsync();
-
-        Assert.That(result, Is.Empty);
-    }
-
-    [Test]
-    public async Task GivenWeCallGetAllIdsAsBatchJobsAsync_WhenTheIDListReturnedIsValid_ThenWeReturnBatchesOfIds()
-    {
-        _handler
-            .When(Arg.Any<string>())
-            .Respond(
-                HttpStatusCode.OK,
-                ContentType,
-                JsonSerializer.Serialize(new List<int> { 1, 2, 3 })
-            );
-
-        var result = await _fetcher.GetIdsAsBatchJobsAsync();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(result.First().Count, Is.EqualTo(3));
-        });
-    }
-
-    [TestCase(1, 1)]
-    [TestCase(2, 1)]
-    [TestCase(3, 1)]
-    [TestCase(4, 2)]
-    [TestCase(10, 4)]
-    public async Task GivenWeCallGetAllIdsAsBatchJobsAsync_WhenTheIDListReturnedIsValid_ThenWeReturnIdsBatchedCorrectly(
-        int entryCount,
-        int expectedPages
-    )
-    {
-        _fetcher.ItemsPerPage = 3;
-        var idList = Enumerable.Range(1, entryCount);
-        _handler
-            .When(Arg.Any<string>())
-            .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(idList));
-
-        var result = await _fetcher.GetIdsAsBatchJobsAsync();
-
-        Assert.That(result, Has.Count.EqualTo(expectedPages));
     }
 
     #endregion
@@ -178,7 +112,7 @@ public class ItemSingleFetcherTests : FetcherTests
     public void GivenWeDeserializeAResponse_WhenMultipleValidEntities_ThenWeDeserializeSuccessfully()
     {
         var result = JsonSerializer.Deserialize<ItemWebResponse>(
-            GetItemJsonResponse(),
+            GetItemJsonResponse1(),
             GetSerializerOptions()
         );
 
@@ -196,7 +130,7 @@ public class ItemSingleFetcherTests : FetcherTests
     public void GivenWeDeserializeAResponse_WhenAValidMarketableEntity_ThenWeDeserialize()
     {
         var result = JsonSerializer.Deserialize<ItemWebPoco>(
-            GetItemJsonResponse(),
+            GetItemJsonResponse1(),
             GetSerializerOptions()
         );
 
@@ -205,22 +139,24 @@ public class ItemSingleFetcherTests : FetcherTests
 
     #endregion
 
-    private IEnumerable<int> SetupResponse(
-        bool success = true,
-        HttpStatusCode statusCode = HttpStatusCode.OK,
-        string? expectedUrl = null)
+    private List<int> SetupResponse(HttpStatusCode statusCode = HttpStatusCode.OK)
     {
         var pocoList = GetMultipleWebPocos().ToList();
-        var idList = pocoList.Select(i => i.Id).ToList();
-        var dict = pocoList.ToDictionary(l => l.Id);
-        var webResponse = new ItemWebResponse(dict);
-        var responseContent = success ? JsonSerializer.Serialize(webResponse) : JsonSerializer.Serialize(idList);
-        var url = expectedUrl ?? GetUrl;
+        foreach (var poco in pocoList)
+        {
+            var id = poco.GetId();
+            var url = GetUrl(id) + ItemSingleFetcher.ColumnsSuffix;
+            if (id == ItemId1)
+                _handler
+                    .When(url)
+                    .Respond(statusCode, ContentType, GetItemJsonResponse1());
+            else if (id == ItemId2)
+                _handler
+                    .When(url)
+                    .Respond(statusCode, ContentType, GetItemJsonResponse2());
+        }
 
-        _handler
-            .When(url)
-            .Respond(statusCode, ContentType, responseContent);
-        return idList;
+        return pocoList.Select(i => i.GetId()).ToList();
     }
 
     private static JsonSerializerOptions GetSerializerOptions() =>
@@ -229,25 +165,25 @@ public class ItemSingleFetcherTests : FetcherTests
     private static int ItemId1 => 10972;
     private static int ItemId2 => 10973;
 
-    private string GetUrl => $"https://xivapi.com/item/{ItemId1}";
+    private string GetUrl(int id) => $"https://xivapi.com/item/{id}";
 
-    public static string GetItemJsonResponse() =>
+    public static string GetItemJsonResponse1() =>
         """{"CanBeHq":1,"Description":"","ID":10972,"IconID":55724,"LevelItem":133,"Name":"Hardsilver Bangle of Fending","PriceLow":119,"PriceMid":20642,"StackSize":1}""";
+
+    public static string GetItemJsonResponse2() =>
+        """{"CanBeHq":1,"Description":"","ID":10973,"IconID":55732,"LevelItem":139,"Name":"Opal Bracelet of Fending","PriceLow":124,"PriceMid":21575,"StackSize":1}""";
 
     protected static List<ItemWebPoco> GetMultipleWebPocos()
     {
-        var poco1 = new ItemWebPoco() { Id = _itemId1 };
-        var poco2 = new ItemWebPoco { Id = _itemId2 };
+        var poco1 = new ItemWebPoco() { Id = ItemId1 };
+        var poco2 = new ItemWebPoco { Id = ItemId2 };
         return new List<ItemWebPoco> { poco1, poco2 };
     }
 
     protected static List<ItemPoco> GetMultipleDbPocos()
     {
-        var poco1 = new ItemPoco() { Id = _itemId1 };
-        var poco2 = new ItemPoco { Id = _itemId2 };
+        var poco1 = new ItemPoco() { Id = ItemId1 };
+        var poco2 = new ItemPoco { Id = ItemId2 };
         return new List<ItemPoco> { poco1, poco2 };
     }
-
-    private static readonly int _itemId1 = 65711;
-    private static readonly int _itemId2 = 86984;
 }
