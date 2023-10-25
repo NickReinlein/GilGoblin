@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using GilGoblin.Repository;
 
 namespace GilGoblin.Fetcher;
@@ -53,4 +55,17 @@ public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetc
 
     public static readonly string ColumnsSuffix =
         "?columns=ID,Name,Description,IconID,PriceMid,PriceLow,StackSize,LevelItem,CanBeHq";
+
+    protected override ItemWebPoco ReadResponseContentAsync(HttpContent content)
+        => JsonSerializer.DeserializeAsync<ItemWebPoco>(
+            content.ReadAsStream(),
+            GetSerializerOptions(),
+            CancellationToken.None
+        ).Result;
+
+    public static JsonSerializerOptions GetSerializerOptions()
+        => new()
+        {
+            Converters = { new ItemWebPocoConverter() }, PropertyNameCaseInsensitive = true, IncludeFields = true,
+        };
 }

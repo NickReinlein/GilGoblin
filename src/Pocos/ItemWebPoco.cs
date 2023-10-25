@@ -7,29 +7,29 @@ public class ItemWebPoco : BaseItemPoco
 {
     public ItemWebPoco() { }
 
-    // [JsonConstructor]
-    // public ItemWebPoco(
-    //     int id,
-    //     string name,
-    //     string description,
-    //     int iconId,
-    //     int priceLow,
-    //     int priceMid,
-    //     int stackSize,
-    //     int level,
-    //     int canBeHq
-    // ) : base(
-    //     id,
-    //     name,
-    //     description,
-    //     iconId,
-    //     priceLow,
-    //     priceMid,
-    //     stackSize,
-    //     level,
-    //     canBeHq > 0)
-    // {
-    // }
+    [JsonConstructor]
+    public ItemWebPoco(
+        int id,
+        string name,
+        string description,
+        int iconId,
+        int priceLow,
+        int priceMid,
+        int stackSize,
+        int level,
+        int canBeHq
+    ) : base(
+        id,
+        name,
+        description,
+        iconId,
+        priceLow,
+        priceMid,
+        stackSize,
+        level,
+        canBeHq > 0)
+    {
+    }
 
     public ItemWebPoco(BaseItemPoco poco)
     {

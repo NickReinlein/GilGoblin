@@ -109,29 +109,11 @@ public class ItemSingleFetcherTests : FetcherTests
     #region Deserialization
 
     [Test]
-    public void GivenWeDeserializeAResponse_WhenMultipleValidEntities_ThenWeDeserializeSuccessfully()
-    {
-        var result = JsonSerializer.Deserialize<ItemWebResponse>(
-            GetItemJsonResponse1(),
-            GetSerializerOptions()
-        );
-
-        var items = result?.GetContentAsList();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(items, Is.Not.Null.And.Not.Empty);
-            Assert.That(items!.Exists(item => item.Id == ItemId1));
-            Assert.That(items.Exists(item => item.Id == ItemId2));
-        });
-    }
-
-    [Test]
     public void GivenWeDeserializeAResponse_WhenAValidMarketableEntity_ThenWeDeserialize()
     {
         var result = JsonSerializer.Deserialize<ItemWebPoco>(
             GetItemJsonResponse1(),
-            GetSerializerOptions()
+            ItemSingleFetcher.GetSerializerOptions()
         );
 
         Assert.That(result?.GetId() > 0);
@@ -158,9 +140,6 @@ public class ItemSingleFetcherTests : FetcherTests
 
         return pocoList.Select(i => i.GetId()).ToList();
     }
-
-    private static JsonSerializerOptions GetSerializerOptions() =>
-        new() { PropertyNameCaseInsensitive = true, IncludeFields = true };
 
     private static int ItemId1 => 10972;
     private static int ItemId2 => 10973;

@@ -6,5 +6,5 @@ namespace GilGoblin.Fetcher;
 public interface ISingleDataFetcher<T> : IDataFetcher<T>
     where T : class, IIdentifiable
 {
-    Task<T?> FetchByIdAsync(int id, int? world = null);
+    Task<T?> FetchByIdAsync(int id, int? world = null); // Don't delete
 }
