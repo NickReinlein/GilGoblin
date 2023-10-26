@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
@@ -16,5 +18,10 @@ public class ItemUpdater : DataUpdater<ItemWebPoco>
         : base(fetcher, saver, logger)
     {
         _fetcher = fetcher;
+    }
+
+    protected override Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId)
+    {
+        return Task.FromResult(new List<List<int>>());
     }
 }

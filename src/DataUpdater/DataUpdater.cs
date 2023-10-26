@@ -38,6 +38,8 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
             try
             {
                 var worldId = GetWorldId();
+                var worldIdString = worldId is null ? "" : worldId.ToString();
+                Logger.LogInformation($"Fetching updates for {nameof(T)}{worldIdString}");
                 await FetchAsync(worldId);
             }
             catch (Exception ex)
@@ -45,7 +47,9 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
                 Logger.LogError($"An exception occured during the Api call: {ex.Message}");
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(5), ct);
+            Logger.LogDebug("Awaiting delay before making another update");
+            // await Task.Delay(TimeSpan.FromMinutes(5), ct);
+            await Task.Delay(TimeSpan.FromSeconds(20), ct);
         }
     }
 
@@ -85,13 +89,15 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
     {
         try
         {
+            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
+            var idList = idsToUpdate.ToList();
+            Logger.LogInformation($"Fetching update for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await Fetcher.FetchByIdsAsync(idsToUpdate, worldId);
+            var updated = await Fetcher.FetchByIdsAsync(idList, worldId);
             timer.Stop();
             var callTime = timer.Elapsed.TotalMilliseconds;
 
-            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
             Logger.LogInformation($"Received updates for {updated.Count} {nameof(T)} entries {worldString}");
             Logger.LogInformation($"Total call time: {callTime}");
             return updated;
@@ -105,6 +111,5 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
 
     protected virtual int? GetWorldId() => null;
 
-    protected virtual async Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId) =>
-        await Task.Run(() => new List<List<int>>());
+    protected abstract Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId);
 }

@@ -18,7 +18,7 @@ public class CraftingCalculator : ICraftingCalculator
     private readonly IRecipeCostRepository _recipeCosts;
     private readonly IRecipeGrocer _grocer;
     private readonly ILogger<CraftingCalculator> _logger;
-    public static int ERROR_DEFAULT_COST { get; } = int.MaxValue;
+    public static int ERROR_DEFAULT_COST = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeRepository recipes,

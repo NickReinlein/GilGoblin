@@ -60,7 +60,7 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipePoco>().Property(t => t.Id).HasColumnName("id");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CraftType).HasColumnName("crafttype");
         modelBuilder.Entity<RecipePoco>().Property(t => t.RecipeLevelTable).HasColumnName("recipeleveltable");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemId).HasColumnName("targetitemid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemId) .HasColumnName("targetitemid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.ResultQuantity).HasColumnName("resultquantity");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanHq).HasColumnName("canhq");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth).HasColumnName("canquicksynth");

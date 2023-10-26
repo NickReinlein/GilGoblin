@@ -59,7 +59,8 @@ public class RecipeRepository : IRecipeRepository
     public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> recipeIds) =>
         _dbContext.Recipe.Where(r => recipeIds.Any(a => a == r.Id));
 
-    public IEnumerable<RecipePoco> GetAll() => _dbContext.Recipe;
+    public IEnumerable<RecipePoco> GetAll()
+        => _dbContext.Recipe.Where(r => r.Id > 0 && r.TargetItemId > 0);
 
     public Task FillCache()
     {
