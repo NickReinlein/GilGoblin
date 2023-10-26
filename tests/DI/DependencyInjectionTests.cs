@@ -31,6 +31,8 @@ public class DependencyInjectionTests : ComponentTests
     [TestCase(typeof(IMarketableItemIdsFetcher))]
     [TestCase(typeof(IDataSaver<ItemWebPoco>))]
     [TestCase(typeof(IDataUpdater<ItemWebPoco>))]
+    [TestCase(typeof(IDataUpdater<PriceWebPoco>))]
+    [TestCase(typeof(IDataSaver<PriceWebPoco>))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         var scopedDependencyService = _services.GetRequiredService(serviceType);

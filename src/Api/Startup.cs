@@ -61,6 +61,8 @@ public class Startup
         services.AddSingleton<IDataSaver<ItemWebPoco>, DataSaver<ItemWebPoco>>();
 
         services.AddSingleton<IPriceFetcher, PriceFetcher>();
+        services.AddSingleton<IDataUpdater<PriceWebPoco>, PriceUpdater>();
+        services.AddSingleton<IDataSaver<PriceWebPoco>, DataSaver<PriceWebPoco>>();
     }
 
     private static void AddGoblinCaches(IServiceCollection services)

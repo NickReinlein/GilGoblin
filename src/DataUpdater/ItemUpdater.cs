@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
@@ -19,7 +17,4 @@ public class ItemUpdater : DataUpdater<ItemWebPoco>
     {
         _fetcher = fetcher;
     }
-
-    protected override async Task<List<int>> GetIdsToUpdateAsync()
-        => await _fetcher.GetAllMissingIds();
 }

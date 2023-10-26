@@ -2,7 +2,6 @@ using GilGoblin.Pocos;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -13,12 +12,10 @@ namespace GilGoblin.Fetcher;
 
 public interface IItemFetcher : ISingleDataFetcher<ItemWebPoco>
 {
-    Task<List<int>> GetAllMissingIds();
 }
 
 public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
 {
-    private readonly IMarketableItemIdsFetcher _marketableFetcher;
     private readonly IItemRepository _repo;
 
     public ItemFetcher(
@@ -26,10 +23,9 @@ public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
         IMarketableItemIdsFetcher fetcher,
         ILogger<ItemFetcher> logger,
         HttpClient? client = null)
-        : base(BaseUrl, logger, client)
+        : base(BaseUrl, fetcher, logger, client)
     {
         _repo = repo;
-        _marketableFetcher = fetcher;
     }
 
     protected override string GetUrlPathFromEntry(int id, int? worldId = null)
@@ -39,16 +35,6 @@ public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
         sb.Append(id);
         sb.Append(ColumnsSuffix);
         return sb.ToString();
-    }
-
-    public async Task<List<int>> GetAllMissingIds()
-    {
-        var allIds = await _marketableFetcher.GetMarketableItemIdsAsync();
-        if (!allIds.Any())
-            return new List<int>();
-
-        var existingIds = _repo.GetAll().Select(i => i.Id).ToList();
-        return allIds.Except(existingIds).ToList();
     }
 
     public static readonly string BaseUrl = "https://xivapi.com/item/";

@@ -12,8 +12,12 @@ namespace GilGoblin.Fetcher;
 public abstract class SingleDataFetcher<T> : DataFetcher
     where T : class, IIdentifiable
 {
-    public SingleDataFetcher(string basePath, ILogger<SingleDataFetcher<T>> logger, HttpClient? client = null)
-        : base(basePath, logger, client)
+    public SingleDataFetcher(
+        string basePath,
+        IMarketableItemIdsFetcher marketableFetcher,
+        ILogger<SingleDataFetcher<T>> logger,
+        HttpClient? client = null)
+        : base(basePath, marketableFetcher, logger, client)
     {
     }
 

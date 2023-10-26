@@ -52,11 +52,16 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
 
     public async Task FetchAsync(int? worldId)
     {
-        var updateIdList = await GetIdsToUpdateAsync();
+        var idBatches = await GetIdsToUpdateAsync(worldId);
+        if (!idBatches.Any())
+            return;
 
-        var updated = await FetchUpdatesForEntriesAsync(updateIdList, worldId);
-        if (updated.Any())
-            await Saver.SaveAsync(updated);
+        foreach (var idBatch in idBatches)
+        {
+            var updated = await FetchUpdatesForEntriesAsync(idBatch, worldId);
+            if (updated.Any())
+                await Saver.SaveAsync(updated);
+        }
     }
 
     private async Task<List<T>> FetchUpdatesForEntriesAsync(IEnumerable<int> entriesToUpdate, int? worldId)
@@ -100,6 +105,6 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
 
     protected virtual int? GetWorldId() => null;
 
-    protected virtual async Task<List<int>> GetIdsToUpdateAsync() =>
-        await Task.Run(() => new List<int>());
+    protected virtual async Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId) =>
+        await Task.Run(() => new List<List<int>>());
 }

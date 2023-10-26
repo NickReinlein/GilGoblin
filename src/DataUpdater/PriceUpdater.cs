@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Pocos;
@@ -21,6 +20,11 @@ public class PriceUpdater : DataUpdater<PriceWebPoco>
         _fetcher = fetcher;
     }
 
-    protected override Task<List<int>> GetIdsToUpdateAsync()
-        => Task.FromResult(_fetcher.GetIdsAsBatchJobsAsync().Result[0]);
+    protected override int? GetWorldId()
+    {
+        return 34; // TODO Add a mechanic to iterate through all worlds
+    }
+
+    protected override async Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId)
+        => await _fetcher.GetIdsAsBatchJobsAsync();
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,15 +10,21 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
+public class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
-    private int _entriesPerPage = 100;
-    public BulkDataFetcher(string basePath, ILogger<BulkDataFetcher<T, U>> logger, HttpClient? client = null)
-        : base(basePath, logger, client)
+    protected int _entriesPerPage = 100;
+
+    public BulkDataFetcher(string basePath, IMarketableItemIdsFetcher marketableFetcher,
+        ILogger<BulkDataFetcher<T, U>> logger, HttpClient? client = null)
+        : base(basePath, marketableFetcher, logger, client)
     {
     }
+
+    public Task<List<List<int>>> GetIdsAsBatchJobsAsync()
+        => MarketableFetcher.GetIdsAsBatchJobsAsync(GetEntriesPerPage());
+
     public int GetEntriesPerPage() => _entriesPerPage;
     public void SetEntriesPerPage(int count) => _entriesPerPage = count;
 
@@ -53,9 +60,7 @@ public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U
     }
 
     protected virtual U ReadResponseContentAsync(HttpContent content)
-    {
-        return content.ReadFromJsonAsync<U>().Result;
-    }
+        => content.ReadFromJsonAsync<U>().Result;
 
     protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {

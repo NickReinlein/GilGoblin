@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using GilGoblin.Services;
 
 namespace GilGoblin.Fetcher;
 
 public interface IMarketableItemIdsFetcher
 {
     Task<List<int>> GetMarketableItemIdsAsync();
+    Task<List<List<int>>> GetIdsAsBatchJobsAsync(int entriesPerPage);
 }
 
 public class MarketableItemIdsFetcher : IMarketableItemIdsFetcher
@@ -47,6 +49,16 @@ public class MarketableItemIdsFetcher : IMarketableItemIdsFetcher
             _logger.LogError("Failure during call to get marketable item Ids");
             return new List<int>();
         }
+    }
+
+    public async Task<List<List<int>>> GetIdsAsBatchJobsAsync(int entriesPerPage)
+    {
+        var allIds = await GetMarketableItemIdsAsync();
+        if (!allIds.Any())
+            return new List<List<int>>();
+
+        var batcher = new Batcher<int>(entriesPerPage);
+        return batcher.SplitIntoBatchJobs(allIds);
     }
 
     private static string PathSuffix => "marketable";
