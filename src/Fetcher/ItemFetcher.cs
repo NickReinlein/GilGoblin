@@ -11,20 +11,20 @@ using GilGoblin.Repository;
 
 namespace GilGoblin.Fetcher;
 
-public interface IItemSingleFetcher : ISingleDataFetcher<ItemWebPoco>
+public interface IItemFetcher : ISingleDataFetcher<ItemWebPoco>
 {
     Task<List<int>> GetAllMissingIds();
 }
 
-public class ItemSingleFetcher : SingleDataFetcher<ItemWebPoco>, IItemSingleFetcher
+public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
 {
     private readonly IMarketableItemIdsFetcher _marketableFetcher;
     private readonly IItemRepository _repo;
 
-    public ItemSingleFetcher(
+    public ItemFetcher(
         IItemRepository repo,
         IMarketableItemIdsFetcher fetcher,
-        ILogger<ItemSingleFetcher> logger,
+        ILogger<ItemFetcher> logger,
         HttpClient? client = null)
         : base(BaseUrl, logger, client)
     {

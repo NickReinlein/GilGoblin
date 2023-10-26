@@ -56,11 +56,11 @@ public class Startup
         services.AddHttpClient();
         services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
 
-        services.AddSingleton<IItemSingleFetcher, ItemSingleFetcher>();
+        services.AddSingleton<IItemFetcher, ItemFetcher>();
         services.AddSingleton<IDataUpdater<ItemWebPoco>, ItemUpdater>();
         services.AddSingleton<IDataSaver<ItemWebPoco>, DataSaver<ItemWebPoco>>();
 
-        services.AddSingleton<IPriceBulkDataFetcher, PriceBulkFetcher>();
+        services.AddSingleton<IPriceFetcher, PriceFetcher>();
     }
 
     private static void AddGoblinCaches(IServiceCollection services)

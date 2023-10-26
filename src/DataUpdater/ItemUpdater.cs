@@ -9,10 +9,10 @@ namespace GilGoblin.DataUpdater;
 
 public class ItemUpdater : DataUpdater<ItemWebPoco>
 {
-    private readonly IItemSingleFetcher _fetcher;
+    private readonly IItemFetcher _fetcher;
 
     public ItemUpdater(
-        IItemSingleFetcher fetcher,
+        IItemFetcher fetcher,
         IDataSaver<ItemWebPoco> saver,
         ILogger<DataUpdater<ItemWebPoco>> logger)
         : base(fetcher, saver, logger)

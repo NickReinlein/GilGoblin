@@ -8,13 +8,18 @@ using System.Net.Http;
 
 namespace GilGoblin.Fetcher;
 
-public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceBulkDataFetcher
+public interface IPriceFetcher : IBulkDataFetcher<PriceWebPoco, PriceWebResponse>
+{
+    Task<List<List<int>>> GetIdsAsBatchJobsAsync();
+}
+
+public class PriceFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceFetcher
 {
     private readonly IMarketableItemIdsFetcher _marketableFetcher;
 
-    public PriceBulkFetcher(
+    public PriceFetcher(
         IMarketableItemIdsFetcher marketableFetcher,
-        ILogger<PriceBulkFetcher> logger,
+        ILogger<PriceFetcher> logger,
         HttpClient? client = null)
         : base(PriceBaseUrl, logger, client)
     {
@@ -33,13 +38,9 @@ public class PriceBulkFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>,
         if (!allIds.Any())
             return new List<List<int>>();
 
-        var batcher = new Batcher<int>(_pricesPerPage);
+        var batcher = new Batcher<int>(GetEntriesPerPage());
         return batcher.SplitIntoBatchJobs(allIds);
     }
-
-    public int GetEntriesPerPage() => _pricesPerPage;
-    public void SetEntriesPerPage(int count) => _pricesPerPage = count;
-    private int _pricesPerPage = 100;
 
     private static string PriceBaseUrl => "https://universalis.app/api/v2/";
 

@@ -11,12 +11,12 @@ using RichardSzalay.MockHttp;
 
 namespace GilGoblin.Tests.Fetcher;
 
-public class ItemSingleFetcherTests : FetcherTests
+public class ItemFetcherTests : FetcherTests
 {
-    private ItemSingleFetcher _fetcher;
+    private ItemFetcher _fetcher;
     private IItemRepository _repo;
     private IMarketableItemIdsFetcher _marketableIdsFetcher;
-    private ILogger<ItemSingleFetcher> _logger;
+    private ILogger<ItemFetcher> _logger;
 
     [SetUp]
     public override void SetUp()
@@ -24,12 +24,12 @@ public class ItemSingleFetcherTests : FetcherTests
         base.SetUp();
         var pocos = GetMultipleDbPocos().ToList();
         var idList = pocos.Select(i => i.Id).ToList();
-        _logger = Substitute.For<ILogger<ItemSingleFetcher>>();
+        _logger = Substitute.For<ILogger<ItemFetcher>>();
         _repo = Substitute.For<IItemRepository>();
         _repo.GetAll().Returns(pocos);
         _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(idList);
-        _fetcher = new ItemSingleFetcher(_repo, _marketableIdsFetcher, _logger, _client);
+        _fetcher = new ItemFetcher(_repo, _marketableIdsFetcher, _logger, _client);
     }
 
     #region Fetcher calls
@@ -113,7 +113,7 @@ public class ItemSingleFetcherTests : FetcherTests
     {
         var result = JsonSerializer.Deserialize<ItemWebPoco>(
             GetItemJsonResponse1(),
-            ItemSingleFetcher.GetSerializerOptions()
+            ItemFetcher.GetSerializerOptions()
         );
 
         Assert.That(result?.GetId() > 0);
@@ -127,7 +127,7 @@ public class ItemSingleFetcherTests : FetcherTests
         foreach (var poco in pocoList)
         {
             var id = poco.GetId();
-            var url = GetUrl(id) + ItemSingleFetcher.ColumnsSuffix;
+            var url = GetUrl(id) + ItemFetcher.ColumnsSuffix;
             if (id == ItemId1)
                 _handler
                     .When(url)

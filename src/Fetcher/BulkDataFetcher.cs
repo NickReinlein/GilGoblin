@@ -13,10 +13,13 @@ public abstract class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
+    private int _entriesPerPage = 100;
     public BulkDataFetcher(string basePath, ILogger<BulkDataFetcher<T, U>> logger, HttpClient? client = null)
         : base(basePath, logger, client)
     {
     }
+    public int GetEntriesPerPage() => _entriesPerPage;
+    public void SetEntriesPerPage(int count) => _entriesPerPage = count;
 
     public async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null)
     {

@@ -14,7 +14,7 @@ namespace GilGoblin.DataUpdater;
 
 public interface IDataUpdater<T> where T : class, IIdentifiable
 {
-    Task FetchAsync();
+    Task FetchAsync(int? worldId = null);
 }
 
 public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
@@ -37,7 +37,8 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
         {
             try
             {
-                await FetchAsync();
+                var worldId = GetWorldId();
+                await FetchAsync(worldId);
             }
             catch (Exception ex)
             {
@@ -48,16 +49,17 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
         }
     }
 
-    public async Task FetchAsync()
+
+    public async Task FetchAsync(int? worldId)
     {
         var updateIdList = await GetIdsToUpdateAsync();
 
-        var updated = await FetchUpdateAsync(updateIdList);
+        var updated = await FetchUpdatesForEntriesAsync(updateIdList, worldId);
         if (updated.Any())
             await Saver.SaveAsync(updated);
     }
 
-    private async Task<List<T>> FetchUpdateAsync(IEnumerable<int> entriesToUpdate, int worldId = 0)
+    private async Task<List<T>> FetchUpdatesForEntriesAsync(IEnumerable<int> entriesToUpdate, int? worldId)
     {
         var entriesList = entriesToUpdate.ToList();
         if (!entriesList.Any())
@@ -74,7 +76,7 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
         return new List<T>();
     }
 
-    private async Task<IEnumerable<T>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate, int worldId = 0)
+    private async Task<IEnumerable<T>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate, int? worldId)
     {
         try
         {
@@ -95,6 +97,8 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
             return Enumerable.Empty<T>();
         }
     }
+
+    protected virtual int? GetWorldId() => null;
 
     protected virtual async Task<List<int>> GetIdsToUpdateAsync() =>
         await Task.Run(() => new List<int>());
