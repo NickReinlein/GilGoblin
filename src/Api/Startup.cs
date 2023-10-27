@@ -54,19 +54,20 @@ public class Startup
     private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
-
         services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
 
         services.AddSingleton<IItemFetcher, ItemFetcher>();
         services.AddSingleton<ISingleDataFetcher<ItemWebPoco>, ItemFetcher>();
-        services.AddSingleton<IDataSaver<ItemWebPoco>, DataSaver<ItemWebPoco>>();
 
         services.AddSingleton<IPriceFetcher, PriceFetcher>();
         services.AddSingleton<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        services.AddSingleton<IDataSaver<PriceWebPoco>, DataSaver<PriceWebPoco>>();
 
-        services.AddSingleton<IDataUpdater<ItemWebPoco>, ItemUpdater>();
-        services.AddSingleton<IDataUpdater<PriceWebPoco>, PriceUpdater>();
+        services.AddSingleton<IDataSaver<ItemPoco>, DataSaver<ItemPoco>>();
+        services.AddSingleton<IDataSaver<PricePoco>, DataSaver<PricePoco>>();
+
+        services.AddSingleton<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
+        services.AddSingleton<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
+        services.AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCaches(IServiceCollection services)

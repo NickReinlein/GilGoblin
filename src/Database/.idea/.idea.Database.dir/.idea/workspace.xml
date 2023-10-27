@@ -8,23 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccfe5020-3b22-4efb-b7d7-bb6f258315b0" name="Changes" comment="changed property name canbehq -&gt; canhq to be consistent">
-      <change afterPath="$PROJECT_DIR$/../DataUpdater/appsettings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Pocos/ItemWebPocoExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/csv-editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Crafting/CraftingCalculator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/DataUpdater.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/ItemUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/csv-editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/db_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/db_creation.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/itemTest.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/priceTest.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/recipe.csv" beforeDir="false" afterPath="$PROJECT_DIR$/resources/recipe.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/recipeTest.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pocos/RecipeCostPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/RecipeCostPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/RecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Repository/RecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/IDataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/IDataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/BulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Component/EndpointComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Component/EndpointComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/DI/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/DI/DependencyInjectionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +77,7 @@
       <updated>1698259035151</updated>
       <workItem from="1698259036305" duration="2260000" />
       <workItem from="1698352098891" duration="284000" />
+      <workItem from="1698361655370" duration="626000" />
     </task>
     <task id="LOCAL-00001" summary="changed property name canbehq -&gt; canhq to be consistent">
       <option name="closed" value="true" />

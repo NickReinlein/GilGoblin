@@ -1,24 +1,28 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class ItemUpdater : DataUpdater<ItemWebPoco>
+public class ItemUpdater : DataUpdater<ItemPoco, ItemWebPoco>
 {
     private readonly IItemFetcher _fetcher;
 
     public ItemUpdater(
         IItemFetcher fetcher,
-        IDataSaver<ItemWebPoco> saver,
-        ILogger<DataUpdater<ItemWebPoco>> logger)
-        : base(fetcher, saver, logger)
+        IDataSaver<ItemPoco> saver,
+        ILogger<DataUpdater<ItemPoco, ItemWebPoco>> logger)
+        : base(saver, fetcher, logger)
     {
         _fetcher = fetcher;
     }
+
+    protected override Task ConvertToDbFormatAndSave(List<ItemWebPoco> updated)
+        => Saver.SaveAsync(updated.ToItemPocoList());
 
     protected override Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId)
     {

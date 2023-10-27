@@ -12,19 +12,22 @@ using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
 
-public interface IDataUpdater<T> where T : class, IIdentifiable
+public interface IDataUpdater<T, U>
+    where T : class, IIdentifiable
+    where U : class, IIdentifiable
 {
     Task FetchAsync(int? worldId = null);
 }
 
-public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
+public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
+    where U : class, IIdentifiable
 {
-    protected readonly IDataFetcher<T> Fetcher;
     protected readonly IDataSaver<T> Saver;
-    protected readonly ILogger<DataUpdater<T>> Logger;
+    protected readonly IDataFetcher<U> Fetcher;
+    protected readonly ILogger<DataUpdater<T, U>> Logger;
 
-    public DataUpdater(IDataFetcher<T> fetcher, IDataSaver<T> saver, ILogger<DataUpdater<T>> logger)
+    public DataUpdater(IDataSaver<T> saver, IDataFetcher<U> fetcher, ILogger<DataUpdater<T, U>> logger)
     {
         Fetcher = fetcher;
         Saver = saver;
@@ -49,7 +52,7 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
 
             Logger.LogDebug("Awaiting delay before making another update");
             // await Task.Delay(TimeSpan.FromMinutes(5), ct);
-            await Task.Delay(TimeSpan.FromSeconds(20), ct);
+            await Task.Delay(TimeSpan.FromSeconds(60), ct);
         }
     }
 
@@ -64,17 +67,21 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
         {
             var updated = await FetchUpdatesForEntriesAsync(idBatch, worldId);
             if (updated.Any())
-                await Saver.SaveAsync(updated);
+                await ConvertToDbFormatAndSave(updated);
+
+            await Task.Delay(GetApiSpamDelayInMs());
         }
     }
 
-    private async Task<List<T>> FetchUpdatesForEntriesAsync(IEnumerable<int> entriesToUpdate, int? worldId)
+    protected abstract Task ConvertToDbFormatAndSave(List<U> updated);
+
+    private async Task<List<U>> FetchUpdatesForEntriesAsync(IEnumerable<int> entriesToUpdate, int? worldId)
     {
         var entriesList = entriesToUpdate.ToList();
         if (!entriesList.Any())
         {
             Logger.LogInformation($"No entries need to be updated for {nameof(T)}");
-            return new List<T>();
+            return new List<U>();
         }
 
         var response = await FetchUpdatesForIdsAsync(entriesList, worldId);
@@ -82,10 +89,10 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
             return response.ToList();
 
         Logger.LogError($"Failed to fetch updates for {entriesList.Count} entries of {nameof(T)}");
-        return new List<T>();
+        return new List<U>();
     }
 
-    private async Task<IEnumerable<T>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate, int? worldId)
+    private async Task<IEnumerable<U>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate, int? worldId)
     {
         try
         {
@@ -105,10 +112,11 @@ public abstract class DataUpdater<T> : BackgroundService, IDataUpdater<T>
         catch (Exception e)
         {
             Logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<U>();
         }
     }
 
+    protected virtual int GetApiSpamDelayInMs() => 300;
     protected virtual int? GetWorldId() => null;
 
     protected abstract Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId);

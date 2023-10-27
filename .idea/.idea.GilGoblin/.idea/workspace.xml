@@ -9,23 +9,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="finished initial price updater">
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Pocos/ItemWebPocoExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/itemTest.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/priceTest.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/recipe.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/resources/recipe.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/recipeTest.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,7 +246,7 @@
       <workItem from="1698154379549" duration="4026000" />
       <workItem from="1698169972866" duration="7542000" />
       <workItem from="1698249696882" duration="16323000" />
-      <workItem from="1698328874914" duration="13581000" />
+      <workItem from="1698328874914" duration="17824000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -525,7 +520,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698338038353</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="fixed issue saving recipecost">
+      <option name="closed" value="true" />
+      <created>1698360931097</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1698360931097</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -578,7 +581,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fixed tests, simplified code" />
     <MESSAGE value="Nuking ID -&gt; Id&#10;Fixing tests" />
     <MESSAGE value="WIP fix tests and change db schema ID -&gt; Id" />
     <MESSAGE value="WIP dockerizing the db" />
@@ -603,7 +605,8 @@
     <MESSAGE value="fixing more tests" />
     <MESSAGE value="started price updater" />
     <MESSAGE value="finished initial price updater" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished initial price updater" />
+    <MESSAGE value="fixed issue saving recipecost" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed issue saving recipecost" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -811,97 +814,6 @@
           <option name="timeStamp" value="277" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs</url>
-          <line>39</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" initialLine="37" containingFunctionPresentation="Method 'GetMarketableItemIdsAsync'">
-            <startOffsets>
-              <option value="1061" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1108" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="279" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs</url>
-          <line>37</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" initialLine="35" containingFunctionPresentation="Method 'GetMarketableItemIdsAsync'">
-            <startOffsets>
-              <option value="996" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1047" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="280" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs</url>
-          <line>44</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" initialLine="42" containingFunctionPresentation="Method 'GetMarketableItemIdsAsync'">
-            <startOffsets>
-              <option value="1297" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1344" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="281" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs</url>
-          <line>48</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" initialLine="46" containingFunctionPresentation="Method 'GetMarketableItemIdsAsync'">
-            <startOffsets>
-              <option value="1391" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1458" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="282" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs</url>
-          <line>36</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" initialLine="26" containingFunctionPresentation="Method 'FetchByIdsAsync'">
-            <startOffsets>
-              <option value="1155" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1203" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="288" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs</url>
-          <line>40</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" initialLine="30" containingFunctionPresentation="Method 'FetchByIdsAsync'">
-            <startOffsets>
-              <option value="1277" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1351" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="289" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs</url>
-          <line>38</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" initialLine="28" containingFunctionPresentation="Method 'FetchByIdsAsync'">
-            <startOffsets>
-              <option value="1213" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1267" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="290" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
           <line>269</line>
           <properties documentPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" initialLine="269" containingFunctionPresentation="Method 'SetupResponse'">
@@ -915,147 +827,30 @@
           <option name="timeStamp" value="291" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs</url>
-          <line>39</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" initialLine="39" containingFunctionPresentation="Method 'ExecuteAsync'">
-            <startOffsets>
-              <option value="1071" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1098" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="292" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs</url>
-          <line>28</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" initialLine="28" containingFunctionPresentation="Constructor 'DataUpdater'">
-            <startOffsets>
-              <option value="822" />
-            </startOffsets>
-            <endOffsets>
-              <option value="840" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="293" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs</url>
-          <line>35</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" initialLine="35" containingFunctionPresentation="Method 'ExecuteAsync'">
-            <startOffsets>
-              <option value="979" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1014" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="294" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
-          <line>19</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="19" containingFunctionPresentation="Constructor 'PriceUpdater'">
-            <startOffsets>
-              <option value="511" />
-            </startOffsets>
-            <endOffsets>
-              <option value="530" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="297" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
-          <line>24</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="24" containingFunctionPresentation="Method 'GetWorldId'">
-            <startOffsets>
-              <option value="593" />
-            </startOffsets>
-            <endOffsets>
-              <option value="656" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="298" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
-          <line>28</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="28" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
-            <startOffsets>
-              <option value="760" />
-            </startOffsets>
-            <endOffsets>
-              <option value="799" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="299" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs</url>
-          <line>58</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" initialLine="57" containingFunctionPresentation="Method 'FetchAsync'">
-            <startOffsets>
-              <option value="1757" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1808" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="300" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs</url>
-          <line>72</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" initialLine="71" containingFunctionPresentation="Method 'FetchUpdatesForEntriesAsync'">
-            <startOffsets>
-              <option value="2210" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2253" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="301" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs</url>
-          <line>94</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" initialLine="90" containingFunctionPresentation="Method 'FetchUpdatesForIdsAsync'">
-            <startOffsets>
-              <option value="3089" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3117" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="302" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs</url>
-          <line>25</line>
-          <properties documentPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" initialLine="25" containingFunctionPresentation="Method 'GetIdsAsBatchJobsAsync'">
-            <startOffsets>
-              <option value="763" />
-            </startOffsets>
-            <endOffsets>
-              <option value="824" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="303" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/Startup.cs</url>
-          <line>154</line>
+          <line>155</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/Startup.cs" initialLine="152" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
             <startOffsets>
-              <option value="5431" />
+              <option value="5491" />
             </startOffsets>
             <endOffsets>
-              <option value="5488" />
+              <option value="5548" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="304" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/87629731af04bb03578c1b6aa46c564e8e7e4647ea8f1b844cfd9e658ab30/BackgroundService.cs</url>
+          <line>41</line>
+          <properties documentPath="$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/87629731af04bb03578c1b6aa46c564e8e7e4647ea8f1b844cfd9e658ab30/BackgroundService.cs" initialLine="41" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1990" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2072" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="307" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
