@@ -51,8 +51,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             }
 
             Logger.LogDebug("Awaiting delay before making another update");
-            // await Task.Delay(TimeSpan.FromMinutes(5), ct);
-            await Task.Delay(TimeSpan.FromSeconds(60), ct);
+            await Task.Delay(TimeSpan.FromMinutes(5), ct);
         }
     }
 
@@ -68,8 +67,9 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             var updated = await FetchUpdatesForEntriesAsync(idBatch, worldId);
             if (updated.Any())
                 await ConvertToDbFormatAndSave(updated);
-
-            await Task.Delay(GetApiSpamDelayInMs());
+            var delay = GetApiSpamDelayInMs();
+            Logger.LogDebug($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
+            await Task.Delay(delay);
         }
     }
 
@@ -98,7 +98,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         {
             var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
             var idList = idsToUpdate.ToList();
-            Logger.LogInformation($"Fetching update for {idList.Count} {nameof(T)} {worldString}");
+            Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
             var updated = await Fetcher.FetchByIdsAsync(idList, worldId);
@@ -116,7 +116,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected virtual int GetApiSpamDelayInMs() => 300;
+    protected virtual int GetApiSpamDelayInMs() => 3000;
     protected virtual int? GetWorldId() => null;
 
     protected abstract Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId);

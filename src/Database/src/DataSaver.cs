@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
@@ -24,16 +23,24 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
         if (!updatesList.Any())
             return false;
 
-        await using var context = DbContext;
-        foreach (var update in updatesList)
-        {
-            context.Entry(update).State =
-                update.GetId() > 0
-                    ? EntityState.Added
-                    : EntityState.Modified;
-        }
-        await context.SaveChangesAsync();
-        _logger.LogInformation($"Saved {updatesList.Count()} entries for type {typeof(T).Name}");
+        var newEntries = updatesList.Where(i => i.GetId() == 0).ToList();
+        await DbContext.AddRangeAsync(newEntries);
+
+        var updatedEntries = updatesList.Except(newEntries).ToList();
+        await UpdatedExistingEntries(updatedEntries);
+
+        await DbContext.SaveChangesAsync();
+        _logger.LogInformation($"Saved {updatesList.Count} entries for type {typeof(T).Name}");
         return true;
+    }
+
+    protected virtual async Task UpdatedExistingEntries(List<T> updatedEntries)
+    {
+        foreach (var updated in updatedEntries)
+        {
+            var existingEntity = await DbContext.Set<T>().FindAsync(updated.GetId());
+            if (existingEntity != null)
+                DbContext.Entry(existingEntity).CurrentValues.SetValues(updated);
+        }
     }
 }

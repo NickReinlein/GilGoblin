@@ -9,14 +9,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed conversion issue for updater that prevented saving to db due to format">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="updated db package">
+      <change afterPath="$PROJECT_DIR$/.idea/GilGoblin.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/Repository.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +72,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0f34c3f406c24260a7ecd1b418fd5bf466400/9e/30f2d457/ConfigureServicesBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17a58286aee34b4f8ef0c972a6b21d662e6a00/9f/09ba8fba/IDbConnection.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1b046e286a344b85999e7c798bc1fc145e00/99/755f15a9/MockHttpMessageHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/10/0a8bf815/DefaultInterpolatedStringHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/2b/14ff84d7/Nullable`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/a1/6fd7eda0/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/14/3c4e49cd/ConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -243,7 +253,7 @@
       <workItem from="1698169972866" duration="7542000" />
       <workItem from="1698249696882" duration="16323000" />
       <workItem from="1698328874914" duration="17824000" />
-      <workItem from="1698368961418" duration="799000" />
+      <workItem from="1698368961418" duration="5065000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -533,7 +543,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698369046407</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="updated db package">
+      <option name="closed" value="true" />
+      <created>1698369828101</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1698369828101</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -586,7 +604,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="WIP fix tests and change db schema ID -&gt; Id" />
     <MESSAGE value="WIP dockerizing the db" />
     <MESSAGE value="WIP decoupling database and pocos" />
     <MESSAGE value="WIP still not working" />
@@ -611,7 +628,8 @@
     <MESSAGE value="finished initial price updater" />
     <MESSAGE value="fixed issue saving recipecost" />
     <MESSAGE value="fixed conversion issue for updater that prevented saving to db due to format" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed conversion issue for updater that prevented saving to db due to format" />
+    <MESSAGE value="updated db package" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated db package" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -836,10 +854,10 @@
           <line>155</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/Startup.cs" initialLine="152" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
             <startOffsets>
-              <option value="5491" />
+              <option value="5481" />
             </startOffsets>
             <endOffsets>
-              <option value="5548" />
+              <option value="5538" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="304" />
@@ -856,6 +874,58 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="307" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
+          <line>35</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="31" containingFunctionPresentation="Method 'ConvertToDbFormatAndSave'">
+            <startOffsets>
+              <option value="900" />
+            </startOffsets>
+            <endOffsets>
+              <option value="964" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="309" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
+          <line>39</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="33" containingFunctionPresentation="Method 'ConvertToDbFormatAndSave'">
+            <startOffsets>
+              <option value="1091" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1166" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="310" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
+          <line>43</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="35" containingFunctionPresentation="Method 'ConvertToDbFormatAndSave'">
+            <startOffsets>
+              <option value="1227" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1318" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="311" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs</url>
+          <line>37</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="37" containingFunctionPresentation="Method 'ConvertToDbFormatAndSave'">
+            <startOffsets>
+              <option value="1007" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1077" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="312" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

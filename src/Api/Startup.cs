@@ -63,7 +63,7 @@ public class Startup
         services.AddSingleton<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
 
         services.AddSingleton<IDataSaver<ItemPoco>, DataSaver<ItemPoco>>();
-        services.AddSingleton<IDataSaver<PricePoco>, DataSaver<PricePoco>>();
+        services.AddSingleton<IDataSaver<PricePoco>, PriceSaver>();
 
         services.AddSingleton<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
         services.AddSingleton<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
