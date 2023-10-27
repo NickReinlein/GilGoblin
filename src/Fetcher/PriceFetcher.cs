@@ -2,6 +2,8 @@ using GilGoblin.Pocos;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
+using GilGoblin.Repository;
 
 namespace GilGoblin.Fetcher;
 
@@ -12,10 +14,9 @@ public interface IPriceFetcher : IBulkDataFetcher<PriceWebPoco, PriceWebResponse
 public class PriceFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceFetcher
 {
     public PriceFetcher(
-        IMarketableItemIdsFetcher marketableFetcher,
         ILogger<PriceFetcher> logger,
         HttpClient? client = null)
-        : base(PriceBaseUrl, marketableFetcher, logger, client)
+        : base(PriceBaseUrl, logger, client)
     {
     }
 

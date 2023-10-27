@@ -15,18 +15,15 @@ public abstract class DataFetcher
 {
     protected string BasePath { get; set; }
     protected HttpClient Client { get; set; }
-    protected IMarketableItemIdsFetcher MarketableFetcher { get; set; }
     protected readonly ILogger<DataFetcher> Logger;
 
     protected DataFetcher(
         string basePath,
-        IMarketableItemIdsFetcher marketableFetcher,
         ILogger<DataFetcher> logger,
         HttpClient? client = null)
     {
         BasePath = basePath;
         Logger = logger;
         Client = client ?? new HttpClient();
-        MarketableFetcher = marketableFetcher;
     }
 }

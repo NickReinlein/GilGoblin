@@ -12,7 +12,6 @@ namespace GilGoblin.Tests.Fetcher;
 public class PriceFetcherTests : FetcherTests
 {
     private IPriceFetcher _fetcher;
-    private IMarketableItemIdsFetcher _marketableItemIdsFetcher;
     private ILogger<PriceFetcher> _logger;
 
     [SetUp]
@@ -20,8 +19,7 @@ public class PriceFetcherTests : FetcherTests
     {
         base.SetUp();
         _logger = Substitute.For<ILogger<PriceFetcher>>();
-        _marketableItemIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
-        _fetcher = new PriceFetcher(_marketableItemIdsFetcher, _logger, _client);
+        _fetcher = new PriceFetcher(_logger, _client);
     }
 
     #region Fetcher calls

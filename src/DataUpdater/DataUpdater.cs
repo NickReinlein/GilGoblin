@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Services;
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
@@ -44,6 +45,9 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
                 var worldIdString = worldId is null ? "" : worldId.ToString();
                 Logger.LogInformation($"Fetching updates for {nameof(T)}{worldIdString}");
                 await FetchAsync(worldId);
+                var delay = GetApiSpamDelayInMs();
+                Logger.LogDebug($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
+                await Task.Delay(delay, ct);
             }
             catch (Exception ex)
             {
@@ -58,19 +62,13 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
 
     public async Task FetchAsync(int? worldId)
     {
-        var idBatches = await GetIdsToUpdateAsync(worldId);
-        if (!idBatches.Any())
+        var idList = await GetIdsToUpdateAsync(worldId);
+        if (!idList.Any())
             return;
 
-        foreach (var idBatch in idBatches)
-        {
-            var updated = await FetchUpdatesForEntriesAsync(idBatch, worldId);
-            if (updated.Any())
-                await ConvertToDbFormatAndSave(updated);
-            var delay = GetApiSpamDelayInMs();
-            Logger.LogDebug($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
-            await Task.Delay(delay);
-        }
+        var updated = await FetchUpdatesForEntriesAsync(idList, worldId);
+        if (updated.Any())
+            await ConvertToDbFormatAndSave(updated);
     }
 
     protected abstract Task ConvertToDbFormatAndSave(List<U> updated);
@@ -119,5 +117,5 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     protected virtual int GetApiSpamDelayInMs() => 3000;
     protected virtual int? GetWorldId() => null;
 
-    protected abstract Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId);
+    protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
 }

@@ -17,15 +17,17 @@ public interface IItemFetcher : ISingleDataFetcher<ItemWebPoco>
 public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
 {
     private readonly IItemRepository _repo;
+    private readonly IMarketableItemIdsFetcher _fetcher;
 
     public ItemFetcher(
         IItemRepository repo,
         IMarketableItemIdsFetcher fetcher,
         ILogger<ItemFetcher> logger,
         HttpClient? client = null)
-        : base(BaseUrl, fetcher, logger, client)
+        : base(BaseUrl, logger, client)
     {
         _repo = repo;
+        _fetcher = fetcher;
     }
 
     protected override string GetUrlPathFromEntry(int id, int? worldId = null)

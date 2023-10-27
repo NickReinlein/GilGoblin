@@ -14,16 +14,13 @@ public class DataFetcherTests : FetcherTests
     private const string basePath = "http://localhost:55448/";
     private MockBulkDataFetcher _fetcher;
     private ILogger<BulkDataFetcher<Apple, AppleResponse>> _logger;
-    private IMarketableItemIdsFetcher _marketableIdsFetcher;
 
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
         _logger = Substitute.For<ILogger<BulkDataFetcher<Apple, AppleResponse>>>();
-        _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
-
-        _fetcher = new MockBulkDataFetcher(basePath, _marketableIdsFetcher, _logger, _client);
+        _fetcher = new MockBulkDataFetcher(basePath, _logger, _client);
     }
 
     [Test]
@@ -74,10 +71,9 @@ public class MockBulkDataFetcher : BulkDataFetcher<Apple, AppleResponse>
 {
     public MockBulkDataFetcher(
         string basePath,
-        IMarketableItemIdsFetcher fetcher,
         ILogger<BulkDataFetcher<Apple, AppleResponse>> logger,
         HttpClient client)
-        : base(basePath, fetcher, logger, client)
+        : base(basePath, logger, client)
     {
     }
 }

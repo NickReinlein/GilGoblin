@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -5,6 +6,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
@@ -15,14 +17,14 @@ public class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
 {
     protected int _entriesPerPage = 100;
 
-    public BulkDataFetcher(string basePath, IMarketableItemIdsFetcher marketableFetcher,
-        ILogger<BulkDataFetcher<T, U>> logger, HttpClient? client = null)
-        : base(basePath, marketableFetcher, logger, client)
+    public BulkDataFetcher(
+        string basePath,
+        ILogger<BulkDataFetcher<T, U>> logger,
+        HttpClient? client = null
+    )
+        : base(basePath, logger, client)
     {
     }
-
-    public Task<List<List<int>>> GetIdsAsBatchJobsAsync()
-        => MarketableFetcher.GetIdsAsBatchJobsAsync(GetEntriesPerPage());
 
     public int GetEntriesPerPage() => _entriesPerPage;
     public void SetEntriesPerPage(int count) => _entriesPerPage = count;
@@ -33,11 +35,35 @@ public class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
         if (!idList.Any())
             return new List<T>();
 
-        var path = GetUrlPathFromEntries(idList, world);
+        var batcher = new Batcher<int>(_entriesPerPage);
+        var batches = batcher.SplitIntoBatchJobs(idList);
 
+        var resultList = new List<T>();
+        foreach (var batch in batches)
+        {
+            try
+            {
+                var response = await FetchAsync(world, batch);
+                if (response is null)
+                    continue;
+
+                var content = response.GetContentAsList();
+                resultList.AddRange(content);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Failed to fetch contents of batch: {e.Message}");
+            }
+        }
+
+        return resultList;
+    }
+
+    private async Task<U> FetchAsync(int? world, List<int> batch)
+    {
+        var path = GetUrlPathFromEntries(batch, world);
         var response = await FetchAndSerializeDataAsync(path);
-
-        return response is not null ? response.GetContentAsList() : new List<T>();
+        return response;
     }
 
     private async Task<U?> FetchAndSerializeDataAsync(string path)
@@ -45,11 +71,9 @@ public class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
         try
         {
             var response = await Client.GetAsync(path);
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var data = ReadResponseContentAsync(response.Content);
-            return data;
+            return !response.IsSuccessStatusCode
+                ? null
+                : ReadResponseContentAsync(response.Content);
         }
         catch
         {

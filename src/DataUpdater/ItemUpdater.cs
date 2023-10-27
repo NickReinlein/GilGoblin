@@ -24,8 +24,8 @@ public class ItemUpdater : DataUpdater<ItemPoco, ItemWebPoco>
     protected override Task ConvertToDbFormatAndSave(List<ItemWebPoco> updated)
         => Saver.SaveAsync(updated.ToItemPocoList());
 
-    protected override Task<List<List<int>>> GetIdsToUpdateAsync(int? worldId)
+    protected override Task<List<int>> GetIdsToUpdateAsync(int? worldId)
     {
-        return Task.FromResult(new List<List<int>>());
+        return Task.FromResult(new List<int>());
     }
 }

@@ -8,22 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccfe5020-3b22-4efb-b7d7-bb6f258315b0" name="Changes" comment="changed property name canbehq -&gt; canhq to be consistent">
-      <change afterPath="$PROJECT_DIR$/../../.idea/GilGoblin.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PriceSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/Startup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/ItemUpdater.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/csv-editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/BulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/DataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/DataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/IBulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/IBulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/ItemFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/ItemFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/MarketableItemIdsFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/MarketableItemIdsFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/PriceFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/PriceFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Fetcher/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/SingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Fetcher/DataFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Fetcher/DataFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Fetcher/PriceFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Fetcher/PriceFetcherTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +79,7 @@
       <workItem from="1698259036305" duration="2260000" />
       <workItem from="1698352098891" duration="284000" />
       <workItem from="1698361655370" duration="626000" />
-      <workItem from="1698369092149" duration="3878000" />
+      <workItem from="1698369092149" duration="4537000" />
     </task>
     <task id="LOCAL-00001" summary="changed property name canbehq -&gt; canhq to be consistent">
       <option name="closed" value="true" />
@@ -114,5 +110,37 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changed property name canbehq -&gt; canhq to be consistent" />
     <option name="LAST_COMMIT_MESSAGE" value="changed property name canbehq -&gt; canhq to be consistent" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/PriceSaver.cs</url>
+          <line>18</line>
+          <properties documentPath="$PROJECT_DIR$/src/PriceSaver.cs" initialLine="17" containingFunctionPresentation="Method 'UpdatedExistingEntries'">
+            <startOffsets>
+              <option value="498" />
+            </startOffsets>
+            <endOffsets>
+              <option value="537" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataSaver.cs</url>
+          <line>21</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataSaver.cs" initialLine="21" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="591" />
+            </startOffsets>
+            <endOffsets>
+              <option value="626" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

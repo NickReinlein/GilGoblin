@@ -14,10 +14,9 @@ public abstract class SingleDataFetcher<T> : DataFetcher
 {
     public SingleDataFetcher(
         string basePath,
-        IMarketableItemIdsFetcher marketableFetcher,
         ILogger<SingleDataFetcher<T>> logger,
         HttpClient? client = null)
-        : base(basePath, marketableFetcher, logger, client)
+        : base(basePath, logger, client)
     {
     }
 

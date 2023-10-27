@@ -5,22 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/GilGoblin.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/DataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/DataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/IBulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/IBulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/ItemFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ItemFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/PriceFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/PriceFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Fetcher/DataFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/DataFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
