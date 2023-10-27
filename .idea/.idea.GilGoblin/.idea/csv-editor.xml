@@ -17,13 +17,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/src/Database/resources/priceTest.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="/src/Database/resources/recipe.csv">
           <value>
             <Attribute>
