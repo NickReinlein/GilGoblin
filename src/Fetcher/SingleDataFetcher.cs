@@ -3,13 +3,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public abstract class SingleDataFetcher<T> : DataFetcher
+public abstract class SingleDataFetcher<T> : DataFetcher<T>
     where T : class, IIdentifiable
 {
     public SingleDataFetcher(
@@ -20,7 +21,7 @@ public abstract class SingleDataFetcher<T> : DataFetcher
     {
     }
 
-    public async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null)
+    public override async Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null)
     {
         var result = new List<T>();
         foreach (var id in ids.ToList())

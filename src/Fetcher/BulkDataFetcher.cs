@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Services;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
+public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
@@ -29,39 +30,31 @@ public class BulkDataFetcher<T, U> : DataFetcher, IBulkDataFetcher<T, U>
     public int GetEntriesPerPage() => _entriesPerPage;
     public void SetEntriesPerPage(int count) => _entriesPerPage = count;
 
-    public async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null)
+    public override async Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null)
     {
         var idList = ids.ToList();
         if (!idList.Any())
             return new List<T>();
 
-        var batcher = new Batcher<int>(_entriesPerPage);
-        var batches = batcher.SplitIntoBatchJobs(idList);
-
-        var resultList = new List<T>();
-        foreach (var batch in batches)
+        try
         {
-            try
-            {
-                var response = await FetchAsync(world, batch);
-                if (response is null)
-                    continue;
+            var response = await FetchAsync(world, ids);
+            if (response is null)
+                return new List<T>();
 
-                var content = response.GetContentAsList();
-                resultList.AddRange(content);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"Failed to fetch contents of batch: {e.Message}");
-            }
+            var content = response.GetContentAsList();
+            return content;
         }
-
-        return resultList;
+        catch (Exception e)
+        {
+            Logger.LogError($"Failed to fetch contents of batch: {e.Message}");
+            return new List<T>();
+        }
     }
 
-    private async Task<U> FetchAsync(int? world, List<int> batch)
+    private async Task<U> FetchAsync(int? world, IEnumerable<int> ids)
     {
-        var path = GetUrlPathFromEntries(batch, world);
+        var path = GetUrlPathFromEntries(ids, world);
         var response = await FetchAndSerializeDataAsync(path);
         return response;
     }

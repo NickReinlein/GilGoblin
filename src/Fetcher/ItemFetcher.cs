@@ -16,18 +16,9 @@ public interface IItemFetcher : ISingleDataFetcher<ItemWebPoco>
 
 public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
 {
-    private readonly IItemRepository _repo;
-    private readonly IMarketableItemIdsFetcher _fetcher;
-
-    public ItemFetcher(
-        IItemRepository repo,
-        IMarketableItemIdsFetcher fetcher,
-        ILogger<ItemFetcher> logger,
-        HttpClient? client = null)
+    public ItemFetcher(ILogger<ItemFetcher> logger, HttpClient? client = null)
         : base(BaseUrl, logger, client)
     {
-        _repo = repo;
-        _fetcher = fetcher;
     }
 
     protected override string GetUrlPathFromEntry(int id, int? worldId = null)
@@ -51,9 +42,8 @@ public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
             CancellationToken.None
         ).Result;
 
-    public static JsonSerializerOptions GetSerializerOptions()
-        => new()
-        {
-            Converters = { new ItemWebPocoConverter() }, PropertyNameCaseInsensitive = true, IncludeFields = true,
-        };
+    public static JsonSerializerOptions GetSerializerOptions() => new()
+    {
+        Converters = { new ItemWebPocoConverter() }, PropertyNameCaseInsensitive = true, IncludeFields = true,
+    };
 }

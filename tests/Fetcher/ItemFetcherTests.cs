@@ -14,8 +14,9 @@ namespace GilGoblin.Tests.Fetcher;
 public class ItemFetcherTests : FetcherTests
 {
     private ItemFetcher _fetcher;
-    private IItemRepository _repo;
-    private IMarketableItemIdsFetcher _marketableIdsFetcher;
+
+    // private IItemRepository _repo;
+    // private IMarketableItemIdsFetcher _marketableIdsFetcher;
     private ILogger<ItemFetcher> _logger;
 
     [SetUp]
@@ -25,11 +26,11 @@ public class ItemFetcherTests : FetcherTests
         var pocos = GetMultipleDbPocos().ToList();
         var idList = pocos.Select(i => i.Id).ToList();
         _logger = Substitute.For<ILogger<ItemFetcher>>();
-        _repo = Substitute.For<IItemRepository>();
-        _repo.GetAll().Returns(pocos);
-        _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
-        _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(idList);
-        _fetcher = new ItemFetcher(_repo, _marketableIdsFetcher, _logger, _client);
+        // _repo = Substitute.For<IItemRepository>();
+        // _repo.GetAll().Returns(pocos);
+        // _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
+        // _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(idList);
+        _fetcher = new ItemFetcher(_logger, _client);
     }
 
     #region Fetcher calls
@@ -39,7 +40,7 @@ public class ItemFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(idList);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
 
         Assert.Multiple(() =>
         {
@@ -60,7 +61,7 @@ public class ItemFetcherTests : FetcherTests
             .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
-        var result = await _fetcher.FetchByIdsAsync(idList);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -68,7 +69,8 @@ public class ItemFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultipleItemsAsync_WhenNoIdsAreProvided_ThenWeReturnAnEmptyList()
     {
-        var result = await _fetcher.FetchByIdsAsync(Array.Empty<int>());
+        var result
+            = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>());
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
@@ -86,7 +88,7 @@ public class ItemFetcherTests : FetcherTests
                 JsonSerializer.Serialize("{}")
             );
 
-        var result = await _fetcher.FetchByIdsAsync(idList);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -99,7 +101,7 @@ public class ItemFetcherTests : FetcherTests
             .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchByIdsAsync(idList);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
 
         Assert.That(result, Is.Empty);
     }

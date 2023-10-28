@@ -17,7 +17,7 @@ public interface IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    Task FetchAsync(int? worldId = null);
+    Task FetchAsync(CancellationToken ct, int? worldId = null);
 }
 
 public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
@@ -25,12 +25,12 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     where U : class, IIdentifiable
 {
     protected readonly IDataSaver<T> Saver;
-    protected readonly IDataFetcher<U> Fetcher;
+    protected readonly IDataFetcher<U> PriceFetcher;
     protected readonly ILogger<DataUpdater<T, U>> Logger;
 
-    public DataUpdater(IDataSaver<T> saver, IDataFetcher<U> fetcher, ILogger<DataUpdater<T, U>> logger)
+    public DataUpdater(IDataSaver<T> saver, IDataFetcher<U> priceFetcher, ILogger<DataUpdater<T, U>> logger)
     {
-        Fetcher = fetcher;
+        PriceFetcher = priceFetcher;
         Saver = saver;
         Logger = logger;
     }
@@ -44,10 +44,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
                 var worldId = GetWorldId();
                 var worldIdString = worldId is null ? "" : worldId.ToString();
                 Logger.LogInformation($"Fetching updates for {nameof(T)}{worldIdString}");
-                await FetchAsync(worldId);
-                var delay = GetApiSpamDelayInMs();
-                Logger.LogDebug($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
-                await Task.Delay(delay, ct);
+                await FetchAsync(ct, worldId);
             }
             catch (Exception ex)
             {
@@ -59,38 +56,26 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
+    protected abstract Task ConvertAndSaveToDbAsync(List<U> updated);
 
-    public async Task FetchAsync(int? worldId)
+    public async Task FetchAsync(CancellationToken ct, int? worldId)
     {
         var idList = await GetIdsToUpdateAsync(worldId);
         if (!idList.Any())
             return;
 
-        var updated = await FetchUpdatesForEntriesAsync(idList, worldId);
-        if (updated.Any())
-            await ConvertToDbFormatAndSave(updated);
+        await FetchUpdatesAsync(ct, worldId, idList);
     }
 
-    protected abstract Task ConvertToDbFormatAndSave(List<U> updated);
-
-    private async Task<List<U>> FetchUpdatesForEntriesAsync(IEnumerable<int> entriesToUpdate, int? worldId)
+    protected virtual async Task FetchUpdatesAsync(CancellationToken ct, int? worldId, List<int> idList)
     {
-        var entriesList = entriesToUpdate.ToList();
-        if (!entriesList.Any())
-        {
-            Logger.LogInformation($"No entries need to be updated for {nameof(T)}");
-            return new List<U>();
-        }
-
-        var response = await FetchUpdatesForIdsAsync(entriesList, worldId);
-        if (response is not null)
-            return response.ToList();
-
-        Logger.LogError($"Failed to fetch updates for {entriesList.Count} entries of {nameof(T)}");
-        return new List<U>();
+        var updated = await FetchUpdatesForIdsAsync(idList, worldId, ct);
+        if (updated.Any())
+            await ConvertAndSaveToDbAsync(updated);
     }
 
-    private async Task<IEnumerable<U>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate, int? worldId)
+    private async Task<List<U>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate,
+        int? worldId, CancellationToken ct)
     {
         try
         {
@@ -99,7 +84,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await Fetcher.FetchByIdsAsync(idList, worldId);
+            var updated = await PriceFetcher.FetchByIdsAsync(ct, idList, worldId);
             timer.Stop();
             var callTime = timer.Elapsed.TotalMilliseconds;
 
@@ -110,12 +95,12 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         catch (Exception e)
         {
             Logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
-            return Enumerable.Empty<U>();
+            return new List<U>();
         }
     }
 
-    protected virtual int GetApiSpamDelayInMs() => 3000;
     protected virtual int? GetWorldId() => null;
 
     protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
+    protected virtual int GetApiSpamDelayInMs() => 3000;
 }

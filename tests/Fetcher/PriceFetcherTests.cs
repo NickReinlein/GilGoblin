@@ -29,7 +29,7 @@ public class PriceFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
 
         Assert.Multiple(() =>
         {
@@ -51,7 +51,7 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
-        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -59,7 +59,7 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenNoIDsAreProvided_ThenWeReturnAnEmptyList()
     {
-        var result = await _fetcher.FetchByIdsAsync(Array.Empty<int>(), _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>(), _worldId);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
@@ -77,7 +77,7 @@ public class PriceFetcherTests : FetcherTests
                 JsonSerializer.Serialize(GetMultipleNewPocos())
             );
 
-        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -90,10 +90,11 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchByIdsAsync(idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
 
         Assert.That(result, Is.Empty);
     }
+
     #endregion
 
     // #region MarketableIds 
@@ -261,7 +262,7 @@ public class PriceFetcherTests : FetcherTests
         var dict = pocoList.ToDictionary(l => l.ItemId);
         var webResponse = new PriceWebResponse(dict);
         var responseContent
-            = success 
+            = success
                 ? JsonSerializer.Serialize(webResponse)
                 : JsonSerializer.Serialize(idList);
 

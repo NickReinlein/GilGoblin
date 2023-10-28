@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Fetcher;
