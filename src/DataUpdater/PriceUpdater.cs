@@ -12,7 +12,6 @@ using GilGoblin.Fetcher;
 using GilGoblin.Repository;
 using GilGoblin.Services;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace GilGoblin.DataUpdater;
 
@@ -70,12 +69,10 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             var success = await Saver.SaveAsync(webPocos.ToPricePocoList());
             if (!success)
                 throw new DatabaseException("Saving from DataSaver returned failure");
-
-            Log.Information($"Saved {webPocos.Count} entries for {nameof(PricePoco)}");
         }
         catch (Exception e)
         {
-            Log.Error($"Failed to save {webPocos.Count} entries for {nameof(PricePoco)}: {e.Message}");
+            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PricePoco)}: {e.Message}");
         }
     }
 

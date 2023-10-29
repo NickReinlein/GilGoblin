@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,24 +24,37 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
         if (!updatesList.Any())
             return false;
 
-        var newEntries = updatesList.Where(i => i.GetId() == 0).ToList();
-        await DbContext.AddRangeAsync(newEntries);
-
-        var updatedEntries = updatesList.Except(newEntries).ToList();
-        await UpdatedExistingEntries(updatedEntries);
-
-        await DbContext.SaveChangesAsync();
-        _logger.LogInformation($"Saved {updatesList.Count} entries for type {typeof(T).Name}");
-        return true;
-    }
-
-    protected virtual async Task UpdatedExistingEntries(List<T> updatedEntries)
-    {
-        foreach (var updated in updatedEntries)
+        try
         {
-            var existingEntity = await DbContext.Set<T>().FindAsync(updated.GetId());
-            if (existingEntity != null)
-                DbContext.Entry(existingEntity).CurrentValues.SetValues(updated);
+            var newEntries = await UpdatedExistingEntries(updatesList);
+            await DbContext.AddRangeAsync(newEntries);
+
+            await DbContext.SaveChangesAsync();
+            _logger.LogInformation($"Saved {updatesList.Count} entries for type {typeof(T).Name}");
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to updated due to error: {e.Message}");
+            return false;
         }
     }
+
+    protected async Task<List<T>> UpdatedExistingEntries(List<T> updatedEntries)
+    {
+        var newEntriesList = new List<T>();
+        foreach (var updated in updatedEntries)
+        {
+            if (await ShouldBeUpdated(updated))
+                DbContext.Entry(updated).CurrentValues.SetValues(updated);
+            else
+                newEntriesList.Add(updated);
+        }
+
+        return newEntriesList;
+    }
+
+    protected virtual async Task<bool> ShouldBeUpdated(T updated)
+        => updated.GetId() > 0 &&
+           await DbContext.Set<T>().FindAsync(updated.GetId()) != null;
 }

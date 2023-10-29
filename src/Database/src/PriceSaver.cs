@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +13,10 @@ public class PriceSaver : DataSaver<PricePoco>
     {
     }
 
-    protected override async Task UpdatedExistingEntries(List<PricePoco> updatedEntries)
-    {
-        foreach (var updated in updatedEntries)
-        {
-            var existingEntity
-                = await DbContext.Price
-                    .FirstOrDefaultAsync(p =>
-                        p.WorldId == updated.WorldId &&
-                        p.ItemId == updated.ItemId);
-            if (existingEntity != null)
-                DbContext.Entry(existingEntity).CurrentValues.SetValues(updated);
-        }
-    }
+    protected override async Task<bool> ShouldBeUpdated(PricePoco updated)
+        => updated.GetId() > 0 &&
+           await DbContext.Price
+               .AnyAsync(p =>
+                   p.WorldId == updated.WorldId &&
+                   p.ItemId == updated.ItemId);
 }

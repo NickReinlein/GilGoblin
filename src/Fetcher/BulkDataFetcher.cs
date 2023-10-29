@@ -67,7 +67,7 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
             return !response.IsSuccessStatusCode
                 ? null
                 : ReadResponseContentAsync(response.Content);
-        }
+        } 
         catch
         {
             Logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");

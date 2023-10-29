@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Services;
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
@@ -42,8 +41,8 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             try
             {
                 var worldId = GetWorldId();
-                var worldIdString = worldId is null ? "" : worldId.ToString();
-                Logger.LogInformation($"Fetching updates for {nameof(T)}{worldIdString}");
+                var worldIdString = worldId is null ? "" : $" for world {worldId.ToString()}";
+                Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
                 await FetchAsync(ct, worldId);
             }
             catch (Exception ex)
