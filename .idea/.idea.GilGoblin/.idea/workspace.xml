@@ -9,19 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="Working example with less spam">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="working but need to prevent spam if response is continually null">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/Batcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Batcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,7 +258,7 @@
       <workItem from="1698328874914" duration="17824000" />
       <workItem from="1698368961418" duration="16539000" />
       <workItem from="1698455411593" duration="3217000" />
-      <workItem from="1698600831883" duration="2919000" />
+      <workItem from="1698600831883" duration="4388000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -589,7 +580,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698456567808</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="working but need to prevent spam if response is continually null">
+      <option name="closed" value="true" />
+      <created>1698605152594</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1698605152595</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -642,7 +641,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="WIP merging 2 branches" />
     <MESSAGE value="Fixed most errors" />
     <MESSAGE value="fixed more tests" />
     <MESSAGE value="WIP" />
@@ -667,7 +665,8 @@
     <MESSAGE value="Working example with data updater" />
     <MESSAGE value="Working example with checks for age of existing entries" />
     <MESSAGE value="Working example with less spam" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working example with less spam" />
+    <MESSAGE value="working but need to prevent spam if response is continually null" />
+    <option name="LAST_COMMIT_MESSAGE" value="working but need to prevent spam if response is continually null" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1016,6 +1015,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="360" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Services/Batcher.cs</url>
+          <line>42</line>
+          <properties documentPath="$PROJECT_DIR$/src/Services/Batcher.cs" initialLine="42" containingFunctionPresentation="Method 'SplitIntoBatchJobs'">
+            <startOffsets>
+              <option value="1038" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1091" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="361" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
