@@ -33,7 +33,7 @@ public class ItemComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/item/10348555";
+        var fullEndpoint = "http://localhost:55448/item/10348555";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

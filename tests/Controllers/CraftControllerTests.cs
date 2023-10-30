@@ -36,11 +36,11 @@ public class CraftControllerTests
     [Test]
     public async Task WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
     {
-        _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestCraftsForWorld(_world).Returns(new List<CraftSummaryPoco>());
 
         _ = await _controller!.GetBestCrafts(_world);
 
-        await _repo.Received(1).GetBestCrafts(_world);
+        await _repo.Received(1).GetBestCraftsForWorld(_world);
     }
 
     [Test]
@@ -48,13 +48,13 @@ public class CraftControllerTests
     {
         _ = await _controller!.GetBestCraft(_world, _craftId);
 
-        await _repo.Received(1).GetBestCraft(_world, _craftId);
+        await _repo.Received(1).GetBestCraftForItem(_world, _craftId);
     }
 
     [Test]
     public async Task WhenReceivingARequestGetBestCrafts_ThenAnEnumerableIsReturned()
     {
-        _repo.GetBestCrafts(_world).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestCraftsForWorld(_world).Returns(new List<CraftSummaryPoco>());
 
         var result = await _controller!.GetBestCrafts(_world);
 
@@ -64,7 +64,7 @@ public class CraftControllerTests
     [Test]
     public async Task WhenReceivingARequestGetBestCraft_ThenASummaryIsReturned()
     {
-        _repo.GetBestCraft(_world, _craftId).Returns(new CraftSummaryPoco());
+        _repo.GetBestCraftForItem(_world, _craftId).Returns(new CraftSummaryPoco());
 
         var result = await _controller!.GetBestCraft(_world, _craftId);
 

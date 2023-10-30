@@ -16,13 +16,12 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-<!--    <PackageReference Include="GilGoblin.Database" Version="0.4.0-alpha"/>-->
+    <PackageReference Include="GilGoblin.Database" Version="0.5.*"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Cache/*Cache.csproj"/>
     <ProjectReference Include="../Controllers/*Controllers.csproj"/>
     <ProjectReference Include="../Crafting/*Crafting.csproj"/>
-    <ProjectReference Include="../Database/*Database.csproj"/>
     <ProjectReference Include="../DataUpdater/*DataUpdater.csproj"/>
     <ProjectReference Include="../Exceptions/*Exceptions.csproj"/>
     <ProjectReference Include="../Pocos/*Pocos.csproj"/>

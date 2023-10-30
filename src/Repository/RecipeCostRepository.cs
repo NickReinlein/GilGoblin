@@ -45,14 +45,13 @@ public class RecipeCostRepository : IRecipeCostRepository
         if (_cache.Get(key) is not null)
             return;
 
-        entity.Created = entity.Created.ToUniversalTime();
-        entity.Updated = entity.Updated.ToUniversalTime();
-
         _cache.Add(key, entity);
 
         if (
             _dbContext.RecipeCost.Any(
-                i => i.WorldId == entity.WorldId && i.RecipeId == entity.RecipeId
+                i =>
+                    i.WorldId == entity.WorldId &&
+                    i.RecipeId == entity.RecipeId
             )
         )
             return;

@@ -3,17 +3,9 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.49">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-4||-9223372036854775808|c|G
-4||10|c|G
-4||10|C|G
-4||10|T|G</Grants>
-      <IntrospectionStateNumber>12150</IntrospectionStateNumber>
+      <IntrospectionStateNumber>12155</IntrospectionStateNumber>
       <ServerVersion>16.0</ServerVersion>
-      <StartupTime>1698600818</StartupTime>
+      <StartupTime>1698686223</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -810,7 +802,7 @@ true posixrules
 13209||10|C|G
 13209||-9223372036854775808|U|G
 13209||10|U|G</Grants>
-      <IntrospectionStateNumber>12150</IntrospectionStateNumber>
+      <IntrospectionStateNumber>12155</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>gilgoblin</OwnerName>
     </database>
@@ -4234,9 +4226,9 @@ true posixrules
     <schema id="264" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>12150</IntrospectionStateNumber>
-      <IntrospectionTimestamp>2023-10-29.14:19:32.191</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-10-29.18:19:32</LocalIntrospectionTimestamp>
+      <IntrospectionStateNumber>12155</IntrospectionStateNumber>
+      <IntrospectionTimestamp>2023-10-30.18:00:10.916</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-10-30.22:00:11</LocalIntrospectionTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4658,21 +4650,14 @@ worldid</ColNames>
       <StateNumber>847</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="325" parent="268" name="created">
-      <DasType>timestamp with time zone|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>847</StateNumber>
-      <TypeId>1184</TypeId>
-    </column>
-    <column id="326" parent="268" name="updated">
+    <column id="325" parent="268" name="updated">
       <DasType>timestamp with time zone|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>847</StateNumber>
       <TypeId>1184</TypeId>
     </column>
-    <index id="327" parent="268" name="recipecost_pkey">
+    <index id="326" parent="268" name="recipecost_pkey">
       <ColNames>recipeid
 worldid</ColNames>
       <NameSurrogate>1</NameSurrogate>
@@ -4682,7 +4667,7 @@ worldid</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="328" parent="268" name="recipecost_pkey">
+    <key id="327" parent="268" name="recipecost_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24612</ObjectId>
       <Primary>1</Primary>

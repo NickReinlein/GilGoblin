@@ -13,7 +13,7 @@ public class DataCacheTests : DataCache<int, Pizza>
 
         Add(pizza.Id, pizza);
 
-        Assert.That(_cache[pizza.Id], Is.EqualTo(pizza));
+        Assert.That(Cache[pizza.Id], Is.EqualTo(pizza));
     }
 
     [Test]
@@ -55,7 +55,7 @@ public class DataCacheTests : DataCache<int, Pizza>
     [Test]
     public void GivenACallToGetMultiple_WhenTheValuesAllExist_ThenWeReturnThemAll()
     {
-        var keys = _cache.Keys.ToList();
+        var keys = Cache.Keys.ToList();
 
         var result = GetMultiple(keys);
 
@@ -69,7 +69,7 @@ public class DataCacheTests : DataCache<int, Pizza>
     [Test]
     public void GivenACallToGetMultiple_WhenSomeValuesExist_ThenWeReturnThem()
     {
-        var keys = _cache.Keys.ToList();
+        var keys = Cache.Keys.ToList();
         var realCount = keys.Count;
         keys.Add(30000);
         keys.Add(30001);
@@ -92,14 +92,14 @@ public class DataCacheTests : DataCache<int, Pizza>
         Assert.Multiple(() =>
         {
             Assert.That(result.Count, Is.GreaterThanOrEqualTo(3));
-            Assert.That(result.Count, Is.EqualTo(_cache.Keys.Count));
+            Assert.That(result.Count, Is.EqualTo(Cache.Keys.Count));
         });
     }
 
     [Test]
     public void GivenACallToGetAll_WhenNoValuesExist_ThenWeReturnEmptyResponse()
     {
-        _cache.Clear();
+        Cache.Clear();
 
         var result = GetAll();
 
@@ -109,10 +109,10 @@ public class DataCacheTests : DataCache<int, Pizza>
     [SetUp]
     public void SetUp()
     {
-        _cache.Clear();
-        _cache.Add(1, new Pizza { Id = 1, IngredientsCount = 10 });
-        _cache.Add(2, new Pizza { Id = 2, IngredientsCount = 20 });
-        _cache.Add(3, new Pizza { Id = 3, IngredientsCount = 30 });
+        Cache.Clear();
+        Cache.Add(1, new Pizza { Id = 1, IngredientsCount = 10 });
+        Cache.Add(2, new Pizza { Id = 2, IngredientsCount = 20 });
+        Cache.Add(3, new Pizza { Id = 3, IngredientsCount = 30 });
     }
 }
 

@@ -90,7 +90,6 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeId).HasColumnName("recipeid");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.WorldId).HasColumnName("worldid");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Cost).HasColumnName("cost");
-        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Created).HasColumnName("created");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Updated).HasColumnName("updated");
     }
 }

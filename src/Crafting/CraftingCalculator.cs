@@ -59,27 +59,19 @@ public class CraftingCalculator : ICraftingCalculator
         try
         {
             var recipe = _recipes.Get(recipeId);
-            var ingredients = await _grocer.BreakdownRecipeById(recipeId);
+            var result = await _grocer.BreakdownRecipeById(recipeId);
+            var ingredients = result?.ToList();
             if (recipe is null || ingredients is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
-            var ingredientPrices = GetIngredientPrice(worldId, recipe.TargetItemId, ingredients);
-            var craftIngredients = AddPricesToIngredients(ingredients, ingredientPrices);
+            var ingredientPrices = GetIngredientPrice(worldId, recipe.TargetItemId, ingredients).ToList();
+            if (!ingredientPrices.Any())
+                return ERROR_DEFAULT_COST;
 
-            var craftingCost = await CalculateCraftingCostForIngredients(worldId, craftIngredients);
-            var lastUpdated = ingredientPrices
-                .FirstOrDefault()
-                .LastUploadTime.ConvertLongUnixMsToDateTime();
-            await _recipeCosts.Add(
-                new RecipeCostPoco
-                {
-                    RecipeId = recipeId,
-                    WorldId = worldId,
-                    Cost = craftingCost,
-                    Created = DateTimeOffset.Now,
-                    Updated = lastUpdated
-                }
-            );
+            var craftingCost = await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
+
+            await SaveRecipeCost(worldId, recipeId, ingredientPrices, craftingCost);
+
             return craftingCost;
         }
         catch (DataNotFoundException)
@@ -94,6 +86,30 @@ public class CraftingCalculator : ICraftingCalculator
         }
 
         return ERROR_DEFAULT_COST;
+    }
+
+    private async Task SaveRecipeCost(int worldId, int recipeId, List<PricePoco> ingredientPrices, int craftingCost)
+    {
+        var oldestTimestamp
+            = ingredientPrices
+                .Select(l => l.LastUploadTime)
+                .Min()
+                .ConvertLongUnixMsToDateTime();
+
+        await _recipeCosts.Add(
+            new RecipeCostPoco
+            {
+                RecipeId = recipeId, WorldId = worldId, Cost = craftingCost, Updated = oldestTimestamp
+            }
+        );
+    }
+
+    private async Task<int> CalculateCraftingCostFromIngredients(int worldId, IEnumerable<IngredientPoco> ingredients,
+        IEnumerable<PricePoco> ingredientPrices)
+    {
+        var craftIngredients = AddPricesToIngredients(ingredients, ingredientPrices);
+        var craftingCost = await CalculateCraftingCostForIngredients(worldId, craftIngredients);
+        return craftingCost;
     }
 
     public async Task<int> CalculateCraftingCostForIngredients(
@@ -167,33 +183,15 @@ public class CraftingCalculator : ICraftingCalculator
         var recipeId = -1;
         foreach (var recipe in recipes.Where(recipe => recipe is not null))
         {
-            var recipeCost = ERROR_DEFAULT_COST;
             var cached = await _recipeCosts.GetAsync(worldId, recipe.Id);
-            if (cached is not null)
-                recipeCost = cached.Cost;
-            else
-            {
-                recipeCost = await CalculateCraftingCostForRecipe(worldId, recipe.Id);
-                if (ERROR_DEFAULT_COST - recipeCost < 1000)
-                    continue;
 
-                await _recipeCosts.Add(
-                    new RecipeCostPoco
-                    {
-                        RecipeId = recipe.Id,
-                        WorldId = worldId,
-                        Cost = recipeCost,
-                        Created = DateTimeOffset.Now,
-                        Updated = DateTimeOffset.Now,
-                    }
-                );
-            }
+            var recipeCost = cached?.Cost ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id);
 
-            if (recipeCost < lowestCost)
-            {
-                lowestCost = recipeCost;
-                recipeId = recipe.Id;
-            }
+            if (recipeCost >= lowestCost)
+                continue;
+
+            lowestCost = recipeCost;
+            recipeId = recipe.Id;
         }
 
         return (recipeId, lowestCost);

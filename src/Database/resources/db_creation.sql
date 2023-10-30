@@ -61,7 +61,6 @@ create table if not exists recipecost
     recipeid INTEGER NOT NULL CHECK (recipeid > 0),
     worldid  INTEGER NOT NULL CHECK (worldid > 0),
     cost     INTEGER NOT NULL,
-    created  TIMESTAMP WITH TIME ZONE NOT NULL,
     updated  TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (recipeid, worldid)
 );

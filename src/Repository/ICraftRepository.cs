@@ -6,6 +6,6 @@ namespace GilGoblin.Repository;
 public interface ICraftRepository<T>
     where T : class
 {
-    Task<T?> GetBestCraft(int worldId, int itemId);
-    Task<IEnumerable<T>> GetBestCrafts(int worldId);
+    Task<T?> GetBestCraftForItem(int worldId, int itemId);
+    Task<List<T>> GetBestCraftsForWorld(int worldId);
 }

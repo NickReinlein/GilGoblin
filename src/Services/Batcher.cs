@@ -35,13 +35,6 @@ public class Batcher<T> : IBatcher<T>
         if (tempList.Any())
             cumulativeList.Add(tempList);
 
-        if (cumulativeList.Count > 1 || cumulativeList[0].Count == 1)
-            return cumulativeList;
-
-        // always split into at least 2 batches if we have 2+ entries
-        var splitMe = cumulativeList[0];
-        var first = splitMe.Take(splitMe.Count / 2).ToList();
-        var second = splitMe.Except(first).ToList();
-        return new List<List<T>> { first, second };
+        return cumulativeList;
     }
 }

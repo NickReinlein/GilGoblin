@@ -54,34 +54,32 @@ public class Startup
     private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddSingleton<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
+        services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
+        services.AddScoped<IItemFetcher, ItemFetcher>();
+        services.AddScoped<ISingleDataFetcher<ItemWebPoco>, ItemFetcher>();
+        services.AddScoped<IPriceFetcher, PriceFetcher>();
+        services.AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
 
-        services.AddSingleton<IItemFetcher, ItemFetcher>();
-        services.AddSingleton<ISingleDataFetcher<ItemWebPoco>, ItemFetcher>();
+        services.AddScoped<IDataSaver<ItemPoco>, DataSaver<ItemPoco>>();
+        services.AddScoped<IDataSaver<PricePoco>, PriceSaver>();
 
-        services.AddSingleton<IPriceFetcher, PriceFetcher>();
-        services.AddSingleton<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-
-        services.AddSingleton<IDataSaver<ItemPoco>, DataSaver<ItemPoco>>();
-        services.AddSingleton<IDataSaver<PricePoco>, PriceSaver>();
-
-        services.AddSingleton<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
-        services.AddSingleton<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
+        services.AddScoped<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
+        services.AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
         services.AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCaches(IServiceCollection services)
     {
-        services.AddSingleton<IItemCache, ItemCache>();
-        services.AddSingleton<IPriceCache, PriceCache>();
-        services.AddSingleton<IRecipeCache, RecipeCache>();
-        services.AddSingleton<IItemRecipeCache, ItemRecipeCache>();
-        services.AddSingleton<ICraftCache, CraftCache>();
-        services.AddSingleton<IRecipeCostCache, RecipeCostCache>();
+        services.AddScoped<IItemCache, ItemCache>();
+        services.AddScoped<IPriceCache, PriceCache>();
+        services.AddScoped<IRecipeCache, RecipeCache>();
+        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        services.AddScoped<ICraftCache, CraftCache>();
+        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
 
-        services.AddSingleton<IRepositoryCache, ItemRepository>();
-        services.AddSingleton<IRepositoryCache, PriceRepository>();
-        services.AddSingleton<IRepositoryCache, RecipeRepository>();
+        services.AddScoped<IRepositoryCache, ItemRepository>();
+        services.AddScoped<IRepositoryCache, PriceRepository>();
+        services.AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
     private static void AddGoblinControllers(IServiceCollection services)
@@ -96,18 +94,18 @@ public class Startup
 
     private static void AddGoblinCrafting(IServiceCollection services)
     {
-        services.AddSingleton<ICraftingCalculator, CraftingCalculator>();
-        services.AddSingleton<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
-        services.AddSingleton<IRecipeGrocer, RecipeGrocer>();
+        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
+        services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
     private static void AddGoblinDatabases(IServiceCollection services)
     {
-        services.AddDbContext<GilGoblinDbContext>(ServiceLifetime.Singleton);
-        services.AddSingleton<IPriceRepository<PricePoco>, PriceRepository>();
-        services.AddSingleton<IItemRepository, ItemRepository>();
-        services.AddSingleton<IRecipeRepository, RecipeRepository>();
-        services.AddSingleton<IRecipeCostRepository, RecipeCostRepository>();
+        services.AddDbContext<GilGoblinDbContext>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        services.AddScoped<IItemRepository, ItemRepository>();
+        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
     }
 
     private static void AddBasicBuilderServices(IServiceCollection services)

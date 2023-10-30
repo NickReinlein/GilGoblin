@@ -5,33 +5,27 @@ namespace GilGoblin.Cache;
 public class DataCache<T, U> : IDataCache<T, U>
     where U : class
 {
-    protected Dictionary<T, U> _cache = new();
+    protected readonly Dictionary<T, U> Cache = new();
 
     public void Add(T key, U item)
     {
-        _cache[key] = item;
+        Cache[key] = item;
     }
 
-    public U? Get(T key)
-    {
-        if (_cache.TryGetValue(key, out var value))
-            return value;
-
-        return null;
-    }
+    public U? Get(T key) => Cache.TryGetValue(key, out var value) ? value : null;
 
     public IEnumerable<U> GetMultiple(IEnumerable<T> keys)
     {
         foreach (var key in keys)
         {
-            if (_cache.TryGetValue(key, out var value))
+            if (Cache.TryGetValue(key, out var value))
             {
                 yield return value;
             }
         }
     }
 
-    public IEnumerable<U> GetAll() => _cache.Values;
+    public IEnumerable<U> GetAll() => Cache.Values;
 
-    public IEnumerable<T> GetKeys() => _cache.Keys;
+    public IEnumerable<T> GetKeys() => Cache.Keys;
 }

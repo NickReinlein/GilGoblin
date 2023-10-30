@@ -47,10 +47,10 @@ public class InMemoryTestDb
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.RecipeCost.AddRange(
-            new RecipeCostPoco { WorldId = 22, RecipeId = 11 },
-            new RecipeCostPoco { WorldId = 22, RecipeId = 12 },
-            new RecipeCostPoco { WorldId = 33, RecipeId = 88 },
-            new RecipeCostPoco { WorldId = 44, RecipeId = 99 }
+            new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107},
+            new RecipeCostPoco { WorldId = 22, RecipeId = 12, Cost = 297 },
+            new RecipeCostPoco { WorldId = 33, RecipeId = 88, Cost = 224 },
+            new RecipeCostPoco { WorldId = 44, RecipeId = 99, Cost = 351 }
         );
         context.Recipe.AddRange(
             new RecipePoco { Id = 11, TargetItemId = 111 },
