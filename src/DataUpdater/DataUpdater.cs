@@ -101,5 +101,5 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     protected virtual int? GetWorldId() => null;
 
     protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
-    protected virtual int GetApiSpamDelayInMs() => 3000;
+    protected virtual int GetApiSpamDelayInMs() => 5000;
 }

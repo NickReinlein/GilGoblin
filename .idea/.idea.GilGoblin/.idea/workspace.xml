@@ -9,10 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="working but need to prevent spam if response is continually null">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="Split each batch of updates into minimum 2 batches">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Batcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Batcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,7 +258,7 @@
       <workItem from="1698328874914" duration="17824000" />
       <workItem from="1698368961418" duration="16539000" />
       <workItem from="1698455411593" duration="3217000" />
-      <workItem from="1698600831883" duration="4388000" />
+      <workItem from="1698600831883" duration="5405000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -588,7 +588,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698605152595</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Split each batch of updates into minimum 2 batches">
+      <option name="closed" value="true" />
+      <created>1698622145577</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1698622145577</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -641,7 +649,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fixed most errors" />
     <MESSAGE value="fixed more tests" />
     <MESSAGE value="WIP" />
     <MESSAGE value="Fixed most tests" />
@@ -666,7 +673,8 @@
     <MESSAGE value="Working example with checks for age of existing entries" />
     <MESSAGE value="Working example with less spam" />
     <MESSAGE value="working but need to prevent spam if response is continually null" />
-    <option name="LAST_COMMIT_MESSAGE" value="working but need to prevent spam if response is continually null" />
+    <MESSAGE value="Split each batch of updates into minimum 2 batches" />
+    <option name="LAST_COMMIT_MESSAGE" value="Split each batch of updates into minimum 2 batches" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -917,10 +925,10 @@
           <line>74</line>
           <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="76" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
             <startOffsets>
-              <option value="2318" />
+              <option value="2335" />
             </startOffsets>
             <endOffsets>
-              <option value="2415" />
+              <option value="2432" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="341" />
@@ -1021,13 +1029,26 @@
           <line>42</line>
           <properties documentPath="$PROJECT_DIR$/src/Services/Batcher.cs" initialLine="42" containingFunctionPresentation="Method 'SplitIntoBatchJobs'">
             <startOffsets>
-              <option value="1038" />
+              <option value="1107" />
             </startOffsets>
             <endOffsets>
-              <option value="1091" />
+              <option value="1160" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="361" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Services/Batcher.cs</url>
+          <line>34</line>
+          <properties documentPath="$PROJECT_DIR$/src/Services/Batcher.cs" initialLine="34" containingFunctionPresentation="Method 'SplitIntoBatchJobs'">
+            <startOffsets>
+              <option value="819" />
+            </startOffsets>
+            <endOffsets>
+              <option value="838" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="365" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

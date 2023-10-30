@@ -19,12 +19,9 @@
     <ProjectReference Include="../Services/*Services.csproj"/>
     <ProjectReference Include="../Fetcher/*Fetcher.csproj"/>
     <ProjectReference Include="../Database/*Database.csproj"/>
-    <ProjectReference Include="..\Exceptions\Exceptions.csproj" />
+    <ProjectReference Include="../Exceptions/*Exceptions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
