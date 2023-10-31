@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
-using GilGoblin.Pocos;
+using System.Threading.Tasks;
+using GilGoblin.Api.Crafting;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;

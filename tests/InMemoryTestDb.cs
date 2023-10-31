@@ -1,5 +1,4 @@
 using GilGoblin.Database.Pocos;
-using GilGoblin.Tests.Component;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;

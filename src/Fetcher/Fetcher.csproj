@@ -3,7 +3,16 @@
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Fetcher</RootNamespace>
+    <PackageId>GilGoblin.Fetcher</PackageId>
+    <Version>0.1.1-alpha</Version>
+    <Authors>Nicholas Reinlein</Authors>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Project>LICENSE.txt</Project>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.0.*"/>
@@ -17,5 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="../Pocos/*Pocos.csproj"/>
     <ProjectReference Include="../Repository/*Repository.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
+    <None Include="icon.png" Pack="true" PackagePath="/"/>
   </ItemGroup>
 </Project>

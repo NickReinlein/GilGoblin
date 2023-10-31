@@ -3,8 +3,17 @@
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Api</RootNamespace>
+    <PackageId>GilGoblin.Api</PackageId>
     <OutputType>Exe</OutputType>
+    <Version>0.2.0-alpha</Version>
+    <Authors>Nicholas Reinlein</Authors>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Project>LICENSE.txt</Project>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.0.*"/>
@@ -19,18 +28,10 @@
     <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Cache/*Cache.csproj"/>
-    <ProjectReference Include="../Controllers/*Controllers.csproj"/>
-    <ProjectReference Include="../Crafting/*Crafting.csproj"/>
-    <ProjectReference Include="../Exceptions/*Exceptions.csproj"/>
-    <ProjectReference Include="../Pocos/*Pocos.csproj"/>
-    <ProjectReference Include="../Repository/*Repository.csproj"/>
-    <ProjectReference Include="../Fetcher/*Fetcher.csproj"/>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Update="src/appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="README.md" Pack="true" PackagePath="/"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
+    <None Include="icon.png" Pack="true" PackagePath="/"/>
   </ItemGroup>
 
 </Project>

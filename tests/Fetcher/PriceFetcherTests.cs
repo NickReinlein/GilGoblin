@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
-using GilGoblin.Pocos;
+using System.Threading;
+using System.Threading.Tasks;
 using GilGoblin.Fetcher;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

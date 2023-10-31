@@ -3,7 +3,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Batcher</RootNamespace>
-    <RootNamespace>GilGoblin.Batcher</RootNamespace>
+    <PackageId>GilGoblin.Batcher</PackageId>
     <Version>0.1.0-alpha</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -18,6 +18,5 @@
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="icon.png" Pack="true" PackagePath="/"/>
-    <Folder Include="publish/"/>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Database.Tests</RootNamespace>
+    <PackageId>GilGoblin.Database.Tests</PackageId>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>

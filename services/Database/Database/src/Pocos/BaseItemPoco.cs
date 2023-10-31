@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace GilGoblin.Database.Pocos;
 
 public class BaseItemPoco : IIdentifiable

@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
-using GilGoblin.Repository;
 using GilGoblin.Fetcher;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -23,8 +26,8 @@ public class ItemFetcherTests : FetcherTests
     public override void SetUp()
     {
         base.SetUp();
-        var pocos = GetMultipleDbPocos().ToList();
-        var idList = pocos.Select(i => i.Id).ToList();
+        // var pocos = GetMultipleDbPocos().ToList();
+        // var idList = pocos.Select(i => i.Id).ToList();
         _logger = Substitute.For<ILogger<ItemFetcher>>();
         // _repo = Substitute.For<IItemRepository>();
         // _repo.GetAll().Returns(pocos);

@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using GilGoblin.Batcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Exceptions;
-using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
-using GilGoblin.Repository;
-using GilGoblin.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +17,7 @@ namespace GilGoblin.DataUpdater;
 public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 {
     private List<int> _allItemIds;
-    private const int dataExpiryInHours = 24;
+    private const int dataExpiryInHours = 48;
 
     public PriceUpdater(
         IServiceScopeFactory scopeFactory,
@@ -64,7 +62,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
             var success = await saver.SaveAsync(webPocos.ToPricePocoList());
             if (!success)
-                throw new DatabaseException("Saving from DataSaver returned failure");
+                throw new DbUpdateException("Saving from DataSaver returned failure");
         }
         catch (Exception e)
         {
@@ -81,20 +79,20 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
             using var scope = ScopeFactory.CreateScope();
             var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-            var priceRepository = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
             _allItemIds ??= await marketableIdsFetcher.GetMarketableItemIdsAsync();
             if (!_allItemIds.Any())
                 throw new WebException("Failed to fetch Marketable Item Ids");
 
             var world = worldId.GetValueOrDefault();
-            var currentPrices = priceRepository.GetAll(world).ToList();
+            var currentPrices = dbContext.Price.Where(cp => cp.WorldId == world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
             var newPriceIds = _allItemIds.Except(currentPriceIds).ToList();
 
             var outdatedPrices = currentPrices.Where(p =>
             {
-                var timestamp = p.LastUploadTime.ConvertLongUnixMsToDateTime().ToUniversalTime();
+                var timestamp = new DateTime(p.LastUploadTime).ToUniversalTime();
                 var ageInHours = (DateTimeOffset.UtcNow - timestamp).Hours;
                 return ageInHours > dataExpiryInHours;
             }).ToList();

@@ -1,9 +1,9 @@
 ## GilGoblin.Database
 
-GilGoblin.Database is a package that holds information for the video game *Final Fantasy XIV (FFXIV)*.
+`GilGoblin.Database` is a package that hosts a database with market data for the video game *Final Fantasy XIV (FFXIV)*.
 
-The database stores static data related to items, recipes and crafts. It also holds time-sensitive, dynamic data such as
-the recent prices for in-game items and ingredients.
+The database stores static data related to items, recipes and crafting recipes. It also holds time-sensitive, dynamic data such as
+the recent prices for in-game items and crafting recipe ingredients.
 
 The database holds data but additional packages are needed to keep it up to date, query the data, etc. The package is
 intended to be used in conjunction with other GilGoblin packages to calculate profitability for in-game

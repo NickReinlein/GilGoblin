@@ -1,6 +1,5 @@
 using System;
 using GilGoblin.Database;
-using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;

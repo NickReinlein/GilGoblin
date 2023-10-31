@@ -3,7 +3,6 @@
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Tests</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.*"/>
@@ -21,13 +20,16 @@
     </PackageReference>
     <PackageReference Include="ReportGenerator" Version="5.1.*"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.*"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Api/Api.csproj"/>
     <ProjectReference Include="../src/Batcher/Batcher.csproj"/>
+    <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <None Update="src/appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
+    <None Update="appsettings.json" CopyToOutputDirectory="Always"/>
+    <None Update="Component\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

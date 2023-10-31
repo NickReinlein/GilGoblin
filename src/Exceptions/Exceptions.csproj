@@ -1,7 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
-    <RootNamespace>GilGoblin.Exceptions</RootNamespace>
-  </PropertyGroup>
-</Project>

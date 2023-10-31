@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection; 
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
