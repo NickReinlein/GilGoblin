@@ -8,14 +8,12 @@ namespace GilGoblin.Tests.Component;
 public class ComponentTests
 {
     protected HttpClient _client;
-    protected IServiceProvider _services;
     protected WebApplicationFactory<Startup> _factory;
 
     [OneTimeSetUp]
     public virtual void OneTimeSetUp()
     {
         _factory = new WebApplicationFactory<Startup>();
-        _services = _factory.Services;
         _client = _factory.CreateClient();
     }
 
@@ -26,7 +24,7 @@ public class ComponentTests
         _factory?.Dispose();
     }
 
-    protected static readonly double MissingEntryPercentageThreshold = 0.85;
+    protected const double missingEntryPercentageThreshold = 0.85;
 
     protected static JsonSerializerOptions GetSerializerOptions() =>
         new() { PropertyNameCaseInsensitive = true, IncludeFields = true, };

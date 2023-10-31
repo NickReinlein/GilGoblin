@@ -57,12 +57,12 @@ public class PriceComponentTests : ComponentTests
             );
             Assert.That(
                 prices.Count(p => p.AverageListingPrice == 0),
-                Is.LessThan(priceCount * MissingEntryPercentageThreshold),
+                Is.LessThan(priceCount * missingEntryPercentageThreshold),
                 "Number of missing AverageListingPrice is suspiciously high"
             );
             Assert.That(
                 prices.Count(p => p.AverageSold == 0),
-                Is.LessThan(priceCount * MissingEntryPercentageThreshold),
+                Is.LessThan(priceCount * missingEntryPercentageThreshold),
                 "Number of missing AverageSold is suspiciously high"
             );
         });

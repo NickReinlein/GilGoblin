@@ -1,12 +1,9 @@
 using GilGoblin.Cache;
 using GilGoblin.Crafting;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.DataUpdater;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
 using GilGoblin.Tests.Component;
-using GilGoblin.Fetcher;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -26,13 +23,6 @@ public class DependencyInjectionTests : ComponentTests
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
-    [TestCase(typeof(IPriceFetcher))]
-    [TestCase(typeof(IItemFetcher))]
-    [TestCase(typeof(IMarketableItemIdsFetcher))]
-    [TestCase(typeof(IDataSaver<ItemPoco>))]
-    [TestCase(typeof(IDataSaver<PricePoco>))]
-    [TestCase(typeof(IDataUpdater<ItemPoco, ItemWebPoco>))]
-    [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();
@@ -41,4 +31,12 @@ public class DependencyInjectionTests : ComponentTests
 
         Assert.That(scopedDependencyService, Is.Not.Null);
     }
+    
+    // [TestCase(typeof(IPriceFetcher))]
+    // [TestCase(typeof(IItemFetcher))]
+    // [TestCase(typeof(IMarketableItemIdsFetcher))]
+    // [TestCase(typeof(IDataSaver<ItemPoco>))]
+    // [TestCase(typeof(IDataSaver<PricePoco>))]
+    // [TestCase(typeof(IDataUpdater<ItemPoco, ItemWebPoco>))]
+    // [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
 }

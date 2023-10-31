@@ -21,14 +21,14 @@
     </PackageReference>
     <PackageReference Include="ReportGenerator" Version="5.1.*"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.5.*"/>
+<!--    <PackageReference Include="GilGoblin.DataUpdater" Version="0.1.0-alpha"/>-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Api/Api.csproj"/>
+    <ProjectReference Include="../src/DataUpdater/DataUpdater.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="src/appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
-    <None Update="Database\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>

@@ -51,7 +51,7 @@ public class ItemComponentTests : ComponentTests
             GetSerializerOptions()
         );
         var itemCount = items.Count();
-        var missingEntryThreshold = itemCount * MissingEntryPercentageThreshold;
+        var missingEntryThreshold = itemCount * missingEntryPercentageThreshold;
         Assert.Multiple(() =>
         {
             Assert.That(itemCount, Is.GreaterThan(1000), "Not enough entries received");
@@ -95,7 +95,7 @@ public class ItemComponentTests : ComponentTests
             );
             Assert.That(
                 items.Count(p => p.CanHq),
-                Is.GreaterThan(itemCount * (1.0f - MissingEntryPercentageThreshold)),
+                Is.GreaterThan(itemCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries that can be High Quality"
             );
         });

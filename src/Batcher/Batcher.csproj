@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <RootNamespace>GilGoblin.Batcher</RootNamespace>
+    <RootNamespace>GilGoblin.Batcher</RootNamespace>
+    <Version>0.1.0-alpha</Version>
+    <Authors>Nicholas Reinlein</Authors>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Project>LICENSE.txt</Project>
+  </PropertyGroup>
+</Project>

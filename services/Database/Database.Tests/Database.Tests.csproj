@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <RootNamespace>GilGoblin.Database.Tests</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.*"/>
+    <PackageReference Include="Nsubstitute" Version="5.0.*"/>
+    <PackageReference Include="NUnit" Version="3.13.*"/>
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.*"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.*"/>
+    <PackageReference Include="ReportGenerator" Version="5.1.*"/>
+    <PackageReference Include="coverlet.msbuild" Version="3.2.*"/>
+    <PackageReference Include="coverlet.collector" Version="3.2.*">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+</Project>

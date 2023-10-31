@@ -5,43 +5,81 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/Database/Database.Tests/InMemoryTestDb.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Repository/CraftRepositoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Repository/ItemRepositoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Repository/PriceRepositoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Repository/RecipeCostRepositoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Repository/RecipeRepositoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/TestGilGoblinDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/CraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/LICENSE.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Exceptions/MarketDataNotFoundException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Exceptions/DataNotFoundException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pocos/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/CraftSummaryPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/ICraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ICraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/Repository.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Batcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Batcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/dataSources/9642553e-95f7-46ef-9225-f3c538092b0d.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/docker-compose.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/resources/ER_Diagram_ 2023-10-23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/resources/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/resources/item.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/resources/price.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/resources/recipe.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/BaseItemPoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/BasePricePoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/IngredientPocoExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/PricePocoExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/RecipePocoExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/IIdentifiable.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/IngredientPoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/ItemPoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/PricePoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Controllers/CraftControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/CraftRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/TestGilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database.Tests/TestGilGoblinDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/CraftRepositoryTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/DatabaseTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/GilGoblinDatabaseConnectorTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/ItemRepositoryTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/PriceRepositoryTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeCostRepositoryTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeRepositoryTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

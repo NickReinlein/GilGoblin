@@ -13,7 +13,4 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
     <PackageReference Include="GilGoblin.Database" Version="0.5.*"/>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../Services/*Services.csproj"/>
-  </ItemGroup>
 </Project>

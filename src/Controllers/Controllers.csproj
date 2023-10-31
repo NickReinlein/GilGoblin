@@ -19,7 +19,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Services/*Services.csproj"/>
     <ProjectReference Include="../Repository/*Repository.csproj"/>
     <ProjectReference Include="../Pocos/*Pocos.csproj"/>
   </ItemGroup>
