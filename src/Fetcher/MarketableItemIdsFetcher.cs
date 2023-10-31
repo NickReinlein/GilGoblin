@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using GilGoblin.Services;
 
 namespace GilGoblin.Fetcher;
 

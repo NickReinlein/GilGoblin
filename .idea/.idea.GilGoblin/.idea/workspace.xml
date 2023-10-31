@@ -9,97 +9,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/Database/Database.Tests/InMemoryTestDb.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Batcher/LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Batcher/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Batcher/icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Repository/CraftRepositoryTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Repository/ItemRepositoryTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Repository/PriceRepositoryTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Repository/RecipeCostRepositoryTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Repository/RecipeRepositoryTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/TestGilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="De-couple docker services">
       <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/dataSources/9642553e-95f7-46ef-9225-f3c538092b0d.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/docker-compose.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/ER_Diagram_ 2023-10-23.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/item.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/price.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/recipe.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/BaseItemPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/BasePricePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/IngredientPocoExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/PricePocoExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/RecipePocoExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/IIdentifiable.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/IngredientPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/ItemPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/PricePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Batcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Batcher/Batcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/GeneralFunctions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/IBatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Batcher/IBatcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Services.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/TestGilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database.Tests/TestGilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/CraftRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/DatabaseTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/GilGoblinDatabaseConnectorTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/ItemRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/PriceRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeCostRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/RecipeRepositoryTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/MarketableItemIdsFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ItemWebPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/ItemWebPocoExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/ItemWebPocoExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/MarketListingPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/MarketListingPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/PriceWebPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/PriceWebPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pocos/PriceWebPocoExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/PriceWebPocoExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/Repository.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Batcher/BatcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Services/GeneralFunctionsTests.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,6 +129,7 @@
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/Batcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/IBatcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Crafting/CraftingCalculator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -347,7 +274,7 @@
       <workItem from="1698686273729" duration="9275000" />
       <workItem from="1698704220814" duration="3772000" />
       <workItem from="1698713256530" duration="5742000" />
-      <workItem from="1698760345704" duration="1694000" />
+      <workItem from="1698760345704" duration="4243000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -709,7 +636,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698715196512</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="De-couple docker services">
+      <option name="closed" value="true" />
+      <created>1698762215431</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1698762215431</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -762,7 +697,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="WIP switch to Postgresql" />
     <MESSAGE value="Functional postgres db created in database project. sql table script fails still" />
     <MESSAGE value="functional postgres database.&#10;Working docker with manual csv imports" />
     <MESSAGE value="no need for csv interactor" />
@@ -787,7 +721,8 @@
     <MESSAGE value="cleanup" />
     <MESSAGE value="DI fails but dbcontext scope fixed" />
     <MESSAGE value="Fixed additional scoping for new background services" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed additional scoping for new background services" />
+    <MESSAGE value="De-couple docker services" />
+    <option name="LAST_COMMIT_MESSAGE" value="De-couple docker services" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -865,27 +800,27 @@
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Fetcher/ItemWebPoco.cs</url>
           <line>20</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="19" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="416" />
+              <option value="418" />
             </startOffsets>
             <endOffsets>
-              <option value="420" />
+              <option value="422" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="257" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Fetcher/ItemWebPoco.cs</url>
           <line>35</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="35" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="645" />
+              <option value="647" />
             </startOffsets>
             <endOffsets>
-              <option value="658" />
+              <option value="660" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="258" />
@@ -917,40 +852,40 @@
           <option name="timeStamp" value="264" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Fetcher/ItemWebPoco.cs</url>
           <line>7</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="8" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="168" />
+              <option value="170" />
             </startOffsets>
             <endOffsets>
-              <option value="169" />
+              <option value="171" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="267" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Fetcher/ItemWebPoco.cs</url>
           <line>30</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="30" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="580" />
+              <option value="582" />
             </startOffsets>
             <endOffsets>
-              <option value="581" />
+              <option value="583" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="271" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Fetcher/ItemWebPoco.cs</url>
           <line>31</line>
           <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="31" containingFunctionPresentation="Constructor 'ItemWebPoco'">
             <startOffsets>
-              <option value="586" />
+              <option value="588" />
             </startOffsets>
             <endOffsets>
-              <option value="587" />
+              <option value="589" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="272" />
@@ -1053,26 +988,26 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs</url>
-          <line>49</line>
+          <line>48</line>
           <properties documentPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" initialLine="49" containingFunctionPresentation="Method 'FetchByIdsAsync'">
             <startOffsets>
-              <option value="1351" />
+              <option value="1325" />
             </startOffsets>
             <endOffsets>
-              <option value="1418" />
+              <option value="1392" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="356" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Services/BatcherTests.cs</url>
-          <line>31</line>
+          <url>file://$PROJECT_DIR$/tests/Batcher/BatcherTests.cs</url>
+          <line>30</line>
           <properties documentPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" initialLine="31" containingFunctionPresentation="Method 'GivenASingleEntry_WhenWeSplitIntoBatchJobs_WeReturnAListWithThatEntry'">
             <startOffsets>
-              <option value="713" />
+              <option value="711" />
             </startOffsets>
             <endOffsets>
-              <option value="746" />
+              <option value="744" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="369" />

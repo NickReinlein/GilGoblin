@@ -1,7 +1,7 @@
-using GilGoblin.Services;
 using NUnit.Framework;
+using GilGoblin.Batcher;
 
-namespace GilGoblin.Tests.Services;
+namespace GilGoblin.Tests.Batcher;
 
 public class BatcherTests
 {

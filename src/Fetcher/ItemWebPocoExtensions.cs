@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Database.Pocos;
 
-namespace GilGoblin.Pocos;
+namespace GilGoblin.Fetcher;
 
 public static class ItemWebPocoExtensions
 {

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using GilGoblin.Exceptions;
 using GilGoblin.Pocos;
 using GilGoblin.Repository;
-using GilGoblin.Services;
 
 namespace GilGoblin.Crafting;
 
@@ -90,18 +89,25 @@ public class CraftingCalculator : ICraftingCalculator
 
     private async Task SaveRecipeCost(int worldId, int recipeId, List<PricePoco> ingredientPrices, int craftingCost)
     {
-        var oldestTimestamp
-            = ingredientPrices
-                .Select(l => l.LastUploadTime)
-                .Min()
-                .ConvertLongUnixMsToDateTime();
+        try
+        {
+            var oldestTime
+                = ingredientPrices
+                    .Select(l => l.LastUploadTime)
+                    .Min();
+            var oldestTimestamp = new DateTime(oldestTime).ToUniversalTime();
 
-        await _recipeCosts.Add(
-            new RecipeCostPoco
-            {
-                RecipeId = recipeId, WorldId = worldId, Cost = craftingCost, Updated = oldestTimestamp
-            }
-        );
+            await _recipeCosts.Add(
+                new RecipeCostPoco
+                {
+                    RecipeId = recipeId, WorldId = worldId, Cost = craftingCost, Updated = oldestTimestamp
+                }
+            );
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to add the recipe costs to the recipe cost repository: {e.Message}");
+        }
     }
 
     private async Task<int> CalculateCraftingCostFromIngredients(int worldId, IEnumerable<IngredientPoco> ingredients,

@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.0"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.5.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Cache/*Cache.csproj"/>

@@ -1,5 +1,4 @@
 using System;
-using GilGoblin.Services;
 
 namespace GilGoblin.Pocos;
 
@@ -22,7 +21,7 @@ public class MarketListingPoco
         Hq = hq;
         try
         {
-            Timestamp = lastReviewTime.ConvertLongUnixMsToDateTime();
+            Timestamp = new DateTime(lastReviewTime).ToUniversalTime();
         }
         catch (Exception)
         {
