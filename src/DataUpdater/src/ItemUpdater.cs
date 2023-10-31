@@ -4,25 +4,28 @@ using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
 public class ItemUpdater : DataUpdater<ItemPoco, ItemWebPoco>
 {
-    private readonly IItemFetcher _fetcher;
-
     public ItemUpdater(
-        IItemFetcher fetcher,
-        IDataSaver<ItemPoco> saver,
+        IServiceScopeFactory scopeFactory,
         ILogger<DataUpdater<ItemPoco, ItemWebPoco>> logger)
-        : base(saver, fetcher, logger)
+        : base(scopeFactory, logger)
     {
-        _fetcher = fetcher;
     }
 
-    protected override Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated)
-        => Saver.SaveAsync(updated.ToItemPocoList());
+    protected override async Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated)
+    {
+        using var scope = ScopeFactory.CreateScope();
+        var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<ItemPoco>>();
+        var success = await saver.SaveAsync(updated.ToItemPocoList());
+        if (!success)
+            Logger.LogError($"Failed to save updates!");
+    }
 
     protected override Task<List<int>> GetIdsToUpdateAsync(int? worldId)
     {

@@ -10,48 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataUpdater/icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cache/DataCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cache/DataCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/CraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/.idea/.idea.Database.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/LICENSE.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/resources/db_creation.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Exceptions/MarketDataNotFoundException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Exceptions/DataNotFoundException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pocos/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/CraftSummaryPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/Pocos.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/ICraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ICraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/Repository.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Batcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Batcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Cache/DataCacheTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Cache/DataCacheTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Controllers/CraftControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/CraftRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DI/DependencyInjectionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +61,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/05f66f42f8464281abbee09f4c1d23ae1de00/44/a9439014/LoggerExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0f34c3f406c24260a7ecd1b418fd5bf466400/9e/30f2d457/ConfigureServicesBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17a58286aee34b4f8ef0c972a6b21d662e6a00/9f/09ba8fba/IDbConnection.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/b8/a8fea91d/IDataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f9/ff3d998e/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1b046e286a344b85999e7c798bc1fc145e00/99/755f15a9/MockHttpMessageHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/10/0a8bf815/DefaultInterpolatedStringHandler.cs" root0="SKIP_HIGHLIGHTING" />
@@ -152,13 +117,6 @@
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Services/BatcherTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -299,6 +257,8 @@
       <workItem from="1698455411593" duration="3217000" />
       <workItem from="1698600831883" duration="5986000" />
       <workItem from="1698686273729" duration="9275000" />
+      <workItem from="1698704220814" duration="3772000" />
+      <workItem from="1698713256530" duration="1309000" />
     </task>
     <task id="LOCAL-00001" summary="IDEA">
       <option name="closed" value="true" />
@@ -644,7 +604,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698624912153</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="DI fails but dbcontext scope fixed">
+      <option name="closed" value="true" />
+      <created>1698704506947</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1698704506947</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -697,7 +665,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="WIP" />
     <MESSAGE value="Fixed most tests" />
     <MESSAGE value="WIP switch to Postgresql" />
     <MESSAGE value="Functional postgres db created in database project. sql table script fails still" />
@@ -722,7 +689,8 @@
     <MESSAGE value="working but need to prevent spam if response is continually null" />
     <MESSAGE value="Split each batch of updates into minimum 2 batches" />
     <MESSAGE value="cleanup" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleanup" />
+    <MESSAGE value="DI fails but dbcontext scope fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="DI fails but dbcontext scope fixed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -947,10 +915,10 @@
           <line>153</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/Startup.cs" initialLine="152" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
             <startOffsets>
-              <option value="5382" />
+              <option value="5379" />
             </startOffsets>
             <endOffsets>
-              <option value="5439" />
+              <option value="5436" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="304" />
@@ -970,15 +938,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
-          <line>74</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="76" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
-            <startOffsets>
-              <option value="2318" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2415" />
-            </endOffsets>
-          </properties>
+          <line>70</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="76" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'" />
           <option name="timeStamp" value="341" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
@@ -1035,15 +996,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
-          <line>54</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="54" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
-            <startOffsets>
-              <option value="1821" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1860" />
-            </endOffsets>
-          </properties>
+          <line>48</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/PriceUpdater.cs" initialLine="54" containingFunctionPresentation="Method 'FetchUpdatesAsync'" />
           <option name="timeStamp" value="357" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">

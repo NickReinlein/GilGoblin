@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
@@ -23,14 +24,14 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    protected readonly IDataSaver<T> Saver;
-    protected readonly IDataFetcher<U> PriceFetcher;
+    protected readonly IServiceScopeFactory ScopeFactory;
     protected readonly ILogger<DataUpdater<T, U>> Logger;
 
-    public DataUpdater(IDataSaver<T> saver, IDataFetcher<U> priceFetcher, ILogger<DataUpdater<T, U>> logger)
+    public DataUpdater(
+        IServiceScopeFactory scopeFactory,
+        ILogger<DataUpdater<T, U>> logger)
     {
-        PriceFetcher = priceFetcher;
-        Saver = saver;
+        ScopeFactory = scopeFactory;
         Logger = logger;
     }
 
@@ -68,22 +69,24 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
 
     protected virtual async Task FetchUpdatesAsync(CancellationToken ct, int? worldId, List<int> idList)
     {
-        var updated = await FetchUpdatesForIdsAsync(idList, worldId, ct);
+        var updated = await FetchUpdatesForIdsAsync(ct, idList, worldId);
         if (updated.Any())
             await ConvertAndSaveToDbAsync(updated);
     }
 
-    private async Task<List<U>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate,
-        int? worldId, CancellationToken ct)
+    private async Task<List<U>> FetchUpdatesForIdsAsync(CancellationToken ct, IEnumerable<int> idsToUpdate,
+        int? worldId)
     {
         try
         {
-            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
             var idList = idsToUpdate.ToList();
+            using var scope = ScopeFactory.CreateScope();
+            var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
+            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await PriceFetcher.FetchByIdsAsync(ct, idList, worldId);
+            var updated = await fetcher.FetchByIdsAsync(ct, idList, worldId);
             timer.Stop();
             var callTime = timer.Elapsed.TotalMilliseconds;
 

@@ -35,7 +35,9 @@ public class DependencyInjectionTests : ComponentTests
     [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
     public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
     {
-        var scopedDependencyService = _services.GetRequiredService(serviceType);
+        using var scope = _factory.Services.CreateScope();
+
+        var scopedDependencyService = scope.ServiceProvider.GetRequiredService(serviceType);
 
         Assert.That(scopedDependencyService, Is.Not.Null);
     }

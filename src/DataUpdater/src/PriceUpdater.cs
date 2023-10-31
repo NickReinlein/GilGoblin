@@ -11,29 +11,21 @@ using GilGoblin.Pocos;
 using GilGoblin.Fetcher;
 using GilGoblin.Repository;
 using GilGoblin.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 {
-    private readonly IPriceRepository<PricePoco> _priceRepository;
-    private readonly IPriceFetcher _priceFetcher;
-    private readonly IMarketableItemIdsFetcher _marketableIdsFetcher;
     private List<int> _allItemIds;
     private const int dataExpiryInHours = 24;
 
     public PriceUpdater(
-        IPriceFetcher priceFetcher,
-        IMarketableItemIdsFetcher marketableIdsFetcher,
-        IPriceRepository<PricePoco> priceRepository,
-        IDataSaver<PricePoco> saver,
+        IServiceScopeFactory scopeFactory,
         ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
-        : base(saver, priceFetcher, logger)
+        : base(scopeFactory, logger)
     {
-        _priceFetcher = priceFetcher;
-        _marketableIdsFetcher = marketableIdsFetcher;
-        _priceRepository = priceRepository;
     }
 
     protected override int? GetWorldId()
@@ -43,14 +35,16 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
     protected override async Task FetchUpdatesAsync(CancellationToken ct, int? worldId, List<int> idList)
     {
-        var batcher = new Batcher<int>(_priceFetcher.GetEntriesPerPage());
+        using var scope = ScopeFactory.CreateScope();
+        var fetcher = scope.ServiceProvider.GetRequiredService<IPriceFetcher>();
+        var batcher = new Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
 
         while (!ct.IsCancellationRequested)
         {
             foreach (var batch in batches)
             {
-                var fetched = await _priceFetcher.FetchByIdsAsync(ct, batch, worldId);
+                var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
                 if (fetched.Any())
                     await ConvertAndSaveToDbAsync(fetched);
 
@@ -66,7 +60,9 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
     {
         try
         {
-            var success = await Saver.SaveAsync(webPocos.ToPricePocoList());
+            using var scope = ScopeFactory.CreateScope();
+            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
+            var success = await saver.SaveAsync(webPocos.ToPricePocoList());
             if (!success)
                 throw new DatabaseException("Saving from DataSaver returned failure");
         }
@@ -83,12 +79,16 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             if (worldId is null or < 1)
                 throw new Exception("World Id cannot be null");
 
-            _allItemIds ??= await _marketableIdsFetcher.GetMarketableItemIdsAsync();
+            using var scope = ScopeFactory.CreateScope();
+            var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
+            var priceRepository = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+
+            _allItemIds ??= await marketableIdsFetcher.GetMarketableItemIdsAsync();
             if (!_allItemIds.Any())
                 throw new WebException("Failed to fetch Marketable Item Ids");
 
             var world = worldId.GetValueOrDefault();
-            var currentPrices = _priceRepository.GetAll(world).ToList();
+            var currentPrices = priceRepository.GetAll(world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
             var newPriceIds = _allItemIds.Except(currentPriceIds).ToList();
 

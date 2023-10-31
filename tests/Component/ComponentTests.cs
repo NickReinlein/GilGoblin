@@ -9,7 +9,7 @@ public class ComponentTests
 {
     protected HttpClient _client;
     protected IServiceProvider _services;
-    private WebApplicationFactory<Startup> _factory;
+    protected WebApplicationFactory<Startup> _factory;
 
     [OneTimeSetUp]
     public virtual void OneTimeSetUp()
