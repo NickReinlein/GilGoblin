@@ -1,4 +1,4 @@
-﻿FROM postgres
+﻿FROM postgres:alpine
 
 ENV POSTGRES_DB=gilgoblin
 ENV POSTGRES_USER=gilgoblin
