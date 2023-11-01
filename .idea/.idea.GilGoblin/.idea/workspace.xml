@@ -9,11 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="WIP decouple services, create Nuget packages">
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/Database.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +148,7 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="SWEA" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -164,7 +167,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "dockerize-updater",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/GilGoblin.sln",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -297,15 +300,7 @@
       <workItem from="1698704220814" duration="3772000" />
       <workItem from="1698713256530" duration="5742000" />
       <workItem from="1698760345704" duration="10441000" />
-      <workItem from="1698776379563" duration="8368000" />
-    </task>
-    <task id="LOCAL-00006" summary="Nuking ID -&gt; Id&#10;Fixing tests">
-      <option name="closed" value="true" />
-      <created>1696295541593</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1696295541593</updated>
+      <workItem from="1698776379563" duration="13085000" />
     </task>
     <task id="LOCAL-00007" summary="WIP fix tests and change db schema ID -&gt; Id">
       <option name="closed" value="true" />
@@ -691,7 +686,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698785190161</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698785957914</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1698785957914</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -776,7 +779,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
-          <line>32</line>
+          <line>37</line>
           <properties documentPath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" initialLine="42" containingFunctionPresentation="Lambda expression inside Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'" />
           <option name="timeStamp" value="59" />
         </line-breakpoint>
@@ -915,13 +918,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
-          <line>267</line>
+          <line>272</line>
           <properties documentPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" initialLine="269" containingFunctionPresentation="Method 'SetupResponse'">
             <startOffsets>
-              <option value="9250" />
+              <option value="9371" />
             </startOffsets>
             <endOffsets>
-              <option value="9361" />
+              <option value="9482" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="291" />
@@ -965,32 +968,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Batcher/BatcherTests.cs</url>
-          <line>30</line>
+          <line>32</line>
           <properties documentPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" initialLine="31" containingFunctionPresentation="Method 'GivenASingleEntry_WhenWeSplitIntoBatchJobs_WeReturnAListWithThatEntry'" />
           <option name="timeStamp" value="369" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/ItemComponentTests.cs</url>
-          <line>47</line>
+          <line>50</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" initialLine="47" containingFunctionPresentation="Method 'GivenACallToGetAll_WhenReceivingAllItems_ThenWeReceiveValidItems'">
             <startOffsets>
-              <option value="1726" />
+              <option value="1809" />
             </startOffsets>
             <endOffsets>
-              <option value="1784" />
+              <option value="1867" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="371" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/ItemComponentTests.cs</url>
-          <line>49</line>
+          <line>52</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" initialLine="49" containingFunctionPresentation="Method 'GivenACallToGetAll_WhenReceivingAllItems_ThenWeReceiveValidItems'">
             <startOffsets>
-              <option value="1794" />
+              <option value="1877" />
             </startOffsets>
             <endOffsets>
-              <option value="1916" />
+              <option value="1999" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="372" />
@@ -1023,42 +1026,55 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/ComponentTests.cs</url>
-          <line>15</line>
+          <line>16</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" initialLine="15" containingFunctionPresentation="Method 'OneTimeSetUp'">
             <startOffsets>
-              <option value="339" />
+              <option value="362" />
             </startOffsets>
             <endOffsets>
-              <option value="387" />
+              <option value="410" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="382" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/ComponentTests.cs</url>
-          <line>16</line>
+          <line>17</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" initialLine="16" containingFunctionPresentation="Method 'OneTimeSetUp'">
             <startOffsets>
-              <option value="396" />
+              <option value="419" />
             </startOffsets>
             <endOffsets>
-              <option value="430" />
+              <option value="453" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="383" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs</url>
-          <line>12</line>
+          <line>13</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" initialLine="12" containingFunctionPresentation="Method 'GivenACallToGet_WhenTheEndPointIsValid_ThenTheEndpointResponds'">
             <startOffsets>
-              <option value="311" />
+              <option value="341" />
             </startOffsets>
             <endOffsets>
-              <option value="366" />
+              <option value="396" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="384" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>133</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="133" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
+            <startOffsets>
+              <option value="4449" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4506" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="385" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

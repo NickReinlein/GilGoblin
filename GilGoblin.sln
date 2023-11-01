@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GilGoblin.Tests", "tests\GilGoblin.Tests.csproj", "{5FE9A6C2-85CD-4326-8175-7C396911D5E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20C167A9-8025-4B80-AC2D-10F67DA96322}"
+	ProjectSection(SolutionItems) = preProject
+		src\docker-compose.yaml = src\docker-compose.yaml
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{8C30C5D8-0F88-4F24-B877-9C57D9EDBA1E}"
 EndProject
