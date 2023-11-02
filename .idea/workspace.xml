@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/Database/Database/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
