@@ -2,8 +2,7 @@ version: "3.7"
 
 services:
   gilgoblin-db:
-    image: gilgoblin-database
-    build: ./
+    image: nickreinlein/gilgoblin-database
     container_name: database
     environment:
       POSTGRES_DB: gilgoblin
