@@ -8,7 +8,7 @@ create table if not exists item
     pricemid    INTEGER NOT NULL,
     pricelow    INTEGER NOT NULL,
     stacksize   INTEGER NOT NULL,
-    canbehq     BOOLEAN NOT NULL
+    canhq     BOOLEAN NOT NULL
 );
 
 create table if not exists price
