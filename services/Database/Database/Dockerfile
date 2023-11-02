@@ -1,12 +1,9 @@
 ﻿FROM postgres:alpine
 
-ENV POSTGRES_DB=gilgoblin
-ENV POSTGRES_USER=gilgoblin
-ENV POSTGRES_PASSWORD=gilgoblin
-ENV PGUSER=gilgoblin
-ENV PGDATA=/var/lib/postgresql/data
-
-COPY ./db /var/lib/postgresql/data
-COPY ./resources /docker-entrypoint-initdb.d/
+ENV POSTGRES_DB=$POSTGRES_DB
+ENV POSTGRES_USER=$POSTGRES_USER
+ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ENV PGUSER=$PGUSER
+ENV PGDATA=$PGDATA
 
 EXPOSE 5432

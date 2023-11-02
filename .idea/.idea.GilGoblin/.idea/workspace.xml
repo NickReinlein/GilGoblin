@@ -9,11 +9,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="Api docker">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/Database/Database/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +77,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/cf/df811847/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/14/3c4e49cd/ConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/f1/65b763ea/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2fd3eb9705d24ccf8e39b91d05ee41a68800/e0/6d32d1ed/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/313b485743a74d008018f17dafb293a37e00/7b/631f73c6/IDataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/313b485743a74d008018f17dafb293a37e00/d5/ce84b9a2/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/313b485743a74d008018f17dafb293a37e00/f0/9c380cc1/BaseItemPoco.cs" root0="SKIP_HIGHLIGHTING" />
@@ -138,7 +146,6 @@
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Fetcher/ItemFetcherTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -298,15 +305,7 @@
       <workItem from="1698713256530" duration="5742000" />
       <workItem from="1698760345704" duration="10441000" />
       <workItem from="1698776379563" duration="13085000" />
-      <workItem from="1698847393955" duration="1224000" />
-    </task>
-    <task id="LOCAL-00007" summary="WIP fix tests and change db schema ID -&gt; Id">
-      <option name="closed" value="true" />
-      <created>1696347874303</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1696347874303</updated>
+      <workItem from="1698847393955" duration="12161000" />
     </task>
     <task id="LOCAL-00008" summary="WIP dockerizing the db">
       <option name="closed" value="true" />
@@ -692,7 +691,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698785957914</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="Api docker">
+      <option name="closed" value="true" />
+      <created>1698848665853</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1698848665853</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -745,8 +752,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="no need for csv interactor" />
-    <MESSAGE value="wip" />
     <MESSAGE value="fixed multiple db issues resulting from migration of sqlite to postgres" />
     <MESSAGE value="updated ER diagram" />
     <MESSAGE value="working API &amp; passing tests" />
@@ -770,7 +775,9 @@
     <MESSAGE value="De-couple docker services" />
     <MESSAGE value="api works" />
     <MESSAGE value="WIP decouple services, create Nuget packages" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP decouple services, create Nuget packages" />
+    <MESSAGE value="Database docker" />
+    <MESSAGE value="Api docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="Api docker" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1003,19 +1010,6 @@
           <option name="timeStamp" value="379" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
-          <line>119</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="118" containingFunctionPresentation="Method 'DatabaseValidation'">
-            <startOffsets>
-              <option value="3854" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3952" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="380" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/ComponentTests.cs</url>
           <line>16</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" initialLine="15" containingFunctionPresentation="Method 'OneTimeSetUp'">
@@ -1066,6 +1060,84 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="385" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>146</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="146" containingFunctionPresentation="Method 'FillGoblinCaches'">
+            <startOffsets>
+              <option value="4941" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5016" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="389" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>144</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="144" containingFunctionPresentation="Method 'FillGoblinCaches'">
+            <startOffsets>
+              <option value="4870" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4927" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="391" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/ItemRepository.cs</url>
+          <line>22</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/ItemRepository.cs" initialLine="22" containingFunctionPresentation="Method 'Get'">
+            <startOffsets>
+              <option value="543" />
+            </startOffsets>
+            <endOffsets>
+              <option value="577" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="392" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/ItemRepository.cs</url>
+          <line>40</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/ItemRepository.cs" initialLine="40" containingFunctionPresentation="Method 'FillCache'">
+            <startOffsets>
+              <option value="1064" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1103" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="393" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>159</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="159" containingFunctionPresentation="Method 'FillGoblinCaches'">
+            <startOffsets>
+              <option value="5690" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5762" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="394" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>125</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="125" containingFunctionPresentation="Method 'DatabaseValidation'">
+            <startOffsets>
+              <option value="4171" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4249" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="395" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -28,10 +28,12 @@
     <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
   </ItemGroup>
   <ItemGroup>
-    <None Update="src/appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="icon.png" Pack="true" PackagePath="/"/>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
