@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
-using GilGoblin.Pocos;
+using System.Threading.Tasks;
+using GilGoblin.Api.Crafting;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -21,7 +24,7 @@ public class CraftComponentTests : ComponentTests
             Assert.That(craft.WorldId, Is.EqualTo(34));
             Assert.That(craft.ItemId, Is.EqualTo(1614));
             Assert.That(craft.Name, Is.EqualTo("Iron Shortsword"));
-            Assert.That(craft.CraftingCost, Is.GreaterThan(100).And.LessThan(50000));
+            Assert.That(craft.RecipeCost, Is.GreaterThan(100).And.LessThan(50000));
             Assert.That(craft.AverageSold, Is.GreaterThan(100).And.LessThan(50000));
             Assert.That(craft.AverageListingPrice, Is.GreaterThan(100).And.LessThan(50000));
             Assert.That(craft.PriceMid, Is.GreaterThan(0));

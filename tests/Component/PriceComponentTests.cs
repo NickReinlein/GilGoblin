@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using NUnit.Framework;
 
@@ -57,12 +60,12 @@ public class PriceComponentTests : ComponentTests
             );
             Assert.That(
                 prices.Count(p => p.AverageListingPrice == 0),
-                Is.LessThan(priceCount * MissingEntryPercentageThreshold),
+                Is.LessThan(priceCount * missingEntryPercentageThreshold),
                 "Number of missing AverageListingPrice is suspiciously high"
             );
             Assert.That(
                 prices.Count(p => p.AverageSold == 0),
-                Is.LessThan(priceCount * MissingEntryPercentageThreshold),
+                Is.LessThan(priceCount * missingEntryPercentageThreshold),
                 "Number of missing AverageSold is suspiciously high"
             );
         });

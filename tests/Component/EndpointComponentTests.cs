@@ -1,25 +1,27 @@
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
+[NonParallelizable]
 public class EndpointComponentTests : ComponentTests
 {
-    [TestCaseSource(nameof(AllEndPoints))]
+    [TestCaseSource(nameof(_allEndPoints))]
     public async Task GivenACallToGet_WhenTheEndPointIsValid_ThenTheEndpointResponds(
         string endpoint
     )
     {
         var fullEndpoint = $"http://localhost:55448{endpoint}";
 
-        using var response = await _client.GetAsync(fullEndpoint);
+        var response = await _client.GetAsync(fullEndpoint);
 
-        response.EnsureSuccessStatusCode();
+        Assert.That(response.IsSuccessStatusCode);
     }
 
-    private static string[] AllEndPoints =
+    private static string[] _allEndPoints =
     {
-        "/recipe/", "/recipe/100", "/price/34/", "/price/34/100",
-        // "/craft/34/", "temporary for performance
-        "/craft/34/100", "/item/", "/item/100"
+        "/recipe/", "/recipe/1639", "/price/34/", "/price/34/1639",
+        // "/craft/34/",  // temporarily disabled for performance 
+        "/craft/34/1639", "/item/", "/item/1639"
     };
 }

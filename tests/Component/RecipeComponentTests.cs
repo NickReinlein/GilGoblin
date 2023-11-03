@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using NUnit.Framework;
 
@@ -65,22 +68,22 @@ public class RecipeComponentTests : ComponentTests
             Assert.That(recipeList.All(p => p.Id > 0), "ItemId is invalid");
             Assert.That(
                 recipes.Count(p => p.TargetItemId > 1),
-                Is.GreaterThan(recipeCount * (1.0f - MissingEntryPercentageThreshold)),
+                Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with TargetItemId"
             );
             Assert.That(
                 recipes.Count(p => p.ItemIngredient0TargetId > 1),
-                Is.GreaterThan(recipeCount * (1.0f - MissingEntryPercentageThreshold)),
+                Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with more than 1 ingredient for ItemIngredient0TargetId"
             );
             Assert.That(
                 recipes.Count(p => p.AmountIngredient0 > 1),
-                Is.GreaterThan(recipeCount * (1.0f - MissingEntryPercentageThreshold)),
+                Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with more than 1 ingredient for AmountIngredient0"
             );
             Assert.That(
                 recipes.Count(p => (p.AmountIngredient0 + p.AmountIngredient1 + p.AmountIngredient2) > 1),
-                Is.GreaterThan(recipeCount * (1.0f - MissingEntryPercentageThreshold)),
+                Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries for multiple ingredients"
             );
         });

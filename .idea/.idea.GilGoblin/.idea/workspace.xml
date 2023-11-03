@@ -9,7 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="data updater docker">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +28,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dockerize-postgresql-database" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -52,18 +57,52 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/05f66f42f8464281abbee09f4c1d23ae1de00/44/a9439014/LoggerExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0ac882aa466e42d084abeccd5a8707a31e2000/78/0a1338d9/ControllerBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0f34c3f406c24260a7ecd1b418fd5bf466400/9e/30f2d457/ConfigureServicesBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17a58286aee34b4f8ef0c972a6b21d662e6a00/9f/09ba8fba/IDbConnection.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/b8/a8fea91d/IDataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f2/fdc055bc/IIdentifiable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f9/ff3d998e/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1b046e286a344b85999e7c798bc1fc145e00/99/755f15a9/MockHttpMessageHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c318fdc22c8430794674d8040a071278800/8a/cc440df5/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/10/0a8bf815/DefaultInterpolatedStringHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/2b/14ff84d7/Nullable`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/a1/6fd7eda0/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/cf/df811847/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/14/3c4e49cd/ConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/25a5a64fdee14a958eb84747c1cb73bd7a00/f1/65b763ea/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2fd3eb9705d24ccf8e39b91d05ee41a68800/e0/6d32d1ed/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/313b485743a74d008018f17dafb293a37e00/7b/631f73c6/IDataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/313b485743a74d008018f17dafb293a37e00/d5/ce84b9a2/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/313b485743a74d008018f17dafb293a37e00/f0/9c380cc1/BaseItemPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/3d/2b6793fb/JsonSerializerOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/93/7b1223d3/ReadStack.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/da/4ce6d9e2/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34ff44185b924e03af1e508da4454a3f164200/fb/358eef35/JsonConstructorAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4f51393d52474b41b977486340c7905963600/be/a61684f6/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5537e977a5534805963c484d304d8d457e00/da/a4678abc/BaseItemPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/699b138c217049bdb610580416cd481613200/90/0b6025ff/GenericHostBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/740d777072e848ec82b3143378be3428a400/38/e1f0d926/BackgroundService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/752389e2f1f640f8bf36451cdca5d0ce11600/54/dea75b12/ServiceProviderServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/752389e2f1f640f8bf36451cdca5d0ce11600/f5/5515832b/ServiceCollectionServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8476e36923654b7cbfe9abf9179f4dd327800/34/0565f321/Substitute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/863c5a9eb0fd481e9b4fee5cf80fe1d1a29c00/0d/10601f28/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/863c5a9eb0fd481e9b4fee5cf80fe1d1a29c00/50/84f43bd1/Int32.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/886141c7401142a095cb8f405ec58f1d66400/88/8a4d634d/GenericWebHostBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/886141c7401142a095cb8f405ec58f1d66400/d1/bdc28929/ConfigureServicesBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9b2d7c9f9ffe42a6b3a7c15b0709ddba16600/86/bbd67cab/HttpContentJsonExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/4a/b0b3a1e3/List`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/00/a59e7a53/PricePoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/3c/c8ee8fd1/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/cf/0ce204e2/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/f2/c72f52e7/DataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d42a9c312eb84d3baa0fe9bd2c81688ca400/63/cf29b271/ServiceCollectionHostedServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d42a9c312eb84d3baa0fe9bd2c81688ca400/7a/b632be8c/IHostedService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d42a9c312eb84d3baa0fe9bd2c81688ca400/9c/c7906afb/HostingAbstractionsHostExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/df6d6c0bf3ea49d89837089d1d52c08f7e00/bb/1271e796/BaseItemPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e93b6a3c2f044d70b99a615754501eed1a6400/06/d0874b7a/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e93b6a3c2f044d70b99a615754501eed1a6400/8b/1d8e4686/HttpResponseMessage.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e93b6a3c2f044d70b99a615754501eed1a6400/ea/1240cc3b/HttpContent.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ef2d5d81e08243859b59aadd7a70f4a72bc00/2e/33d7f9de/CallSiteRuntimeResolver.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ef2d5d81e08243859b59aadd7a70f4a72bc00/54/b8efa8b7/ServiceProviderEngineScope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2c60ab42515ea596bd551d5b8798e63cd7a2affb036bba5e68b15251a3d49bc/InMemoryDbContextOptionsExtensions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -81,18 +120,34 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/de860391f4bca1b51f9f824458f1ed099c6b4eb6b8133b2ca76f1f8ad16357/IDatabaseCreator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eaf74182ad7c943aaf043fd9e7bbb1d564713c6bd276e62966aaa618e9/LoggerExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Database/src/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Web/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Web/ItemSingleFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Web/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/InMemoryTestDb.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/DataCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IDataCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IRepositoryCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/ItemInfoCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/ItemRecipeCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/PriceCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCostCache.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Batcher/Batcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Batcher/IBatcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/src/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="SWEA" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -110,14 +165,14 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/Database&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dockerize-updater&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -176,11 +231,26 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="Dockerfile: Compose Deployment" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue=".NET Launch Settings Profile.Api: https" />
       <item itemvalue=".NET Project.Database" />
+      <item itemvalue="Docker.Dockerfile: Compose Deployment" />
       <item itemvalue="Publish to folder.Publish Database to folder" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.Dockerfile: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -219,70 +289,19 @@
       <workItem from="1698008106756" duration="2316000" />
       <workItem from="1698075462234" duration="13658000" />
       <workItem from="1698154379549" duration="4026000" />
-    </task>
-    <task id="LOCAL-00001" summary="IDEA">
-      <option name="closed" value="true" />
-      <created>1695670159520</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1695670159520</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Additional tests for itemupdater">
-      <option name="closed" value="true" />
-      <created>1695829851799</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1695829851799</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Separating the base classes for updaters">
-      <option name="closed" value="true" />
-      <created>1696091474481</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1696091474481</updated>
-    </task>
-    <task id="LOCAL-00004" summary="WIP to split price and item more clearly">
-      <option name="closed" value="true" />
-      <created>1696167634941</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1696167634941</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Fixed tests, simplified code">
-      <option name="closed" value="true" />
-      <created>1696262701737</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1696262701737</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Nuking ID -&gt; Id&#10;Fixing tests">
-      <option name="closed" value="true" />
-      <created>1696295541593</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1696295541593</updated>
-    </task>
-    <task id="LOCAL-00007" summary="WIP fix tests and change db schema ID -&gt; Id">
-      <option name="closed" value="true" />
-      <created>1696347874303</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1696347874303</updated>
-    </task>
-    <task id="LOCAL-00008" summary="WIP dockerizing the db">
-      <option name="closed" value="true" />
-      <created>1696533222936</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1696533222936</updated>
+      <workItem from="1698169972866" duration="7542000" />
+      <workItem from="1698249696882" duration="16323000" />
+      <workItem from="1698328874914" duration="17824000" />
+      <workItem from="1698368961418" duration="16539000" />
+      <workItem from="1698455411593" duration="3217000" />
+      <workItem from="1698600831883" duration="5986000" />
+      <workItem from="1698686273729" duration="9275000" />
+      <workItem from="1698704220814" duration="3772000" />
+      <workItem from="1698713256530" duration="5742000" />
+      <workItem from="1698760345704" duration="10441000" />
+      <workItem from="1698776379563" duration="13085000" />
+      <workItem from="1698847393955" duration="12161000" />
+      <workItem from="1699020841401" duration="5522000" />
     </task>
     <task id="LOCAL-00009" summary="WIP dockerizing the db">
       <option name="closed" value="true" />
@@ -436,7 +455,247 @@
       <option name="project" value="LOCAL" />
       <updated>1698169849729</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="a">
+      <option name="closed" value="true" />
+      <created>1698169998991</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1698169998991</updated>
+    </task>
+    <task id="LOCAL-00029" summary="a">
+      <option name="closed" value="true" />
+      <created>1698265116359</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1698265116359</updated>
+    </task>
+    <task id="LOCAL-00030" summary="tests pass with new deserialization custom converter">
+      <option name="closed" value="true" />
+      <created>1698268182890</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1698268182890</updated>
+    </task>
+    <task id="LOCAL-00031" summary="fixing more tests">
+      <option name="closed" value="true" />
+      <created>1698268916340</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1698268916340</updated>
+    </task>
+    <task id="LOCAL-00032" summary="fixing more tests">
+      <option name="closed" value="true" />
+      <created>1698271865694</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1698271865694</updated>
+    </task>
+    <task id="LOCAL-00033" summary="started price updater">
+      <option name="closed" value="true" />
+      <created>1698331316938</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1698331316938</updated>
+    </task>
+    <task id="LOCAL-00034" summary="finished initial price updater">
+      <option name="closed" value="true" />
+      <created>1698338038353</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1698338038353</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fixed issue saving recipecost">
+      <option name="closed" value="true" />
+      <created>1698360931097</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1698360931097</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fixed conversion issue for updater that prevented saving to db due to format">
+      <option name="closed" value="true" />
+      <created>1698369046407</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1698369046407</updated>
+    </task>
+    <task id="LOCAL-00037" summary="updated db package">
+      <option name="closed" value="true" />
+      <created>1698369828101</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1698369828101</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Working example with data updater">
+      <option name="closed" value="true" />
+      <created>1698429046243</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1698429046243</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Working example with checks for age of existing entries">
+      <option name="closed" value="true" />
+      <created>1698438141412</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1698438141412</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Working example with less spam">
+      <option name="closed" value="true" />
+      <created>1698456567808</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1698456567808</updated>
+    </task>
+    <task id="LOCAL-00041" summary="working but need to prevent spam if response is continually null">
+      <option name="closed" value="true" />
+      <created>1698605152594</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1698605152595</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Split each batch of updates into minimum 2 batches">
+      <option name="closed" value="true" />
+      <created>1698622145577</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1698622145577</updated>
+    </task>
+    <task id="LOCAL-00043" summary="cleanup">
+      <option name="closed" value="true" />
+      <created>1698624912153</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1698624912153</updated>
+    </task>
+    <task id="LOCAL-00044" summary="DI fails but dbcontext scope fixed">
+      <option name="closed" value="true" />
+      <created>1698704506947</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1698704506947</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Fixed additional scoping for new background services">
+      <option name="closed" value="true" />
+      <created>1698715196512</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1698715196512</updated>
+    </task>
+    <task id="LOCAL-00046" summary="De-couple docker services">
+      <option name="closed" value="true" />
+      <created>1698762215431</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1698762215431</updated>
+    </task>
+    <task id="LOCAL-00047" summary="api works">
+      <option name="closed" value="true" />
+      <created>1698769170110</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1698769170110</updated>
+    </task>
+    <task id="LOCAL-00048" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698770132607</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1698770132607</updated>
+    </task>
+    <task id="LOCAL-00049" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698774292552</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1698774292552</updated>
+    </task>
+    <task id="LOCAL-00050" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698774405393</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1698774405393</updated>
+    </task>
+    <task id="LOCAL-00051" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698774422038</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1698774422038</updated>
+    </task>
+    <task id="LOCAL-00052" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698777653947</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1698777653947</updated>
+    </task>
+    <task id="LOCAL-00053" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698783920826</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1698783920826</updated>
+    </task>
+    <task id="LOCAL-00054" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698785190161</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1698785190161</updated>
+    </task>
+    <task id="LOCAL-00055" summary="WIP decouple services, create Nuget packages">
+      <option name="closed" value="true" />
+      <created>1698785957914</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1698785957914</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Api docker">
+      <option name="closed" value="true" />
+      <created>1698848665853</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1698848665853</updated>
+    </task>
+    <task id="LOCAL-00057" summary="data updater docker">
+      <option name="closed" value="true" />
+      <created>1699029410824</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1699029410824</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -489,60 +748,40 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="IDEA" />
-    <MESSAGE value="Additional tests for itemupdater" />
-    <MESSAGE value="Separating the base classes for updaters" />
-    <MESSAGE value="WIP to split price and item more clearly" />
-    <MESSAGE value="Fixed tests, simplified code" />
-    <MESSAGE value="Nuking ID -&gt; Id&#10;Fixing tests" />
-    <MESSAGE value="WIP fix tests and change db schema ID -&gt; Id" />
-    <MESSAGE value="WIP dockerizing the db" />
-    <MESSAGE value="a" />
-    <MESSAGE value="WIP decoupling database and pocos" />
-    <MESSAGE value="WIP still not working" />
-    <MESSAGE value="WIP merging 2 branches" />
-    <MESSAGE value="Fixed most errors" />
-    <MESSAGE value="fixed more tests" />
-    <MESSAGE value="WIP" />
-    <MESSAGE value="Fixed most tests" />
-    <MESSAGE value="WIP switch to Postgresql" />
-    <MESSAGE value="Functional postgres db created in database project. sql table script fails still" />
-    <MESSAGE value="functional postgres database.&#10;Working docker with manual csv imports" />
-    <MESSAGE value="no need for csv interactor" />
-    <MESSAGE value="wip" />
-    <MESSAGE value="fixed multiple db issues resulting from migration of sqlite to postgres" />
     <MESSAGE value="updated ER diagram" />
     <MESSAGE value="working API &amp; passing tests" />
     <MESSAGE value="Cleanup csproj" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleanup csproj" />
+    <MESSAGE value="a" />
+    <MESSAGE value="tests pass with new deserialization custom converter" />
+    <MESSAGE value="fixing more tests" />
+    <MESSAGE value="started price updater" />
+    <MESSAGE value="finished initial price updater" />
+    <MESSAGE value="fixed issue saving recipecost" />
+    <MESSAGE value="fixed conversion issue for updater that prevented saving to db due to format" />
+    <MESSAGE value="updated db package" />
+    <MESSAGE value="Working example with data updater" />
+    <MESSAGE value="Working example with checks for age of existing entries" />
+    <MESSAGE value="Working example with less spam" />
+    <MESSAGE value="working but need to prevent spam if response is continually null" />
+    <MESSAGE value="Split each batch of updates into minimum 2 batches" />
+    <MESSAGE value="cleanup" />
+    <MESSAGE value="DI fails but dbcontext scope fixed" />
+    <MESSAGE value="Fixed additional scoping for new background services" />
+    <MESSAGE value="De-couple docker services" />
+    <MESSAGE value="api works" />
+    <MESSAGE value="WIP decouple services, create Nuget packages" />
+    <MESSAGE value="Database docker" />
+    <MESSAGE value="Api docker" />
+    <MESSAGE value="data updater docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="data updater docker" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs</url>
-          <line>45</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" initialLine="38" containingFunctionPresentation="Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
-            <startOffsets>
-              <option value="1098" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1160" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs</url>
-          <line>49</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" initialLine="42" containingFunctionPresentation="Lambda expression inside Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
-            <startOffsets>
-              <option value="1214" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1247" />
-            </endOffsets>
-          </properties>
+          <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
+          <line>37</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Web/PriceFetcherTests.cs" initialLine="42" containingFunctionPresentation="Lambda expression inside Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'" />
           <option name="timeStamp" value="59" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
@@ -562,18 +801,6 @@
           <line>75</line>
           <properties documentPath="$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs" initialLine="115" containingFunctionPresentation="Method 'LoadCsvFileAndSaveResults'" />
           <option name="timeStamp" value="126" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Services/CsvInteractor.cs</url>
-          <line>40</line>
-          <properties documentPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" initialLine="36" containingFunctionPresentation="Method 'LoadFile'" />
-          <option name="timeStamp" value="127" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Services/CsvInteractor.cs</url>
-          <line>35</line>
-          <properties documentPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" initialLine="32" containingFunctionPresentation="Method 'LoadFile'" />
-          <option name="timeStamp" value="140" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs</url>
@@ -600,12 +827,6 @@
           <option name="timeStamp" value="208" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Services/CsvInteractor.cs</url>
-          <line>33</line>
-          <properties documentPath="$PROJECT_DIR$/src/Services/CsvInteractor.cs" initialLine="31" containingFunctionPresentation="Method 'LoadFile'" />
-          <option name="timeStamp" value="209" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs</url>
           <line>38</line>
           <properties documentPath="$PROJECT_DIR$/src/Database/src/DatabaseLoader.cs" initialLine="44" containingFunctionPresentation="Method 'FillTablesIfEmpty'" />
@@ -630,30 +851,250 @@
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/Startup.cs</url>
-          <line>121</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/Startup.cs" initialLine="154" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
-            <startOffsets>
-              <option value="5316" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5373" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="239" />
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs</url>
+          <line>20</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="19" containingFunctionPresentation="Constructor 'ItemWebPoco'" />
+          <option name="timeStamp" value="257" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs</url>
-          <line>63</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipePoco.cs" initialLine="63" containingFunctionPresentation="Constructor 'RecipePoco'">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs</url>
+          <line>35</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="35" containingFunctionPresentation="Constructor 'ItemWebPoco'" />
+          <option name="timeStamp" value="258" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="26" containingFunctionPresentation="Method 'FetchByIdsAsync'" />
+          <option name="timeStamp" value="259" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5537e977a5534805963c484d304d8d457e00/da/a4678abc/BaseItemPoco.cs</url>
+          <line>46</line>
+          <properties documentPath="$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5537e977a5534805963c484d304d8d457e00/da/a4678abc/BaseItemPoco.cs" initialLine="46" containingFunctionPresentation="Constructor 'BaseItemPoco'">
             <startOffsets>
-              <option value="2221" />
+              <option value="1085" />
             </startOffsets>
             <endOffsets>
-              <option value="2229" />
+              <option value="1098" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="243" />
+          <option name="timeStamp" value="264" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs</url>
+          <line>7</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="8" containingFunctionPresentation="Constructor 'ItemWebPoco'" />
+          <option name="timeStamp" value="267" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="30" containingFunctionPresentation="Constructor 'ItemWebPoco'" />
+          <option name="timeStamp" value="271" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs</url>
+          <line>31</line>
+          <properties documentPath="$PROJECT_DIR$/src/Pocos/ItemWebPoco.cs" initialLine="31" containingFunctionPresentation="Constructor 'ItemWebPoco'" />
+          <option name="timeStamp" value="272" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
+          <line>52</line>
+          <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="48" containingFunctionPresentation="Method 'FetchAndSerializeDataAsync'" />
+          <option name="timeStamp" value="275" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
+          <line>59</line>
+          <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="54" containingFunctionPresentation="Method 'FetchAndSerializeDataAsync'" />
+          <option name="timeStamp" value="276" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
+          <line>54</line>
+          <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="50" containingFunctionPresentation="Method 'FetchAndSerializeDataAsync'" />
+          <option name="timeStamp" value="277" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
+          <line>272</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" initialLine="269" containingFunctionPresentation="Method 'SetupResponse'">
+            <startOffsets>
+              <option value="9371" />
+            </startOffsets>
+            <endOffsets>
+              <option value="9482" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="291" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/87629731af04bb03578c1b6aa46c564e8e7e4647ea8f1b844cfd9e658ab30/BackgroundService.cs</url>
+          <line>41</line>
+          <properties documentPath="$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/87629731af04bb03578c1b6aa46c564e8e7e4647ea8f1b844cfd9e658ab30/BackgroundService.cs" initialLine="41" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1990" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2072" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="307" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>28</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="28" containingFunctionPresentation="Method 'SaveAsync'" />
+          <option name="timeStamp" value="346" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>44</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="44" containingFunctionPresentation="Method 'UpdatedExistingEntries'" />
+          <option name="timeStamp" value="347" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
+          <line>16</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="16" containingFunctionPresentation="Method 'ShouldBeUpdated'" />
+          <option name="timeStamp" value="348" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs</url>
+          <line>48</line>
+          <properties documentPath="$PROJECT_DIR$/src/Fetcher/BulkDataFetcher.cs" initialLine="49" containingFunctionPresentation="Method 'FetchByIdsAsync'" />
+          <option name="timeStamp" value="356" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Batcher/BatcherTests.cs</url>
+          <line>32</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Services/BatcherTests.cs" initialLine="31" containingFunctionPresentation="Method 'GivenASingleEntry_WhenWeSplitIntoBatchJobs_WeReturnAListWithThatEntry'" />
+          <option name="timeStamp" value="369" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/ItemComponentTests.cs</url>
+          <line>50</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" initialLine="47" containingFunctionPresentation="Method 'GivenACallToGetAll_WhenReceivingAllItems_ThenWeReceiveValidItems'">
+            <startOffsets>
+              <option value="1809" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1867" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="371" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/ItemComponentTests.cs</url>
+          <line>52</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" initialLine="49" containingFunctionPresentation="Method 'GivenACallToGetAll_WhenReceivingAllItems_ThenWeReceiveValidItems'">
+            <startOffsets>
+              <option value="1877" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1999" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="372" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Crafting/CraftRepository.cs</url>
+          <line>75</line>
+          <properties documentPath="$PROJECT_DIR$/src/Crafting/CraftRepository.cs" initialLine="75" containingFunctionPresentation="Method 'GetBestCraftsForWorld'" />
+          <option name="timeStamp" value="379" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/ComponentTests.cs</url>
+          <line>16</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" initialLine="15" containingFunctionPresentation="Method 'OneTimeSetUp'">
+            <startOffsets>
+              <option value="362" />
+            </startOffsets>
+            <endOffsets>
+              <option value="410" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="382" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/ComponentTests.cs</url>
+          <line>17</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/ComponentTests.cs" initialLine="16" containingFunctionPresentation="Method 'OneTimeSetUp'">
+            <startOffsets>
+              <option value="419" />
+            </startOffsets>
+            <endOffsets>
+              <option value="453" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="383" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs</url>
+          <line>13</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" initialLine="12" containingFunctionPresentation="Method 'GivenACallToGet_WhenTheEndPointIsValid_ThenTheEndpointResponds'">
+            <startOffsets>
+              <option value="341" />
+            </startOffsets>
+            <endOffsets>
+              <option value="396" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="384" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>133</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="133" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
+            <startOffsets>
+              <option value="4449" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4506" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="385" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
+          <line>125</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="125" containingFunctionPresentation="Method 'DatabaseValidation'">
+            <startOffsets>
+              <option value="4171" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4249" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="395" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>94</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="94" containingFunctionPresentation="Method 'SortByProfitability'">
+            <startOffsets>
+              <option value="3092" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3125" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="396" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>143</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="150" containingFunctionPresentation="Method 'GetSummaryForRecipe'">
+            <startOffsets>
+              <option value="4931" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5000" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="397" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

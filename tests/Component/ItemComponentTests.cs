@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -21,7 +23,7 @@ public class ItemComponentTests : ComponentTests
         Assert.Multiple(() =>
         {
             Assert.That(item.Id, Is.EqualTo(10348));
-            Assert.That(item.CanBeHq, Is.False);
+            Assert.That(item.CanHq, Is.False);
             Assert.That(item.IconId, Is.EqualTo(51024));
             Assert.That(item.Description, Is.EqualTo(expectedDescription));
             Assert.That(item.PriceLow, Is.GreaterThan(10));
@@ -34,7 +36,7 @@ public class ItemComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/item/10348555";
+        var fullEndpoint = "http://localhost:55448/item/10348555";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -52,7 +54,7 @@ public class ItemComponentTests : ComponentTests
             GetSerializerOptions()
         );
         var itemCount = items.Count();
-        var missingEntryThreshold = itemCount * MissingEntryPercentageThreshold;
+        var missingEntryThreshold = itemCount * missingEntryPercentageThreshold;
         Assert.Multiple(() =>
         {
             Assert.That(itemCount, Is.GreaterThan(1000), "Not enough entries received");
@@ -95,8 +97,8 @@ public class ItemComponentTests : ComponentTests
                 "Missing a suspicious number of descriptions"
             );
             Assert.That(
-                items.Count(p => p.CanBeHq),
-                Is.GreaterThan(itemCount * (1.0f - MissingEntryPercentageThreshold)),
+                items.Count(p => p.CanHq),
+                Is.GreaterThan(itemCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries that can be High Quality"
             );
         });

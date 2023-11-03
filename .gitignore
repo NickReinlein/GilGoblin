@@ -363,4 +363,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Tests/my_data.cs
-resources/.~lock.Recipe.csv#
+
+#Gilgoblin
+*/Database/output/

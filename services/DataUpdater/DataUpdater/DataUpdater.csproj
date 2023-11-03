@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <RootNamespace>GilGoblin.DataUpdater</RootNamespace>
+    <PackageId>GilGoblin.DataUpdater</PackageId>
+    <OutputType>Exe</OutputType>
+    <Version>0.1.1-alpha</Version>
+    <Authors>Nicholas Reinlein</Authors>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Project>LICENSE.txt</Project>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="3.0.*"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
+    <PackageReference Include="EntityFramework" Version="6.4.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Fetcher" Version="0.1.1-alpha"/>
+    <PackageReference Include="GilGoblin.Batcher" Version="0.1.0-alpha"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="README.md" Pack="true" PackagePath="/"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
+    <None Include="icon.png" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+</Project>

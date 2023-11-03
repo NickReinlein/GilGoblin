@@ -1,0 +1,70 @@
+version: "3.7"
+
+name: gilgoblin
+
+services:
+  gilgoblin-database:
+    image: nickreinlein/gilgoblin-database
+    container_name: database
+    environment:
+      POSTGRES_DB: gilgoblin
+      POSTGRES_USER: gilgoblin
+      POSTGRES_PASSWORD: gilgoblin
+      PGUSER: gilgoblin
+      PGDATA: /var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "5432:5432"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    volumes:
+      - ./services/Database/Database/db:/var/lib/postgresql/data
+      - ./services/Database/Database/resources:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  gilgoblin-api:
+    image: nickreinlein/gilgoblin-api
+    container_name: api
+    depends_on:
+      - gilgoblin-database
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "55448:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped
+
+  gilgoblin-dataupdater:
+    image: nickreinlein/gilgoblin-dataupdater
+    container_name: dataupdater
+    depends_on:
+      - gilgoblin-database
+      - gilgoblin-api
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped
