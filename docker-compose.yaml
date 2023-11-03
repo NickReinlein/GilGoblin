@@ -50,3 +50,21 @@ services:
         max-size: '50m'
     restart: unless-stopped
 
+  gilgoblin-dataupdater:
+    image: nickreinlein/gilgoblin-dataupdater
+    container_name: dataupdater
+    depends_on:
+      - gilgoblin-database
+      - gilgoblin-api
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped

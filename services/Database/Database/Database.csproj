@@ -24,7 +24,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.*"/>
   </ItemGroup>
   <ItemGroup>
-    <None Update="src/appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
+    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="resources/icon.png" Pack="true" PackagePath="/"/>

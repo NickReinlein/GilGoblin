@@ -31,9 +31,12 @@ public class Startup
         DatabaseValidation(app);
     }
 
-    private static void AddGoblinUpdaterServices(IServiceCollection services)
+    private void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
+
+        services.AddDbContext<GilGoblinDbContext>();
+
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
         services.AddScoped<IItemFetcher, ItemFetcher>();
         services.AddScoped<ISingleDataFetcher<ItemWebPoco>, ItemFetcher>();
@@ -61,7 +64,7 @@ public class Startup
         }
     }
 
-    private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
+    private void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
         var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var canConnect = dbContextService.Database.CanConnect();

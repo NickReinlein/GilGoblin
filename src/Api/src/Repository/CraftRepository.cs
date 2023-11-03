@@ -90,18 +90,33 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         return SortByProfitability(crafts);
     }
 
-    private static List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
+    private List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
     {
-        var viableCrafts =
-            crafts.Where(i =>
-                i.AverageSold > 1 &&
-                i.AverageListingPrice > 1 &&
-                i.RecipeCost > 1 &&
-                i.Recipe.TargetItemId == i.ItemId &&
-                i.CraftingProfitVsListings > 0
-                && i.CraftingProfitVsSold > 0).ToList();
-        viableCrafts.Sort();
-        return viableCrafts;
+        var craftsList = crafts.ToList();
+        if (!craftsList.Any())
+            return craftsList;
+
+        try
+        {
+            var viableCrafts
+                = craftsList
+                    .Where(i =>
+                        i.AverageSold > 1 &&
+                        i.AverageListingPrice > 1 &&
+                        i.RecipeCost > 1 &&
+                        i.Recipe.TargetItemId == i.ItemId &&
+                        i.CraftingProfitVsListings > 0 &&
+                        i.CraftingProfitVsSold > 0)
+                    .ToList();
+            viableCrafts.Sort();
+            return viableCrafts;
+        }
+        catch (Exception e)
+        {
+            var message = $"Failed to sort crafts by profitability! Returning unsorted crafts list: {e.Message}";
+            _logger.LogError(message);
+            return craftsList;
+        }
     }
 
     private async Task<CraftSummaryPoco> GetSummaryForRecipe(int worldId, RecipePoco recipe)
@@ -109,7 +124,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         var recipeId = recipe.Id;
         var itemId = recipe.TargetItemId;
         var recipeCost = await _recipeCostRepository.GetAsync(worldId, recipeId);
-        if (recipeCost is null)
+        if (recipeCost is null || recipeCost.Cost <= 0)
         {
             var calculatedCost = await _calc.CalculateCraftingCostForRecipe(worldId, recipeId);
             if (calculatedCost <= 1)
@@ -118,11 +133,17 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 
             var newCost = new RecipeCostPoco
             {
-                WorldId = worldId, RecipeId = recipeId, Cost = calculatedCost, Updated = DateTimeOffset.UtcNow
+                WorldId = worldId, 
+                RecipeId = recipeId, 
+                Cost = calculatedCost, 
+                Updated = DateTimeOffset.UtcNow
             };
             await _recipeCostRepository.Add(newCost);
             recipeCost = newCost;
+            if (recipeCost is null || recipeCost.Cost <= 0)
+                throw new DataException($"Failed to find cost of recipe {recipeId}");
         }
+
 
         var ingredients = recipe.GetActiveIngredients();
 
@@ -132,8 +153,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         var bestPrice = price?.AverageSold > 0 ? price.AverageSold : price?.AverageListingPrice;
         if (bestPrice is null or <= 0)
             throw new DataException($"Could not find price for item {itemId} for world {worldId}");
-        if (recipeCost.Cost <= 0)
-            throw new DataException($"Failed to find cost of recipe {recipeId}");
 
         var summary = new CraftSummaryPoco(
             price,

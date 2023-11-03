@@ -87,35 +87,33 @@ public class CraftSummaryPoco : IComparable
         if (obj == null)
             return 1;
 
-        if (obj is CraftSummaryPoco otherCraftSummary)
-        {
-            var worldIdComparison = WorldId.CompareTo(otherCraftSummary.WorldId);
-            if (worldIdComparison != 0)
-                return worldIdComparison;
+        if (obj is not CraftSummaryPoco otherCraftSummary)
+            return 0;
 
-            var profitVsSoldComparison = CraftingProfitVsSold.CompareTo(
-                otherCraftSummary.CraftingProfitVsSold
-            );
-            if (profitVsSoldComparison != 0)
-                return -1 * profitVsSoldComparison;
+        var worldIdComparison = WorldId.CompareTo(otherCraftSummary.WorldId);
+        if (worldIdComparison != 0)
+            return worldIdComparison;
 
-            var profitVsListingsComparison = CraftingProfitVsListings.CompareTo(
-                otherCraftSummary.CraftingProfitVsListings
-            );
-            if (profitVsListingsComparison != 0)
-                return -1 * profitVsListingsComparison;
+        var profitVsSoldComparison = CraftingProfitVsSold.CompareTo(
+            otherCraftSummary.CraftingProfitVsSold
+        );
+        if (profitVsSoldComparison != 0)
+            return -1 * profitVsSoldComparison;
 
-            var priceMidComparison = CraftingProfitVsListings.CompareTo(otherCraftSummary.PriceMid);
-            if (priceMidComparison != 0)
-                return -1 * priceMidComparison;
+        var profitVsListingsComparison = CraftingProfitVsListings.CompareTo(
+            otherCraftSummary.CraftingProfitVsListings
+        );
+        if (profitVsListingsComparison != 0)
+            return -1 * profitVsListingsComparison;
 
-            var priceLowComparison = CraftingProfitVsListings.CompareTo(otherCraftSummary.PriceLow);
-            if (priceLowComparison != 0)
-                return -1 * priceLowComparison;
+        var priceMidComparison = CraftingProfitVsListings.CompareTo(otherCraftSummary.PriceMid);
+        if (priceMidComparison != 0)
+            return -1 * priceMidComparison;
 
-            return ItemId.CompareTo(otherCraftSummary.ItemId);
-        }
+        var priceLowComparison = CraftingProfitVsListings.CompareTo(otherCraftSummary.PriceLow);
+        if (priceLowComparison != 0)
+            return -1 * priceLowComparison;
 
-        return 0;
+        return ItemId.CompareTo(otherCraftSummary.ItemId);
     }
 }

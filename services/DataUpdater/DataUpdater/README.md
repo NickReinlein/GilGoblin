@@ -1,11 +1,11 @@
 ## GilGoblin.DataUpdater
 
-GilGoblin.DataUpdater is a package that updates the dynamic data for GilGoblin.Database.
+`GilGoblin.DataUpdater` is a package that updates the dynamic data for `GilGoblin.Database`.
 
-An external call to third-party API's is performed and the resulting data is updated in the database.It mostly updates prices at
-this time. 
+An external call to third-party API's is performed and the resulting data is updated in the database. It mostly updates prices at
+currently. 
 
-The data updater package updates the database but performs no other functionality. This package is
+The `GilGoblin.DataUpdater` package updates the database, and performs no other functionality. This package is
 intended to be used in conjunction with other GilGoblin packages to calculate profitability for in-game
 crafting in the game *FFXIV*.
 

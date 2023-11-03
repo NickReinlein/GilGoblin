@@ -22,6 +22,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
+    <None Update="../Database/src/appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 </Project>
