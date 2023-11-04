@@ -25,6 +25,8 @@ public class GilGoblinDbContext : DbContext
     {
         var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
         optionsBuilder.UseNpgsql(connectionString);
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.EnableDetailedErrors();
 
         base.OnConfiguring(optionsBuilder);
     }
@@ -60,29 +62,39 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipePoco>().Property(t => t.Id).HasColumnName("id");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CraftType).HasColumnName("crafttype");
         modelBuilder.Entity<RecipePoco>().Property(t => t.RecipeLevelTable).HasColumnName("recipeleveltable");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemId) .HasColumnName("targetitemid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.TargetItemId).HasColumnName("targetitemid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.ResultQuantity).HasColumnName("resultquantity");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanHq).HasColumnName("canhq");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth).HasColumnName("canquicksynth");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient0TargetId).HasColumnName("itemingredient0targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient0TargetId)
+            .HasColumnName("itemingredient0targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient0).HasColumnName("amountingredient0");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient1TargetId).HasColumnName("itemingredient1targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient1TargetId)
+            .HasColumnName("itemingredient1targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient1).HasColumnName("amountingredient1");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient2TargetId).HasColumnName("itemingredient2targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient2TargetId)
+            .HasColumnName("itemingredient2targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient2).HasColumnName("amountingredient2");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient3TargetId).HasColumnName("itemingredient3targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient3TargetId)
+            .HasColumnName("itemingredient3targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient3).HasColumnName("amountingredient3");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient4TargetId).HasColumnName("itemingredient4targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient4TargetId)
+            .HasColumnName("itemingredient4targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient4).HasColumnName("amountingredient4");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient5TargetId).HasColumnName("itemingredient5targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient5TargetId)
+            .HasColumnName("itemingredient5targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient5).HasColumnName("amountingredient5");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient6TargetId).HasColumnName("itemingredient6targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient6TargetId)
+            .HasColumnName("itemingredient6targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient6).HasColumnName("amountingredient6");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient7TargetId).HasColumnName("itemingredient7targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient7TargetId)
+            .HasColumnName("itemingredient7targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient7).HasColumnName("amountingredient7");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient8TargetId).HasColumnName("itemingredient8targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient8TargetId)
+            .HasColumnName("itemingredient8targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient8).HasColumnName("amountingredient8");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient9TargetId).HasColumnName("itemingredient9targetid");
+        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient9TargetId)
+            .HasColumnName("itemingredient9targetid");
         modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient9).HasColumnName("amountingredient9");
 
         modelBuilder.Entity<RecipeCostPoco>().ToTable("recipecost");

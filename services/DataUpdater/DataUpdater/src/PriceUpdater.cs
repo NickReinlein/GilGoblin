@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -8,9 +7,11 @@ using System.Threading.Tasks;
 using GilGoblin.Batcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Fetcher;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using DbUpdateException = System.Data.Entity.Infrastructure.DbUpdateException;
 
 namespace GilGoblin.DataUpdater;
 
@@ -78,15 +79,35 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 throw new Exception("World Id cannot be null");
 
             using var scope = ScopeFactory.CreateScope();
+            var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
-            _allItemIds ??= await marketableIdsFetcher.GetMarketableItemIdsAsync();
+            if (_allItemIds is null || !_allItemIds.Any())
+            {
+                _allItemIds = new List<int>();
+                var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
+
+                var recipePocos = gilGoblinDbContext.Recipe.Cast<RecipePoco>().ToList();
+                var ingredientItemIds =
+                    recipePocos
+                        .SelectMany(r =>
+                            r.GetActiveIngredients()
+                                .Select(i => i.ItemId))
+                        .Distinct()
+                        .ToList();
+
+                _allItemIds =
+                    marketableItemIdList
+                        .Concat(ingredientItemIds)
+                        .ToHashSet()
+                        .ToList();
+            }
+
             if (!_allItemIds.Any())
                 throw new WebException("Failed to fetch Marketable Item Ids");
 
             var world = worldId.GetValueOrDefault();
-            var currentPrices = dbContext.Price.Where(cp => cp.WorldId == world).ToList();
+            var currentPrices = gilGoblinDbContext.Price.Where(cp => cp.WorldId == world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
             var newPriceIds = _allItemIds.Except(currentPriceIds).ToList();
 

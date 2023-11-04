@@ -128,7 +128,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         {
             var calculatedCost = await _calc.CalculateCraftingCostForRecipe(worldId, recipeId);
             if (calculatedCost <= 1)
-                throw new DataException($"Failed to calculate cost for recipe {recipeId} for1 world {worldId}");
+                throw new DataException($"Failed to calculate cost for recipe {recipeId} for world {worldId}");
 
 
             var newCost = new RecipeCostPoco
@@ -143,7 +143,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             if (recipeCost is null || recipeCost.Cost <= 0)
                 throw new DataException($"Failed to find cost of recipe {recipeId}");
         }
-
 
         var ingredients = recipe.GetActiveIngredients();
 

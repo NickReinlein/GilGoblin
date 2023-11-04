@@ -19,7 +19,7 @@ public class ItemController : ControllerBase, IDataController<ItemPoco>
         _logger = logger;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public ItemPoco? Get(int id)
     {
         _logger.LogInformation($"Fetching item info id: {id}");

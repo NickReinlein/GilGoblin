@@ -47,13 +47,10 @@ public class RecipeCostRepository : IRecipeCostRepository
 
         _cache.Add(key, entity);
 
-        if (
-            _dbContext.RecipeCost.Any(
-                i =>
-                    i.WorldId == entity.WorldId &&
-                    i.RecipeId == entity.RecipeId
-            )
-        )
+        if (_dbContext.RecipeCost
+            .Any(i =>
+                i.WorldId == entity.WorldId &&
+                i.RecipeId == entity.RecipeId))
             return;
 
         _dbContext.Add(entity);

@@ -19,7 +19,7 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
         _logger = logger;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public RecipePoco? Get(int id)
     {
         _logger.LogInformation($"Fetching recipe id: {id}");
