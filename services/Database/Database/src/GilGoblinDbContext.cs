@@ -1,3 +1,4 @@
+using System;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,7 @@ public class GilGoblinDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
+        Console.WriteLine($"Connection string to be used: {connectionString}");
         optionsBuilder.UseNpgsql(connectionString);
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.EnableDetailedErrors();

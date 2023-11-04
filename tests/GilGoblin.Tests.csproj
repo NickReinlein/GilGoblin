@@ -27,6 +27,6 @@
     <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <None Update="appsettings.json" CopyToOutputDirectory="Always"/>
+    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :question: Advanced filtering: Enter class levels to filter available recipes
 
 *Not currently on the product roadmap*:
+
 * :heavy_multiplication_x: Filter for HQ/NQ
 
 ## Docker Images

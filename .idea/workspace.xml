@@ -6,22 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/csv-editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipePoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipePoco.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftIngredientPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftIngredientPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/RecipeCostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/RecipeCostRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Controllers/CraftControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Crafting/CraftingCalculatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Crafting/CraftingCalculatorTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/tests/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -9,22 +9,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="Updated readme and a poco">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed component tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/csv-editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipePoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipePoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftIngredientPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftIngredientPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Controllers/CraftControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Crafting/CraftingCalculatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Crafting/CraftingCalculatorTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -315,15 +308,7 @@
       <workItem from="1698776379563" duration="13085000" />
       <workItem from="1698847393955" duration="12161000" />
       <workItem from="1699020841401" duration="5522000" />
-      <workItem from="1699038507428" duration="9296000" />
-    </task>
-    <task id="LOCAL-00010" summary="WIP dockerizing the db">
-      <option name="closed" value="true" />
-      <created>1696534607662</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1696534607662</updated>
+      <workItem from="1699038507428" duration="14832000" />
     </task>
     <task id="LOCAL-00011" summary="a">
       <option name="closed" value="true" />
@@ -709,7 +694,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699035416767</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="fixed component tests">
+      <option name="closed" value="true" />
+      <created>1699105990288</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1699105990288</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -762,7 +755,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="working API &amp; passing tests" />
     <MESSAGE value="Cleanup csproj" />
     <MESSAGE value="a" />
     <MESSAGE value="tests pass with new deserialization custom converter" />
@@ -787,7 +779,8 @@
     <MESSAGE value="Api docker" />
     <MESSAGE value="data updater docker" />
     <MESSAGE value="Updated readme and a poco" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated readme and a poco" />
+    <MESSAGE value="fixed component tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed component tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1122,6 +1115,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="408" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs</url>
+          <line>15</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" initialLine="19" containingFunctionPresentation="Method 'GivenACallToGet_WhenTheEndPointIsValid_ThenTheEndpointResponds'">
+            <startOffsets>
+              <option value="406" />
+            </startOffsets>
+            <endOffsets>
+              <option value="458" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="419" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -5,6 +5,8 @@ name: gilgoblin
 services:
   gilgoblin-database:
     image: nickreinlein/gilgoblin-database
+    # image: database
+    # build: services/Database/Database/
     container_name: database
     environment:
       POSTGRES_DB: gilgoblin
@@ -17,8 +19,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - gilgoblin
     ports:
       - "5432:5432"
     logging:
@@ -32,6 +34,8 @@ services:
 
   gilgoblin-api:
     image: nickreinlein/gilgoblin-api
+    # image: api
+    # build: src/Api/
     container_name: api
     depends_on:
       - gilgoblin-database
@@ -40,10 +44,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin      
     ports:
       - "55448:80"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     logging:
       driver: 'json-file'
       options:
@@ -61,10 +65,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - gilgoblin  
     logging:
       driver: 'json-file'
       options:
         max-size: '50m'
     restart: unless-stopped
+
+networks:
+  gilgoblin:
