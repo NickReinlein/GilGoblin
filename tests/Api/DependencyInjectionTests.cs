@@ -1,16 +1,25 @@
 using System;
+using GilGoblin.Api;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
-using GilGoblin.Tests.Component;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Api;
 
-public class DependencyInjectionTests : ComponentTests
+public class DependencyInjectionTests
 {
+    protected WebApplicationFactory<Startup> _factory;
+
+    [OneTimeSetUp]
+    public void OneTimeSetup()
+    {
+        _factory = new WebApplicationFactory<Startup>();
+    }
+
     [TestCase(typeof(IItemRepository))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]

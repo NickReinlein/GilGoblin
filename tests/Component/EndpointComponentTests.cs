@@ -11,7 +11,7 @@ public class EndpointComponentTests : ComponentTests
         string endpoint
     )
     {
-        var fullEndpoint = $"http://localhost:55448{endpoint}";
+        var fullEndpoint = $"{BaseUrl}{endpoint}";
 
         var response = await _client.GetAsync(fullEndpoint);
 
