@@ -9,6 +9,6 @@ public class CraftIngredientPoco : IngredientPoco
     public CraftIngredientPoco(IngredientPoco ingredient, PricePoco price)
         : base(ingredient.ItemId, ingredient.Quantity, ingredient.RecipeId)
     {
-        this.Price = price;
+        Price = price;
     }
 }

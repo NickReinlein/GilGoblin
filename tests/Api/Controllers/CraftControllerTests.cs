@@ -48,7 +48,7 @@ public class CraftControllerTests
     [Test]
     public async Task WhenReceivingARequestGetBestCraft_ThenTheRepositoryIsCalled()
     {
-        _ = await _controller!.GetBestCraft(_world, _craftId);
+        _ = await _controller!.GetBestCraftForItem(_world, _craftId);
 
         await _repo.Received(1).GetBestCraftForItem(_world, _craftId);
     }
@@ -68,7 +68,7 @@ public class CraftControllerTests
     {
         _repo.GetBestCraftForItem(_world, _craftId).Returns(new CraftSummaryPoco());
 
-        var result = await _controller!.GetBestCraft(_world, _craftId);
+        var result = await _controller!.GetBestCraftForItem(_world, _craftId);
 
         Assert.That(result, Is.TypeOf<CraftSummaryPoco>());
     }

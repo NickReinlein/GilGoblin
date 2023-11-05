@@ -14,12 +14,12 @@ public class CraftSummaryPoco : IComparable
     public int? StackSize { get; set; }
     public int? PriceMid { get; set; }
     public int? PriceLow { get; set; }
-    public float AverageListingPrice { get; set; }
-    public float AverageSold { get; set; }
-    public float RecipeCost { get; set; }
+    public int AverageListingPrice { get; set; }
+    public int AverageSold { get; set; }
+    public int RecipeCost { get; set; }
     public RecipePoco Recipe { get; set; }
-    public float CraftingProfitVsSold { get; set; }
-    public float CraftingProfitVsListings { get; set; }
+    public int CraftingProfitVsSold { get; set; }
+    public int CraftingProfitVsListings { get; set; }
     public IEnumerable<IngredientPoco> Ingredients { get; set; }
 
     public CraftSummaryPoco() { }
@@ -33,11 +33,11 @@ public class CraftSummaryPoco : IComparable
         int? priceMid,
         int? priceLow,
         int? stackSize,
-        float averageListingPrice,
-        float averageSold,
-        float recipeCost,
-        float craftingProfitVsSold,
-        float craftingProfitVsListings,
+        int averageListingPrice,
+        int averageSold,
+        int recipeCost,
+        int craftingProfitVsSold,
+        int craftingProfitVsListings,
         IEnumerable<IngredientPoco> ingredients
     )
     {
@@ -60,7 +60,7 @@ public class CraftSummaryPoco : IComparable
     public CraftSummaryPoco(
         PricePoco price,
         ItemPoco item,
-        float recipeCost,
+        int recipeCost,
         RecipePoco recipe,
         IEnumerable<IngredientPoco> ingredients
     )
@@ -73,12 +73,12 @@ public class CraftSummaryPoco : IComparable
         PriceMid = item.PriceMid;
         PriceLow = item.PriceLow;
         StackSize = item.StackSize;
-        AverageListingPrice = price.AverageListingPrice;
-        AverageSold = price.AverageSold;
+        AverageListingPrice = (int)price.AverageListingPrice;
+        AverageSold = (int)price.AverageSold;
         RecipeCost = recipeCost;
         Recipe = recipe;
-        CraftingProfitVsListings = price.AverageListingPrice - recipeCost;
-        CraftingProfitVsSold = price.AverageSold - recipeCost;
+        CraftingProfitVsListings = (int)price.AverageListingPrice - recipeCost;
+        CraftingProfitVsSold = (int)price.AverageSold - recipeCost;
         Ingredients = ingredients ?? new List<IngredientPoco>();
     }
 

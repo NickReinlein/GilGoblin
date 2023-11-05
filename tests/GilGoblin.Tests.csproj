@@ -26,10 +26,4 @@
     <ProjectReference Include="../src/Batcher/Batcher.csproj"/>
     <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
   </ItemGroup>
-  <ItemGroup>
-    <None Update="appsettings.json" CopyToOutputDirectory="Always"/>
-    <None Update="Component\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

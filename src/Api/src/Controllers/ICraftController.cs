@@ -8,7 +8,7 @@ public interface ICraftController<T>
     where T : class
 {
     [HttpGet("{world}/{id}")]
-    Task<T> GetBestCraft(int worldId, int id);
+    Task<T> GetBestCraftForItem(int worldId, int id);
 
     [HttpGet("{world}")]
     Task<IEnumerable<T>> GetBestCrafts(int worldId);

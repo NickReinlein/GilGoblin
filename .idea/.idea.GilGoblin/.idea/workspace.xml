@@ -9,11 +9,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="data updater docker">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed component tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +68,8 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f2/fdc055bc/IIdentifiable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f9/ff3d998e/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1b046e286a344b85999e7c798bc1fc145e00/99/755f15a9/MockHttpMessageHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c318fdc22c8430794674d8040a071278800/17/c53e8010/IngredientPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c318fdc22c8430794674d8040a071278800/53/86485fc7/BasePricePoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c318fdc22c8430794674d8040a071278800/8a/cc440df5/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/10/0a8bf815/DefaultInterpolatedStringHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/216ef11b57214a2b89fe1ef5ec88009ca29c00/2b/14ff84d7/Nullable`1.cs" root0="SKIP_HIGHLIGHTING" />
@@ -147,7 +153,7 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -165,7 +171,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dockerize-updater&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fix-craft-profitability-bug&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -302,22 +308,7 @@
       <workItem from="1698776379563" duration="13085000" />
       <workItem from="1698847393955" duration="12161000" />
       <workItem from="1699020841401" duration="5522000" />
-    </task>
-    <task id="LOCAL-00009" summary="WIP dockerizing the db">
-      <option name="closed" value="true" />
-      <created>1696533725252</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1696533725252</updated>
-    </task>
-    <task id="LOCAL-00010" summary="WIP dockerizing the db">
-      <option name="closed" value="true" />
-      <created>1696534607662</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1696534607662</updated>
+      <workItem from="1699038507428" duration="14832000" />
     </task>
     <task id="LOCAL-00011" summary="a">
       <option name="closed" value="true" />
@@ -695,7 +686,23 @@
       <option name="project" value="LOCAL" />
       <updated>1699029410824</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Updated readme and a poco">
+      <option name="closed" value="true" />
+      <created>1699035416767</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1699035416767</updated>
+    </task>
+    <task id="LOCAL-00059" summary="fixed component tests">
+      <option name="closed" value="true" />
+      <created>1699105990288</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1699105990288</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -748,8 +755,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="updated ER diagram" />
-    <MESSAGE value="working API &amp; passing tests" />
     <MESSAGE value="Cleanup csproj" />
     <MESSAGE value="a" />
     <MESSAGE value="tests pass with new deserialization custom converter" />
@@ -773,7 +778,9 @@
     <MESSAGE value="Database docker" />
     <MESSAGE value="Api docker" />
     <MESSAGE value="data updater docker" />
-    <option name="LAST_COMMIT_MESSAGE" value="data updater docker" />
+    <MESSAGE value="Updated readme and a poco" />
+    <MESSAGE value="fixed component tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed component tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1046,19 +1053,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
-          <line>133</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="133" containingFunctionPresentation="Method 'ValidateCanConnectToDatabase'">
-            <startOffsets>
-              <option value="4449" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4506" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="385" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Startup.cs</url>
           <line>125</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="125" containingFunctionPresentation="Method 'DatabaseValidation'">
             <startOffsets>
@@ -1072,29 +1066,68 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>94</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="94" containingFunctionPresentation="Method 'SortByProfitability'">
-            <startOffsets>
-              <option value="3092" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3125" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="396" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
           <line>143</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="150" containingFunctionPresentation="Method 'GetSummaryForRecipe'">
             <startOffsets>
-              <option value="4931" />
+              <option value="4930" />
             </startOffsets>
             <endOffsets>
-              <option value="5000" />
+              <option value="4999" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="397" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs</url>
+          <line>79</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" initialLine="76" containingFunctionPresentation="Method 'CalculateCraftingCostForRecipe'">
+            <startOffsets>
+              <option value="2801" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2952" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="402" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs</url>
+          <line>102</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" initialLine="101" containingFunctionPresentation="Method 'SaveRecipeCost'">
+            <startOffsets>
+              <option value="3551" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3684" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="405" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs</url>
+          <line>114</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" initialLine="116" containingFunctionPresentation="Method 'SaveRecipeCost'">
+            <startOffsets>
+              <option value="3975" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4070" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="408" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs</url>
+          <line>15</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" initialLine="19" containingFunctionPresentation="Method 'GivenACallToGet_WhenTheEndPointIsValid_ThenTheEndpointResponds'">
+            <startOffsets>
+              <option value="406" />
+            </startOffsets>
+            <endOffsets>
+              <option value="458" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="419" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

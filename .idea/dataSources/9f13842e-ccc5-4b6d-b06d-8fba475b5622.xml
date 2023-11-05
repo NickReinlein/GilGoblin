@@ -3,9 +3,17 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.49">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <IntrospectionStateNumber>12166</IntrospectionStateNumber>
+      <Grants>1||-9223372036854775808|c|G
+1||10|c|G
+1||10|C|G
+1||10|T|G
+4||-9223372036854775808|c|G
+4||10|c|G
+4||10|C|G
+4||10|T|G</Grants>
+      <IntrospectionStateNumber>13855</IntrospectionStateNumber>
       <ServerVersion>16.0</ServerVersion>
-      <StartupTime>1698958987</StartupTime>
+      <StartupTime>1699029464</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -802,7 +810,7 @@ true posixrules
 13209||10|C|G
 13209||-9223372036854775808|U|G
 13209||10|U|G</Grants>
-      <IntrospectionStateNumber>12166</IntrospectionStateNumber>
+      <IntrospectionStateNumber>13855</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>gilgoblin</OwnerName>
     </database>
@@ -4226,9 +4234,9 @@ true posixrules
     <schema id="264" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>12166</IntrospectionStateNumber>
-      <IntrospectionTimestamp>2023-11-02.17:03:16.327</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-11-02.21:03:16</LocalIntrospectionTimestamp>
+      <IntrospectionStateNumber>13855</IntrospectionStateNumber>
+      <IntrospectionTimestamp>2023-11-03.15:03:25.661</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-11-03.19:03:25</LocalIntrospectionTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4253,7 +4261,7 @@ true posixrules
     </table>
     <table id="268" parent="264" name="recipecost">
       <ObjectId>24606</ObjectId>
-      <StateNumber>847</StateNumber>
+      <StateNumber>13854</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>gilgoblin</OwnerName>
     </table>
@@ -4617,47 +4625,53 @@ worldid</ColNames>
       <StateNumber>822</StateNumber>
       <UnderlyingIndexId>16472</UnderlyingIndexId>
     </key>
-    <check id="320" parent="268" name="recipecost_recipeid_check">
+    <check id="320" parent="268" name="recipecost_cost_check">
+      <ColNames>cost</ColNames>
+      <ObjectId>32791</ObjectId>
+      <Predicate>cost &gt; 1</Predicate>
+      <StateNumber>13854</StateNumber>
+    </check>
+    <check id="321" parent="268" name="recipecost_recipeid_check">
       <ColNames>recipeid</ColNames>
       <ObjectId>24609</ObjectId>
       <Predicate>recipeid &gt; 0</Predicate>
       <StateNumber>847</StateNumber>
     </check>
-    <check id="321" parent="268" name="recipecost_worldid_check">
+    <check id="322" parent="268" name="recipecost_worldid_check">
       <ColNames>worldid</ColNames>
       <ObjectId>24610</ObjectId>
       <Predicate>worldid &gt; 0</Predicate>
       <StateNumber>847</StateNumber>
     </check>
-    <column id="322" parent="268" name="recipeid">
+    <column id="323" parent="268" name="recipeid">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StateNumber>847</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="323" parent="268" name="worldid">
+    <column id="324" parent="268" name="worldid">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>847</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="324" parent="268" name="cost">
+    <column id="325" parent="268" name="cost">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>847</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="325" parent="268" name="updated">
+    <column id="326" parent="268" name="updated">
       <DasType>timestamp with time zone|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>847</StateNumber>
       <TypeId>1184</TypeId>
     </column>
-    <index id="326" parent="268" name="recipecost_pkey">
+    <index id="327" parent="268" name="recipecost_pkey">
       <ColNames>recipeid
 worldid</ColNames>
       <NameSurrogate>1</NameSurrogate>
@@ -4667,7 +4681,7 @@ worldid</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="327" parent="268" name="recipecost_pkey">
+    <key id="328" parent="268" name="recipecost_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24612</ObjectId>
       <Primary>1</Primary>

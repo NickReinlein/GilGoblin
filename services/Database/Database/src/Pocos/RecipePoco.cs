@@ -30,7 +30,6 @@ public class RecipePoco
     public int ItemIngredient9TargetId { get; set; }
     public int AmountIngredient9 { get; set; }
 
-
     public RecipePoco() { }
 
     public RecipePoco(

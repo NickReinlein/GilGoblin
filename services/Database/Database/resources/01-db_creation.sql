@@ -14,7 +14,7 @@ create table if not exists item
 create table if not exists price
 (
     itemid                INTEGER NOT NULL CHECK (itemid > 0),
-    worldid               INTEGER NOT NULL  CHECK (worldid > 0),
+    worldid               INTEGER NOT NULL CHECK (worldid > 0),
     lastuploadtime        BIGINT  NOT NULL,
     averagelistingprice   REAL    NOT NULL,
     averagelistingpricenq REAL    NOT NULL,
@@ -60,7 +60,7 @@ create table if not exists recipecost
 (
     recipeid INTEGER NOT NULL CHECK (recipeid > 0),
     worldid  INTEGER NOT NULL CHECK (worldid > 0),
-    cost     INTEGER NOT NULL,
+    cost     INTEGER NOT NULL CHECK (cost > 0),
     updated  TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (recipeid, worldid)
 );
