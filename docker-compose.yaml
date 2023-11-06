@@ -6,7 +6,7 @@ services:
   gilgoblin-database:
     image: nickreinlein/gilgoblin-database
     # image: database
-    # build: services/Database/Database/
+    # build: src/Database/
     container_name: database
     environment:
       POSTGRES_DB: gilgoblin
@@ -28,8 +28,8 @@ services:
       options:
         max-size: '50m'
     volumes:
-      - ./services/Database/Database/db:/var/lib/postgresql/data
-      - ./services/Database/Database/resources:/docker-entrypoint-initdb.d
+      - ./src/Database/db:/var/lib/postgresql/data
+      - ./src/Database/resources:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
   gilgoblin-api:
