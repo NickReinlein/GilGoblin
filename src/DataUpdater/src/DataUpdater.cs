@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
@@ -19,7 +19,7 @@ public interface IDataUpdater<T, U>
     Task FetchAsync(CancellationToken ct, int? worldId = null);
 }
 
-public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
+public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
@@ -55,7 +55,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected abstract Task ConvertAndSaveToDbAsync(List<U> updated);
+    protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
 
     public async Task FetchAsync(CancellationToken ct, int? worldId)
     {
@@ -102,6 +102,6 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
 
     protected virtual int? GetWorldId() => null;
 
-    protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
+    protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
     protected virtual int GetApiSpamDelayInMs() => 5000;
 }

@@ -25,7 +25,7 @@
     <ProjectReference Include="../src/Api/Api.csproj"/>
     <ProjectReference Include="../src/Batcher/Batcher.csproj"/>
     <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
-<!--    <ProjectReference Include="../src/Database/Database.csproj"/>-->
-<!--    <ProjectReference Include="../src/DataUpdater/DataUpdater.csproj"/>-->
+   <ProjectReference Include="../src/Database/Database.csproj"/>
+   <ProjectReference Include="../src/DataUpdater/DataUpdater.csproj"/>
   </ItemGroup>
 </Project>

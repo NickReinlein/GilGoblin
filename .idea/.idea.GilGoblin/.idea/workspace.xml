@@ -10,91 +10,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="Restructure code and services">
+      <change afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/Insomnia_2023-10-23.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater.Tests/DataUpdater.Tests.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/DataUpdater.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/DataUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/ItemUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/PriceUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/Startup.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.Tests/Database.Tests.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.Tests/InMemoryTestDb.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.Tests/TestGilGoblinDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/dataSources/9642553e-95f7-46ef-9225-f3c538092b0d.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/Database.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/01-db_creation.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/02-item.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/03-price.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/04-recipe.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/05-recipecost.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/ER_Diagram_ 2023-10-23.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/item.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/price.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/recipe.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/DataSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/IDataSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/BaseItemPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/BasePricePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/Extensions/IngredientPocoExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/Extensions/PricePocoExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/Extensions/RecipePocoExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/IIdentifiable.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/IngredientPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/ItemPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/PricePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/PriceSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" beforeDir="false" afterPath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/Database.Tests.csproj_backup" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -409,14 +331,7 @@
       <workItem from="1699038507428" duration="14832000" />
       <workItem from="1699208276678" duration="818000" />
       <workItem from="1699284016070" duration="961000" />
-    </task>
-    <task id="LOCAL-00011" summary="a">
-      <option name="closed" value="true" />
-      <created>1696541341099</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1696541341099</updated>
+      <workItem from="1699286662661" duration="1597000" />
     </task>
     <task id="LOCAL-00012" summary="WIP decoupling database and pocos">
       <option name="closed" value="true" />
@@ -802,7 +717,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699105990288</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Restructure code and services">
+      <option name="closed" value="true" />
+      <created>1699287309869</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1699287309869</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -841,7 +764,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="improve-test-coverage" />
                       </list>
                     </value>
                   </entry>
@@ -854,8 +777,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Cleanup csproj" />
     <MESSAGE value="a" />
     <MESSAGE value="tests pass with new deserialization custom converter" />
     <MESSAGE value="fixing more tests" />
@@ -880,7 +803,8 @@
     <MESSAGE value="data updater docker" />
     <MESSAGE value="Updated readme and a poco" />
     <MESSAGE value="fixed component tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed component tests" />
+    <MESSAGE value="Restructure code and services" />
+    <option name="LAST_COMMIT_MESSAGE" value="Restructure code and services" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
