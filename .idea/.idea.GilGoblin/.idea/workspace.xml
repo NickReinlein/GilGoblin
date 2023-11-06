@@ -10,14 +10,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="Restructure code and services">
-      <change afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" beforeDir="false" afterPath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/Database.Tests.csproj_backup" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +88,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/740d777072e848ec82b3143378be3428a400/38/e1f0d926/BackgroundService.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/752389e2f1f640f8bf36451cdca5d0ce11600/54/dea75b12/ServiceProviderServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/752389e2f1f640f8bf36451cdca5d0ce11600/f5/5515832b/ServiceCollectionServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/75e72660bfaf4426bbed08f0df0639135c00/52/923b2244/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8476e36923654b7cbfe9abf9179f4dd327800/34/0565f321/Substitute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/863c5a9eb0fd481e9b4fee5cf80fe1d1a29c00/0d/10601f28/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/863c5a9eb0fd481e9b4fee5cf80fe1d1a29c00/50/84f43bd1/Int32.cs" root0="SKIP_HIGHLIGHTING" />
@@ -331,15 +329,7 @@
       <workItem from="1699038507428" duration="14832000" />
       <workItem from="1699208276678" duration="818000" />
       <workItem from="1699284016070" duration="961000" />
-      <workItem from="1699286662661" duration="1597000" />
-    </task>
-    <task id="LOCAL-00012" summary="WIP decoupling database and pocos">
-      <option name="closed" value="true" />
-      <created>1696686323309</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1696686323309</updated>
+      <workItem from="1699286662661" duration="3581000" />
     </task>
     <task id="LOCAL-00013" summary="WIP still not working">
       <option name="closed" value="true" />
@@ -725,7 +715,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699287309869</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="began price updater tests">
+      <option name="closed" value="true" />
+      <created>1699288905608</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1699288905608</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -779,7 +777,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="a" />
     <MESSAGE value="tests pass with new deserialization custom converter" />
     <MESSAGE value="fixing more tests" />
     <MESSAGE value="started price updater" />
@@ -804,7 +801,8 @@
     <MESSAGE value="Updated readme and a poco" />
     <MESSAGE value="fixed component tests" />
     <MESSAGE value="Restructure code and services" />
-    <option name="LAST_COMMIT_MESSAGE" value="Restructure code and services" />
+    <MESSAGE value="began price updater tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="began price updater tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

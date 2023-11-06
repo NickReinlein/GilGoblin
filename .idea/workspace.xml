@@ -5,92 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/Insomnia_2023-10-23.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/.idea/.idea.DataUpdater/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater.Tests/DataUpdater.Tests.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/.idea/.idea.DataUpdater.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/DataUpdater.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/DataUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/ItemUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/PriceUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/DataUpdater/DataUpdater/src/Startup.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/.idea/.idea.Database/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.Tests/Database.Tests.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.Tests/InMemoryTestDb.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.Tests/TestGilGoblinDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/dataSources/9642553e-95f7-46ef-9225-f3c538092b0d.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/.idea/.idea.Database.dir/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/Database.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/01-db_creation.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/02-item.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/03-price.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/04-recipe.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/05-recipecost.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/ER_Diagram_ 2023-10-23.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/item.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/price.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/resources/recipe.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/DataSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/GilGoblinDbContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/IDataSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/BaseItemPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/BasePricePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/Extensions/IngredientPocoExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/Extensions/PricePocoExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/Extensions/RecipePocoExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/IIdentifiable.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/IngredientPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/ItemPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/PricePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/Pocos/RecipePoco.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/Database/Database/src/PriceSaver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Batcher/Batcher.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" beforeDir="false" afterPath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,20 +30,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "SQL-Insert-Multirow.sql.groovy",
-    "git-widget-placeholder": "improve-test-coverage",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL-Insert-Multirow.sql.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;improve-test-coverage&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
 </project>
