@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
@@ -19,4 +21,11 @@ public class PriceSaver : DataSaver<PricePoco>
                .AnyAsync(p =>
                    p.WorldId == updated.WorldId &&
                    p.ItemId == updated.ItemId);
+
+    public override bool SanityCheck(IEnumerable<PricePoco> updates)
+        => !updates.Any(price => price.AverageListingPrice <= 1 ||
+                                price.AverageSold <= 1 ||
+                                price.WorldId <= 0 ||
+                                price.ItemId <= 0 ||
+                                price.LastUploadTime <= 0);
 }

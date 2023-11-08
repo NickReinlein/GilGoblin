@@ -1,3 +1,4 @@
+using System;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,7 @@ public class InMemoryTestDb
 
     private void DeleteAllEntries()
     {
-        var context = new TestGilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.Price.RemoveRange(context.Price);
         context.Item.RemoveRange(context.Item);
         context.Recipe.RemoveRange(context.Recipe);
@@ -45,6 +46,7 @@ public class InMemoryTestDb
     private void CreateAllEntries()
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         context.RecipeCost.AddRange(
             new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107 },
             new RecipeCostPoco { WorldId = 22, RecipeId = 12, Cost = 297 },
@@ -58,10 +60,38 @@ public class InMemoryTestDb
             new RecipePoco { Id = 44, TargetItemId = 333 }
         );
         context.Price.AddRange(
-            new PricePoco { WorldId = 22, ItemId = 11 },
-            new PricePoco { WorldId = 22, ItemId = 12 },
-            new PricePoco { WorldId = 33, ItemId = 88 },
-            new PricePoco { WorldId = 44, ItemId = 99 }
+            new PricePoco
+            {
+                WorldId = 22,
+                ItemId = 11,
+                AverageSold = 133f,
+                AverageListingPrice = 241f,
+                LastUploadTime = unixEpochTimestamp
+            },
+            new PricePoco
+            {
+                WorldId = 22,
+                ItemId = 12,
+                AverageSold = 245f,
+                AverageListingPrice = 377f,
+                LastUploadTime = unixEpochTimestamp
+            },
+            new PricePoco
+            {
+                WorldId = 33,
+                ItemId = 88,
+                AverageSold = 247f,
+                AverageListingPrice = 361f,
+                LastUploadTime = unixEpochTimestamp
+            },
+            new PricePoco
+            {
+                WorldId = 44,
+                ItemId = 99,
+                AverageSold = 387f,
+                AverageListingPrice = 477f,
+                LastUploadTime = unixEpochTimestamp
+            }
         );
         context.Item.AddRange(
             new ItemPoco { Id = 1, Name = "Item 1" },

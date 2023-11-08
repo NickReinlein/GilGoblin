@@ -26,19 +26,30 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
 
         try
         {
+            var success = SanityCheck(updatesList);
+            if (!success)
+                throw new ArgumentException("Cannot save price due to error in key field");
+
             var newEntries = await UpdatedExistingEntries(updatesList);
             await DbContext.AddRangeAsync(newEntries);
 
-            await DbContext.SaveChangesAsync();
-            _logger.LogInformation($"Saved {updatesList.Count} entries for type {typeof(T).Name}");
+            var savedCount = await DbContext.SaveChangesAsync();
+            _logger.LogInformation($"Saved {savedCount} entries for type {typeof(T).Name}");
+
+            var failedCount = updatesList.Count - savedCount;
+            if (failedCount > 0)
+                throw new Exception($"Failed to save {failedCount} entities!");
             return true;
         }
         catch (Exception e)
         {
-            _logger.LogError($"Failed to updated due to error: {e.Message}");
+            _logger.LogError($"Failed to update due to error: {e.Message}");
             return false;
         }
     }
+
+    public virtual bool SanityCheck(IEnumerable<T> updates)
+        => !updates.Any(t => t.GetId() < 0);
 
     protected async Task<List<T>> UpdatedExistingEntries(List<T> updatedEntries)
     {
