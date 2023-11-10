@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/ISingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/ISingleDataFetcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/ItemFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/ItemFetcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/TestGilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/TestGilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
-    </list>
+    <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,20 +24,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL-Insert-Multirow.sql.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;improve-test-coverage&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "database.data.extractors.current.export.id": "SQL-Insert-Multirow.sql.groovy",
+    "git-widget-placeholder": "feature/improve-calculation-result-persistence",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
 </project>

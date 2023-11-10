@@ -50,7 +50,8 @@ public class CraftRepositoryTests
             Assert.That(result.WorldId, Is.EqualTo(_worldId));
             Assert.That(result.ItemId, Is.EqualTo(_itemId));
             Assert.That(result.Recipe.Id, Is.EqualTo(_recipeId));
-            Assert.That(result.Name, Is.EqualTo(_itemName));
+            Assert.That(result.ItemInfo.Name, Is.EqualTo(_itemName));
+            Assert.That(result.ItemInfo.Id, Is.EqualTo(_itemId));
         });
     }
 
@@ -173,7 +174,8 @@ public class CraftRepositoryTests
         _cache = Substitute.For<ICraftCache>();
         _cache
             .Get((_worldId, _itemId))
-            .Returns(null, new CraftSummaryPoco() { ItemId = _itemId, Name = _itemName });
+            .Returns(null,
+                new CraftSummaryPoco { ItemId = _itemId, ItemInfo = new ItemPoco { Id = _itemId, Name = _itemName } });
 
         _logger = Substitute.For<ILogger<CraftRepository>>();
 

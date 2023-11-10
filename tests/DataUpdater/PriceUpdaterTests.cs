@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GilGoblin.Batcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
@@ -186,6 +185,5 @@ public class PriceUpdaterTests : InMemoryTestDb
             .FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
             .Returns(saveList);
         return saveList.ToPricePocoList();
-        ;
     }
 }

@@ -105,8 +105,8 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
                         i.AverageListingPrice > 1 &&
                         i.RecipeCost > 1 &&
                         i.Recipe.TargetItemId == i.ItemId &&
-                        i.CraftingProfitVsListings > 0 &&
-                        i.CraftingProfitVsSold > 0)
+                        i.RecipeProfitVsListings > 0 &&
+                        i.RecipeProfitVsSold > 0)
                     .ToList();
             viableCrafts.Sort();
             return viableCrafts;
