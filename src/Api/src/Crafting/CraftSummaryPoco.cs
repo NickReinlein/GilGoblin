@@ -16,6 +16,7 @@ public class CraftSummaryPoco : IComparable
     public int RecipeProfitVsSold { get; set; }
     public int RecipeProfitVsListings { get; set; }
     public IEnumerable<IngredientPoco> Ingredients { get; set; }
+    public DateTimeOffset Updated { get; set; }
 
     public CraftSummaryPoco() { }
 
@@ -37,6 +38,7 @@ public class CraftSummaryPoco : IComparable
         RecipeProfitVsListings = (int)price.AverageListingPrice - recipeCost;
         RecipeProfitVsSold = (int)price.AverageSold - recipeCost;
         Ingredients = ingredients ?? new List<IngredientPoco>();
+        Updated = new DateTime(price.LastUploadTime).ToUniversalTime();
     }
 
     public int CompareTo(object obj)

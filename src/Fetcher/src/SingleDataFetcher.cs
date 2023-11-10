@@ -10,11 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-
 public abstract class SingleDataFetcher<T> : DataFetcher<T>, ISingleDataFetcher<T>
     where T : class, IIdentifiable
 {
-    public SingleDataFetcher(
+    protected SingleDataFetcher(
         string basePath,
         ILogger<SingleDataFetcher<T>> logger,
         HttpClient? client = null)

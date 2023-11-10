@@ -59,7 +59,7 @@ public class CraftingCalculator : ICraftingCalculator
             var recipe = _recipes.Get(recipeId);
             var result = await _grocer.BreakdownRecipeById(recipeId);
             var ingredients = result?.ToList();
-            if (recipe is null || !ingredients.Any())
+            if (recipe is null || ingredients is null || !ingredients.Any())
                 return ERROR_DEFAULT_COST;
 
             var ingredientPrices = GetIngredientPrices(worldId, recipe.TargetItemId, ingredients).ToList();
@@ -234,30 +234,16 @@ public class CraftingCalculator : ICraftingCalculator
     private void LogCraftingResult(int worldId, int itemId, int recipeCount, float craftingCost)
     {
         if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
-            LogErrorCraftingCostForItem(worldId, itemId, recipeCount);
+        {
+            var message =
+                $"Failed to calculate crafting cost of: world {worldId}, item {itemId} with {recipeCount} recipes";
+            _logger.LogError(message);
+        }
         else
-            LogSuccessInfo(worldId, itemId, recipeCount, craftingCost);
-    }
-
-    private void LogSuccessInfo(int worldId, int itemId, int recipeCount, float craftingCost)
-    {
-        _logger.LogInformation(
-            "Successfully calculated crafting cost of {LowestCost} "
-            + "for item {ItemId} world {WorldId} with {RecipeCount} craftable recipes",
-            craftingCost,
-            itemId,
-            worldId,
-            recipeCount
-        );
-    }
-
-    private void LogErrorCraftingCostForItem(int worldId, int ingredientId, int recipesCount)
-    {
-        _logger.LogError(
-            "Failed to calculate crafting cost of: world {worldId}, item {itemId} despite having {count} recipes",
-            worldId,
-            ingredientId,
-            recipesCount
-        );
+        {
+            var message =
+                $"Successfully calculated crafting cost of {craftingCost} for item {itemId} world {worldId} with {recipeCount} craftable recipes";
+            _logger.LogInformation(message);
+        }
     }
 }

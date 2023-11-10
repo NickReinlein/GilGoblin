@@ -39,6 +39,7 @@ public class InMemoryTestDb
         context.Item.RemoveRange(context.Item);
         context.Recipe.RemoveRange(context.Recipe);
         context.RecipeCost.RemoveRange(context.RecipeCost);
+        context.RecipeProfit.RemoveRange(context.RecipeProfit);
         context.SaveChanges();
     }
 
@@ -47,16 +48,46 @@ public class InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         context.RecipeCost.AddRange(
-            new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107 },
-            new RecipeCostPoco { WorldId = 22, RecipeId = 12, Cost = 297 },
-            new RecipeCostPoco { WorldId = 33, RecipeId = 88, Cost = 224 },
-            new RecipeCostPoco { WorldId = 44, RecipeId = 99, Cost = 351 }
+            new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107, Updated = DateTimeOffset.Now },
+            new RecipeCostPoco { WorldId = 22, RecipeId = 12, Cost = 297, Updated = DateTimeOffset.Now },
+            new RecipeCostPoco { WorldId = 33, RecipeId = 88, Cost = 224, Updated = DateTimeOffset.Now },
+            new RecipeCostPoco { WorldId = 44, RecipeId = 99, Cost = 351, Updated = DateTimeOffset.Now }
+        );
+        context.RecipeProfit.AddRange(
+            new RecipeProfitPoco
+            {
+                WorldId = 22, RecipeId = 11, RecipeProfitVsListings = 107, Updated = DateTimeOffset.Now
+            },
+            new RecipeProfitPoco
+            {
+                WorldId = 22,
+                RecipeId = 12,
+                RecipeProfitVsListings = 297,
+                RecipeProfitVsSold = 254,
+                Updated = DateTimeOffset.Now
+            },
+            new RecipeProfitPoco
+            {
+                WorldId = 33,
+                RecipeId = 88,
+                RecipeProfitVsListings = 224,
+                RecipeProfitVsSold = 218,
+                Updated = DateTimeOffset.Now
+            },
+            new RecipeProfitPoco
+            {
+                WorldId = 44,
+                RecipeId = 99,
+                RecipeProfitVsListings = 351,
+                RecipeProfitVsSold = 317,
+                Updated = DateTimeOffset.Now
+            }
         );
         context.Recipe.AddRange(
             new RecipePoco { Id = 11, TargetItemId = 111, ItemIngredient0TargetId = 11, AmountIngredient0 = 3 },
-            new RecipePoco { Id = 22, TargetItemId = 111, ItemIngredient0TargetId = 12, AmountIngredient0 = 5  },
-            new RecipePoco { Id = 33, TargetItemId = 222, ItemIngredient0TargetId = 88, AmountIngredient0 = 7  },
-            new RecipePoco { Id = 44, TargetItemId = 333, ItemIngredient0TargetId = 99, AmountIngredient0 = 2  }
+            new RecipePoco { Id = 22, TargetItemId = 111, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },
+            new RecipePoco { Id = 33, TargetItemId = 222, ItemIngredient0TargetId = 88, AmountIngredient0 = 7 },
+            new RecipePoco { Id = 44, TargetItemId = 333, ItemIngredient0TargetId = 99, AmountIngredient0 = 2 }
         );
         context.Price.AddRange(
             new PricePoco

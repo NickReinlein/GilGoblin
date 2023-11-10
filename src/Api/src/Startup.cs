@@ -56,6 +56,7 @@ public class Startup
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<IRecipeCostCache, RecipeCostCache>();
+        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
 
         services.AddScoped<IRepositoryCache, ItemRepository>();
         services.AddScoped<IRepositoryCache, PriceRepository>();
@@ -86,6 +87,7 @@ public class Startup
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
+        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
     }
 
     private static void AddBasicBuilderServices(IServiceCollection services)

@@ -17,6 +17,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     private readonly IPriceRepository<PricePoco> _priceRepository;
     private readonly IRecipeRepository _recipeRepository;
     private readonly IRecipeCostRepository _recipeCostRepository;
+    private readonly IRecipeProfitRepository _recipeProfitRepository;
     private readonly IItemRepository _itemRepository;
     private readonly ICraftCache _cache;
     private readonly ILogger<CraftRepository> _logger;
@@ -26,6 +27,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         IPriceRepository<PricePoco> priceRepo,
         IRecipeRepository recipeRepository,
         IRecipeCostRepository recipeCostRepository,
+        IRecipeProfitRepository recipeProfitRepository,
         IItemRepository itemRepository,
         ICraftCache cache,
         ILogger<CraftRepository> logger)
@@ -34,6 +36,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _priceRepository = priceRepo;
         _recipeRepository = recipeRepository;
         _recipeCostRepository = recipeCostRepository;
+        _recipeProfitRepository = recipeProfitRepository;
         _itemRepository = itemRepository;
         _logger = logger;
         _cache = cache;
@@ -133,10 +136,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 
             var newCost = new RecipeCostPoco
             {
-                WorldId = worldId, 
-                RecipeId = recipeId, 
-                Cost = calculatedCost, 
-                Updated = DateTimeOffset.UtcNow
+                WorldId = worldId, RecipeId = recipeId, Cost = calculatedCost, Updated = DateTimeOffset.UtcNow
             };
             await _recipeCostRepository.Add(newCost);
             recipeCost = newCost;
@@ -145,13 +145,8 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         }
 
         var ingredients = recipe.GetActiveIngredients();
-
         var item = _itemRepository.Get(itemId);
-
         var price = _priceRepository.Get(worldId, itemId);
-        var bestPrice = price?.AverageSold > 0 ? price.AverageSold : price?.AverageListingPrice;
-        if (bestPrice is null or <= 0)
-            throw new DataException($"Could not find price for item {itemId} for world {worldId}");
 
         var summary = new CraftSummaryPoco(
             price,
@@ -160,6 +155,30 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             recipe,
             ingredients
         );
+        await SaveResults(summary);
+
         return summary;
+    }
+
+    private async Task SaveResults(CraftSummaryPoco summary)
+    {
+        var worldId = summary.WorldId;
+        var itemId = summary.ItemId;
+        var recipeId = summary.Recipe.Id;
+        var bestPrice = summary.AverageSold > 0 ? summary.AverageSold : summary.AverageListingPrice;
+        if (bestPrice <= 0)
+            throw new DataException($"Could not find price for item {itemId} for world {worldId}");
+
+        _cache.Add((worldId, itemId), summary);
+
+        var recipeProfit = new RecipeProfitPoco
+        {
+            WorldId = worldId,
+            RecipeId = recipeId,
+            Updated = summary.Updated,
+            RecipeProfitVsListings = summary.RecipeProfitVsListings,
+            RecipeProfitVsSold = summary.RecipeProfitVsSold
+        };
+        await _recipeProfitRepository.Add(recipeProfit);
     }
 }

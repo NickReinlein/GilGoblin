@@ -18,6 +18,7 @@ public class CraftRepositoryTests
     private IPriceRepository<PricePoco> _priceRepository;
     private IRecipeRepository _recipeRepository;
     private IRecipeCostRepository _recipeCostRepository;
+    private IRecipeProfitRepository _recipeProfitRepository;
     private IItemRepository _itemRepository;
     private ICraftCache _cache;
     private ILogger<CraftRepository> _logger;
@@ -65,56 +66,6 @@ public class CraftRepositoryTests
         Assert.That(result, Is.Null);
     }
 
-    // [Test]
-    // public async Task GivenGetBestCrafts_WhenThereAreMultipleResults_ThenEachOneIsProcessed()
-    // {
-    //     var crafts = GetCrafts();
-    //     var secondItemId = crafts[1].TargetItemId;
-    //     var secondRecipeId = crafts[1].Id;
-    //     _calc.CalculateCraftingCostForItem(_worldId, secondItemId).Returns((secondRecipeId, _recipeCost + 100));
-    //     _priceRepository.Get(_worldId, secondItemId)
-    //         .Returns(new PricePoco { WorldId = _worldId, ItemId = secondItemId });
-    //     _recipeRepository.GetAll().Returns(crafts);
-    //     // _recipeRepository.Get(secondRecipeId)
-    //     //     .Returns(new RecipePoco { Id = secondRecipeId, TargetItemId = secondItemId });
-    //     _itemRepository.Get(secondItemId).Returns(new ItemPoco { Id = secondItemId, Name = _itemName });
-    //
-    //     var result = await _craftRepository.GetBestCraftsForWorld(_worldId);
-    //
-    //     Assert.That(result.Count, Is.EqualTo(2));
-    //     await _calc.Received(1).CalculateCraftingCostForItem(_worldId, _itemId);
-    //     await _calc.Received(1).CalculateCraftingCostForItem(_worldId, secondItemId);
-    //     _recipeRepository.Received(1).Get(_recipeId);
-    //     _recipeRepository.Received(1).Get(secondRecipeId);
-    //     _priceRepository.Received(1).Get(_worldId, _itemId);
-    //     _priceRepository.Received(1).Get(_worldId, secondItemId);
-    //     _itemRepository.Received(1).Get(_itemId);
-    //     _itemRepository.Received(1).Get(secondItemId);
-    // }
-    //
-    // [Test]
-    // public async Task GivenGetBestCrafts_WhenARecipeThrowsAnExeption_ThenAnErrorIsLoggedAndOthersRecipesAreReturned()
-    // {
-    //     var crafts = GetCrafts();
-    //     var goodRecipe = crafts[0];
-    //     var badRecipe = crafts[1];
-    //     _calc.CalculateCraftingCostForItem(_worldId, goodRecipe.TargetItemId).Returns((goodRecipe.Id, 600));
-    //     _calc.CalculateCraftingCostForItem(_worldId, badRecipe.TargetItemId).Throws<ArithmeticException>();
-    //
-    //     var result = await _craftRepository.GetBestCraftsForWorld(_worldId);
-    //
-    //     // await _calc.Received(1).CalculateCraftingCostForItem(_worldId, goodRecipe.TargetItemId);
-    //     // await _calc.Received(1).CalculateCraftingCostForItem(_worldId, badRecipe.TargetItemId);
-    //     Assert.That(result.Count, Is.EqualTo(1));
-    //     _recipeRepository.Received(1).Get(goodRecipe.Id);
-    //     _logger
-    //         .DidNotReceive()
-    //         .LogError($"Failed to calculate best craft for item {goodRecipe.TargetItemId} in world {_worldId}");
-    //     _logger
-    //         .Received(1)
-    //         .LogError($"Failed to calculate best craft for item {badRecipe.TargetItemId} in world {_worldId}");
-    // }
-
     [Test]
     public async Task GivenAGetBestCraft_WhenTheIdIsValidAndUncached_ThenWeCacheTheNewEntry()
     {
@@ -126,7 +77,6 @@ public class CraftRepositoryTests
         _cache.Received(1).Add((_worldId, _itemId),
             Arg.Is<CraftSummaryPoco>(s => s.ItemId == _itemId && s.WorldId == _worldId));
     }
-
 
     [Test]
     public async Task GivenAGetBestCraft_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
@@ -168,6 +118,8 @@ public class CraftRepositoryTests
         _recipeRepository.GetAll().Returns(GetCrafts());
 
         _recipeCostRepository = Substitute.For<IRecipeCostRepository>();
+        _recipeProfitRepository = Substitute.For<IRecipeProfitRepository>();
+
         _itemRepository = Substitute.For<IItemRepository>();
         _itemRepository.Get(_itemId).Returns(new ItemPoco { Id = _itemId, Name = _itemName });
 
@@ -184,6 +136,7 @@ public class CraftRepositoryTests
             _priceRepository,
             _recipeRepository,
             _recipeCostRepository,
+            _recipeProfitRepository,
             _itemRepository,
             _cache,
             _logger
