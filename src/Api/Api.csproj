@@ -5,7 +5,7 @@
     <RootNamespace>GilGoblin.Api</RootNamespace>
     <PackageId>GilGoblin.Api</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.4.0-alpha</Version>
+    <Version>0.5.0</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -24,10 +24,10 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-    <ProjectReference Include="../Database/*Database.csproj"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.6.*" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="icon.png" Pack="true" PackagePath="/"/>

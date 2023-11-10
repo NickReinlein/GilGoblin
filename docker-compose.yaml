@@ -4,9 +4,9 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    image: nickreinlein/gilgoblin-database
-    # image: database
-    # build: src/Database/
+    # image: nickreinlein/gilgoblin-database
+    image: database
+    build: src/Database/
     container_name: database
     environment:
       POSTGRES_DB: gilgoblin
@@ -33,9 +33,9 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    image: nickreinlein/gilgoblin-api
-    # image: api
-    # build: src/Api/
+    # image: nickreinlein/gilgoblin-api
+    image: api
+    build: src/Api/
     container_name: api
     depends_on:
       - gilgoblin-database
@@ -54,24 +54,24 @@ services:
         max-size: '50m'
     restart: unless-stopped
 
-  gilgoblin-dataupdater:
-    image: nickreinlein/gilgoblin-dataupdater
-    container_name: dataupdater
-    depends_on:
-      - gilgoblin-database
-      - gilgoblin-api
-    healthcheck:
-      test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - gilgoblin  
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '50m'
-    restart: unless-stopped
+  # gilgoblin-dataupdater:
+  #   image: nickreinlein/gilgoblin-dataupdater
+  #   container_name: dataupdater
+  #   depends_on:
+  #     - gilgoblin-database
+  #     - gilgoblin-api
+  #   healthcheck:
+  #     test: [ "CMD-SHELL" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - gilgoblin  
+  #   logging:
+  #     driver: 'json-file'
+  #     options:
+  #       max-size: '50m'
+  #   restart: unless-stopped
 
 networks:
   gilgoblin:
