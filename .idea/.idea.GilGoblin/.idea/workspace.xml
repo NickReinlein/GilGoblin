@@ -11,12 +11,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/ISingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/ISingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/ItemFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/ItemFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/TestGilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/TestGilGoblinDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,19 +97,27 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5537e977a5534805963c484d304d8d457e00/da/a4678abc/BaseItemPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/699b138c217049bdb610580416cd481613200/90/0b6025ff/GenericHostBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/740d777072e848ec82b3143378be3428a400/38/e1f0d926/BackgroundService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/74527ba778e24a6a86ec2c77fe16f0d511600/05/23493e3f/IServiceScope.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/74527ba778e24a6a86ec2c77fe16f0d511600/6c/05bff1d1/IServiceScopeFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/752389e2f1f640f8bf36451cdca5d0ce11600/54/dea75b12/ServiceProviderServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/752389e2f1f640f8bf36451cdca5d0ce11600/f5/5515832b/ServiceCollectionServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/75e72660bfaf4426bbed08f0df0639135c00/52/923b2244/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8476e36923654b7cbfe9abf9179f4dd327800/34/0565f321/Substitute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8476e36923654b7cbfe9abf9179f4dd327800/b4/a25d63b1/ReceivedCallsExceptionThrower.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/863c5a9eb0fd481e9b4fee5cf80fe1d1a29c00/0d/10601f28/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/863c5a9eb0fd481e9b4fee5cf80fe1d1a29c00/50/84f43bd1/Int32.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/886141c7401142a095cb8f405ec58f1d66400/88/8a4d634d/GenericWebHostBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/886141c7401142a095cb8f405ec58f1d66400/d1/bdc28929/ConfigureServicesBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9b2d7c9f9ffe42a6b3a7c15b0709ddba16600/86/bbd67cab/HttpContentJsonExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a746bf4ce98a4ff2a4e5f9d1c24279202bc00/f2/0638852f/ServiceProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/4a/b0b3a1e3/List`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/4e/7bc6a88d/SR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/4e/e7883aff/ArgumentNullException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/5e/e1fa4f8f/DateTime.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/84/e2545be8/Int32.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/adbfcb38923b43d89a4fc561760dfb78a29c00/fb/89bb1f9c/TargetInvocationException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c6b58d231e3247c394aee854f7305fa763600/8c/82dba9d3/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c6b58d231e3247c394aee854f7305fa763600/b7/2e411e10/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/00/a59e7a53/PricePoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/3c/c8ee8fd1/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d18cc02608b24eb3a78e0290a2698d118800/cf/0ce204e2/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
@@ -113,6 +129,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e93b6a3c2f044d70b99a615754501eed1a6400/06/d0874b7a/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e93b6a3c2f044d70b99a615754501eed1a6400/8b/1d8e4686/HttpResponseMessage.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e93b6a3c2f044d70b99a615754501eed1a6400/ea/1240cc3b/HttpContent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ee1edc5e7eec469f82bd9a8fb1d9d53847000/3d/e61a4e4d/IApplicationBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ef2d5d81e08243859b59aadd7a70f4a72bc00/2e/33d7f9de/CallSiteRuntimeResolver.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ef2d5d81e08243859b59aadd7a70f4a72bc00/54/b8efa8b7/ServiceProviderEngineScope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2c60ab42515ea596bd551d5b8798e63cd7a2affb036bba5e68b15251a3d49bc/InMemoryDbContextOptionsExtensions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -122,6 +139,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/56f8ed935d52a0e0292cd78ba4d93186e1c0f5ccc91a0bd4ea91b7719e1d3d0/WebApplicationFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5f804acf14aa61d9aedb48e11eb0c2d7bc8862e1ac9a347dde7534eb3c23b991/NpgsqlConnection.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/60b8f1a672fd8b63dc7799d196c618262e3e8d9652dc78b9b45fff1c1da826d/CsvConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/70df3e5caa697356d2da36622f77875efdb4473eafb5bfb84fe07e71a22b9499/EntityFrameworkServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/87629731af04bb03578c1b6aa46c564e8e7e4647ea8f1b844cfd9e658ab30/BackgroundService.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/88dc926c35aa123de453aad9d52d70a823677174c692fc447d5d7c9dabf744a/DbContextOptionsBuilder`.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/aacc74311ca994f12b71cddb22241be9d6654c65e94f5985c5488dee396916f/DbContext.cs" root0="SKIP_HIGHLIGHTING" />
@@ -171,37 +189,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Rider.SolutionAnalysis.ShowPreview": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "improve-test-coverage",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/tests/DataUpdater",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "RiderDotCoverFilteringPageId",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Rider.SolutionAnalysis.ShowPreview&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;improve-test-coverage&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/tests/DataUpdater&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderDotCoverFilteringPageId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Markdown"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Markdown&quot;
     ],
-    "rider.external.source.directories": [
-      "/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
-      "/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache",
-      "/home/lemoneleven/.local/share/Symbols/src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
+      &quot;/home/lemoneleven/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Api: https">
     <configuration name="Publish Database to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/src/Database/bin/Release/net7.0/publish" target_framework="net7.0" uuid_high="1523818118304254509" uuid_low="-7370053201059395975" />
@@ -342,15 +360,10 @@
       <workItem from="1699297389281" duration="468000" />
       <workItem from="1699297869036" duration="857000" />
       <workItem from="1699471369018" duration="859000" />
-      <workItem from="1699473615484" duration="7402000" />
-    </task>
-    <task id="LOCAL-00014" summary="WIP merging 2 branches">
-      <option name="closed" value="true" />
-      <created>1697136116627</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1697136116627</updated>
+      <workItem from="1699473615484" duration="8283000" />
+      <workItem from="1699542138505" duration="15114000" />
+      <workItem from="1699624768728" duration="8737000" />
+      <workItem from="1699643326330" duration="361000" />
     </task>
     <task id="LOCAL-00015" summary="Fixed most errors">
       <option name="closed" value="true" />
@@ -736,16 +749,25 @@
       <option name="project" value="LOCAL" />
       <updated>1699297416051</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="more tests">
+      <option name="closed" value="true" />
+      <created>1699484477131</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1699484477132</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="141" />
+    <option name="coveragePercentColumnWidth" value="82" />
     <option name="sortOrder" value="ASCENDING" />
-    <option name="symbolColumnWidth" value="405" />
+    <option name="sortedColumn" value="1" />
+    <option name="symbolColumnWidth" value="318" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -789,7 +811,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fixing more tests" />
     <MESSAGE value="started price updater" />
     <MESSAGE value="finished initial price updater" />
     <MESSAGE value="fixed issue saving recipecost" />
@@ -814,7 +835,8 @@
     <MESSAGE value="Restructure code and services" />
     <MESSAGE value="began price updater tests" />
     <MESSAGE value="updates for test coverage command &amp; started new tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="updates for test coverage command &amp; started new tests" />
+    <MESSAGE value="more tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="more tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -905,7 +927,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
-          <line>30</line>
+          <line>31</line>
           <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="26" containingFunctionPresentation="Method 'FetchByIdsAsync'" />
           <option name="timeStamp" value="259" />
         </line-breakpoint>
@@ -942,7 +964,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
-          <line>52</line>
+          <line>53</line>
           <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="48" containingFunctionPresentation="Method 'FetchAndSerializeDataAsync'" />
           <option name="timeStamp" value="275" />
         </line-breakpoint>
@@ -954,7 +976,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
-          <line>54</line>
+          <line>55</line>
           <properties documentPath="$PROJECT_DIR$/src/Fetcher/SingleDataFetcher.cs" initialLine="50" containingFunctionPresentation="Method 'FetchAndSerializeDataAsync'" />
           <option name="timeStamp" value="277" />
         </line-breakpoint>
@@ -983,12 +1005,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="307" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>32</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="28" containingFunctionPresentation="Method 'SaveAsync'" />
-          <option name="timeStamp" value="346" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs</url>
@@ -1152,45 +1168,6 @@
           <option name="timeStamp" value="419" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>35</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="31" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="1050" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1085" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="420" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>33</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="29" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="977" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1019" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="421" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>39</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="35" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="1254" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1274" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="423" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Database/PriceSaverTests.cs</url>
           <line>46</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" initialLine="46" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateIsValid_ThenWeLogSuccessAndReturnTrue'">
@@ -1204,19 +1181,6 @@
           <option name="timeStamp" value="429" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>30</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="30" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="816" />
-            </startOffsets>
-            <endOffsets>
-              <option value="891" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="430" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Database/DataSaverTests.cs</url>
           <line>60</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="60" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
@@ -1228,6 +1192,188 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="433" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="30" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="816" />
+            </startOffsets>
+            <endOffsets>
+              <option value="891" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="434" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>40</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="40" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="1291" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1354" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="435" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Database/DataSaverTests.cs</url>
+          <line>63</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="63" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
+            <startOffsets>
+              <option value="1801" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1869" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="438" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Database/PriceSaverTests.cs</url>
+          <line>62</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" initialLine="62" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
+            <startOffsets>
+              <option value="1853" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1899" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="445" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>119</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="113" containingFunctionPresentation="Method 'FillItemIdCache'">
+            <startOffsets>
+              <option value="4315" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4341" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="449" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs</url>
+          <line>64</line>
+          <properties documentPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" initialLine="55" containingFunctionPresentation="Method 'GivenFetchAsync_WhenNoMarketableItemsAreReturned_ThenWeLogAnError'">
+            <startOffsets>
+              <option value="2538" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2619" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="452" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>107</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="101" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="3783" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3868" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="454" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
+          <line>82</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="81" containingFunctionPresentation="Method 'FetchUpdatesForIdsAsync'">
+            <startOffsets>
+              <option value="2574" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2619" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="456" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>86</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="77" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="2848" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2891" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="457" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>124</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="115" containingFunctionPresentation="Method 'FillItemIdCache'">
+            <startOffsets>
+              <option value="4525" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4587" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="464" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>51</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="51" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
+            <startOffsets>
+              <option value="1683" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1704" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="478" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>71</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="70" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2332" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2396" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="480" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>85</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="85" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="2804" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2831" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="481" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs</url>
+          <line>51</line>
+          <properties documentPath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" initialLine="51" containingFunctionPresentation="Method 'FetchAndSerializeDataAsync'">
+            <startOffsets>
+              <option value="1316" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1359" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="482" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

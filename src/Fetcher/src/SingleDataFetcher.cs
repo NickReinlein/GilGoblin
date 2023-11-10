@@ -10,7 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public abstract class SingleDataFetcher<T> : DataFetcher<T>
+
+public abstract class SingleDataFetcher<T> : DataFetcher<T>, ISingleDataFetcher<T>
     where T : class, IIdentifiable
 {
     public SingleDataFetcher(
@@ -52,19 +53,18 @@ public abstract class SingleDataFetcher<T> : DataFetcher<T>
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            var data = ReadResponseContentAsync(response.Content);
-            return data;
+            return await ReadResponseContentAsync(response.Content);
         }
         catch
         {
-            Logger.LogError($"Failed GET call for {nameof(T)} with path: {path}");
+            Logger.LogError($"Failed GET call for {typeof(T).Name} with path: {path}");
             return null;
         }
     }
 
-    protected virtual T ReadResponseContentAsync(HttpContent content)
+    public virtual async Task<T> ReadResponseContentAsync(HttpContent content)
     {
-        return content.ReadFromJsonAsync<T>().Result;
+        return await content.ReadFromJsonAsync<T>();
     }
 
     protected virtual string GetUrlPathFromEntry(int id, int? worldId = null)

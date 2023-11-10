@@ -1,10 +1,11 @@
+using System;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GilGoblin.Database.Tests;
+namespace GilGoblin.Tests.Database;
 
 public class InMemoryTestDb
 {
@@ -46,7 +47,7 @@ public class InMemoryTestDb
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.RecipeCost.AddRange(
-            new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107},
+            new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107 },
             new RecipeCostPoco { WorldId = 22, RecipeId = 12, Cost = 297 },
             new RecipeCostPoco { WorldId = 33, RecipeId = 88, Cost = 224 },
             new RecipeCostPoco { WorldId = 44, RecipeId = 99, Cost = 351 }
@@ -58,10 +59,38 @@ public class InMemoryTestDb
             new RecipePoco { Id = 44, TargetItemId = 333 }
         );
         context.Price.AddRange(
-            new PricePoco { WorldId = 22, ItemId = 11 },
-            new PricePoco { WorldId = 22, ItemId = 12 },
-            new PricePoco { WorldId = 33, ItemId = 88 },
-            new PricePoco { WorldId = 44, ItemId = 99 }
+            new PricePoco
+            {
+                WorldId = 22,
+                ItemId = 11,
+                AverageListingPrice = 11f,
+                AverageSold = 33f,
+                LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            },
+            new PricePoco
+            {
+                WorldId = 22,
+                ItemId = 12,
+                AverageListingPrice = 33f,
+                AverageSold = 24f,
+                LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            },
+            new PricePoco
+            {
+                WorldId = 33,
+                ItemId = 88,
+                AverageListingPrice = 65f,
+                AverageSold = 55f,
+                LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            },
+            new PricePoco
+            {
+                WorldId = 44,
+                ItemId = 99,
+                AverageListingPrice = 87f,
+                AverageSold = 59f,
+                LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            }
         );
         context.Item.AddRange(
             new ItemPoco { Id = 1, Name = "Item 1" },

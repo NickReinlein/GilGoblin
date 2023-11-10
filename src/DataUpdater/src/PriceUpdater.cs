@@ -17,7 +17,7 @@ namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 {
-    private List<int> _allItemIds;
+    public List<int> AllItemIds { get; private set; }
     private const int dataExpiryInHours = 48;
 
     public PriceUpdater(
@@ -47,13 +47,21 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 if (fetched.Any())
                     await ConvertAndSaveToDbAsync(fetched);
 
-                await AwaitDelay(ct);
+                try
+                {
+                    await AwaitDelay(ct);
+                }
+                catch (TaskCanceledException)
+                {
+                    const string message =
+                        $"The cancellation token was cancelled. Ending service {nameof(PriceUpdater)}";
+                    Logger.LogInformation(message);
+                }
             }
 
             return;
         }
     }
-
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
@@ -76,40 +84,14 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         try
         {
             if (worldId is null or < 1)
-                throw new Exception("World Id cannot be null");
+                throw new Exception("World Id is invalid");
 
-            using var scope = ScopeFactory.CreateScope();
-            var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-
-            if (_allItemIds is null || !_allItemIds.Any())
-            {
-                _allItemIds = new List<int>();
-                var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
-
-                var recipePocos = gilGoblinDbContext.Recipe.Cast<RecipePoco>().ToList();
-                var ingredientItemIds =
-                    recipePocos
-                        .SelectMany(r =>
-                            r.GetActiveIngredients()
-                                .Select(i => i.ItemId))
-                        .Distinct()
-                        .ToList();
-
-                _allItemIds =
-                    marketableItemIdList
-                        .Concat(ingredientItemIds)
-                        .ToHashSet()
-                        .ToList();
-            }
-
-            if (!_allItemIds.Any())
-                throw new WebException("Failed to fetch Marketable Item Ids");
+            var gilGoblinDbContext = await FillItemIdCache();
 
             var world = worldId.GetValueOrDefault();
             var currentPrices = gilGoblinDbContext.Price.Where(cp => cp.WorldId == world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
-            var newPriceIds = _allItemIds.Except(currentPriceIds).ToList();
+            var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
 
             var outdatedPrices = currentPrices.Where(p =>
             {
@@ -126,6 +108,38 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
             return new List<int>();
         }
+    }
+
+    private async Task<GilGoblinDbContext> FillItemIdCache()
+    {
+        using var scope = ScopeFactory.CreateScope();
+        var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
+        var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+
+        if (AllItemIds is not null && AllItemIds.Any())
+            return gilGoblinDbContext;
+
+        AllItemIds = new List<int>();
+        var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
+        if (!marketableItemIdList.Any())
+            throw new WebException("Failed to fetch marketable item ids");
+
+        var recipePocos = gilGoblinDbContext.Recipe.Cast<RecipePoco>().ToList();
+        var ingredientItemIds =
+            recipePocos
+                .SelectMany(r =>
+                    r.GetActiveIngredients()
+                        .Select(i => i.ItemId))
+                .Distinct()
+                .ToList();
+
+        AllItemIds =
+            marketableItemIdList
+                .Concat(ingredientItemIds)
+                .ToHashSet()
+                .ToList();
+
+        return gilGoblinDbContext;
     }
 
     private async Task AwaitDelay(CancellationToken ct)

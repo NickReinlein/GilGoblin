@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GilGoblin.Fetcher;
 
@@ -31,12 +32,11 @@ public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
     public static readonly string ColumnsSuffix =
         "?columns=ID,Name,Description,IconID,PriceMid,PriceLow,StackSize,LevelItem,CanBeHq";
 
-    protected override ItemWebPoco ReadResponseContentAsync(HttpContent content)
-        => JsonSerializer.DeserializeAsync<ItemWebPoco>(
-            content.ReadAsStream(),
+    public override async Task<ItemWebPoco> ReadResponseContentAsync(HttpContent content)
+        => await JsonSerializer.DeserializeAsync<ItemWebPoco>(
+            await content.ReadAsStreamAsync(),
             GetSerializerOptions(),
-            CancellationToken.None
-        ).Result;
+            CancellationToken.None);
 
     public static JsonSerializerOptions GetSerializerOptions() => new()
     {

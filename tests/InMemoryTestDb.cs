@@ -16,7 +16,6 @@ public class InMemoryTestDb
     public virtual void OneTimeSetUp()
     {
         _configuration = Substitute.For<IConfiguration>();
-
         _options = Substitute.For<DbContextOptions<TestGilGoblinDbContext>>();
         _options = new DbContextOptionsBuilder<TestGilGoblinDbContext>().Options;
     }
@@ -54,10 +53,10 @@ public class InMemoryTestDb
             new RecipeCostPoco { WorldId = 44, RecipeId = 99, Cost = 351 }
         );
         context.Recipe.AddRange(
-            new RecipePoco { Id = 11, TargetItemId = 111 },
-            new RecipePoco { Id = 22, TargetItemId = 111 },
-            new RecipePoco { Id = 33, TargetItemId = 222 },
-            new RecipePoco { Id = 44, TargetItemId = 333 }
+            new RecipePoco { Id = 11, TargetItemId = 111, ItemIngredient0TargetId = 11, AmountIngredient0 = 3 },
+            new RecipePoco { Id = 22, TargetItemId = 111, ItemIngredient0TargetId = 12, AmountIngredient0 = 5  },
+            new RecipePoco { Id = 33, TargetItemId = 222, ItemIngredient0TargetId = 88, AmountIngredient0 = 7  },
+            new RecipePoco { Id = 44, TargetItemId = 333, ItemIngredient0TargetId = 99, AmountIngredient0 = 2  }
         );
         context.Price.AddRange(
             new PricePoco

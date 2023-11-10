@@ -26,7 +26,7 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     protected readonly IServiceScopeFactory ScopeFactory;
     protected readonly ILogger<DataUpdater<T, U>> Logger;
 
-    public DataUpdater(
+    protected DataUpdater(
         IServiceScopeFactory scopeFactory,
         ILogger<DataUpdater<T, U>> logger)
     {
@@ -79,6 +79,7 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         try
         {
             var idList = idsToUpdate.ToList();
+
             using var scope = ScopeFactory.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
             var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;

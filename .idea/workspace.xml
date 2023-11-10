@@ -5,11 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" beforeDir="false" afterPath="$PROJECT_DIR$/GenerateTestCoverageCommands.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/GilGoblinDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/ISingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/ISingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/ItemFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/ItemFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/TestGilGoblinDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/TestGilGoblinDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/ItemFetcherTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

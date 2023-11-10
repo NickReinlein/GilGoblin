@@ -23,8 +23,8 @@ public class PriceSaver : DataSaver<PricePoco>
                    p.ItemId == updated.ItemId);
 
     public override bool SanityCheck(IEnumerable<PricePoco> updates)
-        => !updates.Any(price => price.AverageListingPrice <= 1 ||
-                                price.AverageSold <= 1 ||
+        => !updates.Any(price => price.AverageListingPrice <= 0 ||
+                                price.AverageSold <= 0 ||
                                 price.WorldId <= 0 ||
                                 price.ItemId <= 0 ||
                                 price.LastUploadTime <= 0);

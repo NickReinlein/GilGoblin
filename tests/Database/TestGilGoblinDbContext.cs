@@ -1,7 +1,8 @@
+using GilGoblin.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace GilGoblin.Database.Tests;
+namespace GilGoblin.Tests.Database;
 
 public class TestGilGoblinDbContext : GilGoblinDbContext
 {

@@ -70,39 +70,45 @@ public class DataSaverTests : InMemoryTestDb
         });
     }
 
-    // [Test]
-    // public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
-    // {
-    //     const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
-    //     var updates = GetPocos();
-    //     updates.First().ItemId = -1;
-    //
-    //     var success = await _saver.SaveAsync(updates);
-    //
-    //     Assert.That(success, Is.False);
-    //     _logger.Received().LogError(errorMessage);
-    // }
-    //
-    // [Test]
-    // public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
-    // {
-    //     var updates = GetPocos(3);
-    //
-    //     var success = await _saver.SaveAsync(updates);
-    //
-    //     Assert.That(success);
-    //     foreach (var update in updates)
-    //     {
-    //         var db = await _context.Price.FindAsync(update.ItemId, update.WorldId);
-    //
-    //         Assert.Multiple(() =>
-    //         {
-    //             Assert.That(db, Is.Not.Null);
-    //             Assert.That(db.AverageSold, Is.EqualTo(update.AverageSold));
-    //             Assert.That(db.AverageListingPrice, Is.EqualTo(update.AverageListingPrice));
-    //         });
-    //     }
-    // }
+    [Test]
+    public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
+    {
+        const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
+        var updates = GetPocos();
+        updates.First().Id = -1;
+    
+        var success = await _saver.SaveAsync(updates);
+    
+        Assert.That(success, Is.False);
+        _logger.Received().LogError(errorMessage);
+    }
+    
+    [Test]
+    public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
+    {
+        var updates = GetPocos(3);
+    
+        var success = await _saver.SaveAsync(updates);
+    
+        Assert.That(success);
+        foreach (var update in updates)
+        {
+            var db = await _context.Item.FindAsync(update.Id);
+    
+            Assert.Multiple(() =>
+            {
+                Assert.That(db, Is.Not.Null);
+                Assert.That(db.Description, Is.EqualTo(update.Description));
+                Assert.That(db.Name, Is.EqualTo(update.Name));
+                Assert.That(db.PriceMid, Is.EqualTo(update.PriceMid));
+                Assert.That(db.PriceLow, Is.EqualTo(update.PriceLow));
+                Assert.That(db.Level, Is.EqualTo(update.Level));
+                Assert.That(db.StackSize, Is.EqualTo(update.StackSize));
+                Assert.That(db.IconId, Is.EqualTo(update.IconId));
+                Assert.That(db.CanHq, Is.EqualTo(update.CanHq));
+            });
+        }
+    }
 
     private static List<ItemPoco> GetPocos(int qty = 1)
     {
