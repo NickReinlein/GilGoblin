@@ -69,8 +69,8 @@ create table if not exists recipeprofit
 (
     recipeid INTEGER NOT NULL CHECK (recipeid > 0),
     worldid  INTEGER NOT NULL CHECK (worldid > 0),
-    profitvssold INTEGER NOT NULL CHECK (profitvssold > 0),
-    profitvslistings INTEGER NOT NULL CHECK (profitvslistings > 0),
+    profitvssold INTEGER NOT NULL,
+    profitvslistings INTEGER NOT NULL,
     updated  TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (recipeid, worldid)
 );

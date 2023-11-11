@@ -6,7 +6,7 @@
 
 The long-term goal is to have a website using this API's endpoints to display the top crafts for each crafting profession (specific to the user-selected world)
 
-**Features will includes the following**:
+**Currently developped features**:
 
 * :heavy_check_mark:  Getting the vendor cost, if available via vendor
 * :heavy_check_mark:  Getting the recipe to craft if the item can be crafted
@@ -14,17 +14,23 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark:  The minimum price of the vendor or the crafting cost or the market board is used to calculate a minimum cost
 * :heavy_check_mark:  The profitability per item is calculated based on the difference of current market prices and the estimated minimum cost
 * :heavy_check_mark:  A crafting calculator that breaks down recipes to ingredients
-* :heavy_check_mark:  Top things to craft
-* :construction:  A website displaying the top crafts for each profession for each world
+* :heavy_check_mark:  Top things to craft for a given FFXIV server/world
+
+*Upcoming*:
+
+* :construction:  A new service to pre-calculate costs and profits
+* :construction:  A website displaying the top crafts for each world
 
 *Nice-to-have*:
 
 * :question: Top things to gather
 * :question: Advanced filtering: Enter class levels to filter available recipes
+* :construction:  A website displaying the top crafts, *for each profession*, for each world
 
 *Not currently on the product roadmap*:
 
 * :heavy_multiplication_x: Filter for HQ/NQ
+* :heavy_multiplication_x: Any interactions with the market board or in-game
 
 ## Docker Images
 

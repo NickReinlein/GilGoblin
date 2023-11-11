@@ -63,8 +63,6 @@ public class CraftingCalculator : ICraftingCalculator
                 return ERROR_DEFAULT_COST;
 
             var ingredientPrices = GetIngredientPrices(worldId, recipe.TargetItemId, ingredients).ToList();
-            if (!ingredientPrices.Any())
-                return ERROR_DEFAULT_COST;
 
             var craftingCost = await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
 
@@ -203,7 +201,7 @@ public class CraftingCalculator : ICraftingCalculator
         }
 
         if (!result.Any())
-            throw new DataException();
+            throw new DataException($"Failed to find ingredient prices for item {itemId} in world {worldId}");
 
         return result;
     }

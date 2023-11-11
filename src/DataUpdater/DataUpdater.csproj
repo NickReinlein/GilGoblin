@@ -20,10 +20,10 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
-    <PackageReference Include="EntityFramework" Version="6.4.0"/>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.*"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
     <PackageReference Include="GilGoblin.Fetcher" Version="0.1.1-alpha"/>
     <PackageReference Include="GilGoblin.Batcher" Version="0.2.0"/>
   </ItemGroup>

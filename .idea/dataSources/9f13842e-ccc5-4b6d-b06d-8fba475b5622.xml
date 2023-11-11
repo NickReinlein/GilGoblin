@@ -11,9 +11,9 @@
 4||10|c|G
 4||10|C|G
 4||10|T|G</Grants>
-      <IntrospectionStateNumber>15325</IntrospectionStateNumber>
+      <IntrospectionStateNumber>18295</IntrospectionStateNumber>
       <ServerVersion>16.0</ServerVersion>
-      <StartupTime>1699643312</StartupTime>
+      <StartupTime>1699722810</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -810,7 +810,7 @@ false posixrules
 13209||10|C|G
 13209||-9223372036854775808|U|G
 13209||10|U|G</Grants>
-      <IntrospectionStateNumber>15325</IntrospectionStateNumber>
+      <IntrospectionStateNumber>18295</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>gilgoblin</OwnerName>
     </database>
@@ -4234,9 +4234,9 @@ false posixrules
     <schema id="264" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>15325</IntrospectionStateNumber>
-      <IntrospectionTimestamp>2023-11-10.15:13:33.228</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-11-10.20:13:33</LocalIntrospectionTimestamp>
+      <IntrospectionStateNumber>18295</IntrospectionStateNumber>
+      <IntrospectionTimestamp>2023-11-11.12:14:40.827</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-11-11.17:14:41</LocalIntrospectionTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4267,7 +4267,7 @@ false posixrules
     </table>
     <table id="269" parent="264" name="recipeprofit">
       <ObjectId>40983</ObjectId>
-      <StateNumber>15324</StateNumber>
+      <StateNumber>15328</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>gilgoblin</OwnerName>
     </table>
@@ -4694,66 +4694,54 @@ worldid</ColNames>
       <StateNumber>847</StateNumber>
       <UnderlyingIndexId>24611</UnderlyingIndexId>
     </key>
-    <check id="330" parent="269" name="recipeprofit_profitvslistings_check">
-      <ColNames>profitvslistings</ColNames>
-      <ObjectId>40989</ObjectId>
-      <Predicate>profitvslistings &gt; 0</Predicate>
-      <StateNumber>15324</StateNumber>
-    </check>
-    <check id="331" parent="269" name="recipeprofit_profitvssold_check">
-      <ColNames>profitvssold</ColNames>
-      <ObjectId>40988</ObjectId>
-      <Predicate>profitvssold &gt; 0</Predicate>
-      <StateNumber>15324</StateNumber>
-    </check>
-    <check id="332" parent="269" name="recipeprofit_recipeid_check">
+    <check id="330" parent="269" name="recipeprofit_recipeid_check">
       <ColNames>recipeid</ColNames>
       <ObjectId>40986</ObjectId>
       <Predicate>recipeid &gt; 0</Predicate>
       <StateNumber>15324</StateNumber>
     </check>
-    <check id="333" parent="269" name="recipeprofit_worldid_check">
+    <check id="331" parent="269" name="recipeprofit_worldid_check">
       <ColNames>worldid</ColNames>
       <ObjectId>40987</ObjectId>
       <Predicate>worldid &gt; 0</Predicate>
       <StateNumber>15324</StateNumber>
     </check>
-    <column id="334" parent="269" name="recipeid">
+    <column id="332" parent="269" name="recipeid">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StateNumber>15324</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="335" parent="269" name="worldid">
+    <column id="333" parent="269" name="worldid">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>15324</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="336" parent="269" name="profitvssold">
+    <column id="334" parent="269" name="profitvssold">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>15324</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="337" parent="269" name="profitvslistings">
+    <column id="335" parent="269" name="profitvslistings">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>15324</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="338" parent="269" name="updated">
+    <column id="336" parent="269" name="updated">
       <DasType>timestamp with time zone|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>15324</StateNumber>
       <TypeId>1184</TypeId>
     </column>
-    <index id="339" parent="269" name="recipeprofit_pkey">
+    <index id="337" parent="269" name="recipeprofit_pkey">
       <ColNames>recipeid
 worldid</ColNames>
       <NameSurrogate>1</NameSurrogate>
@@ -4763,7 +4751,7 @@ worldid</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="340" parent="269" name="recipeprofit_pkey">
+    <key id="338" parent="269" name="recipeprofit_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>40991</ObjectId>
       <Primary>1</Primary>
