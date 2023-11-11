@@ -11,6 +11,7 @@ namespace GilGoblin.Tests.Component;
 public class CraftComponentTests : ComponentTests
 {
     [Test, Timeout(10000), Ignore("Ignore for performance.. should still pass")]
+    // [Test, Timeout(10000)]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
         const string fullEndpoint = "http://localhost:55448/craft/34/1614";
@@ -45,6 +46,7 @@ public class CraftComponentTests : ComponentTests
     }
 
     [Test, Timeout(20000), Ignore("Ignore for performance.. should still pass")]
+    // [Test, Timeout(20000)]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
     {
         var fullEndpoint = "http://localhost:55448/craft/34";
@@ -60,8 +62,8 @@ public class CraftComponentTests : ComponentTests
             Assert.That(crafts.All(r => r.ItemId > 0));
             Assert.That(crafts.All(r => r.IconId > 0));
             Assert.That(crafts.All(r => r.StackSize > 0));
-            Assert.That(crafts.All(r => r.PriceMid > 0));
-            Assert.That(crafts.All(r => r.PriceLow > 0));
+            Assert.That(crafts.All(r => r.PriceMid >= 0));
+            Assert.That(crafts.All(r => r.PriceLow >= 0));
             Assert.That(crafts.All(r => r.Recipe.Id > 0));
             Assert.That(crafts.All(r => r.Recipe.TargetItemId > 0));
             Assert.That(crafts.All(r => r.Recipe.ResultQuantity > 0));

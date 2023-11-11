@@ -3,7 +3,6 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
-[NonParallelizable]
 public class EndpointComponentTests : ComponentTests
 {
     [TestCaseSource(nameof(_allEndPoints))]

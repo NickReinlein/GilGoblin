@@ -2,9 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-    <RootNamespace>GilGoblin.Fetcher</RootNamespace>
-    <PackageId>GilGoblin.Fetcher</PackageId>
-    <Version>0.1.1-alpha</Version>
+    <RootNamespace>GilGoblin.DataUpdater</RootNamespace>
+    <PackageId>GilGoblin.DataUpdater</PackageId>
+    <OutputType>Exe</OutputType>
+    <Version>0.3.0</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -20,13 +21,15 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.0"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../Pocos/*Pocos.csproj"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
     <ProjectReference Include="../Database/*Database.csproj"/>
-    <ProjectReference Include="../Repository/*Repository.csproj"/>
+    <ProjectReference Include="../Fetcher/*Fetcher.csproj"/>
+    <ProjectReference Include="../Batcher/*Batcher.csproj"/>
   </ItemGroup>
   <ItemGroup>
+    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="icon.png" Pack="true" PackagePath="/"/>
