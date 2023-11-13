@@ -71,7 +71,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
             var success = await saver.SaveAsync(webPocos.ToPricePocoList());
             if (!success)
-                throw new DbUpdateException("Saving from DataSaver returned failure");
+                throw new DbUpdateException($"Saving from {nameof(PriceSaver)} returned failure");
         }
         catch (Exception e)
         {

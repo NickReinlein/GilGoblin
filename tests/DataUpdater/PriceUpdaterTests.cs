@@ -144,7 +144,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         _saver.ClearSubstitute();
         _saver.SaveAsync(default).Returns(false);
         var errorMessage =
-            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(DataSaver<PricePoco>)} returned failure";
+            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(PriceSaver)} returned failure";
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(1500);

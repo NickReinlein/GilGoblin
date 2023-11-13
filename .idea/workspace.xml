@@ -8,9 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/RecipeProfitRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/RecipeProfitRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/resources/01-db_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/resources/01-db_creation.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/DataUpdater.Tests.csproj_backup" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/DataUpdater.Tests.csproj_backup" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

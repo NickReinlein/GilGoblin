@@ -2,10 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-    <RootNamespace>GilGoblin.DataUpdater</RootNamespace>
-    <PackageId>GilGoblin.DataUpdater</PackageId>
+    <RootNamespace>GilGoblin.Accountant</RootNamespace>
+    <PackageId>GilGoblin.Accountant</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.3.0</Version>
+    <Version>0.1.0</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -23,10 +23,9 @@
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
-    <PackageReference Include="GilGoblin.Fetcher" Version="0.1.1-alpha"/>
-    <PackageReference Include="GilGoblin.Batcher" Version="0.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
     <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Api" Version="0.4.0-alpha"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>

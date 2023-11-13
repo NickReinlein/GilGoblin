@@ -73,5 +73,25 @@ services:
   #       max-size: '50m'
   #   restart: unless-stopped
 
+
+  gilgoblin-accountant:
+    # image: nickreinlein/gilgoblin-accountant
+    build: src/Accountant/
+    container_name: accountant
+    depends_on:
+      - gilgoblin-database
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gilgoblin  
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped
+
 networks:
   gilgoblin:

@@ -48,7 +48,7 @@ public class Startup
         AddGoblinCaches(services);
     }
 
-    private static void AddGoblinCaches(IServiceCollection services)
+    public static void AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
         services.AddScoped<IPriceCache, PriceCache>();
@@ -73,14 +73,14 @@ public class Startup
             .AddApplicationPart(typeof(RecipeController).Assembly);
     }
 
-    private static void AddGoblinCrafting(IServiceCollection services)
+    public static void AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
-    private static void AddGoblinDatabases(IServiceCollection services)
+    public static void AddGoblinDatabases(IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>();
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
