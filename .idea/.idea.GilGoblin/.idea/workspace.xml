@@ -12,22 +12,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Database/src/Pocos/BaseRecipeValue.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Accountant/PriceUpdaterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GilGoblin.sln" beforeDir="false" afterPath="$PROJECT_DIR$/GilGoblin.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeCostPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeProfitPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/RecipeProfitPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/DataUpdater.Tests.csproj_backup" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/DataUpdater.Tests.csproj_backup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Accountant/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,6 +71,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/b8/a8fea91d/IDataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f2/fdc055bc/IIdentifiable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f9/ff3d998e/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1800989ffd83457ab03f311a19430489e000/97/89ad8c71/Startup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/18f13f2b265c4a9e9649868a65591bc69000/c2/12128e1d/DataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1b046e286a344b85999e7c798bc1fc145e00/99/755f15a9/MockHttpMessageHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c318fdc22c8430794674d8040a071278800/17/c53e8010/IngredientPoco.cs" root0="SKIP_HIGHLIGHTING" />
@@ -157,6 +151,8 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eaf74182ad7c943aaf043fd9e7bbb1d564713c6bd276e62966aaa618e9/LoggerExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f536671e825030c7f17fbf3f75511651c281f2429edc8fd6ea660418f825949/BeforeAndAfterTestCommand.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Accountant/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/DataCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IDataCache.cs" root0="FORCE_HIGHLIGHTING" />
@@ -173,8 +169,7 @@
     <setting file="file://$PROJECT_DIR$/src/Batcher/Batcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/IBatcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs" root0="FORCE_HIGHLIGHTING" />
@@ -395,14 +390,8 @@
       <workItem from="1699722895555" duration="465000" />
       <workItem from="1699723372721" duration="6514000" />
       <workItem from="1699882473496" duration="10475000" />
-    </task>
-    <task id="LOCAL-00019" summary="WIP switch to Postgresql">
-      <option name="closed" value="true" />
-      <created>1697573715384</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1697573715384</updated>
+      <workItem from="1699916793895" duration="3185000" />
+      <workItem from="1699926741291" duration="716000" />
     </task>
     <task id="LOCAL-00020" summary="Functional postgres db created in database project. sql table script fails still">
       <option name="closed" value="true" />
@@ -788,7 +777,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699731828015</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="adding more services to the accountant">
+      <option name="closed" value="true" />
+      <created>1699917240948</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1699917240948</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -841,7 +838,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="finished initial price updater" />
     <MESSAGE value="fixed issue saving recipecost" />
     <MESSAGE value="fixed conversion issue for updater that prevented saving to db due to format" />
     <MESSAGE value="updated db package" />
@@ -866,7 +862,8 @@
     <MESSAGE value="updates for test coverage command &amp; started new tests" />
     <MESSAGE value="more tests" />
     <MESSAGE value="solved package dependency error" />
-    <option name="LAST_COMMIT_MESSAGE" value="solved package dependency error" />
+    <MESSAGE value="adding more services to the accountant" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding more services to the accountant" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1124,10 +1121,10 @@
           <line>125</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Startup.cs" initialLine="125" containingFunctionPresentation="Method 'DatabaseValidation'">
             <startOffsets>
-              <option value="4171" />
+              <option value="4168" />
             </startOffsets>
             <endOffsets>
-              <option value="4249" />
+              <option value="4246" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="395" />

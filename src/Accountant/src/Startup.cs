@@ -34,27 +34,11 @@ public class Startup
 
     private void AddGoblinAccountingServices(IServiceCollection services)
     {
-        // services.AddDbContext<GilGoblinDbContext>();
-        //
-        // services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
-        // services.AddScoped<IItemRepository, ItemRepository>();
-        // services.AddScoped<IRecipeRepository, RecipeRepository>();
-        // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        // // services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
-        //
-        // services.AddScoped<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>();
-        // services.AddScoped<IDataSaver<RecipeProfitPoco>, DataSaver<RecipeProfitPoco>>();
-        //
-        // services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
-        // // services.AddScoped<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>();
-        //
-        // services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        // // services.AddScoped<IRecipeGrocer, RecipeGrocer>();
-        Api.Startup        AddGoblinCrafting(services);
-        AddGoblinDatabases(services);
-        AddGoblinControllers(services);
-        AddBasicBuilderServices(services);
-        AddGoblinCaches(services);
+        Api.Startup.AddGoblinCrafting(services);
+        Api.Startup.AddGoblinDatabases(services);
+        Api.Startup.AddGoblinCaches(services);
+
+        services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
 
         services.AddHostedService<RecipeCostAccountant>();
     }

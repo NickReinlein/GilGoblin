@@ -24,9 +24,14 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
-    <PackageReference Include="GilGoblin.Fetcher" Version="0.1.1-alpha"/>
-    <PackageReference Include="GilGoblin.Batcher" Version="0.2.0"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
+    <!--    <PackageReference Include="GilGoblin.Fetcher" Version="0.1.1-alpha"/>-->
+    <!--    <PackageReference Include="GilGoblin.Batcher" Version="0.2.0"/>-->
+    <!--    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>-->
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Database/Database.csproj"/>
+    <ProjectReference Include="../Fetcher/Fetcher.csproj"/>
+    <ProjectReference Include="../Batcher/Batcher.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>

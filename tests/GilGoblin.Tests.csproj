@@ -10,17 +10,19 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="EntityFramework" Version="6.4.4"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.11"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.11"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="7.0.11"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.11"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.11"/>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1"/>
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.*" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.*"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11"/>
     <PackageReference Include="NUnit" Version="3.13.*"/>
     <PackageReference Include="NUnit.Analyzers" Version="3.6.*"/>
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2"/>
