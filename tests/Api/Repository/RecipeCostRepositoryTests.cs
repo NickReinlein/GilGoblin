@@ -77,7 +77,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [TestCase(100)]
     public async Task GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
     {
-        await using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = await recipeCostRepo.GetAsync(22, id);

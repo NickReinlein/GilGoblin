@@ -145,7 +145,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
     private async Task AwaitDelay(CancellationToken ct)
     {
         var delay = GetApiSpamDelayInMs();
-        Logger.LogDebug($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
+        Logger.LogInformation($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
         await Task.Delay(delay, ct);
     }
 }

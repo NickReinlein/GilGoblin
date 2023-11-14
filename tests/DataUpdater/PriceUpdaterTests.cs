@@ -101,7 +101,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         cts.CancelAfter(1500);
         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(cts.Token, 34));
 
-        _logger.Received().LogDebug($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
+        _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
     }
 
     [Test]

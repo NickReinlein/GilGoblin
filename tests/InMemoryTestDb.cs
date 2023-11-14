@@ -48,19 +48,23 @@ public class InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         context.RecipeCost.AddRange(
-            new RecipeCostPoco { WorldId = 22, RecipeId = 11, Cost = 107, Updated = DateTimeOffset.Now },
-            new RecipeCostPoco { WorldId = 22, RecipeId = 12, Cost = 297, Updated = DateTimeOffset.Now },
-            new RecipeCostPoco { WorldId = 33, RecipeId = 88, Cost = 224, Updated = DateTimeOffset.Now },
-            new RecipeCostPoco { WorldId = 44, RecipeId = 99, Cost = 351, Updated = DateTimeOffset.Now }
+            new RecipeCostPoco { WorldId = 34, RecipeId = 11, Cost = 107, Updated = DateTimeOffset.Now },
+            new RecipeCostPoco { WorldId = 34, RecipeId = 12, Cost = 297, Updated = DateTimeOffset.Now },
+            new RecipeCostPoco { WorldId = 34, RecipeId = 88, Cost = 224, Updated = DateTimeOffset.Now },
+            new RecipeCostPoco { WorldId = 34, RecipeId = 99, Cost = 351, Updated = DateTimeOffset.Now }
         );
         context.RecipeProfit.AddRange(
             new RecipeProfitPoco
             {
-                WorldId = 22, RecipeId = 11, RecipeProfitVsListings = 107, Updated = DateTimeOffset.Now
+                WorldId = 34,
+                RecipeId = 11,
+                RecipeProfitVsListings = 107,
+                RecipeProfitVsSold = 94,
+                Updated = DateTimeOffset.Now
             },
             new RecipeProfitPoco
             {
-                WorldId = 22,
+                WorldId = 34,
                 RecipeId = 12,
                 RecipeProfitVsListings = 297,
                 RecipeProfitVsSold = 254,
@@ -68,7 +72,7 @@ public class InMemoryTestDb
             },
             new RecipeProfitPoco
             {
-                WorldId = 33,
+                WorldId = 34,
                 RecipeId = 88,
                 RecipeProfitVsListings = 224,
                 RecipeProfitVsSold = 218,
@@ -76,7 +80,7 @@ public class InMemoryTestDb
             },
             new RecipeProfitPoco
             {
-                WorldId = 44,
+                WorldId = 34,
                 RecipeId = 99,
                 RecipeProfitVsListings = 351,
                 RecipeProfitVsSold = 317,
@@ -92,7 +96,7 @@ public class InMemoryTestDb
         context.Price.AddRange(
             new PricePoco
             {
-                WorldId = 22,
+                WorldId = 34,
                 ItemId = 11,
                 AverageSold = 133f,
                 AverageListingPrice = 241f,
@@ -100,7 +104,7 @@ public class InMemoryTestDb
             },
             new PricePoco
             {
-                WorldId = 22,
+                WorldId = 34,
                 ItemId = 12,
                 AverageSold = 245f,
                 AverageListingPrice = 377f,
@@ -108,7 +112,7 @@ public class InMemoryTestDb
             },
             new PricePoco
             {
-                WorldId = 33,
+                WorldId = 34,
                 ItemId = 88,
                 AverageSold = 247f,
                 AverageListingPrice = 361f,
@@ -116,10 +120,18 @@ public class InMemoryTestDb
             },
             new PricePoco
             {
-                WorldId = 44,
+                WorldId = 34,
                 ItemId = 99,
                 AverageSold = 387f,
                 AverageListingPrice = 477f,
+                LastUploadTime = unixEpochTimestamp
+            },
+            new PricePoco
+            {
+                WorldId = 34,
+                ItemId = 9001,
+                AverageSold = 1011f,
+                AverageListingPrice = 1051f,
                 LastUploadTime = unixEpochTimestamp
             }
         );

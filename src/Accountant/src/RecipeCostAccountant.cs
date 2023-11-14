@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using GilGoblin.Api.Crafting;
+using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,30 +24,23 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
 
     protected override async Task ComputeAsync(int worldId, List<int> idList, CancellationToken ct)
     {
-        while (!ct.IsCancellationRequested)
+        try
         {
-            try
-            {
-                await using var gilGoblinDbContext = GetDbContext();
-                var pricesToCompute = gilGoblinDbContext.Price.Where(i => idList.Contains(i.GetId())).ToList();
-                foreach (var price in pricesToCompute)
-                {
-                    
-                }
-
-                var delay = TimeSpan.FromMinutes(5);
-                Logger.LogInformation($"Awaiting delay of {delay}");
-                await Task.Delay(delay, ct);
-            }
-            catch (TaskCanceledException)
-            {
-                Logger.LogInformation("Task was cancelled by user. Putting away the books, boss!");
-                return;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"An unexpected exception occured during accounting process: {ex.Message}");
-            }
+            using var scope = ScopeFactory.CreateScope();
+            var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
+            // var pricesToCompute = gilGoblinDbContext.Price.Where(i => idList.Contains(i.GetId())).ToList();
+            // foreach (var price in pricesToCompute)
+            // {
+            // }
+        }
+        catch (TaskCanceledException)
+        {
+            Logger.LogInformation("Task was cancelled by user. Putting away the books, boss!");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"An unexpected exception occured during accounting process: {ex.Message}");
         }
     }
 
@@ -59,7 +54,8 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             if (worldId < 1)
                 throw new Exception("World Id is invalid");
 
-            using var gilGoblinDbContext = GetDbContext();
+            using var scope = ScopeFactory.CreateScope();
+            var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
             var priceCosts = gilGoblinDbContext.RecipeCost.Where(cp => cp.WorldId == worldId).ToList();
             var priceCostIds = priceCosts.Select(i => i.GetId()).ToList();
@@ -70,10 +66,22 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
 
             foreach (var price in prices)
             {
-                var current = priceCosts.Find(c => c.GetId() == price.GetId());
-                var timeDelta = price.LastUploadTime - current.Updated.ToUnixTimeMilliseconds();
-                if (timeDelta > timeThreshold)
-                    idsToUpdate.Add(current.GetId());
+                try
+                {
+                    var current = priceCosts.FirstOrDefault(c => c.GetId() == price.GetId());
+                    if (current is null)
+                        continue;
+
+                    var timeDelta = price.LastUploadTime - current.Updated.ToUnixTimeMilliseconds();
+                    if (timeDelta > timeThreshold)
+                        idsToUpdate.Add(current.GetId());
+                }
+                catch (Exception e)
+                {
+                    var message =
+                        $"Failed during search for price cost: item {price.GetId()}, world {worldId}: {e.Message}";
+                    Logger.LogError(message);
+                }
             }
         }
         catch (Exception e)

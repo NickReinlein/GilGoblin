@@ -73,20 +73,28 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
             return;
         }
 
-        if (!ct.IsCancellationRequested)
+        if (ct.IsCancellationRequested)
+        {
+            Logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
+            return;
+        }
+
+        try
+        {
             await ComputeAsync(worldId, idList, ct);
+            Logger.LogInformation($"Boss, books are closed for world {worldId}");
+        }
+        catch (Exception e)
+        {
+            var message = $"Failed to balance the books for world {worldId}: {e.Message}";
+            Logger.LogError(message);
+        }
     }
 
     protected virtual async Task ComputeAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
     protected virtual List<int> GetWorldIds() => new() { 34 };
-
-    protected GilGoblinDbContext GetDbContext()
-    {
-        using var scope = ScopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-    }
 
     protected virtual List<int> GetIdsToUpdate(int worldId) => new();
 }

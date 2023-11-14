@@ -50,7 +50,7 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
                 Logger.LogError($"An exception occured during the Api call: {ex.Message}");
             }
 
-            Logger.LogDebug("Awaiting delay before making another update");
+            Logger.LogInformation("Awaiting delay before making another update");
             await Task.Delay(TimeSpan.FromMinutes(5), ct);
         }
     }
