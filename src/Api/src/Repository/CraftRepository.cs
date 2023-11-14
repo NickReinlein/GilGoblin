@@ -133,7 +133,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             if (calculatedCost <= 1)
                 throw new DataException($"Failed to calculate cost for recipe {recipeId} for world {worldId}");
 
-
             var newCost = new RecipeCostPoco
             {
                 WorldId = worldId, RecipeId = recipeId, Cost = calculatedCost, Updated = DateTimeOffset.UtcNow

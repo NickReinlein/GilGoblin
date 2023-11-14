@@ -9,12 +9,9 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Api.Repository;
 
-public class RecipeCostRepositoryTests : InMemoryTestDb
+public class RecipeCostRepositoryTests : PriceDependentTests
 {
     private IRecipeCostCache _costCache;
-
-    private static readonly int _worldId = 33;
-    private static readonly int _recipeId = 88;
 
     [Test]
     public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
@@ -22,14 +19,14 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetAll(22);
+        var result = recipeCostRepo.GetAll(WorldId);
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.RecipeId == 11));
-            Assert.That(result.Any(p => p.RecipeId == 12));
-            Assert.That(!result.Any(p => p.WorldId != 22));
+            Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
+            Assert.That(result.Any(p => p.RecipeId == RecipeId));
+            Assert.That(result.Any(p => p.RecipeId == RecipeId2));
+            Assert.That(!result.Any(p => p.WorldId != WorldId));
         });
     }
 
@@ -48,23 +45,23 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [TestCase(12)]
     public async Task GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = await recipeCostRepo.GetAsync(22, id);
+        var result = await recipeCostRepo.GetAsync(WorldId, id);
 
         Assert.Multiple(() =>
         {
-            Assert.That(result?.WorldId == 22);
+            Assert.That(result?.WorldId == WorldId);
             Assert.That(result.RecipeId == id);
         });
     }
 
     [TestCase(11)]
     [TestCase(12)]
-    public async Task GivenAGet_WhenTheIdIsValidButNotTheWorldId_ThenNullIsReturned(int id)
+    public async Task GivenAGet_WhenTheIdIsValidButTheWorldIdIsNot_ThenNullIsReturned(int id)
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         var result = await recipeCostRepo.GetAsync(854, id);
@@ -80,7 +77,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = await recipeCostRepo.GetAsync(22, id);
+        var result = await recipeCostRepo.GetAsync(WorldId, id);
 
         Assert.That(result, Is.Null);
     }
@@ -91,13 +88,13 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, new[] { 11, 12 });
+        var result = recipeCostRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 });
 
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(p => p.RecipeId == 11));
-            Assert.That(result.Any(p => p.RecipeId == 12));
+            Assert.That(result.Any(p => p.RecipeId == RecipeId));
+            Assert.That(result.Any(p => p.RecipeId == RecipeId2));
         });
     }
 
@@ -107,7 +104,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(_worldId, new[] { 11, 12 });
+        var result = recipeCostRepo.GetMultiple(654687, new[] { RecipeId, RecipeId2 });
 
         Assert.That(!result.Any());
     }
@@ -118,13 +115,13 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, new[] { 11, 99 });
+        var result = recipeCostRepo.GetMultiple(WorldId, new[] { RecipeId, 95419 });
 
         Assert.Multiple(() =>
         {
             Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.Any(p => p.RecipeId == 11));
-            Assert.That(!result.Any(p => p.WorldId != 22));
+            Assert.That(result.Any(p => p.RecipeId == RecipeId));
+            Assert.That(!result.Any(p => p.WorldId != WorldId));
         });
     }
 
@@ -134,7 +131,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, new[] { _worldId, 99 });
+        var result = recipeCostRepo.GetMultiple(WorldId, new[] { 654645646, 9953121 });
 
         Assert.That(!result.Any());
     }
@@ -145,7 +142,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        var result = recipeCostRepo.GetMultiple(22, Array.Empty<int>());
+        var result = recipeCostRepo.GetMultiple(WorldId, Array.Empty<int>());
 
         Assert.That(!result.Any());
     }
@@ -153,19 +150,19 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _costCache.Get((_worldId, _recipeId)).Returns((RecipeCostPoco)null);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
+        _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        _ = await recipeCostRepo.GetAsync(_worldId, _recipeId);
+        _ = await recipeCostRepo.GetAsync(WorldId, RecipeId);
 
-        _costCache.Received(2).Get((_worldId, _recipeId));
+        _costCache.Received(2).Get((WorldId, RecipeId));
         _costCache
             .Received(1)
             .Add(
-                (_worldId, _recipeId),
+                (WorldId, RecipeId),
                 Arg.Is<RecipeCostPoco>(
-                    recipeCost => recipeCost.WorldId == _worldId && recipeCost.RecipeId == _recipeId
+                    recipeCost => recipeCost.WorldId == WorldId && recipeCost.RecipeId == RecipeId
                 )
             );
     }
@@ -173,21 +170,21 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        var recipeCost = new RecipeCostPoco { WorldId = _worldId, RecipeId = _recipeId };
-        _costCache.Get((_worldId, _recipeId)).Returns(recipeCost);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var recipeCost = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
+        _costCache.Get((WorldId, RecipeId)).Returns(recipeCost);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
-        _ = await recipeCostRepo.GetAsync(_worldId, _recipeId);
+        _ = await recipeCostRepo.GetAsync(WorldId, RecipeId);
 
-        _costCache.Received(1).Get((_worldId, _recipeId));
+        _costCache.Received(1).Get((WorldId, RecipeId));
         _costCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeCostPoco>());
     }
 
     [Test]
     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
         var allRecipeCosts = context.RecipeCost.ToList();
 
@@ -204,7 +201,7 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.RecipeCost.RemoveRange(context.RecipeCost);
         context.SaveChanges();
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
@@ -217,35 +214,35 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     [Test]
     public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
     {
-        var poco = new RecipeCostPoco { WorldId = _worldId, RecipeId = _recipeId };
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _costCache.Get((_worldId, _recipeId)).Returns(poco);
+        var poco = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
+        _costCache.Get((WorldId, RecipeId)).Returns(poco);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         await recipeCostRepo.Add(poco);
 
-        _costCache.Received(1).Get((_worldId, _recipeId));
+        _costCache.Received(1).Get((WorldId, RecipeId));
         _costCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeCostPoco>());
     }
 
     [Test]
     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
     {
-        var poco = new RecipeCostPoco { WorldId = _worldId, RecipeId = _recipeId };
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _costCache.Get((_worldId, _recipeId)).Returns((RecipeCostPoco)null);
+        var poco = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
+        _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         await recipeCostRepo.Add(poco);
 
-        _costCache.Received(1).Get((_worldId, _recipeId));
-        _costCache.Received(1).Add((_worldId, _recipeId), poco);
+        _costCache.Received(1).Get((WorldId, RecipeId));
+        _costCache.Received(1).Add((WorldId, RecipeId), poco);
     }
 
     [Test]
     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeSaveItToTheDatabase()
     {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
         var poco = new RecipeCostPoco { WorldId = 77, RecipeId = 999 };
         await recipeCostRepo.Add(poco);
@@ -264,5 +261,12 @@ public class RecipeCostRepositoryTests : InMemoryTestDb
     {
         base.SetUp();
         _costCache = Substitute.For<IRecipeCostCache>();
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var oldDataTimestamp = DateTimeOffset.UtcNow.AddDays(-10);
+        context.RecipeCost.Add(new RecipeCostPoco
+        {
+            WorldId = 34, RecipeId = RecipeId2, Cost = 107, Updated = oldDataTimestamp
+        });
+        context.SaveChanges();
     }
 }

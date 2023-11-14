@@ -29,7 +29,7 @@ public class RecipeController : ControllerBase, IDataController<RecipePoco>
     [HttpGet]
     public IEnumerable<RecipePoco> GetAll()
     {
-        _logger.LogInformation($"Fetching all recipes");
+        _logger.LogInformation("Fetching all recipes");
         return _recipeRepo.GetAll();
     }
 }

@@ -4,10 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
-using GilGoblin.Database;
+using GilGoblin.Api.Crafting;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Database.Pocos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,6 +15,8 @@ namespace GilGoblin.Accountant;
 public interface IAccountant<T> where T : class, IIdentifiable
 {
     Task CalculateAsync(CancellationToken ct, int worldId);
+    Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
+    Task<T?> ComputeAsync(int worldId, int recipeId, ICraftingCalculator calc);
 }
 
 public class Accountant<T> : BackgroundService, IAccountant<T>
@@ -81,7 +82,7 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
 
         try
         {
-            await ComputeAsync(worldId, idList, ct);
+            await ComputeListAsync(worldId, idList, ct);
             Logger.LogInformation($"Boss, books are closed for world {worldId}");
         }
         catch (Exception e)
@@ -91,10 +92,13 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
         }
     }
 
-    protected virtual async Task ComputeAsync(int worldId, List<int> idList, CancellationToken ct)
+    public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
-    protected virtual List<int> GetWorldIds() => new() { 34 };
+    public virtual Task<T?> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
+        => throw new NotImplementedException();
 
-    protected virtual List<int> GetIdsToUpdate(int worldId) => new();
+    public virtual List<int> GetWorldIds() => new() { 34 };
+
+    public virtual List<int> GetIdsToUpdate(int worldId) => new();
 }

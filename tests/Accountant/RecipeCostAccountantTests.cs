@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,33 +24,29 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     private IServiceScope _scope;
     private IServiceProvider _serviceProvider;
     private TestGilGoblinDbContext _dbContext;
-    private PricePoco _newPrice;
     private ICraftingCalculator _calc;
+    private IRecipeCostRepository _recipeCostRepo;
     private const int worldId = 34;
+    private const int recipeId = 11;
+    private const int recipeId2 = 12;
 
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
-        _newPrice = new PricePoco
-        {
-            WorldId = worldId,
-            ItemId = 4421,
-            AverageListingPrice = 337,
-            AverageSold = 314,
-            LastUploadTime = DateTimeOffset.Now.ToUnixTimeMilliseconds()
-        };
         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
         _scopeFactory = Substitute.For<IServiceScopeFactory>();
         _logger = Substitute.For<ILogger<RecipeCostAccountant>>();
         _scope = Substitute.For<IServiceScope>();
         _serviceProvider = Substitute.For<IServiceProvider>();
         _calc = Substitute.For<ICraftingCalculator>();
+        _recipeCostRepo = Substitute.For<IRecipeCostRepository>();
 
         _scopeFactory.CreateScope().Returns(_scope);
         _scope.ServiceProvider.Returns(_serviceProvider);
         _serviceProvider.GetService(typeof(GilGoblinDbContext)).Returns(_dbContext);
         _serviceProvider.GetService(typeof(ICraftingCalculator)).Returns(_calc);
+        _serviceProvider.GetService(typeof(IRecipeCostRepository)).Returns(_recipeCostRepo);
 
         _accountant = new RecipeCostAccountant(_scopeFactory, _logger);
     }
@@ -89,6 +85,96 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         _logger.Received().LogInformation(message);
     }
 
+    [TestCase(0)]
+    [TestCase(1)]
+    public async Task GivenComputeAsync_WhenTheCalculatedRecipeCostIsInvalid_ThenWeReturnNullAndLogAnError(
+        int returnedCost)
+    {
+        var errorMessage = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}: Data Exception.";
+        _calc.CalculateCraftingCostForRecipe(worldId, recipeId).Returns(returnedCost);
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(2000);
+        var result = await _accountant.ComputeAsync(worldId, recipeId, _calc);
+
+        Assert.That(result, Is.Null);
+        _logger.Received().LogError(errorMessage);
+    }
+
+    [Test]
+    public async Task GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco()
+    {
+        const int calculatedCost = 371;
+        _calc.CalculateCraftingCostForRecipe(worldId, recipeId).Returns(calculatedCost);
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(2000);
+        var result = await _accountant.ComputeAsync(worldId, recipeId, _calc);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.WorldId, Is.EqualTo(worldId));
+            Assert.That(result.RecipeId, Is.EqualTo(recipeId));
+            Assert.That(result.Cost, Is.EqualTo(calculatedCost));
+            var totalMs = (result.Updated - DateTimeOffset.UtcNow).TotalMilliseconds;
+            Assert.That(totalMs, Is.LessThan(5000));
+        });
+    }
+
+    [Test]
+    public async Task GivenComputeListAsync_WhenNewCostsAreCalculated_ThenWeAddItToTheRepo()
+    {
+        const int calculatedCost = 371;
+        var idList = new List<int> { recipeId, recipeId2 };
+        _calc.CalculateCraftingCostForRecipe(worldId, recipeId2).Returns(calculatedCost + 2);
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(2000);
+        await _accountant.ComputeListAsync(worldId, idList, cts.Token);
+
+        await _calc.Received(1).CalculateCraftingCostForRecipe(worldId, recipeId2);
+        await _recipeCostRepo.Received(1).Add(Arg.Is<RecipeCostPoco>(r =>
+            r.RecipeId == recipeId2 &&
+            r.WorldId == worldId));
+    }
+
+    [Test]
+    public async Task GivenComputeListAsync_WhenNoNewCostsAreCalculated_ThenWeDontAddToTheRepo()
+    {
+        var idList = new List<int> { recipeId };
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(2000);
+        await _accountant.ComputeListAsync(worldId, idList, cts.Token);
+
+        await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>());
+        await _recipeCostRepo.DidNotReceive().Add(Arg.Any<RecipeCostPoco>());
+    }
+
+    [Test]
+    public async Task GivenComputeListAsync_WhenTaskIsCanceledByUser_ThenWeHandleTheCancellationCorrectly()
+    {
+        const string message = "Task was cancelled by user. Putting away the books, boss!";
+
+        var cts = new CancellationTokenSource();
+        cts.Cancel();
+        await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, cts.Token);
+
+        await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>());
+        await _recipeCostRepo.DidNotReceive().Add(Arg.Any<RecipeCostPoco>());
+        _logger.Received().LogInformation(message);
+    }
+
+    [Test]
+    public void GivenGetDataFreshnessInHours_WhenReceivingAResponse_ThenWeHaveAValidNumberOfHours()
+    {
+        var hours = RecipeCostAccountant.GetDataFreshnessInHours().TotalHours;
+
+        Assert.That(hours, Is.GreaterThan(0));
+        Assert.That(hours, Is.LessThan(1000));
+    }
+
     [Test]
     public async Task GivenComputeAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
     {
@@ -125,10 +211,4 @@ public class RecipeCostAccountantTests : InMemoryTestDb
 
         _logger.Received().LogError(messageError);
     }
-
-    private List<RecipeCostPoco> GetPocos() => new List<RecipeCostPoco>
-    {
-        new() { WorldId = worldId, RecipeId = 443, Cost = 339, Updated = DateTimeOffset.Now },
-        new() { WorldId = worldId, RecipeId = 981, Cost = 731, Updated = DateTimeOffset.Now }
-    };
 }
