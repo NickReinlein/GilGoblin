@@ -4,10 +4,10 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    # image: nickreinlein/gilgoblin-database
-    image: database
-    build: src/Database/
+    image: nickreinlein/gilgoblin-database
     container_name: database
+    # image: database
+    # build: src/Database/
     environment:
       POSTGRES_DB: gilgoblin
       POSTGRES_USER: gilgoblin
@@ -33,10 +33,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    # image: nickreinlein/gilgoblin-api
-    image: api
-    build: src/Api/
+    image: nickreinlein/gilgoblin-api
     container_name: api
+    # image: api
+    # build: src/Api/
     depends_on:
       - gilgoblin-database
     healthcheck:
@@ -74,10 +74,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-accountant:
-    # image: nickreinlein/gilgoblin-accountant
+    image: nickreinlein/gilgoblin-accountant
     container_name: accountant
-    image: accountant
-    build: src/Accountant/
+    # image: accountant
+    # build: src/Accountant/
     depends_on:
       - gilgoblin-database
     healthcheck:
