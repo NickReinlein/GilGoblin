@@ -26,7 +26,6 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
   </ItemGroup>
   <ItemGroup>
-    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="resources/icon.png" Pack="true" PackagePath="/"/>

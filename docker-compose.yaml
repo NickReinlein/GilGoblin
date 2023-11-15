@@ -45,7 +45,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - gilgoblin      
+      - gilgoblin
     ports:
       - "55448:80"
     logging:
@@ -54,30 +54,30 @@ services:
         max-size: '50m'
     restart: unless-stopped
 
-  # gilgoblin-dataupdater:
-  #   image: nickreinlein/gilgoblin-dataupdater
-  #   container_name: dataupdater
-  #   depends_on:
-  #     - gilgoblin-database
-  #     - gilgoblin-api
-  #   healthcheck:
-  #     test: [ "CMD-SHELL" ]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  #   networks:
-  #     - gilgoblin  
-  #   logging:
-  #     driver: 'json-file'
-  #     options:
-  #       max-size: '50m'
-  #   restart: unless-stopped
-
+  gilgoblin-dataupdater:
+    image: nickreinlein/gilgoblin-dataupdater
+    container_name: dataupdater
+    depends_on:
+      - gilgoblin-database
+      - gilgoblin-api
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gilgoblin
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped
 
   gilgoblin-accountant:
     # image: nickreinlein/gilgoblin-accountant
-    build: src/Accountant/
     container_name: accountant
+    image: accountant
+    build: src/Accountant/
     depends_on:
       - gilgoblin-database
     healthcheck:
@@ -86,7 +86,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - gilgoblin  
+      - gilgoblin
     logging:
       driver: 'json-file'
       options:
