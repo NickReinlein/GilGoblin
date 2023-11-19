@@ -32,16 +32,16 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-            var allRelevantRecipes = gilGoblinDbContext.Recipe.Where(r => idList.Contains(r.Id)).ToList();
-            var allCosts = gilGoblinDbContext.RecipeCost.Where(rc => rc.WorldId == worldId
+            var existingRecipeCosts = gilGoblinDbContext.RecipeCost.Where(rc => rc.WorldId == worldId
             ).ToList();
+            var allRelevantRecipes = gilGoblinDbContext.Recipe.Where(r => idList.Contains(r.Id)).ToList();
 
             foreach (var recipe in allRelevantRecipes)
             {
                 if (ct.IsCancellationRequested)
                     throw new TaskCanceledException();
 
-                var existing = allCosts.FirstOrDefault(c => c.GetId() == recipe.Id);
+                var existing = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipe.Id);
                 if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
                     continue;
 
@@ -96,18 +96,18 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             using var scope = ScopeFactory.CreateScope();
             var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
-            var priceCosts = gilGoblinDbContext.RecipeCost.Where(cp => cp.WorldId == worldId).ToList();
-            var priceCostIds = priceCosts.Select(i => i.GetId()).ToList();
+            var currentRecipeCosts = gilGoblinDbContext.RecipeCost.Where(cp => cp.WorldId == worldId).ToList();
+            var currentRecipeIds = currentRecipeCosts.Select(i => i.GetId()).ToList();
             var prices = gilGoblinDbContext.Price.Where(cp => cp.WorldId == worldId).ToList();
             var priceIds = prices.Select(i => i.GetId()).ToList();
-            var missingPriceIds = priceIds.Except(priceCostIds).ToList();
+            var missingPriceIds = priceIds.Except(currentRecipeIds).ToList();
             idsToUpdate.AddRange(missingPriceIds);
 
             foreach (var price in prices)
             {
                 try
                 {
-                    var current = priceCosts.FirstOrDefault(c => c.GetId() == price.GetId());
+                    var current = currentRecipeCosts.FirstOrDefault(c => c.GetId() == price.GetId());
                     if (current is null)
                         continue;
 
