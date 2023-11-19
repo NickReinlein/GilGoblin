@@ -26,6 +26,8 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     private TestGilGoblinDbContext _dbContext;
     private ICraftingCalculator _calc;
     private IRecipeCostRepository _recipeCostRepo;
+    private IRecipeRepository _recipeRepo;
+    private IPriceRepository<PricePoco> _priceRepo;
     private const int worldId = 34;
     private const int recipeId = 11;
     private const int recipeId2 = 12;
@@ -41,12 +43,16 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         _serviceProvider = Substitute.For<IServiceProvider>();
         _calc = Substitute.For<ICraftingCalculator>();
         _recipeCostRepo = Substitute.For<IRecipeCostRepository>();
+        _recipeRepo = Substitute.For<IRecipeRepository>();
+        _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
 
         _scopeFactory.CreateScope().Returns(_scope);
         _scope.ServiceProvider.Returns(_serviceProvider);
         _serviceProvider.GetService(typeof(GilGoblinDbContext)).Returns(_dbContext);
         _serviceProvider.GetService(typeof(ICraftingCalculator)).Returns(_calc);
         _serviceProvider.GetService(typeof(IRecipeCostRepository)).Returns(_recipeCostRepo);
+        _serviceProvider.GetService(typeof(IRecipeRepository)).Returns(_recipeRepo);
+        _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
 
         _accountant = new RecipeCostAccountant(_scopeFactory, _logger);
     }

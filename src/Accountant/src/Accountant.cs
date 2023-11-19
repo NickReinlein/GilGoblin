@@ -16,7 +16,6 @@ public interface IAccountant<T> where T : class, IIdentifiable
 {
     Task CalculateAsync(CancellationToken ct, int worldId);
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
-    Task<T?> ComputeAsync(int worldId, int recipeId, ICraftingCalculator calc);
 }
 
 public class Accountant<T> : BackgroundService, IAccountant<T>
@@ -95,7 +94,7 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
-    public virtual Task<T?> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
+    public virtual Task<T> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
         => throw new NotImplementedException();
 
     public virtual List<int> GetWorldIds() => new() { 34 };

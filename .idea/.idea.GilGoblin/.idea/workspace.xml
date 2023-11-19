@@ -11,14 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed Tests.csproj error">
+      <change afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,11 +156,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f536671e825030c7f17fbf3f75511651c281f2429edc8fd6ea660418f825949/BeforeAndAfterTestCommand.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fd66fb5db0c3e7598743c7c4816caa30f3e95257a3e92e46e527ad7bf565a8/ExceptionHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Accountant/src/Accountant.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Accountant/src/Accountant.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Accountant/src/RecipeCostAccountant.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Accountant/src/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Accountant/src/RecipeCostAccountant.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Accountant/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/DataCache.cs" root0="FORCE_HIGHLIGHTING" />
@@ -174,24 +170,12 @@
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCostCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/ItemController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/ItemController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/ItemController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/PriceController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/PriceController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/PriceController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/PriceController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/RecipeController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/RecipeController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Controllers/RecipeController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/Batcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/IBatcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/DataUpdater.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -199,14 +183,6 @@
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Accountant/DependencyInjectionTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Accountant/DependencyInjectionTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Accountant/DependencyInjectionTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Accountant/RecipeCostAccountantTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Accountant/RecipeCostAccountantTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Accountant/RecipeCostAccountantTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Api/Repository/RecipeCostRepositoryTests.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Api/Repository/RecipeCostRepositoryTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -432,14 +408,7 @@
       <workItem from="1699972266542" duration="9417000" />
       <workItem from="1700053439146" duration="888000" />
       <workItem from="1700413409044" duration="667000" />
-    </task>
-    <task id="LOCAL-00025" summary="updated ER diagram">
-      <option name="closed" value="true" />
-      <created>1698098935870</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1698098935870</updated>
+      <workItem from="1700414096324" duration="3373000" />
     </task>
     <task id="LOCAL-00026" summary="working API &amp; passing tests">
       <option name="closed" value="true" />
@@ -825,7 +794,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700010990735</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="fixed Tests.csproj error">
+      <option name="closed" value="true" />
+      <created>1700414192736</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1700414192737</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -879,7 +856,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Working example with checks for age of existing entries" />
     <MESSAGE value="Working example with less spam" />
     <MESSAGE value="working but need to prevent spam if response is continually null" />
     <MESSAGE value="Split each batch of updates into minimum 2 batches" />
@@ -904,7 +880,8 @@
     <MESSAGE value="Working example with 85% coverage or so" />
     <MESSAGE value="finishing up the recipeCost accountant" />
     <MESSAGE value="changing docker-compose" />
-    <option name="LAST_COMMIT_MESSAGE" value="changing docker-compose" />
+    <MESSAGE value="fixed Tests.csproj error" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed Tests.csproj error" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1510,78 +1487,65 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>54</line>
+          <line>53</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="36" containingFunctionPresentation="Method 'ComputeAsync'">
             <startOffsets>
-              <option value="2010" />
+              <option value="1910" />
             </startOffsets>
             <endOffsets>
-              <option value="2093" />
+              <option value="1993" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="502" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>58</line>
+          <line>57</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="40" containingFunctionPresentation="Method 'ComputeAsync'">
             <startOffsets>
-              <option value="2155" />
+              <option value="2055" />
             </startOffsets>
             <endOffsets>
-              <option value="2247" />
+              <option value="2151" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="503" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs</url>
-          <line>173</line>
+          <line>179</line>
           <properties documentPath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" initialLine="84" containingFunctionPresentation="Method 'GivenGetDataFreshnessInHours_WhenUpdatesAreSuccessful_ThenWeLogSuccess'">
             <startOffsets>
-              <option value="6667" />
+              <option value="7068" />
             </startOffsets>
             <endOffsets>
-              <option value="6705" />
+              <option value="7106" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="511" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>67</line>
-          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="64" containingFunctionPresentation="Method 'ComputeAsync'">
-            <startOffsets>
-              <option value="2514" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2538" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="512" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>121</line>
+          <line>115</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="121" containingFunctionPresentation="Method 'GetIdsToUpdate'">
             <startOffsets>
-              <option value="4740" />
+              <option value="4544" />
             </startOffsets>
             <endOffsets>
-              <option value="4765" />
+              <option value="4569" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="522" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>127</line>
+          <line>121</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="127" containingFunctionPresentation="Method 'GetIdsToUpdate'">
             <startOffsets>
-              <option value="4858" />
+              <option value="4662" />
             </startOffsets>
             <endOffsets>
-              <option value="4943" />
+              <option value="4747" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="523" />
@@ -1601,26 +1565,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>43</line>
-          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="43" containingFunctionPresentation="Method 'ComputeListAsync'">
-            <startOffsets>
-              <option value="1571" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1616" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="525" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>38</line>
+          <line>37</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="38" containingFunctionPresentation="Method 'ComputeListAsync'">
             <startOffsets>
-              <option value="1371" />
+              <option value="1280" />
             </startOffsets>
             <endOffsets>
-              <option value="1413" />
+              <option value="1322" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="527" />

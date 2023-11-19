@@ -29,25 +29,35 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
         try
         {
             using var scope = ScopeFactory.CreateScope();
-            var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-            var existingRecipeCosts = gilGoblinDbContext.RecipeCost.Where(rc => rc.WorldId == worldId
-            ).ToList();
-            var allRelevantRecipes = gilGoblinDbContext.Recipe.Where(r => idList.Contains(r.Id)).ToList();
+            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+            var existingRecipeCosts = costRepo.GetAll(worldId).ToList();
+            var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
 
             foreach (var recipe in allRelevantRecipes)
             {
                 if (ct.IsCancellationRequested)
                     throw new TaskCanceledException();
 
-                var existing = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipe.Id);
+                var recipeId = recipe.Id;
+                var existing = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipeId);
                 if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
                     continue;
 
-                var newCost = await ComputeAsync(worldId, recipe.Id, calc);
-                if (newCost is not null)
-                    await costRepo.Add(newCost);
+                var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
+                if (calculatedCost <= 1)
+                {
+                    var message = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}";
+                    Logger.LogError(message);
+                    continue;
+                }
+
+                var newCost = new RecipeCostPoco
+                {
+                    WorldId = worldId, RecipeId = recipeId, Cost = calculatedCost, Updated = DateTimeOffset.UtcNow
+                };
+                await costRepo.Add(newCost);
             }
         }
         catch (TaskCanceledException)
@@ -56,28 +66,7 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
         }
         catch (Exception ex)
         {
-            Logger.LogError($"An unexpected exception occured during accounting process: {ex.Message}");
-        }
-    }
-
-    public override async Task<RecipeCostPoco?> ComputeAsync(int worldId, int recipeId, ICraftingCalculator calc)
-    {
-        try
-        {
-            var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
-            if (calculatedCost <= 1)
-                throw new DataException();
-
-            return new RecipeCostPoco
-            {
-                WorldId = worldId, RecipeId = recipeId, Cost = calculatedCost, Updated = DateTimeOffset.UtcNow
-            };
-        }
-        catch (Exception e)
-        {
-            var message = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}: {e.Message}";
-            Logger.LogError(message);
-            return null;
+            Logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
         }
     }
 
@@ -94,11 +83,11 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
                 throw new Exception("World Id is invalid");
 
             using var scope = ScopeFactory.CreateScope();
-            var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-
-            var currentRecipeCosts = gilGoblinDbContext.RecipeCost.Where(cp => cp.WorldId == worldId).ToList();
+            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+            var currentRecipeCosts = costRepo.GetAll(worldId).ToList();
+            var prices = priceRepo.GetAll(worldId).ToList();
             var currentRecipeIds = currentRecipeCosts.Select(i => i.GetId()).ToList();
-            var prices = gilGoblinDbContext.Price.Where(cp => cp.WorldId == worldId).ToList();
             var priceIds = prices.Select(i => i.GetId()).ToList();
             var missingPriceIds = priceIds.Except(currentRecipeIds).ToList();
             idsToUpdate.AddRange(missingPriceIds);
