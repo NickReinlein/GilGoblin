@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
@@ -53,6 +54,10 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         _serviceProvider.GetService(typeof(IRecipeCostRepository)).Returns(_recipeCostRepo);
         _serviceProvider.GetService(typeof(IRecipeRepository)).Returns(_recipeRepo);
         _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
+
+        _recipeRepo.GetAll().Returns(_dbContext.Recipe.ToList());
+        _recipeCostRepo.GetAll(worldId).Returns(_dbContext.RecipeCost.ToList());
+        _priceRepo.GetAll(worldId).Returns(_dbContext.Price.ToList());
 
         _accountant = new RecipeCostAccountant(_scopeFactory, _logger);
     }
@@ -110,19 +115,20 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     [Test]
     public async Task GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco()
     {
-        const int calculatedCost = 371;
-        _calc.CalculateCraftingCostForRecipe(worldId, recipeId).Returns(calculatedCost);
+        const int expectedCost = 107;
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);
-        var result = await _accountant.ComputeAsync(worldId, recipeId, _calc);
+        await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, CancellationToken.None);
 
+        await using var costAfter = new TestGilGoblinDbContext(_options, _configuration);
+        var result = costAfter.RecipeCost.FirstOrDefault(after => after.RecipeId == recipeId);
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
             Assert.That(result.WorldId, Is.EqualTo(worldId));
             Assert.That(result.RecipeId, Is.EqualTo(recipeId));
-            Assert.That(result.Cost, Is.EqualTo(calculatedCost));
+            Assert.That(result.Cost, Is.EqualTo(expectedCost));
             var totalMs = (result.Updated - DateTimeOffset.UtcNow).TotalMilliseconds;
             Assert.That(totalMs, Is.LessThan(5000));
         });
@@ -184,7 +190,7 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     [Test]
     public async Task GivenComputeAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
     {
-        const string message = "An unexpected exception occured during accounting process: test123";
+        const string message = "An unexpected exception occured during the accounting process: test123";
         _scope.ServiceProvider.GetRequiredService(typeof(ICraftingCalculator))
             .Throws(new NotImplementedException("test123")); //temporary
 

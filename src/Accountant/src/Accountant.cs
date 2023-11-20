@@ -55,7 +55,7 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
             }
             catch (Exception ex)
             {
-                Logger.LogError($"An unexpected exception occured during accounting process: {ex.Message}");
+                Logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
             }
 
             var delay = TimeSpan.FromMinutes(5);

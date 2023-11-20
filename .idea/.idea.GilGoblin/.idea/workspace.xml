@@ -11,12 +11,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed Tests.csproj error">
-      <change afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="WIP improve accountants">
       <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -408,15 +404,7 @@
       <workItem from="1699972266542" duration="9417000" />
       <workItem from="1700053439146" duration="888000" />
       <workItem from="1700413409044" duration="667000" />
-      <workItem from="1700414096324" duration="3373000" />
-    </task>
-    <task id="LOCAL-00026" summary="working API &amp; passing tests">
-      <option name="closed" value="true" />
-      <created>1698169182169</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1698169182170</updated>
+      <workItem from="1700414096324" duration="4749000" />
     </task>
     <task id="LOCAL-00027" summary="Cleanup csproj">
       <option name="closed" value="true" />
@@ -802,7 +790,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700414192737</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="WIP improve accountants">
+      <option name="closed" value="true" />
+      <created>1700425417661</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1700425417661</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -856,7 +852,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Working example with less spam" />
     <MESSAGE value="working but need to prevent spam if response is continually null" />
     <MESSAGE value="Split each batch of updates into minimum 2 batches" />
     <MESSAGE value="cleanup" />
@@ -881,7 +876,8 @@
     <MESSAGE value="finishing up the recipeCost accountant" />
     <MESSAGE value="changing docker-compose" />
     <MESSAGE value="fixed Tests.csproj error" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed Tests.csproj error" />
+    <MESSAGE value="WIP improve accountants" />
+    <option name="LAST_COMMIT_MESSAGE" value="WIP improve accountants" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1422,91 +1418,91 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs</url>
-          <line>53</line>
+          <line>52</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" initialLine="52" containingFunctionPresentation="Method 'ExecuteAsync'">
             <startOffsets>
-              <option value="1709" />
+              <option value="1629" />
             </startOffsets>
             <endOffsets>
-              <option value="1771" />
+              <option value="1691" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="493" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs</url>
-          <line>58</line>
+          <line>57</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" initialLine="57" containingFunctionPresentation="Method 'ExecuteAsync'">
             <startOffsets>
-              <option value="1873" />
+              <option value="1793" />
             </startOffsets>
             <endOffsets>
-              <option value="1965" />
+              <option value="1885" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="494" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs</url>
-          <line>89</line>
+          <line>88</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" initialLine="87" containingFunctionPresentation="Method 'CalculateAsync'">
             <startOffsets>
-              <option value="2835" />
+              <option value="2755" />
             </startOffsets>
             <endOffsets>
-              <option value="2913" />
+              <option value="2833" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="495" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs</url>
-          <line>79</line>
+          <line>78</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" initialLine="78" containingFunctionPresentation="Method 'CalculateAsync'">
             <startOffsets>
-              <option value="2595" />
+              <option value="2515" />
             </startOffsets>
             <endOffsets>
-              <option value="2602" />
+              <option value="2522" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="497" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs</url>
-          <line>72</line>
+          <line>71</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" initialLine="71" containingFunctionPresentation="Method 'CalculateAsync'">
             <startOffsets>
-              <option value="2326" />
+              <option value="2246" />
             </startOffsets>
             <endOffsets>
-              <option value="2387" />
+              <option value="2307" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="501" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>53</line>
+          <line>64</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="36" containingFunctionPresentation="Method 'ComputeAsync'">
             <startOffsets>
-              <option value="1910" />
+              <option value="2402" />
             </startOffsets>
             <endOffsets>
-              <option value="1993" />
+              <option value="2485" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="502" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>57</line>
+          <line>68</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="40" containingFunctionPresentation="Method 'ComputeAsync'">
             <startOffsets>
-              <option value="2055" />
+              <option value="2547" />
             </startOffsets>
             <endOffsets>
-              <option value="2151" />
+              <option value="2643" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="503" />
@@ -1526,26 +1522,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>115</line>
-          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="121" containingFunctionPresentation="Method 'GetIdsToUpdate'">
-            <startOffsets>
-              <option value="4544" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4569" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="522" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
-          <line>121</line>
+          <line>108</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="127" containingFunctionPresentation="Method 'GetIdsToUpdate'">
             <startOffsets>
-              <option value="4662" />
+              <option value="4360" />
             </startOffsets>
             <endOffsets>
-              <option value="4747" />
+              <option value="4445" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="523" />
@@ -1575,6 +1558,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="527" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
+          <line>97</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="94" containingFunctionPresentation="Method 'GetIdsToUpdate'">
+            <startOffsets>
+              <option value="3963" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3994" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="529" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

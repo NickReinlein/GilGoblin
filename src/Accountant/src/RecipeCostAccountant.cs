@@ -85,6 +85,8 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             using var scope = ScopeFactory.CreateScope();
             var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+            var recipes = recipeRepo.GetAll().ToList();
             var currentRecipeCosts = costRepo.GetAll(worldId).ToList();
             var prices = priceRepo.GetAll(worldId).ToList();
             var currentRecipeIds = currentRecipeCosts.Select(i => i.GetId()).ToList();
@@ -92,24 +94,14 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             var missingPriceIds = priceIds.Except(currentRecipeIds).ToList();
             idsToUpdate.AddRange(missingPriceIds);
 
-            foreach (var price in prices)
+            foreach (var recipe in recipes)
             {
-                try
-                {
-                    var current = currentRecipeCosts.FirstOrDefault(c => c.GetId() == price.GetId());
-                    if (current is null)
-                        continue;
+                var current = currentRecipeCosts.FirstOrDefault(c => c.GetId() == recipe.Id);
+                if (current is not null &&
+                    current.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
+                    continue;
 
-                    var timeDelta = price.LastUploadTime - current.Updated.ToUnixTimeMilliseconds();
-                    if (timeDelta > timeThreshold)
-                        idsToUpdate.Add(current.GetId());
-                }
-                catch (Exception e)
-                {
-                    var message =
-                        $"Failed during search for price cost: item {price.GetId()}, world {worldId}: {e.Message}";
-                    Logger.LogError(message);
-                }
+                idsToUpdate.Add(recipe.Id);
             }
         }
         catch (Exception e)
