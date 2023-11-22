@@ -98,25 +98,6 @@ public class RecipeCostAccountantTests : InMemoryTestDb
 
         _logger.Received().LogInformation(message);
     }
-    //
-    // [TestCase(-1)]
-    // [TestCase(0)]
-    // [TestCase(1)]
-    // public async Task GivenComputeAsync_WhenTheCalculatedRecipeCostIsInvalid_ThenWeReturnNullAndLogAnError(
-    //     int returnedCost)
-    // {
-    //     _recipeRepo
-    //         .GetMultiple(Arg.Any<IEnumerable<int>>())
-    //         .Returns(new List<RecipePoco> { new() { Id = recipeId } });
-    //     var errorMessage = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}: Data Exception.";
-    //     _calc.CalculateCraftingCostForRecipe(worldId, recipeId).Returns(returnedCost);
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(2000);
-    //     await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, cts.Token);
-    //
-    //     _logger.Received().LogError(errorMessage);
-    // }
 
     [Test]
     public async Task GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco()
