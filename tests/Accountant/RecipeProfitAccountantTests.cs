@@ -59,7 +59,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
         _serviceProvider.GetService(typeof(IRecipeCostRepository)).Returns(_costRepo);
 
-        _recipeRepo.GetAll().Returns(_dbContext.Recipe.ToList());
+        _costRepo.GetAll(worldId).Returns(_dbContext.RecipeCost.ToList());
         _recipeRepo
             .GetMultiple(Arg.Any<IEnumerable<int>>())
             .Returns(_dbContext.Recipe.ToList());
@@ -67,6 +67,14 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         _priceRepo.GetAll(worldId).Returns(_dbContext.Price.ToList());
 
         _accountant = new RecipeProfitAccountant(_scopeFactory, _logger);
+    }
+
+    [Test]
+    public void GivenGetWorldIds_WhenCalled_ThenWeReturnAtLeastOneEntry()
+    {
+        var worldIds = _accountant.GetWorldIds();
+
+        Assert.That(worldIds, Is.Not.Empty);
     }
 
     [TestCase(0)]
@@ -187,6 +195,20 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         await _accountant.CalculateAsync(CancellationToken.None, worldId);
 
         _logger.Received().LogError(message);
+    }
+
+    [Test]
+    public void GivenGetIdsToUpdate_WhenIdsAreReturned_ThenWeReturnTheList()
+    {
+        var ids = _accountant.GetIdsToUpdate(worldId);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(ids, Has.Count.GreaterThanOrEqualTo(3));
+            Assert.That(ids, Does.Contain(9841));
+            Assert.That(ids, Does.Contain(8854));
+            Assert.That(ids, Does.Contain(11));
+        });
     }
 
     [Test]

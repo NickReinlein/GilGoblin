@@ -1,6 +1,4 @@
 using System;
-using GilGoblin.Api.Crafting;
-using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;

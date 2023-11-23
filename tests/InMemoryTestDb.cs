@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +49,12 @@ public class InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var timestamp = DateTimeOffset.UtcNow;
-        context.RecipeCost.Add(new RecipeCostPoco { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp });
+        context.RecipeCost.AddRange(new List<RecipeCostPoco>
+        {
+            new() { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp },
+            new() { WorldId = 34, RecipeId = 8854, Cost = 351, Updated = timestamp },
+            new() { WorldId = 34, RecipeId = 9841, Cost = 3001, Updated = timestamp }
+        });
         context.RecipeProfit.AddRange(
             new RecipeProfitPoco
             {

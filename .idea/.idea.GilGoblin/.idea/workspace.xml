@@ -11,20 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/aws.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/aws.xml" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="added tests for profitAccountant">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/AccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/AccountantTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeCostAccountantTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/RecipeRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/RecipeRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -422,15 +414,7 @@
       <workItem from="1700414096324" duration="6040000" />
       <workItem from="1700616019350" duration="1972000" />
       <workItem from="1700755276864" duration="1435000" />
-      <workItem from="1700756735834" duration="4804000" />
-    </task>
-    <task id="LOCAL-00029" summary="a">
-      <option name="closed" value="true" />
-      <created>1698265116359</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1698265116359</updated>
+      <workItem from="1700756735834" duration="5648000" />
     </task>
     <task id="LOCAL-00030" summary="tests pass with new deserialization custom converter">
       <option name="closed" value="true" />
@@ -816,7 +800,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700616991181</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="added tests for profitAccountant">
+      <option name="closed" value="true" />
+      <created>1700761951607</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1700761951607</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -870,7 +862,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="cleanup" />
     <MESSAGE value="DI fails but dbcontext scope fixed" />
     <MESSAGE value="Fixed additional scoping for new background services" />
     <MESSAGE value="De-couple docker services" />
@@ -895,7 +886,8 @@
     <MESSAGE value="WIP improve accountants" />
     <MESSAGE value="fix some tests" />
     <MESSAGE value="fixed tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed tests" />
+    <MESSAGE value="added tests for profitAccountant" />
+    <option name="LAST_COMMIT_MESSAGE" value="added tests for profitAccountant" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -108,16 +108,8 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
                 throw new Exception("World Id is invalid");
 
             using var scope = ScopeFactory.CreateScope();
-            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-
-            var currentRecipeProfits = profitRepo.GetAll(worldId).ToList();
-            var currentRecipeIds = currentRecipeProfits.Select(i => i.GetId()).ToList();
-            var prices = priceRepo.GetAll(worldId).ToList();
-            var priceIds = prices.Select(i => i.GetId()).ToList();
-            var missingPriceIds = priceIds.Except(currentRecipeIds).ToList();
-            idsToUpdate.AddRange(missingPriceIds);
 
             var costs = costRepo.GetAll(worldId).ToList();
             var costIds = costs.Select(i => i.GetId()).ToList();
@@ -125,18 +117,18 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
 
             foreach (var cost in costs)
             {
+                var id = cost.GetId();
                 try
                 {
-                    var existing = existingProfits.FirstOrDefault(e => e.GetId() == cost.GetId());
+                    var existing = existingProfits.FirstOrDefault(e => e.GetId() == id);
                     if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
                         continue;
-
-                    idsToUpdate.Add(cost.GetId());
+                    idsToUpdate.Add(id);
                 }
                 catch (Exception e)
                 {
                     var message =
-                        $"Failed during search for price profit: item {cost.GetId()}, world {worldId}: {e.Message}";
+                        $"Failed during search for price profit: item {id}, world {worldId}: {e.Message}";
                     Logger.LogError(message);
                 }
             }
