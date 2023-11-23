@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
@@ -10,7 +9,6 @@ using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Accountant;
@@ -27,8 +25,6 @@ public class AccountantTests : InMemoryTestDb
     private ICraftingCalculator _calc;
     private IRecipeCostRepository _recipeCostRepo;
     private const int worldId = 34;
-    private const int recipeId = 11;
-    private const int recipeId2 = 12;
 
     [SetUp]
     public override void SetUp()

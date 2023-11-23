@@ -26,7 +26,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
 
         Assert.Multiple(() =>
         {
-            Assert.That(result, Has.Count.EqualTo(4));
+            Assert.That(result, Has.Count.EqualTo(ids.Count));
             Assert.That(ids.All(i => result.Exists(r => r.Id == i)));
         });
     }

@@ -11,23 +11,22 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="[0.6.9,)"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.11"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.*"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1"/>
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.*"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.*"/>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.*"/>
     <PackageReference Include="NUnit" Version="3.13.*"/>
     <PackageReference Include="NUnit.Analyzers" Version="3.6.*"/>
-    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.*"/>
     <PackageReference Include="Nsubstitute" Version="5.0.*"/>
     <PackageReference Include="OpenCover" Version="4.7.*"/>
     <PackageReference Include="ReportGenerator" Version="5.1.*"/>
@@ -42,6 +41,7 @@
     <ProjectReference Include="../src/Accountant/Accountant.csproj"/>
     <ProjectReference Include="../src/Api/Api.csproj"/>
     <ProjectReference Include="../src/Batcher/Batcher.csproj"/>
+    <ProjectReference Include="../src/Database/Database.csproj"/>
     <ProjectReference Include="../src/DataUpdater/DataUpdater.csproj"/>
     <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
   </ItemGroup>

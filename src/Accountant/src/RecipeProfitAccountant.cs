@@ -54,7 +54,7 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
         }
         catch (Exception ex)
         {
-            Logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
+            Logger.LogError($"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}");
         }
     }
 
