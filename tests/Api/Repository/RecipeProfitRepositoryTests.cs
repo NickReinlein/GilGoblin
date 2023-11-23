@@ -162,7 +162,8 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
             .Add(
                 (WorldId, RecipeId),
                 Arg.Is<RecipeProfitPoco>(
-                    recipeProfit => recipeProfit.WorldId == WorldId && recipeProfit.RecipeId == RecipeId
+                    recipeProfit => recipeProfit.WorldId == WorldId && 
+                                    recipeProfit.RecipeId == RecipeId
                 )
             );
     }

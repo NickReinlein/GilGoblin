@@ -28,79 +28,7 @@ public class CraftRepositoryTests
     private readonly int _recipeCost = 777;
     private readonly string _itemName = "Excalibur";
 
-    [Test]
-    public async Task GivenGetBestCraft_WhenResultIsValid_ThenOtherRepositoriesAreCalled()
-    {
-        await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        await _calc.Received().CalculateCraftingCostForItem(_worldId, _itemId);
-        _recipeRepository.Received().Get(_recipeId);
-        _priceRepository.Received().Get(_worldId, _itemId);
-        _itemRepository.Received().Get(_itemId);
-    }
-
-    [Test]
-    public async Task GivenGetBestCraft_WhenResultIsValid_ThenASummaryIsReturned()
-    {
-        var result = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.RecipeCost, Is.EqualTo(_recipeCost));
-            Assert.That(result.WorldId, Is.EqualTo(_worldId));
-            Assert.That(result.ItemId, Is.EqualTo(_itemId));
-            Assert.That(result.Recipe.Id, Is.EqualTo(_recipeId));
-            Assert.That(result.ItemInfo.Name, Is.EqualTo(_itemName));
-            Assert.That(result.ItemInfo.Id, Is.EqualTo(_itemId));
-        });
-    }
-
-    [Test]
-    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenNullIsReturned()
-    {
-        _calc.CalculateCraftingCostForItem(_worldId, _itemId).Returns((0, 0));
-
-        var result = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        Assert.That(result, Is.Null);
-    }
-
-    [Test]
-    public async Task GivenAGetBestCraft_WhenTheIdIsValidAndUncached_ThenWeCacheTheNewEntry()
-    {
-        _cache.Get((_worldId, _itemId)).Returns((CraftSummaryPoco)null);
-
-        _ = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        _cache.Received(1).Get((_worldId, _itemId));
-        _cache.Received(1).Add((_worldId, _itemId),
-            Arg.Is<CraftSummaryPoco>(s => s.ItemId == _itemId && s.WorldId == _worldId));
-    }
-
-    [Test]
-    public async Task GivenAGetBestCraft_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
-    {
-        var summary = new CraftSummaryPoco { WorldId = _worldId, ItemId = _itemId };
-        _cache.Get((_worldId, _itemId)).Returns(summary);
-
-        _ = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        _cache.Received(1).Get((_worldId, _itemId));
-        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<CraftSummaryPoco>());
-    }
-
-    [Test]
-    public async Task GivenAGetBestCraft_WhenTheIdIsValidButNoRecipesExist_ThenWeReturnNull()
-    {
-        _recipeRepository.Get(_recipeId).Returns((RecipePoco)null);
-
-        var result = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        Assert.That(result, Is.Null);
-        _cache.Received().Get((_worldId, _itemId));
-        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<CraftSummaryPoco>());
-    }
+    
 
     [SetUp]
     public void SetUp()
@@ -132,7 +60,6 @@ public class CraftRepositoryTests
         _logger = Substitute.For<ILogger<CraftRepository>>();
 
         _craftRepository = new CraftRepository(
-            _calc,
             _priceRepository,
             _recipeRepository,
             _recipeCostRepository,

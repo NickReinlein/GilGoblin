@@ -11,12 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="added tests for profitAccountant">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="more tests and nuget packages">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/ICraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/ICraftRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/RecipeProfitRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/RecipeProfitRepositoryTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,10 +59,6 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/05f66f42f8464281abbee09f4c1d23ae1de00/44/a9439014/LoggerExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0ac882aa466e42d084abeccd5a8707a31e2000/78/0a1338d9/ControllerBase.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0f34c3f406c24260a7ecd1b418fd5bf466400/9e/30f2d457/ConfigureServicesBuilder.cs" root0="SKIP_HIGHLIGHTING" />
@@ -72,6 +68,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f2/fdc055bc/IIdentifiable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17ce1b2d6d3c49e68a4aaf83000adbb28600/f9/ff3d998e/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1800989ffd83457ab03f311a19430489e000/97/89ad8c71/Startup.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/18f13f2b265c4a9e9649868a65591bc69000/57/d1662239/RecipeCostPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/18f13f2b265c4a9e9649868a65591bc69000/c2/12128e1d/DataSaver`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1b046e286a344b85999e7c798bc1fc145e00/99/755f15a9/MockHttpMessageHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c318fdc22c8430794674d8040a071278800/17/c53e8010/IngredientPoco.cs" root0="SKIP_HIGHLIGHTING" />
@@ -414,15 +411,7 @@
       <workItem from="1700414096324" duration="6040000" />
       <workItem from="1700616019350" duration="1972000" />
       <workItem from="1700755276864" duration="1435000" />
-      <workItem from="1700756735834" duration="5648000" />
-    </task>
-    <task id="LOCAL-00030" summary="tests pass with new deserialization custom converter">
-      <option name="closed" value="true" />
-      <created>1698268182890</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1698268182890</updated>
+      <workItem from="1700756735834" duration="7918000" />
     </task>
     <task id="LOCAL-00031" summary="fixing more tests">
       <option name="closed" value="true" />
@@ -808,7 +797,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700761951607</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="more tests and nuget packages">
+      <option name="closed" value="true" />
+      <created>1700763285900</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1700763285900</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -862,7 +859,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="DI fails but dbcontext scope fixed" />
     <MESSAGE value="Fixed additional scoping for new background services" />
     <MESSAGE value="De-couple docker services" />
     <MESSAGE value="api works" />
@@ -887,7 +883,8 @@
     <MESSAGE value="fix some tests" />
     <MESSAGE value="fixed tests" />
     <MESSAGE value="added tests for profitAccountant" />
-    <option name="LAST_COMMIT_MESSAGE" value="added tests for profitAccountant" />
+    <MESSAGE value="more tests and nuget packages" />
+    <option name="LAST_COMMIT_MESSAGE" value="more tests and nuget packages" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -907,13 +904,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
-          <line>125</line>
+          <line>117</line>
           <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="125" containingFunctionPresentation="Method 'GetIdsToUpdate'">
             <startOffsets>
-              <option value="5031" />
+              <option value="4507" />
             </startOffsets>
             <endOffsets>
-              <option value="5058" />
+              <option value="4534" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="3" />
