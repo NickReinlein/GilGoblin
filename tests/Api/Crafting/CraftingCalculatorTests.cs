@@ -24,7 +24,7 @@ public class CraftingCalculatorTests
     private IRecipeCostRepository _recipeCosts;
     private ILogger<CraftingCalculator> _logger;
 
-    private static readonly int _errorCost = CraftingCalculator.ERROR_DEFAULT_COST;
+    private static readonly int _errorCost = CraftingCalculator.ErrorDefaultCost;
     private static readonly int _worldId = 34; // Brynnhildr
     private static readonly int _firstItemId = 554;
     private static readonly int _secondItemId = 668;

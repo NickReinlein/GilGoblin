@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -52,6 +53,7 @@ public class InMemoryTestDb
         context.RecipeCost.AddRange(new List<RecipeCostPoco>
         {
             new() { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp },
+            new() { WorldId = 34, RecipeId = 12, Cost = 75, Updated = timestamp },
             new() { WorldId = 34, RecipeId = 8854, Cost = 351, Updated = timestamp },
             new() { WorldId = 34, RecipeId = 9841, Cost = 3001, Updated = timestamp }
         });
@@ -90,11 +92,12 @@ public class InMemoryTestDb
             }
         );
         context.Recipe.AddRange(
-            new RecipePoco { Id = 11, TargetItemId = 9984, ItemIngredient0TargetId = 11, AmountIngredient0 = 3 },
+            new RecipePoco { Id = 11, TargetItemId = 5682, ItemIngredient0TargetId = 774, AmountIngredient0 = 3 },
             new RecipePoco { Id = 12, TargetItemId = 111, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },
+            new RecipePoco { Id = 13, TargetItemId = 111, ItemIngredient0TargetId = 14, AmountIngredient0 = 2 },
             new RecipePoco { Id = 33, TargetItemId = 222, ItemIngredient0TargetId = 88, AmountIngredient0 = 7 },
             new RecipePoco { Id = 44, TargetItemId = 333, ItemIngredient0TargetId = 99, AmountIngredient0 = 2 },
-            new RecipePoco { Id = 55, TargetItemId = 111, ItemIngredient0TargetId = 101, AmountIngredient0 = 3 }
+            new RecipePoco { Id = 55, TargetItemId = 5556, ItemIngredient0TargetId = 101, AmountIngredient0 = 3 }
         );
         context.Price.AddRange(
             new PricePoco
@@ -124,6 +127,14 @@ public class InMemoryTestDb
             new PricePoco
             {
                 WorldId = 34,
+                ItemId = 5682,
+                AverageSold = 6557f,
+                AverageListingPrice = 3748f,
+                LastUploadTime = unixEpochTimestamp
+            },
+            new PricePoco
+            {
+                WorldId = 34,
                 ItemId = 9984,
                 AverageSold = 387f,
                 AverageListingPrice = 477f,
@@ -138,12 +149,26 @@ public class InMemoryTestDb
                 LastUploadTime = unixEpochTimestamp
             }
         );
-        context.Item.AddRange(
-            new ItemPoco { Id = 1, Name = "Item 1" },
-            new ItemPoco { Id = 2, Name = "Item 2" },
-            new ItemPoco { Id = 3, Name = "Item 3" },
-            new ItemPoco { Id = 22, Name = "Item 22" }
-        );
         context.SaveChanges();
+
+        var itemIds = new List<int>
+        {
+            1,
+            2,
+            3,
+            11,
+            12,
+            88,
+            9984
+        };
+        var recipeTargetItemIds = context.Recipe.Select(r => r.TargetItemId).ToList();
+        itemIds.AddRange(recipeTargetItemIds);
+        var ids = itemIds.Distinct().ToList();
+        foreach (var id in ids)
+        {
+            context.Item.Add(new ItemPoco { Id = id, Name = $"Item {id}" });
+        }
+        context.SaveChanges();
+
     }
 }

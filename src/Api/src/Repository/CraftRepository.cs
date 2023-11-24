@@ -13,7 +13,8 @@ namespace GilGoblin.Api.Repository;
 
 public interface ICraftRepository<T> where T : class
 {
-    Task<List<T>> GetBestCraftsForWorld(int worldId);
+    Task<List<T>> GetBestCraftsAsync(int worldId);
+    List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
 }
 
 public class CraftRepository : ICraftRepository<CraftSummaryPoco>
@@ -44,7 +45,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _cache = cache;
     }
 
-    public async Task<List<CraftSummaryPoco>> GetBestCraftsForWorld(int worldId)
+    public async Task<List<CraftSummaryPoco>> GetBestCraftsAsync(int worldId)
     {
         var crafts = new List<CraftSummaryPoco>();
         var profits = _recipeProfitRepository.GetAll(worldId).ToList();
@@ -66,11 +67,11 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
                 _logger.LogError(message);
             }
         }
-
         return SortByProfitability(crafts);
     }
 
-    private async Task<CraftSummaryPoco> CreateSummaryAsync(int worldId, int recipeId, List<RecipePoco> allRecipes)
+    private async Task<CraftSummaryPoco> CreateSummaryAsync(int worldId, int recipeId,
+        IEnumerable<RecipePoco> allRecipes)
     {
         var recipeCost = await _recipeCostRepository.GetAsync(worldId, recipeId);
         if (recipeCost is null || recipeCost.Cost <= 0)
@@ -100,7 +101,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         return summary;
     }
 
-    private List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
+    public List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
     {
         var craftsList = crafts.ToList();
         if (!craftsList.Any())
@@ -114,9 +115,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
                         i.AverageSold > 1 &&
                         i.AverageListingPrice > 1 &&
                         i.RecipeCost > 1 &&
-                        i.Recipe.TargetItemId == i.ItemId &&
-                        i.RecipeProfitVsListings > 0 &&
-                        i.RecipeProfitVsSold > 0)
+                        i.Recipe.TargetItemId == i.ItemId)
                     .ToList();
             viableCrafts.Sort();
             return viableCrafts;

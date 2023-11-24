@@ -122,20 +122,27 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenComputeListAsync_WhenNewCostsAreCalculated_ThenWeAddItToTheRepo()
+    public async Task GivenComputeListAsync_WhenNewCostsAreCalculated_ThenWeAddEachNewToTheRepo()
     {
-        const int calculatedCost = 371;
-        var idList = new List<int> { recipeId, recipeId2 };
-        _calc.CalculateCraftingCostForRecipe(worldId, recipeId2).Returns(calculatedCost + 2);
+        await using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var recipeIds = context.Recipe.Select(r => r.Id).ToList();
+        var costIds = context.RecipeCost.Select(r => r.RecipeId).ToList();
+        var missingCostIds = recipeIds.Except(costIds).ToList();
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);
-        await _accountant.ComputeListAsync(worldId, idList, cts.Token);
+        await _accountant.ComputeListAsync(worldId, recipeIds, cts.Token);
 
-        await _calc.Received(1).CalculateCraftingCostForRecipe(worldId, recipeId2);
-        await _recipeCostRepo.Received(1).Add(Arg.Is<RecipeCostPoco>(r =>
-            r.RecipeId == recipeId2 &&
-            r.WorldId == worldId));
+        Assert.That(missingCostIds, Has.Count.GreaterThanOrEqualTo(2));
+        foreach (var missingId in missingCostIds)
+        {
+            await _calc.Received(1).CalculateCraftingCostForRecipe(worldId, missingId);
+        }
+
+        await _recipeCostRepo
+            .DidNotReceive()
+            .Add(Arg.Is<RecipeCostPoco>(r =>
+                missingCostIds.Contains(r.RecipeId)));
     }
 
     [Test]

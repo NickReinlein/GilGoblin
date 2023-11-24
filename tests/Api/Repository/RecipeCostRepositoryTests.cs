@@ -71,7 +71,7 @@ public class RecipeCostRepositoryTests : PriceDependentTests
 
     [TestCase(0)]
     [TestCase(-1)]
-    [TestCase(100)]
+    [TestCase(9984545)]
     public async Task GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
     {
         var context = new TestGilGoblinDbContext(_options, _configuration);
@@ -261,12 +261,5 @@ public class RecipeCostRepositoryTests : PriceDependentTests
     {
         base.SetUp();
         _costCache = Substitute.For<IRecipeCostCache>();
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        var oldDataTimestamp = DateTimeOffset.UtcNow.AddDays(-10);
-        context.RecipeCost.Add(new RecipeCostPoco
-        {
-            WorldId = 34, RecipeId = RecipeId2, Cost = 107, Updated = oldDataTimestamp
-        });
-        context.SaveChanges();
     }
 }

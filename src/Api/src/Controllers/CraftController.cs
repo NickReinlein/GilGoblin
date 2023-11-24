@@ -27,6 +27,6 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
     public async Task<IEnumerable<CraftSummaryPoco>> GetBestCrafts(int worldId)
     {
         _logger.LogInformation($"Fetching best crafting result for world {worldId}");
-        return await _craftRepo.GetBestCraftsForWorld(worldId);
+        return await _craftRepo.GetBestCraftsAsync(worldId);
     }
 }

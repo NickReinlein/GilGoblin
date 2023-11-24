@@ -141,6 +141,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         _costRepo.GetAll(worldId).Returns(costs);
         _recipeProfitRepo.GetAll(worldId).Returns(new List<RecipeProfitPoco>());
         _priceRepo.GetMultiple(worldId, idList).Returns(_dbContext.Price.Where(p => p.WorldId == worldId).ToList());
+
         await _accountant.ComputeListAsync(worldId, idList, CancellationToken.None);
 
         await _recipeProfitRepo.Received(1).Add(Arg.Is<RecipeProfitPoco>(r =>

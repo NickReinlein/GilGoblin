@@ -16,7 +16,7 @@ public class CraftingCalculator : ICraftingCalculator
     private readonly IRecipeCostRepository _recipeCosts;
     private readonly IRecipeGrocer _grocer;
     private readonly ILogger<CraftingCalculator> _logger;
-    public static int ERROR_DEFAULT_COST = int.MaxValue;
+    public static readonly int ErrorDefaultCost = int.MaxValue;
 
     public CraftingCalculator(
         IRecipeRepository recipes,
@@ -35,7 +35,7 @@ public class CraftingCalculator : ICraftingCalculator
 
     public async Task<(int, int)> CalculateCraftingCostForItem(int worldId, int itemId)
     {
-        var errorReturn = (-1, ERROR_DEFAULT_COST);
+        var errorReturn = (-1, ERROR_DEFAULT_COST: ErrorDefaultCost);
         if (worldId < 1 || itemId < 1)
             return errorReturn;
 
@@ -60,7 +60,7 @@ public class CraftingCalculator : ICraftingCalculator
             var result = await _grocer.BreakdownRecipeById(recipeId);
             var ingredients = result?.ToList();
             if (recipe is null || ingredients is null || !ingredients.Any())
-                return ERROR_DEFAULT_COST;
+                return ErrorDefaultCost;
 
             var ingredientPrices = GetIngredientPrices(worldId, recipe.TargetItemId, ingredients).ToList();
 
@@ -84,7 +84,7 @@ public class CraftingCalculator : ICraftingCalculator
             _logger.LogError($"Failed to calculate crafting cost: {e.Message}");
         }
 
-        return ERROR_DEFAULT_COST;
+        return ErrorDefaultCost;
     }
 
     private async Task SaveRecipeCost(int worldId, int recipeId, List<PricePoco> ingredientPrices, int craftingCost)
@@ -211,7 +211,7 @@ public class CraftingCalculator : ICraftingCalculator
         IEnumerable<RecipePoco?> recipes
     )
     {
-        var lowestCost = ERROR_DEFAULT_COST;
+        var lowestCost = ErrorDefaultCost;
         var recipeId = -1;
         foreach (var recipe in recipes.Where(recipe => recipe is not null))
         {
@@ -231,7 +231,7 @@ public class CraftingCalculator : ICraftingCalculator
 
     private void LogCraftingResult(int worldId, int itemId, int recipeCount, float craftingCost)
     {
-        if (craftingCost >= (ERROR_DEFAULT_COST - 1000))
+        if (craftingCost >= (ErrorDefaultCost - 1000))
         {
             var message =
                 $"Failed to calculate crafting cost of: world {worldId}, item {itemId} with {recipeCount} recipes";
