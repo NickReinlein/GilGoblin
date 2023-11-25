@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
@@ -22,6 +23,8 @@ public class PriceUpdaterTests : InMemoryTestDb
     private IPriceFetcher _priceFetcher;
     private PriceUpdater _priceUpdater;
     private IDataSaver<PricePoco> _saver;
+    private IPriceRepository<PricePoco> _priceRepo;
+    private IRecipeRepository _recipeRepo;
     private ILogger<PriceUpdater> _logger;
 
     private IServiceScopeFactory _scopeFactory;
@@ -37,6 +40,8 @@ public class PriceUpdaterTests : InMemoryTestDb
         _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
         _scopeFactory = Substitute.For<IServiceScopeFactory>();
         _priceFetcher = Substitute.For<IPriceFetcher>();
+        _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
+        _recipeRepo = Substitute.For<IRecipeRepository>();
         _saver = Substitute.For<IDataSaver<PricePoco>>();
         _logger = Substitute.For<ILogger<PriceUpdater>>();
         _scope = Substitute.For<IServiceScope>();
@@ -48,6 +53,14 @@ public class PriceUpdaterTests : InMemoryTestDb
         _serviceProvider.GetService(typeof(GilGoblinDbContext)).Returns(_dbContext);
         _serviceProvider.GetService(typeof(IPriceFetcher)).Returns(_priceFetcher);
         _serviceProvider.GetService(typeof(IDataSaver<PricePoco>)).Returns(_saver);
+        _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
+        _serviceProvider.GetService(typeof(IRecipeRepository)).Returns(_recipeRepo);
+
+        var prices = _dbContext.Price.Where(p => p.WorldId == 34).ToList();
+        _priceRepo.GetAll(34).Returns(prices);
+
+        var recipes = _dbContext.Recipe.ToList();
+        _recipeRepo.GetAll().Returns(recipes);
 
         _priceUpdater = new PriceUpdater(_scopeFactory, _logger);
     }
@@ -58,7 +71,9 @@ public class PriceUpdaterTests : InMemoryTestDb
         const string errorMessage = "Failed to get the Ids to update for world 34: Failed to fetch marketable item ids";
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int>());
 
-        await _priceUpdater.FetchAsync(CancellationToken.None, 34);
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(1000);
+        await _priceUpdater.FetchAsync(cts.Token, 34);
 
         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
         await _priceFetcher.DidNotReceiveWithAnyArgs().FetchByIdsAsync(default, default);
@@ -71,7 +86,9 @@ public class PriceUpdaterTests : InMemoryTestDb
         var allRecipes = _dbContext.Recipe.ToList();
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int> { 631 });
 
-        await _priceUpdater.FetchAsync(CancellationToken.None, 34);
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(1000);
+        await _priceUpdater.FetchAsync(cts.Token, 34);
 
         var idCount = _priceUpdater.AllItemIds.Count;
         Assert.That(idCount, Is.EqualTo(allRecipes.Count + 1));
@@ -82,7 +99,9 @@ public class PriceUpdaterTests : InMemoryTestDb
     [TestCase(null)]
     public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int? worldIdString)
     {
-        await _priceUpdater.FetchAsync(CancellationToken.None, worldIdString);
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(1000);
+        await _priceUpdater.FetchAsync(cts.Token, worldIdString);
 
         var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";
         _logger.Received().LogError(message);
@@ -98,7 +117,7 @@ public class PriceUpdaterTests : InMemoryTestDb
             .Returns(new List<PriceWebPoco>());
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1500);
+        cts.CancelAfter(1000);
         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(cts.Token, 34));
 
         _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
@@ -110,7 +129,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         var saveList = SetupSave();
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1500);
+        cts.CancelAfter(1000);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         Assert.That(saveList, Has.Count.GreaterThanOrEqualTo(2));
@@ -130,7 +149,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         _saver.SaveAsync(default).ThrowsAsyncForAnyArgs(new Exception("test"));
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1500);
+        cts.CancelAfter(1000);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         await _saver.ReceivedWithAnyArgs().SaveAsync(default);
@@ -147,7 +166,7 @@ public class PriceUpdaterTests : InMemoryTestDb
             $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(PriceSaver)} returned failure";
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1500);
+        cts.CancelAfter(1000);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         await _saver.ReceivedWithAnyArgs().SaveAsync(default);

@@ -83,6 +83,7 @@ public class Startup
     public static void AddGoblinDatabases(IServiceCollection services)
     {
         services.AddDbContext<GilGoblinDbContext>();
+
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();

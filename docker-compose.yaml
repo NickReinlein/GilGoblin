@@ -80,6 +80,7 @@ services:
     # build: src/Accountant/
     depends_on:
       - gilgoblin-database
+      - gilgoblin-api
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s

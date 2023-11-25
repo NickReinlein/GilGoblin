@@ -1,4 +1,5 @@
 using System;
+using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
@@ -35,7 +36,9 @@ public class Startup
     {
         services.AddHttpClient();
 
-        services.AddDbContext<GilGoblinDbContext>();
+        Api.Startup.AddGoblinCrafting(services);
+        Api.Startup.AddGoblinDatabases(services);
+        Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
         services.AddScoped<IItemFetcher, ItemFetcher>();
@@ -48,6 +51,7 @@ public class Startup
 
         services.AddScoped<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
         services.AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
+
         services.AddHostedService<PriceUpdater>();
     }
 

@@ -14,13 +14,11 @@ public class EndpointComponentTests : ComponentTests
 
         var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.IsSuccessStatusCode);
+        Assert.That(response.IsSuccessStatusCode, $"{endpoint}");
     }
 
     private static string[] _allEndPoints =
     {
-        "/recipe/", "/recipe/1639", "/price/34/", "/price/34/1639",
-        // "/craft/34/",  // temporarily disabled for performance 
-        "/craft/34/1639", "/item/", "/item/1639"
+        "/recipe/", "/recipe/1639", "/price/34/", "/price/34/1639", "/craft/34/", "/item/", "/item/1639"
     };
 }

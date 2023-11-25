@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using GilGoblin.Api.Repository;
 using GilGoblin.Batcher;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
@@ -86,10 +87,15 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             if (worldId is null or < 1)
                 throw new Exception("World Id is invalid");
 
-            var gilGoblinDbContext = await FillItemIdCache();
+            await FillItemIdCache();
 
             var world = worldId.GetValueOrDefault();
-            var currentPrices = gilGoblinDbContext.Price.Where(cp => cp.WorldId == world).ToList();
+            if (world <= 0)
+                throw new ArgumentException($"Interpreted world id as {world}");
+
+            using var scope = ScopeFactory.CreateScope();
+            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var currentPrices = priceRepo.GetAll(world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
             var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
 
@@ -99,8 +105,8 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 var ageInHours = (DateTimeOffset.UtcNow - timestamp).Hours;
                 return ageInHours > dataExpiryInHours;
             }).ToList();
-            var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
 
+            var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
             return outdatedPriceIdList.Concat(newPriceIds).ToList();
         }
         catch (Exception e)
@@ -110,23 +116,20 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         }
     }
 
-    private async Task<GilGoblinDbContext> FillItemIdCache()
+    private async Task FillItemIdCache()
     {
         using var scope = ScopeFactory.CreateScope();
         var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-        var gilGoblinDbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-
-        if (AllItemIds is not null && AllItemIds.Any())
-            return gilGoblinDbContext;
 
         AllItemIds = new List<int>();
         var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
         if (!marketableItemIdList.Any())
             throw new WebException("Failed to fetch marketable item ids");
 
-        var recipePocos = gilGoblinDbContext.Recipe.Cast<RecipePoco>().ToList();
+        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+        var recipes = recipeRepo.GetAll().ToList();
         var ingredientItemIds =
-            recipePocos
+            recipes
                 .SelectMany(r =>
                     r.GetActiveIngredients()
                         .Select(i => i.ItemId))
@@ -136,10 +139,8 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         AllItemIds =
             marketableItemIdList
                 .Concat(ingredientItemIds)
-                .ToHashSet()
+                .Distinct()
                 .ToList();
-
-        return gilGoblinDbContext;
     }
 
     private async Task AwaitDelay(CancellationToken ct)

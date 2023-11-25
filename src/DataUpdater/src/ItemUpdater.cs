@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
+// Works but currently unused and untested
 public class ItemUpdater : DataUpdater<ItemPoco, ItemWebPoco>
 {
     public ItemUpdater(

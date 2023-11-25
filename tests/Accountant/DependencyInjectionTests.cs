@@ -21,7 +21,7 @@ public class AccountantDependencyInjectionTests
     }
 
     [Test]
-    public void GivenAProgram_WhenStarting_ThenThereAreNoCompileErrors()
+    public void GivenAGoblinAccountant_WhenWeStartup_ThenWeResolveWithoutError()
     {
         var client = _factory.CreateClient();
 
@@ -44,7 +44,7 @@ public class AccountantDependencyInjectionTests
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IRecipeCostRepository))]
     [TestCase(typeof(IRecipeProfitRepository))]
-    public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
+    public void GivenAGoblinAccountant_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();
 
