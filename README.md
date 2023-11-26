@@ -40,6 +40,8 @@ The long-term goal is to have a website using this API's endpoints to display th
 * [nickreinlein/gilgoblin-dataupdater](https://hub.docker.com/repository/docker/nickreinlein/gilgoblin-dataupdater/general)
   * A background service that will check every 5 minutes for outdated prices to update in `gilgoblin-database`
   * Currently, prices are considered outdated after 48 hours
+* [nickreinlein/gilgoblin-accountant](https://hub.docker.com/repository/docker/nickreinlein/gilgoblin-accountant/general)
+  * A background service that will verify every 5 minutes for costs and profits to calculate in `gilgoblin-database`
 
 ## Special Thanks & References
 Support:
