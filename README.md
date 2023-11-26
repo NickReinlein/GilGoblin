@@ -15,16 +15,17 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark:  The profitability per item is calculated based on the difference of current market prices and the estimated minimum cost
 * :heavy_check_mark:  A crafting calculator that breaks down recipes to ingredients
 * :heavy_check_mark:  Top things to craft for a given FFXIV server/world
+* :heavy_check_mark:  A new service to pre-calculate costs and profits
 
 *Upcoming*:
 
-* :construction:  A new service to pre-calculate costs and profits
-* :construction:  A website displaying the top crafts for each world
+* :construction:  A simple website displaying the top crafts for each world
 
 *Nice-to-have*:
 
 * :question: Top things to gather
 * :question: Advanced filtering: Enter class levels to filter available recipes
+* :question: A hover or clickable option to see the summary's ingredients & details
 * :construction:  A website displaying the top crafts, *for each profession*, for each world
 
 *Not currently on the product roadmap*:
