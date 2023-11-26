@@ -30,7 +30,8 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
             var allRequestedRecipes = recipeRepo.GetMultiple(idList).ToList();
             var existingProfits = profitRepo.GetAll(worldId).ToList();
-            var prices = priceRepo.GetMultiple(worldId, idList).ToList();
+            var targetItemIds = allRequestedRecipes.Select(req => req.TargetItemId).ToList();
+            var prices = priceRepo.GetMultiple(worldId, targetItemIds).ToList();
             var costs = costRepo.GetAll(worldId).ToList();
 
             foreach (var recipe in allRequestedRecipes)
@@ -54,7 +55,9 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
         }
         catch (Exception ex)
         {
-            Logger.LogError($"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}");
+            var message =
+                $"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}";
+            Logger.LogError(message);
         }
     }
 
@@ -138,7 +141,7 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
             Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
         }
 
-        return idsToUpdate;
+        return idsToUpdate.Distinct().ToList();
     }
 }
 

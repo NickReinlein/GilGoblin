@@ -44,9 +44,16 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         {
             foreach (var batch in batches)
             {
-                var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
-                if (fetched.Any())
-                    await ConvertAndSaveToDbAsync(fetched);
+                try
+                {
+                    var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
+                    if (fetched.Any())
+                        await ConvertAndSaveToDbAsync(fetched);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"Failed to get batch: {e.Message}");
+                }
 
                 try
                 {
@@ -128,6 +135,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
         var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
         var recipes = recipeRepo.GetAll().ToList();
+        Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
         var ingredientItemIds =
             recipes
                 .SelectMany(r =>

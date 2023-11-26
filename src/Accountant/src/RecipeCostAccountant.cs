@@ -13,8 +13,6 @@ namespace GilGoblin.Accountant;
 
 public class RecipeCostAccountant : Accountant<RecipeCostPoco>
 {
-    public const long timeThreshold = 1000;
-
     public RecipeCostAccountant(
         IServiceScopeFactory scopeFactory,
         ILogger<Accountant<RecipeCostPoco>> logger) :
@@ -107,6 +105,6 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
         }
 
-        return idsToUpdate;
+        return idsToUpdate.Distinct().ToList();
     }
 }

@@ -6,15 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/ItemUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/RecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/EndpointComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

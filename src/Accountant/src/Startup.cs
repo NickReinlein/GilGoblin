@@ -37,8 +37,10 @@ public class Startup
         Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
+        services.AddScoped<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>();
 
         services.AddHostedService<RecipeCostAccountant>();
+        services.AddHostedService<RecipeProfitAccountant>();
     }
 
     private void DatabaseValidation(IApplicationBuilder app)

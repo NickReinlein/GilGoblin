@@ -14,12 +14,12 @@ public class RecipeRepository : IRecipeRepository
     private readonly IItemRecipeCache _itemRecipesCache;
 
     public RecipeRepository(
-        GilGoblinDbContext recipes,
+        GilGoblinDbContext dbContext,
         IRecipeCache cache,
         IItemRecipeCache itemRecipeCache
     )
     {
-        _dbContext = recipes;
+        _dbContext = dbContext;
         _recipeCache = cache;
         _itemRecipesCache = itemRecipeCache;
     }
