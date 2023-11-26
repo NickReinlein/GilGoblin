@@ -5,7 +5,7 @@
     <RootNamespace>GilGoblin.DataUpdater</RootNamespace>
     <PackageId>GilGoblin.DataUpdater</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.3.0</Version>
+    <Version>0.5.0</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -20,14 +20,20 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
-    <PackageReference Include="EntityFramework" Version="6.4.0"/>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.*"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.*"/>
-    <ProjectReference Include="../Database/*Database.csproj"/>
-    <ProjectReference Include="../Fetcher/*Fetcher.csproj"/>
-    <ProjectReference Include="../Batcher/*Batcher.csproj"/>
+    <PackageReference Include="EntityFramework" Version="6.4.4"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
+    <PackageReference Include="GilGoblin.Api" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Fetcher" Version="0.2.*"/>
+    <PackageReference Include="GilGoblin.Batcher" Version="0.2.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
   </ItemGroup>
+<!--  <ItemGroup>-->
+<!--    <ProjectReference Include="../Database/Database.csproj"/>-->
+<!--    <ProjectReference Include="../Fetcher/Fetcher.csproj"/>-->
+<!--    <ProjectReference Include="../Batcher/Batcher.csproj"/>-->
+<!--  </ItemGroup>-->
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>

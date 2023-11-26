@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <RootNamespace>GilGoblin.Accountant</RootNamespace>
+    <PackageId>GilGoblin.Accountant</PackageId>
+    <OutputType>Exe</OutputType>
+    <Version>0.1.0</Version>
+    <Authors>Nicholas Reinlein</Authors>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Project>LICENSE.txt</Project>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="3.0.*"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
+    <PackageReference Include="EntityFramework" Version="6.4.4"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
+    <PackageReference Include="GilGoblin.Api" Version="0.6.0" />
+  </ItemGroup>
+  <!--  <ItemGroup>-->
+  <!--    <ProjectReference Include="../Api/Api.csproj"/>-->
+  <!--  </ItemGroup>-->
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="README.md" Pack="true" PackagePath="/"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
+    <None Include="icon.png" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+</Project>

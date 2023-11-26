@@ -29,7 +29,7 @@ public class ItemController : ControllerBase, IDataController<ItemPoco>
     [HttpGet]
     public IEnumerable<ItemPoco> GetAll()
     {
-        _logger.LogInformation($"Fetching all item info data");
+        _logger.LogInformation("Fetching all item info data");
         return _itemRepo.GetAll();
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +13,7 @@ public class GilGoblinDbContext : DbContext
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }
     public DbSet<RecipeCostPoco> RecipeCost { get; set; }
+    public DbSet<RecipeProfitPoco> RecipeProfit { get; set; }
 
     public GilGoblinDbContext(DbContextOptions options, IConfiguration configuration)
         : base(options)
@@ -104,5 +104,14 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.WorldId).HasColumnName("worldid");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Cost).HasColumnName("cost");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Updated).HasColumnName("updated");
+
+        modelBuilder.Entity<RecipeProfitPoco>().ToTable("recipeprofit");
+        modelBuilder.Entity<RecipeProfitPoco>().HasKey(t => new { t.RecipeId, t.WorldId });
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeId).HasColumnName("recipeid");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.WorldId).HasColumnName("worldid");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeProfitVsSold).HasColumnName("profitvssold");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeProfitVsListings)
+            .HasColumnName("profitvslistings");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Updated).HasColumnName("updated");
     }
 }

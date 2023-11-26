@@ -5,9 +5,9 @@ name: gilgoblin
 services:
   gilgoblin-database:
     image: nickreinlein/gilgoblin-database
+    container_name: database
     # image: database
     # build: src/Database/
-    container_name: database
     environment:
       POSTGRES_DB: gilgoblin
       POSTGRES_USER: gilgoblin
@@ -34,9 +34,9 @@ services:
 
   gilgoblin-api:
     image: nickreinlein/gilgoblin-api
+    container_name: api
     # image: api
     # build: src/Api/
-    container_name: api
     depends_on:
       - gilgoblin-database
     healthcheck:
@@ -45,7 +45,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - gilgoblin      
+      - gilgoblin
     ports:
       - "55448:80"
     logging:
@@ -66,7 +66,28 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - gilgoblin  
+      - gilgoblin
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    restart: unless-stopped
+
+  gilgoblin-accountant:
+    image: nickreinlein/gilgoblin-accountant
+    container_name: accountant
+    # image: accountant
+    # build: src/Accountant/
+    depends_on:
+      - gilgoblin-database
+      - gilgoblin-api
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gilgoblin
     logging:
       driver: 'json-file'
       options:

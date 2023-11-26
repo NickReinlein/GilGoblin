@@ -22,8 +22,20 @@ public class RecipeGrocer : IRecipeGrocer
 
     public async Task<IEnumerable<IngredientPoco>> BreakdownRecipeById(int recipeId)
     {
-        var recipe = _recipes.Get(recipeId);
-        return recipe is null ? Array.Empty<IngredientPoco>() : await BreakdownRecipe(recipe);
+        var failure = Array.Empty<IngredientPoco>();
+        try
+        {
+            var recipe = _recipes.Get(recipeId);
+            if (recipe is null)
+                return failure;
+
+            return await BreakdownRecipe(recipe);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to break down ingredients for recipe {recipeId}: {e.Message}");
+            return failure;
+        }
     }
 
     public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipe(RecipePoco recipe) =>

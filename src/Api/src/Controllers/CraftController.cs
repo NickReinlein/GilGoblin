@@ -23,17 +23,10 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
         _logger = logger;
     }
 
-    [HttpGet("{worldId:int}/{id:int}")]
-    public async Task<CraftSummaryPoco> GetBestCraftForItem(int worldId, int id)
-    {
-        _logger.LogInformation($"Fetching craft for item id {id} in world {worldId}");
-        return await _craftRepo.GetBestCraftForItem(worldId, id);
-    }
-
     [HttpGet("{worldId}")]
     public async Task<IEnumerable<CraftSummaryPoco>> GetBestCrafts(int worldId)
     {
         _logger.LogInformation($"Fetching best crafting result for world {worldId}");
-        return await _craftRepo.GetBestCraftsForWorld(worldId);
+        return await _craftRepo.GetBestCraftsAsync(worldId);
     }
 }

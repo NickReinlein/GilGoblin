@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
@@ -10,186 +11,202 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Api.Repository;
 
-public class CraftRepositoryTests
+public class CraftRepositoryTests : PriceDependentTests
 {
     private CraftRepository _craftRepository;
 
-    private ICraftingCalculator _calc;
     private IPriceRepository<PricePoco> _priceRepository;
     private IRecipeRepository _recipeRepository;
     private IRecipeCostRepository _recipeCostRepository;
+    private IRecipeProfitRepository _recipeProfitRepository;
     private IItemRepository _itemRepository;
     private ICraftCache _cache;
     private ILogger<CraftRepository> _logger;
-    private readonly int _worldId = 22;
-    private readonly int _itemId = 6400;
-    private readonly int _recipeId = 444;
-    private readonly int _recipeCost = 777;
-    private readonly string _itemName = "Excalibur";
-
-    [Test]
-    public async Task GivenGetBestCraft_WhenResultIsValid_ThenOtherRepositoriesAreCalled()
-    {
-        await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        await _calc.Received().CalculateCraftingCostForItem(_worldId, _itemId);
-        _recipeRepository.Received().Get(_recipeId);
-        _priceRepository.Received().Get(_worldId, _itemId);
-        _itemRepository.Received().Get(_itemId);
-    }
-
-    [Test]
-    public async Task GivenGetBestCraft_WhenResultIsValid_ThenASummaryIsReturned()
-    {
-        var result = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.RecipeCost, Is.EqualTo(_recipeCost));
-            Assert.That(result.WorldId, Is.EqualTo(_worldId));
-            Assert.That(result.ItemId, Is.EqualTo(_itemId));
-            Assert.That(result.Recipe.Id, Is.EqualTo(_recipeId));
-            Assert.That(result.Name, Is.EqualTo(_itemName));
-        });
-    }
-
-    [Test]
-    public async Task GivenGetBestCraft_WhenResultIsInvalid_ThenNullIsReturned()
-    {
-        _calc.CalculateCraftingCostForItem(_worldId, _itemId).Returns((0, 0));
-
-        var result = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        Assert.That(result, Is.Null);
-    }
-
-    // [Test]
-    // public async Task GivenGetBestCrafts_WhenThereAreMultipleResults_ThenEachOneIsProcessed()
-    // {
-    //     var crafts = GetCrafts();
-    //     var secondItemId = crafts[1].TargetItemId;
-    //     var secondRecipeId = crafts[1].Id;
-    //     _calc.CalculateCraftingCostForItem(_worldId, secondItemId).Returns((secondRecipeId, _recipeCost + 100));
-    //     _priceRepository.Get(_worldId, secondItemId)
-    //         .Returns(new PricePoco { WorldId = _worldId, ItemId = secondItemId });
-    //     _recipeRepository.GetAll().Returns(crafts);
-    //     // _recipeRepository.Get(secondRecipeId)
-    //     //     .Returns(new RecipePoco { Id = secondRecipeId, TargetItemId = secondItemId });
-    //     _itemRepository.Get(secondItemId).Returns(new ItemPoco { Id = secondItemId, Name = _itemName });
-    //
-    //     var result = await _craftRepository.GetBestCraftsForWorld(_worldId);
-    //
-    //     Assert.That(result.Count, Is.EqualTo(2));
-    //     await _calc.Received(1).CalculateCraftingCostForItem(_worldId, _itemId);
-    //     await _calc.Received(1).CalculateCraftingCostForItem(_worldId, secondItemId);
-    //     _recipeRepository.Received(1).Get(_recipeId);
-    //     _recipeRepository.Received(1).Get(secondRecipeId);
-    //     _priceRepository.Received(1).Get(_worldId, _itemId);
-    //     _priceRepository.Received(1).Get(_worldId, secondItemId);
-    //     _itemRepository.Received(1).Get(_itemId);
-    //     _itemRepository.Received(1).Get(secondItemId);
-    // }
-    //
-    // [Test]
-    // public async Task GivenGetBestCrafts_WhenARecipeThrowsAnExeption_ThenAnErrorIsLoggedAndOthersRecipesAreReturned()
-    // {
-    //     var crafts = GetCrafts();
-    //     var goodRecipe = crafts[0];
-    //     var badRecipe = crafts[1];
-    //     _calc.CalculateCraftingCostForItem(_worldId, goodRecipe.TargetItemId).Returns((goodRecipe.Id, 600));
-    //     _calc.CalculateCraftingCostForItem(_worldId, badRecipe.TargetItemId).Throws<ArithmeticException>();
-    //
-    //     var result = await _craftRepository.GetBestCraftsForWorld(_worldId);
-    //
-    //     // await _calc.Received(1).CalculateCraftingCostForItem(_worldId, goodRecipe.TargetItemId);
-    //     // await _calc.Received(1).CalculateCraftingCostForItem(_worldId, badRecipe.TargetItemId);
-    //     Assert.That(result.Count, Is.EqualTo(1));
-    //     _recipeRepository.Received(1).Get(goodRecipe.Id);
-    //     _logger
-    //         .DidNotReceive()
-    //         .LogError($"Failed to calculate best craft for item {goodRecipe.TargetItemId} in world {_worldId}");
-    //     _logger
-    //         .Received(1)
-    //         .LogError($"Failed to calculate best craft for item {badRecipe.TargetItemId} in world {_worldId}");
-    // }
-
-    [Test]
-    public async Task GivenAGetBestCraft_WhenTheIdIsValidAndUncached_ThenWeCacheTheNewEntry()
-    {
-        _cache.Get((_worldId, _itemId)).Returns((CraftSummaryPoco)null);
-
-        _ = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        _cache.Received(1).Get((_worldId, _itemId));
-        _cache.Received(1).Add((_worldId, _itemId),
-            Arg.Is<CraftSummaryPoco>(s => s.ItemId == _itemId && s.WorldId == _worldId));
-    }
-
-
-    [Test]
-    public async Task GivenAGetBestCraft_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
-    {
-        var summary = new CraftSummaryPoco { WorldId = _worldId, ItemId = _itemId };
-        _cache.Get((_worldId, _itemId)).Returns(summary);
-
-        _ = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        _cache.Received(1).Get((_worldId, _itemId));
-        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<CraftSummaryPoco>());
-    }
-
-    [Test]
-    public async Task GivenAGetBestCraft_WhenTheIdIsValidButNoRecipesExist_ThenWeReturnNull()
-    {
-        _recipeRepository.Get(_recipeId).Returns((RecipePoco)null);
-
-        var result = await _craftRepository.GetBestCraftForItem(_worldId, _itemId);
-
-        Assert.That(result, Is.Null);
-        _cache.Received().Get((_worldId, _itemId));
-        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<CraftSummaryPoco>());
-    }
 
     [SetUp]
-    public void SetUp()
+    public override void SetUp()
     {
-        _calc = Substitute.For<ICraftingCalculator>();
-        _calc.CalculateCraftingCostForItem(_worldId, _itemId).Returns((_recipeId, _recipeCost));
+        base.SetUp();
 
         _priceRepository = Substitute.For<IPriceRepository<PricePoco>>();
-        _priceRepository
-            .Get(_worldId, _itemId)
-            .Returns(new PricePoco { WorldId = _worldId, ItemId = _itemId });
-
         _recipeRepository = Substitute.For<IRecipeRepository>();
-        _recipeRepository.Get(_recipeId).Returns(new RecipePoco { Id = _recipeId, TargetItemId = _itemId });
-        _recipeRepository.GetAll().Returns(GetCrafts());
-
         _recipeCostRepository = Substitute.For<IRecipeCostRepository>();
+        _recipeProfitRepository = Substitute.For<IRecipeProfitRepository>();
         _itemRepository = Substitute.For<IItemRepository>();
-        _itemRepository.Get(_itemId).Returns(new ItemPoco { Id = _itemId, Name = _itemName });
-
         _cache = Substitute.For<ICraftCache>();
-        _cache
-            .Get((_worldId, _itemId))
-            .Returns(null, new CraftSummaryPoco() { ItemId = _itemId, Name = _itemName });
-
         _logger = Substitute.For<ILogger<CraftRepository>>();
 
         _craftRepository = new CraftRepository(
-            _calc,
             _priceRepository,
             _recipeRepository,
             _recipeCostRepository,
+            _recipeProfitRepository,
             _itemRepository,
             _cache,
             _logger
         );
     }
 
-    private List<RecipePoco> GetCrafts() => new()
+    [Test]
+    public async Task GivenGetBestCraftsAsync_WhenEntriesAreReturned_ThenWeCreateCraftSummaries()
     {
-        new() { Id = _recipeId, TargetItemId = _itemId }, new() { Id = _recipeId + 1, TargetItemId = _itemId + 1 }
-    };
+        await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
+        var profits = ctx.RecipeProfit.ToList();
+        _recipeProfitRepository.GetAll(WorldId).Returns(profits);
+
+        await _craftRepository.GetBestCraftsAsync(WorldId);
+
+        foreach (var profit in profits)
+            await _recipeCostRepository.Received().GetAsync(WorldId, profit.RecipeId);
+    }
+
+    [Test]
+    public async Task GivenGetBestCraftsAsync_WhenEntriesAreReturned_ThenTheSummaryReturnedIsValid()
+    {
+        var targetItemId = SetupForSuccess();
+
+        var results = await _craftRepository.GetBestCraftsAsync(WorldId);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(results, Is.Not.Empty);
+            var result = results.FirstOrDefault(cs => cs.ItemId == targetItemId);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Ingredients.ToList(), Has.Count.GreaterThan(0));
+            Assert.That(result.AverageListingPrice, Is.GreaterThan(1));
+            Assert.That(result.AverageSold, Is.GreaterThan(1));
+            Assert.That(result.ItemId, Is.EqualTo(targetItemId));
+            Assert.That(result.ItemInfo.Id, Is.EqualTo(targetItemId));
+            Assert.That(result.Recipe.TargetItemId, Is.EqualTo(targetItemId));
+            Assert.That(result.RecipeCost, Is.GreaterThan(1));
+            Assert.That(result.RecipeProfitVsListings, Is.GreaterThan(1));
+            Assert.That(result.RecipeProfitVsSold, Is.GreaterThan(1));
+            Assert.That(result.WorldId, Is.EqualTo(WorldId));
+        });
+    }
+
+    [Test]
+    public async Task GivenGetBestCraftsAsync_WhenNothingIsReturned_ThenWeStopAndReturnAnEmptyList()
+    {
+        _recipeProfitRepository.GetAll(WorldId).Returns(new List<RecipeProfitPoco>());
+
+        var result = await _craftRepository.GetBestCraftsAsync(WorldId);
+
+        await _recipeCostRepository.DidNotReceive().GetAsync(WorldId, Arg.Any<int>());
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public async Task GivenGetBestCraftsAsync_WhenEntriesAreReturned_ThenWeCreateSummariesForEachEntry()
+    {
+        await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
+        var profits = ctx.RecipeProfit.ToList();
+        _recipeProfitRepository.GetAll(WorldId).Returns(profits);
+
+        await _craftRepository.GetBestCraftsAsync(WorldId);
+
+        foreach (var profit in profits)
+            await _recipeCostRepository.Received().GetAsync(WorldId, profit.RecipeId);
+    }
+
+    [Test]
+    public void GivenSortByProfitability_WhenTheListProvidedIsEmpty_ThenWeReturnIt()
+    {
+        var result = _craftRepository.SortByProfitability(new List<CraftSummaryPoco>());
+
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public void GivenSortByProfitability_WhenInvalidCraftsAreProvided_ThenWeSanitizeThemFromResults()
+    {
+        var craftSummaryPocos = GetCraftSummaryPocos();
+        craftSummaryPocos[1].AverageListingPrice = 0;
+
+        var result = _craftRepository.SortByProfitability(craftSummaryPocos);
+
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.That(result[0].ItemId, Is.EqualTo(ItemId));
+    }
+
+    [Test]
+    public void GivenSortByProfitability_WhenValidCraftsAreProvided_ThenWeSortByProfit()
+    {
+        var craftSummaryPocos = GetCraftSummaryPocos();
+
+        var result = _craftRepository.SortByProfitability(craftSummaryPocos);
+
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result[0].RecipeProfitVsSold, Is.GreaterThanOrEqualTo(result[1].RecipeProfitVsSold));
+    }
+
+    [Test]
+    public void GivenSortByProfitability_WhenValidCraftsAreProvidedFromDifferent_ThenWeSortByWorldFirstOrDefault()
+    {
+        var otherWorldId = 999;
+        var craftSummaryPocos = GetCraftSummaryPocos();
+        craftSummaryPocos[0].WorldId = otherWorldId;
+
+        var result = _craftRepository.SortByProfitability(craftSummaryPocos);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result[0].WorldId, Is.EqualTo(WorldId));
+            Assert.That(result[0].WorldId, Is.LessThanOrEqualTo(otherWorldId));
+            Assert.That(result[1].WorldId, Is.EqualTo(otherWorldId));
+        });
+    }
+
+    private int SetupForSuccess()
+    {
+        using var ctx = new TestGilGoblinDbContext(_options, _configuration);
+        var recipes = ctx.Recipe.Where(r => r.Id == RecipeId).ToList();
+        var item = ctx.Item.FirstOrDefault(i => i.Id == ItemId);
+        var price = ctx.Price.FirstOrDefault(p => p.WorldId == WorldId && p.ItemId == ItemId);
+        var targetItemIdForRecipe = recipes.First(r => r.Id == RecipeId).TargetItemId;
+        var price2 = ctx.Price.FirstOrDefault(p => p.WorldId == WorldId && p.ItemId == targetItemIdForRecipe);
+        var profits = ctx.RecipeProfit.Where(rp => rp.RecipeId == RecipeId).ToList();
+        var item2 = ctx.Item.FirstOrDefault(i => i.Id == targetItemIdForRecipe);
+        var recipeCost = ctx.RecipeCost.FirstOrDefault(p => p.WorldId == WorldId && p.RecipeId == RecipeId);
+        _recipeProfitRepository.GetAll(WorldId).Returns(profits);
+        _recipeCostRepository.GetAsync(WorldId, RecipeId).Returns(recipeCost);
+        _recipeRepository.GetAll().Returns(recipes);
+        _recipeRepository.Get(RecipeId).Returns(recipes.FirstOrDefault(r => r.Id == RecipeId));
+        _priceRepository.Get(WorldId, ItemId).Returns(price);
+        _priceRepository.Get(WorldId, targetItemIdForRecipe).Returns(price2);
+        _itemRepository.Get(ItemId).Returns(item);
+        _itemRepository.Get(targetItemIdForRecipe).Returns(item2);
+        return targetItemIdForRecipe;
+    }
+
+
+    private static List<CraftSummaryPoco> GetCraftSummaryPocos()
+    {
+        return new List<CraftSummaryPoco>()
+        {
+            new()
+            {
+                WorldId = WorldId,
+                ItemId = ItemId,
+                AverageSold = 100,
+                AverageListingPrice = 101,
+                RecipeCost = 80,
+                Recipe = new RecipePoco { Id = RecipeId, TargetItemId = ItemId },
+                RecipeProfitVsListings = 21,
+                RecipeProfitVsSold = 20
+            },
+            new()
+            {
+                WorldId = WorldId,
+                ItemId = ItemId2,
+                AverageSold = 200,
+                AverageListingPrice = 202,
+                RecipeCost = 111,
+                Recipe = new RecipePoco { Id = RecipeId2, TargetItemId = ItemId2 },
+                RecipeProfitVsListings = 91,
+                RecipeProfitVsSold = 89
+            }
+        };
+    }
 }

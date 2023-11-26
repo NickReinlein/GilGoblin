@@ -21,7 +21,7 @@ public class DependencyInjectionTests
     }
 
     [Test]
-    public void GivenAProgram_WhenStarting_ThenThereAreNoCompileErrors()
+    public void GivenAGoblinApi_WhenWeStartup_ThenWeResolveWithoutError()
     {
         var client = _factory.CreateClient();
 
@@ -40,7 +40,7 @@ public class DependencyInjectionTests
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
-    public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
+    public void GivenAGoblinApi_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();
 

@@ -1,4 +1,5 @@
 using System;
+using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
@@ -20,15 +21,18 @@ public class DataUpdaterDependencyInjectionTests
     }
 
     [Test]
-    public void GivenAProgram_WhenStarting_ThenThereAreNoCompileErrors()
+    public void GivenAGoblinDataUpdater_WhenWeStartup_ThenWeResolveWithoutError()
     {
         var client = _factory.CreateClient();
 
         Assert.That(client, Is.Not.Null);
     }
 
+
     [TestCase(typeof(IBulkDataFetcher<PriceWebPoco, PriceWebResponse>))]
     [TestCase(typeof(IPriceFetcher))]
+    [TestCase(typeof(IPriceRepository<PricePoco>))]
+    [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IMarketableItemIdsFetcher))]
     [TestCase(typeof(IItemFetcher))]
     [TestCase(typeof(ISingleDataFetcher<ItemWebPoco>))]
@@ -36,7 +40,7 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IDataSaver<PricePoco>))]
     [TestCase(typeof(IDataUpdater<ItemPoco, ItemWebPoco>))]
     [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
-    public void GivenAGoblinService_WhenWeSetup_ThenTheServiceIsResolved(Type serviceType)
+    public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();
 

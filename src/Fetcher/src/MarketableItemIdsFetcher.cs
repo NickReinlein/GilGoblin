@@ -48,16 +48,6 @@ public class MarketableItemIdsFetcher : IMarketableItemIdsFetcher
             return new List<int>();
         }
     }
-    //
-    // public async Task<List<List<int>>> GetIdsAsBatchJobsAsync(int entriesPerPage)
-    // {
-    //     var allIds = await GetMarketableItemIdsAsync();
-    //     if (!allIds.Any())
-    //         return new List<List<int>>();
-    //
-    //     var batcher = new Batcher<int>(entriesPerPage);
-    //     return batcher.SplitIntoBatchJobs(allIds);
-    // }
 
     private static string PathSuffix => "marketable";
     private static string BasePath => "https://universalis.app/api/v2/";

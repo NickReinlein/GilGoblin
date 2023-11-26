@@ -95,7 +95,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new[] { 33, 99 });
+        var result = itemRepo.GetMultiple(new[]{ 654645646, 9953121 });
 
         Assert.That(!result.Any());
     }

@@ -1,11 +1,6 @@
-using System;
-
 namespace GilGoblin.Database.Pocos;
 
-public class RecipeCostPoco
+public class RecipeCostPoco : BaseRecipeValue
 {
-    public int RecipeId { get; set; }
-    public int WorldId { get; set; }
     public int Cost { get; set; }
-    public DateTimeOffset Updated { get; set; }
 }
