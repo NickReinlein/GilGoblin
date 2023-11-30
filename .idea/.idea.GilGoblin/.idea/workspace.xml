@@ -11,7 +11,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="a">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -218,7 +221,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Merging feature/improve-calculation-result-persistence",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant/Accountant.csproj",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -247,7 +250,7 @@
       <ReportDescription localRun="true" path="/tmp/qodana_output/qodana.sarif.json" reportGuid="37d2155e-8e5c-4dc8-897f-b28d6ef0f263" reportId="GilGoblin/qodana/2023-11-14" />
     </option>
   </component>
-  <component name="RunManager" selected=".NET Project.Accountant">
+  <component name="RunManager" selected=".NET Launch Settings Profile.Api: https">
     <configuration name="Publish Database to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/src/Database/bin/Release/net7.0/publish" target_framework="net7.0" uuid_high="1523818118304254509" uuid_low="-7370053201059395975" />
       <method v="2" />
@@ -345,6 +348,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Docker.Dockerfile: Compose Deployment" />
+        <item itemvalue="Docker.Dockerfile: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -425,14 +429,7 @@
       <workItem from="1700834291728" duration="17421000" />
       <workItem from="1700927771355" duration="7230000" />
       <workItem from="1701011603585" duration="2497000" />
-    </task>
-    <task id="LOCAL-00035" summary="fixed issue saving recipecost">
-      <option name="closed" value="true" />
-      <created>1698360931097</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1698360931097</updated>
+      <workItem from="1701295645391" duration="602000" />
     </task>
     <task id="LOCAL-00036" summary="fixed conversion issue for updater that prevented saving to db due to format">
       <option name="closed" value="true" />
@@ -818,7 +815,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701015771155</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="a">
+      <option name="closed" value="true" />
+      <created>1701019167794</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1701019167794</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -872,7 +877,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Api docker" />
     <MESSAGE value="data updater docker" />
     <MESSAGE value="Updated readme and a poco" />
     <MESSAGE value="fixed component tests" />
@@ -897,7 +901,8 @@
     <MESSAGE value="fixes DI issues" />
     <MESSAGE value="fsdafsd" />
     <MESSAGE value="Fixed missing Ids in GetIdsToUpdate()" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="a" />
+    <option name="LAST_COMMIT_MESSAGE" value="a" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
