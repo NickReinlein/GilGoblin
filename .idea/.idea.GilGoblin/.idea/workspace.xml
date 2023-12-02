@@ -224,37 +224,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Rider.SolutionAnalysis.ShowPreview": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "add-front-end",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant/Accountant.csproj",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "RiderDotCoverFilteringPageId",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Rider.SolutionAnalysis.ShowPreview&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;add-front-end&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/Accountant/Accountant.csproj&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderDotCoverFilteringPageId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Markdown"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Markdown&quot;
     ],
-    "rider.external.source.directories": [
-      "/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
-      "/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache",
-      "/home/lemoneleven/.local/share/Symbols/src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
+      &quot;/home/lemoneleven/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="QodanaReportsService">
     <option name="descriptions">
       <ReportDescription localRun="true" path="/tmp/qodana_output/qodana.sarif.json" reportGuid="37d2155e-8e5c-4dc8-897f-b28d6ef0f263" reportId="GilGoblin/qodana/2023-11-14" />
