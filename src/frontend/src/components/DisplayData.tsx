@@ -12,7 +12,9 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data }) => {
             <ul>
                 {data.map((item) => (
                     <li key={item.id}>
-                        ID: {item.id}, Name: {item.name}, Description: {item.description}
+                        ID: {item.id},
+                        Name: {item.name},
+                        Description: {item.description}
                         IconId: {item.iconId}
                         Level: {item.level}
                         StackSize: {item.stackSize}
