@@ -5,7 +5,7 @@
     <RootNamespace>GilGoblin.Api</RootNamespace>
     <PackageId>GilGoblin.Api</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.6.0</Version>
+    <Version>0.6.2</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -26,9 +26,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*"/>
     <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
   </ItemGroup>
-  <!--  <ItemGroup>-->
-  <!--    <ProjectReference Include="../Database/Database.csproj"/>-->
-  <!--  </ItemGroup>-->
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
