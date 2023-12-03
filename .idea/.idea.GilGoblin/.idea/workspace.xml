@@ -431,7 +431,7 @@
       <workItem from="1701011603585" duration="2497000" />
       <workItem from="1701295645391" duration="1206000" />
       <workItem from="1701440095589" duration="4931000" />
-      <workItem from="1701538283455" duration="896000" />
+      <workItem from="1701538283455" duration="992000" />
     </task>
     <task id="LOCAL-00036" summary="fixed conversion issue for updater that prevented saving to db due to format">
       <option name="closed" value="true" />

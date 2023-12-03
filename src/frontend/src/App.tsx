@@ -1,10 +1,10 @@
 import React from 'react';
-import FetchTable from './components/FetchTable';
+import TabComponent from "./components/TabComponent";
 
 const App = () => {
     return (
         <div>
-            <FetchTable />
+            <TabComponent />
         </div>
     );
 };
