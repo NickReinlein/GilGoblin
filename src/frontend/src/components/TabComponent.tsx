@@ -37,12 +37,7 @@ const TabComponent = () => {
                 </button>
             </div>
             <div className="results">
-                case activeTab:
-
-                    className={activeTab === 'Crafting' ? 'active' : ''}
-                    className={activeTab === 'Prices' ? 'active' : ''}
-                    className={activeTab === 'Items' ? 'active' : ''}
-                    className={activeTab === 'Recipes' ? 'active' : ''}
+                renderComponent(activeTab, `{'id':'1'});
             </div>
         </div>
     );
