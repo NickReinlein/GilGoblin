@@ -4,7 +4,12 @@ import PricesComponent from './PriceComponent';
 import ItemsComponent from './ItemComponent';
 import RecipesComponent from './RecipeComponent';
 
-const renderComponent = (componentName: string, data: any) => {
+interface ResultsProps {
+    componentName: string;
+    data: any;
+}
+
+const ResultsComponent: React.FC<ResultsProps> = ({ componentName, data }) => {
     switch (componentName) {
         case 'Items':
             return <ItemsComponent item={data} />;
@@ -19,4 +24,4 @@ const renderComponent = (componentName: string, data: any) => {
     }
 };
 
-export default ComponentToRender;
+export default ResultsComponent;

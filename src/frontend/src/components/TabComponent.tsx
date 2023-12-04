@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../styles/TabComponent.css';
+import ResultsComponent from './ResultsComponent';
 
 const TabComponent = () => {
     const [activeTab, setActiveTab] = useState('Items');
@@ -7,6 +8,8 @@ const TabComponent = () => {
     const handleTabClick = (tabName: string) => {
         setActiveTab(tabName);
     };
+
+    const data = {};
 
     return (
         <div className="tab-container">
@@ -37,7 +40,7 @@ const TabComponent = () => {
                 </button>
             </div>
             <div className="results">
-                renderComponent(activeTab, `{'id':'1'});
+                <ResultsComponent componentName={activeTab} data={data}/>
             </div>
         </div>
     );

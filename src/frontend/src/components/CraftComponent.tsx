@@ -18,7 +18,7 @@ const CraftComponent: React.FC<CraftProps> = ({ craftSummary }) => {
 
             <h3>Ingredients:</h3>
             <ul>
-                {craftSummary.ingredients.map((ingredient: Ingredient, index: number) => (
+                {craftSummary.ingredients?.map((ingredient: Ingredient, index: number) => (
                     <li key={index}>
                         Item ID: {ingredient.itemId}, Quantity: {ingredient.quantity}
                     </li>

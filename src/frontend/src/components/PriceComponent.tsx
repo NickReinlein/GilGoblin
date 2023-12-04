@@ -8,8 +8,8 @@ interface PriceProps {
 const PriceComponent: React.FC<PriceProps> = ({ price }) => {
     return (
         <div>
-            <h2>Item ID: {price.itemId}</h2>
-            <p>World ID: {price.worldId}</p>
+            <h2>Price for Item Id: {price.itemId}</h2>
+            <p>World Id: {price.worldId}</p>
             <p>Last Upload Time: {price.lastUploadTime}</p>
         </div>
     );
