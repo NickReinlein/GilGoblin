@@ -1,0 +1,21 @@
+.search-container {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    font-size: 18px;
+    padding: 10px 10px;
+    border-top: 1px solid forestgreen;
+    border-bottom: 1px solid forestgreen;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+}
+
+.search-inputs {
+    grid-column: 1;
+}
+
+.search-button {
+    grid-column: 2;
+    display: flex;
+}
+

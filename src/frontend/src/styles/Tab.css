@@ -7,7 +7,6 @@
     display: flex;
     justify-content: center;
     gap: 20px;
-    border-bottom: 1px solid forestgreen;
     padding-bottom: 20px;
 }
 
@@ -17,8 +16,10 @@
     border: 1px solid forestgreen;
     cursor: pointer;
     background-color: transparent;
+    color: white
 }
 
 .tabs button.active {
+    border: 2px solid forestgreen;
     border-bottom: 4px solid forestgreen;
 }
