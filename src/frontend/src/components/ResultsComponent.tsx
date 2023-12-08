@@ -3,6 +3,7 @@ import CraftingComponent from './CraftComponent';
 import PricesComponent from './PriceComponent';
 import ItemsComponent from './ItemComponent';
 import RecipesComponent from './RecipeComponent';
+import '../styles/Results.css';
 
 interface ResultsProps {
     componentName: string;

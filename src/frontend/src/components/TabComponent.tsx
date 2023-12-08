@@ -17,6 +17,7 @@ const TabComponent = () => {
             setTabData(result);
     };
     const handleSearchClick = (id: number, world: number) => {
+        // get data and set tab data
     };
 
     const getDataForTab = (tabName: string) => {

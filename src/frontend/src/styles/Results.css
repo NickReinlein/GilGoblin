@@ -1,6 +1,6 @@
 .results-container {
+    border-top: 1px solid white;
     text-align: center;
-    margin: 20px;
-    display: flex;
     justify-content: center;
+    display: flex;
 }

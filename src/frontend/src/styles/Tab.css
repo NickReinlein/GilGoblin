@@ -1,25 +1,25 @@
 .tab-container {
     text-align: center;
-    margin: 20px;
+    margin: 10px 5px 5px;
 }
 
 .tabs {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding-bottom: 20px;
+    gap: 27px;
+    padding-bottom: 10px;
 }
 
 .tabs button {
-    font-size: 20px;
+    font-size: 27px;
     padding: 10px 20px;
-    border: 1px solid forestgreen;
+    border: 1px solid darkgreen;
     cursor: pointer;
     background-color: transparent;
     color: white
 }
 
 .tabs button.active {
-    border: 2px solid forestgreen;
-    border-bottom: 4px solid forestgreen;
+    border: 2px solid darkgreen;
+    border-bottom: 4px solid darkgreen;
 }
