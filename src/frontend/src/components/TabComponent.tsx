@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import '../styles/Tab.css';
-import SearchInputComponent from './SearchInputComponent';
+import SearchComponent from './SearchComponent';
 
 import TabButtonsComponent from './TabButtonsComponent';
 import ResultsComponent from "./ResultsComponent";
@@ -99,15 +99,10 @@ const TabComponent = () => {
                 ))}
             </div>
             <div className="search-container">
-                <SearchInputComponent
-                    id={1639}
-                    world={34}
-                    onClick={handleSearchClick}/>
+                <SearchComponent onClick={handleSearchClick}/>
             </div>
             <div className="results-container">
-                <ResultsComponent
-                    componentName={activeTab}
-                    data={tabData}/>
+                <ResultsComponent componentName={activeTab} data={tabData}/>
             </div>
         </div>
     );

@@ -1,12 +1,13 @@
 .tab-container {
     text-align: center;
     margin: 10px 5px 5px;
+    border-: 1px solid darkgreen;
 }
 
 .tabs {
     display: flex;
     justify-content: center;
-    gap: 27px;
+    gap: 22px;
     padding-bottom: 10px;
 }
 
@@ -21,5 +22,8 @@
 
 .tabs button.active {
     border: 2px solid darkgreen;
-    border-bottom: 4px solid darkgreen;
+    border-bottom: 5px solid darkgreen;
+    text-decoration: underline;
+    display: inline-block;
+    text-decoration-color: darkgreen;
 }
