@@ -12,11 +12,12 @@ const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world,
     return (
         <div className="search-inputs">
             <div>
-                <label className="search-label" htmlFor="worldInput">World: </label>
+                <label className="search-label" htmlFor="worldInput">World</label>
                 <select
                     className="search-dropdown"
                     id="worldInput"
                     value={world}
+                    defaultValue={34}
                     onChange={(e) => {
                         if (onWorldChange)
                             onWorldChange(Number(e.target.value))
@@ -26,12 +27,13 @@ const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world,
                 </select>
             </div>
             <div>
-                <label className="search-label" htmlFor="idInput">Id: </label>
+                <label className="search-label" htmlFor="idInput">Id</label>
                 <input
                     className="search-input"
                     type="number"
                     id="idInput"
                     value={id}
+                    defaultValue={1609}
                     onChange={(e) => {
                         if (onIdChange)
                             onIdChange(Number(e.target.value))

@@ -9,17 +9,20 @@
 }
 
 .search-label {
+    margin-right: 5px;
     font-size: 22px;
     padding: 5px 10px 5px 20px;
 }
 
 .search-input {
+    margin: 15px 5px 5px;
     font-size: 22px;
     width: 100px;
-    padding: 5px 10px 5px 20px;
+    padding: 5px 5px 5px 10px;
 }
 
 .search-dropdown {
+    margin: 5px;
     font-size: 22px;
     width: 100px;
     padding: 5px 10px 5px 20px;
