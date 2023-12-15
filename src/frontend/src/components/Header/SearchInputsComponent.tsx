@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/SearchInputs.css';
+import '../../styles/SearchInputs.css';
 
 interface SearchInputsComponentProps {
     id: number,
@@ -17,7 +17,6 @@ const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world,
                     className="search-dropdown"
                     id="worldInput"
                     value={world}
-                    defaultValue={34}
                     onChange={(e) => {
                         if (onWorldChange)
                             onWorldChange(Number(e.target.value))
@@ -33,7 +32,6 @@ const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world,
                     type="number"
                     id="idInput"
                     value={id}
-                    defaultValue={1609}
                     onChange={(e) => {
                         if (onIdChange)
                             onIdChange(Number(e.target.value))

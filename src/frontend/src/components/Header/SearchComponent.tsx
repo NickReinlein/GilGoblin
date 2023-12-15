@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import SearchInputsComponent from "./SearchInputsComponent";
-import '../styles/Search.css';
+import '../../styles/Search.css';
 
 interface SearchComponentProps {
     onClick: (id: number, world: number) => void;
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = ({onClick}) => {
-    const [id, setId] = useState(1609);
+    const [id, setId] = useState(1639);
     const [world, setWorld] = useState(34);
 
     const handleIdChange = (newId: number) => {
@@ -18,6 +18,10 @@ const SearchComponent: React.FC<SearchComponentProps> = ({onClick}) => {
         setWorld(newWorld);
     };
 
+    function handleClick() {
+        onClick(id, world);
+    }
+
     return (
         <div className="search-container">
             <SearchInputsComponent id={id}
@@ -25,11 +29,9 @@ const SearchComponent: React.FC<SearchComponentProps> = ({onClick}) => {
                                    onIdChange={handleIdChange}
                                    onWorldChange={handleWorldChange}
             />
-            <div className="search-button">
-                <button onClick={() => {}}>
-                    Search
-                </button>
-            </div>
+            <button className="search-button" onClick={() => handleClick()}>
+                Search
+            </button>
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CraftSummary, Ingredient } from '../types/types';
+import { CraftSummary, Ingredient } from '../../types/types';
 
 interface CraftProps {
     craftSummary: CraftSummary;

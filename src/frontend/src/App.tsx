@@ -1,5 +1,5 @@
 import React from 'react';
-import TabComponent from "./components/TabComponent";
+import TabComponent from "./components/Header/TabComponent";
 
 const App = () => {
     return (

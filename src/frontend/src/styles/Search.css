@@ -9,16 +9,16 @@
     border-top: 1px solid darkgreen;
 }
 
-.search-button button {
-    display: flex;
+.search-button {
     background-color: black;
     color: white;
     font-size: 27px;
     align-items: center;
     padding: 5px 20px 5px 20px;
-    margin-left: 15px;
-    min-width: 100px;
+    margin-left: 20px;
+    min-width: 120px;
     min-height: 60px;
-    background-image: url("//assets//search_small.png");
+    background-image: url('/public/assets/search_small.png');
+    background-repeat: no-repeat;
 }
 
