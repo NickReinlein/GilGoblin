@@ -48,7 +48,7 @@ export interface RecipeValue {
     updated: string;
 }
 
-export interface CraftSummary {
+export interface craft {
     itemId: number;
     worldId: number;
     itemInfo: Item;

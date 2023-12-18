@@ -1,24 +1,23 @@
 import React from 'react';
-import { CraftSummary, Ingredient } from '../../types/types';
+import { craft, Ingredient } from '../../types/types';
 
 interface CraftProps {
-    craftSummary: CraftSummary;
+    craft: craft;
 }
 
-const CraftComponent: React.FC<CraftProps> = ({ craftSummary }) => {
+const CraftComponent: React.FC<CraftProps> = ({ craft }) => {
     return (
         <div>
-            <h2>Craft Summary for Item ID: {craftSummary.itemId}</h2>
-            <p>World ID: {craftSummary.worldId}</p>
-            <p>Average Listing Price: {craftSummary.averageListingPrice}</p>
-            <p>Average Sold: {craftSummary.averageSold}</p>
-            <p>Recipe Cost: {craftSummary.recipeCost}</p>
-            <p>Recipe Profit vs Sold: {craftSummary.recipeProfitVsSold}</p>
-            <p>Recipe Profit vs Listings: {craftSummary.recipeProfitVsListings}</p>
+            <h2>Craft Summary for Item ID {craft.itemId}, in world {craft.worldId}</h2>
+            <p>Average Listing Price: {craft.averageListingPrice}</p>
+            <p>Average Sold: {craft.averageSold}</p>
+            <p>Recipe Cost: {craft.recipeCost}</p>
+            <p>Recipe Profit vs Sold: {craft.recipeProfitVsSold}</p>
+            <p>Recipe Profit vs Listings: {craft.recipeProfitVsListings}</p>
 
             <h3>Ingredients:</h3>
             <ul>
-                {craftSummary.ingredients?.map((ingredient: Ingredient, index: number) => (
+                {craft.ingredients?.map((ingredient: Ingredient, index: number) => (
                     <li key={index}>
                         Item ID: {ingredient.itemId}, Quantity: {ingredient.quantity}
                     </li>
