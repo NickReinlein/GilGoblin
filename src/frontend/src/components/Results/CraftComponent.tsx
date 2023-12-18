@@ -1,8 +1,8 @@
 import React from 'react';
-import { craft, Ingredient } from '../../types/types';
+import { Craft, Ingredient } from '../../types/types';
 
 interface CraftProps {
-    craft: craft;
+    craft: Craft;
 }
 
 const CraftComponent: React.FC<CraftProps> = ({ craft }) => {

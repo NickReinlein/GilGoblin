@@ -12,7 +12,7 @@ export interface Item {
     canHq: boolean;
 }
 
-export interface BasePrice {
+export interface Price {
     id: number;
     name: string;
     description: string;
@@ -42,13 +42,7 @@ export interface Price {
     lastUploadTime: number;
 }
 
-export interface RecipeValue {
-    recipeId: number;
-    worldId: number;
-    updated: string;
-}
-
-export interface craft {
+export interface Craft {
     itemId: number;
     worldId: number;
     itemInfo: Item;
