@@ -173,6 +173,7 @@ public class CraftRepositoryTests : PriceDependentTests
         _recipeCostRepository.GetAsync(WorldId, RecipeId).Returns(recipeCost);
         _recipeRepository.GetAll().Returns(recipes);
         _recipeRepository.Get(RecipeId).Returns(recipes.FirstOrDefault(r => r.Id == RecipeId));
+        _recipeRepository.GetMultiple(Arg.Any<IEnumerable<int>>()).Returns(recipes);
         _priceRepository.Get(WorldId, ItemId).Returns(price);
         _priceRepository.Get(WorldId, targetItemIdForRecipe).Returns(price2);
         _itemRepository.Get(ItemId).Returns(item);

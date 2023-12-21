@@ -16,7 +16,6 @@ public class CraftControllerTests
     private ICraftRepository<CraftSummaryPoco> _repo;
 
     private static readonly int _world = 34;
-    private static readonly int _craftId = 108;
 
     [SetUp]
     public void SetUp()

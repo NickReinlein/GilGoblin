@@ -31,7 +31,6 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     private IPriceRepository<PricePoco> _priceRepo;
     private const int worldId = 34;
     private const int recipeId = 11;
-    private const int recipeId2 = 12;
 
     [SetUp]
     public override void SetUp()

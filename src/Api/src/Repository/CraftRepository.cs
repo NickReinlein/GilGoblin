@@ -14,6 +14,7 @@ namespace GilGoblin.Api.Repository;
 public interface ICraftRepository<T> where T : class
 {
     Task<List<T>> GetBestCraftsAsync(int worldId);
+    Task<T?> GetCraftAsync(int worldId, int recipeId);
     List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
 }
 
@@ -48,8 +49,14 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     public async Task<List<CraftSummaryPoco>> GetBestCraftsAsync(int worldId)
     {
         var crafts = new List<CraftSummaryPoco>();
-        var profits = _recipeProfitRepository.GetAll(worldId).ToList();
-        var allRecipes = _recipeRepository.GetAll().ToList();
+        var profits = 
+            _recipeProfitRepository
+                .GetAll(worldId)
+                .OrderBy(rp => rp.RecipeProfitVsSold)
+                .Take(100)
+                .ToList();
+        var recipeIds = profits.Select(i => i.RecipeId).ToList();
+        var allRecipes = _recipeRepository.GetMultiple(recipeIds).ToList();
         foreach (var profit in profits)
         {
             try
@@ -62,12 +69,18 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             }
             catch (Exception e)
             {
-                var message =
-                    $"An error occured getting the craft summary for recipe {profit.RecipeId} in world {worldId}: {e.Message}";
+                var message = $"Error creating craft summary: recipe {profit.RecipeId}, world {worldId}: {e.Message}";
                 _logger.LogError(message);
             }
         }
+
         return SortByProfitability(crafts);
+    }
+
+    public Task<CraftSummaryPoco?> GetCraftAsync(int worldId, int recipeId)
+    {
+        var recipe = _recipeRepository.Get(recipeId);
+        return recipe is null ? null : CreateSummaryAsync(worldId, recipeId, new List<RecipePoco> { recipe });
     }
 
     private async Task<CraftSummaryPoco> CreateSummaryAsync(int worldId, int recipeId,

@@ -1,5 +1,4 @@
 using System;
-using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
