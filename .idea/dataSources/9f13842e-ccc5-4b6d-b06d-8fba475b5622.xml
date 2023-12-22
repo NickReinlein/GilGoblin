@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="gilgoblin@localhost">
-  <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.49">
+  <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.51">
     <root id="1">
       <DateStyle>mdy</DateStyle>
       <IntrospectionStateNumber>20146</IntrospectionStateNumber>
@@ -4227,8 +4227,7 @@ false posixrules
       <Comment>standard public schema</Comment>
       <Current>1</Current>
       <IntrospectionStateNumber>20146</IntrospectionStateNumber>
-      <IntrospectionTimestamp>2023-11-25.13:08:04.571</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-11-25.18:08:04</LocalIntrospectionTimestamp>
+      <LastIntrospectionLocalTimestamp>2023-11-25.18:08:04</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>

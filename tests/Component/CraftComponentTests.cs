@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
+[Timeout(20000)]
 public class CraftComponentTests : ComponentTests
 {
     [Test]
@@ -20,8 +21,7 @@ public class CraftComponentTests : ComponentTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
-    [Test, Timeout(20000), Ignore("Ignore for performance.. should still pass")]
-    // [Test, Timeout(20000)]
+    [Test, Ignore("Ignore for performance.. should still pass")]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned()
     {
         const string fullEndpoint = "http://localhost:55448/craft/34";
@@ -46,7 +46,7 @@ public class CraftComponentTests : ComponentTests
         });
     }
 
-    [Test, Timeout(20000)]
+    [Test]
     public async Task GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned()
     {
         const string fullEndpoint = "http://localhost:55448/craft/34/10";
@@ -70,7 +70,7 @@ public class CraftComponentTests : ComponentTests
     }
 
     [Test]
-    public async Task GivenACallToGetBestCrafts_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
         const string fullEndpoint = "http://localhost:55448/craft/34/1614654";
 

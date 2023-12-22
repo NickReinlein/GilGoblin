@@ -49,7 +49,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     public async Task<List<CraftSummaryPoco>> GetBestCraftsAsync(int worldId)
     {
         var crafts = new List<CraftSummaryPoco>();
-        var profits = 
+        var profits =
             _recipeProfitRepository
                 .GetAll(worldId)
                 .OrderBy(rp => rp.RecipeProfitVsSold)
@@ -79,8 +79,16 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
 
     public Task<CraftSummaryPoco?> GetCraftAsync(int worldId, int recipeId)
     {
-        var recipe = _recipeRepository.Get(recipeId);
-        return recipe is null ? null : CreateSummaryAsync(worldId, recipeId, new List<RecipePoco> { recipe });
+        try
+        {
+            var recipe = _recipeRepository.Get(recipeId);
+            return recipe is null ? null : CreateSummaryAsync(worldId, recipeId, new List<RecipePoco> { recipe });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to get craft {Recipe} for world {World}", recipeId, worldId);
+            return null;
+        }
     }
 
     private async Task<CraftSummaryPoco> CreateSummaryAsync(int worldId, int recipeId,

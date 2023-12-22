@@ -24,9 +24,8 @@ public class RecipeProfitRepository : IRecipeProfitRepository
         if (cached is not null)
             return cached;
 
-        var recipeProfit = _dbContext.RecipeProfit.FirstOrDefault(
-            p => p.WorldId == worldId && p.RecipeId == recipeId
-        );
+        var recipeProfit = _dbContext.RecipeProfit
+            .FirstOrDefault(p => p.WorldId == worldId && p.RecipeId == recipeId);
         if (recipeProfit is not null)
             await Add(recipeProfit);
 

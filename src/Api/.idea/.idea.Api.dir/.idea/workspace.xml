@@ -10,10 +10,12 @@
   <component name="ChangeListManager">
     <list default="true" id="8fc995d1-6d0b-4c1e-963a-26882cb579d0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Accountant/Accountant.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Accountant/Accountant.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/CraftController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/RecipeProfitRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeProfitRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Component/CraftComponentTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +52,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    ".NET Launch Settings Profile.Api: http.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -113,6 +116,7 @@
       <workItem from="1701537561016" duration="228000" />
       <workItem from="1703196164160" duration="65000" />
       <workItem from="1703196292853" duration="1915000" />
+      <workItem from="1703251891361" duration="756000" />
     </task>
     <task id="LOCAL-00001" summary="fixed appsettings error">
       <option name="closed" value="true" />
@@ -144,5 +148,37 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="fixed appsettings error" />
     <option name="LAST_COMMIT_MESSAGE" value="fixed appsettings error" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
+          <line>50</line>
+          <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="50" containingFunctionPresentation="Method 'GetBestCraftsAsync'">
+            <startOffsets>
+              <option value="1780" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1822" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
+          <line>96</line>
+          <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="88" containingFunctionPresentation="Method 'CreateSummaryAsync'">
+            <startOffsets>
+              <option value="3404" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3477" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
