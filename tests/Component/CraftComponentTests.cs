@@ -12,21 +12,16 @@ namespace GilGoblin.Tests.Component;
 public class CraftComponentTests : ComponentTests
 {
     [Test]
-    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenNotFoundIsReturned()
     {
         const string fullEndpoint = "http://localhost:55448/craft/1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var list = await response.Content.ReadFromJsonAsync<List<CraftSummaryPoco>>();
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
-            Assert.That(list, Is.Empty);
-        });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
-    [Test, Ignore("Ignore for performance.. should still pass")]
+    [Test]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned()
     {
         const string fullEndpoint = "http://localhost:55448/craft/34";
@@ -74,19 +69,18 @@ public class CraftComponentTests : ComponentTests
         });
     }
 
-    [TestCase("/34/1614654")]
-    [TestCase("/1614654/100")]
-    [TestCase("/1614654/1614654")]
-    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent(string urlSuffix)
+    // First: Wrong recipeId == NotFound
+    // Then: Any further errors == BadRequest 
+    [TestCase("/34/1614654", HttpStatusCode.NotFound)]
+    [TestCase("/1614654/1614654", HttpStatusCode.NotFound)]
+    [TestCase("/1614654/100", HttpStatusCode.BadRequest)]
+    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
+        HttpStatusCode expectedErrorCode)
     {
         var fullEndpoint = $"http://localhost:55448/craft{urlSuffix}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
-            Assert.That(response.Content.ReadAsStringAsync().Result, Is.Empty);
-        });
+        Assert.That(response.StatusCode, Is.EqualTo(expectedErrorCode));
     }
 }

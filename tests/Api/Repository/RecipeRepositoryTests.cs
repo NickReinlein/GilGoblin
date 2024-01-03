@@ -45,7 +45,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         Assert.That(result?.Id, Is.EqualTo(id));
     }
 
-    [TestCase(111, 2)]
+    [TestCase(9984, 2)]
     [TestCase(222, 1)]
     [TestCase(333, 1)]
     public void
@@ -64,7 +64,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
         _itemRecipeCache.Received(1).Add(targetItemId, Arg.Any<List<RecipePoco>>());
     }
 
-    [TestCase(111, 2)]
+    [TestCase(9984, 2)]
     [TestCase(222, 1)]
     [TestCase(333, 1)]
     public void GivenGetRecipesForItem_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntryImmediately(

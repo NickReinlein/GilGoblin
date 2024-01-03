@@ -21,17 +21,16 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
     }
 
     [HttpGet("{recipeId:int}")]
-    public async Task<CraftSummaryPoco?> GetAsync(int worldId, int recipeId)
+    public async Task<ActionResult<CraftSummaryPoco>> GetAsync(int worldId, int recipeId)
     {
         _logger.LogInformation($"Fetching craft for world {worldId} with recipeId {recipeId}");
         return await _craftRepo.GetAsync(worldId, recipeId);
     }
 
     [HttpGet("")]
-    public async Task<IEnumerable<CraftSummaryPoco>> GetBestAsync(int worldId)
+    public async Task<ActionResult<List<CraftSummaryPoco>>>  GetBestAsync(int worldId)
     {
         _logger.LogInformation($"Fetching best crafting result for world {worldId}");
-        var crafts = await _craftRepo.GetBestAsync(worldId);
-        return crafts;
+        return await _craftRepo.GetBestAsync(worldId);
     }
 }

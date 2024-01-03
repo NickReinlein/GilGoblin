@@ -7,8 +7,8 @@ namespace GilGoblin.Api.Controllers;
 public interface ICraftController<T> where T : class
 {
     [HttpGet("")]
-    Task<IEnumerable<T>> GetBestAsync(int worldId);
+    Task<ActionResult<List<T>>>  GetBestAsync(int worldId);
 
     [HttpGet("{recipeId:int}")]
-    Task<T?> GetAsync(int worldId, int recipeId);
+    Task<ActionResult<T>> GetAsync(int worldId, int recipeId);
 }

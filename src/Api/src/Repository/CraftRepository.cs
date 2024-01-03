@@ -8,13 +8,15 @@ using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GilGoblin.Api.Repository;
 
 public interface ICraftRepository<T> where T : class
 {
-    Task<List<T>> GetBestAsync(int worldId);
-    Task<T?> GetAsync(int worldId, int recipeId);
+    Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId);
+    Task<ActionResult<T>> GetAsync(int worldId, int recipeId);
     List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
 }
 
@@ -46,15 +48,18 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _cache = cache;
     }
 
-    public async Task<List<CraftSummaryPoco>> GetBestAsync(int worldId)
+    public async Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId)
     {
         var crafts = new List<CraftSummaryPoco>();
         var profits =
             _recipeProfitRepository
                 .GetAll(worldId)
-                .OrderBy(rp => rp.RecipeProfitVsSold)
+                .OrderByDescending(rp => rp.RecipeProfitVsSold)
                 .Take(100)
                 .ToList();
+        if (!profits.Any())
+            return new NotFoundResult();
+
         var recipeIds = profits.Select(i => i.RecipeId).ToList();
 
         var allRecipes = _recipeRepository.GetMultiple(recipeIds).ToList();
@@ -75,24 +80,28 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             }
         }
 
-        return SortByProfitability(crafts);
+        return crafts.Any() ? new OkObjectResult(crafts) : new NotFoundResult();
     }
 
-    public Task<CraftSummaryPoco?> GetAsync(int worldId, int recipeId)
+    public async Task<ActionResult<CraftSummaryPoco>> GetAsync(int worldId, int recipeId)
     {
         try
         {
             var recipe = _recipeRepository.Get(recipeId);
-            return recipe is null ? null : CreateSummaryAsync(worldId, recipeId, new List<RecipePoco> { recipe });
+            if (recipe is null) return new NotFoundResult();
+            var summary = await CreateSummaryAsync(worldId, recipeId, new List<RecipePoco> { recipe });
+            return new OkObjectResult(summary);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to get craft {Recipe} for world {World}", recipeId, worldId);
-            return null;
+            return new BadRequestResult();
         }
     }
 
-    private async Task<CraftSummaryPoco> CreateSummaryAsync(int worldId, int recipeId,
+    private async Task<CraftSummaryPoco> CreateSummaryAsync(
+        int worldId, 
+        int recipeId,
         IEnumerable<RecipePoco> allRecipes)
     {
         var recipeCost = await _recipeCostRepository.GetAsync(worldId, recipeId);
@@ -126,8 +135,6 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     public List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
     {
         var craftsList = crafts.ToList();
-        if (!craftsList.Any())
-            return craftsList;
 
         try
         {
