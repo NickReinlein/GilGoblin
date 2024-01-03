@@ -12,10 +12,11 @@ namespace GilGoblin.Tests.Api.Controllers;
 
 public class CraftControllerTests
 {
-    private CraftController? _controller;
+    private CraftController _controller = null!;
     private ICraftRepository<CraftSummaryPoco> _repo;
 
-    private static readonly int _world = 34;
+    private const int world = 34;
+    private const int recipe = 221;
 
     [SetUp]
     public void SetUp()
@@ -38,20 +39,40 @@ public class CraftControllerTests
     [Test]
     public async Task WhenReceivingARequestGetBestCrafts_ThenTheRepositoryIsCalled()
     {
-        _repo.GetBestCraftsAsync(_world).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestAsync(world).Returns(new List<CraftSummaryPoco>());
 
-        _ = await _controller!.GetBestCrafts(_world);
+        _ = await _controller.GetBestAsync(world);
 
-        await _repo.Received(1).GetBestCraftsAsync(_world);
+        await _repo.Received(1).GetBestAsync(world);
     }
 
     [Test]
     public async Task WhenReceivingARequestGetBestCrafts_ThenAnEnumerableIsReturned()
     {
-        _repo.GetBestCraftsAsync(_world).Returns(new List<CraftSummaryPoco>());
+        _repo.GetBestAsync(world).Returns(new List<CraftSummaryPoco>());
 
-        var result = await _controller!.GetBestCrafts(_world);
+        var result = await _controller.GetBestAsync(world);
 
-        Assert.That(result is not null);
+        Assert.That(result, Is.Not.Null.Or.Empty);
+    }    
+    
+    [Test]
+    public async Task WhenReceivingARequestGetCrafts_ThenTheRepositoryIsCalled()
+    {
+        _repo.GetAsync(world, recipe).Returns(new CraftSummaryPoco());
+
+        _ = await _controller.GetAsync(world, recipe);
+
+        await _repo.Received(1).GetAsync(world, recipe);
+    }
+
+    [Test]
+    public async Task WhenReceivingARequestGetCrafts_ThenAnEnumerableIsReturned()
+    {
+        _repo.GetAsync(world, recipe).Returns(new CraftSummaryPoco());
+
+        var result = await _controller.GetAsync(world, recipe);
+
+        Assert.That(result, Is.Not.Null);
     }
 }

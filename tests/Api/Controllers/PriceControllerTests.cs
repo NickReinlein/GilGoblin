@@ -24,11 +24,16 @@ public class PriceControllerTests
             _repo,
             NullLoggerFactory.Instance.CreateLogger<PriceController>()
         );
+    }
+    
+    [Test]
+    public void GivenAPriceController_WhenWeSetup_ThenItIsCreatedSuccessfully()
+    {
         Assert.That(_controller, Is.Not.Null);
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfPricesIsReturned()
+    public void GivenAPriceController_WhenWeReceiveAGetAllRequest_ThenAListOfPricesIsReturned()
     {
         var poco1 = CreatePoco();
         var poco2 = CreatePoco();
@@ -46,7 +51,7 @@ public class PriceControllerTests
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetRequest_ThenAPriceIsReturned()
+    public void GivenAPriceController_WhenWeReceiveAGetRequest_ThenAPriceIsReturned()
     {
         var poco1 = CreatePoco();
         _repo.Get(WorldId, poco1.ItemId).Returns(poco1);
@@ -57,7 +62,7 @@ public class PriceControllerTests
     }
 
     [Test]
-    public void GivenAController_WhenWeReceiveAGetRequestForANonExistentPrice_ThenNullIsReturned()
+    public void GivenAPriceController_WhenWeReceiveAGetRequestForAnInvalidPrice_ThenNullIsReturned()
     {
         var result = _controller.Get(WorldId, 42);
 

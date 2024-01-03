@@ -12,7 +12,7 @@ public class DataCache<T, U> : IDataCache<T, U>
         Cache[key] = item;
     }
 
-    public U? Get(T key) => Cache.TryGetValue(key, out var value) ? value : null;
+    public U? Get(T key) => Cache.GetValueOrDefault(key);
 
     public IEnumerable<U> GetMultiple(IEnumerable<T> keys)
     {

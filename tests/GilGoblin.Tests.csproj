@@ -45,4 +45,14 @@
     <ProjectReference Include="../src/DataUpdater/DataUpdater.csproj"/>
     <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Component\appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

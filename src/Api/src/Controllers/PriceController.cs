@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace GilGoblin.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]/{worldId:int}")]
 public class PriceController : ControllerBase, IPriceController
 {
     private readonly IPriceRepository<PricePoco> _priceRepo;
@@ -19,14 +19,14 @@ public class PriceController : ControllerBase, IPriceController
         _priceRepo = priceRepo;
     }
 
-    [HttpGet("{worldId:int}/{id:int}")]
+    [HttpGet("{id:int}")]
     public PricePoco? Get(int worldId, int id)
     {
         _logger.LogInformation($"Fetching market data world {worldId}, id: {id}");
         return _priceRepo.Get(worldId, id);
     }
 
-    [HttpGet("{worldId:int}")]
+    [HttpGet("")]
     public IEnumerable<PricePoco> GetAll(int worldId)
     {
         _logger.LogInformation($"Fetching all market data for world {worldId}");

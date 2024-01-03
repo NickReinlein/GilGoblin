@@ -50,10 +50,10 @@ public class ItemComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var items = await response.Content.ReadFromJsonAsync<IEnumerable<ItemPoco>>(
+        var items = (await response.Content.ReadFromJsonAsync<IEnumerable<ItemPoco>>(
             GetSerializerOptions()
-        );
-        var itemCount = items.Count();
+        )).ToList();
+        var itemCount = items.Count;
         var missingEntryThreshold = itemCount * missingEntryPercentageThreshold;
         Assert.Multiple(() =>
         {
@@ -79,13 +79,13 @@ public class ItemComponentTests : ComponentTests
                 Is.EqualTo(3),
                 "StackSize is above 999999999 invalid"
             );
-            // From experience, has higher proportion of missing data
+            // has higher proportion of missing data
             Assert.That(
                 items.Count(p => p.PriceLow > 0),
                 Is.GreaterThan(missingEntryThreshold * 0.5),
                 "Missing PriceLow"
             );
-            // From experience, has higher proportion of missing data
+            // has higher proportion of missing data
             Assert.That(
                 items.Count(p => p.PriceMid > 0),
                 Is.GreaterThan(missingEntryThreshold * 0.5),

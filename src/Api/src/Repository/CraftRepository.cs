@@ -13,8 +13,8 @@ namespace GilGoblin.Api.Repository;
 
 public interface ICraftRepository<T> where T : class
 {
-    Task<List<T>> GetBestCraftsAsync(int worldId);
-    Task<T?> GetCraftAsync(int worldId, int recipeId);
+    Task<List<T>> GetBestAsync(int worldId);
+    Task<T?> GetAsync(int worldId, int recipeId);
     List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
 }
 
@@ -46,7 +46,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _cache = cache;
     }
 
-    public async Task<List<CraftSummaryPoco>> GetBestCraftsAsync(int worldId)
+    public async Task<List<CraftSummaryPoco>> GetBestAsync(int worldId)
     {
         var crafts = new List<CraftSummaryPoco>();
         var profits =
@@ -56,6 +56,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
                 .Take(100)
                 .ToList();
         var recipeIds = profits.Select(i => i.RecipeId).ToList();
+
         var allRecipes = _recipeRepository.GetMultiple(recipeIds).ToList();
         foreach (var profit in profits)
         {
@@ -77,7 +78,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         return SortByProfitability(crafts);
     }
 
-    public Task<CraftSummaryPoco?> GetCraftAsync(int worldId, int recipeId)
+    public Task<CraftSummaryPoco?> GetAsync(int worldId, int recipeId)
     {
         try
         {

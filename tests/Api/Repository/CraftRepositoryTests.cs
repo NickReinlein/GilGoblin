@@ -48,24 +48,24 @@ public class CraftRepositoryTests : PriceDependentTests
     }
 
     [Test]
-    public async Task GivenGetBestCraftsAsync_WhenEntriesAreReturned_ThenWeCreateCraftSummaries()
+    public async Task GivenGetBestAsync_WhenEntriesAreReturned_ThenWeCreateCraftSummaries()
     {
         await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
         var profits = ctx.RecipeProfit.ToList();
         _recipeProfitRepository.GetAll(WorldId).Returns(profits);
 
-        await _craftRepository.GetBestCraftsAsync(WorldId);
+        await _craftRepository.GetBestAsync(WorldId);
 
         foreach (var profit in profits)
             await _recipeCostRepository.Received().GetAsync(WorldId, profit.RecipeId);
     }
 
     [Test]
-    public async Task GivenGetBestCraftsAsync_WhenEntriesAreReturned_ThenTheSummaryReturnedIsValid()
+    public async Task GivenGetBestAsync_WhenEntriesAreReturned_ThenTheSummaryReturnedIsValid()
     {
         var targetItemId = SetupForSuccess();
 
-        var results = await _craftRepository.GetBestCraftsAsync(WorldId);
+        var results = await _craftRepository.GetBestAsync(WorldId);
 
         Assert.Multiple(() =>
         {
@@ -86,24 +86,24 @@ public class CraftRepositoryTests : PriceDependentTests
     }
 
     [Test]
-    public async Task GivenGetBestCraftsAsync_WhenNothingIsReturned_ThenWeStopAndReturnAnEmptyList()
+    public async Task GivenGetBestAsync_WhenNothingIsReturned_ThenWeStopAndReturnAnEmptyList()
     {
         _recipeProfitRepository.GetAll(WorldId).Returns(new List<RecipeProfitPoco>());
 
-        var result = await _craftRepository.GetBestCraftsAsync(WorldId);
+        var result = await _craftRepository.GetBestAsync(WorldId);
 
         await _recipeCostRepository.DidNotReceive().GetAsync(WorldId, Arg.Any<int>());
         Assert.That(result, Is.Empty);
     }
 
     [Test]
-    public async Task GivenGetBestCraftsAsync_WhenEntriesAreReturned_ThenWeCreateSummariesForEachEntry()
+    public async Task GivenGetBestAsync_WhenEntriesAreReturned_ThenWeCreateSummariesForEachEntry()
     {
         await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
         var profits = ctx.RecipeProfit.ToList();
         _recipeProfitRepository.GetAll(WorldId).Returns(profits);
 
-        await _craftRepository.GetBestCraftsAsync(WorldId);
+        await _craftRepository.GetBestAsync(WorldId);
 
         foreach (var profit in profits)
             await _recipeCostRepository.Received().GetAsync(WorldId, profit.RecipeId);
@@ -164,7 +164,7 @@ public class CraftRepositoryTests : PriceDependentTests
         var recipes = ctx.Recipe.Where(r => r.Id == RecipeId).ToList();
         var item = ctx.Item.FirstOrDefault(i => i.Id == ItemId);
         var price = ctx.Price.FirstOrDefault(p => p.WorldId == WorldId && p.ItemId == ItemId);
-        var targetItemIdForRecipe = recipes.First(r => r.Id == RecipeId).TargetItemId;
+        var targetItemIdForRecipe = recipes.FirstOrDefault(r => r.Id == RecipeId)?.TargetItemId ?? 0;
         var price2 = ctx.Price.FirstOrDefault(p => p.WorldId == WorldId && p.ItemId == targetItemIdForRecipe);
         var profits = ctx.RecipeProfit.Where(rp => rp.RecipeId == RecipeId).ToList();
         var item2 = ctx.Item.FirstOrDefault(i => i.Id == targetItemIdForRecipe);

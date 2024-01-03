@@ -14,11 +14,16 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        const string fullEndpoint = "http://localhost:55448/craft/34/1614654";
+        const string fullEndpoint = "http://localhost:55448/craft/1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        var list = await response.Content.ReadFromJsonAsync<List<CraftSummaryPoco>>();
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+            Assert.That(list, Is.Empty);
+        });
     }
 
     [Test, Ignore("Ignore for performance.. should still pass")]
@@ -49,7 +54,7 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned()
     {
-        const string fullEndpoint = "http://localhost:55448/craft/34/10";
+        const string fullEndpoint = "http://localhost:55448/craft/34/100";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -57,25 +62,31 @@ public class CraftComponentTests : ComponentTests
         Assert.Multiple(() =>
         {
             Assert.That(craft.WorldId, Is.EqualTo(34));
-            Assert.That(craft.ItemId > 0);
-            Assert.That(craft.ItemInfo.IconId > 0);
-            Assert.That(craft.ItemInfo.StackSize > 0);
-            Assert.That(craft.ItemInfo.PriceMid >= 0);
-            Assert.That(craft.ItemInfo.PriceLow >= 0);
-            Assert.That(craft.Recipe.Id > 0);
-            Assert.That(craft.Recipe.TargetItemId > 0);
-            Assert.That(craft.Recipe.ResultQuantity > 0);
+            Assert.That(craft.ItemId, Is.GreaterThan(0));
+            Assert.That(craft.ItemInfo.IconId, Is.GreaterThan(0));
+            Assert.That(craft.ItemInfo.StackSize, Is.GreaterThan(0));
+            Assert.That(craft.ItemInfo.PriceMid, Is.GreaterThanOrEqualTo(0));
+            Assert.That(craft.ItemInfo.PriceLow, Is.GreaterThanOrEqualTo(0));
+            Assert.That(craft.Recipe.Id, Is.GreaterThan(0));
+            Assert.That(craft.Recipe.TargetItemId, Is.GreaterThan(0));
+            Assert.That(craft.Recipe.ResultQuantity, Is.GreaterThan(0));
             Assert.That(craft.Ingredients.Any());
         });
     }
 
-    [Test]
-    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    [TestCase("/34/1614654")]
+    [TestCase("/1614654/100")]
+    [TestCase("/1614654/1614654")]
+    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent(string urlSuffix)
     {
-        const string fullEndpoint = "http://localhost:55448/craft/34/1614654";
+        var fullEndpoint = $"http://localhost:55448/craft{urlSuffix}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+            Assert.That(response.Content.ReadAsStringAsync().Result, Is.Empty);
+        });
     }
 }
