@@ -13,18 +13,14 @@
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/RecipeRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/RecipeRepositoryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,6 +126,7 @@
   "keyToString": {
     ".NET Launch Settings Profile.Api: http.executor": "Run",
     "06d793ff-f3f3-427c-b42b-5762b5dd8c4f.executor": "Debug",
+    "1e2aab95-a74d-4922-b50b-cae2c6bb87cd.executor": "Debug",
     "87cea989-d305-4b8a-9468-da582e209b5a.executor": "Debug",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Rider.SolutionAnalysis.ShowPreview": "false",
@@ -141,6 +138,7 @@
     "bfe024a7-c121-41e2-8e89-763d12b175d5.executor": "Debug",
     "c38214eb-3e7c-4e2e-bf77-08b4de3abb9f.executor": "Debug",
     "cd911656-8942-4c5c-9c42-2ea1aac18058.executor": "Debug",
+    "e1278654-0f91-40d2-b80a-ebb2ffb6aade.executor": "Debug",
     "e1c53b1f-2658-4abb-815d-d82b4e600db8.executor": "Debug",
     "e537d1af-a8fc-42c7-b490-cf297c7ff64e.executor": "Debug",
     "fa092a21-f755-4e56-811a-32e301a3ac60.executor": "Debug",
@@ -354,15 +352,9 @@
       <workItem from="1703196671025" duration="2071000" />
       <workItem from="1703198758817" duration="8980000" />
       <workItem from="1704293603366" duration="4966000" />
-      <workItem from="1704298598428" duration="1988000" />
-    </task>
-    <task id="LOCAL-00038" summary="Working example with data updater">
-      <option name="closed" value="true" />
-      <created>1698429046243</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1698429046243</updated>
+      <workItem from="1704298598428" duration="2719000" />
+      <workItem from="1704377239626" duration="1426000" />
+      <workItem from="1704393034031" duration="3449000" />
     </task>
     <task id="LOCAL-00039" summary="Working example with checks for age of existing entries">
       <option name="closed" value="true" />
@@ -748,17 +740,25 @@
       <option name="project" value="LOCAL" />
       <updated>1704293695301</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="enhanced craft controller to return status codes via ActionResult">
+      <option name="closed" value="true" />
+      <created>1704300633913</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1704300633913</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="76" />
+    <option name="coveragePercentColumnWidth" value="74" />
     <option name="sortOrder" value="ASCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="377" />
+    <option name="symbolColumnWidth" value="368" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -802,7 +802,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fixed component tests" />
     <MESSAGE value="Restructure code and services" />
     <MESSAGE value="began price updater tests" />
     <MESSAGE value="updates for test coverage command &amp; started new tests" />
@@ -827,7 +826,8 @@
     <MESSAGE value="WIP" />
     <MESSAGE value="wip" />
     <MESSAGE value="fix test" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix test" />
+    <MESSAGE value="enhanced craft controller to return status codes via ActionResult" />
+    <option name="LAST_COMMIT_MESSAGE" value="enhanced craft controller to return status codes via ActionResult" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -847,13 +847,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
-          <line>146</line>
+          <line>215</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="113" containingFunctionPresentation="Method 'GivenGetBestCraftsAsync_WhenValidCraftsAreProvided_ThenWeSortByProfit'">
             <startOffsets>
-              <option value="5399" />
+              <option value="8169" />
             </startOffsets>
             <endOffsets>
-              <option value="5441" />
+              <option value="8211" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="20" />
@@ -1240,10 +1240,10 @@
           <line>81</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" initialLine="82" containingFunctionPresentation="Method 'GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent'">
             <startOffsets>
-              <option value="3404" />
+              <option value="3406" />
             </startOffsets>
             <endOffsets>
-              <option value="3462" />
+              <option value="3464" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="165" />
@@ -1263,68 +1263,81 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>108</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="108" containingFunctionPresentation="Method 'CreateSummaryAsync'">
-            <startOffsets>
-              <option value="3928" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4049" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="183" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>114</line>
+          <line>149</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="114" containingFunctionPresentation="Method 'CreateSummaryAsync'">
             <startOffsets>
-              <option value="4241" />
+              <option value="5304" />
             </startOffsets>
             <endOffsets>
-              <option value="4330" />
+              <option value="5393" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="186" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>118</line>
+          <line>153</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="118" containingFunctionPresentation="Method 'CreateSummaryAsync'">
             <startOffsets>
-              <option value="4431" />
+              <option value="5494" />
             </startOffsets>
             <endOffsets>
-              <option value="4527" />
+              <option value="5590" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="187" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>122</line>
+          <line>157</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="122" containingFunctionPresentation="Method 'CreateSummaryAsync'">
             <startOffsets>
-              <option value="4640" />
+              <option value="5703" />
             </startOffsets>
             <endOffsets>
-              <option value="4739" />
+              <option value="5802" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="188" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
-          <line>75</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="75" containingFunctionPresentation="Lambda expression inside Method 'GivenGetBestAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
+          <line>77</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="76" containingFunctionPresentation="Lambda expression inside Method 'GivenGetBestAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="2549" />
+              <option value="2647" />
             </startOffsets>
             <endOffsets>
-              <option value="2600" />
+              <option value="2675" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="190" />
+          <option name="timeStamp" value="191" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
+          <line>156</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="145" containingFunctionPresentation="Lambda expression inside Method 'GivenGetAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
+            <startOffsets>
+              <option value="6201" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6202" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="193" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>126</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="126" containingFunctionPresentation="Method 'SortByProfitability'">
+            <startOffsets>
+              <option value="4416" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4517" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="194" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

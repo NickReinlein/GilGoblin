@@ -9,11 +9,6 @@
       <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/ICraftController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

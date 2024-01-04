@@ -18,7 +18,7 @@ public class CraftComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
     [Test]
@@ -81,6 +81,6 @@ public class CraftComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(expectedErrorCode));
+         Assert.That(response.StatusCode, Is.EqualTo(expectedErrorCode));
     }
 }

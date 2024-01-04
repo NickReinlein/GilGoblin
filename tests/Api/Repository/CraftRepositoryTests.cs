@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ public class CraftRepositoryTests : PriceDependentTests
         await _craftRepository.GetBestAsync(WorldId);
 
         foreach (var profit in profits)
-            await _recipeCostRepository.Received().GetAsync(WorldId, profit.RecipeId);
+            await _recipeCostRepository.Received(1).GetAsync(WorldId, profit.RecipeId);
     }
 
     [Test]
@@ -73,18 +74,19 @@ public class CraftRepositoryTests : PriceDependentTests
         {
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(200));
-            var craft = result.Value as List<CraftSummaryPoco>;
-            Assert.That(craft, Is.Not.Null);
-            // Assert.That(craft.Ingredients.ToList(), Has.Count.GreaterThan(0));
-            // Assert.That(result.AverageListingPrice, Is.GreaterThan(1));
-            // Assert.That(result.AverageSold, Is.GreaterThan(1));
-            // Assert.That(result.ItemId, Is.EqualTo(targetItemId));
-            // Assert.That(result.ItemInfo.Id, Is.EqualTo(targetItemId));
-            // Assert.That(result.Recipe.TargetItemId, Is.EqualTo(targetItemId));
-            // Assert.That(result.RecipeCost, Is.GreaterThan(1));
-            // Assert.That(result.RecipeProfitVsListings, Is.GreaterThan(1));
-            // Assert.That(result.RecipeProfitVsSold, Is.GreaterThan(1));
-            // Assert.That(result.WorldId, Is.EqualTo(WorldId));
+            var crafts = result.Value as List<CraftSummaryPoco>;
+            Assert.That(crafts, Has.Count.GreaterThan(0));
+            var craft = crafts![0];
+            Assert.That(craft.Ingredients.ToList(), Has.Count.GreaterThan(0));
+            Assert.That(craft.AverageListingPrice, Is.GreaterThan(1));
+            Assert.That(craft.AverageSold, Is.GreaterThan(1));
+            Assert.That(craft.ItemId, Is.EqualTo(targetItemId));
+            Assert.That(craft.ItemInfo.Id, Is.EqualTo(targetItemId));
+            Assert.That(craft.Recipe.TargetItemId, Is.EqualTo(targetItemId));
+            Assert.That(craft.RecipeCost, Is.GreaterThan(1));
+            Assert.That(craft.RecipeProfitVsListings, Is.GreaterThan(1));
+            Assert.That(craft.RecipeProfitVsSold, Is.GreaterThan(1));
+            Assert.That(craft.WorldId, Is.EqualTo(WorldId));
         });
     }
 
@@ -114,7 +116,74 @@ public class CraftRepositoryTests : PriceDependentTests
         await _craftRepository.GetBestAsync(WorldId);
 
         foreach (var profit in profits)
-            await _recipeCostRepository.Received().GetAsync(WorldId, profit.RecipeId);
+            await _recipeCostRepository.Received(1).GetAsync(WorldId, profit.RecipeId);
+    }
+
+    [Test]
+    public async Task GivenGetAsync_WhenEntriesAreReturned_ThenWeCreateCraftSummaries()
+    {
+        await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
+        var recipe = ctx.Recipe.First(w => w.Id == RecipeId);
+        _recipeRepository.Get(RecipeId).Returns(recipe);
+
+        var result = await _craftRepository.GetAsync(WorldId, RecipeId);
+
+        await _recipeCostRepository.Received(1).GetAsync(WorldId, recipe.Id);
+    }
+
+    [Test]
+    public async Task GivenGetAsync_WhenSuccessIsReturned_ThenTheResponseIsValid()
+    {
+        var targetItemId = SetupForSuccess();
+
+        var response = await _craftRepository.GetAsync(WorldId, RecipeId);
+
+        var result = response.Result as OkObjectResult;
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(200));
+            var craft = result.Value as CraftSummaryPoco;
+            Assert.That(craft, Is.Not.Null);
+            Assert.That(craft.Ingredients.ToList(), Has.Count.GreaterThan(0));
+            Assert.That(craft.AverageListingPrice, Is.GreaterThan(1));
+            Assert.That(craft.AverageSold, Is.GreaterThan(1));
+            Assert.That(craft.ItemId, Is.EqualTo(targetItemId));
+            Assert.That(craft.ItemInfo.Id, Is.EqualTo(targetItemId));
+            Assert.That(craft.Recipe.TargetItemId, Is.EqualTo(targetItemId));
+            Assert.That(craft.RecipeCost, Is.GreaterThan(1));
+            Assert.That(craft.RecipeProfitVsListings, Is.GreaterThan(1));
+            Assert.That(craft.RecipeProfitVsSold, Is.GreaterThan(1));
+            Assert.That(craft.WorldId, Is.EqualTo(WorldId));
+        });
+    }
+
+    [Test]
+    public async Task GivenGetAsync_WhenNoProfitsExist_ThenNotFoundIsReturned()
+    {
+        _recipeRepository.Get(RecipeId).Returns((RecipePoco)null);
+
+        var result = await _craftRepository.GetAsync(WorldId, RecipeId);
+
+        Assert.Multiple(async () =>
+        {
+            await _recipeCostRepository.DidNotReceive().GetAsync(Arg.Any<int>(), Arg.Any<int>());
+            var status = result.Result as StatusCodeResult;
+            Assert.That(status?.StatusCode, Is.EqualTo(404));
+            Assert.That(result.Value, Is.Null);
+        });
+    }
+
+    [Test]
+    public async Task GivenGetAsync_WhenEntriesAreReturned_ThenWeCreateSummariesForEachEntry()
+    {
+        await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
+        var recipe = ctx.Recipe.First(r => r.Id == RecipeId);
+        _recipeRepository.Get(RecipeId).Returns(recipe);
+
+        await _craftRepository.GetAsync(WorldId, RecipeId);
+
+        await _recipeCostRepository.Received(1).GetAsync(WorldId, RecipeId);
     }
 
     [Test]
@@ -166,6 +235,22 @@ public class CraftRepositoryTests : PriceDependentTests
         });
     }
 
+    [Test]
+    public void GivenSortByProfitability_WhenSortingThrows_ThenTheOriginalListIsReturnedAndAnErrorLogged()
+    {
+        var message = $"Failed to sort crafts by profitability! Returning unsorted crafts list: ";
+        var throwCrafts = Substitute.For<List<CraftSummaryPoco>>();
+        throwCrafts.Where(Arg.Any<Func<CraftSummaryPoco, bool>>()).Returns(GetCraftSummaryPocos());
+        throwCrafts
+            .When(x => x.Sort())
+            .Do(_ => throw new Exception("Simulated sorting exception"));
+
+        var result = _craftRepository.SortByProfitability(throwCrafts);
+
+        Assert.That(result, Is.EqualTo(throwCrafts));
+        _logger.Received(1).LogError(Arg.Any<string>());
+    }
+
     private int SetupForSuccess()
     {
         using var ctx = new TestGilGoblinDbContext(_options, _configuration);
@@ -191,7 +276,7 @@ public class CraftRepositoryTests : PriceDependentTests
 
     private static List<CraftSummaryPoco> GetCraftSummaryPocos()
     {
-        return new List<CraftSummaryPoco>()
+        return new List<CraftSummaryPoco>
         {
             new()
             {
