@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="progress getting jest working">
-      <change beforePath="$PROJECT_DIR$/jest.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/jest.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/src/Repository/CraftRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,36 +77,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Jest.All Tests.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.CraftComponent.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent (1).executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent.renders correctly with ItemSummary (1).executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent.renders correctly with ItemSummary.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponentTests.spec.tsx.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponentTests.tsx.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;add-front-end&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/tests/Results&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs.jest.jest_package&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/jest&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;/home/lemoneleven/.nvm/versions/node/v18.18.0/bin/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.npm start.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.notifications&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Jest.All Tests.executor": "Run",
+    "Jest.CraftComponent.executor": "Run",
+    "Jest.ItemComponent (1).executor": "Run",
+    "Jest.ItemComponent.executor": "Run",
+    "Jest.ItemComponent.renders correctly with ItemSummary (1).executor": "Run",
+    "Jest.ItemComponent.renders correctly with ItemSummary.executor": "Run",
+    "Jest.ItemComponentTests.spec.tsx.executor": "Run",
+    "Jest.ItemComponentTests.tsx.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "add-get-specific-craft-route",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/tests/Results",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/jest",
+    "nodejs_interpreter_path": "/home/lemoneleven/.nvm/versions/node/v18.18.0/bin/node",
+    "nodejs_package_manager_path": "npm",
+    "npm.npm start.executor": "Run",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications",
+    "ts.external.directory.path": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -213,13 +216,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JavaScript Debug.Debug Application" />
       <item itemvalue="Jest.All Tests" />
       <item itemvalue="Jest.ItemComponent (1)" />
       <item itemvalue="Jest.ItemComponentTests.spec.tsx" />
       <item itemvalue="Jest.ItemComponent" />
       <item itemvalue="Jest.ItemComponent.renders correctly with ItemSummary (1)" />
       <item itemvalue="Jest.ItemComponent.renders correctly with ItemSummary" />
-      <item itemvalue="JavaScript Debug.Debug Application" />
       <item itemvalue="npm.npm start" />
     </list>
     <recent_temporary>
@@ -251,6 +254,7 @@
       <workItem from="1702905392724" duration="7175000" />
       <workItem from="1702994274896" duration="638000" />
       <workItem from="1703196059440" duration="221000" />
+      <workItem from="1704472321986" duration="304000" />
     </task>
     <task id="LOCAL-00001" summary="Began front end">
       <option name="closed" value="true" />
