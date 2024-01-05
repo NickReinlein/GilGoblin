@@ -235,6 +235,22 @@ public class CraftRepositoryTests : PriceDependentTests
         });
     }
 
+    [Test]
+    public void GivenSortByProfitability_WhenSortingThrows_ThenTheOriginalListIsReturnedAndAnErrorLogged()
+    {
+        var message = $"Failed to sort crafts by profitability! Returning unsorted crafts list: ";
+        var throwCrafts = Substitute.For<List<CraftSummaryPoco>>();
+        throwCrafts.Where(Arg.Any<Func<CraftSummaryPoco, bool>>()).Returns(GetCraftSummaryPocos());
+        throwCrafts
+            .When(x => x.Sort())
+            .Do(_ => throw new Exception("Simulated sorting exception"));
+
+        var result = _craftRepository.SortByProfitability(throwCrafts);
+
+        Assert.That(result, Is.EqualTo(throwCrafts));
+        _logger.Received(1).LogError(Arg.Any<string>());
+    }
+
     private int SetupForSuccess()
     {
         using var ctx = new TestGilGoblinDbContext(_options, _configuration);
