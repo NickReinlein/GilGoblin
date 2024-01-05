@@ -14,10 +14,10 @@ const fetchData = async (tabName: string, id: number, world: number) => {
                 suffix = `${recipePath}${id}`;
                 break;
             case 'Prices':
-                suffix = `${pricePath}/${world}/${id}`;
+                suffix = `${pricePath}${world}/${id}`;
                 break;
             case 'Crafts':
-                suffix = `${craftPath}/${world}/${id}`;
+                suffix = `${craftPath}${world}/${id}`;
                 break;
             default:
                 suffix = ``;

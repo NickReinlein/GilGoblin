@@ -14,12 +14,19 @@ describe('ItemComponent', () => {
             stackSize: 1,
             priceMid: 101,
             priceLow: 223,
-            canHq: true,
+            canHq: true
         };
+    Object.entries(itemData)
+        .forEach(([field, value]) => {
+            it(`renders ${field} on screen`, () => {
+                render(<ItemComponent item={itemData}/>);
+                let elementText = field === 'id'
+                    ? `Item Id: ${itemData.id}`
+                    : `${field.charAt(0).toUpperCase() + field.slice(1)}: ${value}`;
 
-    it('renders correctly with ItemSummary', () => {
-        render(<ItemComponent item={itemData} />);
-        const itemIdElement = screen.getByText(`Item Id: ${itemData.id}`);
-        expect(itemIdElement).toBeInTheDocument();
-    });
+                const fieldElement = screen.getByText(elementText);
+
+                expect(fieldElement).toBeInTheDocument();
+            });
+        });
 });
