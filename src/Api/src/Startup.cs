@@ -28,14 +28,25 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: "GilGoblin",
+                builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                });
+        });
         AddGoblinServices(services);
         FillGoblinCaches(services).Wait();
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder builder)
     {
-        AddAppGoblinServices(app);
-        DatabaseValidation(app);
+        builder.UseCors("GilGoblin");
+        AddAppGoblinServices(builder);
+        DatabaseValidation(builder);
     }
 
 
@@ -105,7 +116,6 @@ public class Startup
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-        app.UseHttpsRedirection();
         app.UseAuthorization();
 
         app.UseRouting();
