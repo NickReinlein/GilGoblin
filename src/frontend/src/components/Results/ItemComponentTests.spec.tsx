@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import ItemComponent from '../../src/components/Results/ItemComponent';
-import {Item} from '../../src/types/types';
+import ItemComponent from './ItemComponent';
+import {Item} from '../../types/types';
 
 describe('ItemComponent', () => {
     const itemData: Item =
