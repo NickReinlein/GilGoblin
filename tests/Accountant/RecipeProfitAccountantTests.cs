@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,7 +67,11 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         _recipeRepo
             .GetMultiple(Arg.Any<IEnumerable<int>>())
             .Returns(_dbContext.Recipe.ToList());
-        _profitRepo.GetAll(worldId).Returns(_dbContext.RecipeProfit.ToList());
+        _profitRepo.GetAll(worldId).Returns(
+            _dbContext
+                .RecipeProfit
+                .Where(p => p.WorldId == worldId)
+                .ToList());
 
         _accountant = new RecipeProfitAccountant(_scopeFactory, _logger);
     }
@@ -119,9 +122,6 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
     public async Task GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco()
     {
         const int expectedProfit = 107;
-        // await using var ctx = new TestGilGoblinDbContext(_options, _configuration);
-        // ctx.RecipeProfit.RemoveRange(ctx.RecipeProfit);
-        // await ctx.SaveChangesAsync();
         _profitRepo.ClearSubstitute();
         var cts = new CancellationTokenSource();
         cts.CancelAfter(20000000);
@@ -142,7 +142,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenComputeListAsync_WhenNewProfitsAreCalculated_ThenWeAddItToTheRepo()
+    public async Task GivenComputeListAsync_WhenNewProfitsAreCalculated_ThenTheyAreAddedToTheRepo()
     {
         var idList = new List<int> { recipeId, recipeId2 };
         var costs = _dbContext.RecipeCost.Where(i => i.WorldId == worldId).ToList();
@@ -155,7 +155,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         await _profitRepo.Received(1).Add(Arg.Is<RecipeProfitPoco>(r =>
             r.RecipeId == recipeId &&
             r.WorldId == worldId));
-        await _profitRepo.DidNotReceive().Add(Arg.Is<RecipeProfitPoco>(r =>
+        await _profitRepo.Received(1).Add(Arg.Is<RecipeProfitPoco>(r =>
             r.RecipeId == recipeId2 &&
             r.WorldId == worldId));
     }

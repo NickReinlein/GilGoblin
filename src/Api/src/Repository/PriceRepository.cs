@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,8 +27,10 @@ public class PriceRepository : IPriceRepository<PricePoco>
 
         try
         {
-            var price = _dbContext.Price.First(p => p.WorldId == worldId && p.ItemId == id);
-            _cache.Add((price.WorldId, price.ItemId), price);
+            var price = _dbContext.Price.FirstOrDefault(p => p.WorldId == worldId && p.ItemId == id);
+            if (price is not null)
+                _cache.Add((price.WorldId, price.ItemId), price);
+
             return price;
         }
         catch

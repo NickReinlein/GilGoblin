@@ -31,7 +31,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"http://localhost:55448/price/34/103484654";
+        const string fullEndpoint = "http://localhost:55448/price/34/103484654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -41,7 +41,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsValid_ThenWeReceiveAllValidPrices()
     {
-        var fullEndpoint = "http://localhost:55448/price/34";
+        const string fullEndpoint = "http://localhost:55448/price/34";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -74,7 +74,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = "http://localhost:55448/price/9999";
+        const string fullEndpoint = "http://localhost:55448/price/9999";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

@@ -93,11 +93,13 @@ public class InMemoryTestDb
         );
         context.Recipe.AddRange(
             new RecipePoco { Id = 11, TargetItemId = 5682, ItemIngredient0TargetId = 774, AmountIngredient0 = 3 },
-            new RecipePoco { Id = 12, TargetItemId = 111, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },
+            new RecipePoco { Id = 12, TargetItemId = 9984, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },
             new RecipePoco { Id = 13, TargetItemId = 111, ItemIngredient0TargetId = 14, AmountIngredient0 = 2 },
             new RecipePoco { Id = 33, TargetItemId = 222, ItemIngredient0TargetId = 88, AmountIngredient0 = 7 },
             new RecipePoco { Id = 44, TargetItemId = 333, ItemIngredient0TargetId = 99, AmountIngredient0 = 2 },
-            new RecipePoco { Id = 55, TargetItemId = 5556, ItemIngredient0TargetId = 101, AmountIngredient0 = 3 }
+            new RecipePoco { Id = 55, TargetItemId = 88, ItemIngredient0TargetId = 3, AmountIngredient0 = 3 },
+            new RecipePoco { Id = 88, TargetItemId = 88, ItemIngredient0TargetId = 1, AmountIngredient0 = 3 },
+            new RecipePoco { Id = 99, TargetItemId = 9984, ItemIngredient0TargetId = 2, AmountIngredient0 = 5 }
         );
         context.Price.AddRange(
             new PricePoco
