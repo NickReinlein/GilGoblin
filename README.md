@@ -17,7 +17,9 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark:  A new service to pre-calculate costs and profits
 
 *Work-in-progress*
-* :construction:  A simple website displaying the top crafts for each world
+* :hatching_chick: A website to search items, recipes, prices, and the craft summary
+* :egg: Add to the website the top crafts for specific worlds
+* :egg: Store more worlds
 
 *Nice-to-have*
 * :question: Top things to gather
