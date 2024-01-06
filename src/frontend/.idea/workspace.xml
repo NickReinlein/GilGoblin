@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="progress getting jest working">
+    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
@@ -93,7 +93,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "add-get-specific-craft-route",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/tests/Results",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -135,14 +135,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Jest.All Tests">
-    <configuration name="All Tests" type="JavaScriptTestRunnerJest" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$/tests" />
-      <envs />
-      <scope-kind value="ALL" />
-      <method v="2" />
-    </configuration>
     <configuration name="ItemComponent (1)" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
@@ -443,5 +435,10 @@
     <MESSAGE value="wip adding unit tests" />
     <MESSAGE value="progress getting jest working" />
     <option name="LAST_COMMIT_MESSAGE" value="progress getting jest working" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1704490012511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$Tests_in_src_.info" NAME="Tests in src/ Coverage Results" MODIFIED="1704489654423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$PriceComponentTests_spec_tsx.info" NAME="PriceComponentTests.spec.tsx Coverage Results" MODIFIED="1704489679469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

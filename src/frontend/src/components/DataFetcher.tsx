@@ -25,7 +25,9 @@ const fetchData = async (tabName: string, id: number, world: number) => {
         }
         let url = `${getBaseUrl}${suffix}`;
         console.log(`Fetching from url ${url}`)
-        const response = await fetch(url);
+        let request = new Request(url);
+        request.headers.set("Access-Control-Allow-Origin", "*");
+        const response = await fetch(request);
         return await response.json();
     } catch (error) {
         console.error('Error fetching data:', error);
