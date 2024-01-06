@@ -166,9 +166,10 @@ public class CraftingCalculator : ICraftingCalculator
             foreach (var ingredient in uniqueIngredients)
             {
                 var market = priceList
-                    .First(e =>
+                    .FirstOrDefault(e =>
                         e.ItemId == ingredient.ItemId);
-                crafts.Add(new CraftIngredientPoco(ingredient, market));
+                if (market is not null)
+                    crafts.Add(new CraftIngredientPoco(ingredient, market));
             }
 
             return crafts;

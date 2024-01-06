@@ -177,7 +177,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public void GivenAddPricesToIngredients_WithInvalidData_ThenNullIsReturnedAndAnErrorLogged()
+    public void GivenAddPricesToIngredients_WithInvalidData_ThenNullIsReturned()
     {
         var ingredients = new List<IngredientPoco> { NewRecipe.GetIngredientsList().First() };
         var prices = new List<PricePoco> { new() { WorldId = _worldId, ItemId = 222 } };
@@ -185,15 +185,10 @@ public class CraftingCalculatorTests
         var result = _calc.AddPricesToIngredients(ingredients, prices);
 
         Assert.That(result, Is.Empty);
-        _logger
-            .Received(1)
-            .LogError(
-                "Failed to match market prices to ingredients: Sequence contains no matching element"
-            );
     }
 
     [Test]
-    public async Task WhenAnDataNotFoundExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
+    public async Task WhenAnDataNotFoundExceptionOccurs_ThenAnErrorIsLoggedAndErrorCostReturned()
     {
         var recipeId = NewRecipe.Id;
         _recipes.When(x => x.Get(recipeId)).Do(_ => throw new DataException());
@@ -246,7 +241,7 @@ public class CraftingCalculatorTests
     }
 
     [Test]
-    public async Task WhenAnUnexpectedExceptionOccurs_ThenAnErorIsLoggedAndErrorCostReturned()
+    public async Task WhenAnUnexpectedExceptionOccurs_ThenAnErrorIsLoggedAndErrorCostReturned()
     {
         var recipeId = NewRecipe.Id;
         var errorMessage = "testMessageHere";

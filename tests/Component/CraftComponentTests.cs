@@ -8,24 +8,23 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
+[Timeout(20000)]
 public class CraftComponentTests : ComponentTests
 {
-
     [Test]
-    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenNotFoundIsReturned()
     {
-        var fullEndpoint = "http://localhost:55448/craft/34/1614654";
+        const string fullEndpoint = "http://localhost:55448/craft/1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
-    // [Test, Timeout(20000), Ignore("Ignore for performance.. should still pass")]
-    [Test, Timeout(20000)]
-    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenWeReceiveACraftSummary()
+    [Test]
+    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned()
     {
-        var fullEndpoint = "http://localhost:55448/craft/34";
+        const string fullEndpoint = "http://localhost:55448/craft/34";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -48,12 +47,40 @@ public class CraftComponentTests : ComponentTests
     }
 
     [Test]
-    public async Task GivenACallToGetBestCrafts_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    public async Task GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned()
     {
-        var fullEndpoint = "http://localhost:55448/craft/34/1614654";
+        const string fullEndpoint = "http://localhost:55448/craft/34/100";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        var craft = await response.Content.ReadFromJsonAsync<CraftSummaryPoco>(GetSerializerOptions());
+        Assert.Multiple(() =>
+        {
+            Assert.That(craft.WorldId, Is.EqualTo(34));
+            Assert.That(craft.ItemId, Is.GreaterThan(0));
+            Assert.That(craft.ItemInfo.IconId, Is.GreaterThan(0));
+            Assert.That(craft.ItemInfo.StackSize, Is.GreaterThan(0));
+            Assert.That(craft.ItemInfo.PriceMid, Is.GreaterThanOrEqualTo(0));
+            Assert.That(craft.ItemInfo.PriceLow, Is.GreaterThanOrEqualTo(0));
+            Assert.That(craft.Recipe.Id, Is.GreaterThan(0));
+            Assert.That(craft.Recipe.TargetItemId, Is.GreaterThan(0));
+            Assert.That(craft.Recipe.ResultQuantity, Is.GreaterThan(0));
+            Assert.That(craft.Ingredients.Any());
+        });
+    }
+
+    // First: Wrong recipeId == NotFound
+    // Then: Any further errors == BadRequest 
+    [TestCase("/34/1614654", HttpStatusCode.NotFound)]
+    [TestCase("/1614654/1614654", HttpStatusCode.NotFound)]
+    [TestCase("/1614654/100", HttpStatusCode.BadRequest)]
+    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
+        HttpStatusCode expectedErrorCode)
+    {
+        var fullEndpoint = $"http://localhost:55448/craft{urlSuffix}";
+
+        using var response = await _client.GetAsync(fullEndpoint);
+
+         Assert.That(response.StatusCode, Is.EqualTo(expectedErrorCode));
     }
 }

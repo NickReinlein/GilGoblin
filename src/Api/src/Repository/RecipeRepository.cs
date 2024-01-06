@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,15 +30,22 @@ public class RecipeRepository : IRecipeRepository
         if (recipeId < 1)
             return null;
 
-        var cached = _recipeCache.Get(recipeId);
-        if (cached is not null)
-            return cached;
+        try
+        {
+            var cached = _recipeCache.Get(recipeId);
+            if (cached is not null)
+                return cached;
 
-        var recipe = _dbContext?.Recipe?.FirstOrDefault(i => i.Id == recipeId);
-        if (recipe is not null)
-            _recipeCache.Add(recipe.Id, recipe);
+            var recipe = _dbContext.Recipe.FirstOrDefault(i => i.Id == recipeId);
+            if (recipe is not null)
+                _recipeCache.Add(recipe.Id, recipe);
 
-        return recipe;
+            return recipe;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     public IEnumerable<RecipePoco> GetRecipesForItem(int itemId)
