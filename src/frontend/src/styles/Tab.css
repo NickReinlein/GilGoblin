@@ -1,0 +1,29 @@
+.tab-container {
+    text-align: center;
+    margin: 10px 5px 5px;
+    border-: 1px solid darkgreen;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    padding-bottom: 10px;
+}
+
+.tabs button {
+    font-size: 27px;
+    padding: 10px 20px;
+    border: 1px solid darkgreen;
+    cursor: pointer;
+    background-color: transparent;
+    color: white
+}
+
+.tabs button.active {
+    border: 2px solid darkgreen;
+    border-bottom: 5px solid darkgreen;
+    text-decoration: underline;
+    display: inline-block;
+    text-decoration-color: darkgreen;
+}

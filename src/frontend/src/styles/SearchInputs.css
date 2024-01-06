@@ -1,0 +1,33 @@
+.search-inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    /*border: 1px dotted white;*/
+    padding: 5px 10px 5px 20px;
+    margin: 5px;
+    font-size: 27px;
+}
+
+.search-label {
+    margin-right: 5px;
+    font-size: 22px;
+    padding: 5px 10px 5px 20px;
+}
+
+.search-input {
+    text-align: center;
+    margin: 15px 5px 5px;
+    font-size: 22px;
+    width: 100px;
+    padding: 5px 5px 5px 10px;
+    min-width: 100px;
+}
+
+.search-dropdown {
+    text-align: center;
+    margin: 5px;
+    font-size: 22px;
+    width: 100px;
+    padding: 5px 10px 5px 20px;
+    min-width: 120px;
+}

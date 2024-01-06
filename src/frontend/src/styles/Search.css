@@ -1,0 +1,24 @@
+.search-container {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    border-top: 1px solid darkgreen;
+}
+.search-button {
+    font-size: 25px;
+    text-align: left;
+    padding: 5px 20px 5px 20px;
+    margin-left: 20px;
+    min-width: 160px;
+    min-height: 60px;
+    background-image:
+            url('/public/assets/search_small.png');
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+    background-size: auto, cover;
+
+}

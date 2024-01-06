@@ -5,7 +5,7 @@
     <RootNamespace>GilGoblin.DataUpdater</RootNamespace>
     <PackageId>GilGoblin.DataUpdater</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.5.0</Version>
+    <Version>0.5.1</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
-    <PackageReference Include="GilGoblin.Api" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Api" Version="0.7.*"/>
     <PackageReference Include="GilGoblin.Fetcher" Version="0.2.*"/>
     <PackageReference Include="GilGoblin.Batcher" Version="0.2.*"/>
     <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
