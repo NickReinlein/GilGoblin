@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="CORS error">
-      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,36 +75,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Jest.All Tests.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.CraftComponent.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent (1).executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent.renders correctly with ItemSummary (1).executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponent.renders correctly with ItemSummary.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponentTests.spec.tsx.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.ItemComponentTests.tsx.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;add-front-end&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs.jest.jest_package&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/react-scripts&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;/home/lemoneleven/.nvm/versions/node/v18.18.0/bin/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.npm start.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.notifications&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Jest.All Tests.executor": "Run",
+    "Jest.CraftComponent.executor": "Run",
+    "Jest.CraftComponent.renders ${field} on screen.executor": "Debug",
+    "Jest.ItemComponent (1).executor": "Run",
+    "Jest.ItemComponent.executor": "Run",
+    "Jest.ItemComponent.renders correctly with ItemSummary (1).executor": "Run",
+    "Jest.ItemComponent.renders correctly with ItemSummary.executor": "Run",
+    "Jest.ItemComponentTests.spec.tsx.executor": "Run",
+    "Jest.ItemComponentTests.tsx.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "improve-craftingcomponent",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/react-scripts",
+    "nodejs_interpreter_path": "/home/lemoneleven/.nvm/versions/node/v18.18.0/bin/node",
+    "nodejs_package_manager_path": "npm",
+    "npm.npm start.executor": "Debug",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications",
+    "ts.external.directory.path": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -131,14 +134,47 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.npm start">
+    <configuration name="CraftComponent" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-names>
+        <test-name value="CraftComponent" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="CraftComponent.renders ${field} on screen" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-names>
+        <test-name value="CraftComponent" />
+        <test-name value="renders ${field} on screen" />
+      </test-names>
+      <method v="2" />
+    </configuration>
     <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="JavaScript Debug.Debug Application" />
       <item itemvalue="Jest.All Tests" />
+      <item itemvalue="Jest.CraftComponent.renders ${field} on screen" />
+      <item itemvalue="Jest.CraftComponent" />
       <item itemvalue="npm.npm start" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Jest.CraftComponent.renders ${field} on screen" />
+        <item itemvalue="Jest.CraftComponent" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -162,6 +198,8 @@
       <workItem from="1704472321986" duration="304000" />
       <workItem from="1704501454932" duration="404000" />
       <workItem from="1704566238834" duration="2291000" />
+      <workItem from="1704586446240" duration="4521000" />
+      <workItem from="1705180430076" duration="298000" />
     </task>
     <task id="LOCAL-00001" summary="Began front end">
       <option name="closed" value="true" />
@@ -327,7 +365,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="add-front-end" />
+                        <option value="master" />
                       </list>
                     </value>
                   </entry>
@@ -359,6 +397,29 @@
     <MESSAGE value="progress getting jest working" />
     <MESSAGE value="CORS error" />
     <option name="LAST_COMMIT_MESSAGE" value="CORS error" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
+          <line>21</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx</url>
+          <line>8</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
+          <line>23</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1704490012511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Craft, Ingredient} from '../../types/types';
 import RecipesComponent from "./RecipeComponent";
+import ItemComponent from "./ItemComponent";
 
 interface CraftProps {
     craft: Craft;
@@ -16,8 +17,9 @@ const CraftComponent: React.FC<CraftProps> = ({craft}) => {
             <p>Recipe Profit vs Sold: {craft.recipeProfitVsSold}</p>
             <p>Recipe Profit vs Listings: {craft.recipeProfitVsListings}</p>
             <p>Last Updated: {craft.updated}</p>
-            {/*<h3>Recipe</h3>*/}
-            {/*<RecipesComponent recipe={craft.recipe}/>*/}
+            <h3>Recipe</h3>
+            <RecipesComponent recipe={craft.recipe}/>
+            {/*<ItemComponent item={craft.itemInfo}/>*/}
 
             <h3>Ingredients</h3>
             <ul>

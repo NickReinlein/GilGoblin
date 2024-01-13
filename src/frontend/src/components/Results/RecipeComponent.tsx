@@ -6,9 +6,11 @@ interface RecipeProps {
 }
 
 const RecipeComponent: React.FC<RecipeProps> = ({recipe}) => {
-    return (
+    return recipe == undefined
+        ? null
+        : (
         <div>
-            <h2>Recipe Id: {recipe.id}</h2>
+            <h2>Recipe Id: {recipe.id || 'Missing'}</h2>
             <p>Craft Type: {recipe.craftType}</p>
             <p>Recipe Level Table: {recipe.recipeLevelTable}</p>
             <p>Target Item Id: {recipe.targetItemId}</p>

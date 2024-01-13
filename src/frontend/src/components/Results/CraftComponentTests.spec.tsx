@@ -87,8 +87,8 @@ describe('CraftComponent', () => {
         {
             "itemId": `Craft Summary for Item ID ${CraftData.itemId}, in world ${CraftData.worldId}`,
             "worldId": `Craft Summary for Item ID ${CraftData.itemId}, in world ${CraftData.worldId}`,
-            "itemInfo": ``,
-            "recipe":  ``,
+            "itemInfo": `Item Id: ${CraftData.itemId}`,
+            "recipe":  `Target Item Id: ${CraftData.recipe.targetItemId}`,
             "averageListingPrice": `Average Listing Price: ${CraftData.averageListingPrice}`,
             "averageSold":`Average Sold: ${CraftData.averageSold}`, 
             "recipeCost": `Recipe Cost: ${CraftData.recipeCost}`,
