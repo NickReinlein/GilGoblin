@@ -85,17 +85,24 @@ describe('CraftComponent', () => {
 
     const expectedLabels =
         {
-            "itemId": `Craft Summary for Item ID ${CraftData.itemId}, in world ${CraftData.worldId}`,
-            "worldId": `Craft Summary for Item ID ${CraftData.itemId}, in world ${CraftData.worldId}`,
+            "itemId": `Craft Summary for Item ID ${CraftData.itemId} in world ${CraftData.worldId}`,
+            "worldId": `Craft Summary for Item ID ${CraftData.itemId} in world ${CraftData.worldId}`,
             "itemInfo": `Item Id: ${CraftData.itemId}`,
-            "recipe":  `Target Item Id: ${CraftData.recipe.targetItemId}`,
+            "recipe": `Target Item Id: ${CraftData.recipe.targetItemId}`,
             "averageListingPrice": `Average Listing Price: ${CraftData.averageListingPrice}`,
-            "averageSold":`Average Sold: ${CraftData.averageSold}`, 
+            "averageSold": `Average Sold: ${CraftData.averageSold}`,
             "recipeCost": `Recipe Cost: ${CraftData.recipeCost}`,
             "recipeProfitVsSold": `Recipe Profit vs Sold: ${CraftData.recipeProfitVsSold}`,
             "recipeProfitVsListings": `Recipe Profit vs Listings: ${CraftData.recipeProfitVsListings}`,
-            "ingredients": `Ingredients:`,
+            "Ingredients": `Ingredients`,
+            "ingredient1": `Item ID: ${CraftData.ingredients[0].itemId}, Quantity: ${CraftData.ingredients[0].quantity}`,
+            "ingredient2": `Item ID: ${CraftData.ingredients[1].itemId}, Quantity: ${CraftData.ingredients[1].quantity}`,
+            "ingredient3": `Item ID: ${CraftData.ingredients[2].itemId}, Quantity: ${CraftData.ingredients[2].quantity}`,
+            "ingredient4": `Item ID: ${CraftData.ingredients[3].itemId}, Quantity: ${CraftData.ingredients[3].quantity}`,
+            "ingredient5": `Item ID: ${CraftData.ingredients[4].itemId}, Quantity: ${CraftData.ingredients[4].quantity}`,
             "updated": `Last Updated: ${CraftData.updated}`,
+            "stackSize": `StackSize: ${CraftData.itemInfo.stackSize}`,
+            "resultQuantity": `Recipe Result Quantity: ${CraftData?.recipe?.resultQuantity}`,
         };
 
     Object.entries(expectedLabels)

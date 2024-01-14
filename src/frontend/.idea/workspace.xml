@@ -4,11 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="CORS error">
+    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="fixed error on craft page">
+      <change afterPath="$PROJECT_DIR$/src/AppTests.spec.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Header/SearchComponentTests.spec.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Header/SearchInputsComponentTests.spec.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Header/TabButtonsComponentTests.spec.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ItemComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ItemComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/PriceComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/PriceComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/RecipeComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/RecipeComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,16 +29,19 @@
       <option value="directory" />
     </option>
   </component>
+  <component name="CoverageOptionsProvider">
+    <option name="myAddOrReplace" value="0" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
         <option value="com.haulmont.rcb.palette" />
         <option value="com.haulmont.rcb.previews" />
         <option value="com.haulmont.rcb.index" />
         <option value="com.haulmont.rcb.useInitial" />
         <option value="com.haulmont.rcb.README" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -64,7 +76,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -79,20 +91,36 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Jest.All Tests.executor": "Run",
+    "Jest.All Tests.executor": "Coverage",
+    "Jest.App component.executor": "Run",
+    "Jest.App component.renders without crashing.executor": "Run",
+    "Jest.AppTests.spec.tsx.executor": "Coverage",
     "Jest.CraftComponent.executor": "Run",
-    "Jest.CraftComponent.renders ${field} on screen.executor": "Debug",
+    "Jest.CraftComponent.renders ${field} on screen.executor": "Run",
+    "Jest.CraftComponentTests.spec.tsx.executor": "Run",
+    "Jest.Index component.executor": "Run",
+    "Jest.Index component.renders without crashing.executor": "Run",
     "Jest.ItemComponent (1).executor": "Run",
     "Jest.ItemComponent.executor": "Run",
     "Jest.ItemComponent.renders correctly with ItemSummary (1).executor": "Run",
     "Jest.ItemComponent.renders correctly with ItemSummary.executor": "Run",
     "Jest.ItemComponentTests.spec.tsx.executor": "Run",
     "Jest.ItemComponentTests.tsx.executor": "Run",
+    "Jest.SearchInputsComponent.executor": "Run",
+    "Jest.SearchInputsComponent.renders correctly with default values and does not call onIdChange and onWorldChange.executor": "Run",
+    "Jest.TabButtonsComponent.executor": "Run",
+    "Jest.TabButtonsComponent.renders correctly with inactive tab.executor": "Run",
+    "Jest.indexTests.spec.tsx.executor": "Run",
+    "Jest.renders without crashing.executor": "Debug",
+    "Jest.reportWebVitals.executor": "Run",
+    "Jest.reportWebVitals.should call web-vitals functions if onPerfEntry is a function.executor": "Run",
+    "Jest.reportWebVitals.should not call web-vitals functions if onPerfEntry is not a function.executor": "Run",
+    "Jest.reportWebVitalsTests.spec.tsx.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "improve-craftingcomponent",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/src/components/Header",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -100,8 +128,8 @@
     "nodejs.jest.jest_package": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/react-scripts",
     "nodejs_interpreter_path": "/home/lemoneleven/.nvm/versions/node/v18.18.0/bin/node",
     "nodejs_package_manager_path": "npm",
-    "npm.npm start.executor": "Debug",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.notifications",
+    "npm.npm start.executor": "Run",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -133,29 +161,66 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.npm start">
-    <configuration name="CraftComponent" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Jest.SearchInputsComponent">
+    <configuration name="Index component" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-file value="$PROJECT_DIR$/src/indexTests.spec.tsx" />
       <test-names>
-        <test-name value="CraftComponent" />
+        <test-name value="Index component" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="CraftComponent.renders ${field} on screen" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
+    <configuration name="SearchInputsComponent" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/components/Header/TabButtonsComponentTests.spec.tsx" />
+      <test-names>
+        <test-name value="SearchInputsComponent" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="SearchInputsComponent.renders correctly with default values and does not call onIdChange and onWorldChange" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-file value="$PROJECT_DIR$/src/components/Header/TabButtonsComponentTests.spec.tsx" />
       <test-names>
-        <test-name value="CraftComponent" />
-        <test-name value="renders ${field} on screen" />
+        <test-name value="SearchInputsComponent" />
+        <test-name value="renders correctly with default values and does not call onIdChange and onWorldChange" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="TabButtonsComponent" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/components/Header/TabButtonsComponentTests.spec.tsx" />
+      <test-names>
+        <test-name value="TabButtonsComponent" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="TabButtonsComponent.renders correctly with inactive tab" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/components/Header/TabButtonsComponentTests.spec.tsx" />
+      <test-names>
+        <test-name value="TabButtonsComponent" />
+        <test-name value="renders correctly with inactive tab" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -165,14 +230,20 @@
     <list>
       <item itemvalue="JavaScript Debug.Debug Application" />
       <item itemvalue="Jest.All Tests" />
-      <item itemvalue="Jest.CraftComponent.renders ${field} on screen" />
-      <item itemvalue="Jest.CraftComponent" />
+      <item itemvalue="Jest.Index component" />
+      <item itemvalue="Jest.SearchInputsComponent" />
+      <item itemvalue="Jest.SearchInputsComponent.renders correctly with default values and does not call onIdChange and onWorldChange" />
+      <item itemvalue="Jest.TabButtonsComponent" />
+      <item itemvalue="Jest.TabButtonsComponent.renders correctly with inactive tab" />
       <item itemvalue="npm.npm start" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.CraftComponent.renders ${field} on screen" />
-        <item itemvalue="Jest.CraftComponent" />
+        <item itemvalue="Jest.SearchInputsComponent" />
+        <item itemvalue="Jest.SearchInputsComponent.renders correctly with default values and does not call onIdChange and onWorldChange" />
+        <item itemvalue="Jest.TabButtonsComponent" />
+        <item itemvalue="Jest.TabButtonsComponent.renders correctly with inactive tab" />
+        <item itemvalue="Jest.Index component" />
       </list>
     </recent_temporary>
   </component>
@@ -199,7 +270,7 @@
       <workItem from="1704501454932" duration="404000" />
       <workItem from="1704566238834" duration="2291000" />
       <workItem from="1704586446240" duration="4521000" />
-      <workItem from="1705180430076" duration="298000" />
+      <workItem from="1705180430076" duration="8842000" />
     </task>
     <task id="LOCAL-00001" summary="Began front end">
       <option name="closed" value="true" />
@@ -337,7 +408,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704501800851</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fixed error on craft page">
+      <option name="closed" value="true" />
+      <created>1705181036995</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1705181036995</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,7 +475,8 @@
     <MESSAGE value="wip adding unit tests" />
     <MESSAGE value="progress getting jest working" />
     <MESSAGE value="CORS error" />
-    <option name="LAST_COMMIT_MESSAGE" value="CORS error" />
+    <MESSAGE value="fixed error on craft page" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed error on craft page" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -407,22 +487,23 @@
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx</url>
-          <line>8</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
           <line>23</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/reportWebVitals.ts</url>
+          <line>3</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1704490012511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$renders_without_crashing.info" NAME="renders without crashing Coverage Results" MODIFIED="1705267205278" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1705268871272" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$Tests_in_src_.info" NAME="Tests in src/ Coverage Results" MODIFIED="1704489654423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$PriceComponentTests_spec_tsx.info" NAME="PriceComponentTests.spec.tsx Coverage Results" MODIFIED="1704489679469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>

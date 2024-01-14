@@ -58,7 +58,6 @@ describe('RecipeComponent', () => {
                 });
             });
     });
-
     describe('Ingredients', () => {
         Object.entries(RecipeData)
             .filter(([field]) =>

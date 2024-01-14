@@ -8,6 +8,7 @@
     color: white;
     border-top: 1px solid darkgreen;
 }
+
 .search-button {
     font-size: 25px;
     text-align: left;
@@ -15,8 +16,7 @@
     margin-left: 20px;
     min-width: 160px;
     min-height: 60px;
-    background-image:
-            url('/public/assets/search_small.png');
+    background-image: url('/public/assets/search_small.png');
     background-repeat: no-repeat;
     background-position: 95% 50%;
     background-size: auto, cover;
