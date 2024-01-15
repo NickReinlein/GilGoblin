@@ -1,45 +1,56 @@
-import React from "react";
-import '../../styles/SearchInputs.css';
+import React from 'react';
+import {fireEvent, render, screen} from '@testing-library/react';
+import SearchInputsComponent from './SearchInputsComponent';
 
-interface SearchInputsComponentProps {
-    id: number,
-    world: number
-    onIdChange?: (value: number) => void;
-    onWorldChange?: (value: number) => void;
-}
+describe('SearchInputsComponent', () => {
+    const id = 1;
+    const world = 34;
 
-const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world, onIdChange, onWorldChange}) => {
-    return (
-        <div className="search-inputs">
-            <div>
-                <label className="search-label" htmlFor="worldInput">World</label>
-                <select
-                    className="search-dropdown"
-                    id="worldInput"
-                    value={world}
-                    onChange={(e) => {
-                        if (onWorldChange)
-                            onWorldChange(Number(e.target.value))
-                    }}>
-                    <option value="1">1</option>
-                    <option value="34">34</option>
-                </select>
-            </div>
-            <div>
-                <label className="search-label" htmlFor="idInput">Id</label>
-                <input
-                    className="search-input"
-                    type="number"
-                    id="idInput"
-                    value={id}
-                    onChange={(e) => {
-                        if (onIdChange)
-                            onIdChange(Number(e.target.value))
-                    }}
-                />
-            </div>
-        </div>
-    );
-};
+    it('renders correctly and calls onIdChange and onWorldChange', () => {
+        const onIdChangeMock = jest.fn();
+        const onWorldChangeMock = jest.fn();
 
-export default SearchInputsComponent;
+        render(
+            <SearchInputsComponent id={id} world={world} onIdChange={onIdChangeMock} onWorldChange={onWorldChangeMock}/>
+        );
+
+        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
+        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
+
+        expect(worldInput).toBeInTheDocument();
+        expect(idInput).toBeInTheDocument();
+
+        expect(worldInput.value).toBe('34');
+        expect(idInput.value).toBe('1');
+
+        fireEvent.change(worldInput, {target: {value: '1'}});
+        fireEvent.change(idInput, {target: {value: '2'}});
+
+        expect(onWorldChangeMock).toHaveBeenCalledWith(1);
+        expect(onIdChangeMock).toHaveBeenCalledWith(2);
+    });
+
+    it('renders correctly with default values and does not call onIdChange and onWorldChange', () => {
+        const onIdChangeMock = jest.fn();
+        const onWorldChangeMock = jest.fn();
+
+        render(
+            <SearchInputsComponent id={id} world={world}/>
+        );
+
+        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
+        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
+
+        expect(worldInput).toBeInTheDocument();
+        expect(idInput).toBeInTheDocument();
+
+        expect(worldInput.value).toBe('34');
+        expect(idInput.value).toBe('1');
+
+        fireEvent.change(worldInput, {target: {value: '1'}});
+        fireEvent.change(idInput, {target: {value: '2'}});
+
+        expect(onWorldChangeMock).not.toHaveBeenCalled();
+        expect(onIdChangeMock).not.toHaveBeenCalled();
+    });
+});
