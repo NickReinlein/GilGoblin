@@ -10,16 +10,16 @@ interface ResultsProps {
     data: any;
 }
 
-const ResultsComponent: React.FC<ResultsProps> = ({ componentName, data }) => {
+const ResultsComponent: React.FC<ResultsProps> = ({componentName, data}) => {
     switch (componentName) {
         case 'Items':
-            return <ItemsComponent item={data} />;
+            return <ItemsComponent item={data}/>;
         case 'Recipes':
-            return <RecipesComponent recipe={data} />;
+            return <RecipesComponent recipe={data}/>;
         case 'Prices':
-            return <PricesComponent price={data} />;
+            return <PricesComponent price={data}/>;
         case 'Crafts':
-            return <CraftsComponent craft={data} />;
+            return <CraftsComponent craft={data}/>;
         default:
             return null;
     }

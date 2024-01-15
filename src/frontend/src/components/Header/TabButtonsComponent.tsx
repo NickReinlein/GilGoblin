@@ -7,7 +7,7 @@ interface TabButtonsComponentProps {
     children: React.ReactNode;
 }
 
-const TabButtonsComponent: React.FC<TabButtonsComponentProps> = ({ tabName, activeTab, onClick, children }) => {
+const TabButtonsComponent: React.FC<TabButtonsComponentProps> = ({tabName, activeTab, onClick, children}) => {
     return (
         <button
             className={activeTab === tabName ? 'active' : ''}

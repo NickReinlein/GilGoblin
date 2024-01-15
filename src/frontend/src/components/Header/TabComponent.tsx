@@ -22,7 +22,12 @@ const TabComponent = () => {
     };
 
     const getDataForTab = async (tabName: string, id: number, world: number) => {
-        return await DataFetcher.fetchData(tabName, id, world);
+        try {
+            return await DataFetcher.fetchData(tabName, id, world);
+        } catch (error) {
+            console.error(`Error fetching data for id ${id} world ${world}`);
+            return null;
+        }
 
     }
 

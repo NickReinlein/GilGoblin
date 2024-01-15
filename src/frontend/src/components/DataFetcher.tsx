@@ -34,7 +34,11 @@ const fetchData = async (tabName: string, id: number, world: number) => {
     }
 };
 
-const DataFetcher = {
+export type DataFetcherType = {
+    fetchData: (tabName: string, id: number, world: number) => Promise<any>;
+};
+
+const DataFetcher: DataFetcherType = {
     fetchData,
 };
 
