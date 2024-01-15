@@ -15,11 +15,13 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark:  A crafting calculator that breaks down recipes to ingredients
 * :heavy_check_mark:  Top things to craft for a given FFXIV server/world
 * :heavy_check_mark:  A new service to pre-calculate costs and profits
+* :heavy_check_mark: A website to search items, recipes, prices, and the craft summary
 
 *Work-in-progress*
-* :hatching_chick: A website to search items, recipes, prices, and the craft summary
-* :egg: Add to the website the top crafts for specific worlds
-* :egg: Store more worlds
+* :hatching_chick: Add to the website the top crafts for specific worlds
+* :egg: Enhance top crafts to be sortable
+* :egg: Fixing bugs
+* :egg: Add & store more worlds
 
 *Nice-to-have*
 * :question: Top things to gather
