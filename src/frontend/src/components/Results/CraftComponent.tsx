@@ -1,33 +1,65 @@
 import React from 'react';
-import {Craft, Ingredient} from '../../types/types';
-import RecipesComponent from "./RecipeComponent";
-import ItemComponent from "./ItemComponent";
+import { Craft, Ingredient } from '../../types/types';
+import RecipesComponent from './RecipeComponent';
+import ItemComponent from './ItemComponent';
 
 interface CraftProps {
     craft: Craft;
 }
 
-const CraftComponent: React.FC<CraftProps> = ({craft}) => {
+const CraftComponent: React.FC<CraftProps> = ({ craft }) => {
     return (
         <div>
             <h2>Craft Summary for Item ID {craft?.itemId} in world {craft?.worldId}</h2>
-            <p>Average Listing Price: {craft?.averageListingPrice}</p>
-            <p>Average Sold: {craft?.averageSold}</p>
-            <p>Recipe Cost: {craft?.recipeCost}</p>
-            <p>Recipe Result Quantity: {craft?.recipe?.resultQuantity}</p>
-            <p>Recipe Profit vs Sold: {craft?.recipeProfitVsSold}</p>
-            <p>Recipe Profit vs Listings: {craft?.recipeProfitVsListings}</p>
-            <p>Last Updated: {craft?.updated}</p>
-            <h3><u>Ingredients</u></h3>
-            <ol>
+            <table>
+                <tbody>
+                <tr>
+                    <td>Average Listing Price:</td>
+                    <td>{craft?.averageListingPrice}</td>
+                </tr>
+                <tr>
+                    <td>Average Sold:</td>
+                    <td>{craft?.averageSold}</td>
+                </tr>
+                <tr>
+                    <td>Recipe Cost:</td>
+                    <td>{craft?.recipeCost}</td>
+                </tr>
+                <tr>
+                    <td>Recipe Result Quantity:</td>
+                    <td>{craft?.recipe?.resultQuantity}</td>
+                </tr>
+                <tr>
+                    <td>Recipe Profit vs Sold:</td>
+                    <td>{craft?.recipeProfitVsSold}</td>
+                </tr>
+                <tr>
+                    <td>Recipe Profit vs Listings:</td>
+                    <td>{craft?.recipeProfitVsListings}</td>
+                </tr>
+                <tr>
+                    <td>Last Updated:</td>
+                    <td>{craft?.updated}</td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>
+                <u>Ingredients</u>
+            </h3>
+            <table>
+                <tbody>
                 {craft?.ingredients?.map((ingredient: Ingredient, index: number) => (
-                    <li key={index}>
-                        Item ID: {ingredient?.itemId}, Quantity: {ingredient?.quantity}
-                    </li>
+                    <tr key={index}>
+                        <td>Item ID:</td>
+                        <td>{ingredient?.itemId}</td>
+                        <td>Quantity:</td>
+                        <td>{ingredient?.quantity}</td>
+                    </tr>
                 ))}
-            </ol>
-            <RecipesComponent recipe={craft?.recipe}/>
-            <ItemComponent item={craft?.itemInfo}/>
+                </tbody>
+            </table>
+            <RecipesComponent recipe={craft?.recipe} />
+            <ItemComponent item={craft?.itemInfo} />
         </div>
     );
 };

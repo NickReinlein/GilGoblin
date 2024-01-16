@@ -7,18 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="more tests added">
-      <change afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Results/ProfitsComponent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/converters/CraftToProfitConverter.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/converters/CraftToProfitConverterTests.spec.tsx" afterDir="false" />
+    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="basic top craft result is returned. tests for profits. added craft to profit conversion">
+      <change afterPath="$PROJECT_DIR$/src/styles/ProfitsComponent.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataFetcher.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataFetcher.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Header/TabComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/TabComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitsComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/types.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +88,7 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Jest.All Tests.executor": "Run",
+    "Jest.All Tests.executor": "Coverage",
     "Jest.App component.executor": "Run",
     "Jest.App component.renders without crashing.executor": "Run",
     "Jest.AppTests.spec.tsx.executor": "Coverage",
@@ -132,6 +128,7 @@
     "Jest.TabComponent.fetches and displays data on search click.executor": "Run",
     "Jest.TabComponent.handles error during data fetch.executor": "Run",
     "Jest.TabComponentTests.spec.tsx.executor": "Run",
+    "Jest.convertCraftToProfit.executor": "Coverage",
     "Jest.indexTests.spec.tsx.executor": "Run",
     "Jest.renders without crashing.executor": "Debug",
     "Jest.reportWebVitals.executor": "Run",
@@ -142,7 +139,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "add-top-crafts",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/src/converters",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/src/styles",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -151,7 +148,7 @@
     "nodejs.mocha.mocha_node_package_dir": "",
     "nodejs_interpreter_path": "/home/lemoneleven/.nvm/versions/node/v18.18.0/bin/node",
     "nodejs_package_manager_path": "npm",
-    "npm.npm start.executor": "Debug",
+    "npm.npm start.executor": "Run",
     "settings.editor.selected.configurable": "coverage",
     "ts.external.directory.path": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
@@ -171,11 +168,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/styles" />
       <recent name="$PROJECT_DIR$/src/converters" />
       <recent name="$PROJECT_DIR$/src/components/Results" />
       <recent name="$PROJECT_DIR$/src/components/Header" />
       <recent name="$PROJECT_DIR$/src/components" />
-      <recent name="$PROJECT_DIR$/tests/Results" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -185,7 +182,7 @@
       <recent name="$PROJECT_DIR$/src/components/Results" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.All Tests">
+  <component name="RunManager" selected="npm.npm start">
     <configuration name="ProfitComponentTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
@@ -229,13 +226,16 @@
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="TabComponentTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="convertCraftToProfit" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
-      <scope-kind value="TEST_FILE" />
-      <test-file value="$PROJECT_DIR$/src/components/Header/TabComponentTests.spec.tsx" />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/converters/CraftToProfitConverterTests.spec.tsx" />
+      <test-names>
+        <test-name value="convertCraftToProfit" />
+      </test-names>
       <method v="2" />
     </configuration>
     <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
@@ -248,16 +248,16 @@
       <item itemvalue="Jest.ProfitsComponent" />
       <item itemvalue="Jest.ProfitsComponent.renders ProfitsComponent with provided profits" />
       <item itemvalue="Jest.ProfitsComponentTest.spec.tsx" />
-      <item itemvalue="Jest.TabComponentTests.spec.tsx" />
+      <item itemvalue="Jest.convertCraftToProfit" />
       <item itemvalue="npm.npm start" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Jest.convertCraftToProfit" />
         <item itemvalue="Jest.ProfitsComponentTest.spec.tsx" />
         <item itemvalue="Jest.ProfitsComponent" />
         <item itemvalue="Jest.ProfitsComponent.renders ProfitsComponent with provided profits" />
         <item itemvalue="Jest.ProfitComponentTests.spec.tsx" />
-        <item itemvalue="Jest.TabComponentTests.spec.tsx" />
       </list>
     </recent_temporary>
   </component>
@@ -447,7 +447,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705280300294</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="basic top craft result is returned. tests for profits. added craft to profit conversion">
+      <option name="closed" value="true" />
+      <created>1705360432713</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1705360432713</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -509,7 +517,8 @@
     <MESSAGE value="fixed error on craft page" />
     <MESSAGE value="much higher test coverage" />
     <MESSAGE value="more tests added" />
-    <option name="LAST_COMMIT_MESSAGE" value="more tests added" />
+    <MESSAGE value="basic top craft result is returned. tests for profits. added craft to profit conversion" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic top craft result is returned. tests for profits. added craft to profit conversion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -521,25 +530,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
-          <line>26</line>
+          <line>27</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
-          <line>24</line>
+          <line>25</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/converters/CraftToProfitConverter.tsx</url>
+          <line>17</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/frontend$renders_without_crashing.info" NAME="renders without crashing Coverage Results" MODIFIED="1705267205278" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1705281714209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1705360405883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$TabComponent.info" NAME="TabComponent Coverage Results" MODIFIED="1705280847848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$TabButtonsComponentTests_spec_tsx.info" NAME="TabButtonsComponentTests.spec.tsx Coverage Results" MODIFIED="1705280872844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$Tests_in_src_.info" NAME="Tests in src/ Coverage Results" MODIFIED="1704489654423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$convertCraftToProfit.info" NAME="convertCraftToProfit Coverage Results" MODIFIED="1705360325701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$PriceComponentTests_spec_tsx.info" NAME="PriceComponentTests.spec.tsx Coverage Results" MODIFIED="1704489679469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$SearchInputsComponent_renders_correctly_with_default_values_and_does_not_call_onIdChange_and_onWorldChange.info" NAME="SearchInputsComponent.renders correctly with default values and does not call onIdChange and onWorldChange Coverage Results" MODIFIED="1705280864360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>

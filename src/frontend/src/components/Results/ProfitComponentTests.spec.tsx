@@ -19,8 +19,9 @@ const mockProfit = {
 
 describe('ProfitComponent', () => {
     test('renders profit data correctly', () => {
-        render(<ProfitComponent profit={mockProfit}/>);
+        render(<ProfitComponent profit={mockProfit} index={0}/>);
 
+        expect(screen.getByText(`1`)).toBeInTheDocument();
         expect(screen.getByText(`Item Id: ${mockProfit.itemId}`)).toBeInTheDocument();
         expect(screen.getByText(`Name: ${mockProfit.name}`)).toBeInTheDocument();
         expect(screen.getByText(`CanHq: ${mockProfit.canHq}`)).toBeInTheDocument();

@@ -1,0 +1,12 @@
+.profits td {
+    border-right: 1px dotted darkgreen;
+}
+
+.profits th {
+    background-color: darkgreen;
+}
+
+.profits td, .profits th {
+    width: calc(100% / 12);
+    box-sizing: border-box;
+}
