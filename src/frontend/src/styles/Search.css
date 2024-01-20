@@ -7,10 +7,12 @@
     background-color: transparent;
     color: white;
     border-top: 1px solid darkgreen;
+    border-bottom: 1px solid darkgreen;
 }
 
+
 .search-button {
-    font-size: 25px;
+    font-size: 27px;
     text-align: left;
     padding: 5px 20px 5px 20px;
     margin-left: 20px;

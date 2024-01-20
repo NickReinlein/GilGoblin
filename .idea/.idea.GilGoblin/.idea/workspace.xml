@@ -12,7 +12,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="missed changes for api">
+      <change afterPath="$PROJECT_DIR$/src/frontend/src/converters/TimestampToAgeConverter.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/frontend/src/converters/TimestampToAgeConverterTests.spec.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/frontend/src/styles/CraftComponent.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Header/TabComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Header/TabComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/CraftComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/CraftComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ItemComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ItemComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/PriceComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/PriceComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitTableComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/RecipeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/RecipeComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ResultsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ResultsComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/ProfitsComponent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/ProfitTableComponent.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/Results.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/Results.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/Search.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/Search.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/SearchInputs.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/SearchInputs.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/Tab.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/Tab.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +142,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "add-front-end",
+    "git-widget-placeholder": "add-top-crafts",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant/Accountant.csproj",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -141,6 +158,7 @@
       "postgresql"
     ],
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "GitIgnore",
       "Markdown"
     ],
     "rider.external.source.directories": [
@@ -150,11 +168,6 @@
     ]
   }
 }]]></component>
-  <component name="QodanaReportsService">
-    <option name="descriptions">
-      <ReportDescription localRun="true" path="/tmp/qodana_output/qodana.sarif.json" reportGuid="37d2155e-8e5c-4dc8-897f-b28d6ef0f263" reportId="GilGoblin/qodana/2023-11-14" />
-    </option>
-  </component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Api: http">
     <configuration name="Publish Accountant to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/src/Accountant/bin/Release/net7.0/publish" target_framework="net7.0" uuid_high="6895913569179290582" uuid_low="-6138816522910510359" />
@@ -355,6 +368,7 @@
       <workItem from="1701538283455" duration="992000" />
       <workItem from="1701620751019" duration="645000" />
       <workItem from="1704568720480" duration="1197000" />
+      <workItem from="1705788318004" duration="332000" />
     </task>
     <task id="LOCAL-00039" summary="Working example with checks for age of existing entries">
       <option name="closed" value="true" />

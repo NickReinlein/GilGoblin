@@ -8,7 +8,7 @@ interface ItemProps {
 const ItemComponent: React.FC<ItemProps> = ({item}) => {
     return (
         <div>
-            <h2>Item Id: {item?.id}</h2>
+            <p>Item Id: {item?.id}</p>
             <p>Name: {item?.name}</p>
             <p>Description: {item?.description}</p>
             <p>Level: {item?.level}</p>

@@ -1,10 +1,12 @@
 .tab-container {
+    align-content: end;
     text-align: center;
-    margin: 10px 5px 5px;
+    margin: 20px 0 0 0;
     border-: 1px solid darkgreen;
 }
 
 .tabs {
+    margin: 10px 5px 5px;
     display: flex;
     justify-content: center;
     gap: 22px;

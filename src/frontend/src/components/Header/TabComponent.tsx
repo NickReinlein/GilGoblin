@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import '../../styles/Tab.css';
 import SearchComponent from './SearchComponent';
-
 import TabButtonsComponent from './TabButtonsComponent';
 import ResultsComponent from "../Results/ResultsComponent";
 import DataFetcher from "../DataFetcher";
@@ -28,7 +27,6 @@ const TabComponent = () => {
             console.error(`Error fetching data for id ${id} world ${world}`);
             return null;
         }
-
     }
 
     return (
@@ -55,6 +53,6 @@ const TabComponent = () => {
     );
 };
 
-export const tabNames = ['Items', 'Recipes', 'Prices', 'Crafts'];
+export const tabNames = ['Profits', 'Crafts', 'Items', 'Recipes', 'Prices'];
 
 export default TabComponent;
