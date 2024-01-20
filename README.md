@@ -16,18 +16,20 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark:  Top things to craft for a given FFXIV server/world
 * :heavy_check_mark:  A new service to pre-calculate costs and profits
 * :heavy_check_mark: A website to search items, recipes, prices, and the craft summary
-
+* :heavy_check_mark: Add the most profitable recipes to craft for specific worlds
+  
 *Work-in-progress*
-* :hatching_chick: Add to the website the top crafts for specific worlds
-* :egg: Enhance top crafts to be sortable
+* :hatching_chick: Enhance top crafts to be sortable
+* :egg: Create a Docker image of the front-end
 * :egg: Fixing bugs
 * :egg: Add & store more worlds
 
 *Nice-to-have*
 * :question: Top things to gather
 * :question: Advanced filtering: Enter class levels to filter available recipes
-* :question: A hover or clickable option to see the summary's ingredients & details
-* :question:  A website displaying the top crafts, *for each profession*, for each world
+* :question: A link to each profit result's item, recipe, price, and craft in the result
+* :question: A hover or clickable option to see the profit's ingredients & cost info
+* :question: A website displaying the top crafts *for each profession*
 
 *Not currently on the product roadmap*
 * :heavy_multiplication_x: Filter for HQ/NQ
