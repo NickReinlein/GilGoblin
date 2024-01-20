@@ -1,65 +1,83 @@
 import React from 'react';
-import { Craft, Ingredient } from '../../types/types';
+import '../../styles/CraftComponent.css';
+import {Craft, Ingredient} from '../../types/types';
 import RecipesComponent from './RecipeComponent';
 import ItemComponent from './ItemComponent';
+import TimestampToAgeConverter from "../../converters/TimestampToAgeConverter";
 
 interface CraftProps {
     craft: Craft;
 }
 
-const CraftComponent: React.FC<CraftProps> = ({ craft }) => {
+const CraftComponent: React.FC<CraftProps> = ({craft}) => {
     return (
-        <div>
-            <h2>Craft Summary for Item ID {craft?.itemId} in world {craft?.worldId}</h2>
+        <div className="craft">
+            <p>Craft Summary for Item ID {craft?.itemId} in world {craft?.worldId}</p>
             <table>
                 <tbody>
                 <tr>
                     <td>Average Listing Price:</td>
-                    <td>{craft?.averageListingPrice}</td>
+                    <td>{craft?.averageListingPrice?.toLocaleString()}</td>
                 </tr>
                 <tr>
                     <td>Average Sold:</td>
-                    <td>{craft?.averageSold}</td>
+                    <td>{craft?.averageSold?.toLocaleString()}</td>
                 </tr>
                 <tr>
                     <td>Recipe Cost:</td>
-                    <td>{craft?.recipeCost}</td>
+                    <td>{craft?.recipeCost?.toLocaleString()}</td>
                 </tr>
                 <tr>
                     <td>Recipe Result Quantity:</td>
-                    <td>{craft?.recipe?.resultQuantity}</td>
+                    <td>{craft?.recipe?.resultQuantity?.toLocaleString()}</td>
                 </tr>
                 <tr>
                     <td>Recipe Profit vs Sold:</td>
-                    <td>{craft?.recipeProfitVsSold}</td>
+                    <td>{craft?.recipeProfitVsSold?.toLocaleString()}</td>
                 </tr>
                 <tr>
                     <td>Recipe Profit vs Listings:</td>
-                    <td>{craft?.recipeProfitVsListings}</td>
+                    <td>{craft?.recipeProfitVsListings?.toLocaleString()}</td>
                 </tr>
                 <tr>
-                    <td>Last Updated:</td>
-                    <td>{craft?.updated}</td>
+                    <td>Age:</td>
+                    <td><TimestampToAgeConverter timestamp={craft?.updated}/></td>
                 </tr>
                 </tbody>
             </table>
             <h3>
                 <u>Ingredients</u>
             </h3>
-            <table>
-                <tbody>
-                {craft?.ingredients?.map((ingredient: Ingredient, index: number) => (
-                    <tr key={index}>
-                        <td>Item ID:</td>
-                        <td>{ingredient?.itemId}</td>
-                        <td>Quantity:</td>
-                        <td>{ingredient?.quantity}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <RecipesComponent recipe={craft?.recipe} />
-            <ItemComponent item={craft?.itemInfo} />
+            <div className="ingredients">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Qty</th>
+                            <th>Item Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {craft?.ingredients?.map((ingredient: Ingredient, index: number) => (
+                        <tr key={index}>
+                            <td>{ingredient?.quantity}</td>
+                            <td>{ingredient?.itemId}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            <h3>
+                <u>Recipe</u>
+            </h3>
+            <div className="recipes">
+                <RecipesComponent recipe={craft?.recipe}/>
+            </div>
+            <h3>
+                <u>Item</u>
+            </h3>
+            <div className="iteminfo">
+                <ItemComponent item={craft?.itemInfo}/>
+            </div>
         </div>
     );
 };

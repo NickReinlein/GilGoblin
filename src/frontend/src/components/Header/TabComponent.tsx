@@ -53,6 +53,6 @@ const TabComponent = () => {
     );
 };
 
-export const tabNames = ['Items', 'Recipes', 'Prices', 'Crafts', 'Profits'];
+export const tabNames = ['Profits', 'Crafts', 'Items', 'Recipes', 'Prices'];
 
 export default TabComponent;

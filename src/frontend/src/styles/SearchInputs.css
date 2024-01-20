@@ -2,16 +2,17 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    /*border: 1px dotted white;*/
     padding: 5px 10px 5px 20px;
     margin: 5px;
     font-size: 27px;
 }
 
 .search-label {
-    margin-right: 5px;
-    font-size: 22px;
-    padding: 5px 10px 5px 20px;
+    margin-right: 10px;
+    font-size: 25px;
+    padding: 5px 10px 5px 10px;
+    border-bottom: 2px solid darkgreen;
+
 }
 
 .search-input {

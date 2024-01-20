@@ -7,14 +7,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="basic top craft result is returned. tests for profits. added craft to profit conversion">
-      <change afterPath="$PROJECT_DIR$/src/styles/ProfitsComponent.css" afterDir="false" />
+    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="added some styling">
+      <change afterPath="$PROJECT_DIR$/src/converters/TimestampToAgeConverter.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/styles/CraftComponent.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header/TabComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/TabComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ItemComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ItemComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/PriceComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/PriceComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitsComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitTableComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/ProfitsComponent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/ProfitTableComponent.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/Results.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/Results.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/Search.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/Search.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/SearchInputs.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/SearchInputs.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/Tab.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/Tab.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +57,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/../.." value="master" />
+        <entry key="$PROJECT_DIR$/../.." value="add-top-crafts-old" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -128,6 +140,9 @@
     "Jest.TabComponent.fetches and displays data on search click.executor": "Run",
     "Jest.TabComponent.handles error during data fetch.executor": "Run",
     "Jest.TabComponentTests.spec.tsx.executor": "Run",
+    "Jest.TimestampToAgeConverter.executor": "Run",
+    "Jest.TimestampToAgeConverter.renders age indicator correctly for less than a day.executor": "Run",
+    "Jest.TimestampToAgeConverterTests.spec.tsx.executor": "Run",
     "Jest.convertCraftToProfit.executor": "Coverage",
     "Jest.indexTests.spec.tsx.executor": "Run",
     "Jest.renders without crashing.executor": "Debug",
@@ -182,28 +197,7 @@
       <recent name="$PROJECT_DIR$/src/components/Results" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.npm start">
-    <configuration name="ProfitComponentTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="TEST_FILE" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" />
-      <method v="2" />
-    </configuration>
-    <configuration name="ProfitsComponent" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitsComponentTest.spec.tsx" />
-      <test-names>
-        <test-name value="ProfitsComponent" />
-      </test-names>
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Jest.TimestampToAgeConverterTests.spec.tsx">
     <configuration name="ProfitsComponentTest.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
@@ -213,16 +207,37 @@
       <test-file value="$PROJECT_DIR$/src/components/Results/ProfitsComponentTest.spec.tsx" />
       <method v="2" />
     </configuration>
-    <configuration name="ProfitsComponent.renders ProfitsComponent with provided profits" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="TimestampToAgeConverter" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" />
+      <test-names>
+        <test-name value="TimestampToAgeConverter" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="TimestampToAgeConverterTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST_FILE" />
+      <test-file value="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TimestampToAgeConverter.renders age indicator correctly for less than a day" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitsComponentTest.spec.tsx" />
+      <test-file value="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" />
       <test-names>
-        <test-name value="ProfitsComponent" />
-        <test-name value="renders ProfitsComponent with provided profits" />
+        <test-name value="TimestampToAgeConverter" />
+        <test-name value="renders age indicator correctly for less than a day" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -244,20 +259,20 @@
     <list>
       <item itemvalue="JavaScript Debug.Debug Application" />
       <item itemvalue="Jest.All Tests" />
-      <item itemvalue="Jest.ProfitComponentTests.spec.tsx" />
-      <item itemvalue="Jest.ProfitsComponent" />
-      <item itemvalue="Jest.ProfitsComponent.renders ProfitsComponent with provided profits" />
+      <item itemvalue="Jest.TimestampToAgeConverter" />
+      <item itemvalue="Jest.TimestampToAgeConverter.renders age indicator correctly for less than a day" />
+      <item itemvalue="Jest.TimestampToAgeConverterTests.spec.tsx" />
       <item itemvalue="Jest.ProfitsComponentTest.spec.tsx" />
       <item itemvalue="Jest.convertCraftToProfit" />
       <item itemvalue="npm.npm start" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Jest.TimestampToAgeConverterTests.spec.tsx" />
+        <item itemvalue="Jest.TimestampToAgeConverter" />
+        <item itemvalue="Jest.TimestampToAgeConverter.renders age indicator correctly for less than a day" />
         <item itemvalue="Jest.convertCraftToProfit" />
         <item itemvalue="Jest.ProfitsComponentTest.spec.tsx" />
-        <item itemvalue="Jest.ProfitsComponent" />
-        <item itemvalue="Jest.ProfitsComponent.renders ProfitsComponent with provided profits" />
-        <item itemvalue="Jest.ProfitComponentTests.spec.tsx" />
       </list>
     </recent_temporary>
   </component>
@@ -286,6 +301,7 @@
       <workItem from="1704586446240" duration="4521000" />
       <workItem from="1705180430076" duration="10395000" />
       <workItem from="1705276779884" duration="3083000" />
+      <workItem from="1705499846082" duration="11377000" />
     </task>
     <task id="LOCAL-00001" summary="Began front end">
       <option name="closed" value="true" />
@@ -530,20 +546,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
-          <line>27</line>
-          <properties lambdaOrdinal="-1" />
+          <line>26</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Results/ResultsComponent.tsx</url>
-          <line>25</line>
-          <properties lambdaOrdinal="-1" />
+          <line>24</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/converters/CraftToProfitConverter.tsx</url>
           <line>17</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>

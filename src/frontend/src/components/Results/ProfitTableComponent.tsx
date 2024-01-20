@@ -2,13 +2,13 @@ import React from 'react';
 import {Craft} from '../../types/types';
 import ProfitComponent from './ProfitComponent';
 import {convertCraftToProfit} from '../../converters/CraftToProfitConverter';
-import '../../styles/ProfitsComponent.css';
+import '../../styles/ProfitTableComponent.css';
 
-interface ProfitsProps {
+interface ProfitTableProps {
     crafts: Craft[];
 }
 
-const ProfitsComponent: React.FC<ProfitsProps> = ({crafts}) => {
+const ProfitTableComponent: React.FC<ProfitTableProps> = ({crafts}) => {
     return (!crafts || crafts.length === 0)
         ? <div>Press the search button to search for a World's best recipes to craft</div>
         : (
@@ -24,16 +24,14 @@ const ProfitsComponent: React.FC<ProfitsProps> = ({crafts}) => {
                         <th>Avg. Listing</th>
                         <th>Cost</th>
                         <th>Qty</th>
-                        <th>Recipe</th>
-                        <th>Item</th>
-                        <th>World</th>
-                        <th>Updated</th>
+                        <th>Age</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
-                        Array.isArray(crafts) && crafts.map((craft, index) => (
-                            <tr key={index}>
+                        Array.isArray(crafts) &&
+                        crafts.map((craft, index) => (
+                            <tr key={index} >
                                 <ProfitComponent profit={convertCraftToProfit(craft)} index={index}/>
                             </tr>
                         ))
@@ -44,4 +42,4 @@ const ProfitsComponent: React.FC<ProfitsProps> = ({crafts}) => {
         );
 };
 
-export default ProfitsComponent;
+export default ProfitTableComponent;

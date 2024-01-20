@@ -8,7 +8,7 @@ interface RecipeProps {
 const RecipeComponent: React.FC<RecipeProps> = ({recipe}) => {
     return (
         <div>
-            <h2>Recipe Id: {recipe?.id || 'Missing'}</h2>
+            <p>Recipe Id: {recipe?.id || 'Missing'}</p>
             <p>Craft Type: {recipe?.craftType}</p>
             <p>Recipe Level Table: {recipe?.recipeLevelTable}</p>
             <p>Target Item Id: {recipe?.targetItemId}</p>
