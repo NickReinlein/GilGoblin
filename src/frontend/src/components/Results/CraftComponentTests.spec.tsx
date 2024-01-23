@@ -71,12 +71,12 @@ describe('CraftComponent', () => {
                 },
                 {
                     "recipeId": 100,
-                    "itemId": 2,
+                    "itemId": 222,
                     "quantity": 3
                 },
                 {
                     "recipeId": 100,
-                    "itemId": 5,
+                    "itemId": 567,
                     "quantity": 2
                 }
             ],
@@ -101,15 +101,13 @@ describe('CraftComponent', () => {
             "recipeProfitVsListingsValue": `${CraftData.recipeProfitVsListings.toLocaleString()}`,
             "Ingredients": `Ingredients`,
             "ingredient1Id": `${CraftData.ingredients[0].itemId}`,
-            // "ingredient1Qty": `${CraftData.ingredients[0].quantity}`,
-            // "ingredient2": `Item ID: ${CraftData.ingredients[1].itemId}, Quantity: ${CraftData.ingredients[1].quantity}`,
-            // "ingredient3": `Item ID: ${CraftData.ingredients[2].itemId}, Quantity: ${CraftData.ingredients[2].quantity}`,
-            // "ingredient4": `Item ID: ${CraftData.ingredients[3].itemId}, Quantity: ${CraftData.ingredients[3].quantity}`,
-            // "ingredient5": `Item ID: ${CraftData.ingredients[4].itemId}, Quantity: ${CraftData.ingredients[4].quantity}`,
+            "ingredient2Id": `${CraftData.ingredients[1].itemId}`,
+            "ingredient3Id": `${CraftData.ingredients[2].itemId}`,
+            "ingredient4Id": `${CraftData.ingredients[3].itemId}`,
+            "ingredient5Id": `${CraftData.ingredients[4].itemId}`,
             "updatedLabel": `Age:`,
             "stackSize": `StackSize: ${CraftData.itemInfo.stackSize}`,
-            "resultQuantityLabel": `Recipe Result Quantity:`,
-            "resultQuantityValue": `${CraftData?.recipe?.resultQuantity}`,
+            "resultQuantityLabel": `Recipe Result Quantity:`
         };
 
     Object.entries(expectedLabels)
