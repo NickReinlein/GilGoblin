@@ -15,8 +15,12 @@ export function convertCraftToProfit(craft: Craft): Profit {
         ingredients,
     } = craft;
 
-    const {id: recipeId, resultQuantity, canHq} = recipe;
-    const {iconId, name} = itemInfo;
+    const recipeId = recipe?.id ?? 0;
+    const resultQuantity = recipe?.resultQuantity ?? 0;
+    const canHq = recipe?.canHq ?? false;
+
+    const iconId = itemInfo?.iconId ?? 0;
+    const name = itemInfo?.name ?? '';
 
     return {
         itemId,

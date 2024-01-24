@@ -80,7 +80,7 @@ describe('CraftComponent', () => {
                     "quantity": 2
                 }
             ],
-            "updated": "0001-01-02T23:10:32.7760275+00:00"
+            "updated": "2024-01-02T23:10:32.7760275+00:00"
         };
 
     const expectedLabels =
@@ -88,7 +88,7 @@ describe('CraftComponent', () => {
             "itemId": `Craft Summary for Item ID ${CraftData.itemId} in world ${CraftData.worldId}`,
             "worldId": `Craft Summary for Item ID ${CraftData.itemId} in world ${CraftData.worldId}`,
             "itemInfo": `Item Id: ${CraftData.itemId}`,
-            "recipe": `Target Item Id: ${CraftData.recipe.targetItemId}`,
+            "recipe": `Target Item Id: ${CraftData.recipe?.targetItemId}`,
             "averageListingPriceLabel": `Average Listing Price:`,
             "averageListingPriceValue": `${CraftData.averageListingPrice.toLocaleString()}`,
             "averageSoldLabel": `Average Sold:`,
@@ -100,13 +100,13 @@ describe('CraftComponent', () => {
             "recipeProfitVsListingsLabel": `Recipe Profit vs Listings:`,
             "recipeProfitVsListingsValue": `${CraftData.recipeProfitVsListings.toLocaleString()}`,
             "Ingredients": `Ingredients`,
-            "ingredient1Id": `${CraftData.ingredients[0].itemId}`,
-            "ingredient2Id": `${CraftData.ingredients[1].itemId}`,
-            "ingredient3Id": `${CraftData.ingredients[2].itemId}`,
-            "ingredient4Id": `${CraftData.ingredients[3].itemId}`,
-            "ingredient5Id": `${CraftData.ingredients[4].itemId}`,
+            "ingredient1Id": `${CraftData.ingredients?.[0].itemId}`,
+            "ingredient2Id": `${CraftData.ingredients?.[1].itemId}`,
+            "ingredient3Id": `${CraftData.ingredients?.[2].itemId}`,
+            "ingredient4Id": `${CraftData.ingredients?.[3].itemId}`,
+            "ingredient5Id": `${CraftData.ingredients?.[4].itemId}`,
             "updatedLabel": `Age:`,
-            "stackSize": `StackSize: ${CraftData.itemInfo.stackSize}`,
+            "stackSize": `StackSize: ${CraftData.itemInfo?.stackSize}`,
             "resultQuantityLabel": `Recipe Result Quantity:`
         };
 

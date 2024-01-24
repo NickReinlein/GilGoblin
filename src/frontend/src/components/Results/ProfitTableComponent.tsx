@@ -31,7 +31,7 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({crafts}) => {
                     {
                         Array.isArray(crafts) &&
                         crafts.map((craft, index) => (
-                            <tr key={index} >
+                            <tr key={index}>
                                 <ProfitComponent profit={convertCraftToProfit(craft)} index={index}/>
                             </tr>
                         ))

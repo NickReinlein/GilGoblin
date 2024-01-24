@@ -1,5 +1,3 @@
-export {}
-
 export interface Item {
     id: number;
     name?: string;
@@ -63,14 +61,14 @@ export interface Ingredient {
 export interface Craft {
     itemId: number;
     worldId: number;
-    itemInfo: Item;
-    recipe: Recipe;
+    itemInfo?: Item;
+    recipe?: Recipe;
     averageListingPrice: number;
     averageSold: number;
     recipeCost: number;
     recipeProfitVsSold: number;
     recipeProfitVsListings: number;
-    ingredients: Ingredient[];
+    ingredients?: Ingredient[];
     updated: string;
 }
 
