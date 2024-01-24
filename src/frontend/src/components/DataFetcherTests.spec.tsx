@@ -64,6 +64,19 @@ describe('DataFetcher', () => {
         });
     });
 
+    it('fetches data from the correct URL for Profits', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({data: 'mocked data'}));
+
+        await fetchData('Profits', 987, 654);
+
+        expect.objectContaining({
+            parsedURL: expect.objectContaining({
+                href: 'http://localhost:55448/crafts/987/654',
+            }),
+            method: 'GET'
+        });
+    });
+
     it('handles errors gracefully', async () => {
         fetchMock.mockReject(new Error('Mocked error'));
 
