@@ -7,8 +7,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="wip">
+    <list default="true" id="4035ffe2-abfe-472e-969b-036f2052cb15" name="Changes" comment="fixed tests">
+      <change afterPath="$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.spec.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ItemComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ItemComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/PriceComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/PriceComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitComponentTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/ProfitTableComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/ProfitTableComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Results/RecipeComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/converters/CraftToProfitConverter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/converters/CraftToProfitConverter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/converters/TimestampToAgeConverter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/converters/TimestampToAgeConverter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/types.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/types.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,11 +75,14 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="LLMProjectSettings">
+    <option name="turned_on" value="false" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -88,7 +103,7 @@
     "Jest.AppTests.spec.tsx.executor": "Coverage",
     "Jest.CraftComponent.executor": "Run",
     "Jest.CraftComponent.renders ${field} on screen.executor": "Run",
-    "Jest.CraftComponentTests.spec.tsx.executor": "Run",
+    "Jest.CraftComponentTests.spec.tsx.executor": "Coverage",
     "Jest.DataFetcher.executor": "Run",
     "Jest.DataFetcher.fetches data from the correct URL for Items.executor": "Run",
     "Jest.DataFetcher.handles valid onPerfEntry function.executor": "Run",
@@ -101,7 +116,15 @@
     "Jest.ItemComponent.renders correctly with ItemSummary.executor": "Run",
     "Jest.ItemComponentTests.spec.tsx.executor": "Run",
     "Jest.ItemComponentTests.tsx.executor": "Run",
+    "Jest.PriceComponent.executor": "Run",
+    "Jest.ProfitComponent.executor": "Run",
     "Jest.ProfitComponentTests.spec.tsx.executor": "Run",
+    "Jest.ProfitTableComponent (1).executor": "Run",
+    "Jest.ProfitTableComponent.executor": "Run",
+    "Jest.ProfitTableComponent.renders the profit table body with each craft.executor": "Debug",
+    "Jest.ProfitTableComponent.renders the profit table headers.executor": "Run",
+    "Jest.ProfitTableComponent.renders the profit table when crafts are provided.executor": "Run",
+    "Jest.ProfitTableComponentTests.spec.tsx.executor": "Run",
     "Jest.ProfitsComponent.executor": "Run",
     "Jest.ProfitsComponent.renders ProfitsComponent with provided profits.executor": "Run",
     "Jest.ProfitsComponentTest.spec.tsx.executor": "Run",
@@ -136,7 +159,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "add-sorting-to-profits-table",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/src/styles",
+    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/frontend/src/components/Results",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -165,9 +188,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/Results" />
       <recent name="$PROJECT_DIR$/src/styles" />
       <recent name="$PROJECT_DIR$/src/converters" />
-      <recent name="$PROJECT_DIR$/src/components/Results" />
       <recent name="$PROJECT_DIR$/src/components/Header" />
       <recent name="$PROJECT_DIR$/src/components" />
     </key>
@@ -179,60 +202,65 @@
       <recent name="$PROJECT_DIR$/src/components/Results" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.CraftComponent">
-    <configuration name="CraftComponent" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
+  <component name="RunManager" selected="Jest.ProfitTableComponent (1)">
+    <configuration name="ProfitTableComponent (1)" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.spec.tsx" />
       <test-names>
-        <test-name value="CraftComponent" />
+        <test-name value="ProfitTableComponent" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="CraftComponentTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
+    <configuration name="ProfitTableComponentTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="TEST_FILE" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.spec.tsx" />
       <method v="2" />
     </configuration>
-    <configuration name="CraftComponent.renders ${field} on screen" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="$USER_HOME$/.nvm/versions/node/v18.18.0/bin/node" />
+    <configuration name="ProfitTableComponent.renders the profit table body with each craft" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/src/components/Results/CraftComponentTests.spec.tsx" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.spec.tsx" />
       <test-names>
-        <test-name value="CraftComponent" />
-        <test-name value="renders ${field} on screen" />
+        <test-name value="ProfitTableComponent" />
+        <test-name value="renders the profit table body with each craft" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="TimestampToAgeConverter" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="ProfitTableComponent.renders the profit table headers" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
-      <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.spec.tsx" />
       <test-names>
-        <test-name value="TimestampToAgeConverter" />
+        <test-name value="ProfitTableComponent" />
+        <test-name value="renders the profit table headers" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="TimestampToAgeConverterTests.spec.tsx" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="ProfitTableComponent.renders the profit table when crafts are provided" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
-      <scope-kind value="TEST_FILE" />
-      <test-file value="$PROJECT_DIR$/src/converters/TimestampToAgeConverterTests.spec.tsx" />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.tsx" />
+      <test-names>
+        <test-name value="ProfitTableComponent" />
+        <test-name value="renders the profit table when crafts are provided" />
+      </test-names>
       <method v="2" />
     </configuration>
     <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
@@ -241,20 +269,20 @@
     <list>
       <item itemvalue="JavaScript Debug.Debug Application" />
       <item itemvalue="Jest.All Tests" />
-      <item itemvalue="Jest.CraftComponent" />
-      <item itemvalue="Jest.CraftComponent.renders ${field} on screen" />
-      <item itemvalue="Jest.CraftComponentTests.spec.tsx" />
-      <item itemvalue="Jest.TimestampToAgeConverter" />
-      <item itemvalue="Jest.TimestampToAgeConverterTests.spec.tsx" />
+      <item itemvalue="Jest.ProfitTableComponent (1)" />
+      <item itemvalue="Jest.ProfitTableComponent.renders the profit table body with each craft" />
+      <item itemvalue="Jest.ProfitTableComponent.renders the profit table headers" />
+      <item itemvalue="Jest.ProfitTableComponent.renders the profit table when crafts are provided" />
+      <item itemvalue="Jest.ProfitTableComponentTests.spec.tsx" />
       <item itemvalue="npm.npm start" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.CraftComponent" />
-        <item itemvalue="Jest.CraftComponentTests.spec.tsx" />
-        <item itemvalue="Jest.CraftComponent.renders ${field} on screen" />
-        <item itemvalue="Jest.TimestampToAgeConverterTests.spec.tsx" />
-        <item itemvalue="Jest.TimestampToAgeConverter" />
+        <item itemvalue="Jest.ProfitTableComponent (1)" />
+        <item itemvalue="Jest.ProfitTableComponent.renders the profit table body with each craft" />
+        <item itemvalue="Jest.ProfitTableComponentTests.spec.tsx" />
+        <item itemvalue="Jest.ProfitTableComponent.renders the profit table headers" />
+        <item itemvalue="Jest.ProfitTableComponent.renders the profit table when crafts are provided" />
       </list>
     </recent_temporary>
   </component>
@@ -461,7 +489,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705970000645</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fixed tests">
+      <option name="closed" value="true" />
+      <created>1705972107253</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1705972107253</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -525,7 +561,9 @@
     <MESSAGE value="more tests added" />
     <MESSAGE value="basic top craft result is returned. tests for profits. added craft to profit conversion" />
     <MESSAGE value="wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="wip" />
+    <MESSAGE value="fixed tests" />
+    <MESSAGE value="fixed testsr" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed testsr" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -546,21 +584,29 @@
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Results/ProfitTableComponentTests.spec.tsx</url>
+          <line>199</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/converters/CraftToProfitConverter.tsx</url>
-          <line>17</line>
-          <option name="timeStamp" value="12" />
+          <line>24</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/frontend$renders_without_crashing.info" NAME="renders without crashing Coverage Results" MODIFIED="1705267205278" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1705360405883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$All_Tests.info" NAME="All Tests Coverage Results" MODIFIED="1706051127941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$TabComponent.info" NAME="TabComponent Coverage Results" MODIFIED="1705280847848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$TabButtonsComponentTests_spec_tsx.info" NAME="TabButtonsComponentTests.spec.tsx Coverage Results" MODIFIED="1705280872844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$Tests_in_src_.info" NAME="Tests in src/ Coverage Results" MODIFIED="1704489654423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$convertCraftToProfit.info" NAME="convertCraftToProfit Coverage Results" MODIFIED="1705360325701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$PriceComponentTests_spec_tsx.info" NAME="PriceComponentTests.spec.tsx Coverage Results" MODIFIED="1704489679469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/frontend$SearchInputsComponent_renders_correctly_with_default_values_and_does_not_call_onIdChange_and_onWorldChange.info" NAME="SearchInputsComponent.renders correctly with default values and does not call onIdChange and onWorldChange Coverage Results" MODIFIED="1705280864360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/frontend$CraftComponentTests_spec_tsx.info" NAME="CraftComponentTests.spec.tsx Coverage Results" MODIFIED="1706049816283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="JestJavaScriptTestRunnerCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

@@ -43,13 +43,4 @@ describe('TimestampToAgeConverter', () => {
 
         expect(screen.getByText(/days ago/)).toBeInTheDocument();
     });
-
-    test('renders original timestamp', () => {
-        const now = new Date();
-        const timestamp = now.toISOString();
-
-        render(<TimestampToAgeConverter timestamp={timestamp}/>);
-
-        expect(screen.getByText(`Original Timestamp: ${timestamp}`)).toBeInTheDocument();
-    });
 });

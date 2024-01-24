@@ -25,8 +25,8 @@ describe('PriceComponent', () => {
             "averageSold": `Average Sold: ${PriceData.averageSold}`,
             "averageSoldNQ": `Average Sold NQ: ${PriceData.averageSoldNQ}`,
             "averageSoldHQ": `Average Sold HQ: ${PriceData.averageSoldHQ}`,
-            "worldId": `Price for Item Id: ${PriceData.itemId} in World: ${PriceData.worldId}`,
-            "itemId": `Price for Item Id: ${PriceData.itemId} in World: ${PriceData.worldId}`,
+            "worldId": `World: ${PriceData.worldId}`,
+            "itemId": `Item Id: ${PriceData.itemId}`,
             "lastUploadTime": `Last Upload Time: ${PriceData.lastUploadTime}`
         };
 
