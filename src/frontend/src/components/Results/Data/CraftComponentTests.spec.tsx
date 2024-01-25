@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import CraftComponent from './CraftComponent';
-import {Craft} from '../../types/types';
+import {Craft} from '../../../types/types';
 
 describe('CraftComponent', () => {
     const CraftData: Craft =

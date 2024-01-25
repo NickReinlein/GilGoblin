@@ -1,9 +1,9 @@
 import React from 'react';
-import '../../styles/CraftComponent.css';
-import {Craft, Ingredient} from '../../types/types';
+import '../../../styles/CraftComponent.css';
+import {Craft, Ingredient} from '../../../types/types';
 import RecipesComponent from './RecipeComponent';
 import ItemComponent from './ItemComponent';
-import TimestampToAgeConverter from "../../converters/TimestampToAgeConverter";
+import TimestampToAgeConverter from "../../../converters/TimestampToAgeConverter";
 
 interface CraftProps {
     craft: Craft;

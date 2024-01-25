@@ -1,5 +1,5 @@
 import React from 'react';
-import {Recipe} from '../../types/types';
+import {Recipe} from '../../../types/types';
 
 interface RecipeProps {
     recipe: Recipe | null | undefined;

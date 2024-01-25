@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import PriceComponent from './PriceComponent';
-import {Price} from '../../types/types';
+import {Price} from '../../../types/types';
 
 describe('PriceComponent', () => {
     const PriceData: Price =

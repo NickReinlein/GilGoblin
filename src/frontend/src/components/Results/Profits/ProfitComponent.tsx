@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
-import {Profit} from '../../types/types';
-import TimestampToAgeConverter from "../../converters/TimestampToAgeConverter";
+import {Profit} from '../../../types/types';
+import TimestampToAgeConverter from "../../../converters/TimestampToAgeConverter";
 
 interface ProfitProps {
     profit: Profit;

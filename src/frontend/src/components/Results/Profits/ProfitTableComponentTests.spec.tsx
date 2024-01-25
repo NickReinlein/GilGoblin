@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import ProfitTableComponent from './ProfitTableComponent';
-import {convertCraftToProfit} from '../../converters/CraftToProfitConverter';
+import {convertCraftToProfit} from '../../../converters/CraftToProfitConverter';
 
 const mockCrafts = [
     {

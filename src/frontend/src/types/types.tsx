@@ -91,4 +91,4 @@ export interface Profit {
 }
 
 export interface Profits extends Array<Profit>{}
-export interface Crafts extends Array<Crafts>{}
+export interface Crafts extends Array<Craft>{}
