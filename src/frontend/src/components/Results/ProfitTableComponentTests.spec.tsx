@@ -172,10 +172,7 @@ describe('ProfitTableComponent', () => {
     });
 
     test('renders the profit table headers', () => {
-        let profits = mockCrafts.map(craft =>
-            convertCraftToProfit(craft));
-
-        render(<ProfitTableComponent crafts={profits}/>);
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
 
         expect(screen.getByText('#')).toBeInTheDocument();
         expect(screen.getByText('Name')).toBeInTheDocument();
@@ -189,7 +186,6 @@ describe('ProfitTableComponent', () => {
     });
 
     test('renders the profit table body with each craft', () => {
-
         render(<ProfitTableComponent crafts={mockCrafts}/>);
 
         mockCrafts.forEach((craft, index) => {

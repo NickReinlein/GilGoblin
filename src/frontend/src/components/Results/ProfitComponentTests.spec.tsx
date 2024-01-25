@@ -8,12 +8,12 @@ const mockProfit = {
     canHq: true,
     worldId: 456,
     recipeId: 789,
-    averageListingPrice: 50,
+    averageListing: 50,
     averageSold: 30,
-    recipeCost: 20,
+    cost: 20,
     resultQuantity: 5,
-    recipeProfitVsSold: 10,
-    recipeProfitVsListings: 25,
+    profitSold: 10,
+    profitListings: 25,
     updated: '2024-01-01',
 };
 
@@ -23,12 +23,12 @@ describe('ProfitComponent', () => {
 
         expect(screen.getByText(`1`)).toBeInTheDocument();
         expect(screen.getByText(`${mockProfit.name}`)).toBeInTheDocument();
-        expect(screen.getByText(`${mockProfit.averageListingPrice}`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockProfit.averageListing}`)).toBeInTheDocument();
         expect(screen.getByText(`${mockProfit.averageSold}`)).toBeInTheDocument();
-        expect(screen.getByText(`${mockProfit.recipeCost}`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockProfit.cost}`)).toBeInTheDocument();
         expect(screen.getByText(`${mockProfit.resultQuantity}`)).toBeInTheDocument();
-        expect(screen.getByText(`${mockProfit.recipeProfitVsSold}`)).toBeInTheDocument();
-        expect(screen.getByText(`${mockProfit.recipeProfitVsListings}`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockProfit.profitSold}`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockProfit.profitListings}`)).toBeInTheDocument();
         expect(screen.getByTestId('age')).toBeInTheDocument();
     });
 });

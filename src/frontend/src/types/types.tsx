@@ -76,10 +76,10 @@ export interface Profit {
     itemId: number;
     worldId: number;
     recipeId: number;
-    recipeProfitVsSold: number;
-    recipeProfitVsListings: number;
-    recipeCost: number;
-    averageListingPrice: number;
+    profitSold: number;
+    profitListings: number;
+    cost: number;
+    averageListing: number;
     averageSold: number;
     craftType?: number;
     resultQuantity: number;
