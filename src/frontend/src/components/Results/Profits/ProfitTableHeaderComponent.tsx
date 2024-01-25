@@ -1,20 +1,18 @@
 import React from 'react';
 import '../../../styles/ProfitTableHeaderComponent.css';
-import {Crafts} from "../../../types/types";
 
-const ProfitTableHeaderComponent: React.FC = () => {
+interface ProfitTableHeaderComponent {
+    headers: string[];
+}
+
+const ProfitTableHeaderComponent: React.FC<ProfitTableHeaderComponent> = ({headers}) => {
     return (
         <thead className="profits-table-headers">
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Sold Profit</th>
-            <th>Listings Profit</th>
-            <th>Avg. Sold</th>
-            <th>Avg. Listing</th>
-            <th>Cost</th>
-            <th>Qty</th>
-            <th>Age</th>
+        <tr>{
+            headers.map((header: string) => (
+                <th>{header}</th>
+            ))
+        }
         </tr>
         </thead>
     );
