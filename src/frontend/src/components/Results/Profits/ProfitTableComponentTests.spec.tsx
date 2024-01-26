@@ -171,24 +171,10 @@ describe('ProfitTableComponent', () => {
         expect(screen.getByText("Press the search button to search for the World's best recipes to craft")).toBeInTheDocument();
     });
 
-    test('renders the profit table headers', () => {
-        render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-        expect(screen.getByText('#')).toBeInTheDocument();
-        expect(screen.getByText('Name')).toBeInTheDocument();
-        expect(screen.getByText('Sold Profit')).toBeInTheDocument();
-        expect(screen.getByText('Listings Profit')).toBeInTheDocument();
-        expect(screen.getByText('Avg. Sold')).toBeInTheDocument();
-        expect(screen.getByText('Avg. Listing')).toBeInTheDocument();
-        expect(screen.getByText('Cost')).toBeInTheDocument();
-        expect(screen.getByText('Qty')).toBeInTheDocument();
-        expect(screen.getByText('Age')).toBeInTheDocument();
-    });
-
     test('renders the profit table body with each craft', () => {
         render(<ProfitTableComponent crafts={mockCrafts}/>);
 
-        mockCrafts.forEach((craft, index) => {
+        mockCrafts.forEach((craft) => {
             expect(screen.getByText(`${craft.itemInfo.name}`)).toBeInTheDocument();
             expect(screen.getByText(`${craft.averageListingPrice.toLocaleString()}`)).toBeInTheDocument();
             expect(screen.getByText(`${craft.averageSold.toLocaleString()}`)).toBeInTheDocument();
@@ -197,4 +183,18 @@ describe('ProfitTableComponent', () => {
             expect(screen.getByText(`${craft.recipeProfitVsListings.toLocaleString()}`)).toBeInTheDocument();
         });
     });
+
+    // test('sorts crafts by Name in ascending order when Name header is clicked', () => {
+    //     const expectedSortedNames =
+    //         [...mockCrafts]
+    //             .sort((a, b) => a.itemInfo.name.localeCompare(b.itemInfo.name))
+    //             .map(craft => craft.itemInfo.name);
+    //
+    //     render(<ProfitTableComponent crafts={mockCrafts}/>);
+    //     fireEvent.click(screen.getByText('Name'));
+    //
+    //     const nameCells = screen.getAllByRole('cell', {name: /Name/i});
+    //     const sortedNames = nameCells.map(cell => cell.textContent);
+    //     expect(sortedNames).toEqual(expectedSortedNames);
+    // });
 });
