@@ -1,7 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import ProfitTableComponent from './ProfitTableComponent';
-import {convertCraftToProfit} from '../../../converters/CraftToProfitConverter';
 
 const mockCrafts = [
     {
@@ -168,7 +167,8 @@ const mockCrafts = [
 describe('ProfitTableComponent', () => {
     test('renders a message when crafts are empty', () => {
         render(<ProfitTableComponent crafts={[]}/>);
-        expect(screen.getByText(/Press the search button to search for a World's best recipes to craft/i)).toBeInTheDocument();
+
+        expect(screen.getByText("Press the search button to search for the World's best recipes to craft")).toBeInTheDocument();
     });
 
     test('renders the profit table headers', () => {

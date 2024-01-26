@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Crafts, Profit, Profits} from '../../../types/types';
 import ProfitComponent from './ProfitComponent';
+import ProfitTableHeaderComponent from './ProfitTableHeaderComponent';
 import {convertMultipleCraftsToProfits} from '../../../converters/CraftToProfitConverter';
 import '../../../styles/ProfitTableComponent.css';
-import ProfitTableHeaderComponent from './ProfitTableHeaderComponent';
 
 interface ProfitTableProps {
     crafts: Crafts;
@@ -48,19 +48,31 @@ const sortColumns = (profits: Profits, columnSort: string | number, ascending: b
 
 const ProfitTableComponent: React.FC<ProfitTableProps> = ({
                                                               crafts,
-                                                              columnSort = columnHeaders[0],
-                                                              ascending = true
+                                                              columnSort: initialColumnSort = columnHeaders[0],
+                                                              ascending: initialAscending = true,
                                                           }) => {
-    if (crafts === null || crafts === undefined || crafts.length < 1)
-        return <div>Press the search button to search for the World's best recipes to craft</div>;
+    const [localColumnSort, setLocalColumnSort] = useState<string | number>(initialColumnSort);
+    const [localAscending, setLocalAscending] = useState<boolean>(initialAscending);
+    const handleHeaderClick = (clickedColumn: string) => {
+        if (localColumnSort === clickedColumn) {
+            setLocalAscending((prevAscending) => !prevAscending);
+        } else {
+            setLocalColumnSort(clickedColumn);
+            setLocalAscending(false);
+        }
+    };
+
+    if (!(crafts?.length > 0))
+        return (<div>Press the search button to search for the World's best recipes to craft</div>);
 
     const profits = convertMultipleCraftsToProfits(crafts);
-    const sortedProfits = sortColumns(profits, columnSort, ascending);
+    const sortedProfits = sortColumns(profits, localColumnSort, localAscending);
+
 
     return (
         <div className="profits-table">
             <table>
-                <ProfitTableHeaderComponent headers={columnHeaders}/>
+                <ProfitTableHeaderComponent headers={columnHeaders} onHeaderClick={handleHeaderClick}/>
                 <tbody>
                 {
                     sortedProfits.map((profit, index) => (
