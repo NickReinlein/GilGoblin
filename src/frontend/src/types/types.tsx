@@ -1,5 +1,3 @@
-export {}
-
 export interface Item {
     id: number;
     name?: string;
@@ -63,25 +61,26 @@ export interface Ingredient {
 export interface Craft {
     itemId: number;
     worldId: number;
-    itemInfo: Item;
-    recipe: Recipe;
+    itemInfo?: Item;
+    recipe?: Recipe;
     averageListingPrice: number;
     averageSold: number;
     recipeCost: number;
     recipeProfitVsSold: number;
     recipeProfitVsListings: number;
-    ingredients: Ingredient[];
+    ingredients?: Ingredient[];
     updated: string;
+    [key: string]: any;
 }
 
 export interface Profit {
     itemId: number;
     worldId: number;
     recipeId: number;
-    recipeProfitVsSold: number;
-    recipeProfitVsListings: number;
-    recipeCost: number;
-    averageListingPrice: number;
+    profitSold: number;
+    profitListings: number;
+    cost: number;
+    averageListing: number;
     averageSold: number;
     craftType?: number;
     resultQuantity: number;
@@ -90,7 +89,8 @@ export interface Profit {
     canHq?: boolean;
     ingredients?: Ingredient[];
     updated: string;
+    [key: string]: any;
 }
 
 export interface Profits extends Array<Profit>{}
-export interface Crafts extends Array<Crafts>{}
+export interface Crafts extends Array<Craft>{}

@@ -1,9 +1,9 @@
 import React from 'react';
-import '../../styles/Results.css';
+import '../../../styles/Results.css';
 import PricesComponent from './PriceComponent';
 import ItemsComponent from './ItemComponent';
 import RecipesComponent from './RecipeComponent';
-import ProfitTableComponent from "./ProfitTableComponent";
+import ProfitTableComponent from "../Profits/ProfitTableComponent";
 import CraftComponent from "./CraftComponent";
 
 interface ResultsProps {

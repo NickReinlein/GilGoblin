@@ -1,15 +1,9 @@
-.profits th {
-    background-color: darkgreen;
-    font-size: 17px;
-}
-
 .profits tbody {
     border-collapse: separate;
     border-spacing: 0;
 }
 
-.profits td,
-.profits th {
+.profits td, .profits th {
     width: calc(100% / 9);
     box-sizing: border-box;
 }

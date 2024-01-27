@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import RecipeComponent from './RecipeComponent';
-import {Recipe} from '../../types/types';
+import {Recipe} from '../../../types/types';
 
 describe('RecipeComponent', () => {
     const RecipeData: Recipe =

@@ -28,8 +28,8 @@ const TimestampToAgeConverter: React.FC<TimestampToAgeConverterProps> = ({timest
     }, [timestamp]);
 
     return (
-        <div>
-            <p>{age}</p>
+        <div data-testid='age'>
+            {age}
         </div>
     );
 };

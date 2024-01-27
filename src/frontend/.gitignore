@@ -23,6 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Intellij
+**/.idea
+*/.idea
+/.idea
 .idea
 *.iml
 out
