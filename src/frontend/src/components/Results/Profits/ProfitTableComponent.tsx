@@ -11,7 +11,7 @@ interface ProfitTableProps {
     ascending?: boolean;
 }
 
-const columnHeaders = [
+export const columnHeaders = [
     '#',
     'Name',
     'Sold Profit',
@@ -23,7 +23,7 @@ const columnHeaders = [
     'Age'
 ]
 
-const columnHeaderToFieldMapping = (header: string) => {
+export const columnHeaderToFieldMapping = (header: string) => {
     switch (header) {
         case '#':
             return 'index';
@@ -44,7 +44,7 @@ const columnHeaderToFieldMapping = (header: string) => {
         case 'Age':
             return 'updated';
         default:
-            return '';
+            return 'missing';
     }
 }
 
@@ -77,6 +77,8 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
     const [localColumnSort, setLocalColumnSort] = useState<string>(initialColumnSort);
     const [localAscending, setLocalAscending] = useState<boolean>(initialAscending);
     const handleHeaderClick = (clickedColumn: string) => {
+        if (clickedColumn === '#')
+            return;
         if (localColumnSort === clickedColumn) {
             setLocalAscending((prevAscending) => !prevAscending);
         } else {

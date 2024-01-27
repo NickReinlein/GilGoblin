@@ -70,6 +70,7 @@ export interface Craft {
     recipeProfitVsListings: number;
     ingredients?: Ingredient[];
     updated: string;
+    [key: string]: any;
 }
 
 export interface Profit {
@@ -88,6 +89,7 @@ export interface Profit {
     canHq?: boolean;
     ingredients?: Ingredient[];
     updated: string;
+    [key: string]: any;
 }
 
 export interface Profits extends Array<Profit>{}
