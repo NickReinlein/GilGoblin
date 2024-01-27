@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import ProfitTableComponent from './ProfitTableComponent';
 
 const mockCrafts = [
@@ -184,17 +184,78 @@ describe('ProfitTableComponent', () => {
         });
     });
 
-    // test('sorts crafts by Name in ascending order when Name header is clicked', () => {
-    //     const expectedSortedNames =
-    //         [...mockCrafts]
-    //             .sort((a, b) => a.itemInfo.name.localeCompare(b.itemInfo.name))
-    //             .map(craft => craft.itemInfo.name);
-    //
-    //     render(<ProfitTableComponent crafts={mockCrafts}/>);
-    //     fireEvent.click(screen.getByText('Name'));
-    //
-    //     const nameCells = screen.getAllByRole('cell', {name: /Name/i});
-    //     const sortedNames = nameCells.map(cell => cell.textContent);
-    //     expect(sortedNames).toEqual(expectedSortedNames);
-    // });
+    test('sorts crafts by Name in descending order when Name header is clicked', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const nameHeaderCell = screen.getByRole('columnheader', {name: 'Name'});
+        fireEvent.click(nameHeaderCell);
+
+        const rows = screen.getAllByRole('row', {});
+        const rowContent = rows.map(cell => cell.textContent).slice(1);
+        expect(rowContent[0]).toContain(mockCrafts[1].itemInfo.name)
+        expect(rowContent[1]).toContain(mockCrafts[0].itemInfo.name)
+    });
+
+    test('sorts crafts by Name in ascending order when Name header is clicked twice', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const nameHeaderCell = screen.getByRole('columnheader', {name: 'Name'});
+        fireEvent.click(nameHeaderCell);
+        fireEvent.click(nameHeaderCell);
+
+        const rows = screen.getAllByRole('row', {});
+        const rowContent = rows.map(cell => cell.textContent).slice(1);
+        expect(rowContent[0]).toContain(mockCrafts[0].itemInfo.name)
+        expect(rowContent[1]).toContain(mockCrafts[1].itemInfo.name)
+    });
+
+    test('sorts crafts by Cost in descending order when Cost header is clicked', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const nameHeaderCell = screen.getByRole('columnheader', {name: 'Cost'});
+        fireEvent.click(nameHeaderCell);
+
+        const rows = screen.getAllByRole('row', {});
+        const rowContent = rows.map(cell => cell.textContent).slice(1);
+        expect(rowContent[0]).toContain(mockCrafts[1].recipeCost.toLocaleString())
+        expect(rowContent[1]).toContain(mockCrafts[0].recipeCost.toLocaleString())
+    });
+
+    test('sorts crafts by Cost in ascending order when Cost header is clicked twice', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const nameHeaderCell = screen.getByRole('columnheader', {name: 'Cost'});
+        fireEvent.click(nameHeaderCell);
+        fireEvent.click(nameHeaderCell);
+
+        const rows = screen.getAllByRole('row', {});
+        const rowContent = rows.map(cell => cell.textContent).slice(1);
+        expect(rowContent[0]).toContain(mockCrafts[0].recipeCost.toLocaleString())
+        expect(rowContent[1]).toContain(mockCrafts[1].recipeCost.toLocaleString())
+    });
+
+    test('sorts crafts by Listings Profit in descending order when Listings Profit header is clicked', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const nameHeaderCell = screen.getByRole('columnheader', {name: 'Listings Profit'});
+        fireEvent.click(nameHeaderCell);
+
+        const rows = screen.getAllByRole('row', {});
+        const rowContent = rows.map(cell => cell.textContent).slice(1);
+        expect(rowContent[0]).toContain(mockCrafts[1].recipeProfitVsListings.toLocaleString())
+        expect(rowContent[1]).toContain(mockCrafts[0].recipeProfitVsListings.toLocaleString())
+    });
+
+    test('sorts crafts by Listings Profit in ascending order when Listings Profit header is clicked twice', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const nameHeaderCell = screen.getByRole('columnheader', {name: 'Listings Profit'});
+        fireEvent.click(nameHeaderCell);
+        fireEvent.click(nameHeaderCell);
+
+        const rows = screen.getAllByRole('row', {});
+        const rowContent = rows.map(cell => cell.textContent).slice(1);
+        expect(rowContent[0]).toContain(mockCrafts[0].recipeProfitVsListings.toLocaleString())
+        expect(rowContent[1]).toContain(mockCrafts[1].recipeProfitVsListings.toLocaleString())
+    });
 });

@@ -23,13 +23,36 @@ const columnHeaders = [
     'Age'
 ]
 
+const columnHeaderToFieldMapping = (header: string) => {
+    switch (header) {
+        case '#':
+            return 'index';
+        case 'Name':
+            return 'name'
+        case 'Sold Profit':
+            return 'profitSold';
+        case 'Listings Profit':
+            return 'profitListings';
+        case 'Avg. Sold':
+            return 'averageSold';
+        case 'Avg. Listing':
+            return 'averageListing';
+        case 'Cost':
+            return 'cost';
+        case 'Qty':
+            return 'resultQuantity';
+        case 'Age':
+            return 'updated';
+        default:
+            return '';
+    }
+}
+
 const sortColumns = (profits: Profits, columnSort: string | number, ascending: boolean | undefined) => {
     if (columnSort && ascending !== undefined) {
         profits.sort((a, b) => {
             const columnA = a[columnSort as keyof Profit];
             const columnB = b[columnSort as keyof Profit];
-            if (columnA === null || columnA === undefined || columnB === null || columnB === undefined)
-                return 0;
 
             if (columnA == null && columnB == null) return 0;
             if (columnA == null) return ascending ? -1 : 1;
@@ -51,7 +74,7 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
                                                               columnSort: initialColumnSort = columnHeaders[0],
                                                               ascending: initialAscending = true,
                                                           }) => {
-    const [localColumnSort, setLocalColumnSort] = useState<string | number>(initialColumnSort);
+    const [localColumnSort, setLocalColumnSort] = useState<string>(initialColumnSort);
     const [localAscending, setLocalAscending] = useState<boolean>(initialAscending);
     const handleHeaderClick = (clickedColumn: string) => {
         if (localColumnSort === clickedColumn) {
@@ -66,8 +89,8 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
         return (<div>Press the search button to search for the World's best recipes to craft</div>);
 
     const profits = convertMultipleCraftsToProfits(crafts);
-    const sortedProfits = sortColumns(profits, localColumnSort, localAscending);
-
+    let localField = columnHeaderToFieldMapping(localColumnSort);
+    const sortedProfits = sortColumns(profits, localField, localAscending);
 
     return (
         <div className="profits-table">
