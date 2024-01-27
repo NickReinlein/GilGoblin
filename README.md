@@ -17,11 +17,15 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark:  A new service to pre-calculate costs and profits
 * :heavy_check_mark: A website to search items, recipes, prices, and the craft summary
 * :heavy_check_mark: Add the most profitable recipes to craft for specific worlds
-  
+* :heavy_check_mark: Enhance top crafts to be sortable
+
 *Work-in-progress*
-* :hatching_chick: Enhance top crafts to be sortable
+* :hatching_chick: Add arrows to column headers to indicate sorting status (ascending, descending, none)
+
+*Upcoming*
 * :egg: Create a Docker image of the front-end
-* :egg: Fixing bugs
+* :egg: Improve performance for top-crafts endpoint
+* :egg: Fixing existing high-priority bugs
 * :egg: Add & store more worlds
 
 *Nice-to-have*
