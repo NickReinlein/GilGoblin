@@ -7,7 +7,7 @@ describe('ProfitTableHeaderComponent', () => {
     const onHeaderClickMock = jest.fn();
 
     test('renders all the headers', () => {
-        render(<ProfitTableHeaderComponent headers={headersMock} onHeaderClick={onHeaderClickMock}/>);
+        render(<ProfitTableHeaderComponent headers={headersMock} onHeaderClick={onHeaderClickMock} />);
 
         expect(screen.getByText('#')).toBeInTheDocument();
         expect(screen.getByText('Name')).toBeInTheDocument();

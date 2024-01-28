@@ -71,7 +71,7 @@ const sortColumns = (profits: Profits, columnSort: string | number, ascending: b
 
 const ProfitTableComponent: React.FC<ProfitTableProps> = ({
                                                               crafts,
-                                                              columnSort: initialColumnSort = columnHeaders[0],
+                                                              columnSort: initialColumnSort = 'Sold Profit',
                                                               ascending: initialAscending = true,
                                                           }) => {
     const [localColumnSort, setLocalColumnSort] = useState<string>(initialColumnSort);
@@ -97,7 +97,7 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
     return (
         <div className="profits-table">
             <table>
-                <ProfitTableHeaderComponent headers={columnHeaders} onHeaderClick={handleHeaderClick}/>
+                <ProfitTableHeaderComponent headers={columnHeaders} onHeaderClick={handleHeaderClick} columnSort={localColumnSort} ascending={localAscending}/>
                 <tbody>
                 {
                     sortedProfits.map((profit, index) => (
