@@ -2,3 +2,13 @@
     background-color: darkgreen;
     font-size: 17px;
 }
+
+.profits-table-headers th {
+    padding: 10px;
+}
+
+.sort-arrow {
+    width: 40px;
+    font-size: 23px;
+    margin-left: 15px;
+}

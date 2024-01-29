@@ -10,7 +10,6 @@
     border-bottom: 1px solid darkgreen;
 }
 
-
 .search-button {
     font-size: 27px;
     text-align: left;
@@ -22,5 +21,4 @@
     background-repeat: no-repeat;
     background-position: 95% 50%;
     background-size: auto, cover;
-
 }
