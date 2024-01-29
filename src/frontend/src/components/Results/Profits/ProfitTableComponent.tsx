@@ -97,7 +97,8 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
     return (
         <div className="profits-table">
             <table>
-                <ProfitTableHeaderComponent headers={columnHeaders} onHeaderClick={handleHeaderClick} columnSort={localColumnSort} ascending={localAscending}/>
+                <ProfitTableHeaderComponent headers={columnHeaders} onHeaderClick={handleHeaderClick}
+                                            columnSort={localColumnSort} ascending={localAscending}/>
                 <tbody>
                 {
                     sortedProfits.map((profit, index) => (
