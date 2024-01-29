@@ -12,8 +12,8 @@ const ProfitTableHeaderComponent: React.FC<ProfitTableHeaderComponentProps> = (
     {
         headers,
         onHeaderClick,
-        columnSort = 'Cost',
-        ascending
+        columnSort,
+        ascending = false
     }) => {
     const handleHeaderClick = (clickedHeader: string) => {
         onHeaderClick(clickedHeader);
@@ -25,12 +25,10 @@ const ProfitTableHeaderComponent: React.FC<ProfitTableHeaderComponentProps> = (
             {headers.map((header: string) => (
                 <th key={header} onClick={() => handleHeaderClick(header)}>
                     {header}
-                    {header === columnSort && (
-                        <img
-                            className={`sort-arrow ${ascending ? 'asc' : 'desc'}`}
-                            src='../../../../public/assets/arrow.png'
-                            alt={`Sort arrow for ${header}`}
-                        />
+                    {columnSort && header === columnSort && (
+                        <span className={`sort-arrow ${ascending ? 'asc' : 'desc'}`}>
+                            {ascending ? '▲' : '▼'}
+                        </span>
                     )}
                 </th>
             ))}
