@@ -34,7 +34,7 @@ describe('ProfitTableComponent', () => {
             const expectedSecondResult: string = profits[0][relevantProp]?.toLocaleString();
             render(<ProfitTableComponent crafts={mockCrafts}/>);
 
-            const nameHeaderCell = screen.getByRole('columnheader', {name: `${header}`});
+            let nameHeaderCell = screen.getByRole('columnheader', {name: `${header}`});
             fireEvent.click(nameHeaderCell);
 
             const rows = screen.getAllByRole('row', {});
