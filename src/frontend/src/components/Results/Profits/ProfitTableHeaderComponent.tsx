@@ -26,7 +26,7 @@ const ProfitTableHeaderComponent: React.FC<ProfitTableHeaderComponentProps> = (
                 <th key={header} onClick={() => handleHeaderClick(header)}>
                     {header}
                     {columnSort && header === columnSort && (
-                        <span className={`sort-arrow ${ascending ? 'asc' : 'desc'}`}>
+                        <span data-testid="sorting-arrow" className={`sort-arrow ${ascending ? 'asc' : 'desc'}`}>
                             {ascending ? '▲' : '▼'}
                         </span>
                     )}

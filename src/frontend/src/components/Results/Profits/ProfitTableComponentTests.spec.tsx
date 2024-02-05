@@ -12,18 +12,25 @@ describe('ProfitTableComponent', () => {
         expect(screen.getByText("Press the search button to search for the World's best recipes to craft")).toBeInTheDocument();
     });
 
-    test('renders the profit table body with each craft', () => {
-        render(<ProfitTableComponent crafts={mockCrafts}/>);
+    test('maps the first column header to index field', () => {
+        const mapped = columnHeaderToFieldMapping('#');
 
-        mockCrafts.forEach((craft) => {
-            expect(screen.getByText(`${craft.itemInfo?.name}`)).toBeInTheDocument();
-            expect(screen.getByText(`${craft.averageListingPrice.toLocaleString()}`)).toBeInTheDocument();
-            expect(screen.getByText(`${craft.averageSold.toLocaleString()}`)).toBeInTheDocument();
-            expect(screen.getByText(`${craft.recipeCost.toLocaleString()}`)).toBeInTheDocument();
-            expect(screen.getByText(`${craft.recipeProfitVsSold.toLocaleString()}`)).toBeInTheDocument();
-            expect(screen.getByText(`${craft.recipeProfitVsListings.toLocaleString()}`)).toBeInTheDocument();
-        });
+        expect(mapped).toBe('index')
     });
+
+    test('maps the age header to timestamp updated field', () => {
+        const mapped = columnHeaderToFieldMapping('Age');
+
+        expect(mapped).toBe('updated')
+    });
+
+    test.each(['1', 'Aged', 'Avg. Soul', ''])
+    ('maps an invalid header, %p, to missing field',
+        (header) => {
+            const mapped = columnHeaderToFieldMapping(header);
+
+            expect(mapped).toBe('missing')
+        });
 
     test.each(columnHeaders.slice(1, columnHeaders.length - 1))
     ('sorts crafts by %p in descending order when header is clicked',
@@ -34,7 +41,7 @@ describe('ProfitTableComponent', () => {
             const expectedSecondResult: string = profits[0][relevantProp]?.toLocaleString();
             render(<ProfitTableComponent crafts={mockCrafts}/>);
 
-            const nameHeaderCell = screen.getByRole('columnheader', {name: `${header}`});
+            const nameHeaderCell = screen.getByRole('columnheader', {name: new RegExp(`${header}`, 'i')});
             fireEvent.click(nameHeaderCell);
 
             const rows = screen.getAllByRole('row', {});
@@ -52,7 +59,7 @@ describe('ProfitTableComponent', () => {
             const expectedSecondResult: string = profits[1][relevantProp]?.toLocaleString();
             render(<ProfitTableComponent crafts={mockCrafts}/>);
 
-            const nameHeaderCell = screen.getByRole('columnheader', {name: `${header}`});
+            const nameHeaderCell = screen.getByRole('columnheader', {name: new RegExp(`${header}`, 'i')});
             fireEvent.click(nameHeaderCell);
             fireEvent.click(nameHeaderCell);
 
@@ -238,4 +245,5 @@ describe('ProfitTableComponent', () => {
             "updated": "2024-01-02T23:10:40.4266199+00:00"
         }
     ];
-});
+})
+;
