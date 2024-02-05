@@ -89,10 +89,11 @@ services:
     restart: unless-stopped
 
   gilgoblin-frontend:
-    # image: nickreinlein/gilgoblin-frontend
-    # container_name: frontend
-    image: frontend
-    build: src/frontend/
+    image: nickreinlein/gilgoblin-frontend
+    container_name: frontend
+    ## For local testing, replace with:
+    # image: frontend
+    # build: src/frontend/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
