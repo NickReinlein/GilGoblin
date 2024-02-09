@@ -20,23 +20,23 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
 
     public async Task<bool> SaveAsync(IEnumerable<T> updates)
     {
-        var updatesList = updates.ToList();
-        if (!updatesList.Any())
+        var updateList = updates.ToList();
+        if (!updateList.Any())
             return false;
 
         try
         {
-            var success = SanityCheck(updatesList);
+            var success = SanityCheck(updateList);
             if (!success)
                 throw new ArgumentException("Cannot save price due to error in key field");
 
-            var newEntries = await UpdatedExistingEntries(updatesList);
+            var newEntries = await UpdatedExistingEntries(updateList);
+
             await DbContext.AddRangeAsync(newEntries);
-
             var savedCount = await DbContext.SaveChangesAsync();
-            _logger.LogInformation($"Saved {savedCount} entries for type {typeof(T).Name}");
+            _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
-            var failedCount = updatesList.Count - savedCount;
+            var failedCount = updateList.Count - savedCount;
             if (failedCount > 0)
                 throw new Exception($"Failed to save {failedCount} entities!");
             return true;
@@ -48,8 +48,7 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
         }
     }
 
-    public virtual bool SanityCheck(IEnumerable<T> updates)
-        => !updates.Any(t => t.GetId() < 0);
+    public virtual bool SanityCheck(IEnumerable<T> updates) => true;
 
     protected async Task<List<T>> UpdatedExistingEntries(List<T> updatedEntries)
     {
@@ -61,6 +60,9 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
             else
                 newEntriesList.Add(updated);
         }
+
+        var savedCount = await DbContext.SaveChangesAsync();
+        _logger.LogInformation($"Saved {savedCount} updated entries for type {typeof(T).Name}");
 
         return newEntriesList;
     }

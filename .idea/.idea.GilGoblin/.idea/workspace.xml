@@ -11,25 +11,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="missed changes for api">
-      <change afterPath="$PROJECT_DIR$/src/frontend/src/converters/TimestampToAgeConverter.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/frontend/src/converters/TimestampToAgeConverterTests.spec.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/frontend/src/styles/CraftComponent.css" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Header/TabComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Header/TabComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/CraftComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/CraftComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ItemComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ItemComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/PriceComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/PriceComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ProfitTableComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/RecipeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/RecipeComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/components/Results/ResultsComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/components/Results/ResultsComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/ProfitsComponent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/ProfitTableComponent.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/Results.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/Results.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/Search.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/Search.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/SearchInputs.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/SearchInputs.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/styles/Tab.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/styles/Tab.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/RecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,6 +131,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     ".NET Launch Settings Profile.Api: http.executor": "Run",
+    "8c981c23-d797-430c-8ecd-e3e986d268a7.executor": "Debug",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Publish to folder.Publish Accountant to folder.executor": "Run",
     "Publish to folder.Publish Api to folder.executor": "Run",
@@ -142,7 +140,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "add-top-crafts",
+    "git-widget-placeholder": "bug/fix-missing-prices-from-data-updater",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant/Accountant.csproj",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -369,6 +367,7 @@
       <workItem from="1701620751019" duration="645000" />
       <workItem from="1704568720480" duration="1197000" />
       <workItem from="1705788318004" duration="332000" />
+      <workItem from="1707228262677" duration="1452000" />
     </task>
     <task id="LOCAL-00039" summary="Working example with checks for age of existing entries">
       <option name="closed" value="true" />

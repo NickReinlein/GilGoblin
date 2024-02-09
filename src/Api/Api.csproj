@@ -5,7 +5,7 @@
     <RootNamespace>GilGoblin.Api</RootNamespace>
     <PackageId>GilGoblin.Api</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.7.1</Version>
+    <Version>0.7.2</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>

@@ -365,4 +365,8 @@ FodyWeavers.xsd
 /Tests/my_data.cs
 
 #Gilgoblin
-*/Database/output/
+*src/Database/db/*
+
+#Idea IDE configs
+.idea
+src**.idea**
