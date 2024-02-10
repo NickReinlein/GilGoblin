@@ -12,6 +12,7 @@ public class PricePoco : BasePricePoco
 
     public PricePoco() { }
 
+
     public PricePoco(
         int itemId,
         int worldId,

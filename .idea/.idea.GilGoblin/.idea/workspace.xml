@@ -14,9 +14,24 @@
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="more fixes but bug persists when saving updated entities">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/IDataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/Extensions/PricePocoExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/PricePoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/PricePoco.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/PriceFetcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/PriceFetcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fetcher/src/PriceWebResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/src/PriceWebResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +76,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5108fc8cfce44d798c1eed3309cf17c56200/00/2ee7f901/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/33/f931bdc1/List`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/b2/a657ff22/CancellationTokenSource.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cc214e0e7cf3464bb45e81e7292f6f3a1fd5b0/15/18ef9fbe/DbContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Accountant/appsettings.json" root0="FORCE_HIGHLIGHTING" />
@@ -100,6 +116,7 @@
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/DataUpdater/PriceUpdaterTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -118,45 +135,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Api: http.executor": "Debug",
-    "8c981c23-d797-430c-8ecd-e3e986d268a7.executor": "Debug",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Publish to folder.Publish Accountant to folder.executor": "Run",
-    "Publish to folder.Publish Api to folder.executor": "Run",
-    "Publish to folder.Publish DataUpdater to folder.executor": "Run",
-    "Rider.SolutionAnalysis.ShowPreview": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor": "Debug",
-    "git-widget-placeholder": "bug/fix-missing-prices-from-data-updater",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "RiderDotCoverFilteringPageId",
-    "ts.external.directory.path": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Api: http.executor&quot;: &quot;Debug&quot;,
+    &quot;8c981c23-d797-430c-8ecd-e3e986d268a7.executor&quot;: &quot;Debug&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Publish to folder.Publish Accountant to folder.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.Publish Api to folder.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.Publish DataUpdater to folder.executor&quot;: &quot;Run&quot;,
+    &quot;Rider.SolutionAnalysis.ShowPreview&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;bug/fix-missing-prices-from-data-updater&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderDotCoverFilteringPageId&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "GitIgnore",
-      "Markdown"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;GitIgnore&quot;,
+      &quot;Markdown&quot;
     ],
-    "rider.external.source.directories": [
-      "/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/home/lemoneleven/.local/share/Symbols/src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/home/lemoneleven/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Api: http">
     <configuration name="Publish Accountant to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/src/Accountant/bin/Release/net7.0/publish" target_framework="net7.0" uuid_high="6895913569179290582" uuid_low="-6138816522910510359" />
@@ -360,7 +377,8 @@
       <workItem from="1705788318004" duration="332000" />
       <workItem from="1707228262677" duration="1452000" />
       <workItem from="1707518456034" duration="4585000" />
-      <workItem from="1707528137092" duration="6220000" />
+      <workItem from="1707528137092" duration="10439000" />
+      <workItem from="1707591536731" duration="354000" />
     </task>
     <task id="LOCAL-00044" summary="DI fails but dbcontext scope fixed">
       <option name="closed" value="true" />
@@ -869,78 +887,26 @@
           <line>62</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" initialLine="62" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
             <startOffsets>
-              <option value="1857" />
+              <option value="1898" />
             </startOffsets>
             <endOffsets>
-              <option value="1889" />
+              <option value="1930" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="158" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>41</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="38" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="1332" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1333" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="163" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>43</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="40" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="1383" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1446" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="165" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>48</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="45" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="1532" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1596" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="166" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Database/PriceSaverTests.cs</url>
           <line>58</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" initialLine="58" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
             <startOffsets>
-              <option value="1740" />
+              <option value="1781" />
             </startOffsets>
             <endOffsets>
-              <option value="1768" />
+              <option value="1809" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="167" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
-          <line>18</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="25" containingFunctionPresentation="Method 'SanityCheck'">
-            <startOffsets>
-              <option value="496" />
-            </startOffsets>
-            <endOffsets>
-              <option value="649" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="171" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Program.cs</url>
@@ -954,19 +920,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="172" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
-          <line>17</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="26" containingFunctionPresentation="Method 'SanityCheck'">
-            <startOffsets>
-              <option value="439" />
-            </startOffsets>
-            <endOffsets>
-              <option value="471" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="173" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
@@ -999,13 +952,52 @@
           <line>83</line>
           <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="83" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
             <startOffsets>
-              <option value="2673" />
+              <option value="2683" />
             </startOffsets>
             <endOffsets>
-              <option value="2721" />
+              <option value="2731" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="177" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>81</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="81" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2534" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2579" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>84</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="84" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2744" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2757" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>77</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="77" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2491" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2498" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="180" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

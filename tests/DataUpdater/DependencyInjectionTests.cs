@@ -37,7 +37,7 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IItemFetcher))]
     [TestCase(typeof(ISingleDataFetcher<ItemWebPoco>))]
     [TestCase(typeof(IDataSaver<ItemPoco>))]
-    [TestCase(typeof(IPriceSaver))]
+    [TestCase(typeof(IDataSaver<PricePoco>))]
     [TestCase(typeof(IDataUpdater<ItemPoco, ItemWebPoco>))]
     [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)

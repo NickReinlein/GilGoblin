@@ -22,7 +22,7 @@ public class PriceUpdaterTests : InMemoryTestDb
     private IMarketableItemIdsFetcher _marketableIdsFetcher;
     private IPriceFetcher _priceFetcher;
     private PriceUpdater _priceUpdater;
-    private IPriceSaver _saver;
+    private IDataSaver<PricePoco> _saver;
     private IPriceRepository<PricePoco> _priceRepo;
     private IRecipeRepository _recipeRepo;
     private ILogger<PriceUpdater> _logger;
@@ -42,7 +42,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         _priceFetcher = Substitute.For<IPriceFetcher>();
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
         _recipeRepo = Substitute.For<IRecipeRepository>();
-        _saver = Substitute.For<IPriceSaver>();
+        _saver = Substitute.For<IDataSaver<PricePoco>>();
         _logger = Substitute.For<ILogger<PriceUpdater>>();
         _scope = Substitute.For<IServiceScope>();
         _serviceProvider = Substitute.For<IServiceProvider>();
@@ -52,7 +52,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         _serviceProvider.GetService(typeof(IMarketableItemIdsFetcher)).Returns(_marketableIdsFetcher);
         _serviceProvider.GetService(typeof(GilGoblinDbContext)).Returns(_dbContext);
         _serviceProvider.GetService(typeof(IPriceFetcher)).Returns(_priceFetcher);
-        _serviceProvider.GetService(typeof(IPriceSaver)).Returns(_saver);
+        _serviceProvider.GetService(typeof(IDataSaver<PricePoco>)).Returns(_saver);
         _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
         _serviceProvider.GetService(typeof(IRecipeRepository)).Returns(_recipeRepo);
 
@@ -159,7 +159,6 @@ public class PriceUpdaterTests : InMemoryTestDb
     public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
     {
         var saveList = SetupSave();
-        _saver.ClearSubstitute();
         _saver.SaveAsync(default).Returns(false);
         var errorMessage =
             $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from PriceSaver returned failure";

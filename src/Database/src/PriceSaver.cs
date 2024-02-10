@@ -1,29 +1,46 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Database;
-
-public class PriceSaver : DataSaver<PricePoco>, IPriceSaver
+namespace GilGoblin.Database
 {
-    public PriceSaver(GilGoblinDbContext context,
-        ILogger<DataSaver<PricePoco>> logger)
-        : base(context, logger)
+    public class PriceSaver : DataSaver<PricePoco>
     {
-    }
+        public PriceSaver(GilGoblinDbContext context, ILogger<DataSaver<PricePoco>> logger) : base(context, logger)
+        {
+        }
 
-    public override bool SanityCheck(IEnumerable<PricePoco> updates)
-    {
-        var pocoList = updates.ToList();
-        return !pocoList
-            .Any(price =>
-                price.WorldId <= 0 ||
-                price.ItemId <= 0 ||
-                price.LastUploadTime <= 1704114061); // older than 2024-01-01
-    }
-}
+        protected override void UpdateContext(List<PricePoco> priceList)
+        {
+            var worldId = priceList.First().WorldId;
+            var itemList = priceList.Select(p => p.ItemId).ToList();
+            var existing = Context.Price
+                .Where(p =>
+                    p.WorldId == worldId &&
+                    itemList.Contains(p.ItemId))
+                .Select(s => s.ItemId)
+                .ToList();
+            foreach (var price in priceList)
+            {
+                Context.Entry(price).State = existing.Contains(price.ItemId) ? EntityState.Modified : EntityState.Added;
+            }
+        }
 
-public interface IPriceSaver : IDataSaver<PricePoco>
-{
+        protected override void ValidateEntities(IEnumerable<PricePoco> entities)
+        {
+            if (entities.Any(t =>
+                    t.WorldId <= 0 ||
+                    t.ItemId <= 0 ||
+                    t.LastUploadTime <= 0 ||
+                    (t.AverageSold <= 0 &&
+                     t.AverageListingPrice <= 0)
+                ))
+            {
+                throw new ArgumentException("Cannot save entities due to error in key field");
+            }
+        }
+    }
 }

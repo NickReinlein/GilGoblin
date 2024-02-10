@@ -26,5 +26,5 @@ public class PriceFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPr
     private static string PriceBaseUrl => "https://universalis.app/api/v2/";
 
     private static string SelectiveColumnsMulti =>
-        "?listings=0&entries=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime";
+        "?listings=0&fields=items.itemID%2Citems.worldID%2Citems.currentAveragePrice%2Citems.currentAveragePriceNQ%2Citems.currentAveragePriceHQ,items.averagePrice%2Citems.averagePriceNQ%2Citems.averagePriceHQ%2Citems.lastUploadTime";
 }

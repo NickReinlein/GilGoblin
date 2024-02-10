@@ -15,18 +15,18 @@ public class PriceSaverTests : InMemoryTestDb
     private const int defaultWorldId = 34;
     private const int defaultItemId = 1604;
 
-    private PriceSaver _saver;
-    private ILogger<PriceSaver> _logger;
+    private IDataSaver<PricePoco> _saver;
+    private ILogger<DataSaver<PricePoco>> _logger;
     private TestGilGoblinDbContext _context;
 
     [SetUp]
     public override void SetUp()
     {
-        _logger = Substitute.For<ILogger<PriceSaver>>();
+        _logger = Substitute.For<ILogger<DataSaver<PricePoco>>>();
         base.SetUp();
 
         _context = new TestGilGoblinDbContext(_options, _configuration);
-        _saver = new PriceSaver(_context, _logger);
+        _saver = new DataSaver<PricePoco>(_context, _logger);
     }
 
     [Test]
@@ -110,15 +110,23 @@ public class PriceSaverTests : InMemoryTestDb
     [TestCase(0, 1, 0)]
     [TestCase(0, 1, 1)]
     [TestCase(1, 1, 0)]
-    public void GivenSanityCheck_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
+    public void GivenAnyFieldIsInvalid_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
         int worldId, int itemId, int lastUploadTime)
     {
         var updatesList = new List<PricePoco>
         {
-            new() { WorldId = worldId, ItemId = itemId, LastUploadTime = lastUploadTime }
+            new()
+            {
+                WorldId = worldId,
+                ItemId = itemId,
+                LastUploadTime =
+                    lastUploadTime == 0
+                        ? 0
+                        : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            }
         };
 
-        Assert.That(_saver.SanityCheck(updatesList), Is.False);
+        Assert.That(_saver.SaveAsync(updatesList), Is.False);
     }
 
     private static List<PricePoco> GetPocos(int qty = 1)
