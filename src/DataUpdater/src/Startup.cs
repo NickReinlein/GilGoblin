@@ -46,7 +46,7 @@ public class Startup
         services.AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
 
         services.AddScoped<IDataSaver<ItemPoco>, DataSaver<ItemPoco>>();
-        services.AddScoped<IDataSaver<PricePoco>, PriceSaver>();
+        services.AddScoped<IPriceSaver, PriceSaver>();
 
         services.AddScoped<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
         services.AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
-public class PriceSaver : DataSaver<PricePoco>
+public class PriceSaver : DataSaver<PricePoco>, IPriceSaver
 {
     public PriceSaver(GilGoblinDbContext dbContext,
         ILogger<DataSaver<PricePoco>> logger)
@@ -22,10 +22,23 @@ public class PriceSaver : DataSaver<PricePoco>
                 p.ItemId == updated.ItemId &&
                 p.LastUploadTime < updated.LastUploadTime);
 
-    public override bool SanityCheck(IEnumerable<PricePoco> updates) =>
-        !updates
+    public override bool SanityCheck(IEnumerable<PricePoco> updates)
+    {
+        var pocoList = updates.ToList();
+        var check = pocoList
+            .FirstOrDefault(price =>
+                price.WorldId <= 0 ||
+                price.ItemId <= 0 ||
+                price.LastUploadTime <= 0);
+
+        return !pocoList
             .Any(price =>
                 price.WorldId <= 0 ||
                 price.ItemId <= 0 ||
                 price.LastUploadTime <= 0);
+    }
+}
+
+public interface IPriceSaver : IDataSaver<PricePoco>
+{
 }

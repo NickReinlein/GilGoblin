@@ -80,10 +80,10 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         try
         {
             using var scope = ScopeFactory.CreateScope();
-            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
+            var saver = scope.ServiceProvider.GetRequiredService<IPriceSaver>();
             var success = await saver.SaveAsync(updateList);
             if (!success)
-                throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
+                throw new DbUpdateException($"Saving from {nameof(PriceSaver)} returned failure");
         }
         catch (Exception e)
         {

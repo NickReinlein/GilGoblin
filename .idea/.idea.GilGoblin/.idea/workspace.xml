@@ -11,16 +11,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fetcher/Fetcher.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +85,7 @@
     <setting file="file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/PriceRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Repository/RecipeRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/Batcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Batcher/IBatcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -90,10 +93,12 @@
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Database/out/Database.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Database/src/DataSaver.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Database/src/DataSaver.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Database/src/Pocos/BaseRecipeValue.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs" root0="FORCE_HIGHLIGHTING" />
@@ -120,7 +125,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.Api: http.executor": "Run",
+    ".NET Launch Settings Profile.Api: http.executor": "Debug",
     "8c981c23-d797-430c-8ecd-e3e986d268a7.executor": "Debug",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Publish to folder.Publish Accountant to folder.executor": "Run",
@@ -360,15 +365,7 @@
       <workItem from="1705788318004" duration="332000" />
       <workItem from="1707228262677" duration="1452000" />
       <workItem from="1707518456034" duration="4585000" />
-      <workItem from="1707528137092" duration="1675000" />
-    </task>
-    <task id="LOCAL-00041" summary="working but need to prevent spam if response is continually null">
-      <option name="closed" value="true" />
-      <created>1698605152594</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1698605152595</updated>
+      <workItem from="1707528137092" duration="3598000" />
     </task>
     <task id="LOCAL-00042" summary="Split each batch of updates into minimum 2 batches">
       <option name="closed" value="true" />
@@ -754,7 +751,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707527712751</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="fixed tests">
+      <option name="closed" value="true" />
+      <created>1707529883050</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1707529883050</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -793,7 +798,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="add-front-end" />
+                        <option value="bug/fix-missing-prices-from-data-updater" />
                       </list>
                     </value>
                   </entry>
@@ -820,7 +825,6 @@
     <MESSAGE value="fixed Tests.csproj error" />
     <MESSAGE value="WIP improve accountants" />
     <MESSAGE value="fix some tests" />
-    <MESSAGE value="fixed tests" />
     <MESSAGE value="added tests for profitAccountant" />
     <MESSAGE value="more tests and nuget packages" />
     <MESSAGE value="wip new craft repo" />
@@ -833,7 +837,8 @@
     <MESSAGE value="missed package updates" />
     <MESSAGE value="missed changes for api" />
     <MESSAGE value="WIP" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP" />
+    <MESSAGE value="fixed tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -856,10 +861,10 @@
           <line>59</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="59" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
             <startOffsets>
-              <option value="1646" />
+              <option value="1718" />
             </startOffsets>
             <endOffsets>
-              <option value="1692" />
+              <option value="1764" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="152" />
@@ -980,6 +985,71 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="168" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>32</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="32" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="902" />
+            </startOffsets>
+            <endOffsets>
+              <option value="980" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="169" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
+          <line>18</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="18" containingFunctionPresentation="Method 'ShouldBeUpdated'">
+            <startOffsets>
+              <option value="513" />
+            </startOffsets>
+            <endOffsets>
+              <option value="714" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="170" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
+          <line>33</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="25" containingFunctionPresentation="Method 'SanityCheck'">
+            <startOffsets>
+              <option value="1043" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1187" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="171" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Program.cs</url>
+          <line>16</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Program.cs" initialLine="16" containingFunctionPresentation="Lambda expression inside Method 'CreateHostBuilder'">
+            <startOffsets>
+              <option value="421" />
+            </startOffsets>
+            <endOffsets>
+              <option value="454" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="172" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
+          <line>26</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="26" containingFunctionPresentation="Method 'SanityCheck'">
+            <startOffsets>
+              <option value="800" />
+            </startOffsets>
+            <endOffsets>
+              <option value="832" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="173" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
