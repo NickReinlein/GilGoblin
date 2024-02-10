@@ -52,7 +52,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     {
         if (!ValidateWorldInput(worldId))
             return new BadRequestResult();
-        
+
         var crafts = new List<CraftSummaryPoco>();
         var profits =
             _recipeProfitRepository
@@ -90,7 +90,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     {
         if (!ValidateWorldInput(worldId))
             return new BadRequestResult();
-        
+
         try
         {
             var recipe = _recipeRepository.Get(recipeId);
@@ -104,7 +104,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             return new BadRequestResult();
         }
     }
-    
+
     public List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
     {
         var craftsList = crafts.ToList();
@@ -114,8 +114,8 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             var viableCrafts
                 = craftsList
                     .Where(i =>
-                        i.AverageSold > 1 &&
-                        i.AverageListingPrice > 1 &&
+                        (i.AverageSold > 1 ||
+                         i.AverageListingPrice > 1) &&
                         i.RecipeCost > 1 &&
                         i.Recipe.TargetItemId == i.ItemId)
                     .ToList();
@@ -129,7 +129,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
             return craftsList;
         }
     }
-    
+
     private static bool ValidateWorldInput(int worldId)
     {
         // Eventually keep a table or list of acceptable worlds
@@ -137,7 +137,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     }
 
     private async Task<CraftSummaryPoco> CreateSummaryAsync(
-        int worldId, 
+        int worldId,
         int recipeId,
         IEnumerable<RecipePoco> allRecipes)
     {

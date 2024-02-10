@@ -18,12 +18,12 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetAll();
+        var result = itemRepo.GetAll().ToList();
 
         var allItems = context.Item.ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(allItems.Count));
+            Assert.That(result, Has.Count.EqualTo(allItems.Count));
             allItems.ForEach(item => Assert.That(result.Any(p => p.Name == item.Name)));
             allItems.ForEach(item => Assert.That(result.Any(p => p.Id == item.Id)));
         });
@@ -40,8 +40,8 @@ public class ItemRepositoryTests : InMemoryTestDb
 
         Assert.Multiple(() =>
         {
-            Assert.That(result?.Name == $"Item {id}");
-            Assert.That(result.Id == id);
+            Assert.That(result?.Name, Is.EqualTo($"Item {id}"));
+            Assert.That(result != null && result.Id == id);
         });
     }
 
@@ -64,11 +64,11 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new[] { 1, 2 });
+        var result = itemRepo.GetMultiple(new[] { 1, 2 }).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(result.Count, Is.EqualTo(2));
             Assert.That(result.Any(p => p.Id == 1));
             Assert.That(result.Any(p => p.Id == 2));
         });
@@ -80,11 +80,11 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new[] { 1, 99 });
+        var result = itemRepo.GetMultiple(new[] { 1, 99 }).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result.Any(p => p.Id == 1));
         });
     }
@@ -95,7 +95,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new[]{ 654645646, 9953121 });
+        var result = itemRepo.GetMultiple(new[] { 654645646, 9953121 });
 
         Assert.That(!result.Any());
     }
@@ -106,7 +106,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache);
 
-        var result = itemRepo.GetMultiple(new int[] { });
+        var result = itemRepo.GetMultiple(System.Array.Empty<int>());
 
         Assert.That(!result.Any());
     }

@@ -12,17 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed tests">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/DependencyInjectionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +55,7 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5108fc8cfce44d798c1eed3309cf17c56200/00/2ee7f901/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/33/f931bdc1/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cc214e0e7cf3464bb45e81e7292f6f3a1fd5b0/15/18ef9fbe/DbContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/17.4.1/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
@@ -365,15 +356,7 @@
       <workItem from="1705788318004" duration="332000" />
       <workItem from="1707228262677" duration="1452000" />
       <workItem from="1707518456034" duration="4585000" />
-      <workItem from="1707528137092" duration="3598000" />
-    </task>
-    <task id="LOCAL-00042" summary="Split each batch of updates into minimum 2 batches">
-      <option name="closed" value="true" />
-      <created>1698622145577</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1698622145577</updated>
+      <workItem from="1707528137092" duration="3924000" />
     </task>
     <task id="LOCAL-00043" summary="cleanup">
       <option name="closed" value="true" />
@@ -759,7 +742,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707529883050</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="fixed tests">
+      <option name="closed" value="true" />
+      <created>1707532024499</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1707532024499</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1050,6 +1041,45 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="173" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
+          <line>65</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="65" containingFunctionPresentation="Method 'FetchAsync'">
+            <startOffsets>
+              <option value="2038" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2083" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="175" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>50</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="50" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
+            <startOffsets>
+              <option value="1666" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1705" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="176" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>83</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="83" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2673" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2721" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="177" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

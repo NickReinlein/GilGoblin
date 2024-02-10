@@ -27,13 +27,11 @@
     <PackageReference Include="GilGoblin.Api" Version="0.7.*"/>
     <PackageReference Include="GilGoblin.Fetcher" Version="0.2.*"/>
     <PackageReference Include="GilGoblin.Batcher" Version="0.2.*"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.7.*"/>
   </ItemGroup>
-<!--  <ItemGroup>-->
-<!--    <ProjectReference Include="../Database/Database.csproj"/>-->
-<!--&lt;!&ndash;    <ProjectReference Include="../Fetcher/Fetcher.csproj"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    <ProjectReference Include="../Batcher/Batcher.csproj"/>&ndash;&gt;-->
-<!--  </ItemGroup>-->
+  <ItemGroup>
+    <ProjectReference Include="../Database/Database.csproj"/>
+  </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>
@@ -41,6 +39,6 @@
     <None Include="icon.png" Pack="true" PackagePath="/"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\Database\Database.csproj"/>
   </ItemGroup>
 </Project>
