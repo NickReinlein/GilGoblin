@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
 public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
 {
-    protected readonly GilGoblinDbContext DbContext;
+    protected readonly GilGoblinDbContext _context;
     private readonly ILogger<DataSaver<T>> _logger;
 
-    public DataSaver(GilGoblinDbContext dbContext, ILogger<DataSaver<T>> logger)
+    public DataSaver(GilGoblinDbContext context, ILogger<DataSaver<T>> logger)
     {
-        DbContext = dbContext;
+        _context = context;
         _logger = logger;
     }
 
@@ -30,13 +31,15 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
             if (!success)
                 throw new ArgumentException("Cannot save price due to error in key field");
 
-            var (newEntries, updatedSavedCount) = await UpdateExistingEntries(updateList);
+             foreach (var updated in updateList)
+            {
+                _context.Entry(updated).State = updated.GetId() == 0 ? EntityState.Added : EntityState.Modified;
+            }
 
-            await DbContext.AddRangeAsync(newEntries);
-            var savedCount = await DbContext.SaveChangesAsync();
+            var savedCount = await _context.SaveChangesAsync();
             _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
-            var failedCount = updateList.Count - savedCount - updatedSavedCount;
+            var failedCount = updateList.Count - savedCount;
             if (failedCount > 0)
                 throw new Exception($"Failed to save {failedCount} entities!");
             return true;
@@ -49,25 +52,4 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
     }
 
     public virtual bool SanityCheck(IEnumerable<T> updates) => !updates.Any(t => t.GetId() < 0);
-
-    protected async Task<(List<T>, int)> UpdateExistingEntries(List<T> updatedEntries)
-    {
-        var newEntriesList = new List<T>();
-        foreach (var updated in updatedEntries)
-        {
-            if (await ShouldBeUpdated(updated))
-                DbContext.Entry(updated).CurrentValues.SetValues(updated);
-            else
-                newEntriesList.Add(updated);
-        }
-
-        var savedCount = await DbContext.SaveChangesAsync();
-        _logger.LogInformation($"Saved {savedCount} updated entries for type {typeof(T).Name}");
-
-        return (newEntriesList, savedCount);
-    }
-
-    protected virtual async Task<bool> ShouldBeUpdated(T updated)
-        => updated.GetId() > 0 &&
-           await DbContext.Set<T>().FindAsync(updated.GetId()) != null;
 }
