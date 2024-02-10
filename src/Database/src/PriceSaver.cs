@@ -15,16 +15,17 @@ public class PriceSaver : DataSaver<PricePoco>
     {
     }
 
-    protected override async Task<bool> ShouldBeUpdated(PricePoco updated)
-        => await DbContext.Price
+    protected override async Task<bool> ShouldBeUpdated(PricePoco updated) =>
+        await DbContext.Price
             .AnyAsync(p =>
                 p.WorldId == updated.WorldId &&
                 p.ItemId == updated.ItemId &&
                 p.LastUploadTime < updated.LastUploadTime);
 
-    public override bool SanityCheck(IEnumerable<PricePoco> updates)
-        => true;
-    // => !updates.Any(price => price.WorldId <= 0 ||
-    //                          price.ItemId <= 0 ||
-    //                          price.LastUploadTime <= 0);
+    public override bool SanityCheck(IEnumerable<PricePoco> updates) =>
+        !updates
+            .Any(price =>
+                price.WorldId <= 0 ||
+                price.ItemId <= 0 ||
+                price.LastUploadTime <= 0);
 }

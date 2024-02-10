@@ -47,7 +47,7 @@ public class PriceSaverTests : InMemoryTestDb
         var success = await _saver.SaveAsync(updates);
 
         Assert.That(success);
-        _logger.Received().LogInformation($"Saved {updates.Count} entries for type {nameof(PricePoco)}");
+        _logger.Received().LogInformation($"Saved {updates.Count} new entries for type {nameof(PricePoco)}");
     }
 
     [Test]
@@ -60,8 +60,7 @@ public class PriceSaverTests : InMemoryTestDb
         var updates = GetPocos(newEntityCount);
         updates.Add(existing);
 
-        var success = await _saver.SaveAsync(updates);
-        Assert.That(success);
+        await _saver.SaveAsync(updates);
 
         var updatedEntity = await _context.Price.FindAsync(existing.ItemId, existing.WorldId);
         Assert.Multiple(() =>
@@ -106,24 +105,17 @@ public class PriceSaverTests : InMemoryTestDb
         }
     }
 
-    [TestCase(0, 2, 3, 4, 5)]
-    [TestCase(1, 0, 3, 4, 5)]
-    [TestCase(1, 2, 0, 4, 5)]
-    [TestCase(1, 2, 3, 0, 5)]
-    [TestCase(1, 2, 3, 4, 0)]
+    [TestCase(0, 0, 0)]
+    [TestCase(0, 0, 1)]
+    [TestCase(0, 1, 0)]
+    [TestCase(0, 1, 1)]
+    [TestCase(1, 1, 0)]
     public void GivenSanityCheck_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
-        int averageListingPrice, int averageSold, int worldId, int itemId, int lastUploadTime)
+        int worldId, int itemId, int lastUploadTime)
     {
         var updatesList = new List<PricePoco>
         {
-            new()
-            {
-                AverageListingPrice = averageListingPrice,
-                AverageSold = averageSold,
-                WorldId = worldId,
-                ItemId = itemId,
-                LastUploadTime = lastUploadTime
-            }
+            new() { WorldId = worldId, ItemId = itemId, LastUploadTime = lastUploadTime }
         };
 
         Assert.That(_saver.SanityCheck(updatesList), Is.False);

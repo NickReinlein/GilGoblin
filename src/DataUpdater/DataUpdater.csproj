@@ -31,8 +31,8 @@
   </ItemGroup>
 <!--  <ItemGroup>-->
 <!--    <ProjectReference Include="../Database/Database.csproj"/>-->
-<!--    <ProjectReference Include="../Fetcher/Fetcher.csproj"/>-->
-<!--    <ProjectReference Include="../Batcher/Batcher.csproj"/>-->
+<!--&lt;!&ndash;    <ProjectReference Include="../Fetcher/Fetcher.csproj"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    <ProjectReference Include="../Batcher/Batcher.csproj"/>&ndash;&gt;-->
 <!--  </ItemGroup>-->
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>

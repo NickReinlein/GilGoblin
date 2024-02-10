@@ -48,7 +48,7 @@ public class DataSaverTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting()
+    public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeUpdateExistingEntitiesWithNewValues()
     {
         const int newEntityCount = 2;
         var initialCount = _context.Item.Count();
@@ -75,25 +75,25 @@ public class DataSaverTests : InMemoryTestDb
         const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
         var updates = GetPocos();
         updates.First().Id = -1;
-    
+
         var success = await _saver.SaveAsync(updates);
-    
+
         Assert.That(success, Is.False);
         _logger.Received().LogError(errorMessage);
     }
-    
+
     [Test]
     public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
     {
         var updates = GetPocos(3);
-    
+
         var success = await _saver.SaveAsync(updates);
-    
+
         Assert.That(success);
         foreach (var update in updates)
         {
             var db = await _context.Item.FindAsync(update.Id);
-    
+
             Assert.Multiple(() =>
             {
                 Assert.That(db, Is.Not.Null);

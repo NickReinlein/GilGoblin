@@ -30,13 +30,13 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
             if (!success)
                 throw new ArgumentException("Cannot save price due to error in key field");
 
-            var newEntries = await UpdatedExistingEntries(updateList);
+            var (newEntries, updatedSavedCount) = await UpdateExistingEntries(updateList);
 
             await DbContext.AddRangeAsync(newEntries);
             var savedCount = await DbContext.SaveChangesAsync();
             _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
-            var failedCount = updateList.Count - savedCount;
+            var failedCount = updateList.Count - savedCount - updatedSavedCount;
             if (failedCount > 0)
                 throw new Exception($"Failed to save {failedCount} entities!");
             return true;
@@ -48,9 +48,9 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
         }
     }
 
-    public virtual bool SanityCheck(IEnumerable<T> updates) => true;
+    public virtual bool SanityCheck(IEnumerable<T> updates) => !updates.Any(t => t.GetId() < 0);
 
-    protected async Task<List<T>> UpdatedExistingEntries(List<T> updatedEntries)
+    protected async Task<(List<T>, int)> UpdateExistingEntries(List<T> updatedEntries)
     {
         var newEntriesList = new List<T>();
         foreach (var updated in updatedEntries)
@@ -64,7 +64,7 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
         var savedCount = await DbContext.SaveChangesAsync();
         _logger.LogInformation($"Saved {savedCount} updated entries for type {typeof(T).Name}");
 
-        return newEntriesList;
+        return (newEntriesList, savedCount);
     }
 
     protected virtual async Task<bool> ShouldBeUpdated(T updated)
