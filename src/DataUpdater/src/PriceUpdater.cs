@@ -47,8 +47,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 try
                 {
                     var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
-                    if (fetched.Any())
-                        await ConvertAndSaveToDbAsync(fetched);
+                    await ConvertAndSaveToDbAsync(fetched);
                 }
                 catch (Exception e)
                 {

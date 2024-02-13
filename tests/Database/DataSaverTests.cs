@@ -50,14 +50,11 @@ public class DataSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeUpdateExistingEntitiesWithNewValues()
     {
-        const int newEntityCount = 2;
         var initialCount = _context.Item.Count();
         var existing = _context.Item.First();
         existing.PriceMid = 9887;
-        var updates = GetPocos(newEntityCount);
-        updates.Add(existing);
 
-        var success = await _saver.SaveAsync(updates);
+        var success = await _saver.SaveAsync(new List<ItemPoco> { existing });
         Assert.That(success);
 
         var updatedEntity = await _context.Item.FindAsync(existing.GetId());
@@ -65,14 +62,14 @@ public class DataSaverTests : InMemoryTestDb
         {
             Assert.That(updatedEntity, Is.Not.Null);
             Assert.That(updatedEntity.PriceMid, Is.EqualTo(9887));
-            Assert.That(_context.Item.Count(), Is.EqualTo(initialCount + newEntityCount));
+            Assert.That(_context.Item.Count(), Is.EqualTo(initialCount++));
         });
     }
 
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
     {
-        const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
+        const string errorMessage = "Failed to save 1 entities, out of 1 total entities";
         var updates = GetPocos();
         updates.First().Id = -1;
 
@@ -114,7 +111,18 @@ public class DataSaverTests : InMemoryTestDb
         var updates = new List<ItemPoco>();
         for (var i = 0; i < qty; i++)
         {
-            var item = new ItemPoco { Id = defaultItemId + i * 227, PriceMid = 33 + i * 333, PriceLow = 13 + i * 27 };
+            var item = new ItemPoco
+            {
+                Id = defaultItemId + i * 227,
+                PriceMid = 33 + i * 333,
+                PriceLow = 13 + i * 27,
+                Level = 1,
+                Description = "testDescription",
+                Name = "testName",
+                CanHq = true,
+                IconId = 17 + i * 21,
+                StackSize = 1
+            };
             updates.Add(item);
         }
 

@@ -27,20 +27,20 @@ namespace GilGoblin.Database
 
             try
             {
-                ValidateEntities(entityList);
+                var filteredUpdates = FilterInvalidEntities(entityList);
 
-                UpdateContext(entityList);
+                UpdateContext(filteredUpdates);
 
                 var savedCount = await Context.SaveChangesAsync();
                 _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
                 var failedCount = entityList.Count - savedCount;
-                if (failedCount > 0)
-                {
-                    throw new InvalidOperationException($"Failed to save {failedCount} entities!");
-                }
+                if (failedCount == 0)
+                    return true;
 
-                return true;
+                _logger.LogError(
+                    $"Failed to save {failedCount} entities, out of {entityList.Count} total entities");
+                throw new DbUpdateException();
             }
             catch (DbUpdateException ex)
             {
@@ -67,12 +67,9 @@ namespace GilGoblin.Database
             }
         }
 
-        protected virtual void ValidateEntities(IEnumerable<T> entities)
+        protected virtual List<T> FilterInvalidEntities(IEnumerable<T> entities)
         {
-            if (entities.Any(t => t.GetId() < 0))
-            {
-                throw new ArgumentException("Cannot save entities due to error in key field");
-            }
+            return entities.Where(t => t.GetId() >= 0).ToList();
         }
     }
 }
