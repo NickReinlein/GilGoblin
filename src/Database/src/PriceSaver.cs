@@ -15,7 +15,10 @@ namespace GilGoblin.Database
 
         protected override void UpdateContext(List<PricePoco> priceList)
         {
-            var worldId = priceList.First().WorldId;
+            var worldId = priceList.FirstOrDefault()?.WorldId;
+            if (worldId is null or <= 0)
+                throw new ArgumentException($"Missing or invalid world id {worldId}");
+
             var itemIdList = priceList.Select(p => p.ItemId).ToList();
             var existing = Context.Price
                 .Where(p =>

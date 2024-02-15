@@ -11,13 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixing tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/InMemoryTestDb.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -369,15 +368,7 @@
       <workItem from="1707591536731" duration="661000" />
       <workItem from="1707676658127" duration="915000" />
       <workItem from="1707777070152" duration="3510000" />
-      <workItem from="1708033981837" duration="2386000" />
-    </task>
-    <task id="LOCAL-00045" summary="Fixed additional scoping for new background services">
-      <option name="closed" value="true" />
-      <created>1698715196512</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1698715196512</updated>
+      <workItem from="1708033981837" duration="4032000" />
     </task>
     <task id="LOCAL-00046" summary="De-couple docker services">
       <option name="closed" value="true" />
@@ -763,7 +754,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707786548717</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="fixing tests">
+      <option name="closed" value="true" />
+      <created>1708037622437</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1708037622437</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -817,7 +816,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="updates for test coverage command &amp; started new tests" />
     <MESSAGE value="solved package dependency error" />
     <MESSAGE value="adding more services to the accountant" />
     <MESSAGE value=" changed DI to be more DRY" />
@@ -842,7 +840,8 @@
     <MESSAGE value="fixed tests" />
     <MESSAGE value="more fixes but bug persists when saving updated entities" />
     <MESSAGE value="WIP fixing tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP fixing tests" />
+    <MESSAGE value="fixing tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -862,42 +861,16 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Database/DataSaverTests.cs</url>
-          <line>58</line>
+          <line>59</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="59" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
             <startOffsets>
-              <option value="1702" />
+              <option value="1716" />
             </startOffsets>
             <endOffsets>
-              <option value="1772" />
+              <option value="1786" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="152" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Database/PriceSaverTests.cs</url>
-          <line>63</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" initialLine="62" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
-            <startOffsets>
-              <option value="1983" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2015" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="158" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Database/PriceSaverTests.cs</url>
-          <line>59</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Database/PriceSaverTests.cs" initialLine="58" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
-            <startOffsets>
-              <option value="1850" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1878" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="167" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Program.cs</url>
@@ -979,13 +952,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Database/DataSaverTests.cs</url>
-          <line>46</line>
+          <line>47</line>
           <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="44" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateIsValid_ThenWeReturnTrue'">
             <startOffsets>
-              <option value="1350" />
+              <option value="1364" />
             </startOffsets>
             <endOffsets>
-              <option value="1396" />
+              <option value="1410" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="190" />
@@ -1005,16 +978,94 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>31</line>
+          <line>33</line>
           <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="31" containingFunctionPresentation="Method 'SaveAsync'">
             <startOffsets>
-              <option value="1008" />
+              <option value="1152" />
             </startOffsets>
             <endOffsets>
-              <option value="1039" />
+              <option value="1183" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="192" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>40</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="38" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="1477" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1489" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="195" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>42</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="40" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="1507" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1629" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="196" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>35</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="33" containingFunctionPresentation="Method 'SaveAsync'">
+            <startOffsets>
+              <option value="1201" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1251" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="197" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="27" containingFunctionPresentation="Method 'UpdateContext'">
+            <startOffsets>
+              <option value="1049" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1153" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="198" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
+          <line>73</line>
+          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="71" containingFunctionPresentation="Method 'FilterInvalidEntities'">
+            <startOffsets>
+              <option value="2647" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2699" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="200" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/PriceComponentTests.cs</url>
+          <line>22</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" initialLine="22" containingFunctionPresentation="Lambda expression inside Method 'GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice'">
+            <startOffsets>
+              <option value="668" />
+            </startOffsets>
+            <endOffsets>
+              <option value="713" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="201" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

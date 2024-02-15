@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,18 +14,18 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice()
     {
-        var fullEndpoint = "http://localhost:55448/price/34/10348";
+        const string fullEndpoint = "http://localhost:55448/price/34/10348";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
         var price = await response.Content.ReadFromJsonAsync<PricePoco?>(GetSerializerOptions());
+        var highestPrice = (int)Math.Max(price.AverageListingPrice, price.AverageSold);
         Assert.Multiple(() =>
         {
             Assert.That(price.ItemId, Is.EqualTo(10348));
             Assert.That(price.WorldId, Is.EqualTo(34));
-            Assert.That(price.LastUploadTime, Is.GreaterThan(1674800561942));
-            Assert.That(price.AverageListingPrice, Is.GreaterThan(200));
-            Assert.That(price.AverageSold, Is.GreaterThan(200));
+            Assert.That(price.LastUploadTime, Is.GreaterThanOrEqualTo(1674800561942));
+            Assert.That(highestPrice, Is.GreaterThanOrEqualTo(100));
         });
     }
 

@@ -53,22 +53,28 @@ public class PriceSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting()
     {
-        const int newEntityCount = 2;
         var initialPriceCount = _context.Price.Count();
-        var existing = _context.Price.First();
-        existing.AverageSold = 9887;
-        var updates = GetNewPocos(newEntityCount);
-        updates.Add(existing);
+        var existingUpdated = _context.Price.First();
+        existingUpdated.AverageSold = 9887;
+        var newEntity = new PricePoco
+        {
+            WorldId = existingUpdated.WorldId,
+            ItemId = 1234,
+            LastUploadTime = 1000,
+            AverageSold = 5431,
+            AverageListingPrice = 5410
+        };
+        var updates = new List<PricePoco> { newEntity, existingUpdated };
 
         var result = await _saver.SaveAsync(updates);
 
-        var updatedEntity = await _context.Price.FindAsync(existing.ItemId, existing.WorldId);
+        var updatedEntity = await _context.Price.FindAsync(existingUpdated.ItemId, existingUpdated.WorldId);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.True);
             Assert.That(updatedEntity, Is.Not.Null);
             Assert.That(updatedEntity.AverageSold, Is.EqualTo(9887));
-            Assert.That(_context.Price.Count(), Is.EqualTo(initialPriceCount + newEntityCount));
+            Assert.That(_context.Price.Count(), Is.EqualTo(initialPriceCount + 1));
         });
     }
 
@@ -84,7 +90,7 @@ public class PriceSaverTests : InMemoryTestDb
         var success = await _saver.SaveAsync(updates);
 
         Assert.That(success, Is.False);
-        _logger.Received().LogError(Arg.Any<Exception>(), infoMessage);
+        _logger.Received().LogError(Arg.Any<ArgumentException>(), infoMessage);
     }
 
     [Test]
@@ -113,15 +119,19 @@ public class PriceSaverTests : InMemoryTestDb
     [TestCase(0, 1, 0)]
     [TestCase(0, 1, 1)]
     [TestCase(1, 1, 0)]
-    public void GivenAnyFieldIsInvalid_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
+    public async Task GivenAnyFieldIsInvalid_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
         int worldId, int itemId, int lastUploadTime)
     {
+        var existing = _context.Price.First();
+
         var updatesList = new List<PricePoco>
         {
             new()
             {
-                WorldId = worldId,
-                ItemId = itemId,
+                WorldId = worldId == 0 ? 0 : existing.WorldId,
+                ItemId = itemId == 0 ? 0 : existing.ItemId,
+                AverageSold = 1234,
+                AverageListingPrice = 4321,
                 LastUploadTime =
                     lastUploadTime == 0
                         ? 0
@@ -129,7 +139,9 @@ public class PriceSaverTests : InMemoryTestDb
             }
         };
 
-        Assert.That(_saver.SaveAsync(updatesList), Is.False);
+        var result = await _saver.SaveAsync(updatesList);
+
+        Assert.That(result, Is.False);
     }
 
     private static List<PricePoco> GetNewPocos(int qty = 1)

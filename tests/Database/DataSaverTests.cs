@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,14 +72,14 @@ public class DataSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
     {
-        const string errorMessage = "Failed to save 1 entities, out of 1 total entities";
+        const string errorMessage = "Failed to update due to invalid data: No valid entities remained after validity check";
         var updates = GetNewPocos();
         updates.First().Id = -1;
 
         var success = await _saver.SaveAsync(updates);
 
         Assert.That(success, Is.False);
-        _logger.Received().LogError(errorMessage);
+        _logger.Received().LogError(Arg.Any<ArgumentException>(), errorMessage);
     }
 
     [Test]
