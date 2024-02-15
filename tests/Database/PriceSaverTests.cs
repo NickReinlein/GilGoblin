@@ -13,9 +13,8 @@ namespace GilGoblin.Tests.Database;
 public class PriceSaverTests : InMemoryTestDb
 {
     private const int defaultWorldId = 34;
-    private const int defaultItemId = 1604;
 
-    private IDataSaver<PricePoco> _saver;
+    private PriceSaver _saver;
     private ILogger<DataSaver<PricePoco>> _logger;
     private TestGilGoblinDbContext _context;
 
@@ -26,7 +25,7 @@ public class PriceSaverTests : InMemoryTestDb
         base.SetUp();
 
         _context = new TestGilGoblinDbContext(_options, _configuration);
-        _saver = new DataSaver<PricePoco>(_context, _logger);
+        _saver = new PriceSaver(_context, _logger);
     }
 
     [Test]
@@ -42,7 +41,8 @@ public class PriceSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsValid_ThenWeLogSuccessAndReturnTrue()
     {
-        var updates = GetPocos();
+        var existing = _context.Price.First();
+        var updates = new List<PricePoco> { existing };
 
         var success = await _saver.SaveAsync(updates);
 
@@ -57,14 +57,15 @@ public class PriceSaverTests : InMemoryTestDb
         var initialPriceCount = _context.Price.Count();
         var existing = _context.Price.First();
         existing.AverageSold = 9887;
-        var updates = GetPocos(newEntityCount);
+        var updates = GetNewPocos(newEntityCount);
         updates.Add(existing);
 
-        await _saver.SaveAsync(updates);
+        var result = await _saver.SaveAsync(updates);
 
         var updatedEntity = await _context.Price.FindAsync(existing.ItemId, existing.WorldId);
         Assert.Multiple(() =>
         {
+            Assert.That(result, Is.True);
             Assert.That(updatedEntity, Is.Not.Null);
             Assert.That(updatedEntity.AverageSold, Is.EqualTo(9887));
             Assert.That(_context.Price.Count(), Is.EqualTo(initialPriceCount + newEntityCount));
@@ -72,22 +73,24 @@ public class PriceSaverTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
+    public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenNothingISSaveAndAnErrorIsLogged()
     {
-        const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
-        var updates = GetPocos();
-        updates.First().ItemId = -1;
+        const string infoMessage =
+            "Failed to update due to invalid data: No valid entities remained after validity check";
+        var existing = _context.Price.First();
+        existing.ItemId = -1;
+        var updates = new List<PricePoco> { existing };
 
         var success = await _saver.SaveAsync(updates);
 
         Assert.That(success, Is.False);
-        _logger.Received().LogError(errorMessage);
+        _logger.Received().LogError(Arg.Any<Exception>(), infoMessage);
     }
 
     [Test]
     public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
     {
-        var updates = GetPocos(3);
+        var updates = GetNewPocos(3);
 
         var success = await _saver.SaveAsync(updates);
 
@@ -129,18 +132,18 @@ public class PriceSaverTests : InMemoryTestDb
         Assert.That(_saver.SaveAsync(updatesList), Is.False);
     }
 
-    private static List<PricePoco> GetPocos(int qty = 1)
+    private static List<PricePoco> GetNewPocos(int qty = 1)
     {
         var updates = new List<PricePoco>();
         for (var i = 0; i < qty; i++)
         {
             var pricePoco = new PricePoco
             {
-                WorldId = defaultWorldId + i * 111,
-                ItemId = defaultItemId + i * 111,
+                WorldId = defaultWorldId,
+                ItemId = 100 + i * 111,
                 AverageSold = 111f + i * 333,
                 AverageListingPrice = 222f + i * 444,
-                LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                LastUploadTime = DateTimeOffset.UtcNow.AddDays(-3).ToUnixTimeMilliseconds()
             };
             updates.Add(pricePoco);
         }

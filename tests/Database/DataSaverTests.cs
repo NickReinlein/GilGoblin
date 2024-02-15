@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,7 +12,7 @@ namespace GilGoblin.Tests.Database;
 
 public class DataSaverTests : InMemoryTestDb
 {
-    private const int defaultItemId = 1604;
+    private const int defaultItemId = 1;
 
     private DataSaver<ItemPoco> _saver;
     private ILogger<DataSaver<ItemPoco>> _logger;
@@ -40,7 +41,8 @@ public class DataSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsValid_ThenWeReturnTrue()
     {
-        var updates = GetPocos();
+        var existing = _context.Item.First();
+        var updates = new List<ItemPoco> { existing };
 
         var success = await _saver.SaveAsync(updates);
 
@@ -70,7 +72,7 @@ public class DataSaverTests : InMemoryTestDb
     public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
     {
         const string errorMessage = "Failed to save 1 entities, out of 1 total entities";
-        var updates = GetPocos();
+        var updates = GetNewPocos();
         updates.First().Id = -1;
 
         var success = await _saver.SaveAsync(updates);
@@ -82,7 +84,7 @@ public class DataSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
     {
-        var updates = GetPocos(3);
+        var updates = GetNewPocos(3);
 
         var success = await _saver.SaveAsync(updates);
 
@@ -106,14 +108,13 @@ public class DataSaverTests : InMemoryTestDb
         }
     }
 
-    private static List<ItemPoco> GetPocos(int qty = 1)
+    private static List<ItemPoco> GetNewPocos(int qty = 1)
     {
         var updates = new List<ItemPoco>();
         for (var i = 0; i < qty; i++)
         {
             var item = new ItemPoco
             {
-                Id = defaultItemId + i * 227,
                 PriceMid = 33 + i * 333,
                 PriceLow = 13 + i * 27,
                 Level = 1,

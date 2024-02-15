@@ -159,9 +159,9 @@ public class PriceUpdaterTests : InMemoryTestDb
     public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
     {
         var saveList = SetupSave();
-        _saver.SaveAsync(default).Returns(false);
+        _saver.SaveAsync(Arg.Any<IEnumerable<PricePoco>>()).Returns(false);
         var errorMessage =
-            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from PriceSaver returned failure";
+            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(IDataSaver<PricePoco>)} returned failure";
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);

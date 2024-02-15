@@ -28,6 +28,8 @@ namespace GilGoblin.Database
             try
             {
                 var filteredUpdates = FilterInvalidEntities(entityList);
+                if (!filteredUpdates.Any())
+                    throw new ArgumentException("No valid entities remained after validity check");
 
                 UpdateContext(filteredUpdates);
 
