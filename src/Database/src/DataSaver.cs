@@ -3,69 +3,75 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Database;
-
-public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
+namespace GilGoblin.Database
 {
-    protected readonly GilGoblinDbContext DbContext;
-    private readonly ILogger<DataSaver<T>> _logger;
-
-    public DataSaver(GilGoblinDbContext dbContext, ILogger<DataSaver<T>> logger)
+    public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
     {
-        DbContext = dbContext;
-        _logger = logger;
-    }
+        protected readonly GilGoblinDbContext Context;
+        private readonly ILogger<DataSaver<T>> _logger;
 
-    public async Task<bool> SaveAsync(IEnumerable<T> updates)
-    {
-        var updatesList = updates.ToList();
-        if (!updatesList.Any())
-            return false;
-
-        try
+        public DataSaver(GilGoblinDbContext context, ILogger<DataSaver<T>> logger)
         {
-            var success = SanityCheck(updatesList);
-            if (!success)
-                throw new ArgumentException("Cannot save price due to error in key field");
-
-            var newEntries = await UpdatedExistingEntries(updatesList);
-            await DbContext.AddRangeAsync(newEntries);
-
-            var savedCount = await DbContext.SaveChangesAsync();
-            _logger.LogInformation($"Saved {savedCount} entries for type {typeof(T).Name}");
-
-            var failedCount = updatesList.Count - savedCount;
-            if (failedCount > 0)
-                throw new Exception($"Failed to save {failedCount} entities!");
-            return true;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Failed to update due to error: {e.Message}");
-            return false;
-        }
-    }
-
-    public virtual bool SanityCheck(IEnumerable<T> updates)
-        => !updates.Any(t => t.GetId() < 0);
-
-    protected async Task<List<T>> UpdatedExistingEntries(List<T> updatedEntries)
-    {
-        var newEntriesList = new List<T>();
-        foreach (var updated in updatedEntries)
-        {
-            if (await ShouldBeUpdated(updated))
-                DbContext.Entry(updated).CurrentValues.SetValues(updated);
-            else
-                newEntriesList.Add(updated);
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        return newEntriesList;
-    }
+        public async Task<bool> SaveAsync(IEnumerable<T> entities)
+        {
+            var entityList = entities.ToList();
+            if (!entityList.Any())
+                return false;
 
-    protected virtual async Task<bool> ShouldBeUpdated(T updated)
-        => updated.GetId() > 0 &&
-           await DbContext.Set<T>().FindAsync(updated.GetId()) != null;
+            try
+            {
+                var filteredUpdates = FilterInvalidEntities(entityList);
+                if (!filteredUpdates.Any())
+                    throw new ArgumentException("No valid entities remained after validity check");
+
+                UpdateContext(filteredUpdates);
+
+                var savedCount = await Context.SaveChangesAsync();
+                _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
+
+                var failedCount = entityList.Count - savedCount;
+                if (failedCount == 0)
+                    return true;
+
+                _logger.LogError(
+                    $"Failed to save {failedCount} entities, out of {entityList.Count} total entities");
+                throw new DbUpdateException();
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, $"Failed to update due to database error: {ex.Message}");
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, $"Failed to update due to invalid data: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to update due to unknown error: {ex.Message}");
+                return false;
+            }
+        }
+
+        protected virtual void UpdateContext(List<T> entityList)
+        {
+            foreach (var entity in entityList)
+            {
+                Context.Entry(entity).State = entity.GetId() == 0 ? EntityState.Added : EntityState.Modified;
+            }
+        }
+
+        protected virtual List<T> FilterInvalidEntities(IEnumerable<T> entities)
+        {
+            return entities.Where(t => t.GetId() >= 0).ToList();
+        }
+    }
 }

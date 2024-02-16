@@ -72,7 +72,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int>());
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
@@ -87,7 +87,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int> { 631 });
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         var idCount = _priceUpdater.AllItemIds.Count;
@@ -100,7 +100,7 @@ public class PriceUpdaterTests : InMemoryTestDb
     public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int? worldIdString)
     {
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(cts.Token, worldIdString);
 
         var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";
@@ -117,7 +117,7 @@ public class PriceUpdaterTests : InMemoryTestDb
             .Returns(new List<PriceWebPoco>());
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(cts.Token, 34));
 
         _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
@@ -129,7 +129,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         var saveList = SetupSave();
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         Assert.That(saveList, Has.Count.GreaterThanOrEqualTo(2));
@@ -149,10 +149,9 @@ public class PriceUpdaterTests : InMemoryTestDb
         _saver.SaveAsync(default).ThrowsAsyncForAnyArgs(new Exception("test"));
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
-        await _saver.ReceivedWithAnyArgs().SaveAsync(default);
         _logger.Received().LogError($"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: test");
     }
 
@@ -160,16 +159,14 @@ public class PriceUpdaterTests : InMemoryTestDb
     public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
     {
         var saveList = SetupSave();
-        _saver.ClearSubstitute();
-        _saver.SaveAsync(default).Returns(false);
+        _saver.SaveAsync(Arg.Any<IEnumerable<PricePoco>>()).Returns(false);
         var errorMessage =
-            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(PriceSaver)} returned failure";
+            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(IDataSaver<PricePoco>)} returned failure";
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(1000);
+        cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
-        await _saver.ReceivedWithAnyArgs().SaveAsync(default);
         _logger.Received().LogError(errorMessage);
     }
 

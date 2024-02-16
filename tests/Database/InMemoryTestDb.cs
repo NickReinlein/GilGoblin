@@ -35,7 +35,7 @@ public class InMemoryTestDb
 
     private void DeleteAllEntries()
     {
-        var context = new TestGilGoblinDbContext(_options, _configuration);
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.Price.RemoveRange(context.Price);
         context.Item.RemoveRange(context.Item);
         context.Recipe.RemoveRange(context.Recipe);

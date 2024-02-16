@@ -65,10 +65,10 @@ public class RecipeRepository : IRecipeRepository
     }
 
     public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> recipeIds) =>
-        _dbContext.Recipe.Where(r => recipeIds.Any(a => a == r.Id));
+        _dbContext.Recipe.Where(r => recipeIds.Any(a => a == r.Id)).AsEnumerable();
 
-    public IEnumerable<RecipePoco> GetAll()
-        => _dbContext.Recipe.Where(r => r.Id > 0 && r.TargetItemId > 0);
+    public IEnumerable<RecipePoco> GetAll() =>
+        _dbContext.Recipe.AsEnumerable();
 
     public Task FillCache()
     {

@@ -37,7 +37,7 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
 
         try
         {
-            var response = await FetchAsync(world, ids);
+            var response = await FetchAsync(world, idList);
             if (response is null)
                 return new List<T>();
 

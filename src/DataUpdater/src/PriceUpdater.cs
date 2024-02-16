@@ -10,9 +10,9 @@ using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Fetcher;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using DbUpdateException = System.Data.Entity.Infrastructure.DbUpdateException;
 
 namespace GilGoblin.DataUpdater;
 
@@ -47,8 +47,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 try
                 {
                     var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
-                    if (fetched.Any())
-                        await ConvertAndSaveToDbAsync(fetched);
+                    await ConvertAndSaveToDbAsync(fetched);
                 }
                 catch (Exception e)
                 {
@@ -73,13 +72,17 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
+        var updateList = webPocos.ToPricePocoList();
+        if (!updateList.Any())
+            return;
+
         try
         {
             using var scope = ScopeFactory.CreateScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
-            var success = await saver.SaveAsync(webPocos.ToPricePocoList());
+            var success = await saver.SaveAsync(updateList);
             if (!success)
-                throw new DbUpdateException($"Saving from {nameof(PriceSaver)} returned failure");
+                throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
         }
         catch (Exception e)
         {
@@ -94,11 +97,11 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             if (worldId is null or < 1)
                 throw new Exception("World Id is invalid");
 
-            await FillItemIdCache();
-
             var world = worldId.GetValueOrDefault();
             if (world <= 0)
                 throw new ArgumentException($"Interpreted world id as {world}");
+
+            await FillItemIdCache();
 
             using var scope = ScopeFactory.CreateScope();
             var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
@@ -108,13 +111,15 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
             var outdatedPrices = currentPrices.Where(p =>
             {
-                var timestamp = new DateTime(p.LastUploadTime).ToUniversalTime();
-                var ageInHours = (DateTimeOffset.UtcNow - timestamp).Hours;
+                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(p.LastUploadTime).UtcDateTime;
+                var ageInHours = (DateTimeOffset.UtcNow - timestamp).TotalHours;
                 return ageInHours > dataExpiryInHours;
             }).ToList();
 
             var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
-            return outdatedPriceIdList.Concat(newPriceIds).ToList();
+            var idsToUpdate = outdatedPriceIdList.Concat(newPriceIds).ToList();
+
+            return idsToUpdate;
         }
         catch (Exception e)
         {
@@ -127,13 +132,9 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
     {
         using var scope = ScopeFactory.CreateScope();
         var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-
-        AllItemIds = new List<int>();
-        var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
-        if (!marketableItemIdList.Any())
-            throw new WebException("Failed to fetch marketable item ids");
-
         var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+        AllItemIds = new List<int>();
+
         var recipes = recipeRepo.GetAll().ToList();
         Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
         var ingredientItemIds =
@@ -144,11 +145,18 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 .Distinct()
                 .ToList();
 
+        var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
+        Logger.LogDebug(
+            $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
+        if (!marketableItemIdList.Any())
+            throw new WebException("Failed to fetch marketable item ids");
+
         AllItemIds =
             marketableItemIdList
                 .Concat(ingredientItemIds)
                 .Distinct()
                 .ToList();
+        Logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
     }
 
     private async Task AwaitDelay(CancellationToken ct)

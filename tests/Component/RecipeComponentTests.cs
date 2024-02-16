@@ -52,7 +52,7 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenReceivingAllRecipes_ThenWeReceiveValidRecipes()
     {
-        var fullEndpoint = "http://localhost:55448/recipe/";
+        const string fullEndpoint = "http://localhost:55448/recipe/";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -61,28 +61,28 @@ public class RecipeComponentTests : ComponentTests
         );
 
         var recipeList = recipes.ToList();
-        var recipeCount = recipeList.Count();
+        var recipeCount = recipeList.Count;
         Assert.Multiple(() =>
         {
             Assert.That(recipeCount, Is.GreaterThan(1000), "Not enough entries received");
             Assert.That(recipeList.All(p => p.Id > 0), "ItemId is invalid");
             Assert.That(
-                recipes.Count(p => p.TargetItemId > 1),
+                recipeList.Count(p => p.TargetItemId > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with TargetItemId"
             );
             Assert.That(
-                recipes.Count(p => p.ItemIngredient0TargetId > 1),
+                recipeList.Count(p => p.ItemIngredient0TargetId > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with more than 1 ingredient for ItemIngredient0TargetId"
             );
             Assert.That(
-                recipes.Count(p => p.AmountIngredient0 > 1),
+                recipeList.Count(p => p.AmountIngredient0 > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with more than 1 ingredient for AmountIngredient0"
             );
             Assert.That(
-                recipes.Count(p => (p.AmountIngredient0 + p.AmountIngredient1 + p.AmountIngredient2) > 1),
+                recipeList.Count(p => (p.AmountIngredient0 + p.AmountIngredient1 + p.AmountIngredient2) > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries for multiple ingredients"
             );

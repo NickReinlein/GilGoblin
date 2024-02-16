@@ -4,7 +4,7 @@
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Fetcher</RootNamespace>
     <PackageId>GilGoblin.Fetcher</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -20,7 +20,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.6.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.7.*"/>
   </ItemGroup>
   <!--  <ItemGroup>-->
   <!--    <ProjectReference Include="../Database/Database.csproj"/>-->

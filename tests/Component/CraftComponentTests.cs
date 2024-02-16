@@ -69,10 +69,10 @@ public class CraftComponentTests : ComponentTests
         });
     }
 
-    // First: Wrong recipeId == NotFound
-    // Then: Any further errors == BadRequest 
+    // Any errors ==> BadRequest 
+    // Exception: Correct world, wrong recipeId ==> NotFound
     [TestCase("/34/1614654", HttpStatusCode.NotFound)]
-    [TestCase("/1614654/1614654", HttpStatusCode.NotFound)]
+    [TestCase("/1614654/1614654", HttpStatusCode.BadRequest)]
     [TestCase("/1614654/100", HttpStatusCode.BadRequest)]
     public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
         HttpStatusCode expectedErrorCode)

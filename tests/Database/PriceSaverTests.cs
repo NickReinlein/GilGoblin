@@ -13,16 +13,15 @@ namespace GilGoblin.Tests.Database;
 public class PriceSaverTests : InMemoryTestDb
 {
     private const int defaultWorldId = 34;
-    private const int defaultItemId = 1604;
 
     private PriceSaver _saver;
-    private ILogger<PriceSaver> _logger;
+    private ILogger<DataSaver<PricePoco>> _logger;
     private TestGilGoblinDbContext _context;
 
     [SetUp]
     public override void SetUp()
     {
-        _logger = Substitute.For<ILogger<PriceSaver>>();
+        _logger = Substitute.For<ILogger<DataSaver<PricePoco>>>();
         base.SetUp();
 
         _context = new TestGilGoblinDbContext(_options, _configuration);
@@ -42,53 +41,62 @@ public class PriceSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsValid_ThenWeLogSuccessAndReturnTrue()
     {
-        var updates = GetPocos();
+        var existing = _context.Price.First();
+        var updates = new List<PricePoco> { existing };
 
         var success = await _saver.SaveAsync(updates);
 
         Assert.That(success);
-        _logger.Received().LogInformation($"Saved {updates.Count} entries for type {nameof(PricePoco)}");
+        _logger.Received().LogInformation($"Saved {updates.Count} new entries for type {nameof(PricePoco)}");
     }
 
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting()
     {
-        const int newEntityCount = 2;
         var initialPriceCount = _context.Price.Count();
-        var existing = _context.Price.First();
-        existing.AverageSold = 9887;
-        var updates = GetPocos(newEntityCount);
-        updates.Add(existing);
+        var existingUpdated = _context.Price.First();
+        existingUpdated.AverageSold = 9887;
+        var newEntity = new PricePoco
+        {
+            WorldId = existingUpdated.WorldId,
+            ItemId = 1234,
+            LastUploadTime = 1000,
+            AverageSold = 5431,
+            AverageListingPrice = 5410
+        };
+        var updates = new List<PricePoco> { newEntity, existingUpdated };
 
-        var success = await _saver.SaveAsync(updates);
-        Assert.That(success);
+        var result = await _saver.SaveAsync(updates);
 
-        var updatedEntity = await _context.Price.FindAsync(existing.ItemId, existing.WorldId);
+        var updatedEntity = await _context.Price.FindAsync(existingUpdated.ItemId, existingUpdated.WorldId);
         Assert.Multiple(() =>
         {
+            Assert.That(result, Is.True);
             Assert.That(updatedEntity, Is.Not.Null);
             Assert.That(updatedEntity.AverageSold, Is.EqualTo(9887));
-            Assert.That(_context.Price.Count(), Is.EqualTo(initialPriceCount + newEntityCount));
+            Assert.That(_context.Price.Count(), Is.EqualTo(initialPriceCount + 1));
         });
     }
 
     [Test]
-    public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
+    public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenNothingISSaveAndAnErrorIsLogged()
     {
-        const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
-        var updates = GetPocos();
-        updates.First().ItemId = -1;
+        const string infoMessage =
+            "Failed to update due to invalid data: No valid entities remained after validity check";
+        var existing = _context.Price.First();
+        existing.ItemId = -1;
+        var updates = new List<PricePoco> { existing };
 
         var success = await _saver.SaveAsync(updates);
 
         Assert.That(success, Is.False);
-        _logger.Received().LogError(errorMessage);
+        _logger.Received().LogError(Arg.Any<ArgumentException>(), infoMessage);
     }
 
     [Test]
     public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
     {
-        var updates = GetPocos(3);
+        var updates = GetNewPocos(3);
 
         var success = await _saver.SaveAsync(updates);
 
@@ -106,41 +114,48 @@ public class PriceSaverTests : InMemoryTestDb
         }
     }
 
-    [TestCase(0, 2, 3, 4, 5)]
-    [TestCase(1, 0, 3, 4, 5)]
-    [TestCase(1, 2, 0, 4, 5)]
-    [TestCase(1, 2, 3, 0, 5)]
-    [TestCase(1, 2, 3, 4, 0)]
-    public void GivenSanityCheck_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
-        int averageListingPrice, int averageSold, int worldId, int itemId, int lastUploadTime)
+    [TestCase(0, 0, 0)]
+    [TestCase(0, 0, 1)]
+    [TestCase(0, 1, 0)]
+    [TestCase(0, 1, 1)]
+    [TestCase(1, 1, 0)]
+    public async Task GivenAnyFieldIsInvalid_WhenAnyFieldIsInvalid_ThenWeFailTheCheck(
+        int worldId, int itemId, int lastUploadTime)
     {
+        var existing = _context.Price.First();
+
         var updatesList = new List<PricePoco>
         {
             new()
             {
-                AverageListingPrice = averageListingPrice,
-                AverageSold = averageSold,
-                WorldId = worldId,
-                ItemId = itemId,
-                LastUploadTime = lastUploadTime
+                WorldId = worldId == 0 ? 0 : existing.WorldId,
+                ItemId = itemId == 0 ? 0 : existing.ItemId,
+                AverageSold = 1234,
+                AverageListingPrice = 4321,
+                LastUploadTime =
+                    lastUploadTime == 0
+                        ? 0
+                        : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             }
         };
 
-        Assert.That(_saver.SanityCheck(updatesList), Is.False);
+        var result = await _saver.SaveAsync(updatesList);
+
+        Assert.That(result, Is.False);
     }
 
-    private static List<PricePoco> GetPocos(int qty = 1)
+    private static List<PricePoco> GetNewPocos(int qty = 1)
     {
         var updates = new List<PricePoco>();
         for (var i = 0; i < qty; i++)
         {
             var pricePoco = new PricePoco
             {
-                WorldId = defaultWorldId + i * 111,
-                ItemId = defaultItemId + i * 111,
+                WorldId = defaultWorldId,
+                ItemId = 100 + i * 111,
                 AverageSold = 111f + i * 333,
                 AverageListingPrice = 222f + i * 444,
-                LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                LastUploadTime = DateTimeOffset.UtcNow.AddDays(-3).ToUnixTimeMilliseconds()
             };
             updates.Add(pricePoco);
         }

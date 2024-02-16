@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,7 +13,7 @@ namespace GilGoblin.Tests.Database;
 
 public class DataSaverTests : InMemoryTestDb
 {
-    private const int defaultItemId = 1604;
+    private const int defaultItemId = 1;
 
     private DataSaver<ItemPoco> _saver;
     private ILogger<DataSaver<ItemPoco>> _logger;
@@ -40,7 +42,8 @@ public class DataSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsValid_ThenWeReturnTrue()
     {
-        var updates = GetPocos();
+        var existing = _context.Item.First();
+        var updates = new List<ItemPoco> { existing };
 
         var success = await _saver.SaveAsync(updates);
 
@@ -48,16 +51,13 @@ public class DataSaverTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting()
+    public async Task GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeUpdateExistingEntitiesWithNewValues()
     {
-        const int newEntityCount = 2;
         var initialCount = _context.Item.Count();
         var existing = _context.Item.First();
         existing.PriceMid = 9887;
-        var updates = GetPocos(newEntityCount);
-        updates.Add(existing);
 
-        var success = await _saver.SaveAsync(updates);
+        var success = await _saver.SaveAsync(new List<ItemPoco> { existing });
         Assert.That(success);
 
         var updatedEntity = await _context.Item.FindAsync(existing.GetId());
@@ -65,35 +65,35 @@ public class DataSaverTests : InMemoryTestDb
         {
             Assert.That(updatedEntity, Is.Not.Null);
             Assert.That(updatedEntity.PriceMid, Is.EqualTo(9887));
-            Assert.That(_context.Item.Count(), Is.EqualTo(initialCount + newEntityCount));
+            Assert.That(_context.Item.Count(), Is.EqualTo(initialCount++));
         });
     }
 
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
     {
-        const string errorMessage = "Failed to update due to error: Cannot save price due to error in key field";
-        var updates = GetPocos();
+        const string errorMessage = "Failed to update due to invalid data: No valid entities remained after validity check";
+        var updates = GetNewPocos();
         updates.First().Id = -1;
-    
+
         var success = await _saver.SaveAsync(updates);
-    
+
         Assert.That(success, Is.False);
-        _logger.Received().LogError(errorMessage);
+        _logger.Received().LogError(Arg.Any<ArgumentException>(), errorMessage);
     }
-    
+
     [Test]
     public async Task GivenASaveAsync_WhenUpdatesAreNewAndValid_ThenWeSaveTheData()
     {
-        var updates = GetPocos(3);
-    
+        var updates = GetNewPocos(3);
+
         var success = await _saver.SaveAsync(updates);
-    
+
         Assert.That(success);
         foreach (var update in updates)
         {
             var db = await _context.Item.FindAsync(update.Id);
-    
+
             Assert.Multiple(() =>
             {
                 Assert.That(db, Is.Not.Null);
@@ -109,12 +109,22 @@ public class DataSaverTests : InMemoryTestDb
         }
     }
 
-    private static List<ItemPoco> GetPocos(int qty = 1)
+    private static List<ItemPoco> GetNewPocos(int qty = 1)
     {
         var updates = new List<ItemPoco>();
         for (var i = 0; i < qty; i++)
         {
-            var item = new ItemPoco { Id = defaultItemId + i * 227, PriceMid = 33 + i * 333, PriceLow = 13 + i * 27 };
+            var item = new ItemPoco
+            {
+                PriceMid = 33 + i * 333,
+                PriceLow = 13 + i * 27,
+                Level = 1,
+                Description = "testDescription",
+                Name = "testName",
+                CanHq = true,
+                IconId = 17 + i * 21,
+                StackSize = 1
+            };
             updates.Add(item);
         }
 

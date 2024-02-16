@@ -19,11 +19,11 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetAll(WorldId);
+        var result = priceRepo.GetAll(WorldId).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.GreaterThanOrEqualTo(2));
+            Assert.That(result, Has.Count.GreaterThanOrEqualTo(2));
             Assert.That(result.Any(p => p.ItemId == RecipeId));
             Assert.That(result.Any(p => p.ItemId == RecipeId2));
             Assert.That(result.Any(p => p.WorldId != WorldId), Is.False);
@@ -52,8 +52,9 @@ public class PriceRepositoryTests : PriceDependentTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.WorldId == WorldId);
-            Assert.That(result.ItemId == id);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.WorldId, Is.EqualTo(WorldId));
+            Assert.That(result.ItemId, Is.EqualTo(id));
         });
     }
 
@@ -88,11 +89,11 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 });
+        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 }).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count, Is.GreaterThanOrEqualTo(2));
+            Assert.That(result, Has.Count.GreaterThanOrEqualTo(2));
             Assert.That(result.Any(p => p.ItemId == RecipeId));
             Assert.That(result.Any(p => p.ItemId == RecipeId2));
         });
@@ -115,13 +116,13 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, 99 });
+        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, 99 }).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.Any(p => p.ItemId == RecipeId));
-            Assert.That(!result.Any(p => p.WorldId != WorldId));
+            Assert.That(result.All(p => p.WorldId == WorldId));
         });
     }
 

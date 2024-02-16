@@ -1,31 +1,46 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace GilGoblin.Database;
-
-public class PriceSaver : DataSaver<PricePoco>
+namespace GilGoblin.Database
 {
-    public PriceSaver(GilGoblinDbContext dbContext,
-        ILogger<DataSaver<PricePoco>> logger)
-        : base(dbContext, logger)
+    public class PriceSaver : DataSaver<PricePoco>
     {
+        public PriceSaver(GilGoblinDbContext context, ILogger<DataSaver<PricePoco>> logger) : base(context, logger)
+        {
+        }
+
+        protected override void UpdateContext(List<PricePoco> priceList)
+        {
+            var worldId = priceList.FirstOrDefault()?.WorldId;
+            if (worldId is null or <= 0)
+                throw new ArgumentException($"Missing or invalid world id {worldId}");
+
+            var itemIdList = priceList.Select(p => p.ItemId).ToList();
+            var existing = Context.Price
+                .Where(p =>
+                    p.WorldId == worldId &&
+                    itemIdList.Contains(p.ItemId))
+                .Select(s => s.ItemId)
+                .ToList();
+            foreach (var price in priceList)
+            {
+                Context.Entry(price).State = existing.Contains(price.ItemId) ? EntityState.Modified : EntityState.Added;
+            }
+        }
+
+        protected override List<PricePoco> FilterInvalidEntities(IEnumerable<PricePoco> entities)
+        {
+            return entities.Where(t =>
+                t.WorldId >= 0 &&
+                t.ItemId >= 0 &&
+                t.LastUploadTime >= 0 &&
+                (t.AverageSold >= 0 ||
+                 t.AverageListingPrice >= 0)
+            ).ToList();
+        }
     }
-
-    protected override async Task<bool> ShouldBeUpdated(PricePoco updated)
-        => updated.GetId() > 0 &&
-           await DbContext.Price
-               .AnyAsync(p =>
-                   p.WorldId == updated.WorldId &&
-                   p.ItemId == updated.ItemId);
-
-    public override bool SanityCheck(IEnumerable<PricePoco> updates)
-        => !updates.Any(price => price.AverageListingPrice <= 0 ||
-                                price.AverageSold <= 0 ||
-                                price.WorldId <= 0 ||
-                                price.ItemId <= 0 ||
-                                price.LastUploadTime <= 0);
 }
