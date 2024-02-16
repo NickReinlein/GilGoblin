@@ -18,14 +18,14 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: A website to search items, recipes, prices, and the craft summary
 * :heavy_check_mark: Add to website a table to display the most profitable recipes to craft for each world
 * :heavy_check_mark: Enhance most profitable recipes table to be sortable
+* :heavy_check_mark: Add arrows to profit table column headers to indicate sorting status (ascending, descending, none)
+* :heavy_check_mark: Create a Docker image of the front-end
 
 *Work-in-progress*
-* :hatching_chick: Add arrows to profit table column headers to indicate sorting status (ascending, descending, none)
+* :hatching_chick: Improve performance for top-crafts endpoint
+* :hatching_chick: Fix existing high-priority bugs
 
 *Upcoming*
-* :egg: Create a Docker image of the front-end
-* :egg: Improve performance for top-crafts endpoint
-* :egg: Fix existing high-priority bugs
 * :egg: Add & store more worlds
 
 *Nice-to-have*
