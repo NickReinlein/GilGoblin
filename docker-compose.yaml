@@ -4,10 +4,8 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    # image: nickreinlein/gilgoblin-database
-    # container_name: database
-    image: database
-    build: src/Database/    
+    image: nickreinlein/gilgoblin-database
+    container_name: database
     environment:
       POSTGRES_DB: gilgoblin
       POSTGRES_USER: gilgoblin
@@ -53,10 +51,8 @@ services:
     restart: unless-stopped
 
   gilgoblin-dataupdater:
-    # image: nickreinlein/gilgoblin-dataupdater
-    # container_name: dataupdater
-    image: data_updater
-    build: src/DataUpdater/
+    image: nickreinlein/gilgoblin-dataupdater
+    container_name: dataupdater
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
