@@ -11,13 +11,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frontend/src/converters/TimestampToAgeConverterTests.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/src/converters/TimestampToAgeConverterTests.spec.tsx" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="found and hopefully fixed bug">
+      <change beforePath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/RecipeComponentTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,9 +78,10 @@
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCostCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Repository/CraftRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Repository/CraftRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/PriceRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Repository/RecipeRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
@@ -94,14 +90,20 @@
     <setting file="file://$PROJECT_DIR$/src/Batcher/out/Batcher.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Database/out/Database.deps.json" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Database/src/Pocos/PricePoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Fetcher/src/BulkDataFetcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Fetcher/src/BulkDataFetcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Fetcher/src/BulkDataFetcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/IBulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPoco.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Fetcher/src/PriceFetcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Fetcher/src/PriceFetcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Fetcher/src/PriceWebResponse.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -145,7 +147,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor": "Debug",
-    "git-widget-placeholder": "api/fix-age-timestamps-returned-from-best-crafts",
+    "git-widget-placeholder": "bug/fix-age-timestamps-returned-from-best-crafts",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -380,14 +382,6 @@
       <workItem from="1707676658127" duration="915000" />
       <workItem from="1707777070152" duration="3510000" />
       <workItem from="1708033981837" duration="6062000" />
-    </task>
-    <task id="LOCAL-00047" summary="api works">
-      <option name="closed" value="true" />
-      <created>1698769170110</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1698769170110</updated>
     </task>
     <task id="LOCAL-00048" summary="WIP decouple services, create Nuget packages">
       <option name="closed" value="true" />
@@ -773,7 +767,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708038762519</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="found and hopefully fixed bug">
+      <option name="closed" value="true" />
+      <created>1708134403126</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1708134403126</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -827,7 +829,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="adding more services to the accountant" />
     <MESSAGE value=" changed DI to be more DRY" />
     <MESSAGE value="Working example with 85% coverage or so" />
     <MESSAGE value="finishing up the recipeCost accountant" />
@@ -852,7 +853,8 @@
     <MESSAGE value="WIP fixing tests" />
     <MESSAGE value="fixing tests" />
     <MESSAGE value="fixed remaining tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed remaining tests" />
+    <MESSAGE value="found and hopefully fixed bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="found and hopefully fixed bug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1064,32 +1066,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="201" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs</url>
-          <line>40</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" initialLine="40" containingFunctionPresentation="Constructor 'CraftSummaryPoco'">
-            <startOffsets>
-              <option value="1360" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1425" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="203" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>56</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="56" containingFunctionPresentation="Method 'GetBestAsync'">
-            <startOffsets>
-              <option value="2033" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2233" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="204" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
