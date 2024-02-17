@@ -20,19 +20,22 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: Enhance most profitable recipes table to be sortable
 * :heavy_check_mark: Add arrows to profit table column headers to indicate sorting status (ascending, descending, none)
 * :heavy_check_mark: Create a Docker image of the front-end
+* :heavy_check_mark: Fix existing high-priority bugs
 
 *Work-in-progress*
 * :hatching_chick: Improve performance for top-crafts endpoint
-* :hatching_chick: Fix existing high-priority bugs
 
 *Upcoming*
+* :egg: Add Gilgoblin favicon and title to header
+* :egg: Add about project page
 * :egg: Add & store more worlds
+* :egg: Launch website
 
 *Nice-to-have*
 * :question: Top things to gather
-* :question: Advanced filtering: Enter class levels to filter available recipes
-* :question: A link to each profit result's item, recipe, price, and craft in the result
+* :question: A link to each profit result's item, recipe, price, and craft in the profit table row
 * :question: A hover or clickable option to see the profit's ingredients & cost info
+* :question: Advanced filtering: Enter class levels to filter available recipes
 * :question: A website displaying the top crafts *for each profession*
 
 *Not currently on the product roadmap*
@@ -42,8 +45,10 @@ The long-term goal is to have a website using this API's endpoints to display th
 ## Docker Images
 
 * [nickreinlein/gilgoblin-api](https://hub.docker.com/repository/docker/nickreinlein/gilgoblin-api/general)
-  * A REST API to get information on items, recipes, prices
+  * A C# REST API to get information on items, recipes, prices
   * Provides the best crafts for a specific world given current prices
+* [nickreinlein/gilgoblin-frontend](https://hub.docker.com/repository/docker/nickreinlein/gilgoblin-frontend/general)
+  * A React frontend that displays results from endpoints in `gilgoblin-api`
 * [nickreinlein/gilgoblin-database](https://hub.docker.com/repository/docker/nickreinlein/gilgoblin-database/general)
   * A PostgreSQL database which hosts the GilGoblin database
   * On initialization, scripts are run to create the tables and populate with data
