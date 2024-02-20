@@ -100,8 +100,6 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
 
     public static TimeSpan GetDataFreshnessInHours() => TimeSpan.FromHours(48);
 
-    public override List<int> GetWorldIds() => new() { 34 };
-
     public override List<int> GetIdsToUpdate(int worldId)
     {
         var idsToUpdate = new List<int>();

@@ -62,14 +62,6 @@ public class AccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenGetWorldIds_WhenMethodIsNotImplemented_ThenWeThrowAnException()
-    {
-        var ids = _accountant.GetWorldIds();
-
-        Assert.That(ids, Is.Not.Empty);
-    }
-
-    [Test]
     public void GivenGetIdsToUpdate_WhenMethodIsNotImplemented_ThenWeThrowAnException()
     {
         var ids = _accountant.GetIdsToUpdate(1);

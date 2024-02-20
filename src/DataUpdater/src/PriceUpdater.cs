@@ -28,10 +28,6 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
     {
     }
 
-    protected override int? GetWorldId()
-    {
-        return 34; // TODO Add a mechanic to iterate through all worlds
-    }
 
     protected override async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
@@ -88,6 +84,14 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         {
             Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PricePoco)}: {e.Message}");
         }
+    }
+
+    protected List<int> GetWorldIds()
+    {
+        using var scope = ScopeFactory.CreateScope();
+        var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
+        var response = worldRepo.GetAllWorlds().Keys.ToList();
+        return response;
     }
 
     protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId)

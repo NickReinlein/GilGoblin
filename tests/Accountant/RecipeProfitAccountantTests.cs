@@ -76,14 +76,6 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         _accountant = new RecipeProfitAccountant(_scopeFactory, _logger);
     }
 
-    [Test]
-    public void GivenGetWorldIds_WhenCalled_ThenWeReturnAtLeastOneEntry()
-    {
-        var worldIds = _accountant.GetWorldIds();
-
-        Assert.That(worldIds, Is.Not.Empty);
-    }
-
     [TestCase(0)]
     [TestCase(-1)]
     public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int invalidWorldId)

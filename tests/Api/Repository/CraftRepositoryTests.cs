@@ -22,6 +22,7 @@ public class CraftRepositoryTests : PriceDependentTests
     private IRecipeCostRepository _recipeCostRepository;
     private IRecipeProfitRepository _recipeProfitRepository;
     private IItemRepository _itemRepository;
+    private IWorldRepository _worldRepository;
     private ICraftCache _cache;
     private ILogger<CraftRepository> _logger;
 
@@ -35,6 +36,7 @@ public class CraftRepositoryTests : PriceDependentTests
         _recipeCostRepository = Substitute.For<IRecipeCostRepository>();
         _recipeProfitRepository = Substitute.For<IRecipeProfitRepository>();
         _itemRepository = Substitute.For<IItemRepository>();
+        _worldRepository = Substitute.For<IWorldRepository>();
         _cache = Substitute.For<ICraftCache>();
         _logger = Substitute.For<ILogger<CraftRepository>>();
 
@@ -44,9 +46,12 @@ public class CraftRepositoryTests : PriceDependentTests
             _recipeCostRepository,
             _recipeProfitRepository,
             _itemRepository,
+            _worldRepository,
             _cache,
             _logger
         );
+
+        _worldRepository.GetAllWorlds().Returns(new Dictionary<int, string> { { 34, "TestWorld" } });
     }
 
     [Test]
@@ -126,7 +131,7 @@ public class CraftRepositoryTests : PriceDependentTests
         var recipe = ctx.Recipe.First(w => w.Id == RecipeId);
         _recipeRepository.Get(RecipeId).Returns(recipe);
 
-        var result = await _craftRepository.GetAsync(WorldId, RecipeId);
+        await _craftRepository.GetAsync(WorldId, RecipeId);
 
         await _recipeCostRepository.Received(1).GetAsync(WorldId, recipe.Id);
     }
@@ -239,7 +244,6 @@ public class CraftRepositoryTests : PriceDependentTests
     [Test, Ignore("fails now?")]
     public void GivenSortByProfitability_WhenSortingThrows_ThenTheOriginalListIsReturnedAndAnErrorLogged()
     {
-        var message = $"Failed to sort crafts by profitability! Returning unsorted crafts list: ";
         var throwCrafts = Substitute.For<List<CraftSummaryPoco>>();
         throwCrafts.Where(Arg.Any<Func<CraftSummaryPoco, bool>>()).Returns(GetCraftSummaryPocos());
         throwCrafts
