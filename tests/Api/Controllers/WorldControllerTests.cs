@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GilGoblin.Api.Tests.Controllers
+namespace GilGoblin.Tests.Api.Controllers
 {
     [TestFixture]
     public class WorldControllerTests
