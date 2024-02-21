@@ -11,37 +11,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Api/src/Controllers/IWorldController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/src/Repository/AllAvailableWorldsEntries.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/src/Repository/IWorldRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Api/Controllers/WorldControllerTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/csv-editor.xml" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="namespace">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Cache/IDataCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Cache/IDataCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/IDataRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/IDataRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/PriceRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/PriceRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Startup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/AccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/AccountantTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/tests/GilGoblin.Tests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +59,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5108fc8cfce44d798c1eed3309cf17c56200/00/2ee7f901/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d1ec82f59e546629ea3afcac9c96df35de00/d4/30c2595e/AbstractInvocation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d1ec82f59e546629ea3afcac9c96df35de00/e3/ea188421/InterfaceMethodWithoutTargetInvocation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/909bfcc4ea2a4fa68dc724e5d570473d163e00/48/217a3f19/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/33/f931bdc1/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/b2/a657ff22/CancellationTokenSource.cs" root0="SKIP_HIGHLIGHTING" />
@@ -120,6 +96,7 @@
     <setting file="file://$PROJECT_DIR$/src/Batcher/out/Batcher.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/publish/DataUpdater.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Database/out/Database.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -128,6 +105,7 @@
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Api/Controllers/WorldControllerTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -404,23 +382,7 @@
       <workItem from="1708033981837" duration="6062000" />
       <workItem from="1708187785743" duration="1179000" />
       <workItem from="1708395139861" duration="347000" />
-      <workItem from="1708395497062" duration="6496000" />
-    </task>
-    <task id="LOCAL-00049" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698774292552</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1698774292552</updated>
-    </task>
-    <task id="LOCAL-00050" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698774405393</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1698774405393</updated>
+      <workItem from="1708395497062" duration="8517000" />
     </task>
     <task id="LOCAL-00051" summary="WIP decouple services, create Nuget packages">
       <option name="closed" value="true" />
@@ -798,7 +760,23 @@
       <option name="project" value="LOCAL" />
       <updated>1708188031393</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="wip new controller">
+      <option name="closed" value="true" />
+      <created>1708473434424</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1708473434425</updated>
+    </task>
+    <task id="LOCAL-00099" summary="namespace">
+      <option name="closed" value="true" />
+      <created>1708478278971</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1708478278971</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -852,8 +830,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Working example with 85% coverage or so" />
-    <MESSAGE value="finishing up the recipeCost accountant" />
     <MESSAGE value="changing docker-compose" />
     <MESSAGE value="fixed Tests.csproj error" />
     <MESSAGE value="WIP improve accountants" />
@@ -877,7 +853,9 @@
     <MESSAGE value="fixed remaining tests" />
     <MESSAGE value="found and hopefully fixed bug" />
     <MESSAGE value="update resources, scripts" />
-    <option name="LAST_COMMIT_MESSAGE" value="update resources, scripts" />
+    <MESSAGE value="wip new controller" />
+    <MESSAGE value="namespace" />
+    <option name="LAST_COMMIT_MESSAGE" value="namespace" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1128,6 +1106,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="204" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs</url>
+          <line>26</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" initialLine="26" containingFunctionPresentation="Method 'GetWorld'">
+            <startOffsets>
+              <option value="749" />
+            </startOffsets>
+            <endOffsets>
+              <option value="804" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="205" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
