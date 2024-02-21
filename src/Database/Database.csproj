@@ -4,7 +4,7 @@
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Database</RootNamespace>
     <PackageId>GilGoblin.Database</PackageId>
-    <Version>0.7.0</Version>
+    <Version>0.7.1</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>

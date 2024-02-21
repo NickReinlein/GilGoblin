@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.DataUpdater;
 
+// ReSharper disable twice UnusedTypeParameter
 public interface IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable

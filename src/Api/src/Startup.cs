@@ -100,6 +100,7 @@ public class Startup
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
         services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
+        services.AddSingleton<IWorldRepository, WorldRepository>();
     }
 
     private static void AddBasicBuilderServices(IServiceCollection services)

@@ -8,7 +8,6 @@ using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GilGoblin.Api.Repository;
@@ -27,6 +26,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
     private readonly IRecipeCostRepository _recipeCostRepository;
     private readonly IRecipeProfitRepository _recipeProfitRepository;
     private readonly IItemRepository _itemRepository;
+    private readonly IWorldRepository _worldRepository;
     private readonly ICraftCache _cache;
     private readonly ILogger<CraftRepository> _logger;
 
@@ -36,6 +36,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         IRecipeCostRepository recipeCostRepository,
         IRecipeProfitRepository recipeProfitRepository,
         IItemRepository itemRepository,
+        IWorldRepository worldRepository,
         ICraftCache cache,
         ILogger<CraftRepository> logger)
     {
@@ -44,6 +45,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _recipeCostRepository = recipeCostRepository;
         _recipeProfitRepository = recipeProfitRepository;
         _itemRepository = itemRepository;
+        _worldRepository = worldRepository;
         _logger = logger;
         _cache = cache;
     }
@@ -130,10 +132,10 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         }
     }
 
-    private static bool ValidateWorldInput(int worldId)
+    private bool ValidateWorldInput(int worldId)
     {
-        // Eventually keep a table or list of acceptable worlds
-        return worldId == 34;
+        var allWorlds = _worldRepository.GetAllWorlds();
+        return allWorlds.TryGetValue(worldId, out _);
     }
 
     private async Task<CraftSummaryPoco> CreateSummaryAsync(

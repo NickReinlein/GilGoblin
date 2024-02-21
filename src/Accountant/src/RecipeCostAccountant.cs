@@ -62,13 +62,12 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
         }
         catch (Exception ex)
         {
-            Logger.LogError($"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}");
+            Logger.LogError(
+                $"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}");
         }
     }
 
     public static TimeSpan GetDataFreshnessInHours() => TimeSpan.FromHours(48);
-
-    public override List<int> GetWorldIds() => new() { 34 };
 
     public override List<int> GetIdsToUpdate(int worldId)
     {

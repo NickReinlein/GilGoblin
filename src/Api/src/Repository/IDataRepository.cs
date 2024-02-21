@@ -3,8 +3,7 @@ using GilGoblin.Api.Cache;
 
 namespace GilGoblin.Api.Repository;
 
-public interface IDataRepository<T> : IRepositoryCache
-    where T : class
+public interface IDataRepository<out T> : IRepositoryCache
 {
     T? Get(int recipeId);
     IEnumerable<T> GetMultiple(IEnumerable<int> recipeIds);

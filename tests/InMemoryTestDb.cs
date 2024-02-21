@@ -171,6 +171,5 @@ public class InMemoryTestDb
             context.Item.Add(new ItemPoco { Id = id, Name = $"Item {id}" });
         }
         context.SaveChanges();
-
     }
 }
