@@ -11,9 +11,9 @@
 4||10|c|G
 4||10|C|G
 4||10|T|G</Grants>
-      <IntrospectionStateNumber>58946</IntrospectionStateNumber>
-      <ServerVersion>16.0</ServerVersion>
-      <StartupTime>1704472395</StartupTime>
+      <IntrospectionStateNumber>733</IntrospectionStateNumber>
+      <ServerVersion>16.2</ServerVersion>
+      <StartupTime>1708642863</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -674,7 +674,6 @@ false PET
 false PETST
 false PETT
 false PGT
-false PHOT
 false PHT
 true PKST
 false PKT
@@ -807,10 +806,10 @@ false posixrules
 2200||6171|C|G
 2200||-9223372036854775808|U|G
 2200||6171|U|G
-13209||10|C|G
-13209||-9223372036854775808|U|G
-13209||10|U|G</Grants>
-      <IntrospectionStateNumber>58946</IntrospectionStateNumber>
+13255||10|C|G
+13255||-9223372036854775808|U|G
+13255||10|U|G</Grants>
+      <IntrospectionStateNumber>733</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>gilgoblin</OwnerName>
     </database>
@@ -819,52 +818,7 @@ false posixrules
       <ObjectId>5</ObjectId>
       <OwnerName>gilgoblin</OwnerName>
     </database>
-    <role id="4" parent="1" name="pg_database_owner">
-      <ObjectId>6171</ObjectId>
-    </role>
-    <role id="5" parent="1" name="pg_read_all_data">
-      <ObjectId>6181</ObjectId>
-    </role>
-    <role id="6" parent="1" name="pg_write_all_data">
-      <ObjectId>6182</ObjectId>
-    </role>
-    <role id="7" parent="1" name="pg_monitor">
-      <ObjectId>3373</ObjectId>
-      <RoleGrants>3374
-3375
-3377</RoleGrants>
-    </role>
-    <role id="8" parent="1" name="pg_read_all_settings">
-      <ObjectId>3374</ObjectId>
-    </role>
-    <role id="9" parent="1" name="pg_read_all_stats">
-      <ObjectId>3375</ObjectId>
-    </role>
-    <role id="10" parent="1" name="pg_stat_scan_tables">
-      <ObjectId>3377</ObjectId>
-    </role>
-    <role id="11" parent="1" name="pg_read_server_files">
-      <ObjectId>4569</ObjectId>
-    </role>
-    <role id="12" parent="1" name="pg_write_server_files">
-      <ObjectId>4570</ObjectId>
-    </role>
-    <role id="13" parent="1" name="pg_execute_server_program">
-      <ObjectId>4571</ObjectId>
-    </role>
-    <role id="14" parent="1" name="pg_signal_backend">
-      <ObjectId>4200</ObjectId>
-    </role>
-    <role id="15" parent="1" name="pg_checkpoint">
-      <ObjectId>4544</ObjectId>
-    </role>
-    <role id="16" parent="1" name="pg_use_reserved_connections">
-      <ObjectId>4550</ObjectId>
-    </role>
-    <role id="17" parent="1" name="pg_create_subscription">
-      <ObjectId>6304</ObjectId>
-    </role>
-    <role id="18" parent="1" name="gilgoblin">
+    <role id="4" parent="1" name="gilgoblin">
       <BypassRls>1</BypassRls>
       <CanLogin>1</CanLogin>
       <CreateDb>1</CreateDb>
@@ -872,6 +826,51 @@ false posixrules
       <ObjectId>10</ObjectId>
       <Replication>1</Replication>
       <SuperRole>1</SuperRole>
+    </role>
+    <role id="5" parent="1" name="pg_checkpoint">
+      <ObjectId>4544</ObjectId>
+    </role>
+    <role id="6" parent="1" name="pg_create_subscription">
+      <ObjectId>6304</ObjectId>
+    </role>
+    <role id="7" parent="1" name="pg_database_owner">
+      <ObjectId>6171</ObjectId>
+    </role>
+    <role id="8" parent="1" name="pg_execute_server_program">
+      <ObjectId>4571</ObjectId>
+    </role>
+    <role id="9" parent="1" name="pg_monitor">
+      <ObjectId>3373</ObjectId>
+      <RoleGrants>3374
+3375
+3377</RoleGrants>
+    </role>
+    <role id="10" parent="1" name="pg_read_all_data">
+      <ObjectId>6181</ObjectId>
+    </role>
+    <role id="11" parent="1" name="pg_read_all_settings">
+      <ObjectId>3374</ObjectId>
+    </role>
+    <role id="12" parent="1" name="pg_read_all_stats">
+      <ObjectId>3375</ObjectId>
+    </role>
+    <role id="13" parent="1" name="pg_read_server_files">
+      <ObjectId>4569</ObjectId>
+    </role>
+    <role id="14" parent="1" name="pg_signal_backend">
+      <ObjectId>4200</ObjectId>
+    </role>
+    <role id="15" parent="1" name="pg_stat_scan_tables">
+      <ObjectId>3377</ObjectId>
+    </role>
+    <role id="16" parent="1" name="pg_use_reserved_connections">
+      <ObjectId>4550</ObjectId>
+    </role>
+    <role id="17" parent="1" name="pg_write_all_data">
+      <ObjectId>6182</ObjectId>
+    </role>
+    <role id="18" parent="1" name="pg_write_server_files">
+      <ObjectId>4570</ObjectId>
     </role>
     <tablespace id="19" parent="1" name="pg_default">
       <ObjectId>1663</ObjectId>
@@ -4176,15 +4175,15 @@ false posixrules
     </cast>
     <extension id="257" parent="2" name="plpgsql">
       <Comment>PL/pgSQL procedural language</Comment>
-      <ObjectId>13561</ObjectId>
+      <ObjectId>13607</ObjectId>
       <StateNumber>684</StateNumber>
       <Version>1.0</Version>
       <ExtSchemaId>11</ExtSchemaId>
       <ExtSchemaName>pg_catalog</ExtSchemaName>
-      <MemberIds>13562
-13563
-13564
-13565</MemberIds>
+      <MemberIds>13608
+13609
+13610
+13611</MemberIds>
     </extension>
     <language id="258" parent="2" name="c">
       <Comment>dynamically-loaded C functions</Comment>
@@ -4206,7 +4205,7 @@ false posixrules
       <HandlerSchema>pg_catalog</HandlerSchema>
       <InlineHandlerName>plpgsql_inline_handler</InlineHandlerName>
       <InlineHandlerSchema>pg_catalog</InlineHandlerSchema>
-      <ObjectId>13565</ObjectId>
+      <ObjectId>13611</ObjectId>
       <StateNumber>684</StateNumber>
       <Trusted>1</Trusted>
       <ValidatorName>plpgsql_validator</ValidatorName>
@@ -4221,7 +4220,7 @@ false posixrules
       <ValidatorSchema>pg_catalog</ValidatorSchema>
     </language>
     <schema id="262" parent="2" name="information_schema">
-      <ObjectId>13209</ObjectId>
+      <ObjectId>13255</ObjectId>
       <StateNumber>530</StateNumber>
       <OwnerName>gilgoblin</OwnerName>
     </schema>
@@ -4234,552 +4233,11 @@ false posixrules
     <schema id="264" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>58946</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2024-01-06.00:15:42</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>733</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2024-02-22.23:01:14</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
     </schema>
-    <table id="265" parent="264" name="item">
-      <ObjectId>16385</ObjectId>
-      <StateNumber>732</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
-      <OwnerName>gilgoblin</OwnerName>
-    </table>
-    <table id="266" parent="264" name="price">
-      <ObjectId>16392</ObjectId>
-      <StateNumber>733</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
-      <OwnerName>gilgoblin</OwnerName>
-    </table>
-    <table id="267" parent="264" name="recipe">
-      <ObjectId>16399</ObjectId>
-      <StateNumber>734</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
-      <OwnerName>gilgoblin</OwnerName>
-    </table>
-    <table id="268" parent="264" name="recipecost">
-      <ObjectId>16406</ObjectId>
-      <StateNumber>39546</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
-      <OwnerName>gilgoblin</OwnerName>
-    </table>
-    <table id="269" parent="264" name="recipeprofit">
-      <ObjectId>16414</ObjectId>
-      <StateNumber>39547</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
-      <OwnerName>gilgoblin</OwnerName>
-    </table>
-    <column id="270" parent="265" name="id">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="271" parent="265" name="name">
-      <DasType>text|0s</DasType>
-      <Position>2</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>25</TypeId>
-    </column>
-    <column id="272" parent="265" name="description">
-      <DasType>text|0s</DasType>
-      <Position>3</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>25</TypeId>
-    </column>
-    <column id="273" parent="265" name="iconid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="274" parent="265" name="level">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>5</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="275" parent="265" name="pricemid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>6</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="276" parent="265" name="pricelow">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>7</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="277" parent="265" name="stacksize">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>8</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="278" parent="265" name="canhq">
-      <DasType>boolean|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>9</Position>
-      <StateNumber>732</StateNumber>
-      <TypeId>16</TypeId>
-    </column>
-    <index id="279" parent="265" name="item_pkey">
-      <ColNames>id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16390</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>732</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <key id="280" parent="265" name="item_pkey">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16391</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>732</StateNumber>
-      <UnderlyingIndexId>16390</UnderlyingIndexId>
-    </key>
-    <check id="281" parent="266" name="price_itemid_check">
-      <ColNames>itemid</ColNames>
-      <ObjectId>16395</ObjectId>
-      <Predicate>itemid &gt; 0</Predicate>
-      <StateNumber>733</StateNumber>
-    </check>
-    <check id="282" parent="266" name="price_worldid_check">
-      <ColNames>worldid</ColNames>
-      <ObjectId>16396</ObjectId>
-      <Predicate>worldid &gt; 0</Predicate>
-      <StateNumber>733</StateNumber>
-    </check>
-    <column id="283" parent="266" name="itemid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="284" parent="266" name="worldid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="285" parent="266" name="lastuploadtime">
-      <DasType>bigint|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>20</TypeId>
-    </column>
-    <column id="286" parent="266" name="averagelistingprice">
-      <DasType>real|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>700</TypeId>
-    </column>
-    <column id="287" parent="266" name="averagelistingpricenq">
-      <DasType>real|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>5</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>700</TypeId>
-    </column>
-    <column id="288" parent="266" name="averagelistingpricehq">
-      <DasType>real|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>6</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>700</TypeId>
-    </column>
-    <column id="289" parent="266" name="averagesold">
-      <DasType>real|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>7</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>700</TypeId>
-    </column>
-    <column id="290" parent="266" name="averagesoldnq">
-      <DasType>real|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>8</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>700</TypeId>
-    </column>
-    <column id="291" parent="266" name="averagesoldhq">
-      <DasType>real|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>9</Position>
-      <StateNumber>733</StateNumber>
-      <TypeId>700</TypeId>
-    </column>
-    <index id="292" parent="266" name="pk_price">
-      <ColNames>itemid
-worldid</ColNames>
-      <ObjectId>16397</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>733</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <key id="293" parent="266" name="pk_price">
-      <ObjectId>16398</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>733</StateNumber>
-      <UnderlyingIndexId>16397</UnderlyingIndexId>
-    </key>
-    <check id="294" parent="267" name="recipe_resultquantity_check">
-      <ColNames>resultquantity</ColNames>
-      <ObjectId>16403</ObjectId>
-      <Predicate>resultquantity &gt; 0</Predicate>
-      <StateNumber>734</StateNumber>
-    </check>
-    <check id="295" parent="267" name="recipe_targetitemid_check">
-      <ColNames>targetitemid</ColNames>
-      <ObjectId>16402</ObjectId>
-      <Predicate>targetitemid &gt; 0</Predicate>
-      <StateNumber>734</StateNumber>
-    </check>
-    <column id="296" parent="267" name="id">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="297" parent="267" name="crafttype">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="298" parent="267" name="recipeleveltable">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="299" parent="267" name="targetitemid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="300" parent="267" name="resultquantity">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>5</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="301" parent="267" name="canhq">
-      <DasType>boolean|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>6</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>16</TypeId>
-    </column>
-    <column id="302" parent="267" name="canquicksynth">
-      <DasType>boolean|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>7</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>16</TypeId>
-    </column>
-    <column id="303" parent="267" name="itemingredient0targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>8</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="304" parent="267" name="amountingredient0">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>9</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="305" parent="267" name="itemingredient1targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>10</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="306" parent="267" name="amountingredient1">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>11</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="307" parent="267" name="itemingredient2targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>12</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="308" parent="267" name="amountingredient2">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>13</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="309" parent="267" name="itemingredient3targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>14</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="310" parent="267" name="amountingredient3">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>15</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="311" parent="267" name="itemingredient4targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>16</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="312" parent="267" name="amountingredient4">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>17</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="313" parent="267" name="itemingredient5targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>18</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="314" parent="267" name="amountingredient5">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>19</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="315" parent="267" name="itemingredient6targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>20</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="316" parent="267" name="amountingredient6">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>21</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="317" parent="267" name="itemingredient7targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>22</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="318" parent="267" name="amountingredient7">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>23</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="319" parent="267" name="itemingredient8targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>24</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="320" parent="267" name="amountingredient8">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>25</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="321" parent="267" name="itemingredient9targetid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>26</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="322" parent="267" name="amountingredient9">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>27</Position>
-      <StateNumber>734</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <index id="323" parent="267" name="recipe_pkey">
-      <ColNames>id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16404</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>734</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <key id="324" parent="267" name="recipe_pkey">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16405</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>734</StateNumber>
-      <UnderlyingIndexId>16404</UnderlyingIndexId>
-    </key>
-    <check id="325" parent="268" name="recipecost_cost_check">
-      <ColNames>cost</ColNames>
-      <ObjectId>16411</ObjectId>
-      <Predicate>cost &gt; 0</Predicate>
-      <StateNumber>735</StateNumber>
-    </check>
-    <check id="326" parent="268" name="recipecost_recipeid_check">
-      <ColNames>recipeid</ColNames>
-      <ObjectId>16409</ObjectId>
-      <Predicate>recipeid &gt; 0</Predicate>
-      <StateNumber>735</StateNumber>
-    </check>
-    <check id="327" parent="268" name="recipecost_worldid_check">
-      <ColNames>worldid</ColNames>
-      <ObjectId>16410</ObjectId>
-      <Predicate>worldid &gt; 0</Predicate>
-      <StateNumber>735</StateNumber>
-    </check>
-    <column id="328" parent="268" name="recipeid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>735</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="329" parent="268" name="worldid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StateNumber>735</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="330" parent="268" name="cost">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <StateNumber>735</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="331" parent="268" name="updated">
-      <DasType>timestamp with time zone|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>735</StateNumber>
-      <TypeId>1184</TypeId>
-    </column>
-    <index id="332" parent="268" name="recipecost_pkey">
-      <ColNames>recipeid
-worldid</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16412</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>39546</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <key id="333" parent="268" name="recipecost_pkey">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16413</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>735</StateNumber>
-      <UnderlyingIndexId>16412</UnderlyingIndexId>
-    </key>
-    <check id="334" parent="269" name="recipeprofit_recipeid_check">
-      <ColNames>recipeid</ColNames>
-      <ObjectId>16417</ObjectId>
-      <Predicate>recipeid &gt; 0</Predicate>
-      <StateNumber>736</StateNumber>
-    </check>
-    <check id="335" parent="269" name="recipeprofit_worldid_check">
-      <ColNames>worldid</ColNames>
-      <ObjectId>16418</ObjectId>
-      <Predicate>worldid &gt; 0</Predicate>
-      <StateNumber>736</StateNumber>
-    </check>
-    <column id="336" parent="269" name="recipeid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>736</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="337" parent="269" name="worldid">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StateNumber>736</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="338" parent="269" name="profitvssold">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <StateNumber>736</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="339" parent="269" name="profitvslistings">
-      <DasType>integer|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>736</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="340" parent="269" name="updated">
-      <DasType>timestamp with time zone|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>5</Position>
-      <StateNumber>736</StateNumber>
-      <TypeId>1184</TypeId>
-    </column>
-    <index id="341" parent="269" name="recipeprofit_pkey">
-      <ColNames>recipeid
-worldid</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16419</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>39547</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <key id="342" parent="269" name="recipeprofit_pkey">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>16420</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>736</StateNumber>
-      <UnderlyingIndexId>16419</UnderlyingIndexId>
-    </key>
   </database-model>
 </dataSource>

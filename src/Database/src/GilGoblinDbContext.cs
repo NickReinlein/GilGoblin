@@ -14,6 +14,7 @@ public class GilGoblinDbContext : DbContext
     public DbSet<RecipePoco> Recipe { get; set; }
     public DbSet<RecipeCostPoco> RecipeCost { get; set; }
     public DbSet<RecipeProfitPoco> RecipeProfit { get; set; }
+    public DbSet<WorldPoco> World { get; set; }
 
     public GilGoblinDbContext(DbContextOptions options, IConfiguration configuration)
         : base(options)
@@ -34,6 +35,11 @@ public class GilGoblinDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<WorldPoco>().ToTable("world");
+        modelBuilder.Entity<WorldPoco>().HasKey(t => t.Id);
+        modelBuilder.Entity<WorldPoco>().Property(t => t.Id).HasColumnName("id");
+        modelBuilder.Entity<WorldPoco>().Property(t => t.Name).HasColumnName("name");
+
         modelBuilder.Entity<ItemPoco>().ToTable("item");
         modelBuilder.Entity<ItemPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<ItemPoco>().Property(t => t.Id).HasColumnName("id");
