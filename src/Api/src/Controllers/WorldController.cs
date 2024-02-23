@@ -24,7 +24,7 @@ public class WorldController : ControllerBase, IWorldController
     public KeyValuePair<int, string> GetWorld(int id)
     {
         _logger.LogInformation($"Fetching world id: {id}");
-        return GetAllWorlds().FirstOrDefault(w => w.Key == id);
+        return _worldRepo.GetWorld(id);
     }
 
     [HttpGet]

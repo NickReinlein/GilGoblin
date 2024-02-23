@@ -1,9 +1,3 @@
-create table if not exists world
-(
-    id   INTEGER PRIMARY KEY,
-    name TEXT
-);
-
 create table if not exists item
 (
     id          INTEGER PRIMARY KEY,
@@ -79,4 +73,10 @@ create table if not exists recipeprofit
     profitvslistings INTEGER                  NOT NULL,
     updated          TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (recipeid, worldid)
+);
+
+create table if not exists world
+(
+    id   INTEGER PRIMARY KEY,
+    name TEXT
 );
