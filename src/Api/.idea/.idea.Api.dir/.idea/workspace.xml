@@ -9,9 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8fc995d1-6d0b-4c1e-963a-26882cb579d0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/Api/Repository/WorldRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Repository/WorldRepositoryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
@@ -132,7 +131,7 @@
       <workItem from="1704408419047" duration="1348000" />
       <workItem from="1707226991439" duration="772000" />
       <workItem from="1708803888288" duration="3249000" />
-      <workItem from="1708817135964" duration="629000" />
+      <workItem from="1708817135964" duration="751000" />
     </task>
     <task id="LOCAL-00001" summary="fixed appsettings error">
       <option name="closed" value="true" />

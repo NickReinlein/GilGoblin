@@ -13,8 +13,6 @@ public class WorldRepositoryTests : InMemoryTestDb
 {
     private IWorldCache _cache;
 
-    private static readonly List<int> _validWorldIds = new() { 34, 99 };
-
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
     {
@@ -32,7 +30,7 @@ public class WorldRepositoryTests : InMemoryTestDb
         });
     }
 
-    [TestCaseSource(nameof(_validWorldIds))]
+    [TestCaseSource(nameof(ValidWorldIds))]
     public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
@@ -66,12 +64,12 @@ public class WorldRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var worldRepo = new WorldRepository(context, _cache);
 
-        var result = worldRepo.GetMultiple(_validWorldIds).ToList();
+        var result = worldRepo.GetMultiple(ValidWorldIds).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result, Has.Count.EqualTo(_validWorldIds.Count));
-            Assert.That(result.All(w => _validWorldIds.Contains(w.Id)));
+            Assert.That(result, Has.Count.EqualTo(ValidWorldIds.Count));
+            Assert.That(result.All(w => ValidWorldIds.Contains(w.Id)));
         });
     }
 
@@ -80,14 +78,14 @@ public class WorldRepositoryTests : InMemoryTestDb
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var worldRepo = new WorldRepository(context, _cache);
-        var mixedIds = new[] { 99 }.Concat(_validWorldIds).ToList();
+        var mixedIds = new[] { 99 }.Concat(ValidWorldIds).ToList();
 
         var result = worldRepo.GetMultiple(mixedIds).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result, Has.Count.EqualTo(_validWorldIds.Count));
-            Assert.That(result.All(w => _validWorldIds.Contains(w.Id)));
+            Assert.That(result, Has.Count.EqualTo(ValidWorldIds.Count));
+            Assert.That(result.All(w => ValidWorldIds.Contains(w.Id)));
         });
     }
 
@@ -113,7 +111,7 @@ public class WorldRepositoryTests : InMemoryTestDb
         Assert.That(!result.Any());
     }
 
-    [TestCaseSource(nameof(_validWorldIds))]
+    [TestCaseSource(nameof(ValidWorldIds))]
     public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry(int worldId)
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
@@ -125,7 +123,7 @@ public class WorldRepositoryTests : InMemoryTestDb
         _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.Id == worldId));
     }
 
-    [TestCaseSource(nameof(_validWorldIds))]
+    [TestCaseSource(nameof(ValidWorldIds))]
     public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntryTheSecondTime(int worldId)
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);

@@ -13,6 +13,8 @@ public class InMemoryTestDb
 {
     protected DbContextOptions<TestGilGoblinDbContext> _options;
     protected IConfiguration _configuration;
+    
+    protected static readonly List<int> ValidWorldIds = new() { 34, 99 };
 
     [OneTimeSetUp]
     public virtual void OneTimeSetUp()

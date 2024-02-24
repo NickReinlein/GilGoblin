@@ -11,10 +11,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="fixed world repo tests">
+      <change beforePath="$PROJECT_DIR$/src/Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
@@ -389,15 +388,7 @@
       <workItem from="1708395497062" duration="9716000" />
       <workItem from="1708731409116" duration="23000" />
       <workItem from="1708787334742" duration="2642000" />
-      <workItem from="1708817169752" duration="595000" />
-    </task>
-    <task id="LOCAL-00054" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698785190161</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1698785190161</updated>
+      <workItem from="1708817169752" duration="1386000" />
     </task>
     <task id="LOCAL-00055" summary="WIP decouple services, create Nuget packages">
       <option name="closed" value="true" />
@@ -783,7 +774,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708807348492</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="fixed world repo tests">
+      <option name="closed" value="true" />
+      <created>1708818303264</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1708818303264</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -837,7 +836,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fix some tests" />
     <MESSAGE value="added tests for profitAccountant" />
     <MESSAGE value="more tests and nuget packages" />
     <MESSAGE value="wip new craft repo" />
@@ -862,7 +860,8 @@
     <MESSAGE value="package version updates" />
     <MESSAGE value="removed double reference" />
     <MESSAGE value="progress on controllers, repos, fixing tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="progress on controllers, repos, fixing tests" />
+    <MESSAGE value="fixed world repo tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed world repo tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -885,10 +884,10 @@
           <line>217</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="113" containingFunctionPresentation="Method 'GivenGetBestCraftsAsync_WhenValidCraftsAreProvided_ThenWeSortByProfit'">
             <startOffsets>
-              <option value="8275" />
+              <option value="8256" />
             </startOffsets>
             <endOffsets>
-              <option value="8317" />
+              <option value="8298" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="20" />
@@ -1326,10 +1325,10 @@
           <line>79</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="76" containingFunctionPresentation="Lambda expression inside Method 'GivenGetBestAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="2753" />
+              <option value="2734" />
             </startOffsets>
             <endOffsets>
-              <option value="2781" />
+              <option value="2762" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="191" />
@@ -1339,10 +1338,10 @@
           <line>158</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="145" containingFunctionPresentation="Lambda expression inside Method 'GivenGetAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="6307" />
+              <option value="6288" />
             </startOffsets>
             <endOffsets>
-              <option value="6308" />
+              <option value="6289" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="193" />
@@ -1388,42 +1387,16 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs</url>
-          <line>42</line>
+          <line>40</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" initialLine="40" containingFunctionPresentation="Method 'GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry'">
             <startOffsets>
-              <option value="1391" />
+              <option value="1316" />
             </startOffsets>
             <endOffsets>
-              <option value="1560" />
+              <option value="1485" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="197" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/InMemoryTestDb.cs</url>
-          <line>178</line>
-          <properties documentPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" initialLine="176" containingFunctionPresentation="Method 'CreateAllEntries'">
-            <startOffsets>
-              <option value="6290" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6312" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="199" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/InMemoryTestDb.cs</url>
-          <line>53</line>
-          <properties documentPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" initialLine="52" containingFunctionPresentation="Method 'CreateAllEntries'">
-            <startOffsets>
-              <option value="1603" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1754" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="200" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs</url>
