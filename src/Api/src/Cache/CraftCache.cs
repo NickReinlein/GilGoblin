@@ -1,4 +1,5 @@
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 
 namespace GilGoblin.Api.Cache;
 

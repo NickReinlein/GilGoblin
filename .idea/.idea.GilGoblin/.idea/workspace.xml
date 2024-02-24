@@ -12,7 +12,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Api/src/Cache/WorldCache.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/IWorldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/IWorldController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftIngredientPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Pocos/CraftIngredientPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftPoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftingCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Crafting/ICraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Crafting/ICraftingCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/IDataRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/IDataRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/IWorldRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/IWorldRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/ItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/ItemRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/RecipeRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Accountant/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Controllers/CraftControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Controllers/WorldControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Controllers/WorldControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +84,9 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0784e1a433b84d59a97e7b19c5101ccb8a00/a2/0bf78c49/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5108fc8cfce44d798c1eed3309cf17c56200/00/2ee7f901/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/76e511356dd246b8b3c6a9c19bd736ce11c00/75/94e6aae9/WorldRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d1ec82f59e546629ea3afcac9c96df35de00/d4/30c2595e/AbstractInvocation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d1ec82f59e546629ea3afcac9c96df35de00/e3/ea188421/InterfaceMethodWithoutTargetInvocation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/909bfcc4ea2a4fa68dc724e5d570473d163e00/48/217a3f19/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
@@ -75,7 +106,6 @@
     <setting file="file://$PROJECT_DIR$/src/Accountant/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/DataCache.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Cache/IDataCache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IDataCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IRepositoryCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/ItemInfoCache.cs" root0="FORCE_HIGHLIGHTING" />
@@ -84,7 +114,7 @@
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCostCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/PriceRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
@@ -93,7 +123,6 @@
     <setting file="file://$PROJECT_DIR$/src/Batcher/out/Batcher.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/publish/DataUpdater.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Database/out/Database.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -102,7 +131,6 @@
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Api/Controllers/WorldControllerTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -123,7 +151,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.Api: http.executor": "Debug",
+    ".NET Launch Settings Profile.Api: http.executor": "Run",
     "13434f07-e965-40a9-87d0-ebd6fc01f889.executor": "Debug",
     "18a6d1f5-6001-4e74-9148-0254277a608b.executor": "Debug",
     "83664d58-238e-426f-a3fc-e525edd7d14d.executor": "Debug",
@@ -142,7 +170,7 @@
     "WebServerToolWindowFactoryState": "false",
     "b07c1f92-c456-488d-a51d-2c027d848c90.executor": "Debug",
     "d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor": "Debug",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "add__world",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -381,6 +409,8 @@
       <workItem from="1708187785743" duration="1179000" />
       <workItem from="1708395139861" duration="347000" />
       <workItem from="1708395497062" duration="9716000" />
+      <workItem from="1708731409116" duration="23000" />
+      <workItem from="1708787334742" duration="2422000" />
     </task>
     <task id="LOCAL-00053" summary="WIP decouple services, create Nuget packages">
       <option name="closed" value="true" />
@@ -873,39 +903,39 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
-          <line>215</line>
+          <line>216</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="113" containingFunctionPresentation="Method 'GivenGetBestCraftsAsync_WhenValidCraftsAreProvided_ThenWeSortByProfit'">
             <startOffsets>
-              <option value="8169" />
+              <option value="8200" />
             </startOffsets>
             <endOffsets>
-              <option value="8211" />
+              <option value="8242" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs</url>
           <line>45</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" initialLine="45" containingFunctionPresentation="Method 'CompareTo'">
             <startOffsets>
-              <option value="1482" />
+              <option value="1479" />
             </startOffsets>
             <endOffsets>
-              <option value="1498" />
+              <option value="1495" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs</url>
+          <url>file://$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs</url>
           <line>51</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" initialLine="51" containingFunctionPresentation="Method 'CompareTo'">
             <startOffsets>
-              <option value="1612" />
+              <option value="1609" />
             </startOffsets>
             <endOffsets>
-              <option value="1681" />
+              <option value="1678" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="25" />
@@ -1263,13 +1293,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Component/CraftComponentTests.cs</url>
-          <line>81</line>
+          <line>82</line>
           <properties documentPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" initialLine="82" containingFunctionPresentation="Method 'GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent'">
             <startOffsets>
-              <option value="3406" />
+              <option value="3433" />
             </startOffsets>
             <endOffsets>
-              <option value="3464" />
+              <option value="3491" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="165" />
@@ -1289,91 +1319,91 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>150</line>
+          <line>147</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="114" containingFunctionPresentation="Method 'CreateSummaryAsync'">
             <startOffsets>
-              <option value="5383" />
+              <option value="5333" />
             </startOffsets>
             <endOffsets>
-              <option value="5472" />
+              <option value="5422" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="186" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>154</line>
+          <line>151</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="118" containingFunctionPresentation="Method 'CreateSummaryAsync'">
             <startOffsets>
-              <option value="5573" />
+              <option value="5523" />
             </startOffsets>
             <endOffsets>
-              <option value="5669" />
+              <option value="5619" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="187" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>158</line>
+          <line>155</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="122" containingFunctionPresentation="Method 'CreateSummaryAsync'">
             <startOffsets>
-              <option value="5782" />
+              <option value="5732" />
             </startOffsets>
             <endOffsets>
-              <option value="5881" />
+              <option value="5831" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="188" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
-          <line>77</line>
+          <line>78</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="76" containingFunctionPresentation="Lambda expression inside Method 'GivenGetBestAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="2647" />
+              <option value="2678" />
             </startOffsets>
             <endOffsets>
-              <option value="2675" />
+              <option value="2706" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
-          <line>156</line>
+          <line>157</line>
           <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="145" containingFunctionPresentation="Lambda expression inside Method 'GivenGetAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="6201" />
+              <option value="6232" />
             </startOffsets>
             <endOffsets>
-              <option value="6202" />
+              <option value="6233" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="193" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>126</line>
+          <line>125</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="126" containingFunctionPresentation="Method 'SortByProfitability'">
             <startOffsets>
-              <option value="4426" />
+              <option value="4453" />
             </startOffsets>
             <endOffsets>
-              <option value="4527" />
+              <option value="4554" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="194" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
-          <line>113</line>
+          <line>112</line>
           <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="113" containingFunctionPresentation="Method 'SortByProfitability'">
             <startOffsets>
-              <option value="3990" />
+              <option value="4017" />
             </startOffsets>
             <endOffsets>
-              <option value="4299" />
+              <option value="4326" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="195" />

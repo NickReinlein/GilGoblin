@@ -25,18 +25,18 @@ public class RecipeRepository : IRecipeRepository
         _itemRecipesCache = itemRecipeCache;
     }
 
-    public RecipePoco? Get(int recipeId)
+    public RecipePoco? Get(int itemId)
     {
-        if (recipeId < 1)
+        if (itemId < 1)
             return null;
 
         try
         {
-            var cached = _recipeCache.Get(recipeId);
+            var cached = _recipeCache.Get(itemId);
             if (cached is not null)
                 return cached;
 
-            var recipe = _dbContext.Recipe.FirstOrDefault(i => i.Id == recipeId);
+            var recipe = _dbContext.Recipe.FirstOrDefault(i => i.Id == itemId);
             if (recipe is not null)
                 _recipeCache.Add(recipe.Id, recipe);
 
@@ -64,8 +64,8 @@ public class RecipeRepository : IRecipeRepository
         return recipesForItem;
     }
 
-    public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> recipeIds) =>
-        _dbContext.Recipe.Where(r => recipeIds.Any(a => a == r.Id)).AsEnumerable();
+    public IEnumerable<RecipePoco?> GetMultiple(IEnumerable<int> itemIds) =>
+        _dbContext.Recipe.Where(r => itemIds.Any(a => a == r.Id)).AsEnumerable();
 
     public IEnumerable<RecipePoco> GetAll() =>
         _dbContext.Recipe.AsEnumerable();

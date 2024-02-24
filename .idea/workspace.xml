@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bf889b4-7ebd-4af4-a4ef-8c5395e6b79a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/src/Pocos/WorldPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/src/Pocos/WorldPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +34,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "database.data.extractors.current.export.id": "SQL-Insert-Multirow.sql.groovy",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "add__world",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Database/scripts/07-world.sql",
     "settings.editor.selected.configurable": "database.query.execution"
   },

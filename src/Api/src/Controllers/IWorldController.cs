@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Api.Controllers;
 
 public interface IWorldController
 {
-    Dictionary<int, string> GetAllWorlds();
-    KeyValuePair<int, string> GetWorld(int id);
+    IEnumerable<WorldPoco> GetAllWorlds();
+    WorldPoco GetWorld(int id);
 }

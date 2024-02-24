@@ -18,23 +18,23 @@ public class ItemRepository : IItemRepository
         _cache = cache;
     }
 
-    public ItemPoco? Get(int recipeId)
+    public ItemPoco? Get(int itemId)
     {
-        var cached = _cache.Get(recipeId);
+        var cached = _cache.Get(itemId);
         if (cached is not null)
             return cached;
 
-        var item = _dbContext?.Item?.FirstOrDefault(i => i.Id == recipeId);
+        var item = _dbContext?.Item?.FirstOrDefault(i => i.Id == itemId);
         if (item is not null)
             _cache.Add(item.Id, item);
 
         return item;
     }
 
-    public IEnumerable<ItemPoco> GetMultiple(IEnumerable<int> recipeIds) =>
-        _dbContext?.Item?.Where(i => recipeIds.Any(a => a == i.Id));
+    public IEnumerable<ItemPoco> GetMultiple(IEnumerable<int> itemIds) =>
+        _dbContext?.Item?.Where(i => itemIds.Any(a => a == i.Id)).AsEnumerable();
 
-    public IEnumerable<ItemPoco> GetAll() => _dbContext?.Item;
+    public IEnumerable<ItemPoco> GetAll() => _dbContext?.Item.AsEnumerable();
 
     public Task FillCache()
     {

@@ -1,9 +1,7 @@
-using System.Collections.Generic;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Api.Repository;
 
-public interface IWorldRepository
+public interface IWorldRepository : IDataRepository<WorldPoco>
 {
-    Dictionary<int, string> GetAllWorlds();
-    KeyValuePair<int, string> GetWorld(int id);
 }

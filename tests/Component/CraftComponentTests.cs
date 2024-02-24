@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;

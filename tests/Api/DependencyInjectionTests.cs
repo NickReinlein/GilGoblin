@@ -2,6 +2,7 @@ using System;
 using GilGoblin.Api;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;

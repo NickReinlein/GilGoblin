@@ -9,10 +9,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8fc995d1-6d0b-4c1e-963a-26882cb579d0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Cache/WorldCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/dataSources/9f13842e-ccc5-4b6d-b06d-8fba475b5622.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Cache/CraftCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cache/CraftCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/CraftController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/CraftController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/IWorldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/IWorldController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/WorldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/WorldController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftIngredientPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/CraftIngredientPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftPoco.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftSummaryPoco.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pocos/CraftSummaryPoco.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/CraftingCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Crafting/ICraftingCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crafting/ICraftingCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IDataRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IDataRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IWorldRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IWorldRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ItemRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Repository/RecipeRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RecipeRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/WorldRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/WorldRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Accountant/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Accountant/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Controllers/CraftControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/Controllers/WorldControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Controllers/WorldControllerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/DependencyInjectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/DependencyInjectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/Repository/CraftRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Repository/CraftRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Api/Repository/WorldRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Repository/WorldRepositoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Component/CraftComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/InMemoryTestDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/InMemoryTestDb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +86,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "bug/fix-missing-prices-from-data-updater",
+    "git-widget-placeholder": "add__world",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/DataUpdater",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -130,6 +156,7 @@
       <workItem from="1704393043623" duration="22000" />
       <workItem from="1704408419047" duration="1348000" />
       <workItem from="1707226991439" duration="772000" />
+      <workItem from="1708803888288" duration="3231000" />
     </task>
     <task id="LOCAL-00001" summary="fixed appsettings error">
       <option name="closed" value="true" />
@@ -179,78 +206,78 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
-          <line>63</line>
+          <line>64</line>
           <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="60" containingFunctionPresentation="Method 'GetBestAsync'">
             <startOffsets>
-              <option value="2277" />
+              <option value="2304" />
             </startOffsets>
             <endOffsets>
-              <option value="2305" />
+              <option value="2332" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
-          <line>67</line>
+          <line>68</line>
           <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="64" containingFunctionPresentation="Method 'GetBestAsync'">
             <startOffsets>
-              <option value="2382" />
+              <option value="2409" />
             </startOffsets>
             <endOffsets>
-              <option value="2449" />
+              <option value="2476" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
-          <line>55</line>
+          <line>56</line>
           <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="52" containingFunctionPresentation="Method 'GetBestAsync'">
             <startOffsets>
-              <option value="1985" />
+              <option value="2012" />
             </startOffsets>
             <endOffsets>
-              <option value="2027" />
+              <option value="2054" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
-          <line>85</line>
+          <line>86</line>
           <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="82" containingFunctionPresentation="Method 'GetBestAsync'">
             <startOffsets>
-              <option value="3033" />
+              <option value="3060" />
             </startOffsets>
             <endOffsets>
-              <option value="3105" />
+              <option value="3132" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
-          <line>95</line>
+          <line>96</line>
           <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="89" containingFunctionPresentation="Method 'GetAsync'">
             <startOffsets>
-              <option value="3332" />
+              <option value="3359" />
             </startOffsets>
             <endOffsets>
-              <option value="3377" />
+              <option value="3404" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Repository/CraftRepository.cs</url>
-          <line>103</line>
+          <line>104</line>
           <properties documentPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" initialLine="97" containingFunctionPresentation="Method 'GetAsync'">
             <startOffsets>
-              <option value="3753" />
+              <option value="3780" />
             </startOffsets>
             <endOffsets>
-              <option value="3783" />
+              <option value="3810" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="27" />

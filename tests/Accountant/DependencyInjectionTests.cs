@@ -3,6 +3,7 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;

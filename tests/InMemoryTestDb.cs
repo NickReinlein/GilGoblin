@@ -50,6 +50,11 @@ public class InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var timestamp = DateTimeOffset.UtcNow;
+        // context.World.AddRange(new List<WorldPoco>
+        // {
+        //     new() { Id = 34, Name = "Brynnhildr" },
+        //     new() { Id = 99, Name = "UberGeschenk" }
+        // });
         context.RecipeCost.AddRange(new List<RecipeCostPoco>
         {
             new() { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp },
@@ -170,6 +175,7 @@ public class InMemoryTestDb
         {
             context.Item.Add(new ItemPoco { Id = id, Name = $"Item {id}" });
         }
+
         context.SaveChanges();
     }
 }
