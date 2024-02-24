@@ -51,9 +51,9 @@ public class CraftRepositoryTests : PriceDependentTests
             _logger
         );
 
-        var testWorld = new WorldPoco { Id = 654, Name = "Eurasia" };
-        _worldRepository.GetAll().Returns(new List<WorldPoco> { testWorld });
-        _worldRepository.Get(testWorld.Id).Returns(testWorld);
+        var worldPoco = new WorldPoco { Id = WorldId };
+        _worldRepository.GetAll().Returns(new List<WorldPoco> { worldPoco });
+        _worldRepository.Get(WorldId).Returns(worldPoco);
     }
 
     [Test]

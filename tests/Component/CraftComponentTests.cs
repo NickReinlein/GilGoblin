@@ -50,7 +50,7 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned()
     {
-        const string fullEndpoint = "http://localhost:55448/craft/34/100";
+        const string fullEndpoint = "http://localhost:55448/craft/34/486";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

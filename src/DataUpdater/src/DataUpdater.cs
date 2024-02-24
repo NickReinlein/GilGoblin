@@ -20,7 +20,7 @@ public interface IDataUpdater<T, U>
     Task FetchAsync(CancellationToken ct, int? worldId = null);
 }
 
-public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
+public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
