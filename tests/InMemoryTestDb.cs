@@ -42,6 +42,7 @@ public class InMemoryTestDb
         context.Recipe.RemoveRange(context.Recipe);
         context.RecipeCost.RemoveRange(context.RecipeCost);
         context.RecipeProfit.RemoveRange(context.RecipeProfit);
+        context.World.RemoveRange(context.World);
         context.SaveChanges();
     }
 
@@ -50,18 +51,17 @@ public class InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var timestamp = DateTimeOffset.UtcNow;
-        // context.World.AddRange(new List<WorldPoco>
-        // {
-        //     new() { Id = 34, Name = "Brynnhildr" },
-        //     new() { Id = 99, Name = "UberGeschenk" }
-        // });
-        context.RecipeCost.AddRange(new List<RecipeCostPoco>
-        {
-            new() { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp },
-            new() { WorldId = 34, RecipeId = 12, Cost = 75, Updated = timestamp },
-            new() { WorldId = 34, RecipeId = 8854, Cost = 351, Updated = timestamp },
-            new() { WorldId = 34, RecipeId = 9841, Cost = 3001, Updated = timestamp }
-        });
+        context.World.AddRange(
+            new List<WorldPoco> { new() { Id = 34, Name = "Brynnhildr" }, new() { Id = 99, Name = "UberGeschenk" } }
+        );
+        context.RecipeCost.AddRange(
+            new List<RecipeCostPoco>
+            {
+                new() { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp },
+                new() { WorldId = 34, RecipeId = 12, Cost = 75, Updated = timestamp },
+                new() { WorldId = 34, RecipeId = 8854, Cost = 351, Updated = timestamp },
+                new() { WorldId = 34, RecipeId = 9841, Cost = 3001, Updated = timestamp }
+            });
         context.RecipeProfit.AddRange(
             new RecipeProfitPoco
             {

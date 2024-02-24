@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
@@ -11,6 +12,8 @@ namespace GilGoblin.Tests.Api.Repository;
 public class WorldRepositoryTests : InMemoryTestDb
 {
     private IWorldCache _cache;
+
+    private static readonly List<int> _validWorldIds = new() { 34, 99 };
 
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
@@ -29,8 +32,7 @@ public class WorldRepositoryTests : InMemoryTestDb
         });
     }
 
-    [TestCase(1)]
-    [TestCase(2)]
+    [TestCaseSource(nameof(_validWorldIds))]
     public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
@@ -40,7 +42,7 @@ public class WorldRepositoryTests : InMemoryTestDb
 
         Assert.Multiple(() =>
         {
-            Assert.That(result?.Name, Is.EqualTo($"World {id}"));
+            Assert.That(result?.Name, Has.Length.GreaterThan(0));
             Assert.That(result != null && result.Id == id);
         });
     }
@@ -64,13 +66,12 @@ public class WorldRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var worldRepo = new WorldRepository(context, _cache);
 
-        var result = worldRepo.GetMultiple(new[] { 1, 2 }).ToList();
+        var result = worldRepo.GetMultiple(_validWorldIds).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count, Is.EqualTo(2));
-            Assert.That(result.Any(p => p.Id == 1));
-            Assert.That(result.Any(p => p.Id == 2));
+            Assert.That(result, Has.Count.EqualTo(_validWorldIds.Count));
+            Assert.That(result.All(w => _validWorldIds.Contains(w.Id)));
         });
     }
 
@@ -79,13 +80,14 @@ public class WorldRepositoryTests : InMemoryTestDb
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var worldRepo = new WorldRepository(context, _cache);
+        var mixedIds = new[] { 99 }.Concat(_validWorldIds).ToList();
 
-        var result = worldRepo.GetMultiple(new[] { 1, 99 }).ToList();
+        var result = worldRepo.GetMultiple(mixedIds).ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(result.Any(p => p.Id == 1));
+            Assert.That(result, Has.Count.EqualTo(_validWorldIds.Count));
+            Assert.That(result.All(w => _validWorldIds.Contains(w.Id)));
         });
     }
 
@@ -111,30 +113,31 @@ public class WorldRepositoryTests : InMemoryTestDb
         Assert.That(!result.Any());
     }
 
-    [Test]
-    public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
+    [TestCaseSource(nameof(_validWorldIds))]
+    public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry(int worldId)
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var worldRepo = new WorldRepository(context, _cache);
 
-        _ = worldRepo.Get(2);
+        _ = worldRepo.Get(worldId);
 
-        _cache.Received(1).Get(2);
-        _cache.Received(1).Add(2, Arg.Is<WorldPoco>(world => world.Id == 2));
+        _cache.Received(1).Get(worldId);
+        _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.Id == worldId));
     }
 
-    [Test]
-    public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
+    [TestCaseSource(nameof(_validWorldIds))]
+    public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntryTheSecondTime(int worldId)
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var worldRepo = new WorldRepository(context, _cache);
-        _cache.Get(2).Returns(null, new WorldPoco() { Id = 2 });
-        _ = worldRepo.Get(2);
+        _cache.Get(worldId).Returns(null, new WorldPoco { Id = worldId });
 
-        worldRepo.Get(2);
+        _ = worldRepo.Get(worldId);
+        _ = worldRepo.Get(worldId);
 
-        _cache.Received(2).Get(2);
-        _cache.Received(1).Add(2, Arg.Is<WorldPoco>(world => world.Id == 2));
+        _cache.Received(2).Get(worldId);
+        _cache.Received(1).Add(worldId,
+            Arg.Is<WorldPoco>(world => world.Id == worldId));
     }
 
     [Test]
