@@ -1,6 +1,6 @@
 using GilGoblin.Database.Pocos;
 
-namespace GilGoblin.Api.Crafting;
+namespace GilGoblin.Api.Pocos;
 
 public class CraftIngredientPoco : IngredientPoco
 {

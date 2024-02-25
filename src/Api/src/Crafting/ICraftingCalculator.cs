@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GilGoblin.Api.Pocos;
 
 namespace GilGoblin.Api.Crafting;
 

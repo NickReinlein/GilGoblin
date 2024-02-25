@@ -11,11 +11,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="namespace">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/Accountant.csproj" afterDir="false" />
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Accountant/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Accountant/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database/Database.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Database/Database.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="bug/fix-missing-prices-from-data-updater" />
+        <entry key="$PROJECT_DIR$" value="fix-appsettings" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -58,14 +58,20 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0784e1a433b84d59a97e7b19c5101ccb8a00/a2/0bf78c49/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1c57f9806b0041b797fa3d900a2636b36200/57/1ff3e9bc/PriceFetcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5108fc8cfce44d798c1eed3309cf17c56200/00/2ee7f901/IDataFetcher`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/76e511356dd246b8b3c6a9c19bd736ce11c00/75/94e6aae9/WorldRepository.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d1ec82f59e546629ea3afcac9c96df35de00/d4/30c2595e/AbstractInvocation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d1ec82f59e546629ea3afcac9c96df35de00/e3/ea188421/InterfaceMethodWithoutTargetInvocation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/909bfcc4ea2a4fa68dc724e5d570473d163e00/48/217a3f19/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/33/f931bdc1/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5a7b0fc5aac405c9d6720d130ff0ef2a2a000/b2/a657ff22/CancellationTokenSource.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cc214e0e7cf3464bb45e81e7292f6f3a1fd5b0/15/18ef9fbe/DbContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ebf4c3f4bc3942a4b21e42acba2ce4b61a6400/b4/73999266/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed8c4168e2374391a9575685120010768a00/4c/009199e4/RecipePoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ee3f1e491a334f0383d9c6ad3478a5098e00/07/eb47e99e/WorldPoco.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ee3f1e491a334f0383d9c6ad3478a5098e00/7c/2c5eca4d/GilGoblinDbContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/efc4c2802c08438ea29ce10759c64676a2a000/af/5fdc0c11/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/efc4c2802c08438ea29ce10759c64676a2a000/b9/5fd58558/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2e4305d8867756e7b17dbfec583104491e29edfe21dfca1cc6a80a7fb27b3d5/RelationalQueryableExtensions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -78,7 +84,6 @@
     <setting file="file://$PROJECT_DIR$/src/Accountant/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/CraftCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/DataCache.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/Api/src/Cache/IDataCache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IDataCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/IRepositoryCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/ItemInfoCache.cs" root0="FORCE_HIGHLIGHTING" />
@@ -87,7 +92,7 @@
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Cache/RecipeCostCache.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Controllers/CraftController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Repository/PriceRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Api/src/Startup.cs" root0="FORCE_HIGHLIGHTING" />
@@ -96,7 +101,6 @@
     <setting file="file://$PROJECT_DIR$/src/Batcher/out/Batcher.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/publish/DataUpdater.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/src/DataUpdater/src/PriceUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Database/out/Database.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/BulkDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -105,14 +109,13 @@
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebPocoConverter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/ItemWebResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Fetcher/src/SingleDataFetcher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/lemoneleven/Code/GilGoblin/tests/Api/Controllers/WorldControllerTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="SWEA" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;053e0bff&quot;,
@@ -124,53 +127,55 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Api: http.executor": "Debug",
-    "13434f07-e965-40a9-87d0-ebd6fc01f889.executor": "Debug",
-    "18a6d1f5-6001-4e74-9148-0254277a608b.executor": "Debug",
-    "83664d58-238e-426f-a3fc-e525edd7d14d.executor": "Debug",
-    "83f60d2b-fc29-4977-adef-2743c1315999.executor": "Debug",
-    "8aebfcf3-47b3-4b21-9da6-b13e01e25683.executor": "Debug",
-    "8c981c23-d797-430c-8ecd-e3e986d268a7.executor": "Debug",
-    "9274930c-d096-4125-8c9b-b381242a66b3.executor": "Debug",
-    "95032509-703a-49c2-be04-e03e79537a3d.executor": "Debug",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Publish to folder.Publish Accountant to folder.executor": "Run",
-    "Publish to folder.Publish Api to folder.executor": "Run",
-    "Publish to folder.Publish DataUpdater to folder.executor": "Run",
-    "Rider.SolutionAnalysis.ShowPreview": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "b07c1f92-c456-488d-a51d-2c027d848c90.executor": "Debug",
-    "d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor": "Debug",
-    "git-widget-placeholder": "add-worlds-controller",
-    "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "RoslynSettingsId",
-    "ts.external.directory.path": "/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Api: http.executor&quot;: &quot;Run&quot;,
+    &quot;13434f07-e965-40a9-87d0-ebd6fc01f889.executor&quot;: &quot;Debug&quot;,
+    &quot;18a6d1f5-6001-4e74-9148-0254277a608b.executor&quot;: &quot;Debug&quot;,
+    &quot;60c1bf74-eb53-4461-b638-cb5e4b4a68f7.executor&quot;: &quot;Debug&quot;,
+    &quot;83664d58-238e-426f-a3fc-e525edd7d14d.executor&quot;: &quot;Debug&quot;,
+    &quot;83f60d2b-fc29-4977-adef-2743c1315999.executor&quot;: &quot;Debug&quot;,
+    &quot;8aebfcf3-47b3-4b21-9da6-b13e01e25683.executor&quot;: &quot;Debug&quot;,
+    &quot;8c981c23-d797-430c-8ecd-e3e986d268a7.executor&quot;: &quot;Debug&quot;,
+    &quot;9274930c-d096-4125-8c9b-b381242a66b3.executor&quot;: &quot;Debug&quot;,
+    &quot;95032509-703a-49c2-be04-e03e79537a3d.executor&quot;: &quot;Debug&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Publish to folder.Publish Accountant to folder.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.Publish Api to folder.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.Publish DataUpdater to folder.executor&quot;: &quot;Run&quot;,
+    &quot;Rider.SolutionAnalysis.ShowPreview&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;a9bf2ef4-5ad3-4e81-8181-0d26fdb44889.executor&quot;: &quot;Debug&quot;,
+    &quot;b07c1f92-c456-488d-a51d-2c027d848c90.executor&quot;: &quot;Debug&quot;,
+    &quot;d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;add__world&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/Accountant&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderDotCoverFilteringPageId&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/lemoneleven/Code/GilGoblin/src/frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "GitIgnore",
-      "Markdown"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;GitIgnore&quot;,
+      &quot;Markdown&quot;
     ],
-    "rider.external.source.directories": [
-      "/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/home/lemoneleven/.local/share/Symbols/src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/home/lemoneleven/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/home/lemoneleven/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Api: http">
     <configuration name="Publish Accountant to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/src/Accountant/bin/Release/net7.0/publish" target_framework="net7.0" uuid_high="6895913569179290582" uuid_low="-6138816522910510359" />
@@ -287,6 +292,7 @@
         <item itemvalue="Docker.Dockerfile: Compose Deployment" />
         <item itemvalue="Docker.Dockerfile: Compose Deployment" />
         <item itemvalue="Docker.Dockerfile: Compose Deployment" />
+        <item itemvalue="Docker.Dockerfile: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -382,55 +388,11 @@
       <workItem from="1708033981837" duration="6062000" />
       <workItem from="1708187785743" duration="1179000" />
       <workItem from="1708395139861" duration="347000" />
-      <workItem from="1708395497062" duration="8517000" />
-    </task>
-    <task id="LOCAL-00051" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698774422038</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1698774422038</updated>
-    </task>
-    <task id="LOCAL-00052" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698777653947</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1698777653947</updated>
-    </task>
-    <task id="LOCAL-00053" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698783920826</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1698783920826</updated>
-    </task>
-    <task id="LOCAL-00054" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698785190161</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1698785190161</updated>
-    </task>
-    <task id="LOCAL-00055" summary="WIP decouple services, create Nuget packages">
-      <option name="closed" value="true" />
-      <created>1698785957914</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1698785957914</updated>
-    </task>
-    <task id="LOCAL-00056" summary="Api docker">
-      <option name="closed" value="true" />
-      <created>1698848665853</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1698848665853</updated>
+      <workItem from="1708395497062" duration="9716000" />
+      <workItem from="1708731409116" duration="23000" />
+      <workItem from="1708787334742" duration="2642000" />
+      <workItem from="1708817169752" duration="2461000" />
+      <workItem from="1708873163507" duration="2129000" />
     </task>
     <task id="LOCAL-00057" summary="data updater docker">
       <option name="closed" value="true" />
@@ -776,17 +738,65 @@
       <option name="project" value="LOCAL" />
       <updated>1708478278971</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="package version updates">
+      <option name="closed" value="true" />
+      <created>1708480173313</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1708480173313</updated>
+    </task>
+    <task id="LOCAL-00101" summary="removed double reference">
+      <option name="closed" value="true" />
+      <created>1708480393735</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1708480393735</updated>
+    </task>
+    <task id="LOCAL-00102" summary="progress on controllers, repos, fixing tests">
+      <option name="closed" value="true" />
+      <created>1708807348492</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1708807348492</updated>
+    </task>
+    <task id="LOCAL-00103" summary="fixed world repo tests">
+      <option name="closed" value="true" />
+      <created>1708818303264</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1708818303264</updated>
+    </task>
+    <task id="LOCAL-00104" summary="all tests fixed">
+      <option name="closed" value="true" />
+      <created>1708819036026</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1708819036026</updated>
+    </task>
+    <task id="LOCAL-00105" summary="all tests fixed">
+      <option name="closed" value="true" />
+      <created>1708819229110</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1708819229110</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="76" />
-    <option name="sortOrder" value="ASCENDING" />
+    <option name="coveragePercentColumnWidth" value="51" />
+    <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="1" />
-    <option name="symbolColumnWidth" value="377" />
+    <option name="symbolColumnWidth" value="225" />
     <coverage-tree-state>
       <expand />
       <select />
@@ -815,7 +825,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="general-improvements-and-cleanup" />
+                        <option value="add_world" />
                       </list>
                     </value>
                   </entry>
@@ -830,11 +840,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="changing docker-compose" />
-    <MESSAGE value="fixed Tests.csproj error" />
-    <MESSAGE value="WIP improve accountants" />
-    <MESSAGE value="fix some tests" />
-    <MESSAGE value="added tests for profitAccountant" />
     <MESSAGE value="more tests and nuget packages" />
     <MESSAGE value="wip new craft repo" />
     <MESSAGE value="Rework of craft repo" />
@@ -855,270 +860,612 @@
     <MESSAGE value="update resources, scripts" />
     <MESSAGE value="wip new controller" />
     <MESSAGE value="namespace" />
-    <option name="LAST_COMMIT_MESSAGE" value="namespace" />
+    <MESSAGE value="package version updates" />
+    <MESSAGE value="removed double reference" />
+    <MESSAGE value="progress on controllers, repos, fixing tests" />
+    <MESSAGE value="fixed world repo tests" />
+    <MESSAGE value="all tests fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="all tests fixed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/ItemController.cs</url>
-          <line>24</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/ItemController.cs" initialLine="24" containingFunctionPresentation="Method 'Get'">
-            <startOffsets>
-              <option value="648" />
-            </startOffsets>
-            <endOffsets>
-              <option value="703" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="151" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Database/DataSaverTests.cs</url>
-          <line>56</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="59" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateContainsEntities_ThenWeCheckNewVsExisting'">
-            <startOffsets>
-              <option value="1637" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1707" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="152" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
-          <line>72</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="71" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
-            <startOffsets>
-              <option value="2331" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2349" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="182" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
-          <line>73</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="72" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
-            <startOffsets>
-              <option value="2362" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2401" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="183" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
+          <url>file://$PROJECT_DIR$/src/Accountant/src/Accountant.cs</url>
           <line>71</line>
-          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="70" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/Accountant.cs" initialLine="71" containingFunctionPresentation="Method 'CalculateAsync'">
             <startOffsets>
-              <option value="2257" />
+              <option value="2250" />
             </startOffsets>
             <endOffsets>
-              <option value="2322" />
+              <option value="2311" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="184" />
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs</url>
-          <line>169</line>
-          <properties documentPath="$PROJECT_DIR$/tests/DataUpdater/PriceUpdaterTests.cs" initialLine="169" containingFunctionPresentation="Method 'GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError'">
+          <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
+          <line>217</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="113" containingFunctionPresentation="Method 'GivenGetBestCraftsAsync_WhenValidCraftsAreProvided_ThenWeSortByProfit'">
             <startOffsets>
-              <option value="6809" />
+              <option value="8256" />
             </startOffsets>
             <endOffsets>
-              <option value="6851" />
+              <option value="8298" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs</url>
+          <line>45</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" initialLine="45" containingFunctionPresentation="Method 'CompareTo'" />
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Pocos/CraftSummaryPoco.cs</url>
+          <line>51</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Crafting/CraftSummaryPoco.cs" initialLine="51" containingFunctionPresentation="Method 'CompareTo'" />
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>89</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="71" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2944" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3008" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>87</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="69" containingFunctionPresentation="Method 'ConvertAndSaveToDbAsync'">
+            <startOffsets>
+              <option value="2795" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2840" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>48</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="37" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
+            <startOffsets>
+              <option value="1534" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1606" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
+          <line>83</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="80" containingFunctionPresentation="Method 'FetchUpdatesForIdsAsync'">
+            <startOffsets>
+              <option value="2713" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2747" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
+          <line>69</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="63" containingFunctionPresentation="Method 'FetchAsync'">
+            <startOffsets>
+              <option value="2202" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2209" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>109</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="93" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="3623" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3687" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>112</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="97" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="3759" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3847" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>129</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="114" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="4588" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4673" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>114</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="98" containingFunctionPresentation="Method 'GetIdsToUpdateAsync'">
+            <startOffsets>
+              <option value="3926" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3994" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs</url>
+          <line>78</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeCostAccountant.cs" initialLine="80" containingFunctionPresentation="Method 'GetIdsToUpdate'">
+            <startOffsets>
+              <option value="2930" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2973" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>142</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="126" containingFunctionPresentation="Method 'FillItemIdCache'">
+            <startOffsets>
+              <option value="5117" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5179" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs</url>
+          <line>45</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" initialLine="49" containingFunctionPresentation="Method 'ExecuteAsync'">
+            <startOffsets>
+              <option value="1273" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1348" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs</url>
+          <line>64</line>
+          <properties documentPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" initialLine="61" containingFunctionPresentation="Method 'FetchUpdatesAsync'">
+            <startOffsets>
+              <option value="2164" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2217" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="118" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
+          <line>140</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="138" containingFunctionPresentation="Method 'GetIdsToUpdate'">
+            <startOffsets>
+              <option value="5409" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5494" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="128" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs</url>
+          <line>132</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" initialLine="124" containingFunctionPresentation="Method 'GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco'">
+            <startOffsets>
+              <option value="5176" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5209" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs</url>
+          <line>63</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Accountant/RecipeProfitAccountantTests.cs" initialLine="61" containingFunctionPresentation="Method 'SetUp'">
+            <startOffsets>
+              <option value="2639" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2641" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="135" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
+          <line>132</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="130" containingFunctionPresentation="Method 'GetIdsToUpdate'">
+            <startOffsets>
+              <option value="5150" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5270" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="144" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
+          <line>59</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="56" containingFunctionPresentation="Method 'ComputeListAsync'">
+            <startOffsets>
+              <option value="2558" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2560" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="147" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
+          <line>39</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="38" containingFunctionPresentation="Method 'ComputeListAsync'">
+            <startOffsets>
+              <option value="1674" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1708" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="148" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
+          <line>36</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="36" containingFunctionPresentation="Method 'ComputeListAsync'">
+            <startOffsets>
+              <option value="1548" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1591" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="149" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs</url>
+          <line>53</line>
+          <properties documentPath="$PROJECT_DIR$/src/Accountant/src/RecipeProfitAccountant.cs" initialLine="53" containingFunctionPresentation="Method 'ComputeListAsync'">
+            <startOffsets>
+              <option value="2248" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2331" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="150" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/ItemComponentTests.cs</url>
+          <line>28</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/ItemComponentTests.cs" initialLine="28" containingFunctionPresentation="Lambda expression inside Method 'GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItem'">
+            <startOffsets>
+              <option value="1066" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1113" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="153" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/RecipeProfitRepository.cs</url>
+          <line>22</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/RecipeProfitRepository.cs" initialLine="22" containingFunctionPresentation="Method 'GetAsync'">
+            <startOffsets>
+              <option value="618" />
+            </startOffsets>
+            <endOffsets>
+              <option value="663" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="155" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/PriceController.cs</url>
+          <line>25</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/PriceController.cs" initialLine="25" containingFunctionPresentation="Method 'Get'">
+            <startOffsets>
+              <option value="782" />
+            </startOffsets>
+            <endOffsets>
+              <option value="817" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/PriceController.cs</url>
+          <line>26</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/PriceController.cs" initialLine="26" containingFunctionPresentation="Method 'Get'">
+            <startOffsets>
+              <option value="822" />
+            </startOffsets>
+            <endOffsets>
+              <option value="823" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/tests/Component/CraftComponentTests.cs</url>
+          <line>80</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" initialLine="82" containingFunctionPresentation="Method 'GivenACallToGetACraft_WhenTheInputIsInvalid_ThenWeReceiveNoContent'">
+            <startOffsets>
+              <option value="3405" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3463" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/PriceController.cs</url>
+          <line>24</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/PriceController.cs" initialLine="24" containingFunctionPresentation="Method 'Get'">
+            <startOffsets>
+              <option value="699" />
+            </startOffsets>
+            <endOffsets>
+              <option value="773" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>146</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="114" containingFunctionPresentation="Method 'CreateSummaryAsync'">
+            <startOffsets>
+              <option value="5303" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5392" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="186" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>150</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="118" containingFunctionPresentation="Method 'CreateSummaryAsync'">
+            <startOffsets>
+              <option value="5493" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5589" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="187" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>154</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="122" containingFunctionPresentation="Method 'CreateSummaryAsync'">
+            <startOffsets>
+              <option value="5702" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5801" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="188" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs</url>
-          <line>40</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Fetcher/PriceFetcherTests.cs" initialLine="40" containingFunctionPresentation="Lambda expression inside Method 'GivenWeCallFetchMultiplePricesAsync_WhenTheResponseIsValid_ThenWeDeserializeSuccessfully'">
+          <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
+          <line>79</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="76" containingFunctionPresentation="Lambda expression inside Method 'GivenGetBestAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="1045" />
+              <option value="2734" />
             </startOffsets>
             <endOffsets>
-              <option value="1096" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="189" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Database/DataSaverTests.cs</url>
-          <line>44</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Database/DataSaverTests.cs" initialLine="44" containingFunctionPresentation="Method 'GivenASaveAsync_WhenAnUpdateIsValid_ThenWeReturnTrue'">
-            <startOffsets>
-              <option value="1285" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1331" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="190" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>25</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="25" containingFunctionPresentation="Method 'SaveAsync'">
-            <startOffsets>
-              <option value="873" />
-            </startOffsets>
-            <endOffsets>
-              <option value="886" />
+              <option value="2762" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>33</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="31" containingFunctionPresentation="Method 'SaveAsync'">
+          <url>file://$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs</url>
+          <line>158</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/CraftRepositoryTests.cs" initialLine="145" containingFunctionPresentation="Lambda expression inside Method 'GivenGetAsync_WhenSuccessIsReturned_ThenTheResponseIsValid'">
             <startOffsets>
-              <option value="1152" />
+              <option value="6288" />
             </startOffsets>
             <endOffsets>
-              <option value="1183" />
+              <option value="6289" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="192" />
+          <option name="timeStamp" value="193" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>40</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="38" containingFunctionPresentation="Method 'SaveAsync'">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>124</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="126" containingFunctionPresentation="Method 'SortByProfitability'">
             <startOffsets>
-              <option value="1477" />
+              <option value="4423" />
             </startOffsets>
             <endOffsets>
-              <option value="1489" />
+              <option value="4524" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="194" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>111</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="113" containingFunctionPresentation="Method 'SortByProfitability'">
+            <startOffsets>
+              <option value="3987" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4296" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="195" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>42</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="40" containingFunctionPresentation="Method 'SaveAsync'">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs</url>
+          <line>97</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/CraftRepository.cs" initialLine="98" containingFunctionPresentation="Method 'GetAsync'">
             <startOffsets>
-              <option value="1507" />
+              <option value="3420" />
             </startOffsets>
             <endOffsets>
-              <option value="1629" />
+              <option value="3465" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="196" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>35</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="33" containingFunctionPresentation="Method 'SaveAsync'">
+          <url>file://$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs</url>
+          <line>39</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Repository/WorldRepositoryTests.cs" initialLine="40" containingFunctionPresentation="Method 'GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry'">
             <startOffsets>
-              <option value="1201" />
+              <option value="1282" />
             </startOffsets>
             <endOffsets>
-              <option value="1251" />
+              <option value="1451" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="197" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/PriceSaver.cs</url>
-          <line>30</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/PriceSaver.cs" initialLine="27" containingFunctionPresentation="Method 'UpdateContext'">
+          <url>file://$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs</url>
+          <line>22</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" initialLine="22" containingFunctionPresentation="Method 'Get'">
             <startOffsets>
-              <option value="1049" />
+              <option value="543" />
             </startOffsets>
             <endOffsets>
-              <option value="1153" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="198" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Database/src/DataSaver.cs</url>
-          <line>73</line>
-          <properties documentPath="$PROJECT_DIR$/src/Database/src/DataSaver.cs" initialLine="71" containingFunctionPresentation="Method 'FilterInvalidEntities'">
-            <startOffsets>
-              <option value="2647" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2699" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="200" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/tests/Component/PriceComponentTests.cs</url>
-          <line>24</line>
-          <properties documentPath="$PROJECT_DIR$/tests/Component/PriceComponentTests.cs" initialLine="22" containingFunctionPresentation="Lambda expression inside Method 'GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice'">
-            <startOffsets>
-              <option value="770" />
-            </startOffsets>
-            <endOffsets>
-              <option value="815" />
+              <option value="571" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="201" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs</url>
-          <line>14</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" initialLine="16" containingFunctionPresentation="Method 'GetAsync'">
+          <url>file://$PROJECT_DIR$/tests/Component/CraftComponentTests.cs</url>
+          <line>60</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/CraftComponentTests.cs" initialLine="61" containingFunctionPresentation="Lambda expression inside Method 'GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned'">
             <startOffsets>
-              <option value="410" />
+              <option value="2345" />
             </startOffsets>
             <endOffsets>
-              <option value="457" />
+              <option value="2399" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="202" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs</url>
-          <line>34</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" initialLine="31" containingFunctionPresentation="Method 'GetAvailableWorldsDict'">
+          <url>file://$PROJECT_DIR$/tests/Component/WorldComponentTests.cs</url>
+          <line>39</line>
+          <properties documentPath="$PROJECT_DIR$/tests/Component/WorldComponentTests.cs" initialLine="38" containingFunctionPresentation="Method 'GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent'">
             <startOffsets>
-              <option value="1041" />
+              <option value="1235" />
             </startOffsets>
             <endOffsets>
-              <option value="1056" />
+              <option value="1299" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="203" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs</url>
+          <url>file://$PROJECT_DIR$/tests/Api/Controllers/WorldControllerTests.cs</url>
           <line>47</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Repository/WorldRepository.cs" initialLine="46" containingFunctionPresentation="Lambda expression inside Method 'DeserializeServerInfo'">
+          <properties documentPath="$PROJECT_DIR$/tests/Api/Controllers/WorldControllerTests.cs" initialLine="47" containingFunctionPresentation="Method 'WhenGet_ThenTheCorrectWorldIsReturned'">
             <startOffsets>
-              <option value="1439" />
+              <option value="1436" />
             </startOffsets>
             <endOffsets>
-              <option value="1463" />
+              <option value="1464" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="204" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs</url>
-          <line>26</line>
-          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" initialLine="26" containingFunctionPresentation="Method 'GetWorld'">
+          <line>27</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" initialLine="27" containingFunctionPresentation="Method 'GetWorld'">
             <startOffsets>
-              <option value="749" />
+              <option value="741" />
             </startOffsets>
             <endOffsets>
-              <option value="804" />
+              <option value="792" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="205" />
+          <option name="timeStamp" value="206" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs</url>
+          <line>25</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" initialLine="25" containingFunctionPresentation="Method 'GetWorld'">
+            <startOffsets>
+              <option value="693" />
+            </startOffsets>
+            <endOffsets>
+              <option value="723" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="207" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs</url>
+          <line>24</line>
+          <properties documentPath="$PROJECT_DIR$/src/Api/src/Controllers/WorldController.cs" initialLine="24" containingFunctionPresentation="Method 'GetWorld'">
+            <startOffsets>
+              <option value="668" />
+            </startOffsets>
+            <endOffsets>
+              <option value="680" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="208" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

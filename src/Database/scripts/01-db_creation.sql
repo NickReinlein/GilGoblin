@@ -8,7 +8,7 @@ create table if not exists item
     pricemid    INTEGER NOT NULL,
     pricelow    INTEGER NOT NULL,
     stacksize   INTEGER NOT NULL,
-    canhq     BOOLEAN NOT NULL
+    canhq       BOOLEAN NOT NULL
 );
 
 create table if not exists price
@@ -58,19 +58,25 @@ create table if not exists recipe
 
 create table if not exists recipecost
 (
-    recipeid INTEGER NOT NULL CHECK (recipeid > 0),
-    worldid  INTEGER NOT NULL CHECK (worldid > 0),
-    cost     INTEGER NOT NULL CHECK (cost > 0),
+    recipeid INTEGER                  NOT NULL CHECK (recipeid > 0),
+    worldid  INTEGER                  NOT NULL CHECK (worldid > 0),
+    cost     INTEGER                  NOT NULL CHECK (cost > 0),
     updated  TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (recipeid, worldid)
 );
 
 create table if not exists recipeprofit
 (
-    recipeid INTEGER NOT NULL CHECK (recipeid > 0),
-    worldid  INTEGER NOT NULL CHECK (worldid > 0),
-    profitvssold INTEGER NOT NULL,
-    profitvslistings INTEGER NOT NULL,
-    updated  TIMESTAMP WITH TIME ZONE NOT NULL,
+    recipeid         INTEGER                  NOT NULL CHECK (recipeid > 0),
+    worldid          INTEGER                  NOT NULL CHECK (worldid > 0),
+    profitvssold     INTEGER                  NOT NULL,
+    profitvslistings INTEGER                  NOT NULL,
+    updated          TIMESTAMP WITH TIME ZONE NOT NULL,
     primary key (recipeid, worldid)
+);
+
+create table if not exists world
+(
+    id   INTEGER PRIMARY KEY,
+    name TEXT
 );

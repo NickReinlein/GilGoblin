@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -21,16 +20,19 @@ public class WorldController : ControllerBase, IWorldController
     }
 
     [HttpGet("{id:int}")]
-    public KeyValuePair<int, string> GetWorld(int id)
+    public ActionResult<WorldPoco> GetWorld(int id)
     {
+        if (id <= 0)
+            return new BadRequestResult();
+        
         _logger.LogInformation($"Fetching world id: {id}");
-        return GetAllWorlds().FirstOrDefault(w => w.Key == id);
+        return _worldRepo.Get(id);
     }
 
     [HttpGet]
-    public Dictionary<int, string> GetAllWorlds()
+    public IEnumerable<WorldPoco> GetAllWorlds()
     {
         _logger.LogInformation("Fetching all worlds");
-        return _worldRepo.GetAllWorlds();
+        return _worldRepo.GetAll();
     }
 }

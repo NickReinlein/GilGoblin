@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Api.Cache;
-using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -132,11 +132,7 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         }
     }
 
-    private bool ValidateWorldInput(int worldId)
-    {
-        var allWorlds = _worldRepository.GetAllWorlds();
-        return allWorlds.TryGetValue(worldId, out _);
-    }
+    private bool ValidateWorldInput(int worldId) => _worldRepository.Get(worldId) is not null;
 
     private async Task<CraftSummaryPoco> CreateSummaryAsync(
         int worldId,

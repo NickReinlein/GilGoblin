@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
-using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +51,9 @@ public class CraftRepositoryTests : PriceDependentTests
             _logger
         );
 
-        _worldRepository.GetAllWorlds().Returns(new Dictionary<int, string> { { 34, "TestWorld" } });
+        var worldPoco = new WorldPoco { Id = WorldId };
+        _worldRepository.GetAll().Returns(new List<WorldPoco> { worldPoco });
+        _worldRepository.Get(WorldId).Returns(worldPoco);
     }
 
     [Test]

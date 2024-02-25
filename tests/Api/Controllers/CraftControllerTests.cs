@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Api.Controllers;
-using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
