@@ -47,7 +47,7 @@ namespace GilGoblin.Tests.Api.Controllers
         {
             var world = _worlds.First();
 
-            var result = _worldController.GetWorld(world.Id);
+            var result = _worldController.GetWorld(world.Id).Value;
 
             Assert.That(result, Is.EqualTo(world));
         }

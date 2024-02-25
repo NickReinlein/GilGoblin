@@ -85,7 +85,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
             Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PricePoco)}: {e.Message}");
         }
     }
-
+    
     protected List<int> GetWorldIds()
     {
         using var scope = ScopeFactory.CreateScope();

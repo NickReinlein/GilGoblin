@@ -6,7 +6,7 @@ namespace GilGoblin.Tests.Component;
 
 public class ComponentTests
 {
-    protected static readonly string BaseUrl = "http://localhost:55448";
+    protected const string baseUrl = "http://localhost:55448";
     protected HttpClient _client;
 
     [OneTimeSetUp]

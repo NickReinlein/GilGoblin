@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Api.Cache;
-using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;

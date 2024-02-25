@@ -10,7 +10,7 @@ public class EndpointComponentTests : ComponentTests
         string endpoint
     )
     {
-        var fullEndpoint = $"{BaseUrl}{endpoint}";
+        var fullEndpoint = $"{baseUrl}{endpoint}";
 
         var response = await _client.GetAsync(fullEndpoint);
 

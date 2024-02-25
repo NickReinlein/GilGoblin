@@ -20,8 +20,11 @@ public class WorldController : ControllerBase, IWorldController
     }
 
     [HttpGet("{id:int}")]
-    public WorldPoco GetWorld(int id)
+    public ActionResult<WorldPoco> GetWorld(int id)
     {
+        if (id <= 0)
+            return new BadRequestResult();
+        
         _logger.LogInformation($"Fetching world id: {id}");
         return _worldRepo.Get(id);
     }
