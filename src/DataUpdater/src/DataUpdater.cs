@@ -59,7 +59,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         var worlds = GetWorlds();
         var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
         Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-        await FetchAsync(ct, worlds.FirstOrDefault());
+        await FetchAsync(ct, worlds.FirstOrDefault()?.GetId());
     }
 
     protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
@@ -80,8 +80,10 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             await ConvertAndSaveToDbAsync(updated);
     }
 
-    private async Task<List<U>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate,
-        int? worldId, CancellationToken ct)
+    private async Task<List<U>> FetchUpdatesForIdsAsync(
+        IEnumerable<int> idsToUpdate,
+        int? worldId,
+        CancellationToken ct)
     {
         try
         {
@@ -89,7 +91,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
 
             using var scope = ScopeFactory.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
-            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
+            var worldString = worldId > 0 ? $"for world id {worldId}" : string.Empty;
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
@@ -108,7 +110,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected virtual List<int> GetWorlds() => new();
+    protected virtual List<WorldPoco> GetWorlds() => new();
 
     protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
     protected virtual int GetApiSpamDelayInMs() => 5000;
