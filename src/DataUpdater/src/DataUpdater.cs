@@ -59,7 +59,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         var worlds = GetWorlds();
         var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
         Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-        await FetchAsync(ct, worlds.FirstOrDefault()?.GetId());
+        await FetchAsync(ct, worlds.FirstOrDefault());
     }
 
     protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
@@ -108,7 +108,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected virtual List<WorldPoco> GetWorlds() => new();
+    protected virtual List<int> GetWorlds() => new();
 
     protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
     protected virtual int GetApiSpamDelayInMs() => 5000;
