@@ -41,19 +41,25 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         {
             try
             {
-                var worldId = GetWorldId();
-                var worldIdString = worldId is null ? string.Empty : $" for world {worldId.ToString()}";
-                Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-                await FetchAsync(ct, worldId);
+                await ExecuteUpdateAsync(ct);
             }
             catch (Exception ex)
             {
                 Logger.LogError($"An exception occured during the Api call: {ex.Message}");
             }
 
-            Logger.LogInformation("Awaiting delay before making another update");
-            await Task.Delay(TimeSpan.FromMinutes(5), ct);
+            var delay = TimeSpan.FromMinutes(5);
+            Logger.LogInformation($"Awaiting delay of {delay.TotalSeconds} seconds before performing next update");
+            await Task.Delay(delay, ct);
         }
+    }
+
+    protected virtual async Task ExecuteUpdateAsync(CancellationToken ct)
+    {
+        var worlds = GetWorlds();
+        var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
+        Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
+        await FetchAsync(ct, worlds.FirstOrDefault()?.GetId());
     }
 
     protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
@@ -102,7 +108,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected virtual int? GetWorldId() => null;
+    protected virtual List<WorldPoco> GetWorlds() => new();
 
     protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
     protected virtual int GetApiSpamDelayInMs() => 5000;

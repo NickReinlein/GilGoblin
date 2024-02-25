@@ -6,8 +6,6 @@ services:
   gilgoblin-database:
     image: nickreinlein/gilgoblin-database
     container_name: database
-    # image: database
-    # build: src/Database/
     environment:
       POSTGRES_DB: gilgoblin
       POSTGRES_USER: gilgoblin

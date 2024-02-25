@@ -9,22 +9,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8fc995d1-6d0b-4c1e-963a-26882cb579d0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../tests/Component/WorldComponentTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Accountant/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Accountant/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cache/CraftCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cache/CraftCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controllers/IWorldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/IWorldController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controllers/WorldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/WorldController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CraftRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Fetcher/Fetcher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Fetcher/Fetcher.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Api/Controllers/CraftControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Controllers/CraftControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Api/Controllers/WorldControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Controllers/WorldControllerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Api/Repository/WorldRepositoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Api/Repository/WorldRepositoryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Component/ComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Component/ComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Component/CraftComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Component/CraftComponentTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Component/EndpointComponentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Component/EndpointComponentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/src/DataUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DataUpdater/src/PriceUpdater.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +136,7 @@
       <workItem from="1707226991439" duration="772000" />
       <workItem from="1708803888288" duration="3249000" />
       <workItem from="1708817135964" duration="1655000" />
-      <workItem from="1708873047234" duration="1896000" />
+      <workItem from="1708873047234" duration="2225000" />
     </task>
     <task id="LOCAL-00001" summary="fixed appsettings error">
       <option name="closed" value="true" />
