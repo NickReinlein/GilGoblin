@@ -15,28 +15,28 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: A crafting calculator that breaks down recipes to ingredients
 * :heavy_check_mark: Calculate most profitable recipes to craft for a given FFXIV server/world
 * :heavy_check_mark: A new service to pre-calculate costs and profits
-* :heavy_check_mark: A website to search items, recipes, prices, and the craft summary
-* :heavy_check_mark: Add to website a table to display the most profitable recipes to craft for each world
-* :heavy_check_mark: Enhance most profitable recipes table to be sortable
-* :heavy_check_mark: Add arrows to profit table column headers to indicate sorting status (ascending, descending, none)
-* :heavy_check_mark: Create a Docker image of the front-end
-* :heavy_check_mark: Fix existing high-priority bugs
+* :heavy_check_mark: A website to search items, recipes, prices, and the craft summary  💰
+* :heavy_check_mark: Add to website a table to display the most profitable recipes to craft for each world 📈
+* :heavy_check_mark: Enhance most profitable recipes table to be sortable 💲
+* :heavy_check_mark: Add arrows to profit table column headers to indicate sorting status (ascending, descending, none) ⬇️
+* :heavy_check_mark: Create a Docker image of the front-end 🐋
+* :heavy_check_mark: Fix existing high-priority bugs 🐛
 
 *Work-in-progress*
-* :hatching_chick: Improve performance for top-crafts endpoint
+* :hatching_chick: Add support for multiple worlds 🌐
 
 *Upcoming*
-* :egg: Add Gilgoblin favicon and title to header
-* :egg: Add about project page
-* :egg: Add & store more worlds
-* :egg: Launch website
+* :egg: Add Gilgoblin favicon and title to header 📖
+* :egg: Add about project page ℹ️
+* :egg: Launch and test website 🚀
+* :egg: Improve performance for top-crafts endpoint
 
 *Nice-to-have*
-* :question: Top things to gather
-* :question: A link to each profit result's item, recipe, price, and craft in the profit table row
-* :question: A hover or clickable option to see the profit's ingredients & cost info
-* :question: Advanced filtering: Enter class levels to filter available recipes
-* :question: A website displaying the top crafts *for each profession*
+* :question: Top things to gather 🌳🪓 🪨⛏️
+* :question: A link to each profit result's item, recipe, price, and craft in the profit table row 🕵️
+* :question: A hover or clickable option to see the profit's ingredients & cost info ☁️
+* :question: Advanced filtering: Enter class levels to filter available recipes 🧰
+* :question: A website displaying the top crafts *for each profession* 🛠️
 
 *Not currently on the product roadmap*
 * :heavy_multiplication_x: Filter for HQ/NQ
@@ -51,6 +51,8 @@ The long-term goal is to have a website using this API's endpoints to display th
 
 ## Startup
 From the root folder of the project, run `docker-compose up -d` to build the images. The database will load, and if necessary run the scripts to populate the tables. The front end is avialable by default over port 3000. The other services will run in the background periodically to refresh data.
+
+The docker containers need to be running and healthy for the component tests to pass.
 
 ## Docker Images
 
