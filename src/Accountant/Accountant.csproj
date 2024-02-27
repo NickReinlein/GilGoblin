@@ -5,7 +5,7 @@
     <RootNamespace>GilGoblin.Accountant</RootNamespace>
     <PackageId>GilGoblin.Accountant</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>0.1.2</Version>
+    <Version>0.5.0</Version>
     <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -23,11 +23,8 @@
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
-    <PackageReference Include="GilGoblin.Api" Version="0.8.*" />
+    <PackageReference Include="GilGoblin.Api" Version="0.8.*"/>
   </ItemGroup>
-  <!--  <ItemGroup>-->
-  <!--    <ProjectReference Include="../Api/Api.csproj"/>-->
-  <!--  </ItemGroup>-->
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="README.md" Pack="true" PackagePath="/"/>

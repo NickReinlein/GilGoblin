@@ -40,14 +40,15 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
         {
             try
             {
-                var worldIds = GetWorldIds();
-                if (!worldIds.Any())
+                var worlds = GetWorlds();
+                if (!worlds.Any())
                     throw new DataException("Failed to find any world Ids. This should never happen");
 
-                foreach (var worldId in worldIds)
+                foreach (var world in worlds)
                 {
-                    Logger.LogInformation($"Opening ledger to update {typeof(T)} for world {worldId}");
-                    await CalculateAsync(ct, worldId);
+                    Logger.LogInformation(
+                        $"Opening ledger to update {typeof(T)} for world {world.Name}, id: {world.Id}");
+                    await CalculateAsync(ct, world.Id);
                 }
             }
             catch (DataException ex)
@@ -93,12 +94,11 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
         }
     }
 
-    protected List<int> GetWorldIds()
+    protected List<WorldPoco> GetWorlds()
     {
         using var scope = ScopeFactory.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
-        var response = worldRepo.GetAllWorlds().Keys.ToList();
-        return response;
+        return worldRepo.GetAll().ToList();
     }
 
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
