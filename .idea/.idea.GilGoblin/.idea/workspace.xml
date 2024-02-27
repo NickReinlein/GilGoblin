@@ -12,9 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/DataUpdater.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/DataUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataUpdater/src/PriceUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,7 +150,7 @@
     "a9bf2ef4-5ad3-4e81-8181-0d26fdb44889.executor": "Debug",
     "b07c1f92-c456-488d-a51d-2c027d848c90.executor": "Debug",
     "d1a51b96-2515-4fc5-a2b5-0cfacffc16ee.executor": "Debug",
-    "git-widget-placeholder": "add-support-for-multiple-worlds-to-dataupdater",
+    "git-widget-placeholder": "add-support-for-multiple-worlds-dataupdater",
     "last_opened_file_path": "/home/lemoneleven/Code/GilGoblin/src/Accountant",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
