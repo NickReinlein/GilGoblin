@@ -1,56 +1,45 @@
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
-import SearchInputsComponent from './SearchInputsComponent';
+import { render, fireEvent, screen } from '@testing-library/react';
+import TabButtonsComponent from './TabButtonsComponent';
 
-describe('SearchInputsComponent', () => {
-    const id = 1;
-    const world = 34;
+describe('TabButtonsComponent', () => {
+    const tabName = 'Tab 1';
+    const activeTab = 'Tab 1';
+    const onClickMock = jest.fn();
 
-    it('renders correctly and calls onIdChange and onWorldChange', () => {
-        const onIdChangeMock = jest.fn();
-        const onWorldChangeMock = jest.fn();
-
+    test('renders TabButtonsComponent with correct class when active', () => {
         render(
-            <SearchInputsComponent id={id} world={world} onIdChange={onIdChangeMock} onWorldChange={onWorldChangeMock}/>
+            <TabButtonsComponent tabName={tabName} activeTab={activeTab} onClick={onClickMock}>
+                {tabName}
+            </TabButtonsComponent>
         );
 
-        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
-        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
-
-        expect(worldInput).toBeInTheDocument();
-        expect(idInput).toBeInTheDocument();
-
-        expect(worldInput.value).toBe('34');
-        expect(idInput.value).toBe('1');
-
-        fireEvent.change(worldInput, {target: {value: '1'}});
-        fireEvent.change(idInput, {target: {value: '2'}});
-
-        expect(onWorldChangeMock).toHaveBeenCalledWith(1);
-        expect(onIdChangeMock).toHaveBeenCalledWith(2);
+        const button = screen.getByText(tabName);
+        expect(button).toBeInTheDocument();
+        expect(button).toHaveClass('active');
     });
 
-    it('renders correctly with default values and does not call onIdChange and onWorldChange', () => {
-        const onIdChangeMock = jest.fn();
-        const onWorldChangeMock = jest.fn();
-
+    test('renders TabButtonsComponent without active class when not active', () => {
         render(
-            <SearchInputsComponent id={id} world={world}/>
+            <TabButtonsComponent tabName={tabName} activeTab="Tab 2" onClick={onClickMock}>
+                {tabName}
+            </TabButtonsComponent>
         );
 
-        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
-        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
+        const button = screen.getByText(tabName);
+        expect(button).toBeInTheDocument();
+        expect(button).not.toHaveClass('active');
+    });
 
-        expect(worldInput).toBeInTheDocument();
-        expect(idInput).toBeInTheDocument();
+    test('calls onClick function with tabName when clicked', () => {
+        render(
+            <TabButtonsComponent tabName={tabName} activeTab={activeTab} onClick={onClickMock}>
+                {tabName}
+            </TabButtonsComponent>
+        );
 
-        expect(worldInput.value).toBe('34');
-        expect(idInput.value).toBe('1');
-
-        fireEvent.change(worldInput, {target: {value: '1'}});
-        fireEvent.change(idInput, {target: {value: '2'}});
-
-        expect(onWorldChangeMock).not.toHaveBeenCalled();
-        expect(onIdChangeMock).not.toHaveBeenCalled();
+        const button = screen.getByText(tabName);
+        fireEvent.click(button);
+        expect(onClickMock).toHaveBeenCalledWith(tabName);
     });
 });
