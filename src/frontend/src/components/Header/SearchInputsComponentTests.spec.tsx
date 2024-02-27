@@ -17,8 +17,8 @@ test('renders SearchInputsComponent', async () => {
 
     render(<SearchInputsComponent id={1} world={1}/>);
 
-    expect(screen.getByText('1:World 1')).toBeInTheDocument();
-    expect(screen.getByText('2:World 2')).toBeInTheDocument();
+    expect(screen.getByText('1:Dagobah')).toBeInTheDocument();
+    expect(screen.getByText('2:Tattooine')).toBeInTheDocument();
     expect(screen.getByLabelText('Id')).toBeInTheDocument();
 });
 
@@ -34,7 +34,7 @@ test('calls onWorldChange when world dropdown value changes', async () => {
 });
 
 test('displays error message when API call fails', async () => {
-    (DataFetcher.fetchData as jest.Mock).mockRejectedValueOnce(new Error('API call failed'));
+    (DataFetcher.fetchData as jest.Mock).mockRejectedValueOnce(new Error('Error fetching worlds:'));
 
     render(<SearchInputsComponent id={1} world={1}/>);
 
