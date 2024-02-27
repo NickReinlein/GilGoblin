@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.8.*" />
+    <PackageReference Include="GilGoblin.Database" Version="0.7.*"/>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest"/>

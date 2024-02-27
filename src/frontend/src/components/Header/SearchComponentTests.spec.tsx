@@ -18,8 +18,8 @@ describe('SearchComponent', () => {
         expect(worldInput).toBeInTheDocument();
         expect(idInput).toBeInTheDocument();
 
-        fireEvent.change(worldInput, {target: {value: '1'}});
-        fireEvent.change(idInput, {target: {value: '2'}});
+        fireEvent.change(worldInput, {target: {value: '99'}});
+        fireEvent.change(idInput, {target: {value: '999'}});
 
         fireEvent.click(searchButton);
 

@@ -1,3 +1,8 @@
+export interface World {
+    id: number;
+    name?: string;
+}
+
 export interface Item {
     id: number;
     name?: string;
