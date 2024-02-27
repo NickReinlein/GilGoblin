@@ -33,8 +33,8 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         var worlds = GetWorlds();
         foreach (var world in worlds)
         {
-            Logger.LogInformation($"Fetching updates for price relating to world id:{world}");
-            await FetchAsync(ct, worlds.FirstOrDefault());
+            Logger.LogInformation($"Fetching updates for price relating for world {world.Name}, id: {world.Id}");
+            await FetchAsync(ct, world.Id);
         }
     }
 
@@ -96,11 +96,11 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         }
     }
 
-    protected override List<int> GetWorlds()
+    protected override List<WorldPoco> GetWorlds()
     {
         using var scope = ScopeFactory.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
-        return worldRepo.GetAllWorlds().Keys.ToList();
+        return worldRepo.GetAll().ToList();
     }
 
     protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId)
