@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import '../../styles/SearchInputs.css';
-import {World} from "../../types/types";
-import DataFetcher from "../DataFetcher";
 
 interface SearchInputsComponentProps {
     id: number,
@@ -11,22 +9,6 @@ interface SearchInputsComponentProps {
 }
 
 const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world, onIdChange, onWorldChange}) => {
-    const [worlds, setWorlds] = useState<World[]>([]);
-
-    useEffect(() => {
-        const fetchWorlds = async () => {
-            try {
-                const fetchedWorlds = await DataFetcher.fetchData('World', null, null);
-                setWorlds(fetchedWorlds);
-            } catch (error) {
-                console.error("Error fetching worlds:", error);
-            }
-        };
-
-        fetchWorlds();
-    }, []);
-
-
     return (
         <div className="search-inputs">
             <div>
@@ -39,9 +21,8 @@ const SearchInputsComponent: React.FC<SearchInputsComponentProps> = ({id, world,
                         if (onWorldChange)
                             onWorldChange(Number(e.target.value))
                     }}>
-                    {worlds.map((w) => (
-                        <option key={w.id} value={w.id}>{`${w.id}:${w.name}`}</option>
-                    ))}
+                    <option value="1">1</option>
+                    <option value="34">34</option>
                 </select>
             </div>
             <div>

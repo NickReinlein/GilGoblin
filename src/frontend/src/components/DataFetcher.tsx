@@ -2,9 +2,8 @@ const itemPath = `item/`;
 const recipePath = `recipe/`;
 const pricePath = `price/`;
 const craftPath = `craft/`;
-const worldPath = `world/`;
 const getBaseUrl = `http://localhost:55448/`;
-const fetchData = async (tabName: string, id: number | null, world: number | null) => {
+const fetchData = async (tabName: string, id: number, world: number) => {
     try {
         let suffix: string;
         switch (tabName) {
@@ -23,9 +22,6 @@ const fetchData = async (tabName: string, id: number | null, world: number | nul
             case 'Profits':
                 suffix = `${craftPath}${world}`;
                 break;
-            case 'World':
-                suffix = `${worldPath}`;
-                break;
             default:
                 suffix = ``;
                 break;
@@ -42,7 +38,7 @@ const fetchData = async (tabName: string, id: number | null, world: number | nul
 };
 
 export type DataFetcherType = {
-    fetchData: (tabName: string, id: number | null, world: number | null) => Promise<any>;
+    fetchData: (tabName: string, id: number, world: number) => Promise<any>;
 };
 
 const DataFetcher: DataFetcherType = {
