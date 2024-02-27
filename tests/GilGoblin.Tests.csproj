@@ -11,7 +11,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.7.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.8.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.*"/>

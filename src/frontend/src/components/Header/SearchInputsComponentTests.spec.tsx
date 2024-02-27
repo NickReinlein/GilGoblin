@@ -1,44 +1,56 @@
 import React from 'react';
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import SearchInputsComponent from './SearchInputsComponent';
-import DataFetcher from '../DataFetcher';
 
-jest.mock('../DataFetcher', () => ({
-    fetchData: jest.fn(),
-}));
+describe('SearchInputsComponent', () => {
+    const id = 1;
+    const world = 34;
 
-const mockedWorlds = [
-    {id: 1, name: 'Dagobah'},
-    {id: 2, name: 'Tattooine'},
-];
+    it('renders correctly and calls onIdChange and onWorldChange', () => {
+        const onIdChangeMock = jest.fn();
+        const onWorldChangeMock = jest.fn();
 
-test('renders SearchInputsComponent', async () => {
-    (DataFetcher.fetchData as jest.Mock).mockResolvedValueOnce(mockedWorlds);
+        render(
+            <SearchInputsComponent id={id} world={world} onIdChange={onIdChangeMock} onWorldChange={onWorldChangeMock}/>
+        );
 
-    render(<SearchInputsComponent id={1} world={1}/>);
+        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
+        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
 
-    expect(screen.getByText('1:Dagobah')).toBeInTheDocument();
-    expect(screen.getByText('2:Tattooine')).toBeInTheDocument();
-    expect(screen.getByLabelText('Id')).toBeInTheDocument();
-});
+        expect(worldInput).toBeInTheDocument();
+        expect(idInput).toBeInTheDocument();
 
-// Test user interaction
-test('calls onWorldChange when world dropdown value changes', async () => {
-    (DataFetcher.fetchData as jest.Mock).mockResolvedValueOnce(mockedWorlds);
-    const onWorldChangeMock = jest.fn();
-    render(<SearchInputsComponent id={1} world={1} onWorldChange={onWorldChangeMock}/>);
+        expect(worldInput.value).toBe('34');
+        expect(idInput.value).toBe('1');
 
-    fireEvent.change(screen.getByLabelText('World'), {target: {value: '2'}});
+        fireEvent.change(worldInput, {target: {value: '1'}});
+        fireEvent.change(idInput, {target: {value: '2'}});
 
-    expect(onWorldChangeMock).toHaveBeenCalledWith(2);
-});
+        expect(onWorldChangeMock).toHaveBeenCalledWith(1);
+        expect(onIdChangeMock).toHaveBeenCalledWith(2);
+    });
 
-test('displays error message when API call fails', async () => {
-    (DataFetcher.fetchData as jest.Mock).mockRejectedValueOnce(new Error('Error fetching worlds:'));
+    it('renders correctly with default values and does not call onIdChange and onWorldChange', () => {
+        const onIdChangeMock = jest.fn();
+        const onWorldChangeMock = jest.fn();
 
-    render(<SearchInputsComponent id={1} world={1}/>);
+        render(
+            <SearchInputsComponent id={id} world={world}/>
+        );
 
-    await waitFor(() => {
-        expect(screen.getByText('Error fetching worlds:')).toBeInTheDocument();
+        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
+        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
+
+        expect(worldInput).toBeInTheDocument();
+        expect(idInput).toBeInTheDocument();
+
+        expect(worldInput.value).toBe('34');
+        expect(idInput.value).toBe('1');
+
+        fireEvent.change(worldInput, {target: {value: '1'}});
+        fireEvent.change(idInput, {target: {value: '2'}});
+
+        expect(onWorldChangeMock).not.toHaveBeenCalled();
+        expect(onIdChangeMock).not.toHaveBeenCalled();
     });
 });
