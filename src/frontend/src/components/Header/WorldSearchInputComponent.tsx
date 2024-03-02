@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {World} from "../../types/types";
-import DataFetcher from "../DataFetcher";
+import {World} from '../../types/types';
+import DataFetcher from '../DataFetcher';
 
 interface WorldSearchInputProps {
     world: number | null;
@@ -16,7 +16,7 @@ const WorldSearchInputComponent: React.FC<WorldSearchInputProps> = ({world, onWo
                 const fetchedWorlds = await DataFetcher.fetchData('World', null, null);
                 setWorlds(fetchedWorlds);
             } catch (error) {
-                console.error("Error fetching worlds:", error);
+                console.error('Error fetching worlds:', error);
             }
         };
 
@@ -25,22 +25,24 @@ const WorldSearchInputComponent: React.FC<WorldSearchInputProps> = ({world, onWo
 
     return (
         <div>
-            <label className="search-label" htmlFor="worldInput">World</label>
+            <label className="search-label" htmlFor="worldInput">
+                World
+            </label>
             <select
                 className="search-dropdown"
                 id="worldInput"
                 value={world === null ? '' : world}
                 onChange={(e) => {
-                    if (onWorldChange)
-                        onWorldChange(Number(e.target.value))
+                    if (onWorldChange) onWorldChange(Number(e.target.value));
                 }}>
                 {worlds?.map((w) => (
-                    <option key={w.id} value={w.id}>{`${w.id}:${w.name}`}</option>
+                    <option key={w.id} value={w.id}>
+                        {`${w.id}:${w.name}`}
+                    </option>
                 ))}
             </select>
         </div>
     );
 };
-
 
 export default WorldSearchInputComponent;
