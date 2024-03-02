@@ -1,28 +1,48 @@
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SearchComponent from './SearchComponent';
 
 describe('SearchComponent', () => {
-    it('renders correctly and calls onClick with updated values on button click', () => {
-        const onClickMock = jest.fn();
+    const onClickMock = jest.fn();
 
+    it('renders correctly', () => {
         render(
             <SearchComponent onClick={onClickMock}/>
         );
 
-        const searchButton = screen.getByText('Search') as HTMLButtonElement;
-        const worldInput = screen.getByLabelText('World') as HTMLSelectElement;
-        const idInput = screen.getByLabelText('Id') as HTMLInputElement;
+        const searchButton = screen.getByText('Search');
+        const worldInput = screen.getByLabelText('World');
+        const idInput = screen.getByLabelText('Id');
 
         expect(searchButton).toBeInTheDocument();
         expect(worldInput).toBeInTheDocument();
         expect(idInput).toBeInTheDocument();
+    });
 
-        fireEvent.change(worldInput, {target: {value: '99'}});
-        fireEvent.change(idInput, {target: {value: '999'}});
+    it('calls onClick with updated id value on button click', () => {
+        render(
+            <SearchComponent onClick={onClickMock}/>
+        );
+        const searchButton = screen.getByText('Search');
+        const idInput = screen.getByLabelText('Id');
 
-        fireEvent.click(searchButton);
+        userEvent.type(idInput, '999');
+        userEvent.click(searchButton);
 
-        expect(onClickMock).toHaveBeenCalledWith(2, 1);
+        expect(onClickMock).toHaveBeenCalledWith(999, 0);
+    });
+
+    it('calls onClick with updated world value on button click', () => {
+        render(
+            <SearchComponent onClick={onClickMock}/>
+        );
+        const searchButton = screen.getByText('Search');
+        const worldInput = screen.getByLabelText('World');
+
+        userEvent.selectOptions(worldInput, '22');
+        userEvent.click(searchButton);
+
+        expect(onClickMock).toHaveBeenCalledWith(0, 22);
     });
 });
