@@ -10,30 +10,31 @@ interface WorldSearchInputProps {
 const WorldSearchInputComponent: React.FC<WorldSearchInputProps> = ({world, onWorldChange}) => {
     const [worlds, setWorlds] = useState<World[]>([]);
 
-    useEffect(() => {
-        const fetchWorlds = async () => {
-            try {
-                const fetchedWorlds = await DataFetcher.fetchData('World', null, null);
-                setWorlds(fetchedWorlds);
-            } catch (error) {
-                console.error('Error fetching worlds:', error);
-            }
-        };
+    const fetchWorlds = () => {
+        try {
+            DataFetcher.fetchData('World', null, null)
+                .then((fetchedWorlds) => {
+                    setWorlds(fetchedWorlds);
+                });
+        } catch (error) {
+            console.error('Error fetching worlds:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchWorlds();
     }, []);
 
     return (
         <div>
-            <label className="search-label" htmlFor="worldInput">
-                World
-            </label>
+            <label className="search-label" htmlFor="worldInput"> World </label>
             <select
                 className="search-dropdown"
                 id="worldInput"
                 value={world === null ? '' : world}
                 onChange={(e) => {
-                    if (onWorldChange) onWorldChange(Number(e.target.value));
+                    if (onWorldChange)
+                        onWorldChange(Number(e.target.value));
                 }}>
                 {worlds?.map((w) => (
                     <option key={w.id} value={w.id}>
