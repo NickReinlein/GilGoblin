@@ -27,7 +27,7 @@ services:
         max-size: '50m'
     volumes:
       - ./src/Database/db:/var/lib/postgresql/data
-      - ./src/Database/resources:/docker-entrypoint-initdb.d
+      - ./src/Database/scripts:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
   gilgoblin-api:

@@ -1,57 +1,45 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Threading.Tasks;
+using GilGoblin.Api.Cache;
+using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Api.Repository;
 
 public class WorldRepository : IWorldRepository
 {
-    private static ConcurrentDictionary<int, string>? AvailableWorlds { get; set; } = null;
+    private readonly GilGoblinDbContext _dbContext;
+    private readonly IWorldCache _cache;
 
-    public Dictionary<int, string> GetAllWorlds()
+    public WorldRepository(GilGoblinDbContext dbContext, IWorldCache cache)
     {
-        var worldsDict = GetAvailableWorldsDict();
-        return new Dictionary<int, string>(worldsDict);
+        _dbContext = dbContext;
+        _cache = cache;
     }
 
-    public KeyValuePair<int, string> GetWorld(int id)
+    public WorldPoco? Get(int id)
     {
-        return GetAvailableWorldsDict().FirstOrDefault();
+        var cached = _cache.Get(id);
+        if (cached is not null)
+            return cached;
+
+        var world = _dbContext?.World?.FirstOrDefault(i => i.Id == id);
+        if (world is not null)
+            _cache.Add(world.Id, world);
+
+        return world;
     }
 
-    private static ConcurrentDictionary<int, string> GetAvailableWorldsDict()
+    public IEnumerable<WorldPoco> GetMultiple(IEnumerable<int> ids) =>
+        _dbContext?.World?.Where(w => ids.Contains(w.Id)).AsEnumerable();
+
+    public IEnumerable<WorldPoco> GetAll() => _dbContext?.World.AsEnumerable();
+
+    public Task FillCache()
     {
-        if (AvailableWorlds is not null)
-            return AvailableWorlds;
-
-        var serverArray = DeserializeServerInfo(AllAvailableWorldsEntries.AllAvailableWorldsJson);
-        var servers = new ConcurrentDictionary<int, string>();
-        foreach (var server in serverArray)
-        {
-            servers.TryAdd(server.Key, server.Value);
-        }
-
-        return servers;
+        var worlds = _dbContext?.World?.ToList();
+        worlds?.ForEach(world => _cache.Add(world.Id, world));
+        return Task.CompletedTask;
     }
-
-    private static ConcurrentDictionary<int, string> DeserializeServerInfo(string json)
-    {
-        var serverDictionary = new ConcurrentDictionary<int, string>();
-        var serverArray = JsonSerializer.Deserialize<ServerInfo[]>(json);
-
-        foreach (var server in serverArray)
-        {
-            serverDictionary.TryAdd(server.id, server.name);
-        }
-
-        return serverDictionary;
-    }
-}
-
-public record ServerInfo
-{
-    // ReSharper disable twice InconsistentNaming
-    public int id { get; set; }
-    public string name { get; set; }
 }

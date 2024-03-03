@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
@@ -12,7 +12,7 @@ namespace GilGoblin.Tests.Component;
 public class CraftComponentTests : ComponentTests
 {
     [Test]
-    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenNotFoundIsReturned()
+    public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenBadRequestIsReturned()
     {
         const string fullEndpoint = "http://localhost:55448/craft/1614654";
 
@@ -49,7 +49,7 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned()
     {
-        const string fullEndpoint = "http://localhost:55448/craft/34/100";
+        const string fullEndpoint = "http://localhost:55448/craft/34/486";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

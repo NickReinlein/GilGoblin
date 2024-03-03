@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
@@ -65,6 +66,7 @@ public class Startup
         services.AddScoped<IPriceCache, PriceCache>();
         services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        services.AddScoped<IWorldCache, WorldCache>();
         services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<IRecipeCostCache, RecipeCostCache>();
         services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
@@ -100,7 +102,7 @@ public class Startup
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
         services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
-        services.AddSingleton<IWorldRepository, WorldRepository>();
+        services.AddScoped<IWorldRepository, WorldRepository>();
     }
 
     private static void AddBasicBuilderServices(IServiceCollection services)
@@ -162,12 +164,16 @@ public class Startup
             var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
             var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
+            var recipeProfitRepository = serviceProvider.GetRequiredService<IRecipeProfitRepository>();
+            var worldRepository = serviceProvider.GetRequiredService<IWorldRepository>();
 
             var itemTask = itemRepository.FillCache();
             var priceTask = priceRepository.FillCache();
             var recipeTask = recipeRepository.FillCache();
             var recipeCostTask = recipeCostRepository.FillCache();
-            await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask);
+            var recipeProfitTask = recipeProfitRepository.FillCache();
+            var worldsTask = worldRepository.FillCache();
+            await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask, recipeProfitTask, worldsTask);
         }
         catch (Exception e)
         {

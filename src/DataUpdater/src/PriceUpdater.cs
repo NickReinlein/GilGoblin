@@ -6,8 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
 using GilGoblin.Batcher;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Fetcher;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +26,16 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
         : base(scopeFactory, logger)
     {
+    }
+
+    protected override async Task ExecuteUpdateAsync(CancellationToken ct)
+    {
+        var worlds = GetWorlds();
+        foreach (var world in worlds)
+        {
+            Logger.LogInformation($"Fetching updates for price relating for world {world.Name}, id: {world.Id}");
+            await FetchAsync(ct, world.Id);
+        }
     }
 
 
@@ -86,12 +96,11 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
         }
     }
 
-    protected List<int> GetWorldIds()
+    protected override List<WorldPoco> GetWorlds()
     {
         using var scope = ScopeFactory.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
-        var response = worldRepo.GetAllWorlds().Keys.ToList();
-        return response;
+        return worldRepo.GetAll().ToList();
     }
 
     protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId)

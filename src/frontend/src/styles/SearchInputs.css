@@ -16,18 +16,18 @@
 
 .search-input {
     text-align: center;
-    margin: 15px 5px 5px;
+    margin: 10px 5px 5px;
     font-size: 22px;
-    width: 100px;
-    padding: 5px 5px 5px 10px;
-    min-width: 100px;
+    width: 125px;
+    padding: 5px 5px 5px 5px;
+    min-width: 135px;
 }
 
 .search-dropdown {
     text-align: center;
     margin: 5px;
-    font-size: 22px;
-    width: 100px;
-    padding: 5px 10px 5px 20px;
+    font-size: 19px;
+    width: 150px;
+    padding: 5px 5px 5px 5px;
     min-width: 120px;
 }

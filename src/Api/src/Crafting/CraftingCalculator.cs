@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Api.Repository;

@@ -20,7 +20,7 @@ public interface IDataUpdater<T, U>
     Task FetchAsync(CancellationToken ct, int? worldId = null);
 }
 
-public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
+public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
@@ -41,19 +41,25 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         {
             try
             {
-                var worldId = GetWorldId();
-                var worldIdString = worldId is null ? string.Empty : $" for world {worldId.ToString()}";
-                Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-                await FetchAsync(ct, worldId);
+                await ExecuteUpdateAsync(ct);
             }
             catch (Exception ex)
             {
                 Logger.LogError($"An exception occured during the Api call: {ex.Message}");
             }
 
-            Logger.LogInformation("Awaiting delay before making another update");
-            await Task.Delay(TimeSpan.FromMinutes(5), ct);
+            var delay = TimeSpan.FromMinutes(5);
+            Logger.LogInformation($"Awaiting delay of {delay.TotalSeconds} seconds before performing next update");
+            await Task.Delay(delay, ct);
         }
+    }
+
+    protected virtual async Task ExecuteUpdateAsync(CancellationToken ct)
+    {
+        var worlds = GetWorlds();
+        var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
+        Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
+        await FetchAsync(ct, worlds.FirstOrDefault()?.GetId());
     }
 
     protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
@@ -74,8 +80,10 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             await ConvertAndSaveToDbAsync(updated);
     }
 
-    private async Task<List<U>> FetchUpdatesForIdsAsync(IEnumerable<int> idsToUpdate,
-        int? worldId, CancellationToken ct)
+    private async Task<List<U>> FetchUpdatesForIdsAsync(
+        IEnumerable<int> idsToUpdate,
+        int? worldId,
+        CancellationToken ct)
     {
         try
         {
@@ -83,7 +91,7 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
 
             using var scope = ScopeFactory.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
-            var worldString = worldId > 0 ? $"for world {worldId}" : string.Empty;
+            var worldString = worldId > 0 ? $"for world id {worldId}" : string.Empty;
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
@@ -102,7 +110,7 @@ public class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected virtual int? GetWorldId() => null;
+    protected virtual List<WorldPoco> GetWorlds() => new();
 
     protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
     protected virtual int GetApiSpamDelayInMs() => 5000;
