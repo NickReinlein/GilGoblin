@@ -51,7 +51,7 @@ The long-term goal is to have a website using this API's endpoints to display th
 * There are 5 Docker images (listed below)
 
 ## Startup
-From the root folder of the project, run `docker-compose up -d` to build the images. The database will load, and if necessary run the scripts to populate the tables. The front end is avialable by default over port 3000. The other services will run in the background periodically to refresh data.
+From the root folder of the project, run `docker-compose up -d` to build the images. The database will load, and if necessary run the scripts to populate the tables. The front end is available by default over port 3000. The other services will run in the background periodically to refresh data.
 
 The docker containers need to be running and healthy for the component tests to pass.
 
