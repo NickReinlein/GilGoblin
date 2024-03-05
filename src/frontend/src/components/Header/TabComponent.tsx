@@ -6,7 +6,7 @@ import ResultsComponent from "../Results/Data/ResultsComponent";
 import DataFetcher from "../DataFetcher";
 
 const TabComponent = () => {
-    const [activeTab, setActiveTab] = useState(tabNames[0]);
+    const [activeTab, setActiveTab] = useState(buttonTitles[0]);
     const [tabData, setTabData] = useState({});
 
     const handleTabClick = (tabName: string) => {
@@ -32,7 +32,7 @@ const TabComponent = () => {
     return (
         <div className="tab-container">
             <div className="tabs">
-                {tabNames.map((tabName) => (
+                {buttonTitles.map((tabName) => (
                     <TabButtonsComponent
                         key={tabName}
                         tabName={tabName}
@@ -53,6 +53,6 @@ const TabComponent = () => {
     );
 };
 
-export const tabNames = ['Profits', 'Crafts', 'Items', 'Recipes', 'Prices'];
+export const buttonTitles = ['Profits', 'Crafts', 'Items', 'Recipes', 'Prices', 'About'];
 
 export default TabComponent;
