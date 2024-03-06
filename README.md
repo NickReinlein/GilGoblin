@@ -22,12 +22,12 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: Create a Docker image of the front-end 🐋
 * :heavy_check_mark: Fix existing high-priority bugs 🐛
 * :heavy_check_mark: Add support for multiple worlds 🌐
+* :heavy_check_mark: Add about project page ℹ️
 
 *Work-in-progress*
 * :hatching_chick: Add Gilgoblin favicon and title to header 📖
 
 *Upcoming*
-* :egg: Add about project page ℹ️
 * :egg: Launch and test website 🚀
 * :egg: Add performance tests for crucial bottlenecks (top-craftsj)
 * :egg: Improve performance for top-crafts endpoint
