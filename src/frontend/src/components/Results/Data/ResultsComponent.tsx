@@ -5,6 +5,7 @@ import ItemsComponent from './ItemComponent';
 import RecipesComponent from './RecipeComponent';
 import ProfitTableComponent from "../Profits/ProfitTableComponent";
 import CraftComponent from "./CraftComponent";
+import AboutPageComponent from "../../AboutPageComponent";
 
 interface ResultsProps {
     componentName: string;
@@ -23,6 +24,8 @@ const ResultsComponent: React.FC<ResultsProps> = ({componentName, data}) => {
             return <CraftComponent craft={data}/>;
         case 'Profits':
             return <ProfitTableComponent crafts={data}/>;
+        case 'About':
+            return <AboutPageComponent/>
         default:
             return null;
     }

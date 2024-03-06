@@ -1,0 +1,11 @@
+.about-page {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+    width: min(80%, 800px);
+}
+
+.about-page h1 {
+    font-size: 31px;
+}
