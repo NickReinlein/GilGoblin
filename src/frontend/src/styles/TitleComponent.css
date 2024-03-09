@@ -1,0 +1,9 @@
+.title {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
+}
+
+.title .icon {
+    margin-left: 10px;
+}

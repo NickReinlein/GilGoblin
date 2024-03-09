@@ -3,6 +3,7 @@ import '../../styles/Tab.css';
 import SearchComponent from './SearchComponent';
 import TabButtonsComponent from './TabButtonsComponent';
 import ResultsComponent from "../Results/Data/ResultsComponent";
+import TitleComponent from "../Header/TitleComponent";
 import DataFetcher from "../DataFetcher";
 
 const TabComponent = () => {
@@ -32,6 +33,7 @@ const TabComponent = () => {
     return (
         <div className="tab-container">
             <div className="tabs">
+                <TitleComponent/>
                 {buttonTitles.map((tabName) => (
                     <TabButtonsComponent
                         key={tabName}

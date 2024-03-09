@@ -4,7 +4,7 @@ import TabComponent from "./components/Header/TabComponent";
 
 const App = () => {
     return (
-        <div data-testid="app-tab">
+        <div className="app" data-testid="app">
             <TabComponent/>
         </div>
     );
