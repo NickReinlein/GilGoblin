@@ -1,8 +1,9 @@
-.image-container {
-    display: inline-block;
+.title {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
 }
 
-.image-container img {
-    vertical-align: middle;
-    margin-right: 10px;
+.title .icon {
+    margin-left: 10px;
 }

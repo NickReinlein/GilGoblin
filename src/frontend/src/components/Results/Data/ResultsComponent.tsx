@@ -5,7 +5,7 @@ import ItemsComponent from './ItemComponent';
 import RecipesComponent from './RecipeComponent';
 import ProfitTableComponent from "../Profits/ProfitTableComponent";
 import CraftComponent from "./CraftComponent";
-import AboutPageComponent from "../../AboutPageComponent";
+import AboutPageComponent from "../../Header/AboutPageComponent";
 
 interface ResultsProps {
     componentName: string;

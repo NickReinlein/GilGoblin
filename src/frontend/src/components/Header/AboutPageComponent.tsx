@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/AboutPageComponent.css';
+import '../../styles/AboutPageComponent.css';
 
 const AboutPageComponent = () => {
     return (
