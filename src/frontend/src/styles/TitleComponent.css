@@ -1,0 +1,8 @@
+.image-container {
+    display: inline-block;
+}
+
+.image-container img {
+    vertical-align: middle;
+    margin-right: 10px;
+}
