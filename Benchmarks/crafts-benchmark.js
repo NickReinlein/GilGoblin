@@ -15,7 +15,7 @@ export let options = {
 
 const worldIds = [21, 22, 23, 34];
 
-export default function testCrafts(delay = 5) {
+export default function (delay = 5) {
     let randomIndex = Math.floor(Math.random() * worldIds.length);
     let worldId = worldIds[randomIndex];
 
