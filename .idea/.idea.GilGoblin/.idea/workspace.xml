@@ -13,11 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Api/src/Middleware/CPUMetrics.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/src/Middleware/RequestInfoMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Middleware/RequestInfoMiddleware.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Api/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Startup.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +123,7 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;053e0bff&quot;,
@@ -405,6 +405,7 @@
       <workItem from="1711034707992" duration="1201000" />
       <workItem from="1711137378594" duration="1141000" />
       <workItem from="1711300016125" duration="81000" />
+      <workItem from="1711300128153" duration="1306000" />
     </task>
     <task id="LOCAL-00059" summary="fixed component tests">
       <option name="closed" value="true" />
