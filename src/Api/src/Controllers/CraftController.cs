@@ -28,9 +28,9 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
     }
 
     [HttpGet("")]
-    public async Task<ActionResult<List<CraftSummaryPoco>>>  GetBestAsync(int worldId)
+    public async Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId)
     {
-        _logger.LogInformation($"Fetching best crafting result for world {worldId}");
+        _logger.LogInformation($"Fetching best crafting results for world {worldId}");
         return await _craftRepo.GetBestAsync(worldId);
     }
 }
