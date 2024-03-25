@@ -13,13 +13,13 @@ services:
       PGUSER: gilgoblin
       PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: [ CMD-SHELL, pg_isready ]
+      test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
     ports:
-      - 5432:5432
+      - "5432:5432"
     logging:
       driver: 'json-file'
       options:
@@ -35,12 +35,12 @@ services:
     depends_on:
       - gilgoblin-database
     healthcheck:
-      test: [ CMD-SHELL ]
+      test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-      - 55448:80
+      - "55448:80"
     logging:
       driver: 'json-file'
       options:
@@ -54,7 +54,7 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ CMD-SHELL ]
+      test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -71,7 +71,7 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ CMD-SHELL ]
+      test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -91,12 +91,12 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ CMD-SHELL ]
+      test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-      - 3000:3000
+      - "3000:3000"
     logging:
       driver: 'json-file'
       options:
@@ -107,12 +107,12 @@ services:
     image: prom/prometheus
     container_name: prometheus
     healthcheck:
-      test: [ CMD-SHELL ]
+      test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
-      - 127.0.0.1:9090:9090
+      - "127.0.0.1:9090:9090"
     logging:
       driver: 'json-file'
       options:
@@ -125,7 +125,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     healthcheck:
-      test: [ CMD-SHELL ]
+      test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -134,7 +134,7 @@ services:
       options:
         max-size: '50m'
     ports:
-      - 55450:3000
+      - "55450:3000"
     restart: unless-stopped
 
 networks:
