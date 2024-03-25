@@ -30,10 +30,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    # image: nickreinlein/gilgoblin-api
+    image: nickreinlein/gilgoblin-api
     container_name: api
-    image: api
-    build: src/Api/
+    # image: api
+    # build: src/Api/
     depends_on:
       - gilgoblin-database
     healthcheck:
@@ -136,7 +136,7 @@ services:
       options:
         max-size: '50m'
     ports:
-      - 55450:3000
+      - 55450:3000    
     restart: unless-stopped
 
   gilgoblin-k6-benchmarks:

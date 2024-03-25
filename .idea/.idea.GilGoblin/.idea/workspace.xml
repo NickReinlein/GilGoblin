@@ -12,14 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Api/src/Middleware/CPUMetrics.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Middleware/RequestInfoMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Middleware/RequestInfoMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Api/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/src/Startup.cs" afterDir="false" />
-    </list>
+    <list default="true" id="c9ce3506-386d-40db-bed0-54825e8e583e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -405,15 +398,7 @@
       <workItem from="1711034707992" duration="1201000" />
       <workItem from="1711137378594" duration="1141000" />
       <workItem from="1711300016125" duration="81000" />
-      <workItem from="1711300128153" duration="1306000" />
-    </task>
-    <task id="LOCAL-00059" summary="fixed component tests">
-      <option name="closed" value="true" />
-      <created>1699105990288</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1699105990288</updated>
+      <workItem from="1711300128153" duration="1433000" />
     </task>
     <task id="LOCAL-00060" summary="Restructure code and services">
       <option name="closed" value="true" />
@@ -799,7 +784,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710976877847</updated>
     </task>
-    <option name="localTasksCounter" value="108" />
+    <task id="LOCAL-00108" summary="adding cpu usage">
+      <option name="closed" value="true" />
+      <created>1711313273332</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1711313273333</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -853,7 +846,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="wip new craft repo" />
     <MESSAGE value="Rework of craft repo" />
     <MESSAGE value="fixes DI issues" />
     <MESSAGE value="fsdafsd" />
@@ -878,7 +870,8 @@
     <MESSAGE value="fixed world repo tests" />
     <MESSAGE value="all tests fixed" />
     <MESSAGE value="adding k6 benchmarks" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding k6 benchmarks" />
+    <MESSAGE value="adding cpu usage" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding cpu usage" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

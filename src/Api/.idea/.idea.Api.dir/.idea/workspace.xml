@@ -8,11 +8,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fc995d1-6d0b-4c1e-963a-26882cb579d0" name="Changes" comment="adding prometheus request info middleware">
-      <change afterPath="$PROJECT_DIR$/src/Middleware/CPUMetrics.cs" afterDir="false" />
+    <list default="true" id="8fc995d1-6d0b-4c1e-963a-26882cb579d0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/.idea.GilGoblin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Api.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Middleware/CPUMetrics.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Middleware/CPUMetrics.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Middleware/RequestInfoMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Middleware/RequestInfoMiddleware.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Startup.cs" afterDir="false" />
     </list>
@@ -138,6 +137,7 @@
       <workItem from="1708873047234" duration="2225000" />
       <workItem from="1711042539942" duration="1657000" />
       <workItem from="1711306533512" duration="4959000" />
+      <workItem from="1711373102171" duration="1156000" />
     </task>
     <task id="LOCAL-00001" summary="fixed appsettings error">
       <option name="closed" value="true" />

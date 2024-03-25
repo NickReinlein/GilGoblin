@@ -115,8 +115,6 @@ public class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
         });
-
-        services.AddSingleton<CpuMetrics>();
     }
 
     private static void AddAppGoblinServices(IApplicationBuilder builder)
