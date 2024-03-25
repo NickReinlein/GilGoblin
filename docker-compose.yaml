@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "5432:5432"
     logging:
@@ -38,6 +40,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "55448:80"
     logging:
@@ -57,6 +61,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     logging:
       driver: 'json-file'
       options:
@@ -74,6 +80,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     logging:
       driver: 'json-file'
       options:
@@ -94,6 +102,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "3000:3000"
     logging:
@@ -110,6 +120,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "127.0.0.1:9090:9090"
     logging:
@@ -117,7 +129,7 @@ services:
       options:
         max-size: '50m'
     volumes:
-      - ./Benchmarks:/etc/prometheus
+      - ./benchmarks:/etc/prometheus
     restart: unless-stopped
 
   gilgoblin-grafana:
@@ -132,9 +144,26 @@ services:
       driver: 'json-file'
       options:
         max-size: '50m'
+    networks:
+      - gilgoblin        
     ports:
       - "55450:3000"
     restart: unless-stopped
+
+  gilgoblin-k6-benchmarks:
+    image: grafana/k6
+    container_name: k6-benchmarks
+    depends_on:
+      - gilgoblin-database
+      - gilgoblin-api
+    command: run /scripts/crafts-benchmark.js
+    networks:
+      - gilgoblin
+    ports:
+      - "6565:6565"
+    volumes:
+      - ./benchmarks:/scripts
+    restart: no
 
 networks:
   gilgoblin:
