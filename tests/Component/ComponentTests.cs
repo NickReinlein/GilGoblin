@@ -24,5 +24,5 @@ public class ComponentTests
     protected const double missingEntryPercentageThreshold = 0.85;
 
     protected static JsonSerializerOptions GetSerializerOptions() =>
-        new() { PropertyNameCaseInsensitive = true, IncludeFields = true, };
+        new() { PropertyNameCaseInsensitive = true, IncludeFields = true };
 }

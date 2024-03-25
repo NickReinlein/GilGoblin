@@ -13,12 +13,11 @@ services:
       PGUSER: gilgoblin
       PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: [ CMD-SHELL, pg_isready ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
+
     ports:
       - "5432:5432"
     logging:
@@ -36,12 +35,10 @@ services:
     depends_on:
       - gilgoblin-database
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: [ CMD-SHELL ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     ports:
       - "55448:80"
     logging:
@@ -57,12 +54,10 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: [ CMD-SHELL ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     logging:
       driver: 'json-file'
       options:
@@ -76,12 +71,10 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: [ CMD-SHELL ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     logging:
       driver: 'json-file'
       options:
@@ -98,18 +91,50 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: [ CMD-SHELL ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     ports:
       - "3000:3000"
     logging:
       driver: 'json-file'
       options:
         max-size: '50m'
+    restart: unless-stopped
+
+  gilgoblin-prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    healthcheck:
+      test: [ CMD-SHELL ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "127.0.0.1:9090:9090"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    volumes:
+      - ./Benchmarks:/etc/prometheus
+    restart: unless-stopped
+
+  gilgoblin-grafana:
+    image: grafana/grafana
+    container_name: grafana
+    healthcheck:
+      test: [ CMD-SHELL ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    ports:
+      - "55450:3000"
     restart: unless-stopped
 
 networks:
