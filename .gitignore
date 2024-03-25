@@ -368,5 +368,5 @@ FodyWeavers.xsd
 *src/Database/db/*
 
 #Idea IDE configs
-.idea
-src**.idea**
+*.iml
+.idea/workspace.xml
