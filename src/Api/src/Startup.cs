@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
 using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Middleware;
 using GilGoblin.Api.Pocos;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 
 namespace GilGoblin.Api;
 
@@ -115,25 +117,29 @@ public class Startup
         });
     }
 
-    private static void AddAppGoblinServices(IApplicationBuilder app)
+    private static void AddAppGoblinServices(IApplicationBuilder builder)
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.UseAuthorization();
+        builder.UseSwagger();
+        builder.UseSwaggerUI();
+        builder.UseHttpMetrics();
+        builder.UseMetricServer();
+        builder.UseAuthorization();
+        builder.UseMiddleware<RequestInfoMiddleware>();
 
-        app.UseRouting();
-        app.UseEndpoints(endpoints =>
+        builder.UseRouting();
+        builder.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
             endpoints.MapSwagger();
+            endpoints.MapMetrics();
         });
     }
 
-    private void DatabaseValidation(IApplicationBuilder app)
+    private void DatabaseValidation(IApplicationBuilder builder)
     {
         try
         {
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            using var serviceScope = builder.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             using var dbContext = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             ValidateCanConnectToDatabase(dbContext);
         }
