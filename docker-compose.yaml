@@ -19,7 +19,7 @@ services:
       retries: 5
 
     ports:
-      - "5432:5432"
+      - 5432:5432
     logging:
       driver: 'json-file'
       options:
@@ -30,8 +30,7 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    # image: nickreinlein/gilgoblin-api
-    build: src/Api/
+    image: nickreinlein/gilgoblin-api
     container_name: api
     depends_on:
       - gilgoblin-database
@@ -41,7 +40,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - "55448:80"
+      - 55448:80
     logging:
       driver: 'json-file'
       options:
@@ -97,7 +96,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - "3000:3000"
+      - 3000:3000
     logging:
       driver: 'json-file'
       options:
@@ -113,7 +112,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - "127.0.0.1:9090:9090"
+      - 127.0.0.1:9090:9090
     logging:
       driver: 'json-file'
       options:
@@ -135,7 +134,7 @@ services:
       options:
         max-size: '50m'
     ports:
-      - "55450:3000"
+      - 55450:3000
     restart: unless-stopped
 
 networks:
