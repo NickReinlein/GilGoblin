@@ -132,6 +132,26 @@ services:
       - ./benchmarks:/etc/prometheus
     restart: unless-stopped
 
+  gilgoblin-node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gilgoblin
+    ports:
+      - "9100:9100"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    volumes:
+      - ./benchmarks:/etc/node-exporter
+    restart: unless-stopped
+
   gilgoblin-grafana:
     image: grafana/grafana
     container_name: grafana
@@ -145,9 +165,11 @@ services:
       options:
         max-size: '50m'
     networks:
-      - gilgoblin        
+      - gilgoblin
     ports:
       - "55450:3000"
+    volumes:
+      - ./benchmarks/grafana:/var/lib/grafana   
     restart: unless-stopped
 
   gilgoblin-k6-benchmarks:
