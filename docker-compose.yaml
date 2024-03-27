@@ -115,6 +115,10 @@ services:
   gilgoblin-prometheus:
     image: prom/prometheus
     container_name: prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s
@@ -140,14 +144,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
-    ports:
-      - "9100:9100"
     logging:
       driver: 'json-file'
       options:
         max-size: '50m'
+    networks:
+      - gilgoblin
+    ports:
+      - "9100:9100"
     volumes:
       - ./benchmarks:/etc/node-exporter
     restart: unless-stopped
@@ -168,8 +172,13 @@ services:
       - gilgoblin
     ports:
       - "55450:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
     volumes:
-      - ./benchmarks/grafana:/var/lib/grafana   
+      - ./benchmarks/grafana/provisioning:/etc/grafana/provisioning/
+      - ./benchmarks/grafana:/var/lib/grafana
     restart: unless-stopped
 
   gilgoblin-k6-benchmarks:
@@ -178,7 +187,7 @@ services:
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
-    command: run /scripts/crafts-benchmark.js
+    command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js
     networks:
       - gilgoblin
     ports:
