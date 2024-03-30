@@ -112,6 +112,8 @@ services:
         max-size: '50m'
     restart: unless-stopped
 
+  ### Alerts & Monitoring ###
+
   gilgoblin-prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -170,16 +172,18 @@ services:
         max-size: '50m'
     networks:
       - gilgoblin
-    ports:
-      - "55450:3000"
     environment:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
+    ports:
+      - "55450:3000"
     volumes:
       - ./benchmarks/grafana/provisioning:/etc/grafana/provisioning/
       - ./benchmarks/grafana:/var/lib/grafana
     restart: unless-stopped
+
+  ### Benchmarks ###
 
   gilgoblin-k6-benchmarks:
     image: grafana/k6
@@ -187,6 +191,7 @@ services:
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
+      - gilgoblin-prometheus
     command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js
     networks:
       - gilgoblin
@@ -195,6 +200,16 @@ services:
     volumes:
       - ./benchmarks:/scripts
     restart: no
+
+  gilgoblin-k6-exporter:
+    image: ghcr.io/benc-uk/k6-prometheus-exporter:latest
+    environment:
+      - K6_API_ENDPOINT=http://host.docker.internal:6565/v1
+    networks:
+      - gilgoblin
+    ports:
+      - "2112:2112"
+    restart: unless-stopped
 
 networks:
   gilgoblin:
