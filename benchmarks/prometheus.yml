@@ -33,7 +33,7 @@ scrape_configs:
     static_configs:
       - targets:
           - host.docker.internal:9090
-  - job_name: "node"
+  - job_name: node
     scrape_interval: 15s
     scrape_timeout: 10s
     static_configs:
@@ -45,9 +45,9 @@ scrape_configs:
     static_configs:
       - targets:
           - host.docker.internal:55448
-  - job_name: "k6"
+  - job_name: k6
     static_configs:
       - targets:
           - host.docker.internal:6565         
 remote_write:
-  - url: "http://host.docker.internal:9090/api/v1/write"
+  - url: http://host.docker.internal:9090/api/v1/write
