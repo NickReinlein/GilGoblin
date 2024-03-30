@@ -186,7 +186,7 @@ services:
   ### Benchmarks ###
 
   gilgoblin-influxdb:
-    image: influxdb:1.8-alpine
+    image: influxdb:latest
     container_name: influxdb
     environment:
       - INFLUXDB_DB=gilgoblin_db
