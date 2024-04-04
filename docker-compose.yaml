@@ -123,17 +123,11 @@ services:
         max-size: '50m'
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=gilgoblin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=gilgoblin
       - DOCKER_INFLUXDB_INIT_ORG=gilgoblin_org
       - DOCKER_INFLUXDB_INIT_BUCKET=gilgoblin_bucket
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=EEKpryGZk8pVDXmIuy484BKUxM5jOEDv7YNoeNZUbsNbpbPbP6kK_qY9Zsyw7zNnlZ7pHG16FYzNaqwLMBUz8g==
       - DOCKER_INFLUXDB_DB=gilgoblin_db
       - DOCKER_INFLUXDB_ADMIN_USER=admin
       - DOCKER_INFLUXDB_ADMIN_PASSWORD=gilgoblin_password
-      - INFLUXDB_DB=gilgoblin_db
-      - INFLUXDB_ADMIN_USER=admin
-      - INFLUXDB_ADMIN_PASSWORD=gilgoblin_password
     networks:
       - gilgoblin
     ports:
@@ -228,7 +222,7 @@ services:
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
       - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max
       - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
-    command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js --out json=test_results.json --out influxdb=http://host.docker.internal:8086/gilgoblin_db
+    command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js --out influxdb=http://host.docker.internal:8086/gilgoblin_db
     networks:
       - gilgoblin
     ports:
