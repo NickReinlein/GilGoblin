@@ -1,0 +1,60 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  scrape_protocols:
+    - OpenMetricsText1.0.0
+    - OpenMetricsText0.0.1
+    - PrometheusText0.0.4
+  evaluation_interval: 15s
+alerting:
+  alertmanagers:
+    - follow_redirects: true
+      enable_http2: true
+      scheme: http
+      timeout: 10s
+      api_version: v2
+      static_configs:
+        - targets: []
+scrape_configs:
+  - job_name: prometheus
+    honor_timestamps: true
+    track_timestamps_staleness: false
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    scrape_protocols:
+      - OpenMetricsText1.0.0
+      - OpenMetricsText0.0.1
+      - PrometheusText0.0.4
+    metrics_path: /metrics
+    scheme: http
+    enable_compression: true
+    follow_redirects: true
+    enable_http2: true
+    static_configs:
+      - targets:
+          - host.docker.internal:9090
+  - job_name: node
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets:
+          - host.docker.internal:9100
+  - job_name: gilgoblin
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets:
+          - host.docker.internal:55448
+  - job_name: k6
+    static_configs:
+      - targets:
+          - host.docker.internal:6565
+  - job_name: influxdb
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets:
+          - host.docker.internal:8086
+remote_write:
+  # - url: http://host.docker.internal:9090/api/v1/write
+  - url: http://host.docker.internal:8086/api/v1/prom/write?db=gilgoblin_db
