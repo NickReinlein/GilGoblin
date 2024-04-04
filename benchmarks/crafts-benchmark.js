@@ -2,16 +2,12 @@ import http from "k6/http";
 import {check, sleep} from "k6";
 
 export let options = {
-  // stages: [
-  //   { duration: "5m", target: 50 }, // Ramp-up to 50 VUs over 5 minutes
-  //   { duration: "5m", target: 100 }, // Ramp-up to 100 VUs over 5 minutes
-  //   { duration: "10m", target: 100 }, // Hold 100 VUs for 10 minutes
-  //   { duration: "2m", target: 50 }, // Ramp-down to 50 VUs over 2 minutes
-  //   { duration: "5m", target: 0 }, // Ramp-down to 0 VUs over 5 minutes
-  // ],
   stages: [
-      {duration: "3s", target: 2},
-      {duration: "3s", target: 0},
+    { duration: "3m", target: 50 }, // Ramp-up to 50 VUs over 3 minutes
+    { duration: "3m", target: 100 }, // Ramp-up to 100 VUs over 3 minutes
+    { duration: "10m", target: 100 }, // Hold 100 VUs for 10 minutes
+    { duration: "2m", target: 50 }, // Ramp-down to 50 VUs over 2 minutes
+    { duration: "2m", target: 0 }, // Ramp-down to 0 VUs over 5 minutes
   ],
   ext: {
     thresholds: {
