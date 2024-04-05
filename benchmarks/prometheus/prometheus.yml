@@ -32,10 +32,29 @@ scrape_configs:
     enable_http2: true
     static_configs:
       - targets:
-          - localhost:9090
+          - host.docker.internal:9090
+  - job_name: node
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets:
+          - host.docker.internal:9100
   - job_name: gilgoblin
     scrape_interval: 15s
     scrape_timeout: 10s
     static_configs:
       - targets:
           - host.docker.internal:55448
+  - job_name: k6
+    static_configs:
+      - targets:
+          - host.docker.internal:6565
+  - job_name: influxdb
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets:
+          - host.docker.internal:8086
+remote_write:
+  # - url: http://host.docker.internal:9090/api/v1/write
+  - url: http://host.docker.internal:8086/api/v1/prom/write?db=gilgoblin_db

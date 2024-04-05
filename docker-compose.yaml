@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "5432:5432"
     logging:
@@ -38,6 +40,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "55448:80"
     logging:
@@ -57,6 +61,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     logging:
       driver: 'json-file'
       options:
@@ -74,6 +80,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     logging:
       driver: 'json-file'
       options:
@@ -94,6 +102,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
       - "3000:3000"
     logging:
@@ -102,22 +112,75 @@ services:
         max-size: '50m'
     restart: unless-stopped
 
+  ### Alerts & Monitoring ###
+
+  gilgoblin-influxdb:
+    image: influxdb:1.8.10
+    container_name: influxdb
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_ORG=gilgoblin_org
+      - DOCKER_INFLUXDB_INIT_BUCKET=gilgoblin_bucket
+      - DOCKER_INFLUXDB_DB=gilgoblin_db
+      - DOCKER_INFLUXDB_ADMIN_USER=admin
+      - DOCKER_INFLUXDB_ADMIN_PASSWORD=gilgoblin_password
+    networks:
+      - gilgoblin
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./benchmarks/influxdb:/var/lib/influxdb
+
   gilgoblin-prometheus:
     image: prom/prometheus
     container_name: prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - gilgoblin
     ports:
-      - "127.0.0.1:9090:9090"
+      - "9090:9090"
+    depends_on:
+      - gilgoblin-influxdb
     logging:
       driver: 'json-file'
       options:
         max-size: '50m'
     volumes:
-      - ./Benchmarks:/etc/prometheus
+      - ./benchmarks/prometheus:/etc/prometheus
+    restart: unless-stopped
+
+  gilgoblin-node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    healthcheck:
+      test: [ "CMD-SHELL" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+    depends_on:
+      - gilgoblin-prometheus        
+    networks:
+      - gilgoblin
+    ports:
+      - "9100:9100"
+    volumes:
+      - ./benchmarks:/etc/node-exporter
     restart: unless-stopped
 
   gilgoblin-grafana:
@@ -132,9 +195,41 @@ services:
       driver: 'json-file'
       options:
         max-size: '50m'
+    networks:
+      - gilgoblin
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
     ports:
       - "55450:3000"
+    volumes:
+      - ./benchmarks/grafana:/var/lib/grafana
     restart: unless-stopped
+
+  ### Benchmarks ###
+
+  gilgoblin-k6-benchmarks:
+    image: grafana/k6
+    container_name: k6-benchmarks
+    depends_on:
+      - gilgoblin-database
+      - gilgoblin-api
+      - gilgoblin-prometheus
+      - gilgoblin-influxdb
+      - gilgoblin-grafana
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+    command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js --out influxdb=http://host.docker.internal:8086/gilgoblin_db
+    networks:
+      - gilgoblin
+    ports:
+      - "6565:6565"
+    volumes:
+      - ./benchmarks:/scripts
+    restart: no
 
 networks:
   gilgoblin:

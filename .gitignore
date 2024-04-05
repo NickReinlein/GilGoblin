@@ -364,9 +364,12 @@ MigrationBackup/
 FodyWeavers.xsd
 /Tests/my_data.cs
 
-#Gilgoblin
+# Gilgoblin
 *src/Database/db/*
 
-#Idea IDE configs
+# Idea IDE configs
 **.iml
 **/workspace.xml
+
+# Benchmark db
+**/benchmarks/influxdb/*
