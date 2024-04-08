@@ -13,16 +13,15 @@ namespace GilGoblin.Tests.Api.Controllers;
 public class CraftControllerTests
 {
     private CraftController _controller = null!;
-    private ICraftRepository<CraftSummaryPoco> _repo;
+    private ICraftRepository _repo;
 
     private const int world = 34;
-    private const int recipe = 221;
 
     [SetUp]
     public void SetUp()
     
     {
-        _repo = Substitute.For<ICraftRepository<CraftSummaryPoco>>();
+        _repo = Substitute.For<ICraftRepository>();
 
         _controller = new CraftController(
             _repo,
@@ -55,24 +54,4 @@ public class CraftControllerTests
 
         Assert.That(result, Is.Not.Null.Or.Empty);
     }    
-    
-    [Test]
-    public async Task WhenReceivingARequestGetCrafts_ThenTheRepositoryIsCalled()
-    {
-        _repo.GetAsync(world, recipe).Returns(new CraftSummaryPoco());
-
-        _ = await _controller.GetAsync(world, recipe);
-
-        await _repo.Received(1).GetAsync(world, recipe);
-    }
-
-    [Test]
-    public async Task WhenReceivingARequestGetCrafts_ThenAnEnumerableIsReturned()
-    {
-        _repo.GetAsync(world, recipe).Returns(new CraftSummaryPoco());
-
-        var result = await _controller.GetAsync(world, recipe);
-
-        Assert.That(result, Is.Not.Null);
-    }
 }
