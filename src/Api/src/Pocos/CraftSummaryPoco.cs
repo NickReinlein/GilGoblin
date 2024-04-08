@@ -22,9 +22,9 @@ public class CraftSummaryPoco : IComparable
 
     public CraftSummaryPoco(
         PricePoco price,
-        ItemPoco item,
+        ItemPoco? item,
         int recipeCost,
-        RecipePoco recipe,
+        RecipePoco? recipe,
         IEnumerable<IngredientPoco> ingredients
     )
     {

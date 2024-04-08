@@ -15,6 +15,7 @@ namespace GilGoblin.Api.Repository;
 public interface ICraftRepository<T> where T : class
 {
     Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId);
+    ActionResult<List<CraftSummaryPoco>> GetBest(int worldId);
     Task<ActionResult<T>> GetAsync(int worldId, int recipeId);
     List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
 }
@@ -48,6 +49,70 @@ public class CraftRepository : ICraftRepository<CraftSummaryPoco>
         _worldRepository = worldRepository;
         _logger = logger;
         _cache = cache;
+    }
+
+    public ActionResult<List<CraftSummaryPoco>> GetBest(int worldId)
+    {
+        if (!ValidateWorldInput(worldId))
+            return new BadRequestResult();
+
+        var profits =
+            _recipeProfitRepository
+                .GetAll(worldId)
+                .OrderByDescending(rp => rp.RecipeProfitVsSold)
+                .Take(100)
+                .ToList();
+        if (!profits.Any())
+            return new NotFoundResult();
+
+        var recipeIds = profits.Select(i => i.RecipeId).ToList();
+        var recipeCosts = _recipeCostRepository.GetMultiple(worldId, recipeIds);
+        var recipes = _recipeRepository.GetMultiple(recipeIds).ToList();
+
+        var items = _itemRepository.GetMultiple(recipes.Select(i => i.TargetItemId));
+        var prices = _priceRepository.GetMultiple(worldId, recipes.Select(i => i.TargetItemId));
+
+        var crafts = CreateSummaryAsync2(worldId, recipeCosts, recipes, items, prices, profits);
+        return crafts.Any() ? new OkObjectResult(crafts) : new NotFoundResult();
+    }
+
+    private IEnumerable<CraftSummaryPoco> CreateSummaryAsync2(
+        int worldId,
+        IEnumerable<RecipeCostPoco> recipeCosts,
+        IEnumerable<RecipePoco> recipes,
+        IEnumerable<ItemPoco> items,
+        IEnumerable<PricePoco> prices,
+        IEnumerable<RecipeProfitPoco> profits)
+    {
+        var recipeCostList = recipeCosts.ToList();
+        var recipeList = recipes.ToList();
+        var itemList = items.ToList();
+        var priceList = prices.ToList();
+        var profitList = profits.ToList();
+
+        foreach (var profit in profitList)
+        {
+            var price = priceList.FirstOrDefault(i => i.ItemId == profit.RecipeId && i.WorldId == worldId);
+            if (price is null)
+            {
+                _logger.LogError($"Failed to find price for recipe {profit.RecipeId} for world {worldId}");
+                continue;
+            }
+
+            var recipe = recipeList.FirstOrDefault(i => i.Id == profit.RecipeId);
+            var recipeCost = recipeCostList.FirstOrDefault(i => i.RecipeId == profit.RecipeId && i.WorldId == worldId)
+                ?.Cost ?? 0;
+            var item = itemList.FirstOrDefault(i =>
+                i.Id == recipeList.FirstOrDefault(r => r.Id == profit.RecipeId)?.TargetItemId);
+            var ingredients = recipe.GetActiveIngredients();
+
+            yield return new CraftSummaryPoco(
+                price,
+                item,
+                recipeCost,
+                recipe,
+                ingredients);
+        }
     }
 
     public async Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId)

@@ -33,4 +33,11 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
         _logger.LogInformation($"Fetching best crafting results for world {worldId}");
         return await _craftRepo.GetBestAsync(worldId);
     }
+    
+    [HttpGet("/new/")]
+    public ActionResult<List<CraftSummaryPoco>> GetBest(int worldId)
+    {
+        _logger.LogInformation($"Fetching best crafting results for world {worldId}");
+        return _craftRepo.GetBest(worldId);
+    }
 }
