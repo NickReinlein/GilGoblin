@@ -30,7 +30,7 @@ export default function () {
     let randomIndex = Math.floor(Math.random() * worldIds.length);
     let worldId = worldIds[randomIndex];
 
-    let response = http.get(`http://host.docker.internal:55448/craft/${worldId}`);
+    let response = http.get(`http://host.docker.internal:55448/craft/${worldId}/new`);
 
     check(response, {
         "status is 200": (r) => r.status === 200,

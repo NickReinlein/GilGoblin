@@ -34,10 +34,10 @@ public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco
         return await _craftRepo.GetBestAsync(worldId);
     }
     
-    [HttpGet("/new/")]
-    public ActionResult<List<CraftSummaryPoco>> GetBest(int worldId)
+    [HttpGet("new")]
+    public async Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync2(int worldId)
     {
-        _logger.LogInformation($"Fetching best crafting results for world {worldId}");
-        return _craftRepo.GetBest(worldId);
+        _logger.LogInformation($"Fetching new! best crafting results for world {worldId}");
+        return await _craftRepo.GetBestAsync2(worldId);
     }
 }
