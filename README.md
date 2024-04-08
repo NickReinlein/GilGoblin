@@ -23,14 +23,15 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: Fix existing high-priority bugs 🐛
 * :heavy_check_mark: Add support for multiple worlds 🌐
 * :heavy_check_mark: Add about project page ℹ️
+* :heavy_check_mark: Add Gilgoblin favicon and title to header 📖
+* :heavy_check_mark: Add performance tests for high-traffic bottlenecks (top-crafts) 🚥
+* :heavy_check_mark: Improve performance for top-crafts endpoint ⏩
 
 *Work-in-progress*
-* :hatching_chick: Add Gilgoblin favicon and title to header 📖
+* :hatching_chick: Launch and test website 🚀
 
 *Upcoming*
-* :egg: Launch and test website 🚀
-* :egg: Add performance tests for crucial bottlenecks (top-craftsj)
-* :egg: Improve performance for top-crafts endpoint
+* :egg: Live release bug fixes 🐛
 
 *Nice-to-have*
 * :question: Top things to gather 🌳🪓 🪨⛏️
@@ -40,7 +41,7 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :question: A website displaying the top crafts *for each profession* 🛠️
 
 *Not currently on the product roadmap*
-* :heavy_multiplication_x: Filter for HQ/NQ
+* :heavy_multiplication_x: Filter for HQ/NQ 
 * :heavy_multiplication_x: Any interactions with the market board or in-game
 
 ## Technologies
@@ -48,7 +49,8 @@ The long-term goal is to have a website using this API's endpoints to display th
 * The back-end tests use NUnit3
 * The front-end code uses the React library, written in Typescript (React 18)
 * The front-end tests use Jest
-* There are 5 Docker images (listed below)
+* There are 5 Docker images (listed below) specific to GilGoblin
+* K6 benchmarks feed Prometheus. Test results are displayed in a Grafana dashboard
 
 ## Startup
 From the root folder of the project, run `docker-compose up -d` to build the images. The database will load, and if necessary run the scripts to populate the tables. The front end is available by default over port 3000. The other services will run in the background periodically to refresh data.
