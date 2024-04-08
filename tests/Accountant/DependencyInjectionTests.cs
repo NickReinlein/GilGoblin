@@ -3,7 +3,6 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
-using GilGoblin.Api.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +38,7 @@ public class AccountantDependencyInjectionTests
     [TestCase(typeof(IRecipeCostCache))]
     [TestCase(typeof(IRecipeProfitCache))]
     [TestCase(typeof(ICraftingCalculator))]
-    [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
+    [TestCase(typeof(ICraftRepository))]
     [TestCase(typeof(IRecipeGrocer))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(IItemRepository))]

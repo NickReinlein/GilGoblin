@@ -4,7 +4,6 @@ using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Middleware;
-using GilGoblin.Api.Pocos;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
@@ -91,7 +90,7 @@ public class Startup
     public static void AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository<CraftSummaryPoco>, CraftRepository>();
+        services.AddScoped<ICraftRepository, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 

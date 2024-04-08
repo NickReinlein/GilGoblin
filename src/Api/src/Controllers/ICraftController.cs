@@ -8,7 +8,4 @@ public interface ICraftController<T> where T : class
 {
     [HttpGet("")]
     Task<ActionResult<List<T>>> GetBestAsync(int worldId);
-
-    [HttpGet("{recipeId:int}")]
-    Task<ActionResult<T>> GetAsync(int worldId, int recipeId);
 }

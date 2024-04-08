@@ -209,27 +209,27 @@ services:
 
   ### Benchmarks ###
 
-  gilgoblin-k6-benchmarks:
-    image: grafana/k6
-    container_name: k6-benchmarks
-    depends_on:
-      - gilgoblin-database
-      - gilgoblin-api
-      - gilgoblin-prometheus
-      - gilgoblin-influxdb
-      - gilgoblin-grafana
-    environment:
-      - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
-      - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max
-      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
-    command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js --out influxdb=http://host.docker.internal:8086/gilgoblin_db
-    networks:
-      - gilgoblin
-    ports:
-      - "6565:6565"
-    volumes:
-      - ./benchmarks:/scripts
-    restart: no
+  # gilgoblin-k6-benchmarks:
+  #   image: grafana/k6
+  #   container_name: k6-benchmarks
+  #   depends_on:
+  #     - gilgoblin-database
+  #     - gilgoblin-api
+  #     - gilgoblin-prometheus
+  #     - gilgoblin-influxdb
+  #     - gilgoblin-grafana
+  #   environment:
+  #     - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
+  #     - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max
+  #     - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+  #   command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js --out influxdb=http://host.docker.internal:8086/gilgoblin_db
+  #   networks:
+  #     - gilgoblin
+  #   ports:
+  #     - "6565:6565"
+  #   volumes:
+  #     - ./benchmarks:/scripts
+  #   restart: no
 
 networks:
   gilgoblin:

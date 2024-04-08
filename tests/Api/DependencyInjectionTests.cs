@@ -2,7 +2,6 @@ using System;
 using GilGoblin.Api;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
-using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -32,7 +31,7 @@ public class DependencyInjectionTests
     [TestCase(typeof(IItemRepository))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
-    [TestCase(typeof(ICraftRepository<CraftSummaryPoco>))]
+    [TestCase(typeof(ICraftRepository))]
     [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]
     [TestCase(typeof(IRecipeCostCache))]
