@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
+using GilGoblin.Tests.InMemoryTest;
 using NSubstitute;
 using NUnit.Framework;
 

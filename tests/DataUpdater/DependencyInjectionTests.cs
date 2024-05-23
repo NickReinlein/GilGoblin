@@ -7,6 +7,7 @@ using GilGoblin.Fetcher;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Startup = GilGoblin.DataUpdater.Startup;
 
 namespace GilGoblin.Tests.DataUpdater;
 

@@ -16,11 +16,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
+    <PackageReference Include="GilGoblin.Database" Version="0.8.*"/>
     <PackageReference Include="Serilog" Version="3.0.*"/>
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.8.*"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/"/>

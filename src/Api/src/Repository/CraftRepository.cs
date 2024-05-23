@@ -15,6 +15,14 @@ public interface ICraftRepository
 {
     Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId);
     List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
+
+    Task<List<CraftSummaryPoco>> CreateSummaryAsync(
+        int worldId,
+        IEnumerable<RecipeCostPoco> recipeCosts,
+        IEnumerable<RecipePoco> recipes,
+        IEnumerable<ItemPoco> items,
+        IEnumerable<PricePoco> prices,
+        IEnumerable<RecipeProfitPoco> profits);
 }
 
 public class CraftRepository : ICraftRepository
@@ -73,7 +81,7 @@ public class CraftRepository : ICraftRepository
         return crafts.Any() ? new OkObjectResult(crafts) : new NotFoundResult();
     }
 
-    private Task<List<CraftSummaryPoco>> CreateSummaryAsync(
+    public Task<List<CraftSummaryPoco>> CreateSummaryAsync(
         int worldId,
         IEnumerable<RecipeCostPoco> recipeCosts,
         IEnumerable<RecipePoco> recipes,
@@ -130,11 +138,9 @@ public class CraftRepository : ICraftRepository
 
         try
         {
-            var viableCrafts
-                = craftsList
+            var viableCrafts = craftsList
                     .Where(i =>
-                        (i.AverageSold > 1 ||
-                         i.AverageListingPrice > 1) &&
+                        (i.AverageSold > 1 || i.AverageListingPrice > 1) &&
                         i.RecipeCost > 1 &&
                         i.Recipe.TargetItemId == i.ItemId)
                     .ToList();
