@@ -86,7 +86,7 @@ public class CraftingCalculatorTests
     [Test]
     public async Task WhenCalculatingCraftingCostForAnInexistentRecipe_ThenReturnErrorCost()
     {
-        var inexistentRecipeId = -200;
+        const int inexistentRecipeId = -200;
         _recipes.Get(Arg.Any<int>()).ReturnsNull();
 
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, inexistentRecipeId);
@@ -305,8 +305,6 @@ public class CraftingCalculatorTests
         ingredientMarketPrice.ItemId = ingredientId;
         recipe.ItemIngredient0TargetId = ingredientId;
         recipe.AmountIngredient0 = 10;
-        var itemIdList = new List<int>() { itemId, ingredientId };
-        itemIdList.Sort();
         MockReposForSingularTest(market, recipe, ingredientMarketPrice);
         SetupPricesForIngredients(recipe);
     }

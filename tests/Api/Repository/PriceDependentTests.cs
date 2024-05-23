@@ -1,3 +1,5 @@
+using GilGoblin.Tests.InMemoryTest;
+
 namespace GilGoblin.Tests.Api.Repository;
 
 public class PriceDependentTests : InMemoryTestDb

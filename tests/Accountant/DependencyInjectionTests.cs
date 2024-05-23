@@ -7,6 +7,7 @@ using GilGoblin.Api.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Startup = GilGoblin.Accountant.Startup;
 
 namespace GilGoblin.Tests.Accountant;
 
