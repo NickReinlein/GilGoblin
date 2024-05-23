@@ -27,8 +27,10 @@ public class GilGoblinDbContext : DbContext
     {
         var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
         optionsBuilder.UseNpgsql(connectionString);
-        optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.EnableDetailedErrors();
+        
+        // Only used during development and debugging
+        // optionsBuilder.EnableSensitiveDataLogging();
+        // optionsBuilder.EnableDetailedErrors();
 
         base.OnConfiguring(optionsBuilder);
     }

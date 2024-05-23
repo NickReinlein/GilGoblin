@@ -368,7 +368,8 @@ FodyWeavers.xsd
 *src/Database/db/*
 
 # Idea IDE configs
-**.iml
+.idea/
+.iml/
 **/workspace.xml
 
 # Benchmark db
