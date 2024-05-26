@@ -1,5 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
+ENV ConnectionStrings__GilGoblinDbContext=$ConnectionStrings__GilGoblinDbContext
+
 WORKDIR /app
 COPY . .
 RUN dotnet restore

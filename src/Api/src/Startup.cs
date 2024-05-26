@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
@@ -52,16 +53,17 @@ public class Startup
     }
 
 
-    private static void AddGoblinServices(IServiceCollection services)
+    private void AddGoblinServices(IServiceCollection services)
     {
-        AddGoblinCrafting(services);
-        AddGoblinDatabases(services);
-        AddGoblinControllers(services);
-        AddBasicBuilderServices(services);
-        AddGoblinCaches(services);
+        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
+        services = AddGoblinDatabases(services, connectionString);
+        services = AddGoblinCrafting(services);
+        services = AddGoblinControllers(services);
+        services = AddBasicBuilderServices(services);
+        services = AddGoblinCaches(services); 
     }
 
-    public static void AddGoblinCaches(IServiceCollection services)
+    public static IServiceCollection AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
         services.AddScoped<IPriceCache, PriceCache>();
@@ -75,9 +77,10 @@ public class Startup
         services.AddScoped<IRepositoryCache, ItemRepository>();
         services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
+        return services;
     }
 
-    private static void AddGoblinControllers(IServiceCollection services)
+    private static IServiceCollection AddGoblinControllers(IServiceCollection services)
     {
         services
             .AddControllers()
@@ -85,18 +88,20 @@ public class Startup
             .AddApplicationPart(typeof(CraftController).Assembly)
             .AddApplicationPart(typeof(PriceController).Assembly)
             .AddApplicationPart(typeof(RecipeController).Assembly);
+        return services;
     }
 
-    public static void AddGoblinCrafting(IServiceCollection services)
+    public static IServiceCollection AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
         services.AddScoped<ICraftRepository, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
+        return services;
     }
 
-    public static void AddGoblinDatabases(IServiceCollection services)
+    public static IServiceCollection AddGoblinDatabases(IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<GilGoblinDbContext>();
+        services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
@@ -104,9 +109,10 @@ public class Startup
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
         services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();
+        return services;
     }
 
-    private static void AddBasicBuilderServices(IServiceCollection services)
+    private static IServiceCollection AddBasicBuilderServices(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddLogging();
@@ -114,6 +120,7 @@ public class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
         });
+        return services;
     }
 
     private static void AddAppGoblinServices(IApplicationBuilder builder)

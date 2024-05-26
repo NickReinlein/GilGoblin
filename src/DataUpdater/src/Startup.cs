@@ -35,8 +35,9 @@ public class Startup
     {
         services.AddHttpClient();
 
+        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
+        services = Api.Startup.AddGoblinDatabases(services, connectionString);
         Api.Startup.AddGoblinCrafting(services);
-        Api.Startup.AddGoblinDatabases(services);
         Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
@@ -54,6 +55,7 @@ public class Startup
         services.AddHostedService<PriceUpdater>();
     }
 
+    
     private void DatabaseValidation(IApplicationBuilder app)
     {
         try

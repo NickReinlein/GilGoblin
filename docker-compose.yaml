@@ -35,6 +35,8 @@ services:
     build: src/Api/    
     depends_on:
       - gilgoblin-database
+    environment:
+      ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s
