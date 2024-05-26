@@ -366,6 +366,7 @@ FodyWeavers.xsd
 
 # Gilgoblin
 *src/Database/db/*
+.env
 
 # Idea IDE configs
 .idea/
@@ -374,3 +375,4 @@ FodyWeavers.xsd
 
 # Benchmark db
 **/benchmarks/influxdb/*
+**/benchmarks/grafana/*

@@ -27,10 +27,10 @@ public class GilGoblinDbContext : DbContext
     {
         var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
         optionsBuilder.UseNpgsql(connectionString);
-        
+
         // Only used during development and debugging
-        // optionsBuilder.EnableSensitiveDataLogging();
-        // optionsBuilder.EnableDetailedErrors();
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.EnableDetailedErrors();
 
         base.OnConfiguring(optionsBuilder);
     }
@@ -117,8 +117,13 @@ public class GilGoblinDbContext : DbContext
         modelBuilder.Entity<RecipeProfitPoco>().HasKey(t => new { t.RecipeId, t.WorldId });
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeId).HasColumnName("recipeid");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.WorldId).HasColumnName("worldid");
-        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeProfitVsSold).HasColumnName("profitvssold");
-        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeProfitVsListings)
+        modelBuilder
+            .Entity<RecipeProfitPoco>()
+            .Property(t => t.RecipeProfitVsSold)
+            .HasColumnName("profitvssold");
+        modelBuilder
+            .Entity<RecipeProfitPoco>()
+            .Property(t => t.RecipeProfitVsListings)
             .HasColumnName("profitvslistings");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Updated).HasColumnName("updated");
     }
