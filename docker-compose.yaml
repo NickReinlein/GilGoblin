@@ -18,7 +18,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "5432:${DATABASE_PORT}"
+      - "5432:${PORT_DATABASE}"
     logging:
       driver: 'json-file'
       options:
@@ -29,8 +29,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    image: nickreinlein/gilgoblin-api
-    container_name: api
+    # image: nickreinlein/gilgoblin-api
+    # container_name: api
+    image: api
+    build: src/Api/    
     depends_on:
       - gilgoblin-database
     healthcheck:
@@ -103,7 +105,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "3000:3000"
+      - "3000:${PORT_FRONTEND}"
     logging:
       driver: 'json-file'
       options:

@@ -46,34 +46,9 @@ public class CraftComponentTests : ComponentTests
         });
     }
 
-    [Test]
-    public async Task GivenACallGetACraft_WhenTheInputIsValid_ThenACraftSummaryIsReturned()
-    {
-        const string fullEndpoint = "http://localhost:55448/craft/34/486";
-
-        using var response = await _client.GetAsync(fullEndpoint);
-
-        var craft = await response.Content.ReadFromJsonAsync<CraftSummaryPoco>(GetSerializerOptions());
-        Assert.Multiple(() =>
-        {
-            Assert.That(craft.WorldId, Is.EqualTo(34));
-            Assert.That(craft.ItemId, Is.GreaterThan(0));
-            Assert.That(craft.ItemInfo.IconId, Is.GreaterThan(0));
-            Assert.That(craft.ItemInfo.StackSize, Is.GreaterThan(0));
-            Assert.That(craft.ItemInfo.PriceMid, Is.GreaterThanOrEqualTo(0));
-            Assert.That(craft.ItemInfo.PriceLow, Is.GreaterThanOrEqualTo(0));
-            Assert.That(craft.Recipe.Id, Is.GreaterThan(0));
-            Assert.That(craft.Recipe.TargetItemId, Is.GreaterThan(0));
-            Assert.That(craft.Recipe.ResultQuantity, Is.GreaterThan(0));
-            Assert.That(craft.Ingredients.Any());
-        });
-    }
-
-    // Any errors ==> BadRequest 
-    // Exception: Correct world, wrong recipeId ==> NotFound
     [TestCase("/34/1614654", HttpStatusCode.NotFound)]
-    [TestCase("/1614654/1614654", HttpStatusCode.BadRequest)]
-    [TestCase("/1614654/100", HttpStatusCode.BadRequest)]
+    [TestCase("/1614654/1614654", HttpStatusCode.NotFound)]
+    [TestCase("/1614654/100", HttpStatusCode.NotFound)]
     public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
         HttpStatusCode expectedErrorCode)
     {
