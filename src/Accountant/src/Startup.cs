@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
@@ -33,7 +34,7 @@ public class Startup
     private void AddGoblinAccountingServices(IServiceCollection services)
     {
         Api.Startup.AddGoblinCrafting(services);
-        Api.Startup.AddGoblinDatabases(services);
+        Api.Startup.AddGoblinDatabases(services, _configuration.GetConnectionString(nameof(GilGoblinDbContext)));
         Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();

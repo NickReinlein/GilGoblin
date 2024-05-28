@@ -55,7 +55,6 @@ public class Startup
         services.AddHostedService<PriceUpdater>();
     }
 
-    
     private void DatabaseValidation(IApplicationBuilder app)
     {
         try

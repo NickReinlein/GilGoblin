@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;

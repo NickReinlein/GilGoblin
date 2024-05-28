@@ -32,7 +32,7 @@ const AboutPageComponent = () => {
                 struggle, but he is determined to try.
             </p>
             <h2> Contact </h2>
-            <a href="mailto:gilgoblinproject@gmail.com">gilgoblinproject@gmail.com</a>
+            <a href="mailto:admin@gilgoblin.com">admin@gilgoblin.com</a>
         </div>
     )
         ;
