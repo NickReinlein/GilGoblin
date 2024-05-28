@@ -366,10 +366,13 @@ FodyWeavers.xsd
 
 # Gilgoblin
 *src/Database/db/*
+.env
 
 # Idea IDE configs
-**.iml
+.idea/
+.iml/
 **/workspace.xml
 
 # Benchmark db
 **/benchmarks/influxdb/*
+**/benchmarks/grafana/*

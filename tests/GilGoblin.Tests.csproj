@@ -11,7 +11,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="EntityFramework" Version="6.4.4"/>
-    <PackageReference Include="GilGoblin.Database" Version="0.8.*" />
+    <PackageReference Include="GilGoblin.Database" Version="1.0.*" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.*"/>
@@ -45,13 +45,10 @@
     <ProjectReference Include="../src/Fetcher/Fetcher.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Component\appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToPublishDirectory>"PreserveNewest"</CopyToPublishDirectory>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>appsettings.json</TargetPath>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,3 @@
-version: "3.7"
-
 name: gilgoblin
 
 services:
@@ -7,11 +5,11 @@ services:
     image: nickreinlein/gilgoblin-database
     container_name: database
     environment:
-      POSTGRES_DB: gilgoblin
-      POSTGRES_USER: gilgoblin
-      POSTGRES_PASSWORD: gilgoblin
-      PGUSER: gilgoblin
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGUSER: ${PGUSER}
+      PGDATA: ${PGDATA}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
@@ -20,7 +18,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "5432:5432"
+      - "5432:${PORT_DATABASE}"
     logging:
       driver: 'json-file'
       options:
@@ -35,6 +33,8 @@ services:
     container_name: api
     depends_on:
       - gilgoblin-database
+    environment:
+      ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s
@@ -56,6 +56,8 @@ services:
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
+    environment:
+      ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s
@@ -75,6 +77,8 @@ services:
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
+    environment:
+      ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
       test: [ "CMD-SHELL" ]
       interval: 10s
@@ -105,7 +109,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "3000:3000"
+      - "3000:${PORT_FRONTEND}"
     logging:
       driver: 'json-file'
       options:
@@ -122,12 +126,12 @@ services:
       options:
         max-size: '50m'
     environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_ORG=gilgoblin_org
-      - DOCKER_INFLUXDB_INIT_BUCKET=gilgoblin_bucket
-      - DOCKER_INFLUXDB_DB=gilgoblin_db
-      - DOCKER_INFLUXDB_ADMIN_USER=admin
-      - DOCKER_INFLUXDB_ADMIN_PASSWORD=gilgoblin_password
+      - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
+      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+      - DOCKER_INFLUXDB_DB=${DOCKER_INFLUXDB_DB}
+      - DOCKER_INFLUXDB_ADMIN_USER=${DOCKER_INFLUXDB_ADMIN_USER}
+      - DOCKER_INFLUXDB_ADMIN_PASSWORD=${DOCKER_INFLUXDB_ADMIN_PASSWORD}
     networks:
       - gilgoblin
     ports:
@@ -198,9 +202,9 @@ services:
     networks:
       - gilgoblin
     environment:
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_BASIC_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
+      - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
+      - GF_AUTH_BASIC_ENABLED=${GF_AUTH_BASIC_ENABLED}
     ports:
       - "55450:3000"
     volumes:
