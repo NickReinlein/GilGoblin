@@ -39,6 +39,7 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :question: A hover or clickable option to see the profit's ingredients & cost info ☁️
 * :question: Advanced filtering: Enter class levels to filter available recipes 🧰
 * :question: A website displaying the top crafts *for each profession* 🛠️
+* :question: Make everything *prettier* ✨
 
 *Not currently on the product roadmap*
 * :heavy_multiplication_x: Filter for HQ/NQ 
