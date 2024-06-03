@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /app
+
 COPY . .
 RUN dotnet restore
 
@@ -14,4 +15,3 @@ COPY --from=build /app/out ./
 EXPOSE 80
 
 ENTRYPOINT ["dotnet", "DataUpdater.dll"]
-

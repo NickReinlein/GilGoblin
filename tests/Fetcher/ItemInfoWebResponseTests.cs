@@ -26,7 +26,7 @@ public class ItemWebResponseTests
         Assert.Multiple(() =>
         {
             Assert.That(result.Items is not null);
-            Assert.That(result.Items.Count, Is.EqualTo(_pocos.Count));
+            Assert.That(result.Items!.Count, Is.EqualTo(_pocos.Count));
             Assert.That(result.Items[_itemId1], Is.EqualTo(_pocos[0]));
             Assert.That(result.Items[_itemId2], Is.EqualTo(_pocos[1]));
         });

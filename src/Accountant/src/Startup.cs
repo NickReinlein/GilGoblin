@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
@@ -33,8 +32,9 @@ public class Startup
 
     private void AddGoblinAccountingServices(IServiceCollection services)
     {
+        var connectionString = _configuration.GetConnectionString(nameof(GilGoblinDbContext)) ?? string.Empty;
         Api.Startup.AddGoblinCrafting(services);
-        Api.Startup.AddGoblinDatabases(services, _configuration.GetConnectionString(nameof(GilGoblinDbContext)));
+        Api.Startup.AddGoblinDatabases(services, connectionString);
         Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
@@ -48,7 +48,9 @@ public class Startup
     {
         try
         {
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+            if (serviceScope == null)
+                throw new Exception("Failed to create service scope for database validation");
             ValidateCanConnectToDatabase(serviceScope);
         }
         catch (Exception e)

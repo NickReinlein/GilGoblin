@@ -36,6 +36,9 @@ public class Startup
         services.AddHttpClient();
 
         var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
+        if (string.IsNullOrEmpty(connectionString))
+            throw new Exception("Failed to get connection string");
+
         services = Api.Startup.AddGoblinDatabases(services, connectionString);
         Api.Startup.AddGoblinCrafting(services);
         Api.Startup.AddGoblinCaches(services);
@@ -59,7 +62,9 @@ public class Startup
     {
         try
         {
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+            if (serviceScope == null)
+                throw new Exception("Failed to create service scope for database validation");
             ValidateCanConnectToDatabase(serviceScope);
         }
         catch (Exception e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace GilGoblin.Api.Cache;
 
 public class DataCache<T, U> : IDataCache<T, U>
+    where T : class
     where U : class
 {
     protected readonly Dictionary<T, U> Cache = new();

@@ -22,7 +22,8 @@ public class WorldComponentTests : ComponentTests
         var world = await response.Content.ReadFromJsonAsync<WorldPoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
-            Assert.That(world.Id, Is.EqualTo(testWorldId));
+            Assert.That(world, Is.Not.Null);
+            Assert.That(world!.Id, Is.EqualTo(testWorldId));
             Assert.That(world.Name, Has.Length.GreaterThan(0));
         });
     }
@@ -49,7 +50,7 @@ public class WorldComponentTests : ComponentTests
 
         var worlds = (await response.Content.ReadFromJsonAsync<IEnumerable<WorldPoco>>(
             GetSerializerOptions()
-        )).ToList();
+        ))!.ToList();
         Assert.Multiple(() =>
         {
             Assert.That(worlds, Has.Count.GreaterThan(0), "No worlds received");

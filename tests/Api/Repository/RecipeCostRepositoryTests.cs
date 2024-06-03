@@ -52,7 +52,7 @@ public class RecipeCostRepositoryTests : PriceDependentTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(result?.WorldId == WorldId);
+            Assert.That(result.WorldId == WorldId);
             Assert.That(result.RecipeId == id);
         });
     }
@@ -151,7 +151,7 @@ public class RecipeCostRepositoryTests : PriceDependentTests
     public async Task GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null);
+        _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null!);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         _ = await recipeCostRepo.GetAsync(WorldId, RecipeId);
@@ -230,7 +230,7 @@ public class RecipeCostRepositoryTests : PriceDependentTests
     {
         var poco = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null);
+        _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null!);
         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 
         await recipeCostRepo.Add(poco);
