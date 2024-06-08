@@ -14,11 +14,10 @@
     <Project>LICENSE.txt</Project>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4"/>
-    <PackageReference Include="GilGoblin.Api" Version="1.1.*"/>
-    <PackageReference Include="GilGoblin.Fetcher" Version="1.0.*"/>
-    <PackageReference Include="GilGoblin.Batcher" Version="1.0.*"/>
-    <PackageReference Include="GilGoblin.Database" Version="1.1.*"/>
+<!--    <PackageReference Include="GilGoblin.Api" Version="1.1.*"/>-->
+<!--    <PackageReference Include="GilGoblin.Fetcher" Version="1.0.*"/>-->
+<!--    <PackageReference Include="GilGoblin.Batcher" Version="1.0.*"/>-->
+<!--    <PackageReference Include="GilGoblin.Database" Version="1.1.*"/>-->
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.*"/>

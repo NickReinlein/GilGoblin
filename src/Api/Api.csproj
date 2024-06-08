@@ -23,7 +23,7 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.*" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="GilGoblin.Database" Version="1.1.*" />
   </ItemGroup>
 

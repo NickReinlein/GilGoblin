@@ -14,7 +14,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="EntityFramework" Version="6.4.4"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.*" />
@@ -37,7 +36,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Accountant/Accountant.csproj"/>

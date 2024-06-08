@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
@@ -17,16 +18,10 @@ using Prometheus;
 
 namespace GilGoblin.Api;
 
-public class Startup
+public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
-    public IConfiguration _configuration;
-    public IWebHostEnvironment _environment;
-
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
-    {
-        _configuration = configuration;
-        _environment = environment;
-    }
+    public IConfiguration _configuration = configuration;
+    public IWebHostEnvironment _environment = environment;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -54,11 +49,7 @@ public class Startup
 
     private void AddGoblinServices(IServiceCollection services)
     {
-        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new Exception("Failed to get connection string");
-
-        services = AddGoblinDatabases(services, connectionString);
+        services = AddGoblinDatabases(services, _configuration);
         services = AddGoblinCrafting(services);
         services = AddGoblinControllers(services);
         services = AddBasicBuilderServices(services);
@@ -101,8 +92,12 @@ public class Startup
         return services;
     }
 
-    public static IServiceCollection AddGoblinDatabases(IServiceCollection services, string connectionString)
+    public static IServiceCollection AddGoblinDatabases(IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("GilGoblinDbContext");
+        if (string.IsNullOrEmpty(connectionString))
+            throw new Exception("Failed to get connection string");
+
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();

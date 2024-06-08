@@ -32,9 +32,8 @@ public class Startup
 
     private void AddGoblinAccountingServices(IServiceCollection services)
     {
-        var connectionString = _configuration.GetConnectionString(nameof(GilGoblinDbContext)) ?? string.Empty;
         Api.Startup.AddGoblinCrafting(services);
-        Api.Startup.AddGoblinDatabases(services, connectionString);
+        Api.Startup.AddGoblinDatabases(services, _configuration);
         Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
@@ -44,7 +43,7 @@ public class Startup
         services.AddHostedService<RecipeProfitAccountant>();
     }
 
-    private void DatabaseValidation(IApplicationBuilder app)
+    private static void DatabaseValidation(IApplicationBuilder app)
     {
         try
         {
@@ -59,7 +58,7 @@ public class Startup
         }
     }
 
-    private void ValidateCanConnectToDatabase(IServiceScope serviceScope)
+    private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
         var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var canConnect = dbContextService.Database.CanConnect();

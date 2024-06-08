@@ -39,7 +39,7 @@ public class Startup
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        services = Api.Startup.AddGoblinDatabases(services, connectionString);
+        services = Api.Startup.AddGoblinDatabases(services, _configuration);
         Api.Startup.AddGoblinCrafting(services);
         Api.Startup.AddGoblinCaches(services);
 
