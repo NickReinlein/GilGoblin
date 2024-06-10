@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
@@ -142,11 +141,11 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     {
         try
         {
-            var iServiceScopeFactory = builder.ApplicationServices.GetService<IServiceScopeFactory>();
-            if (iServiceScopeFactory == null)
+            var serviceScopeFactory = builder.ApplicationServices.GetService<IServiceScopeFactory>();
+            if (serviceScopeFactory == null)
                 throw new Exception("Failed to create service scope for database validation");
 
-            using var serviceScope = iServiceScopeFactory.CreateScope();
+            using var serviceScope = serviceScopeFactory.CreateScope();
             using var dbContext = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             ValidateCanConnectToDatabase(dbContext);
         }

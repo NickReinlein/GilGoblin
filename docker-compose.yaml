@@ -29,10 +29,8 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    # image: nickreinlein/gilgoblin-api
-    # container_name: api
-    image: api
-    build: src/Api/
+    image: nickreinlein/gilgoblin-api
+    container_name: api
     depends_on:
       - gilgoblin-database
     environment:
@@ -53,8 +51,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-dataupdater:
-    image: nickreinlein/gilgoblin-dataupdater
-    container_name: dataupdater
+    # image: nickreinlein/gilgoblin-dataupdater
+    # container_name: dataupdater
+    image: accountant
+    build: src/Accountant/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
@@ -74,8 +74,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-accountant:
-    image: nickreinlein/gilgoblin-accountant
-    container_name: accountant
+    # image: nickreinlein/gilgoblin-accountant
+    # container_name: accountant
+    image: accountant
+    build: src/Accountant/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api

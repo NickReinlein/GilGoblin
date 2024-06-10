@@ -2,7 +2,6 @@
   <PropertyGroup>
     <RootNamespace>GilGoblin.Tests</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
-    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
@@ -36,7 +35,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Accountant/Accountant.csproj"/>

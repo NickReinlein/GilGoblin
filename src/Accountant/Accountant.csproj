@@ -2,9 +2,10 @@
   <PropertyGroup>
     <RootNamespace>GilGoblin.Accountant</RootNamespace>
     <PackageId>GilGoblin.Accountant</PackageId>
-    <OutputType>Exe</OutputType>
     <Version>1.1.0</Version>
-    <Authors>Nicholas Reinlein</Authors>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -15,12 +16,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+      <PackageReference Include="GilGoblin.Api" Version="1.0.*" />
+    <PackageReference Include="GilGoblin.Database" Version="1.0.*" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.*"/>
     <PackageReference Include="Serilog" Version="3.0.*"/>
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.*"/>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
   </ItemGroup>
 
   <ItemGroup>

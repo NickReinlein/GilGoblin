@@ -3,7 +3,6 @@
     <RootNamespace>GilGoblin.Batcher</RootNamespace>
     <PackageId>GilGoblin.Batcher</PackageId>
     <Version>1.1.0</Version>
-    <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

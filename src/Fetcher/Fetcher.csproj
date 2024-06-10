@@ -4,7 +4,6 @@
     <RootNamespace>GilGoblin.Fetcher</RootNamespace>
     <PackageId>GilGoblin.Fetcher</PackageId>
     <Version>1.1.0</Version>
-    <Authors>Nicholas Reinlein</Authors>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
