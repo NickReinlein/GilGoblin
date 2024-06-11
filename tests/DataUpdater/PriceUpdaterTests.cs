@@ -77,7 +77,7 @@ public class PriceUpdaterTests : InMemoryTestDb
         await _priceUpdater.FetchAsync(cts.Token, 34);
 
         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
-        await _priceFetcher.DidNotReceiveWithAnyArgs().FetchByIdsAsync(default, default);
+        await _priceFetcher.DidNotReceiveWithAnyArgs().FetchByIdsAsync(default, default!);
         _logger.Received(1).LogError(errorMessage);
     }
 
@@ -85,7 +85,7 @@ public class PriceUpdaterTests : InMemoryTestDb
     public async Task GivenFetchAsync_WhenMarketableItemsAreReturned_ThenWeAlsoReturnRecipeIngredients()
     {
         var allRecipes = _dbContext.Recipe.ToList();
-        _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int> { 631 });
+        _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([631]);
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
@@ -111,8 +111,8 @@ public class PriceUpdaterTests : InMemoryTestDb
     [Test]
     public void GivenFetchAsync_WhenTheTokenIsCancelled_ThenWeExitGracefully()
     {
-        _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int> { 443, 1420, 3500, 900 });
-        _saver.SaveAsync(default).ReturnsForAnyArgs(true);
+        _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([443, 1420, 3500, 900]);
+        _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
         _priceFetcher.GetEntriesPerPage().Returns(2);
         _priceFetcher.FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
             .Returns(new List<PriceWebPoco>());
@@ -147,7 +147,7 @@ public class PriceUpdaterTests : InMemoryTestDb
     {
         var saveList = SetupSave();
         _saver.ClearSubstitute();
-        _saver.SaveAsync(default).ThrowsAsyncForAnyArgs(new Exception("test"));
+        _saver.SaveAsync(default!).ThrowsAsyncForAnyArgs(new Exception("test"));
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
@@ -196,7 +196,7 @@ public class PriceUpdaterTests : InMemoryTestDb
 
         var idList = new List<int> { 443, 1420 };
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(idList);
-        _saver.SaveAsync(default).ReturnsForAnyArgs(true);
+        _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
         _priceFetcher.GetEntriesPerPage().Returns(2);
         _priceFetcher
             .FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())

@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +33,7 @@ public class Startup
     private void AddGoblinAccountingServices(IServiceCollection services)
     {
         Api.Startup.AddGoblinCrafting(services);
-        Api.Startup.AddGoblinDatabases(services, _configuration.GetConnectionString(nameof(GilGoblinDbContext)));
+        Api.Startup.AddGoblinDatabases(services, _configuration);
         Api.Startup.AddGoblinCaches(services);
 
         services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
@@ -44,11 +43,13 @@ public class Startup
         services.AddHostedService<RecipeProfitAccountant>();
     }
 
-    private void DatabaseValidation(IApplicationBuilder app)
+    private static void DatabaseValidation(IApplicationBuilder app)
     {
         try
         {
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
+            if (serviceScope == null)
+                throw new Exception("Failed to create service scope for database validation");
             ValidateCanConnectToDatabase(serviceScope);
         }
         catch (Exception e)
@@ -57,7 +58,7 @@ public class Startup
         }
     }
 
-    private void ValidateCanConnectToDatabase(IServiceScope serviceScope)
+    private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
         var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var canConnect = dbContextService.Database.CanConnect();

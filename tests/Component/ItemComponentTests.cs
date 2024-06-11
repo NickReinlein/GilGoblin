@@ -22,7 +22,8 @@ public class ItemComponentTests : ComponentTests
         var item = await response.Content.ReadFromJsonAsync<ItemPoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
-            Assert.That(item.Id, Is.EqualTo(10348));
+            Assert.That(item, Is.Not.Null);
+            Assert.That(item!.Id, Is.EqualTo(10348));
             Assert.That(item.CanHq, Is.False);
             Assert.That(item.IconId, Is.EqualTo(51024));
             Assert.That(item.Description, Is.EqualTo(expectedDescription));

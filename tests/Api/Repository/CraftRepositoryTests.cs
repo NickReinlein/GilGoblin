@@ -49,7 +49,7 @@ public class CraftRepositoryTests
     [Test]
     public async Task GivenGetBestAsync_WhenAnInvalidWorldIdIsProvided_ThenBadRequestIsReturned()
     {
-        _worldRepository.Get(Arg.Any<int>()).Returns((WorldPoco)null);
+        _worldRepository.Get(Arg.Any<int>()).Returns((WorldPoco)null!);
 
         var result = await _repository.GetBestAsync(1);
 
@@ -161,7 +161,7 @@ public class CraftRepositoryTests
         var prices = new List<PricePoco> { pricePoco };
         var profits = new List<RecipeProfitPoco> { recipeProfitPoco };
 
-        _cache.Get(Arg.Any<(int, int)>()).Returns((CraftSummaryPoco)null);
+        _cache.Get(Arg.Any<(int, int)>()).Returns((CraftSummaryPoco)null!);
 
         var result = await _repository.CreateSummaryAsync(worldId, recipeCosts, recipes, items, prices, profits);
 

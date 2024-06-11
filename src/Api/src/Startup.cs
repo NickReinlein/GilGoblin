@@ -17,16 +17,10 @@ using Prometheus;
 
 namespace GilGoblin.Api;
 
-public class Startup
+public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
-    public IConfiguration _configuration;
-    public IWebHostEnvironment _environment;
-
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
-    {
-        _configuration = configuration;
-        _environment = environment;
-    }
+    public IConfiguration _configuration = configuration;
+    public IWebHostEnvironment _environment = environment;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -54,12 +48,11 @@ public class Startup
 
     private void AddGoblinServices(IServiceCollection services)
     {
-        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
-        services = AddGoblinDatabases(services, connectionString);
+        services = AddGoblinDatabases(services, _configuration);
         services = AddGoblinCrafting(services);
         services = AddGoblinControllers(services);
         services = AddBasicBuilderServices(services);
-        services = AddGoblinCaches(services); 
+        _ = AddGoblinCaches(services); 
     }
 
     public static IServiceCollection AddGoblinCaches(IServiceCollection services)
@@ -98,8 +91,12 @@ public class Startup
         return services;
     }
 
-    public static IServiceCollection AddGoblinDatabases(IServiceCollection services, string connectionString)
+    public static IServiceCollection AddGoblinDatabases(IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("GilGoblinDbContext");
+        if (string.IsNullOrEmpty(connectionString))
+            throw new Exception("Failed to get connection string");
+
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
@@ -144,7 +141,11 @@ public class Startup
     {
         try
         {
-            using var serviceScope = builder.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var serviceScopeFactory = builder.ApplicationServices.GetService<IServiceScopeFactory>();
+            if (serviceScopeFactory == null)
+                throw new Exception("Failed to create service scope for database validation");
+
+            using var serviceScope = serviceScopeFactory.CreateScope();
             using var dbContext = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             ValidateCanConnectToDatabase(dbContext);
         }

@@ -207,7 +207,7 @@ public class CraftingCalculatorTests
     [Test]
     public void GivenGetIngredientPrice_WhenThereIsNoResult_ThenAnExceptionIsThrown()
     {
-        _prices.Get(Arg.Any<int>(), Arg.Any<int>()).Returns((PricePoco)null);
+        _prices.Get(Arg.Any<int>(), Arg.Any<int>()).Returns((PricePoco)null!);
 
         Assert.Throws<DataException>(() =>
             _calc.GetIngredientPrices(_worldId, _firstItemId, NewRecipe.GetIngredientsList()));

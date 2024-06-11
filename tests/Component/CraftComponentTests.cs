@@ -29,10 +29,12 @@ public class CraftComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
 
         var craftsRaw = await response.Content.ReadFromJsonAsync<IEnumerable<CraftSummaryPoco>>(GetSerializerOptions());
-        var crafts = craftsRaw.ToList();
+        
         Assert.Multiple(() =>
         {
-            Assert.That(crafts, Has.Count.GreaterThan(5));
+            var crafts = craftsRaw?.ToList();
+            Assert.That(crafts, Is.Not.Null);
+            Assert.That(crafts!, Has.Count.GreaterThan(5));
             Assert.That(crafts.All(r => r.WorldId == 34));
             Assert.That(crafts.All(r => r.ItemId > 0));
             Assert.That(crafts.All(r => r.ItemInfo.IconId > 0));

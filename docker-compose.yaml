@@ -11,7 +11,7 @@ services:
       PGUSER: ${PGUSER}
       PGDATA: ${PGDATA}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,7 +43,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "55448:80"
+      - "${PORT_API}:8080"
     logging:
       driver: 'json-file'
       options:
@@ -206,7 +206,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
       - GF_AUTH_BASIC_ENABLED=${GF_AUTH_BASIC_ENABLED}
     ports:
-      - "55450:3000"
+      - "${PORT_GRAFANA}:3000"
     volumes:
       - ./benchmarks/grafana:/var/lib/grafana
     restart: unless-stopped

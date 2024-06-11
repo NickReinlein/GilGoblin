@@ -156,7 +156,7 @@ public class RecipeGrocerTests
     [Test]
     public async Task GivenACallToBreakdownItem_WhenRecipeHasNullIngredients_ThenTheyAreIgnored()
     {
-        var recipes = new List<RecipePoco> { null, null };
+        var recipes = new List<RecipePoco> { null!, null! };
         _recipes.GetRecipesForItem(_firstItemId).Returns(recipes);
 
         var result = await _grocer.BreakdownItem(NewRecipe.Id);
@@ -194,8 +194,8 @@ public class RecipeGrocerTests
     public async Task GivenACallToBreakdownRecipeById_WhenItHasNullIngredients_ThenTheyAreIgnored()
     {
         var allIngredients = NewRecipe.GetIngredientsList().GetRange(0, 5);
-        allIngredients.Add(null);
-        allIngredients.Add(null);
+        allIngredients.Add(null!);
+        allIngredients.Add(null!);
 
         var result = await _grocer.BreakDownIngredientEntirely(allIngredients);
 

@@ -53,7 +53,7 @@ public class PriceRepositoryTests : PriceDependentTests
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.WorldId, Is.EqualTo(WorldId));
+            Assert.That(result!.WorldId, Is.EqualTo(WorldId));
             Assert.That(result.ItemId, Is.EqualTo(id));
         });
     }
