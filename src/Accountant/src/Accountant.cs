@@ -20,19 +20,11 @@ public interface IAccountant<T> where T : class, IIdentifiable
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
-public class Accountant<T> : BackgroundService, IAccountant<T>
-    where T : class, IIdentifiable
+public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant<T>> logger)
+    : BackgroundService, IAccountant<T> where T : class, IIdentifiable
 {
-    protected readonly IServiceScopeFactory ScopeFactory;
-    protected readonly ILogger<Accountant<T>> Logger;
-
-    public Accountant(
-        IServiceScopeFactory scopeFactory,
-        ILogger<Accountant<T>> logger)
-    {
-        ScopeFactory = scopeFactory;
-        Logger = logger;
-    }
+    protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
+    protected readonly ILogger<Accountant<T>> Logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
