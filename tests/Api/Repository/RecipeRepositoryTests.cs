@@ -161,49 +161,36 @@ public class RecipeRepositoryTests : InMemoryTestDb
 
     [Test]
     public void
-        GivenWeGetRecipesForItems_WhenTheIdsAreValidAndUncached_ThenTheRepositoryReturnsTheCorrectEntriesAndCachesThem()
+        GivenWeGetRecipesForItems_WhenTheIdsAreValidAndUncached_ThenTheRepositoryReturnsTheEntriesAndCachesThem()
     {
-        var validIds = new[] { 9984, 222, 333 };
+        var validIds = new[] { 9984, 222, 333, 88 };
+        const int expectedRecipesCount = 6; // Some items have multiple recipes
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
 
         var result = recipeRepo.GetRecipesForItemIds(validIds);
 
-        _itemRecipeCache.Received(1).GetMultiple(validIds);
-        _itemRecipeCache.Received(1).Add(Arg.Is<int>(i => validIds.Contains(i)), Arg.Any<List<RecipePoco>>());
+        Assert.That(result, Has.Count.EqualTo(expectedRecipesCount));
+        _recipeCache.Received(expectedRecipesCount).Add(Arg.Any<int>(), Arg.Any<RecipePoco>());
+        _itemRecipeCache.Received(validIds.Length).Add(Arg.Is<int>(i => validIds.Contains(i)), Arg.Any<List<RecipePoco>>());
     }
+
+    [TestCase(-1)]
+    [TestCase(0)]
+    public void GivenWeGetRecipesForItems_WhenTheIdIsInvalid_ThenTheRepositoryReturnsAnEmptyResultImmediately(
+        int targetItemId
+    )
+    {
+        using var context = new TestGilGoblinDbContext(_options, _configuration);
+        var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
+        var idList = new List<int> { targetItemId };
     
-    [TestCase]
-    public void GivenGetRecipesForItem_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntryImmediately()
-    {
-        var validIds = new[] { 9984, 222, 333 };
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        // var recipes = context.Recipe.Where(r => r.TargetItemId == targetItemId).ToList();
-        // _itemRecipeCache.Configure().Get(Arg.Is(targetItemId)).Returns(recipes);
-        var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
-
-        var result = recipeRepo.GetRecipesForItemIds(validIds);
-
-        Assert.That(result.Count, Is.EqualTo(validIds.Length));
-        _itemRecipeCache.Received(1).GetMultiple(validIds);
-        _itemRecipeCache.DidNotReceive().Add(Arg.Is<int>(i => validIds.Contains(i)), Arg.Any<List<RecipePoco>>());
+        var result = recipeRepo.GetRecipesForItemIds(idList);
+    
+        Assert.That(!result.Any());
+        _itemRecipeCache.DidNotReceive().Get(targetItemId);
+        _itemRecipeCache.DidNotReceive().Add(targetItemId, Arg.Any<List<RecipePoco>>());
     }
-
-    // [TestCase(-1)]
-    // [TestCase(0)]
-    // public void GivenWeGetRecipesForItem_WhenTheIdIsInvalid_ThenTheRepositoryReturnsAnEmptyResultImmediately(
-    //     int targetItemId
-    // )
-    // {
-    //     using var context = new TestGilGoblinDbContext(_options, _configuration);
-    //     var recipeRepo = new RecipeRepository(context, _recipeCache, _itemRecipeCache);
-    //
-    //     var result = recipeRepo.GetRecipesForItem(targetItemId);
-    //
-    //     Assert.That(!result.Any());
-    //     _itemRecipeCache.DidNotReceive().Get(targetItemId);
-    //     _itemRecipeCache.DidNotReceive().Add(targetItemId, Arg.Any<List<RecipePoco>>());
-    // }
 
     #endregion GetRecipesForItemIds
 
