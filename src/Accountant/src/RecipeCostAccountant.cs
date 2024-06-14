@@ -11,14 +11,11 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Accountant;
 
-public class RecipeCostAccountant : Accountant<RecipeCostPoco>
+public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Accountant<RecipeCostPoco>> logger)
+    : Accountant<RecipeCostPoco>(scopeFactory, logger)
 {
-    public RecipeCostAccountant(
-        IServiceScopeFactory scopeFactory,
-        ILogger<Accountant<RecipeCostPoco>> logger) :
-        base(scopeFactory, logger)
-    {
-    }
+    private const string ageMessage = "Recipe cost calculation is only {Age} hours old and fresh, " +
+                                      "therefore not updating for recipe {RecipeId} for world {WorldId}";
 
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
@@ -26,9 +23,11 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
         {
             using var scope = ScopeFactory.CreateScope();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
+
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             var existingRecipeCosts = costRepo.GetAll(worldId).ToList();
+
+            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
 
             Logger.LogInformation(
@@ -46,15 +45,26 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
                 try
                 {
                     var recipeId = recipe.Id;
-                    var existing = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipeId);
-                    if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
-                        continue;
+                    var current = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipeId);
+                    if (current is not null)
+                    {
+                        Logger.LogDebug("Found current recipe cost for Recipe {RecipeId} for world {WorldId}",
+                            recipe.Id, worldId);
+                        var age = DateTimeOffset.Now - current.Updated;
+                        if (age <= GetDataFreshnessInHours())
+                        {
+                            Logger.LogDebug(ageMessage, age.TotalHours, recipe.Id, worldId);
+                            continue;
+                        }
+                    }
 
+                    Logger.LogDebug("Calculating new cost for {RecipeId} for world {WorldId}", recipeId, worldId);
                     var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
                     if (calculatedCost <= 1)
                     {
-                        var message = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}";
-                        Logger.LogError(message);
+                        Logger.LogError(
+                            "Failed to calculate crafting cost of recipe {RecipeId} world {WorldId}: {Cost}",
+                            recipeId, worldId, calculatedCost.ToString());
                         continue;
                     }
 
@@ -71,9 +81,9 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
                 }
                 catch (Exception e)
                 {
-                    var message =
-                        $"Failed to calculate crafting cost of recipe {recipe.Id} for world {worldId}: {e.Message}";
-                    Logger.LogWarning(message);
+                    const string message =
+                        "Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}: {Message}";
+                    Logger.LogWarning(message, recipe.Id, worldId, e.Message);
                 }
             }
         }
@@ -84,7 +94,8 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
         catch (Exception ex)
         {
             Logger.LogError(
-                $"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}");
+                "An unexpected exception occured during the accounting process for world {WorldId}: {Message}",
+                worldId, ex.Message);
         }
     }
 
@@ -113,9 +124,16 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             foreach (var recipe in recipes)
             {
                 var current = currentRecipeCosts.FirstOrDefault(c => c.GetId() == recipe.Id);
-                if (current is not null &&
-                    current.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
-                    continue;
+                if (current is not null)
+                {
+                    Logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id, worldId);
+                    var age = DateTimeOffset.Now - current.Updated;
+                    if (age <= GetDataFreshnessInHours())
+                    {
+                        Logger.LogDebug(ageMessage, age.TotalHours, recipe.Id, worldId);
+                        continue;
+                    }
+                }
 
                 idsToUpdate.Add(recipe.Id);
             }
