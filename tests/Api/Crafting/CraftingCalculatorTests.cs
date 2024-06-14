@@ -269,7 +269,7 @@ public class CraftingCalculatorTests
     {
         foreach (var ingredient in recipe.GetActiveIngredients())
         {
-            var ingredientPrice = new PricePoco()
+            var ingredientPrice = new PricePoco
             {
                 ItemId = ingredient.ItemId, AverageListingPrice = 300, AverageSold = 280, WorldId = worldId
             };
@@ -283,9 +283,17 @@ public class CraftingCalculatorTests
         BasePricePoco ingredientMarket
     )
     {
+        _recipeCosts.GetAsync(market.WorldId, recipe.Id).ReturnsNullForAnyArgs();
         _prices.Get(market.WorldId, market.ItemId).ReturnsForAnyArgs(market);
         _prices.Get(ingredientMarket.WorldId, ingredientMarket.ItemId).ReturnsForAnyArgs(market);
-        _grocer.BreakdownRecipeById(recipe.Id).Returns(recipe.GetActiveIngredients());
+        var activeIngredients = recipe.GetActiveIngredients();
+        _grocer.BreakdownRecipeById(recipe.Id).Returns(activeIngredients);
+        foreach (var ingredient in activeIngredients)
+        {
+            _prices.Get(market.WorldId, ingredient.ItemId).Returns(market);
+            _prices.Get(ingredientMarket.WorldId, ingredient.ItemId).Returns(ingredientMarket);
+            _recipes.GetRecipesForItem(ingredient.ItemId).Returns(new List<RecipePoco>());
+        }
         _recipes.GetRecipesForItem(market.ItemId).Returns(new List<RecipePoco>() { recipe });
         _recipes.GetRecipesForItem(ingredientMarket.ItemId).Returns([]);
         _recipes.Get(recipe.Id).Returns(recipe);

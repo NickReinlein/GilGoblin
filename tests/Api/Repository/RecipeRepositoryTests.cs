@@ -177,7 +177,7 @@ public class RecipeRepositoryTests : InMemoryTestDb
 
     [TestCase(-1)]
     [TestCase(0)]
-    public void GivenWeGetRecipesForItems_WhenTheIdIsInvalid_ThenTheRepositoryReturnsAnEmptyResultImmediately(
+    public void GivenWeGetRecipesForItemIds_WhenTheIdIsInvalid_ThenTheRepositoryReturnsAnEmptyResultImmediately(
         int targetItemId
     )
     {

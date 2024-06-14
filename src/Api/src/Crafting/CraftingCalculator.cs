@@ -40,7 +40,7 @@ public class CraftingCalculator : ICraftingCalculator
         if (worldId < 1 || itemId < 1)
             return errorReturn;
 
-        var recipes = _recipes.GetRecipesForItem(itemId).ToList();
+        var recipes = _recipes.GetRecipesForItem(itemId);
         if (!recipes.Any())
             return errorReturn;
 
