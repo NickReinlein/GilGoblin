@@ -31,6 +31,13 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
             var existingRecipeCosts = costRepo.GetAll(worldId).ToList();
             var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
 
+            Logger.LogInformation(
+                "Found {Count} relevant recipes for world {WorldId}, compared to the {ParamCount} requested recipes",
+                allRelevantRecipes.Count,
+                worldId,
+                idList.Count);
+            Logger.LogInformation("Found {Count} costs for world {worldId}", existingRecipeCosts.Count, worldId);
+
             foreach (var recipe in allRelevantRecipes)
             {
                 if (ct.IsCancellationRequested)
@@ -58,13 +65,15 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
                         Cost = calculatedCost,
                         Updated = DateTimeOffset.UtcNow
                     };
+                    Logger.LogDebug("Cost of recipe {RecipeId} for world {WorldId} is successfully calculated: {Cost}",
+                        newCost.RecipeId, newCost.WorldId, newCost.Cost);
                     await costRepo.Add(newCost);
                 }
                 catch (Exception e)
                 {
                     var message =
                         $"Failed to calculate crafting cost of recipe {recipe.Id} for world {worldId}: {e.Message}";
-                    Logger.LogError(message);
+                    Logger.LogWarning(message);
                 }
             }
         }
