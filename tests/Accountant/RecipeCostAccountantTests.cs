@@ -30,8 +30,8 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     private IRecipeCostRepository _recipeCostRepo;
     private IRecipeRepository _recipeRepo;
     private IPriceRepository<PricePoco> _priceRepo;
-    private const int worldId = 34;
-    private const int recipeId = 11;
+    private const int WorldId = 34;
+    private const int RecipeId = 11;
 
     [SetUp]
     public override void SetUp()
@@ -59,8 +59,8 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         _recipeRepo
             .GetMultiple(Arg.Any<IEnumerable<int>>())
             .Returns(_dbContext.Recipe.ToList());
-        _recipeCostRepo.GetAll(worldId).Returns(_dbContext.RecipeCost.ToList());
-        _priceRepo.GetAll(worldId).Returns(_dbContext.Price.ToList());
+        _recipeCostRepo.GetAll(WorldId).Returns(_dbContext.RecipeCost.ToList());
+        _priceRepo.GetAll(WorldId).Returns(_dbContext.Price.ToList());
 
         _accountant = new RecipeCostAccountant(_scopeFactory, _logger);
     }
@@ -78,11 +78,11 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     [Test]
     public void GivenCalculateAsync_WhenTheTokenIsCancelled_ThenWeExitGracefullyAndLogAnInfoMessage()
     {
-        var infoMessage = $"Cancellation of the task by the user. Putting away the books for {worldId}";
+        var infoMessage = $"Cancellation of the task by the user. Putting away the books for {WorldId}";
 
         var cts = new CancellationTokenSource();
         cts.Cancel();
-        Assert.DoesNotThrowAsync(async () => await _accountant.CalculateAsync(cts.Token, worldId));
+        Assert.DoesNotThrowAsync(async () => await _accountant.CalculateAsync(cts.Token, WorldId));
 
         _logger.Received().LogInformation(infoMessage);
     }
@@ -90,31 +90,31 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     [Test]
     public async Task GivenCalculateAsync_WhenUpdatesAreSuccessful_ThenWeLogSuccess()
     {
-        var message = $"Boss, books are closed for world {worldId}";
+        var message = $"Boss, books are closed for world {WorldId}";
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);
-        await _accountant.CalculateAsync(CancellationToken.None, worldId);
+        await _accountant.CalculateAsync(CancellationToken.None, WorldId);
 
         _logger.Received().LogInformation(message);
     }
 
     [Test]
-    public async Task GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco()
+    public async Task GivenComputeListAsync_WhenSuccessful_ThenWeReturnAPoco()
     {
         const int expectedCost = 107;
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);
-        await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, CancellationToken.None);
+        await _accountant.ComputeListAsync(WorldId, [RecipeId], CancellationToken.None);
 
         await using var costAfter = new TestGilGoblinDbContext(_options, _configuration);
-        var result = costAfter.RecipeCost.FirstOrDefault(after => after.RecipeId == recipeId);
+        var result = costAfter.RecipeCost.FirstOrDefault(after => after.RecipeId == RecipeId);
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.WorldId, Is.EqualTo(worldId));
-            Assert.That(result.RecipeId, Is.EqualTo(recipeId));
+            Assert.That(result.WorldId, Is.EqualTo(WorldId));
+            Assert.That(result.RecipeId, Is.EqualTo(RecipeId));
             Assert.That(result.Cost, Is.EqualTo(expectedCost));
             var totalMs = (result.Updated - DateTimeOffset.UtcNow).TotalMilliseconds;
             Assert.That(totalMs, Is.LessThan(5000));
@@ -131,16 +131,15 @@ public class RecipeCostAccountantTests : InMemoryTestDb
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);
-        await _accountant.ComputeListAsync(worldId, recipeIds, cts.Token);
+        await _accountant.ComputeListAsync(WorldId, recipeIds, cts.Token);
 
         Assert.That(missingCostIds, Has.Count.GreaterThanOrEqualTo(2));
         foreach (var missingId in missingCostIds)
         {
-            await _calc.Received(1).CalculateCraftingCostForRecipe(worldId, missingId);
+            await _calc.Received(1).CalculateCraftingCostForRecipe(WorldId, missingId);
         }
 
-        await _recipeCostRepo
-            .DidNotReceive()
+        await _recipeCostRepo.DidNotReceive()
             .Add(Arg.Is<RecipeCostPoco>(r =>
                 missingCostIds.Contains(r.RecipeId)));
     }
@@ -148,11 +147,11 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     [Test]
     public async Task GivenComputeListAsync_WhenNoNewCostsAreCalculated_ThenWeDontAddToTheRepo()
     {
-        var idList = new List<int> { recipeId };
+        var idList = new List<int> { RecipeId };
 
-        await _accountant.ComputeListAsync(worldId, idList, CancellationToken.None);
+        await _accountant.ComputeListAsync(WorldId, idList, CancellationToken.None);
 
-        await _recipeCostRepo.DidNotReceive().Add(Arg.Is<RecipeCostPoco>(r => r.RecipeId == recipeId));
+        await _recipeCostRepo.DidNotReceive().Add(Arg.Is<RecipeCostPoco>(r => r.RecipeId == RecipeId));
     }
 
     [Test]
@@ -161,12 +160,33 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         const string message = "Task was cancelled by user. Putting away the books, boss!";
 
         var cts = new CancellationTokenSource();
-        cts.Cancel();
-        await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, cts.Token);
+        await cts.CancelAsync();
+        await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
 
         await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>());
         await _recipeCostRepo.DidNotReceive().Add(Arg.Any<RecipeCostPoco>());
-        _logger.Received().LogInformation(message);
+        _logger.Received(1).LogInformation(message);
+    }
+
+    [Test]
+    public async Task GivenComputeListAsync_WhenAnExceptionIsThrownForOneEntry_ThenWeLogTheErrorAndContinue()
+    {
+        var recipePocos = _dbContext.Recipe.ToList().Append(new RecipePoco { Id = 2222 }).ToList();
+        _recipeRepo
+            .GetMultiple(Arg.Any<IEnumerable<int>>())
+            .Returns(recipePocos);
+        _calc.CalculateCraftingCostForRecipe(WorldId, 2222).Throws<InvalidOperationException>();
+
+        await _accountant.CalculateAsync(CancellationToken.None, WorldId);
+
+        var singularFailureException = $"Failed to calculate crafting cost of recipe 2222 world {WorldId}: " +
+                                       "Operation is not valid due to the current state of the object.";
+        _logger.Received().LogError(singularFailureException);
+        await _calc.Received(1).CalculateCraftingCostForRecipe(WorldId, 2222);
+        await _calc.Received().CalculateCraftingCostForRecipe(WorldId, 33);
+        var processEndedExceptionMessage =
+            $"An unexpected exception occured during the accounting process for world {WorldId}: test123";
+        _logger.DidNotReceive().LogError(processEndedExceptionMessage);
     }
 
     [Test]
@@ -179,26 +199,26 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public async Task GivenComputeAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
+    public async Task GivenCalculateAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
     {
-        var message = $"An unexpected exception occured during the accounting process for world {worldId}: test123";
+        var message = $"An unexpected exception occured during the accounting process for world {WorldId}: test123";
         _scope.ServiceProvider.GetRequiredService(typeof(ICraftingCalculator))
             .Throws(new NotImplementedException("test123")); //temporary
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);
-        await _accountant.CalculateAsync(CancellationToken.None, worldId);
+        await _accountant.CalculateAsync(CancellationToken.None, WorldId);
 
-        _logger.Received().LogError(message);
+        _logger.Received(1).LogError(message);
     }
 
     [Test]
     public async Task GivenGetIdsToUpdate_WhenNoIdsAreReturned_ThenWeLogTheInfoAndStop()
     {
         _scope.ServiceProvider.GetRequiredService(typeof(IRecipeRepository)).Throws<IndexOutOfRangeException>();
-        var messageInfo = $"Nothing to calculate for {worldId}";
+        var messageInfo = $"Nothing to calculate for {WorldId}";
 
-        await _accountant.CalculateAsync(CancellationToken.None, worldId);
+        await _accountant.CalculateAsync(CancellationToken.None, WorldId);
 
         _logger.Received().LogInformation(messageInfo);
         _recipeCostRepo.DidNotReceive().GetAll(Arg.Any<int>());
@@ -209,11 +229,11 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     {
         _scope.ServiceProvider.GetRequiredService(typeof(IRecipeRepository)).Throws<IndexOutOfRangeException>();
         var messageError =
-            $"Failed to get the Ids to update for world {worldId}: Index was outside the bounds of the array.";
+            $"Failed to get the Ids to update for world {WorldId}: Index was outside the bounds of the array.";
 
-        await _accountant.CalculateAsync(CancellationToken.None, worldId);
+        await _accountant.CalculateAsync(CancellationToken.None, WorldId);
 
-        _logger.Received().LogError(messageError);
+        _logger.Received(1).LogError(messageError);
         _recipeCostRepo.DidNotReceive().GetAll(Arg.Any<int>());
     }
 }

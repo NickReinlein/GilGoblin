@@ -36,24 +36,36 @@ public class RecipeCostAccountant : Accountant<RecipeCostPoco>
                 if (ct.IsCancellationRequested)
                     throw new TaskCanceledException();
 
-                var recipeId = recipe.Id;
-                var existing = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipeId);
-                if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
-                    continue;
-
-                var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
-                if (calculatedCost <= 1)
+                try
                 {
-                    var message = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}";
-                    Logger.LogError(message);
-                    continue;
+                    var recipeId = recipe.Id;
+                    var existing = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipeId);
+                    if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
+                        continue;
+
+                    var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
+                    if (calculatedCost <= 1)
+                    {
+                        var message = $"Failed to calculate crafting cost of recipe {recipeId} world {worldId}";
+                        Logger.LogError(message);
+                        continue;
+                    }
+
+                    var newCost = new RecipeCostPoco
+                    {
+                        WorldId = worldId,
+                        RecipeId = recipeId,
+                        Cost = calculatedCost,
+                        Updated = DateTimeOffset.UtcNow
+                    };
+                    await costRepo.Add(newCost);
                 }
-
-                var newCost = new RecipeCostPoco
+                catch (Exception e)
                 {
-                    WorldId = worldId, RecipeId = recipeId, Cost = calculatedCost, Updated = DateTimeOffset.UtcNow
-                };
-                await costRepo.Add(newCost);
+                    var message =
+                        $"Failed to calculate crafting cost of recipe {recipe.Id} for world {worldId}: {e.Message}";
+                    Logger.LogError(message);
+                }
             }
         }
         catch (TaskCanceledException)
