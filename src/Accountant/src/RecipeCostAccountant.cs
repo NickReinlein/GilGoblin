@@ -14,6 +14,8 @@ namespace GilGoblin.Accountant;
 public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Accountant<RecipeCostPoco>> logger)
     : Accountant<RecipeCostPoco>(scopeFactory, logger)
 {
+    public static int GetDataFreshnessInHours() => 48;
+
     private const string ageMessage = "Recipe cost calculation is only {Age} hours old and fresh, " +
                                       "therefore not updating for recipe {RecipeId} for world {WorldId}";
 
@@ -50,17 +52,17 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                     {
                         Logger.LogDebug("Found current recipe cost for Recipe {RecipeId} for world {WorldId}",
                             recipe.Id, worldId);
-                        var age = DateTimeOffset.Now - current.Updated;
+                        var age = (DateTimeOffset.Now - current.Updated).TotalHours;
                         if (age <= GetDataFreshnessInHours())
                         {
-                            Logger.LogDebug(ageMessage, age.TotalHours, recipe.Id, worldId);
+                            Logger.LogDebug(ageMessage, age, recipe.Id, worldId);
                             continue;
                         }
                     }
 
                     Logger.LogDebug("Calculating new cost for {RecipeId} for world {WorldId}", recipeId, worldId);
                     var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
-                    if (calculatedCost <= 1)
+                    if (calculatedCost is <= 1 or >= 1147483647)
                     {
                         Logger.LogError(
                             "Failed to calculate crafting cost of recipe {RecipeId} world {WorldId}: {Cost}",
@@ -77,7 +79,7 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                     };
                     Logger.LogDebug("Cost of recipe {RecipeId} for world {WorldId} is successfully calculated: {Cost}",
                         newCost.RecipeId, newCost.WorldId, newCost.Cost);
-                    await costRepo.Add(newCost);
+                    await costRepo.AddAsync(newCost);
                 }
                 catch (Exception e)
                 {
@@ -98,8 +100,6 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                 worldId, ex.Message);
         }
     }
-
-    public static TimeSpan GetDataFreshnessInHours() => TimeSpan.FromHours(48);
 
     public override List<int> GetIdsToUpdate(int worldId)
     {
@@ -127,10 +127,10 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                 if (current is not null)
                 {
                     Logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id, worldId);
-                    var age = DateTimeOffset.Now - current.Updated;
+                    var age = (DateTimeOffset.Now - current.Updated).TotalHours;
                     if (age <= GetDataFreshnessInHours())
                     {
-                        Logger.LogDebug(ageMessage, age.TotalHours, recipe.Id, worldId);
+                        Logger.LogDebug(ageMessage, age, recipe.Id, worldId);
                         continue;
                     }
                 }

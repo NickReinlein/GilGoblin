@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,20 +19,32 @@ public class RecipeCostRepository : IRecipeCostRepository
         _cache = cache;
     }
 
-    public async Task<RecipeCostPoco> GetAsync(int worldId, int recipeId)
+    public async Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId)
     {
         var cached = _cache.Get((worldId, recipeId));
         if (cached is not null)
-            return cached;
+        {
+            if (DataIsFresh(cached.Updated))
+                return cached;
+            _cache.Delete(worldId, recipeId);
+        }
 
-        var recipeCost = _dbContext.RecipeCost.FirstOrDefault(
-            p => p.WorldId == worldId && p.RecipeId == recipeId
-        );
-        if (recipeCost is not null)
-            await Add(recipeCost);
+        var recipeCost = _dbContext.RecipeCost.FirstOrDefault(p =>
+            p.WorldId == worldId &&
+            p.RecipeId == recipeId);
+        if (recipeCost is null)
+            return null;
+
+        if (DataIsFresh(recipeCost.Updated))
+            await AddAsync(recipeCost);
+        else
+            _cache.Delete(worldId, recipeId);
 
         return recipeCost;
     }
+
+    private static bool DataIsFresh(DateTimeOffset timestamp) =>
+        timestamp >= DateTime.UtcNow.AddHours(-GetDataFreshnessInHours());
 
     public IEnumerable<RecipeCostPoco> GetMultiple(int worldId, IEnumerable<int> recipeIds) =>
         _dbContext.RecipeCost.Where(p => p.WorldId == worldId && recipeIds.Any(i => i == p.RecipeId));
@@ -39,27 +52,37 @@ public class RecipeCostRepository : IRecipeCostRepository
     public IEnumerable<RecipeCostPoco> GetAll(int worldId) =>
         _dbContext.RecipeCost.Where(p => p.WorldId == worldId);
 
-    public async Task Add(RecipeCostPoco entity)
+    public async Task AddAsync(RecipeCostPoco entity)
     {
         (int, int) key = (entity.WorldId, entity.RecipeId);
-        if (_cache.Get(key) is not null)
-            return;
+        var cached = _cache.Get(key);
+        if (cached is not null)
+        {
+            if (DataIsFresh(cached.Updated))
+                return;
+            _cache.Delete(entity.WorldId, entity.RecipeId);
+        }
 
         _cache.Add(key, entity);
 
-        if (_dbContext.RecipeCost
-            .Any(i =>
-                i.WorldId == entity.WorldId &&
-                i.RecipeId == entity.RecipeId))
-            return;
+        var existing = await _dbContext.FindAsync<RecipeCostPoco>(entity.RecipeId, entity.WorldId);
+        if (existing is null)
+        {
+            _dbContext.RecipeCost.Add(entity);
+        }
+        else
+        {
+            _dbContext.Entry(existing).CurrentValues.SetValues(entity);
+        }
 
-        _dbContext.Add(entity);
         await _dbContext.SaveChangesAsync();
     }
 
+    private static int GetDataFreshnessInHours() => 48;
+
     public Task FillCache()
     {
-        var costs = _dbContext?.RecipeCost?.ToList();
+        var costs = _dbContext.RecipeCost.ToList();
         costs?.ForEach(cost => _cache.Add((cost.WorldId, cost.RecipeId), cost));
         return Task.CompletedTask;
     }

@@ -151,7 +151,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     public async Task GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
     {
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null);
+        _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null!);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 
         _ = await recipeProfitRepo.GetAsync(WorldId, RecipeId);
@@ -231,7 +231,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     {
         var poco = new RecipeProfitPoco { WorldId = WorldId, RecipeId = RecipeId };
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
-        _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null);
+        _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null!);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 
         await recipeProfitRepo.Add(poco);

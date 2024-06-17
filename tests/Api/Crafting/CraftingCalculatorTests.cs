@@ -216,7 +216,13 @@ public class CraftingCalculatorTests
     [Test]
     public async Task GivenCalculateCraftingCostForRecipe_WhenTheCostIsCached_ThenItIsReturnedImmediately()
     {
-        var poco = new RecipeCostPoco { RecipeId = _recipeId, WorldId = _worldId, Cost = 9001 };
+        var poco = new RecipeCostPoco
+        {
+            RecipeId = _recipeId, 
+            WorldId = _worldId, 
+            Cost = 9001, 
+            Updated = DateTimeOffset.UtcNow
+        };
         _recipeCosts.GetAsync(_worldId, _recipeId).Returns(poco);
 
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, _recipeId);
@@ -294,6 +300,7 @@ public class CraftingCalculatorTests
             _prices.Get(ingredientMarket.WorldId, ingredient.ItemId).Returns(ingredientMarket);
             _recipes.GetRecipesForItem(ingredient.ItemId).Returns(new List<RecipePoco>());
         }
+
         _recipes.GetRecipesForItem(market.ItemId).Returns(new List<RecipePoco>() { recipe });
         _recipes.GetRecipesForItem(ingredientMarket.ItemId).Returns([]);
         _recipes.Get(recipe.Id).Returns(recipe);

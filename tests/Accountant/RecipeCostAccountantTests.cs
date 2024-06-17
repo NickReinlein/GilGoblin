@@ -140,7 +140,7 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         }
 
         await _recipeCostRepo.DidNotReceive()
-            .Add(Arg.Is<RecipeCostPoco>(r =>
+            .AddAsync(Arg.Is<RecipeCostPoco>(r =>
                 missingCostIds.Contains(r.RecipeId)));
     }
 
@@ -151,7 +151,7 @@ public class RecipeCostAccountantTests : InMemoryTestDb
 
         await _accountant.ComputeListAsync(WorldId, idList, CancellationToken.None);
 
-        await _recipeCostRepo.DidNotReceive().Add(Arg.Is<RecipeCostPoco>(r => r.RecipeId == RecipeId));
+        await _recipeCostRepo.DidNotReceive().AddAsync(Arg.Is<RecipeCostPoco>(r => r.RecipeId == RecipeId));
     }
 
     [Test]
@@ -164,7 +164,7 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
 
         await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>());
-        await _recipeCostRepo.DidNotReceive().Add(Arg.Any<RecipeCostPoco>());
+        await _recipeCostRepo.DidNotReceive().AddAsync(Arg.Any<RecipeCostPoco>());
         _logger.Received(1).LogInformation(message);
     }
 
@@ -190,20 +190,11 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenGetDataFreshnessInHours_WhenReceivingAResponse_ThenWeHaveAValidNumberOfHours()
-    {
-        var hours = RecipeCostAccountant.GetDataFreshnessInHours().TotalHours;
-
-        Assert.That(hours, Is.GreaterThan(0));
-        Assert.That(hours, Is.LessThan(1000));
-    }
-
-    [Test]
     public async Task GivenCalculateAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
     {
         var message = $"An unexpected exception occured during the accounting process for world {WorldId}: test123";
         _scope.ServiceProvider.GetRequiredService(typeof(ICraftingCalculator))
-            .Throws(new NotImplementedException("test123")); //temporary
+            .Throws(new NotImplementedException("test123"));
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(2000);

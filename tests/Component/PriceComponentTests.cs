@@ -19,7 +19,7 @@ public class PriceComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
 
         var price = await response.Content.ReadFromJsonAsync<PricePoco?>(GetSerializerOptions());
-        var highestPrice = (int)Math.Max(price.AverageListingPrice, price.AverageSold);
+        var highestPrice = (int)Math.Max(price!.AverageListingPrice, price.AverageSold);
         Assert.Multiple(() =>
         {
             Assert.That(price.ItemId, Is.EqualTo(10348));

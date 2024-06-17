@@ -23,5 +23,5 @@ public class ItemWebResponse : IResponseToList<ItemWebPoco>
         }
     }
 
-    public List<ItemWebPoco> GetContentAsList() => Items?.Values.ToList();
+    public List<ItemWebPoco> GetContentAsList() => Items.Values.ToList();
 }

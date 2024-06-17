@@ -7,8 +7,8 @@ namespace GilGoblin.Api.Repository;
 
 public interface IRecipeCostRepository : IRepositoryCache
 {
-    Task<RecipeCostPoco> GetAsync(int worldId, int recipeId);
+    Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId);
     IEnumerable<RecipeCostPoco> GetMultiple(int worldId, IEnumerable<int> recipeIds);
     IEnumerable<RecipeCostPoco> GetAll(int worldId);
-    Task Add(RecipeCostPoco entity);
+    Task AddAsync(RecipeCostPoco entity);
 }

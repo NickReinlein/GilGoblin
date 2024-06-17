@@ -24,7 +24,7 @@ public class IngredientPoco : IComparable
         Quantity = copyMe.Quantity;
     }
 
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         if (obj == null)
             return 1;

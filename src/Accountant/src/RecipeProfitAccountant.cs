@@ -79,6 +79,7 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
         var price = prices.FirstOrDefault(c => c.GetId() == recipe.TargetItemId);
         if (price is null)
         {
+            // todo check here next!
             var message = $"Failed to match market price of recipe {recipeId} for world {worldId}";
             Logger.LogError(message);
             return null;

@@ -90,9 +90,9 @@ public class RecipeGrocer : IRecipeGrocer
     )
     {
         foreach (
-            var ingredient in recipeIngredients.Where(
-                ing => ing is not null && ing.Quantity is not 0 && ing.RecipeId == recipe.Id
-            )
+            var ingredient in recipeIngredients.Where(ing => 
+                ing.Quantity is not 0 && 
+                ing.RecipeId == recipe.Id)
         )
         {
             ingredient.Quantity *= recipe.ResultQuantity;
