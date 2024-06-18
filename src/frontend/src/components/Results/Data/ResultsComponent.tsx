@@ -4,7 +4,6 @@ import PricesComponent from './PriceComponent';
 import ItemsComponent from './ItemComponent';
 import RecipesComponent from './RecipeComponent';
 import ProfitTableComponent from "../Profits/ProfitTableComponent";
-import CraftComponent from "./CraftComponent";
 import AboutPageComponent from "../../Header/AboutPageComponent";
 
 interface ResultsProps {
@@ -20,8 +19,6 @@ const ResultsComponent: React.FC<ResultsProps> = ({componentName, data}) => {
             return <RecipesComponent recipe={data}/>;
         case 'Prices':
             return <PricesComponent price={data}/>;
-        case 'Crafts':
-            return <CraftComponent craft={data}/>;
         case 'Profits':
             return <ProfitTableComponent crafts={data}/>;
         case 'About':

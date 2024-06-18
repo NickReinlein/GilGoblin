@@ -4,6 +4,10 @@ import PriceComponent from './PriceComponent';
 import {Price} from '../../../types/types';
 
 describe('PriceComponent', () => {
+    const convertTime = (time: number | undefined) => {
+        return new Date(time ?? 0 * 1000);
+    }
+
     const PriceData: Price =
         {
             "averageListingPrice": 10500,
@@ -27,7 +31,7 @@ describe('PriceComponent', () => {
             "averageSoldHQ": `Average Sold HQ: ${PriceData.averageSoldHQ}`,
             "worldId": `World: ${PriceData.worldId}`,
             "itemId": `Item Id: ${PriceData.itemId}`,
-            "lastUploadTime": `Last Upload Time: ${PriceData.lastUploadTime}`
+            "lastUploadTime": `Last Upload Time: ${convertTime(PriceData.lastUploadTime)}`
         };
 
     Object.entries(expectedLabels)

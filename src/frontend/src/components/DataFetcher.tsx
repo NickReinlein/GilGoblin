@@ -17,9 +17,6 @@ const fetchData = async (tabName: string, id: number | null, world: number | nul
             case 'Prices':
                 suffix = `${pricePath}${world}/${id}`;
                 break;
-            case 'Crafts':
-                suffix = `${craftPath}${world}/${id}`;
-                break;
             case 'Profits':
                 suffix = `${craftPath}${world}`;
                 break;
