@@ -81,8 +81,7 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
         }
         catch (Exception e)
         {
-            var message = $"Failed to balance the books for world {worldId}: {e.Message}";
-            Logger.LogError(message);
+            Logger.LogError("Failed to balance the books for world {WorldId}: {Message}", worldId, e.Message);
         }
     }
 
@@ -99,6 +98,7 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
     public virtual Task<T> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
         => throw new NotImplementedException();
 
+    public virtual int GetDataFreshnessInHours() => throw new NotImplementedException();
 
     public virtual List<int> GetIdsToUpdate(int worldId) => new();
 }

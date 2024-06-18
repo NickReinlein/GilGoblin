@@ -14,7 +14,7 @@ namespace GilGoblin.Accountant;
 public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Accountant<RecipeCostPoco>> logger)
     : Accountant<RecipeCostPoco>(scopeFactory, logger)
 {
-    public static int GetDataFreshnessInHours() => 48;
+    public override int GetDataFreshnessInHours() => 48;
 
     private const string ageMessage = "Recipe cost calculation is only {Age} hours old and fresh, " +
                                       "therefore not updating for recipe {RecipeId} for world {WorldId}";

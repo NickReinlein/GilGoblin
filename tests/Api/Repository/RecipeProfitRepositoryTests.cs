@@ -220,7 +220,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
         _profitCache.Get((WorldId, RecipeId)).Returns(poco);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 
-        await recipeProfitRepo.Add(poco);
+        await recipeProfitRepo.AddAsync(poco);
 
         _profitCache.Received(1).Get((WorldId, RecipeId));
         _profitCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeProfitPoco>());
@@ -234,7 +234,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
         _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null!);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 
-        await recipeProfitRepo.Add(poco);
+        await recipeProfitRepo.AddAsync(poco);
 
         _profitCache.Received(1).Get((WorldId, RecipeId));
         _profitCache.Received(1).Add((WorldId, RecipeId), poco);
@@ -257,7 +257,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
             RecipeProfitVsSold = recipeProfitVsSold,
             Updated = DateTimeOffset.Now
         };
-        await recipeProfitRepo.Add(poco);
+        await recipeProfitRepo.AddAsync(poco);
 
         var result = await recipeProfitRepo.GetAsync(worldId, recipeId);
 
