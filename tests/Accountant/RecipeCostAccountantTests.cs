@@ -11,6 +11,7 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.InMemoryTest;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
@@ -39,7 +40,7 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         base.SetUp();
         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
         _scopeFactory = Substitute.For<IServiceScopeFactory>();
-        _logger = Substitute.For<ILogger<RecipeCostAccountant>>();
+        _logger = Substitute.For<NullLogger<RecipeCostAccountant>>();
         _scope = Substitute.For<IServiceScope>();
         _serviceProvider = Substitute.For<IServiceProvider>();
         _calc = Substitute.For<ICraftingCalculator>();
@@ -176,14 +177,14 @@ public class RecipeCostAccountantTests : InMemoryTestDb
         var recipePocos = _dbContext.Recipe.ToList();
         _recipeRepo.GetMultiple(Arg.Any<IEnumerable<int>>()).Returns(recipePocos);
         var exception = new ArithmeticException();
-        _calc.CalculateCraftingCostForRecipe(WorldId, Arg.Any<int>()).Throws(exception);
+        _calc.CalculateCraftingCostForRecipe(WorldId, RecipeId).Throws(exception);
 
         await _accountant.CalculateAsync(CancellationToken.None, WorldId);
 
         await _calc.Received(1).CalculateCraftingCostForRecipe(WorldId, RecipeId);
         const string exceptionMessage =
             "Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}";
-        _logger.Received(1).LogError(exceptionMessage, RecipeId, WorldId);
+        _logger.Received(1).LogWarning(exceptionMessage, RecipeId, WorldId);
     }
 
     [Test]

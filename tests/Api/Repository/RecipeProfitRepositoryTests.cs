@@ -252,22 +252,26 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     {
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
-        var worldId = 77;
-        var recipeId = 999;
-        var recipeProfitVsListings = 333;
-        var recipeProfitVsSold = 791;
-        var poco = GetRecipeProfitPoco();
+        var poco = new RecipeProfitPoco
+        {
+            WorldId = 77,
+            RecipeId = 65454,
+            RecipeProfitVsListings = 3315,
+            RecipeProfitVsSold = 6454,
+            Updated = DateTime.Now
+        };
+
         await recipeProfitRepo.AddAsync(poco);
 
-        var result = await recipeProfitRepo.GetAsync(worldId, recipeId);
-
+        var result = await recipeProfitRepo.GetAsync(poco.WorldId, poco.RecipeId);
         Assert.Multiple(() =>
         {
-            Assert.That(result.WorldId, Is.EqualTo(worldId));
-            Assert.That(result.RecipeId, Is.EqualTo(recipeId));
-            Assert.That(result.RecipeProfitVsSold, Is.EqualTo(recipeProfitVsSold));
-            Assert.That(result.RecipeProfitVsListings, Is.EqualTo(recipeProfitVsListings));
-            Assert.That(result.Updated.ToUnixTimeMilliseconds(), Is.GreaterThan(1695906560209));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.WorldId, Is.EqualTo(poco.WorldId));
+            Assert.That(result.RecipeId, Is.EqualTo(poco.RecipeId));
+            Assert.That(result.RecipeProfitVsSold, Is.EqualTo(poco.RecipeProfitVsSold));
+            Assert.That(result.RecipeProfitVsListings, Is.EqualTo(poco.RecipeProfitVsListings));
+            Assert.That(result.Updated.ToUniversalTime(), Is.GreaterThan(DateTimeOffset.UtcNow.AddMinutes(-1)));
         });
     }
 

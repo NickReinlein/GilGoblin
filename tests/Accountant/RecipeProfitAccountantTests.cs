@@ -11,6 +11,7 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.InMemoryTest;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using NSubstitute.ExceptionExtensions;
@@ -43,7 +44,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         base.SetUp();
         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
         _scopeFactory = Substitute.For<IServiceScopeFactory>();
-        _logger = Substitute.For<ILogger<RecipeProfitAccountant>>();
+        _logger = Substitute.For<NullLogger<RecipeProfitAccountant>>();
         _scope = Substitute.For<IServiceScope>();
         _serviceProvider = Substitute.For<IServiceProvider>();
         _calc = Substitute.For<ICraftingCalculator>();
