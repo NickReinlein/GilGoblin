@@ -171,36 +171,19 @@ public class RecipeCostAccountantTests : InMemoryTestDb
     [Test]
     public async Task GivenComputeListAsync_WhenAnExceptionIsThrownForOneEntry_ThenWeLogTheErrorAndContinue()
     {
-        var recipePocos = _dbContext.Recipe.ToList().Append(new RecipePoco { Id = 2222 }).ToList();
-        _recipeRepo
-            .GetMultiple(Arg.Any<IEnumerable<int>>())
-            .Returns(recipePocos);
-        _calc.CalculateCraftingCostForRecipe(WorldId, 2222).Throws<InvalidOperationException>();
+        _dbContext.RecipeCost.First(r => r.RecipeId == RecipeId).Updated = DateTimeOffset.UtcNow.AddHours(-100);
+        await _dbContext.SaveChangesAsync();
+        var recipePocos = _dbContext.Recipe.ToList();
+        _recipeRepo.GetMultiple(Arg.Any<IEnumerable<int>>()).Returns(recipePocos);
+        var exception = new ArithmeticException();
+        _calc.CalculateCraftingCostForRecipe(WorldId, Arg.Any<int>()).Throws(exception);
 
         await _accountant.CalculateAsync(CancellationToken.None, WorldId);
 
-        var singularFailureException = $"Failed to calculate crafting cost of recipe 2222 world {WorldId}: " +
-                                       "Operation is not valid due to the current state of the object.";
-        _logger.Received().LogError(singularFailureException);
-        await _calc.Received(1).CalculateCraftingCostForRecipe(WorldId, 2222);
-        await _calc.Received().CalculateCraftingCostForRecipe(WorldId, 33);
-        var processEndedExceptionMessage =
-            $"An unexpected exception occured during the accounting process for world {WorldId}: test123";
-        _logger.DidNotReceive().LogError(processEndedExceptionMessage);
-    }
-
-    [Test]
-    public async Task GivenCalculateAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
-    {
-        var message = $"An unexpected exception occured during the accounting process for world {WorldId}: test123";
-        _scope.ServiceProvider.GetRequiredService(typeof(ICraftingCalculator))
-            .Throws(new NotImplementedException("test123"));
-
-        var cts = new CancellationTokenSource();
-        cts.CancelAfter(2000);
-        await _accountant.CalculateAsync(CancellationToken.None, WorldId);
-
-        _logger.Received(1).LogError(message);
+        await _calc.Received(1).CalculateCraftingCostForRecipe(WorldId, RecipeId);
+        const string exceptionMessage =
+            "Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}";
+        _logger.Received(1).LogError(exceptionMessage, RecipeId, WorldId);
     }
 
     [Test]

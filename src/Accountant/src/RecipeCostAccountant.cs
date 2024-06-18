@@ -63,12 +63,7 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                     Logger.LogDebug("Calculating new cost for {RecipeId} for world {WorldId}", recipeId, worldId);
                     var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
                     if (calculatedCost is <= 1 or >= 1147483647)
-                    {
-                        Logger.LogError(
-                            "Failed to calculate crafting cost of recipe {RecipeId} world {WorldId}: {Cost}",
-                            recipeId, worldId, calculatedCost.ToString());
-                        continue;
-                    }
+                        throw new ArithmeticException();
 
                     var newCost = new RecipeCostPoco
                     {
@@ -81,11 +76,10 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                         newCost.RecipeId, newCost.WorldId, newCost.Cost);
                     await costRepo.AddAsync(newCost);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    const string message =
-                        "Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}: {Message}";
-                    Logger.LogWarning(message, recipe.Id, worldId, e.Message);
+                    Logger.LogWarning("Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}",
+                        recipe.Id, worldId);
                 }
             }
         }
@@ -97,7 +91,8 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
         {
             Logger.LogError(
                 "An unexpected exception occured during the accounting process for world {WorldId}: {Message}",
-                worldId, ex.Message);
+                worldId,
+                ex.Message);
         }
     }
 

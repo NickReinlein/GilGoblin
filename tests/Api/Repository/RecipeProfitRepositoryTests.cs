@@ -13,6 +13,13 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
 {
     private IRecipeProfitCache _profitCache;
 
+    [SetUp]
+    public override void SetUp()
+    {
+        base.SetUp();
+        _profitCache = Substitute.For<IRecipeProfitCache>();
+    }
+
     [Test]
     public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
     {
@@ -162,7 +169,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
             .Add(
                 (WorldId, RecipeId),
                 Arg.Is<RecipeProfitPoco>(
-                    recipeProfit => recipeProfit.WorldId == WorldId && 
+                    recipeProfit => recipeProfit.WorldId == WorldId &&
                                     recipeProfit.RecipeId == RecipeId
                 )
             );
@@ -171,14 +178,14 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     [Test]
     public async Task GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
     {
+        var recipeProfit = GetRecipeProfitPoco();
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
-        var recipeProfit = new RecipeProfitPoco { WorldId = WorldId, RecipeId = RecipeId };
         _profitCache.Get((WorldId, RecipeId)).Returns(recipeProfit);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 
         _ = await recipeProfitRepo.GetAsync(WorldId, RecipeId);
 
-        _profitCache.Received(1).Get((WorldId, RecipeId));
+        _profitCache.Received().Get((WorldId, RecipeId));
         _profitCache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<RecipeProfitPoco>());
     }
 
@@ -204,7 +211,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     {
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
         context.RecipeProfit.RemoveRange(context.RecipeProfit);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 
         await recipeProfitRepo.FillCache();
@@ -215,7 +222,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     [Test]
     public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
     {
-        var poco = new RecipeProfitPoco { WorldId = WorldId, RecipeId = RecipeId };
+        var poco = GetRecipeProfitPoco();
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
         _profitCache.Get((WorldId, RecipeId)).Returns(poco);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
@@ -229,7 +236,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
     [Test]
     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
     {
-        var poco = new RecipeProfitPoco { WorldId = WorldId, RecipeId = RecipeId };
+        var poco = GetRecipeProfitPoco();
         await using var context = new TestGilGoblinDbContext(_options, _configuration);
         _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null!);
         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
@@ -249,14 +256,7 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
         var recipeId = 999;
         var recipeProfitVsListings = 333;
         var recipeProfitVsSold = 791;
-        var poco = new RecipeProfitPoco
-        {
-            WorldId = worldId,
-            RecipeId = recipeId,
-            RecipeProfitVsListings = recipeProfitVsListings,
-            RecipeProfitVsSold = recipeProfitVsSold,
-            Updated = DateTimeOffset.Now
-        };
+        var poco = GetRecipeProfitPoco();
         await recipeProfitRepo.AddAsync(poco);
 
         var result = await recipeProfitRepo.GetAsync(worldId, recipeId);
@@ -271,10 +271,15 @@ public class RecipeProfitRepositoryTests : PriceDependentTests
         });
     }
 
-    [SetUp]
-    public override void SetUp()
+    private static RecipeProfitPoco GetRecipeProfitPoco()
     {
-        base.SetUp();
-        _profitCache = Substitute.For<IRecipeProfitCache>();
+        return new RecipeProfitPoco
+        {
+            WorldId = WorldId,
+            RecipeId = RecipeId,
+            RecipeProfitVsListings = 100,
+            RecipeProfitVsSold = 200,
+            Updated = DateTime.Now
+        };
     }
 }

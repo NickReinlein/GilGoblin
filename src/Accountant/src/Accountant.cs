@@ -81,7 +81,7 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
         }
         catch (Exception e)
         {
-            Logger.LogError("Failed to balance the books for world {WorldId}: {Message}", worldId, e.Message);
+            Logger.LogError("Failed to balance the books for world {WorldId}: {Error}", worldId, e.Message);
         }
     }
 
