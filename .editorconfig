@@ -23,21 +23,6 @@ indent_size = 2
 [*.cs]
 indent_size = 4
 
-# Namespace settings
-csharp_style_namespace_declarations = file_scoped:suggestion
-
-# IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = warning
-
-# CA2254: logging message template false positive
-dotnet_diagnostic.CA2254.severity = none
-
-# CS8632: annotation for reference type null
-dotnet_diagnostic.CS8632.severity = none
-
-# CS8618: non-nullable field must contain a non-null value when exiting constructor
-dotnet_diagnostic.CS8618.severity = none
-
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
@@ -54,9 +39,6 @@ dotnet_style_collection_initializer = true:suggestion
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_explicit_tuple_names = true:suggestion
-
-# Whitespace options
-dotnet_style_allow_multiple_blank_lines_experimental = false
 
 # Static fields are camelCase and start with _
 dotnet_naming_rule.static_fields_should_be_camel_case.severity = suggestion
@@ -87,10 +69,6 @@ dotnet_naming_rule.constants_should_be_camel_case.symbols = constants
 dotnet_naming_rule.constants_should_be_camel_case.style = constant_style
 
 # Private Constants are CamelCase
-dotnet_naming_rule.dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
-.symbols = constants
-dotnet_naming_rule.dotnet_naming_rule.private_const_fields_should_be_prefix.severity = suggestion
-.style = constant_style
 dotnet_naming_symbols.constants.applicable_kinds = field, local
 dotnet_naming_symbols.constants.required_modifiers = const
 dotnet_naming_style.constant_style.capitalization = camel_case
@@ -145,11 +123,6 @@ csharp_indent_case_contents_when_block = true
 csharp_indent_switch_labels = true
 csharp_indent_labels = flush_left
 
-# Whitespace options
-csharp_style_allow_embedded_statements_on_same_line_experimental = false
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
-csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
-
 # Prefer "var" everywhere
 csharp_style_var_for_built_in_types = true:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
@@ -171,7 +144,6 @@ csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 csharp_style_inlined_variable_declaration = true:suggestion
 csharp_style_throw_expression = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
-csharp_style_prefer_extended_property_pattern = true:suggestion
 
 # Space preferences
 csharp_space_after_cast = false

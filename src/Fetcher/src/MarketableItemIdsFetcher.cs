@@ -40,7 +40,7 @@ public class MarketableItemIdsFetcher : IMarketableItemIdsFetcher
                 throw new WebException();
 
             var returnedList = await response.Content.ReadFromJsonAsync<List<int>>();
-            return returnedList.Where(i => i > 0).ToList();
+            return returnedList?.Where(i => i > 0).ToList() ?? []; 
         }
         catch
         {

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace GilGoblin.Api.Cache;
@@ -6,7 +7,7 @@ public class DataCache<T, U> : IDataCache<T, U>
     where T : notnull
     where U : class
 {
-    protected readonly Dictionary<T, U> Cache = new();
+    protected readonly ConcurrentDictionary<T, U> Cache = new();
 
     public void Add(T key, U item)
     {

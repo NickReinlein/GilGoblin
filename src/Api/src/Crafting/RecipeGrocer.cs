@@ -38,12 +38,11 @@ public class RecipeGrocer : IRecipeGrocer
         }
     }
 
-    public async Task<IEnumerable<IngredientPoco?>> BreakdownRecipe(RecipePoco recipe) =>
+    public async Task<IEnumerable<IngredientPoco>> BreakdownRecipe(RecipePoco recipe) =>
         await BreakDownIngredientEntirely(recipe.GetActiveIngredients());
 
-    public async Task<IEnumerable<IngredientPoco?>> BreakDownIngredientEntirely(
-        IEnumerable<IngredientPoco?> ingredientList
-    )
+    public async Task<IEnumerable<IngredientPoco>> BreakDownIngredientEntirely(
+        IEnumerable<IngredientPoco?> ingredientList)
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
         foreach (var ingredient in ingredientList.Where(i => i?.Quantity > 0))
@@ -68,11 +67,18 @@ public class RecipeGrocer : IRecipeGrocer
         var allIngredients = new List<IngredientPoco>();
         var allRecipes = _recipes.GetRecipesForItem(itemId);
 
-        foreach (var recipe in allRecipes.Where(r => r is not null))
+        foreach (var recipe in allRecipes)
         {
-            var ingredients = await BreakdownRecipeById(recipe.Id);
-            MultiplyQuantityProduced(ingredients, recipe);
-            allIngredients.AddRange(ingredients);
+            try
+            {
+                var ingredients = await BreakdownRecipeById(recipe.Id);
+                MultiplyQuantityProduced(ingredients, recipe);
+                allIngredients.AddRange(ingredients);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning($"Failed to break down ingredients for recipe {recipe.Id}: {e.Message}");
+            }
         }
 
         return allIngredients;
@@ -84,9 +90,9 @@ public class RecipeGrocer : IRecipeGrocer
     )
     {
         foreach (
-            var ingredient in recipeIngredients.Where(
-                ing => ing is not null && ing.Quantity is not 0 && ing.RecipeId == recipe.Id
-            )
+            var ingredient in recipeIngredients.Where(ing => 
+                ing.Quantity is not 0 && 
+                ing.RecipeId == recipe.Id)
         )
         {
             ingredient.Quantity *= recipe.ResultQuantity;

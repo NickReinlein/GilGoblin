@@ -12,12 +12,16 @@ namespace GilGoblin.Accountant;
 
 public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfitAccountant
 {
+    private const string ageMessage = "Recipe profit calculation is only {Age} hours old and fresh, " +
+                                      "therefore not updating for recipe {RecipeId} for world {WorldId}";
+
     public RecipeProfitAccountant(
         IServiceScopeFactory scopeFactory,
         ILogger<Accountant<RecipeProfitPoco>> logger) :
         base(scopeFactory, logger)
     {
     }
+
 
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
@@ -41,12 +45,21 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
 
                 var recipeId = recipe.Id;
                 var profit = existingProfits.FirstOrDefault(c => c.GetId() == recipeId);
-                if (profit is not null && profit.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
-                    continue;
+                if (profit is not null)
+                {
+                    Logger.LogDebug("Found recipe profit for Recipe {RecipeId} for world {WorldId}", recipe.Id,
+                        worldId);
+                    var age = (DateTimeOffset.Now - profit.Updated).TotalHours;
+                    if (age <= GetDataFreshnessInHours())
+                    {
+                        Logger.LogDebug(ageMessage, age, recipe.Id, worldId);
+                        continue;
+                    }
+                }
 
                 var newProfit = ComputeAsync(worldId, recipeId, recipe, costs, prices);
                 if (newProfit is not null)
-                    await profitRepo.Add(newProfit);
+                    await profitRepo.AddAsync(newProfit);
             }
         }
         catch (TaskCanceledException)
@@ -71,16 +84,16 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
         var cost = costs.FirstOrDefault(c => c.GetId() == recipeId);
         if (cost is null)
         {
-            var message = $"Failed to match crafting cost of recipe {recipeId} for world {worldId}";
-            Logger.LogError(message);
+            Logger.LogError("Failed to match crafting cost of recipe {RecipeId} for world {WorldId}",
+                recipeId,
+                worldId);
             return null;
         }
 
         var price = prices.FirstOrDefault(c => c.GetId() == recipe.TargetItemId);
         if (price is null)
         {
-            var message = $"Failed to match market price of recipe {recipeId} for world {worldId}";
-            Logger.LogError(message);
+            Logger.LogError("Failed to match market price of recipe {RecipeId} for world {WorldId}", recipeId, worldId);
             return null;
         }
 
@@ -98,7 +111,7 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
         return newProfit;
     }
 
-    public static TimeSpan GetDataFreshnessInHours() => TimeSpan.FromHours(48);
+    public override int GetDataFreshnessInHours() => 48;
 
     public override List<int> GetIdsToUpdate(int worldId)
     {
@@ -119,24 +132,21 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
             foreach (var cost in costs)
             {
                 var id = cost.GetId();
-                try
+                var existing = existingProfits.FirstOrDefault(e => e.GetId() == id);
+                if (existing is null)
                 {
-                    var existing = existingProfits.FirstOrDefault(e => e.GetId() == id);
-                    if (existing is not null && existing.Updated - DateTimeOffset.Now <= GetDataFreshnessInHours())
-                        continue;
                     idsToUpdate.Add(id);
+                    continue;
                 }
-                catch (Exception e)
-                {
-                    var message =
-                        $"Failed during search for price profit: item {id}, world {worldId}: {e.Message}";
-                    Logger.LogError(message);
-                }
+
+                var age = (DateTimeOffset.Now - existing.Updated).TotalHours;
+                if (age >= GetDataFreshnessInHours())
+                    idsToUpdate.Add(id);
             }
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+            Logger.LogError("Failed to get the Ids to update for world {WorldId}: {Message}", worldId, e.Message);
         }
 
         return idsToUpdate.Distinct().ToList();

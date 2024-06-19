@@ -90,7 +90,6 @@ public class ItemRepositoryTests : InMemoryTestDb
             Arg.Is<object>(v => v.ToString()!.Contains("Failed to get item 9238192: Description is null")),
             null,
             Arg.Any<Func<object, Exception, string>>()!);
-        ;
     }
 
     [Test]
@@ -141,7 +140,7 @@ public class ItemRepositoryTests : InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var itemRepo = new ItemRepository(context, _cache, _logger);
 
-        var result = itemRepo.GetMultiple(System.Array.Empty<int>());
+        var result = itemRepo.GetMultiple(Array.Empty<int>());
 
         Assert.That(!result.Any());
     }

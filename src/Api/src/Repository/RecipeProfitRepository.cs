@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,16 +19,26 @@ public class RecipeProfitRepository : IRecipeProfitRepository
         _cache = cache;
     }
 
-    public async Task<RecipeProfitPoco> GetAsync(int worldId, int recipeId)
+    public async Task<RecipeProfitPoco?> GetAsync(int worldId, int recipeId)
     {
         var cached = _cache.Get((worldId, recipeId));
         if (cached is not null)
-            return cached;
+        {
+            if (DataIsFresh(cached.Updated))
+                return cached;
+            _cache.Delete(worldId, recipeId);
+        }
 
-        var recipeProfit = _dbContext.RecipeProfit
-            .FirstOrDefault(p => p.WorldId == worldId && p.RecipeId == recipeId);
-        if (recipeProfit is not null)
-            await Add(recipeProfit);
+        var recipeProfit = _dbContext.RecipeProfit.FirstOrDefault(p =>
+            p.WorldId == worldId &&
+            p.RecipeId == recipeId);
+        if (recipeProfit is null)
+            return null;
+
+        if (DataIsFresh(recipeProfit.Updated))
+            await AddAsync(recipeProfit);
+        else
+            _cache.Delete(worldId, recipeId);
 
         return recipeProfit;
     }
@@ -38,28 +49,41 @@ public class RecipeProfitRepository : IRecipeProfitRepository
     public IEnumerable<RecipeProfitPoco> GetAll(int worldId) =>
         _dbContext.RecipeProfit.Where(p => p.WorldId == worldId);
 
-    public async Task Add(RecipeProfitPoco entity)
+    public async Task AddAsync(RecipeProfitPoco entity)
     {
         (int, int) key = (entity.WorldId, entity.RecipeId);
-        if (_cache.Get(key) is not null)
-            return;
+        var cached = _cache.Get(key);
+        if (cached is not null)
+        {
+            if (DataIsFresh(cached.Updated))
+                return;
+            _cache.Delete(entity.WorldId, entity.RecipeId);
+        }
 
         _cache.Add(key, entity);
 
-        if (_dbContext.RecipeProfit
-            .Any(i =>
-                i.WorldId == entity.WorldId &&
-                i.RecipeId == entity.RecipeId))
-            return;
+        var existing = await _dbContext.FindAsync<RecipeProfitPoco>(entity.RecipeId, entity.WorldId);
+        if (existing is null)
+        {
+            _dbContext.RecipeProfit.Add(entity);
+        }
+        else
+        {
+            _dbContext.Entry(existing).CurrentValues.SetValues(entity);
+        }
 
-        _dbContext.Add(entity);
         await _dbContext.SaveChangesAsync();
     }
 
     public Task FillCache()
     {
-        var costs = _dbContext?.RecipeProfit?.ToList();
+        var costs = _dbContext.RecipeProfit.ToList();
         costs?.ForEach(cost => _cache.Add((cost.WorldId, cost.RecipeId), cost));
         return Task.CompletedTask;
     }
+
+    private static bool DataIsFresh(DateTimeOffset timestamp) =>
+        timestamp >= DateTime.UtcNow.AddHours(-GetDataFreshnessInHours());
+
+    private static int GetDataFreshnessInHours() => 48;
 }

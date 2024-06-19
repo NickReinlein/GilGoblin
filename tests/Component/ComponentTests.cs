@@ -18,7 +18,7 @@ public class ComponentTests
     [OneTimeTearDown]
     public virtual void OneTimeTearDown()
     {
-        _client?.Dispose();
+        _client.Dispose();
     }
 
     protected const double missingEntryPercentageThreshold = 0.85;
