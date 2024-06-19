@@ -2,6 +2,7 @@ using System;
 using GilGoblin.Database;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

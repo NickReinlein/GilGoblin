@@ -10,6 +10,7 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Fetcher;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

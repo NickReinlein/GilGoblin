@@ -4,6 +4,7 @@ using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

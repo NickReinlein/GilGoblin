@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using GilGoblin.Database.Pocos;
 
-namespace GilGoblin.Fetcher;
+namespace GilGoblin.Fetcher.Pocos;
 
 public class ItemWebPoco : BaseItemPoco
 {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Fetcher;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

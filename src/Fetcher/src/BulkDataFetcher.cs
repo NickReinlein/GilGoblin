@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;

@@ -8,6 +8,7 @@ using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
+using GilGoblin.Fetcher.Pocos;
 using GilGoblin.Tests.InMemoryTest;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
