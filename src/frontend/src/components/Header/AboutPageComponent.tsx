@@ -24,18 +24,14 @@ const AboutPageComponent = () => {
             <h1>About the author</h1>
             <p>
                 Nick Reinlein is a software developer with 9 years experience, currently working from Canada.
-                Nick has a passion for web development and programming.
-                He has a dual background in Computer Science and Financial Accounting.
-            </p>
-            <p>
-                He is married and father of 2 children. Trying to balance life, work and leisure is a perpetual
-                struggle, but he is determined to try.
+                Nick has a passion for web development and automation, particularly when it involves complexity.
+                He has a dual background in Computer Science and Financial Accounting. He is married and father of 3
+                children. Nick tries to balance life, work and leisure.
             </p>
             <h2> Contact </h2>
             <a href="mailto:admin@gilgoblin.com">admin@gilgoblin.com</a>
         </div>
-    )
-        ;
+    );
 };
 
 export default AboutPageComponent;

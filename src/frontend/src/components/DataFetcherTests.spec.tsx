@@ -51,19 +51,6 @@ describe('DataFetcher', () => {
         });
     });
 
-    it('fetches data from the correct URL for Crafts', async () => {
-        fetchMock.mockResponseOnce(JSON.stringify({data: 'mocked data'}));
-
-        await fetchData('Crafts', 987, 654);
-
-        expect.objectContaining({
-            parsedURL: expect.objectContaining({
-                href: 'http://localhost:55448/crafts/987',
-            }),
-            method: 'GET'
-        });
-    });
-
     it('fetches data from the correct URL for Profits', async () => {
         fetchMock.mockResponseOnce(JSON.stringify({data: 'mocked data'}));
 

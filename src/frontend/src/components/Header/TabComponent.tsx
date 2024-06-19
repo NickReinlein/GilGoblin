@@ -39,8 +39,7 @@ const TabComponent = () => {
                         key={tabName}
                         tabName={tabName}
                         activeTab={activeTab}
-                        onClick={handleTabClick}
-                    >
+                        onClick={handleTabClick}>
                         {tabName}
                     </TabButtonsComponent>
                 ))}
@@ -55,6 +54,6 @@ const TabComponent = () => {
     );
 };
 
-export const buttonTitles = ['Profits', 'Crafts', 'Items', 'Recipes', 'Prices', 'About'];
+export const buttonTitles = ['Profits', 'Items', 'Recipes', 'Prices', 'About'];
 
 export default TabComponent;

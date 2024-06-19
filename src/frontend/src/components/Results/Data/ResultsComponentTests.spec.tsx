@@ -5,7 +5,6 @@ import ResultsComponent from './ResultsComponent';
 jest.mock('./ItemComponent', () => ({item}: { item: any }) => <div>{item.name}</div>);
 jest.mock('./RecipeComponent', () => ({recipe}: { recipe: any }) => <div>{recipe.name}</div>);
 jest.mock('./PriceComponent', () => ({price}: { price: any }) => <div>{price.amount}</div>);
-jest.mock('./CraftComponent', () => ({craft}: { craft: any }) => <div>{craft.skill}</div>);
 
 describe('ResultsComponent', () => {
     it('renders ItemsComponent correctly', () => {
@@ -24,12 +23,6 @@ describe('ResultsComponent', () => {
         const data = {amount: 50};
         render(<ResultsComponent componentName="Prices" data={data}/>);
         expect(screen.getByText('50')).toBeInTheDocument();
-    });
-
-    it('renders CraftComponent correctly', () => {
-        const data = {skill: 'Crafting'};
-        render(<ResultsComponent componentName="Crafts" data={data}/>);
-        expect(screen.getByText('Crafting')).toBeInTheDocument();
     });
 
     it('returns null for unknown component', () => {
