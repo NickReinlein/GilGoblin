@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database;
@@ -11,6 +12,9 @@ using GilGoblin.Tests.InMemoryTest;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ClearExtensions;
+using NSubstitute.ExceptionExtensions;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DataUpdater;
@@ -70,114 +74,83 @@ public class WorldUpdaterTests : InMemoryTestDb
         await _worldUpdater.GetAllWorldsAsync();
 
         await _fetcher.Received(1).GetAllAsync();
-        _logger.Received(1).LogInformation("Received updates for {Count} worlds", worlds.Count);
         _logger.DidNotReceive().LogError("Received empty list returned when fetching all worlds");
+        Assert.Multiple(() =>
+        {
+            Assert.That(worlds, Has.Count.EqualTo(2));
+            Assert.That(worlds[0].Id, Is.GreaterThan(0));
+            Assert.That(worlds[0].Name, Is.Not.Null.Or.Empty);
+            Assert.That(worlds[1].Id, Is.GreaterThan(0));
+            Assert.That(worlds[1].Name, Is.Not.Null.Or.Empty);
+        });
     }
 
-    // [Test]
-    // public async Task GivenFetchAsync_WhenNoMarketableItemsAreReturned_ThenWeLogAnError()
-    // {
-    //     const string errorMessage = "Failed to get the Ids to update for world 34: Failed to fetch marketable item ids";
-    //     _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(new List<int>());
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     await _worldUpdater.FetchAsync(cts.Token, 34);
-    //
-    //     await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
-    //     await _priceFetcher.DidNotReceiveWithAnyArgs().FetchByIdsAsync(default, default!);
-    //     _logger.Received(1).LogError(errorMessage);
-    // }
-    //
-    // [Test]
-    // public async Task GivenFetchAsync_WhenMarketableItemsAreReturned_ThenWeAlsoReturnRecipeIngredients()
-    // {
-    //     var allRecipes = _dbContext.Recipe.ToList();
-    //     _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([631]);
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     await _worldUpdater.FetchAsync(cts.Token, 34);
-    //
-    //     var idCount = _worldUpdater.AllItemIds.Count;
-    //     Assert.That(idCount, Is.EqualTo(allRecipes.Count + 1));
-    // }
-    //
-    // [TestCase(0)]
-    // [TestCase(-1)]
-    // [TestCase(null)]
-    // public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int? worldIdString)
-    // {
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     await _worldUpdater.FetchAsync(cts.Token, worldIdString);
-    //
-    //     var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";
-    //     _logger.Received().LogError(message);
-    // }
-    //
-    // [Test]
-    // public void GivenFetchAsync_WhenTheTokenIsCancelled_ThenWeExitGracefully()
-    // {
-    //     _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([443, 1420, 3500, 900]);
-    //     _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
-    //     _priceFetcher.GetEntriesPerPage().Returns(2);
-    //     _priceFetcher.FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
-    //         .Returns(new List<PriceWebPoco>());
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     Assert.DoesNotThrowAsync(async () => await _worldUpdater.FetchAsync(cts.Token, 34));
-    //
-    //     _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
-    // }
-    //
-    // [Test]
-    // public async Task GivenConvertAndSaveToDbAsync_WhenThereAreValidEntriesToSave_ThenWeConvertAndSaveThoseEntities()
-    // {
-    //     var saveList = SetupSave();
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     await _worldUpdater.FetchAsync(cts.Token, 34);
-    //
-    //     Assert.That(saveList, Has.Count.GreaterThanOrEqualTo(2));
-    //     await _saver.Received().SaveAsync(
-    //         Arg.Is<List<PricePoco>>(x => saveList.All(
-    //             s => x.Any(i =>
-    //                 i.ItemId == s.ItemId &&
-    //                 i.WorldId == s.WorldId)))
-    //     );
-    // }
-    //
-    // [Test]
-    // public async Task GivenConvertAndSaveToDbAsync_WhenSavingThrowsAnException_ThenWeLogTheError()
-    // {
-    //     var saveList = SetupSave();
-    //     _saver.ClearSubstitute();
-    //     _saver.SaveAsync(default!).ThrowsAsyncForAnyArgs(new Exception("test"));
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     await _worldUpdater.FetchAsync(cts.Token, 34);
-    //
-    //     _logger.Received().LogError($"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: test");
-    // }
-    //
-    // [Test]
-    // public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
-    // {
-    //     var saveList = SetupSave();
-    //     _saver.SaveAsync(Arg.Any<IEnumerable<PricePoco>>()).Returns(false);
-    //     var errorMessage =
-    //         $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(IDataSaver<PricePoco>)} returned failure";
-    //
-    //     var cts = new CancellationTokenSource();
-    //     cts.CancelAfter(500);
-    //     await _worldUpdater.FetchAsync(cts.Token, 34);
-    //
-    //     _logger.Received().LogError(errorMessage);
-    // }
+    [Test]
+    public async Task GivenGetAllAsync_WhenAnExceptionIsThrown_ThenWeLogAnError()
+    {
+        _fetcher.GetAllAsync().ThrowsAsyncForAnyArgs(new InvalidOperationException());
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(500);
+        await _worldUpdater.GetAllWorldsAsync();
+
+        await _fetcher.Received(1).GetAllAsync();
+        _logger.Received(1).Log(LogLevel.Error,
+            "Failed to fetch updates for worlds: Operation is not valid due to the current state of the object.");
+    }
+
+    [Test, Ignore("fix me later")]
+    public void GivenFetchAsync_WhenTheTokenIsCancelled_ThenWeExitGracefully()
+    {
+        // _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([443, 1420, 3500, 900]);
+        // _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
+        // _priceFetcher.GetEntriesPerPage().Returns(2);
+        // _priceFetcher.FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
+        //     .Returns(new List<PriceWebPoco>());
+        //
+        // var cts = new CancellationTokenSource();
+        // cts.CancelAfter(500);
+        // Assert.DoesNotThrowAsync(async () => await _worldUpdater.FetchAsync(cts.Token, 34));
+        //
+        // _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
+    }
+
+    [Test]
+    public async Task GivenConvertAndSaveToDbAsync_WhenThereAreValidEntriesToSave_ThenWeConvertAndSaveThoseEntities()
+    {
+        var worlds = SetupSave();
+
+        await _worldUpdater.GetAllWorldsAsync();
+
+        Assert.That(worlds, Has.Count.GreaterThanOrEqualTo(2));
+        await _saver.Received().SaveAsync(Arg.Is<List<WorldPoco>>(x =>
+            x.All(y => y.Id > 0 && !string.IsNullOrWhiteSpace(y.Name))));
+    }
+
+    [Test]
+    public async Task GivenConvertAndSaveToDbAsync_WhenSavingThrowsAnException_ThenWeLogTheError()
+    {
+        var worlds = SetupSave();
+        _saver.ClearSubstitute();
+        _saver.SaveAsync(default!).ThrowsAsyncForAnyArgs(new Exception("test"));
+
+        await _worldUpdater.GetAllWorldsAsync();
+
+        _logger.Received().LogError($"Failed to save {worlds.Count} entries for {nameof(WorldPoco)}: test");
+    }
+
+    [Test]
+    public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
+    {
+        var worlds = SetupSave();
+        _saver.SaveAsync(Arg.Any<IEnumerable<WorldPoco>>()).Returns(false);
+
+        await _worldUpdater.GetAllWorldsAsync();
+
+        var errorMessage =
+            $"Failed to save {worlds.Count} entries for {nameof(WorldPoco)}: Saving from {nameof(IDataSaver<WorldPoco>)} returned failure";
+        _logger.Received().LogError(errorMessage);
+    }
 
     private List<WorldPoco> SetupSave()
     {

@@ -63,7 +63,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetch
             else
                 Logger.LogInformation("Received updates for {Count} worlds", updated.Count);
 
-            Logger.LogInformation("Total call time: {CallTime}", timer.Elapsed.TotalMilliseconds);
+            Logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
             return updated;
         }
         catch (Exception e)
