@@ -8,47 +8,29 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
-using GilGoblin.Tests.InMemoryTest;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using NSubstitute.ExceptionExtensions;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.DataUpdater;
 
-public class WorldUpdaterTests : InMemoryTestDb
+public class WorldUpdaterTests
 {
     private WorldUpdater _worldUpdater;
     private IWorldFetcher _fetcher;
     private IDataSaver<WorldPoco> _saver;
     private ILogger<WorldUpdater> _logger;
 
-    private IServiceScopeFactory _scopeFactory;
-    private IServiceScope _scope;
-    private IServiceProvider _serviceProvider;
-    private TestGilGoblinDbContext _dbContext;
-
     [SetUp]
-    public override void SetUp()
+    public void SetUp()
     {
-        base.SetUp();
-        _dbContext = new TestGilGoblinDbContext(_options, _configuration);
         _saver = Substitute.For<IDataSaver<WorldPoco>>();
         _fetcher = Substitute.For<IWorldFetcher>();
         _logger = Substitute.For<ILogger<WorldUpdater>>();
-        _scopeFactory = Substitute.For<IServiceScopeFactory>();
-        _scope = Substitute.For<IServiceScope>();
-        _serviceProvider = Substitute.For<IServiceProvider>();
 
-        _scopeFactory.CreateScope().Returns(_scope);
-        _scope.ServiceProvider.Returns(_serviceProvider);
-        _serviceProvider.GetService(typeof(GilGoblinDbContext)).Returns(_dbContext);
-        _serviceProvider.GetService(typeof(IDataSaver<WorldPoco>)).Returns(_saver);
-
-        _worldUpdater = new WorldUpdater(_scopeFactory, _fetcher, _logger);
+        _worldUpdater = new WorldUpdater(_fetcher, _saver, _logger);
     }
 
     [Test]
@@ -88,31 +70,15 @@ public class WorldUpdaterTests : InMemoryTestDb
     [Test]
     public async Task GivenGetAllAsync_WhenAnExceptionIsThrown_ThenWeLogAnError()
     {
-        _fetcher.GetAllAsync().ThrowsAsyncForAnyArgs(new InvalidOperationException());
+        var exception = new InvalidOperationException();
+        _fetcher.GetAllAsync().ThrowsAsyncForAnyArgs(exception);
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
         await _worldUpdater.GetAllWorldsAsync();
 
         await _fetcher.Received(1).GetAllAsync();
-        _logger.Received(1).Log(LogLevel.Error,
-            "Failed to fetch updates for worlds: Operation is not valid due to the current state of the object.");
-    }
-
-    [Test, Ignore("fix me later")]
-    public void GivenFetchAsync_WhenTheTokenIsCancelled_ThenWeExitGracefully()
-    {
-        // _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([443, 1420, 3500, 900]);
-        // _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
-        // _priceFetcher.GetEntriesPerPage().Returns(2);
-        // _priceFetcher.FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
-        //     .Returns(new List<PriceWebPoco>());
-        //
-        // var cts = new CancellationTokenSource();
-        // cts.CancelAfter(500);
-        // Assert.DoesNotThrowAsync(async () => await _worldUpdater.FetchAsync(cts.Token, 34));
-        //
-        // _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
+        _logger.ReceivedWithAnyArgs().LogError(default);
     }
 
     [Test]

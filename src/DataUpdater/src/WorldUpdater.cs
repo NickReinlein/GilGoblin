@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetcher, ILogger<WorldUpdater> Logger)
+public class WorldUpdater(IWorldFetcher Fetcher, IDataSaver<WorldPoco> Saver, ILogger<WorldUpdater> Logger)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -49,9 +49,6 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetch
     {
         try
         {
-            // TODO: do we really need this instead of using DI to inject the world fetcher?
-            // using var scope = ScopeFactory.CreateScope();
-            // var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
             Logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
@@ -81,9 +78,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetch
 
         try
         {
-            using var scope = ScopeFactory.CreateScope();
-            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<WorldPoco>>();
-            var success = await saver.SaveAsync(updateList);
+            var success = await Saver.SaveAsync(updateList);
             if (!success)
                 throw new DbUpdateException($"Saving from {nameof(IDataSaver<WorldPoco>)} returned failure");
         }
