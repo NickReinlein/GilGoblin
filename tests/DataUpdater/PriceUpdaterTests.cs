@@ -26,8 +26,8 @@ public class PriceUpdaterTests : InMemoryTestDb
     private PriceUpdater _priceUpdater;
     private IDataSaver<PricePoco> _saver;
     private IPriceRepository<PricePoco> _priceRepo;
-    private IRecipeRepository _recipeRepo;
     private ILogger<PriceUpdater> _logger;
+    private IRecipeRepository _recipeRepo;
 
     private IServiceScopeFactory _scopeFactory;
     private IServiceScope _scope;
