@@ -10,14 +10,14 @@ namespace GilGoblin.Fetcher;
 
 public interface IWorldFetcher
 {
-    Task<List<WorldWebPoco>> GetAll();
+    Task<List<WorldWebPoco>> GetAllAsync();
 }
 
 public class WorldFetcher(ILogger<WorldFetcher> Logger, HttpClient? Client = null) : IWorldFetcher
 {
-    private static string WorldBaseUrl => "https://universalis.app/api/v2/worlds";
+    public static string WorldBaseUrl => "https://universalis.app/api/v2/worlds";
 
-    public async Task<List<WorldWebPoco>> GetAll()
+    public async Task<List<WorldWebPoco>> GetAllAsync()
     {
         try
         {

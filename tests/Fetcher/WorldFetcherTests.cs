@@ -33,7 +33,7 @@ public class WorldFetcherTests : FetcherTests
     {
         SetupResponse();
 
-        var result = await _fetcher.GetAll();
+        var result = await _fetcher.GetAllAsync();
 
         Assert.Multiple(() =>
         {
@@ -55,7 +55,7 @@ public class WorldFetcherTests : FetcherTests
     {
         SetupResponse(statusCode);
 
-        var result = await _fetcher.GetAll();
+        var result = await _fetcher.GetAllAsync();
 
         Assert.Multiple(() =>
         {
@@ -69,7 +69,7 @@ public class WorldFetcherTests : FetcherTests
     {
         SetupResponse(HttpStatusCode.OK, "blah blah");
 
-        var result = await _fetcher.GetAll();
+        var result = await _fetcher.GetAllAsync();
 
         Assert.Multiple(() =>
         {
@@ -83,7 +83,7 @@ public class WorldFetcherTests : FetcherTests
     {
         SetupResponse(HttpStatusCode.OK, GetWorldsJsonResponse);
 
-        var result = await _fetcher.GetAll();
+        var result = await _fetcher.GetAllAsync();
 
         Assert.Multiple(() =>
         {

@@ -24,7 +24,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetch
         {
             try
             {
-                await GetAllWorlds(ct);
+                await GetAllWorldsAsync();
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetch
         }
     }
 
-    public async Task GetAllWorlds(CancellationToken ct)
+    public async Task GetAllWorldsAsync()
     {
         var result = await FetchAllWorlds();
         await ConvertAndSaveToDbAsync(result);
@@ -55,11 +55,14 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, IWorldFetcher Fetch
             Logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
-            // var updated = await fetcher.GetAll();
-            var updated = await Fetcher.GetAll();
+            var updated = await Fetcher.GetAllAsync();
             timer.Stop();
 
-            Logger.LogInformation("Received updates for {Count} worlds}", updated.Count);
+            if (updated.Count == 0)
+                Logger.LogError("Received empty list returned when fetching all worlds");
+            else
+                Logger.LogInformation("Received updates for {Count} worlds", updated.Count);
+
             Logger.LogInformation("Total call time: {CallTime}", timer.Elapsed.TotalMilliseconds);
             return updated;
         }
