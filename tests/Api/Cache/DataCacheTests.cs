@@ -1,6 +1,5 @@
 using System.Linq;
 using GilGoblin.Api.Cache;
-
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Api.Cache;
@@ -48,7 +47,7 @@ public class DataCacheTests : DataCache<int, Pizza>
     [Test]
     public void GivenACallToGetMultiple_WhenTheValuesAreAllNew_ThenWeReturnEmptyResponse()
     {
-        var result = GetMultiple(new [] { 2000, 2001 });
+        var result = GetMultiple(new[] { 2000, 2001 });
 
         Assert.That(result, Is.Empty);
     }
@@ -111,9 +110,9 @@ public class DataCacheTests : DataCache<int, Pizza>
     public void SetUp()
     {
         Cache.Clear();
-        Cache.Add(1, new Pizza { Id = 1, IngredientsCount = 10 });
-        Cache.Add(2, new Pizza { Id = 2, IngredientsCount = 20 });
-        Cache.Add(3, new Pizza { Id = 3, IngredientsCount = 30 });
+        Cache[1] = new Pizza { Id = 1, IngredientsCount = 10 };
+        Cache[2] = new Pizza { Id = 2, IngredientsCount = 20 };
+        Cache[3] = new Pizza { Id = 3, IngredientsCount = 30 };
     }
 }
 

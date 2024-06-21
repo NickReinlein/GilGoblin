@@ -32,7 +32,7 @@ public class WorldRepository : IWorldRepository
     }
 
     public IEnumerable<WorldPoco> GetMultiple(IEnumerable<int> ids) =>
-        _dbContext?.World?.Where(w => ids.Contains(w.Id)).AsEnumerable();
+        _dbContext.World.Where(w => ids.Contains(w.Id)).AsEnumerable();
 
     public IEnumerable<WorldPoco> GetAll() => _dbContext?.World.AsEnumerable();
 

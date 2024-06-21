@@ -60,7 +60,7 @@ public class RecipeComponentTests : ComponentTests
             GetSerializerOptions()
         );
 
-        var recipeList = recipes.ToList();
+        var recipeList = recipes?.ToList() ?? [];
         var recipeCount = recipeList.Count;
         Assert.Multiple(() =>
         {

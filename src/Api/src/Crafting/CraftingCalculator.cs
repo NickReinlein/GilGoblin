@@ -10,29 +10,15 @@ using GilGoblin.Api.Repository;
 
 namespace GilGoblin.Api.Crafting;
 
-public class CraftingCalculator : ICraftingCalculator
+public class CraftingCalculator(
+    IRecipeRepository recipes,
+    IPriceRepository<PricePoco> prices,
+    IRecipeCostRepository recipeCosts,
+    IRecipeGrocer grocer,
+    ILogger<CraftingCalculator> logger)
+    : ICraftingCalculator
 {
-    private readonly IRecipeRepository _recipes;
-    private readonly IPriceRepository<PricePoco> _prices;
-    private readonly IRecipeCostRepository _recipeCosts;
-    private readonly IRecipeGrocer _grocer;
-    private readonly ILogger<CraftingCalculator> _logger;
     public static readonly int ErrorDefaultCost = int.MaxValue;
-
-    public CraftingCalculator(
-        IRecipeRepository recipes,
-        IPriceRepository<PricePoco> prices,
-        IRecipeCostRepository recipeCosts,
-        IRecipeGrocer grocer,
-        ILogger<CraftingCalculator> logger
-    )
-    {
-        _recipes = recipes;
-        _prices = prices;
-        _grocer = grocer;
-        _recipeCosts = recipeCosts;
-        _logger = logger;
-    }
 
     public async Task<(int, int)> CalculateCraftingCostForItem(int worldId, int itemId)
     {
@@ -40,79 +26,52 @@ public class CraftingCalculator : ICraftingCalculator
         if (worldId < 1 || itemId < 1)
             return errorReturn;
 
-        var recipes = _recipes.GetRecipesForItem(itemId).ToList();
-        if (!recipes.Any())
+        var recipes1 = recipes.GetRecipesForItem(itemId);
+        if (!recipes1.Any())
             return errorReturn;
 
-        var (recipeId, lowestCraftingCost) = await GetLowestCraftingCost(worldId, recipes);
-        LogCraftingResult(worldId, itemId, recipes.Count, lowestCraftingCost);
+        var (recipeId, lowestCraftingCost) = await GetLowestCraftingCost(worldId, recipes1);
+        LogCraftingResult(worldId, itemId, recipes1.Count, lowestCraftingCost);
         return (recipeId, lowestCraftingCost);
     }
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldId, int recipeId)
     {
-        var calculated = await _recipeCosts.GetAsync(worldId, recipeId);
-        if (calculated is not null)
+        var calculated = await recipeCosts.GetAsync(worldId, recipeId);
+        if (calculated is not null &&
+            calculated.Updated >= DateTime.UtcNow.AddHours(-48))
             return calculated.Cost;
 
         try
         {
-            var recipe = _recipes.Get(recipeId);
-            var result = await _grocer.BreakdownRecipeById(recipeId);
-            var ingredients = result?.ToList();
-            if (recipe is null || ingredients is null || !ingredients.Any())
+            var recipe = recipes.Get(recipeId);
+            var result = await grocer.BreakdownRecipeById(recipeId);
+            var ingredients = result.ToList();
+            if (recipe is null || !ingredients.Any())
                 return ErrorDefaultCost;
 
             var ingredientPrices = GetIngredientPrices(worldId, recipe.TargetItemId, ingredients).ToList();
 
             var craftingCost = await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
 
-            if (craftingCost <= 1)
+            if (craftingCost is <= 1 or >= 1147483647)
                 throw new ArithmeticException(
                     $"Failed to calculate crafting cost for ingredients of recipe {recipeId} in world {worldId}");
-            await SaveRecipeCost(worldId, recipeId, ingredientPrices, craftingCost);
 
             return craftingCost;
         }
         catch (DataException)
         {
-            _logger.LogError(
+            logger.LogError(
                 $"Failed to find market data while calculating crafting cost for recipe {recipeId} in world {worldId}"
             );
         }
         catch (Exception e)
         {
-            _logger.LogError($"Failed to calculate crafting cost: {e.Message}");
+            logger.LogError($"Failed to calculate crafting cost: {e.Message}");
         }
 
         return ErrorDefaultCost;
-    }
-
-    private async Task SaveRecipeCost(int worldId, int recipeId, List<PricePoco> ingredientPrices, int craftingCost)
-    {
-        try
-        {
-            var oldestTime
-                = ingredientPrices
-                    .Select(l => l.LastUploadTime)
-                    .Min();
-            var oldestTimestamp = new DateTime(oldestTime).ToUniversalTime();
-
-            if (craftingCost <= 1)
-                throw new ArgumentException(
-                    $"Crafting cost cannot be {craftingCost} for recipe {recipeId} in world {worldId}");
-
-            await _recipeCosts.Add(
-                new RecipeCostPoco
-                {
-                    RecipeId = recipeId, WorldId = worldId, Cost = craftingCost, Updated = oldestTimestamp
-                }
-            );
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Failed to add the recipe costs to the recipe cost repository: {e.Message}");
-        }
     }
 
     private async Task<int> CalculateCraftingCostFromIngredients(int worldId, IEnumerable<IngredientPoco> ingredients,
@@ -123,7 +82,7 @@ public class CraftingCalculator : ICraftingCalculator
         var craftIngredients = AddPricesToIngredients(ingredientList, ingredientPrices);
         if (!craftIngredients.Any())
         {
-            _logger.LogError(
+            logger.LogError(
                 $"Failed to calculate crafting ingredient prices for world {worldId} for ingredients: {ingredientList.Select(i => i.ItemId)}");
             return 0;
         }
@@ -177,7 +136,7 @@ public class CraftingCalculator : ICraftingCalculator
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Failed to match market prices to ingredients: {ex.Message}");
+            logger.LogError($"Failed to match market prices to ingredients: {ex.Message}");
             return new List<CraftIngredientPoco>();
         }
     }
@@ -188,18 +147,18 @@ public class CraftingCalculator : ICraftingCalculator
         IEnumerable<IngredientPoco> ingredients
     )
     {
-        var itemIdList = ingredients.Where(i => i is not null).Select(e => e!.ItemId).ToList();
+        var itemIdList = ingredients.Select(e => e.ItemId).ToList();
         itemIdList.Add(itemId);
         itemIdList.Sort();
 
         var result = new List<PricePoco>();
         foreach (var ingredientId in itemIdList)
         {
-            var ingredientPrice = _prices.Get(worldId, ingredientId);
+            var ingredientPrice = prices.Get(worldId, ingredientId);
             if (ingredientPrice is not null)
                 result.Add(ingredientPrice);
             else
-                _logger.LogError($"No price found for ingredient {ingredientId} in world {worldId}");
+                logger.LogError($"No price found for ingredient {ingredientId} in world {worldId}");
         }
 
         if (!result.Any())
@@ -208,16 +167,13 @@ public class CraftingCalculator : ICraftingCalculator
         return result;
     }
 
-    public async Task<(int, int)> GetLowestCraftingCost(
-        int worldId,
-        IEnumerable<RecipePoco?> recipes
-    )
+    public async Task<(int, int)> GetLowestCraftingCost(int worldId, IEnumerable<RecipePoco?> recipeList)
     {
         var lowestCost = ErrorDefaultCost;
         var recipeId = -1;
-        foreach (var recipe in recipes.Where(recipe => recipe is not null))
+        foreach (var recipe in recipeList.Where(recipe => recipe is not null))
         {
-            var cached = await _recipeCosts.GetAsync(worldId, recipe.Id);
+            var cached = await recipeCosts.GetAsync(worldId, recipe!.Id);
 
             var recipeCost = cached?.Cost ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id);
 
@@ -233,17 +189,17 @@ public class CraftingCalculator : ICraftingCalculator
 
     private void LogCraftingResult(int worldId, int itemId, int recipeCount, float craftingCost)
     {
-        if (craftingCost >= (ErrorDefaultCost - 1000))
+        if (craftingCost >= ErrorDefaultCost - 10000)
         {
             var message =
                 $"Failed to calculate crafting cost of: world {worldId}, item {itemId} with {recipeCount} recipes";
-            _logger.LogError(message);
+            logger.LogError(message);
         }
         else
         {
             var message =
                 $"Successfully calculated crafting cost of {craftingCost} for item {itemId} world {worldId} with {recipeCount} craftable recipes";
-            _logger.LogInformation(message);
+            logger.LogInformation(message);
         }
     }
 }

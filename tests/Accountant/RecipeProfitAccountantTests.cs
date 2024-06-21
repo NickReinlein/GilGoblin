@@ -11,6 +11,7 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.InMemoryTest;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using NSubstitute.ExceptionExtensions;
@@ -43,7 +44,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         base.SetUp();
         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
         _scopeFactory = Substitute.For<IServiceScopeFactory>();
-        _logger = Substitute.For<ILogger<RecipeProfitAccountant>>();
+        _logger = Substitute.For<NullLogger<RecipeProfitAccountant>>();
         _scope = Substitute.For<IServiceScope>();
         _serviceProvider = Substitute.For<IServiceProvider>();
         _calc = Substitute.For<ICraftingCalculator>();
@@ -145,10 +146,10 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
 
         await _accountant.ComputeListAsync(worldId, idList, CancellationToken.None);
 
-        await _profitRepo.Received(1).Add(Arg.Is<RecipeProfitPoco>(r =>
+        await _profitRepo.Received(1).AddAsync(Arg.Is<RecipeProfitPoco>(r =>
             r.RecipeId == recipeId &&
             r.WorldId == worldId));
-        await _profitRepo.Received(1).Add(Arg.Is<RecipeProfitPoco>(r =>
+        await _profitRepo.Received(1).AddAsync(Arg.Is<RecipeProfitPoco>(r =>
             r.RecipeId == recipeId2 &&
             r.WorldId == worldId));
     }
@@ -160,7 +161,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
 
         await _accountant.ComputeListAsync(worldId, idList, CancellationToken.None);
 
-        await _profitRepo.DidNotReceive().Add(Arg.Is<RecipeProfitPoco>(r => r.RecipeId == recipeId));
+        await _profitRepo.DidNotReceive().AddAsync(Arg.Is<RecipeProfitPoco>(r => r.RecipeId == recipeId));
     }
 
     [Test]
@@ -172,17 +173,8 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         cts.Cancel();
         await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, cts.Token);
 
-        await _profitRepo.DidNotReceive().Add(Arg.Any<RecipeProfitPoco>());
+        await _profitRepo.DidNotReceive().AddAsync(Arg.Any<RecipeProfitPoco>());
         _logger.Received().LogInformation(message);
-    }
-
-    [Test]
-    public void GivenGetDataFreshnessInHours_WhenReceivingAResponse_ThenWeHaveAValidNumberOfHours()
-    {
-        var hours = RecipeProfitAccountant.GetDataFreshnessInHours().TotalHours;
-
-        Assert.That(hours, Is.GreaterThan(0));
-        Assert.That(hours, Is.LessThan(1000));
     }
 
     [Test]
@@ -223,7 +215,7 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         await _accountant.CalculateAsync(CancellationToken.None, worldId);
 
         _logger.Received().LogInformation(messageInfo);
-        await _profitRepo.DidNotReceive().Add(Arg.Any<RecipeProfitPoco>());
+        await _profitRepo.DidNotReceive().AddAsync(Arg.Any<RecipeProfitPoco>());
     }
 
     [Test]
@@ -236,6 +228,6 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
         await _accountant.CalculateAsync(CancellationToken.None, worldId);
 
         _logger.Received().LogError(messageError);
-        await _profitRepo.DidNotReceive().Add(Arg.Any<RecipeProfitPoco>());
+        await _profitRepo.DidNotReceive().AddAsync(Arg.Any<RecipeProfitPoco>());
     }
 }

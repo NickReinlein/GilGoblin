@@ -37,7 +37,7 @@ public class CraftSummaryPoco : IComparable
         AverageSold = (int)price.AverageSold;
         RecipeProfitVsListings = (int)price.AverageListingPrice - recipeCost;
         RecipeProfitVsSold = (int)price.AverageSold - recipeCost;
-        Ingredients = ingredients ?? new List<IngredientPoco>();
+        Ingredients = ingredients;
         Updated = DateTimeOffset.FromUnixTimeMilliseconds(price.LastUploadTime);
     }
 

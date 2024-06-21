@@ -7,5 +7,5 @@ namespace GilGoblin.Api.Crafting;
 public interface IRecipeGrocer
 {
     public Task<IEnumerable<IngredientPoco>> BreakdownRecipeById(int recipeId);
-    public Task<IEnumerable<IngredientPoco>?> BreakdownItem(int itemId);
+    public Task<IEnumerable<IngredientPoco>> BreakdownItem(int itemId);
 }

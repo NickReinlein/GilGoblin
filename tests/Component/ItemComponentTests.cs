@@ -53,7 +53,7 @@ public class ItemComponentTests : ComponentTests
 
         var items = (await response.Content.ReadFromJsonAsync<IEnumerable<ItemPoco>>(
             GetSerializerOptions()
-        )).ToList();
+        ))!.ToList();
         var itemCount = items.Count;
         var missingEntryThreshold = itemCount * missingEntryPercentageThreshold;
         Assert.Multiple(() =>

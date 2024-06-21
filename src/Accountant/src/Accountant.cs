@@ -20,19 +20,11 @@ public interface IAccountant<T> where T : class, IIdentifiable
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
-public class Accountant<T> : BackgroundService, IAccountant<T>
-    where T : class, IIdentifiable
+public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant<T>> logger)
+    : BackgroundService, IAccountant<T> where T : class, IIdentifiable
 {
-    protected readonly IServiceScopeFactory ScopeFactory;
-    protected readonly ILogger<Accountant<T>> Logger;
-
-    public Accountant(
-        IServiceScopeFactory scopeFactory,
-        ILogger<Accountant<T>> logger)
-    {
-        ScopeFactory = scopeFactory;
-        Logger = logger;
-    }
+    protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
+    protected readonly ILogger<Accountant<T>> Logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -89,8 +81,7 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
         }
         catch (Exception e)
         {
-            var message = $"Failed to balance the books for world {worldId}: {e.Message}";
-            Logger.LogError(message);
+            Logger.LogError("Failed to balance the books for world {WorldId}: {Error}", worldId, e.Message);
         }
     }
 
@@ -107,6 +98,7 @@ public class Accountant<T> : BackgroundService, IAccountant<T>
     public virtual Task<T> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
         => throw new NotImplementedException();
 
+    public virtual int GetDataFreshnessInHours() => throw new NotImplementedException();
 
     public virtual List<int> GetIdsToUpdate(int worldId) => new();
 }
