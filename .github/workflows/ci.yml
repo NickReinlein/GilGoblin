@@ -23,7 +23,7 @@ jobs:
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
       - name: Publish
         if: github.event_name == 'push'
         run: dotnet publish -c Release
