@@ -52,7 +52,8 @@ services:
 
   gilgoblin-dataupdater:
     image: nickreinlein/gilgoblin-dataupdater
-    container_name: dataupdater
+    # container_name: dataupdater
+    build: src/frontend/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api

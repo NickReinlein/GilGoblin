@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>GilGoblin.Database</RootNamespace>
     <PackageId>GilGoblin.Database</PackageId>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

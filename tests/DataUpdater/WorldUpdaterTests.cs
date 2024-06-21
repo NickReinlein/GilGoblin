@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
@@ -22,6 +23,9 @@ public class WorldUpdaterTests
     private IWorldFetcher _fetcher;
     private IDataSaver<WorldPoco> _saver;
     private ILogger<WorldUpdater> _logger;
+    private IServiceScopeFactory _serviceScopeFactory;
+    private IServiceScope _scope;
+    private IServiceProvider _serviceProvider;
 
     [SetUp]
     public void SetUp()
@@ -29,8 +33,16 @@ public class WorldUpdaterTests
         _saver = Substitute.For<IDataSaver<WorldPoco>>();
         _fetcher = Substitute.For<IWorldFetcher>();
         _logger = Substitute.For<ILogger<WorldUpdater>>();
+        _scope = Substitute.For<IServiceScope>();
+        _serviceScopeFactory = Substitute.For<IServiceScopeFactory>();
+        _serviceProvider = Substitute.For<IServiceProvider>();
 
-        _worldUpdater = new WorldUpdater(_fetcher, _saver, _logger);
+        _serviceScopeFactory.CreateScope().Returns(_scope);
+        _scope.ServiceProvider.Returns(_serviceProvider);
+        _serviceProvider.GetService(typeof(IWorldFetcher)).Returns(_fetcher);
+        _serviceProvider.GetService(typeof(IDataSaver<WorldPoco>)).Returns(_saver);
+
+        _worldUpdater = new WorldUpdater(_serviceScopeFactory, _logger);
     }
 
     [Test]

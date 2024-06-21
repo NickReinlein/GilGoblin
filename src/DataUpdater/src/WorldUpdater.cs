@@ -4,18 +4,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class WorldUpdater(IWorldFetcher Fetcher, IDataSaver<WorldPoco> Saver, ILogger<WorldUpdater> Logger)
-    : BackgroundService
+public interface IWorldUpdater
+{
+}
+
+public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdater> Logger)
+    : BackgroundService, IWorldUpdater
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -48,10 +53,12 @@ public class WorldUpdater(IWorldFetcher Fetcher, IDataSaver<WorldPoco> Saver, IL
     {
         try
         {
+            using var scope = ScopeFactory.CreateScope();
+            var fetcher = scope.ServiceProvider.GetService<IWorldFetcher>();
             Logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await Fetcher.GetAllAsync();
+            var updated = await fetcher.GetAllAsync();
             timer.Stop();
 
             if (updated.Count == 0)
@@ -77,7 +84,9 @@ public class WorldUpdater(IWorldFetcher Fetcher, IDataSaver<WorldPoco> Saver, IL
 
         try
         {
-            var success = await Saver.SaveAsync(updateList);
+            using var scope = ScopeFactory.CreateScope();
+            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<WorldPoco>>();
+            var success = await saver.SaveAsync(updateList);
             if (!success)
                 throw new DbUpdateException($"Saving from {nameof(IDataSaver<WorldPoco>)} returned failure");
         }

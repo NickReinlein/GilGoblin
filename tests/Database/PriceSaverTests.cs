@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;

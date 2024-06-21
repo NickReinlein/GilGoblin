@@ -1,10 +1,15 @@
 using System;
+using GilGoblin.Api.Cache;
+using GilGoblin.Api.Crafting;
+using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +29,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddLogging();
+        AddGoblinDatabases(services);
+        AddGoblinCrafting(services);
+        AddGoblinCaches(services);
         AddGoblinUpdaterServices(services);
     }
 
@@ -40,23 +48,58 @@ public class Startup
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        services = Api.Startup.AddGoblinDatabases(services, _configuration);
-        Api.Startup.AddGoblinCrafting(services);
-        Api.Startup.AddGoblinCaches(services);
-
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
-        services.AddScoped<IItemFetcher, ItemFetcher>();
-        services.AddScoped<ISingleDataFetcher<ItemWebPoco>, ItemFetcher>();
+
         services.AddScoped<IPriceFetcher, PriceFetcher>();
         services.AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-
-        services.AddScoped<IDataSaver<ItemPoco>, DataSaver<ItemPoco>>();
         services.AddScoped<IDataSaver<PricePoco>, PriceSaver>();
-
-        services.AddScoped<IDataUpdater<ItemPoco, ItemWebPoco>, ItemUpdater>();
         services.AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
 
+        services.AddScoped<IWorldFetcher, WorldFetcher>();
+        services.AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
+        services.AddScoped<IWorldUpdater, WorldUpdater>();
+
         services.AddHostedService<PriceUpdater>();
+        services.AddHostedService<WorldUpdater>();
+    }
+
+    private static void AddGoblinCrafting(IServiceCollection services)
+    {
+        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
+        services.AddScoped<ICraftRepository, CraftRepository>();
+        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
+    }
+
+    public static void AddGoblinCaches(IServiceCollection services)
+    {
+        services.AddScoped<IItemCache, ItemCache>();
+        services.AddScoped<IPriceCache, PriceCache>();
+        services.AddScoped<IRecipeCache, RecipeCache>();
+        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        services.AddScoped<IWorldCache, WorldCache>();
+        services.AddScoped<ICraftCache, CraftCache>();
+        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
+        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
+
+        services.AddScoped<IRepositoryCache, ItemRepository>();
+        services.AddScoped<IRepositoryCache, PriceRepository>();
+        services.AddScoped<IRepositoryCache, RecipeRepository>();
+    }
+
+    private void AddGoblinDatabases(IServiceCollection services)
+    {
+        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
+        if (string.IsNullOrEmpty(connectionString))
+            throw new Exception("Failed to get connection string");
+
+        services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
+
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        services.AddScoped<IItemRepository, ItemRepository>();
+        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
+        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
+        services.AddScoped<IWorldRepository, WorldRepository>();
     }
 
     private void DatabaseValidation(IApplicationBuilder app)

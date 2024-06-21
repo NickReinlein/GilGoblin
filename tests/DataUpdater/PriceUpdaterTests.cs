@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
