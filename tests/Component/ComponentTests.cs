@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
+[Category("Component")]
 public class ComponentTests
 {
     protected const string baseUrl = "http://localhost:55448";
