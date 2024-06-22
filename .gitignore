@@ -371,6 +371,10 @@ FodyWeavers.xsd
 # Idea IDE configs
 .idea/
 .iml/
+.vscode/
+.config/
+.out/
+
 **/workspace.xml
 
 # Benchmark db

@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GilGoblin.Fetcher;
+namespace GilGoblin.Fetcher.Pocos;
 
 public class ItemWebPocoConverter : JsonConverter<ItemWebPoco>
 {

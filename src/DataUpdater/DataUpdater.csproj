@@ -4,7 +4,7 @@
     <RootNamespace>GilGoblin.DataUpdater</RootNamespace>
     <PackageId>GilGoblin.DataUpdater</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>1.1.0</Version>
+    <Version>1.2.2</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -15,7 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GilGoblin.Api" Version="1.1.*"/>
-    <PackageReference Include="GilGoblin.Fetcher" Version="1.0.*"/>
+    <PackageReference Include="GilGoblin.Fetcher" Version="1.2.*"/>
     <PackageReference Include="GilGoblin.Batcher" Version="1.0.*"/>
     <PackageReference Include="GilGoblin.Database" Version="1.1.*"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.*"/>

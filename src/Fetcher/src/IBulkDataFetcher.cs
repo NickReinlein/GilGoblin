@@ -1,4 +1,5 @@
 using GilGoblin.Database.Pocos;
+using GilGoblin.Fetcher.Pocos;
 
 namespace GilGoblin.Fetcher;
 

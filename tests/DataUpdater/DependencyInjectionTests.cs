@@ -2,8 +2,10 @@ using System;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -32,15 +34,13 @@ public class DataUpdaterDependencyInjectionTests
 
     [TestCase(typeof(IBulkDataFetcher<PriceWebPoco, PriceWebResponse>))]
     [TestCase(typeof(IPriceFetcher))]
+    [TestCase(typeof(IWorldFetcher))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IMarketableItemIdsFetcher))]
-    [TestCase(typeof(IItemFetcher))]
-    [TestCase(typeof(ISingleDataFetcher<ItemWebPoco>))]
-    [TestCase(typeof(IDataSaver<ItemPoco>))]
     [TestCase(typeof(IDataSaver<PricePoco>))]
-    [TestCase(typeof(IDataUpdater<ItemPoco, ItemWebPoco>))]
     [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
+    [TestCase(typeof(IWorldUpdater))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();

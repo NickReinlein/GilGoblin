@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Fetcher;
+using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;

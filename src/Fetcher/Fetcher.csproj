@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>GilGoblin.Fetcher</RootNamespace>
     <PackageId>GilGoblin.Fetcher</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -29,5 +29,5 @@
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="icon.png" Pack="true" PackagePath="/"/>
   </ItemGroup>
-  
+
 </Project>

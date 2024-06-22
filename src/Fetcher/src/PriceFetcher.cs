@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net.Http;
+using GilGoblin.Fetcher.Pocos;
 
 namespace GilGoblin.Fetcher;
 

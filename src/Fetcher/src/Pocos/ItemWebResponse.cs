@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Database.Pocos;
 
-namespace GilGoblin.Fetcher;
+namespace GilGoblin.Fetcher.Pocos;
 
 public class ItemWebResponse : IResponseToList<ItemWebPoco>
 {
