@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET8
@@ -19,18 +20,10 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
-
-  publish:
-    runs-on: ubuntu-latest
-    steps:
+        run: dotnet test --no-build --verbosity normal
       - name: Publish
         if: github.event_name == 'push'
         run: dotnet publish -c Release
