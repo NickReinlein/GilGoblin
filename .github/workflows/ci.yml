@@ -24,13 +24,3 @@ jobs:
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
         run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
-      - name: Publish
-        if: github.event_name == 'push'
-        run: dotnet publish -c Release
-      - name: Publish Docker
-        if: github.event_name == 'push'
-        uses: elgohr/Publish-Docker-Github-Action@v5
-        with:
-          name: myDocker/repository
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
