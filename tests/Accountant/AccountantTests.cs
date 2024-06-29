@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
@@ -63,9 +64,9 @@ public class AccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenGetIdsToUpdate_WhenMethodIsNotImplemented_ThenWeThrowAnException()
+    public async Task GivenGetIdsToUpdate_WhenMethodIsNotImplemented_ThenWeThrowAnException()
     {
-        var ids = _accountant.GetIdsToUpdate(1);
+        var ids = await _accountant.GetIdsToUpdate(1);
 
         Assert.That(ids, Is.Empty);
     }

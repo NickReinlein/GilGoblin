@@ -49,8 +49,11 @@ public class RecipeProfitRepository : IRecipeProfitRepository
     public IEnumerable<RecipeProfitPoco> GetAll(int worldId) =>
         _dbContext.RecipeProfit.Where(p => p.WorldId == worldId);
 
-    public async Task AddAsync(RecipeProfitPoco entity)
+    public async Task AddAsync(RecipeProfitPoco? entity)
     {
+        if (entity is null)
+            return;
+
         (int, int) key = (entity.WorldId, entity.RecipeId);
         var cached = _cache.Get(key);
         if (cached is not null)

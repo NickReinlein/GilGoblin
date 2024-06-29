@@ -36,12 +36,15 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
                 if (!worlds.Any())
                     throw new DataException("Failed to find any world Ids. This should never happen");
 
+                var accountingTasks = new List<Task>();
                 foreach (var world in worlds)
                 {
-                    Logger.LogInformation(
-                        $"Opening ledger to update {typeof(T)} for world {world.Name}, id: {world.Id}");
-                    await CalculateAsync(ct, world.Id);
+                    Logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
+                        typeof(T), world.Id, world.Name);
+                    accountingTasks.Add(CalculateAsync(ct, world.Id));
                 }
+
+                await Task.WhenAll(accountingTasks);
             }
             catch (DataException ex)
             {
@@ -61,7 +64,7 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
 
     public async Task CalculateAsync(CancellationToken ct, int worldId)
     {
-        var idList = GetIdsToUpdate(worldId);
+        var idList = await GetIdsToUpdate(worldId);
         if (!idList.Any())
         {
             Logger.LogInformation($"Nothing to calculate for {worldId}");
@@ -100,5 +103,5 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
 
     public virtual int GetDataFreshnessInHours() => throw new NotImplementedException();
 
-    public virtual List<int> GetIdsToUpdate(int worldId) => new();
+    public virtual Task<List<int>> GetIdsToUpdate(int worldId) => Task.FromResult(new List<int>());
 }

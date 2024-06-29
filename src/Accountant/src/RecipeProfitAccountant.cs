@@ -68,9 +68,9 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
         }
         catch (Exception ex)
         {
-            var message =
-                $"An unexpected exception occured during the accounting process for world {worldId}: {ex.Message}";
-            Logger.LogError(message);
+            const string message =
+                "An unexpected exception occured during the accounting process for world {WorldId}: {Message}";
+            Logger.LogError(message, worldId, ex.Message);
         }
     }
 
@@ -113,43 +113,46 @@ public class RecipeProfitAccountant : Accountant<RecipeProfitPoco>, IRecipeProfi
 
     public override int GetDataFreshnessInHours() => 48;
 
-    public override List<int> GetIdsToUpdate(int worldId)
+    public override Task<List<int>> GetIdsToUpdate(int worldId)
     {
-        var idsToUpdate = new List<int>();
-        try
+        return Task.Run(() =>
         {
-            if (worldId < 1)
-                throw new Exception("World Id is invalid");
-
-            using var scope = ScopeFactory.CreateScope();
-            var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
-            var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-
-            var costs = costRepo.GetAll(worldId).ToList();
-            var costIds = costs.Select(i => i.GetId()).ToList();
-            var existingProfits = profitRepo.GetMultiple(worldId, costIds).ToList();
-
-            foreach (var cost in costs)
+            var idsToUpdate = new List<int>();
+            try
             {
-                var id = cost.GetId();
-                var existing = existingProfits.FirstOrDefault(e => e.GetId() == id);
-                if (existing is null)
+                if (worldId < 1)
+                    throw new Exception("World Id is invalid");
+
+                using var scope = ScopeFactory.CreateScope();
+                var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
+                var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+
+                var costs = costRepo.GetAll(worldId).ToList();
+                var costIds = costs.Select(i => i.GetId()).ToList();
+                var existingProfits = profitRepo.GetMultiple(worldId, costIds).ToList();
+
+                foreach (var cost in costs)
                 {
-                    idsToUpdate.Add(id);
-                    continue;
+                    var id = cost.GetId();
+                    var existing = existingProfits.FirstOrDefault(e => e.GetId() == id);
+                    if (existing is null)
+                    {
+                        idsToUpdate.Add(id);
+                        continue;
+                    }
+
+                    var age = (DateTimeOffset.Now - existing.Updated).TotalHours;
+                    if (age >= GetDataFreshnessInHours())
+                        idsToUpdate.Add(id);
                 }
-
-                var age = (DateTimeOffset.Now - existing.Updated).TotalHours;
-                if (age >= GetDataFreshnessInHours())
-                    idsToUpdate.Add(id);
             }
-        }
-        catch (Exception e)
-        {
-            Logger.LogError("Failed to get the Ids to update for world {WorldId}: {Message}", worldId, e.Message);
-        }
+            catch (Exception e)
+            {
+                Logger.LogError("Failed to get the Ids to update for world {WorldId}: {Message}", worldId, e.Message);
+            }
 
-        return idsToUpdate.Distinct().ToList();
+            return idsToUpdate.Distinct().ToList();
+        });
     }
 }
 

@@ -192,9 +192,9 @@ public class RecipeProfitAccountantTests : InMemoryTestDb
     }
 
     [Test]
-    public void GivenGetIdsToUpdate_WhenIdsAreReturned_ThenWeReturnTheList()
+    public async Task GivenGetIdsToUpdate_WhenIdsAreReturned_ThenWeReturnTheList()
     {
-        var ids = _accountant.GetIdsToUpdate(worldId);
+        var ids = await _accountant.GetIdsToUpdate(worldId);
 
         Assert.Multiple(() =>
         {

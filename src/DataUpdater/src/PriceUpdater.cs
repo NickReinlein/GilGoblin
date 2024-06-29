@@ -32,11 +32,15 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
     {
         var worlds = GetWorlds();
+        var fetchTasks = new List<Task>();
+
         foreach (var world in worlds)
         {
-            Logger.LogInformation($"Fetching updates for price relating for world {world.Name}, id: {world.Id}");
-            await FetchAsync(ct, world.Id);
+            Logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
+            fetchTasks.Add(FetchAsync(ct, world.Id));
         }
+
+        await Task.WhenAll(fetchTasks);
     }
 
 

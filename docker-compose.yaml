@@ -72,8 +72,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-accountant:
-    image: nickreinlein/gilgoblin-accountant
-    container_name: accountant
+    # image: nickreinlein/gilgoblin-accountant
+    # container_name: accountant
+    image: accountant
+    build: src/Accountant/    
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
