@@ -15,14 +15,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     ports:
       - "5432:${PORT_DATABASE}"
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     volumes:
       - ./src/Database/db:/var/lib/postgresql/data
       - ./src/Database/scripts:/docker-entrypoint-initdb.d
@@ -36,18 +34,16 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     ports:
       - "${PORT_API}:8080"
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   gilgoblin-dataupdater:
@@ -59,16 +55,14 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   gilgoblin-accountant:
@@ -80,16 +74,14 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   gilgoblin-frontend:
@@ -102,18 +94,16 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     ports:
       - "3000:${PORT_FRONTEND}"
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   ### Alerts & Monitoring ###
@@ -122,9 +112,9 @@ services:
     image: influxdb:1.8.10
     container_name: influxdb
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
       - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
@@ -132,10 +122,8 @@ services:
       - DOCKER_INFLUXDB_DB=${DOCKER_INFLUXDB_DB}
       - DOCKER_INFLUXDB_ADMIN_USER=${DOCKER_INFLUXDB_ADMIN_USER}
       - DOCKER_INFLUXDB_ADMIN_PASSWORD=${DOCKER_INFLUXDB_ADMIN_PASSWORD}
-    networks:
-      - gilgoblin
     ports:
-      - '8086:8086'
+      - "8086:8086"
     volumes:
       - ./benchmarks/influxdb:/var/lib/influxdb
 
@@ -147,20 +135,18 @@ services:
       - --enable-feature=native-histograms
       - --config.file=/etc/prometheus/prometheus.yml
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - gilgoblin
     ports:
       - "9090:9090"
     depends_on:
       - gilgoblin-influxdb
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     volumes:
       - ./benchmarks/prometheus:/etc/prometheus
     restart: unless-stopped
@@ -169,18 +155,16 @@ services:
     image: prom/node-exporter
     container_name: node-exporter
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     depends_on:
-      - gilgoblin-prometheus        
-    networks:
-      - gilgoblin
+      - gilgoblin-prometheus
     ports:
       - "9100:9100"
     volumes:
@@ -191,16 +175,14 @@ services:
     image: grafana/grafana
     container_name: grafana
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 10s
       timeout: 5s
       retries: 5
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
-    networks:
-      - gilgoblin
+        max-size: "50m"
     environment:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
       - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
@@ -209,6 +191,32 @@ services:
       - "${PORT_GRAFANA}:3000"
     volumes:
       - ./benchmarks/grafana:/var/lib/grafana
+    restart: unless-stopped
+
+  ## Security ##
+
+  nginx-proxy-manager:
+    image: "jc21/nginx-proxy-manager"
+    container_name: nginx-proxy-manager
+    healthcheck:
+      test: ["CMD", "/usr/bin/check-health"]
+      retries: 3
+      interval: 10s
+      timeout: 3s
+    env_file: .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+    environment:
+      DISABLE_IPV6: true
+    volumes:
+      - "./nginx:/data"
+      - ./letsencrypt:/etc/letsencrypt
+    ports:
+      - "${NGINX_PROXY_MANAGER_HTTP_PORT}:80" # Public HTTP Port
+      - "${NGINX_PROXY_MANAGER_HTTPS_PORT}:443" # Public HTTPS Port
+      - "${NGINX_PROXY_MANAGER_ADMIN_PORT}:81" # Admin Web Port
     restart: unless-stopped
 
   ### Benchmarks ###
@@ -236,4 +244,6 @@ services:
   #   restart: no
 
 networks:
-  gilgoblin:
+  default:
+    external: true
+    name: gilgoblin
