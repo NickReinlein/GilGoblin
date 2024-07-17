@@ -1,8 +1,8 @@
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
-import ProfitTableComponent, {columnHeaders, columnHeaderToFieldMapping} from './ProfitTableComponent';
 import {Crafts} from "../../../types/types";
 import {convertMultipleCraftsToProfits} from "../../../converters/CraftToProfitConverter";
+import ProfitTableComponent from "./ProfitTableComponent";
 
 
 describe('ProfitTableComponent', () => {
@@ -245,5 +245,42 @@ describe('ProfitTableComponent', () => {
             "updated": "2024-01-02T23:10:40.4266199+00:00"
         }
     ];
-})
-;
+});
+
+const columnHeaders =
+    [
+        '#',
+        'Name',
+        'Sold Profit',
+        'Listings Profit',
+        'Avg. Sold',
+        'Avg. Listing',
+        'Cost',
+        'Qty',
+        'Age'
+    ];
+
+const columnHeaderToFieldMapping = (header: string) => {
+    switch (header) {
+        case '#':
+            return 'index';
+        case 'Name':
+            return 'name'
+        case 'Sold Profit':
+            return 'profitSold';
+        case 'Listings Profit':
+            return 'profitListings';
+        case 'Avg. Sold':
+            return 'averageSold';
+        case 'Avg. Listing':
+            return 'averageListing';
+        case 'Cost':
+            return 'cost';
+        case 'Qty':
+            return 'resultQuantity';
+        case 'Age':
+            return 'updated';
+        default:
+            return 'missing';
+    }
+}
