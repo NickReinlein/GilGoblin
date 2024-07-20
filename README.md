@@ -28,6 +28,7 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: Improve performance for top-crafts endpoint ⏩
 
 *Work-in-progress*
+* :hatching_chick: Make everything *prettier* ✨
 * :hatching_chick: Launch and test website 🚀
 
 *Upcoming*
@@ -35,11 +36,10 @@ The long-term goal is to have a website using this API's endpoints to display th
 
 *Nice-to-have*
 * :question: Top things to gather 🌳🪓 🪨⛏️
-* :question: A link to each profit result's item, recipe, price, and craft in the profit table row 🕵️
+* :question: A link/recipe details for each profit result's items, ingredients, prices, etc. in the profit table row 🕵️
 * :question: A hover or clickable option to see the profit's ingredients & cost info ☁️
 * :question: Advanced filtering: Enter class levels to filter available recipes 🧰
 * :question: A website displaying the top crafts *for each profession* 🛠️
-* :question: Make everything *prettier* ✨
 
 *Not currently on the product roadmap*
 * :heavy_multiplication_x: Filter for HQ/NQ 
