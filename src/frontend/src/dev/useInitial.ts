@@ -1,4 +1,4 @@
-import {useState} from wip with alternating row colors"react";
+import {useState} from "react";
 import {InitialHookStatus} from "@react-buddy/ide-toolbox";
 
 export const useInitial: () => InitialHookStatus = () => {
