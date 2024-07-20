@@ -1,0 +1,52 @@
+:root {
+    --background-even: rgba(0, 0, 0, 1);
+    --background-even-hover: rgba(150, 150, 150, 1);
+    --background-even-selected: rgba(200, 200, 200, 1);
+    --background-even-selected-hover: rgba(255, 255, 255, 1);
+
+    --background-odd: rgba(50, 50, 50, 1);
+    --background-odd-hover: rgba(100, 100, 100, 1);
+    --background-odd-selected: rgba(200, 200, 200, 1);
+    --background-odd-selected-hover: rgba(255, 255, 255, 1);
+
+    --text-color: white;
+}
+
+.evenRow {
+    background-color: var(--background-even);
+    text-align: center;
+}
+
+.evenRow:hover {
+    background-color: var(--background-even-hover);
+}
+
+.evenRow.Mui-selected {
+    background-color: var(--background-even-selected);
+}
+
+.evenRow.Mui-selected:hover {
+    background-color: var(--background-even-selected-hover);
+}
+
+.oddRow {
+    background-color: var(--background-odd);
+    text-align: center;
+}
+
+.oddRow:hover {
+    background-color: var(--background-odd-hover);
+}
+
+.oddRow.Mui-selected {
+    background-color: var(--background-odd-selected);
+}
+
+.oddRow.Mui-selected:hover {
+    background-color: var(--background-odd-selected-hover);
+}
+
+/* Apply white text color globally within the DataGrid */
+.dataGrid {
+    color: var(--text-color);
+}
