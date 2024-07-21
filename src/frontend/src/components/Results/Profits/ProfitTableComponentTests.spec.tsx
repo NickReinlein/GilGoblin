@@ -4,6 +4,18 @@ import {Crafts} from "../../../types/types";
 import {convertMultipleCraftsToProfits} from "../../../converters/CraftToProfitConverter";
 import ProfitTableComponent from "./ProfitTableComponent";
 
+const columnHeaders =
+    [
+        '#',
+        'Name',
+        'Sold Profit',
+        'Listings Profit',
+        'Avg. Sold',
+        'Avg. Listing',
+        'Cost',
+        'Qty',
+        'Age'
+    ];
 
 describe('ProfitTableComponent', () => {
     test('renders a message when crafts are empty', () => {
@@ -246,19 +258,6 @@ describe('ProfitTableComponent', () => {
         }
     ];
 });
-
-const columnHeaders =
-    [
-        '#',
-        'Name',
-        'Sold Profit',
-        'Listings Profit',
-        'Avg. Sold',
-        'Avg. Listing',
-        'Cost',
-        'Qty',
-        'Age'
-    ];
 
 const columnHeaderToFieldMapping = (header: string) => {
     switch (header) {

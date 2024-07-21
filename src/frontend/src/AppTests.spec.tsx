@@ -6,7 +6,7 @@ describe('App component', () => {
     it('renders without crashing', () => {
         render(<App/>);
 
-        const appDivElement = screen.getByTestId("app-tab");
+        const appDivElement = screen.getByTestId("app");
 
         expect(appDivElement).toBeInTheDocument();
     });
