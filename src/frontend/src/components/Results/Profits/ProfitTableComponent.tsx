@@ -3,7 +3,7 @@ import {Crafts, Profit} from '../../../types/types';
 import {convertMultipleCraftsToProfits} from '../../../converters/CraftToProfitConverter';
 import '../../../styles/ProfitTableComponent.css';
 import {GridColDef} from "@mui/x-data-grid";
-import StripedDataGrid from "../StripedDataGrid";
+import StripedDataGrid, {getRowClassName} from "../StripedDataGrid";
 
 interface ProfitTableProps {
     crafts: Crafts;
@@ -35,19 +35,24 @@ const convertTimestampToAge = (timestamp: string): string => {
 
     const ageInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (ageInSeconds < 60) {
-        return `${ageInSeconds} seconds ago`;
-    } else if (ageInSeconds < 3600) {
-        const ageInMinutes = Math.floor(ageInSeconds / 60);
-        return `${ageInMinutes} minutes ago`;
-    } else if (ageInSeconds < 86400) {
-        const ageInHours = Math.floor(ageInSeconds / 3600);
-        return `${ageInHours} hours ago`;
-    } else {
-        const ageInDays = Math.floor(ageInSeconds / 86400);
-        return `${ageInDays.toLocaleString()} days ago`;
-    }
+    return timeAgo(ageInSeconds);
 }
+
+const timeAgo = (ageInSeconds: number) => {
+    switch (true) {
+        case ageInSeconds < 60:
+            return `${ageInSeconds} seconds ago`;
+        case ageInSeconds < 3600:
+            const ageInMinutes = Math.floor(ageInSeconds / 60);
+            return `${ageInMinutes} minutes ago`;
+        case ageInSeconds < 86400:
+            const ageInHours = Math.floor(ageInSeconds / 3600);
+            return `${ageInHours} hours ago`;
+        default:
+            const ageInDays = Math.floor(ageInSeconds / 86400);
+            return `${ageInDays.toLocaleString()} days ago`;
+    }
+};
 
 const ProfitTableComponent: React.FC<ProfitTableProps> = ({
                                                               crafts,
@@ -64,10 +69,12 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
     })
 
     return (
-        <div className="profits-table" style={{height: 800, width: '80%'}}>
+        <div className="profits-table" style={{height: 800, width: '85%'}}>
             <StripedDataGrid
                 rows={profitsMapped}
                 columns={profitTableHeaders}
+                getRowClassName={getRowClassName}
+                className="dataGrid"
                 autosizeOnMount={true}
                 initialState={
                     {

@@ -1,13 +1,9 @@
 :root {
-    --background-even: rgba(0, 0, 0, 1);
-    --background-even-hover: rgba(150, 150, 150, 1);
-    --background-even-selected: rgba(200, 200, 200, 1);
-    --background-even-selected-hover: rgba(255, 255, 255, 1);
-
-    --background-odd: rgba(50, 50, 50, 1);
-    --background-odd-hover: rgba(100, 100, 100, 1);
-    --background-odd-selected: rgba(200, 200, 200, 1);
-    --background-odd-selected-hover: rgba(255, 255, 255, 1);
+    --background-hover: rgba(0, 100, 0, 0.6);
+    --background-even: rgba(0, 0, 0, 0.8);
+    --background-odd: rgba(20, 20, 20, 0.8);
+    --background-selected: rgba(0, 75, 0, 0.4);
+    --background-selected-hover: rgba(0, 125, 0, 0.6);
 
     --text-color: white;
 }
@@ -18,15 +14,15 @@
 }
 
 .evenRow:hover {
-    background-color: var(--background-even-hover);
+    background-color: var(--background-hover);
 }
 
 .evenRow.Mui-selected {
-    background-color: var(--background-even-selected);
+    background-color: var(--background-selected);
 }
 
 .evenRow.Mui-selected:hover {
-    background-color: var(--background-even-selected-hover);
+    background-color: var(--background-selected-hover);
 }
 
 .oddRow {
@@ -35,18 +31,17 @@
 }
 
 .oddRow:hover {
-    background-color: var(--background-odd-hover);
+    background-color: var(--background-hover);
 }
 
 .oddRow.Mui-selected {
-    background-color: var(--background-odd-selected);
+    background-color: var(--background-selected);
 }
 
 .oddRow.Mui-selected:hover {
-    background-color: var(--background-odd-selected-hover);
+    background-color: var(--background-selected-hover);
 }
 
-/* Apply white text color globally within the DataGrid */
 .dataGrid {
     color: var(--text-color);
 }
