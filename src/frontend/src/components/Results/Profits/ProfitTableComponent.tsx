@@ -12,14 +12,14 @@ interface ProfitTableProps {
 }
 
 const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
-    {field: 'index', headerName: '#', width: 70},
-    {field: 'name', headerName: 'Name', width: 300},
-    {field: 'profitSold', headerName: 'Sold Profit', type: 'number', width: 150},
-    {field: 'profitListings', headerName: 'Listings Profit', type: 'number', width: 150},
-    {field: 'averageSold', headerName: 'Avg. Sold', type: 'number', width: 150},
-    {field: 'averageListing', headerName: 'Avg. Listing', type: 'number', width: 150},
-    {field: 'cost', headerName: 'Cost', type: 'number', width: 150},
-    {field: 'resultQuantity', headerName: 'Qty', type: 'number', width: 100},
+    {field: 'index', headerName: '#', minWidth: 70},
+    {field: 'name', headerName: 'Name', minWidth: 300},
+    {field: 'profitSold', headerName: 'Sold Profit', type: 'number', minWidth: 150},
+    {field: 'profitListings', headerName: 'Listings Profit', type: 'number', minWidth: 150},
+    {field: 'averageSold', headerName: 'Avg. Sold', type: 'number', minWidth: 150},
+    {field: 'averageListing', headerName: 'Avg. Listing', type: 'number', minWidth: 150},
+    {field: 'cost', headerName: 'Cost', type: 'number', minWidth: 150},
+    {field: 'resultQuantity', headerName: 'Qty', type: 'number', minWidth: 100},
     {
         field: 'updated',
         headerName: 'Age',
@@ -69,7 +69,7 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
     })
 
     return (
-        <div className="profits-table" style={{height: 800, width: '85%'}}>
+        <div className="profits-table" style={{minHeight: 800, width: '90%'}}>
             <StripedDataGrid
                 rows={profitsMapped}
                 columns={profitTableHeaders}
