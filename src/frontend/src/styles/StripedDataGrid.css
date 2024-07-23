@@ -1,9 +1,10 @@
 :root {
-    --background-hover: rgba(0, 100, 0, 0.6);
-    --background-even: rgba(0, 0, 0, 0.8);
-    --background-odd: rgba(20, 20, 20, 0.8);
-    --background-selected: rgba(0, 75, 0, 0.4);
-    --background-selected-hover: rgba(0, 125, 0, 0.6);
+    --background-headers: rgb(0, 30, 0);
+    --background-even: rgba(0, 0, 0, 1);
+    --background-odd: rgba(20, 20, 20, 1);
+    --background-hover: rgba(0, 100, 0, 1);
+    --background-selected: rgba(0, 30, 0, 1);
+    --background-selected-hover: rgba(0, 125, 0, 1);
 
     --text-color: white;
 }
@@ -15,33 +16,30 @@
 
 .evenRow:hover {
     background-color: var(--background-hover);
-}
-
-.evenRow.Mui-selected {
-    background-color: var(--background-selected);
-}
-
-.evenRow.Mui-selected:hover {
-    background-color: var(--background-selected-hover);
-}
-
-.oddRow {
-    background-color: var(--background-odd);
-    text-align: center;
+    font-weight: bold;
 }
 
 .oddRow:hover {
     background-color: var(--background-hover);
+    font-weight: bold;
+}
+
+.evenRow.Mui-selected {
+    background-color: var(--background-selected);
+    font-style: italic;
+}
+
+.evenRow.Mui-selected:hover {
+    background-color: var(--background-selected-hover);
+    font-weight: bold;
 }
 
 .oddRow.Mui-selected {
     background-color: var(--background-selected);
+    font-style: italic;
 }
 
 .oddRow.Mui-selected:hover {
     background-color: var(--background-selected-hover);
-}
-
-.dataGrid {
-    color: var(--text-color);
+    font-weight: bold;
 }
