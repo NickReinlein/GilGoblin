@@ -2,9 +2,11 @@
 
 ## Summary
 
-`GilGoblin` is a back-end REST API, to calculate in-game crafting profitability in Final Fantasy XIV (FFXIV). It calculates the most profitable items to craft based on current market prices, vendor prices and crafting component costs. It stores recent prices in a local PostgreSQL database. The prices are refreshed by a background service.
+`GilGoblin` is a end-to-end application which calculates in-game crafting profitability in Final Fantasy XIV (FFXIV). 
 
-The long-term goal is to have a website using this API's endpoints to display the top crafts for each crafting profession (specific to the user-selected world)
+It calculates the most profitable items to craft based on current market prices, vendor prices and crafting component costs. It stores recent prices in a local PostgreSQL database. The prices are refreshed by a background service.
+
+A webpage front-end is available with the resulting calculations. Filters are available per world, allowing users to see the most profitable items specific to their server.
 
 **Complete**
 * :heavy_check_mark: Getting the vendor cost, if available via vendor
@@ -28,6 +30,7 @@ The long-term goal is to have a website using this API's endpoints to display th
 * :heavy_check_mark: Improve performance for top-crafts endpoint ⏩
 
 *Work-in-progress*
+* :hatching_chick: Make everything *prettier* ✨
 * :hatching_chick: Launch and test website 🚀
 
 *Upcoming*
@@ -35,11 +38,10 @@ The long-term goal is to have a website using this API's endpoints to display th
 
 *Nice-to-have*
 * :question: Top things to gather 🌳🪓 🪨⛏️
-* :question: A link to each profit result's item, recipe, price, and craft in the profit table row 🕵️
+* :question: A link/recipe details for each profit result's items, ingredients, prices, etc. in the profit table row 🕵️
 * :question: A hover or clickable option to see the profit's ingredients & cost info ☁️
 * :question: Advanced filtering: Enter class levels to filter available recipes 🧰
 * :question: A website displaying the top crafts *for each profession* 🛠️
-* :question: Make everything *prettier* ✨
 
 *Not currently on the product roadmap*
 * :heavy_multiplication_x: Filter for HQ/NQ 
