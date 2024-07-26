@@ -1,29 +1,28 @@
 import React from 'react';
 import {Crafts, Profit} from '../../../types/types';
 import {convertMultipleCraftsToProfits} from '../../../converters/CraftToProfitConverter';
-import '../../../styles/ProfitTableComponent.css';
 import {GridColDef} from "@mui/x-data-grid";
 import StripedDataGrid, {getRowClassName} from "../StripedDataGrid";
 
 interface ProfitTableProps {
     crafts: Crafts;
-    columnSort?: string;
-    ascending?: boolean;
 }
 
 const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
-    {field: 'index', headerName: '#', minWidth: 70},
-    {field: 'name', headerName: 'Name', minWidth: 300},
-    {field: 'profitSold', headerName: 'Sold Profit', type: 'number', minWidth: 150},
-    {field: 'profitListings', headerName: 'Listings Profit', type: 'number', minWidth: 150},
-    {field: 'averageSold', headerName: 'Avg. Sold', type: 'number', minWidth: 150},
-    {field: 'averageListing', headerName: 'Avg. Listing', type: 'number', minWidth: 150},
-    {field: 'cost', headerName: 'Cost', type: 'number', minWidth: 150},
-    {field: 'resultQuantity', headerName: 'Qty', type: 'number', minWidth: 100},
+    {field: 'id', headerName: '#', minWidth: 70, maxWidth: 100, type: 'number'},
+    {field: 'name', headerName: 'Name', minWidth: 300, type: 'string', flex: 1},
+    {field: 'profitSold', headerName: 'Sold Profit', type: 'number', minWidth: 150, flex: 1},
+    {field: 'profitListings', headerName: 'Listings Profit', type: 'number', minWidth: 150, flex: 1},
+    {field: 'averageSold', headerName: 'Avg. Sold', type: 'number', minWidth: 150, flex: 1},
+    {field: 'averageListing', headerName: 'Avg. Listing', type: 'number', minWidth: 150, flex: 1},
+    {field: 'cost', headerName: 'Cost', type: 'number', minWidth: 150, flex: 1},
+    {field: 'resultQuantity', headerName: 'Qty', type: 'number', minWidth: 100, flex: 1},
     {
         field: 'updated',
         headerName: 'Age',
-        width: 150,
+        minWidth: 200,
+        maxWidth: 400,
+        flex: 1,
         type: 'string',
         valueGetter: (value, row) => convertTimestampToAge(row.updated),
     },
@@ -32,9 +31,7 @@ const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
 const convertTimestampToAge = (timestamp: string): string => {
     const date = new Date(timestamp);
     const now = new Date();
-
     const ageInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
     return timeAgo(ageInSeconds);
 }
 
