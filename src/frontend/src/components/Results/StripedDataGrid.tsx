@@ -11,33 +11,28 @@ const StripedDataGrid = styled(DataGrid)(() => {
         [`& .${gridClasses.columnHeader}`]: {
             backgroundColor: 'var(--background-headers)',
             color: 'var(--text-color)',
+            autosizeOnMount: true,
+
         },
         [`& .${gridClasses.row}`]: {
             color: 'var(--text-color)',
+            '&:hover': {
+                backgroundColor: 'var(--background-hover)',
+                fontWeight: 'bold',
+            },
+            '&.Mui-selected': {
+                backgroundColor: 'var(--background-selected)',
+                fontStyle: 'italic',
+                '&:hover': {
+                    backgroundColor: 'var(--background-selected-hover)',
+                },
+            },
         },
         [`& .evenRow`]: {
             backgroundColor: 'var(--background-even)',
-            '&:hover': {
-                backgroundColor: 'var(--background-hover)',
-            },
-            '&.Mui-selected': {
-                backgroundColor: 'var(--background-selected)',
-                '&:hover': {
-                    backgroundColor: 'var(--background-selected-hover)',
-                },
-            },
         },
         [`& .oddRow`]: {
             backgroundColor: 'var(--background-odd)',
-            '&:hover': {
-                backgroundColor: 'var(--background-hover)',
-            },
-            '&.Mui-selected': {
-                backgroundColor: 'var(--background-selected)',
-                '&:hover': {
-                    backgroundColor: 'var(--background-selected-hover)',
-                },
-            },
         },
     });
 });

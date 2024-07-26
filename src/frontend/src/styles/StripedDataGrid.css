@@ -9,37 +9,6 @@
     --text-color: white;
 }
 
-.evenRow {
-    background-color: var(--background-even);
-    text-align: center;
-}
-
-.evenRow:hover {
-    background-color: var(--background-hover);
-    font-weight: bold;
-}
-
-.oddRow:hover {
-    background-color: var(--background-hover);
-    font-weight: bold;
-}
-
-.evenRow.Mui-selected {
-    background-color: var(--background-selected);
-    font-style: italic;
-}
-
-.evenRow.Mui-selected:hover {
-    background-color: var(--background-selected-hover);
-    font-weight: bold;
-}
-
-.oddRow.Mui-selected {
-    background-color: var(--background-selected);
-    font-style: italic;
-}
-
-.oddRow.Mui-selected:hover {
-    background-color: var(--background-selected-hover);
-    font-weight: bold;
+.MuiDataGrid-sortIcon, .MuiSvgIcon-root {
+    color: var(--text-color);
 }
