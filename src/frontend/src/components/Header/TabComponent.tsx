@@ -1,24 +1,25 @@
-import React, {useState} from 'react';
-import '../../styles/Tab.css';
+import React, { SyntheticEvent, useState } from 'react';
+import { Box, Tab, Tabs } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import SearchComponent from './SearchComponent';
-import TabButtonsComponent from './TabButtonsComponent';
-import ResultsComponent from "../Results/Data/ResultsComponent";
-import TitleComponent from "../Header/TitleComponent";
-import DataFetcher from "../DataFetcher";
+import ResultsComponent from '../Results/Data/ResultsComponent';
+import TitleComponent from '../Header/TitleComponent';
+import DataFetcher from '../DataFetcher';
+import '../../styles/Tab.css';
 
 const TabComponent = () => {
+    const theme = useTheme();
     const [activeTab, setActiveTab] = useState(buttonTitles[0]);
     const [tabData, setTabData] = useState({});
 
-    const handleTabClick = (tabName: string) => {
-        setActiveTab(tabName);
+    const handleChange = (event: SyntheticEvent, newValue: string) => {
+        setActiveTab(newValue);
     };
 
     const handleSearchClick = async (id: number, world: number) => {
         console.log(`Fetching data for id ${id} world ${world}`);
         const result = await getDataForTab(activeTab, id, world);
-        if (result)
-            setTabData(result);
+        if (result) setTabData(result);
     };
 
     const getDataForTab = async (tabName: string, id: number, world: number) => {
@@ -28,27 +29,52 @@ const TabComponent = () => {
             console.error(`Error fetching data for id ${id} world ${world}`);
             return null;
         }
-    }
+    };
 
     return (
         <div className="tab-container">
-            <div className="tabs">
-                <TitleComponent/>
-                {buttonTitles.map((tabName) => (
-                    <TabButtonsComponent
-                        key={tabName}
-                        tabName={tabName}
-                        activeTab={activeTab}
-                        onClick={handleTabClick}>
-                        {tabName}
-                    </TabButtonsComponent>
-                ))}
+            <div className="tabs-header">
+                <TitleComponent />
+                <div className="tabs-wrapper">
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={activeTab} onChange={handleChange}>
+                            {buttonTitles.map((title, index) => (
+                                <Tab
+                                    key={index}
+                                    label={title}
+                                    value={title}
+                                    className={activeTab === title ? 'selected-tab' : 'tab'}
+                                    sx={{
+                                        '&': {
+                                            color: 'white',
+                                            border: `2px solid`,
+                                            borderColor: 'var(--background-selected)',
+                                            borderRadius: '12px 12px 12px 12px',
+                                            margin: '5px',
+                                        },
+                                        '&:hover': {
+                                            backgroundColor: 'var(--background-hover)',
+                                        },
+                                        '&.Mui-selected': {
+                                            color: 'white',
+                                            backgroundColor: 'var(--background-selected)',
+                                            borderBottom: `2px solid`,
+                                            '&:hover': {
+                                                backgroundColor: 'var(--background-selected-hover)',
+                                            },
+                                        }
+                                    }}
+                                />
+                            ))}
+                        </Tabs>
+                    </Box>
+                </div>
             </div>
             <div className="search-container">
-                <SearchComponent onClick={handleSearchClick}/>
+                <SearchComponent onClick={handleSearchClick} />
             </div>
             <div className="results-container">
-                <ResultsComponent componentName={activeTab} data={tabData}/>
+                <ResultsComponent componentName={activeTab} data={tabData} />
             </div>
         </div>
     );
