@@ -48,12 +48,14 @@ A webpage front-end is available with the resulting calculations. Filters are av
 * :heavy_multiplication_x: Any interactions with the market board or in-game
 
 ## Technologies
-* The back-end REST API is written in C# (dotnet 7, EF6)
+* The back-end REST API is written in C# (.NET 8)
 * The back-end tests use NUnit3
-* The front-end code uses the React library, written in Typescript (React 18)
+* The front-end code uses the React library, written in Typescript (Node 18)
 * The front-end tests use Jest
 * There are 5 Docker images (listed below) specific to GilGoblin
-* K6 benchmarks feed Prometheus. Test results are displayed in a Grafana dashboard
+* K6 benchmarks can be optionally run.
+  * Results are fed to Prometheus.
+  * Test results are displayed in a Grafana dashboard
 
 ## Startup
 From the root folder of the project, run `docker-compose up -d` to build the images. The database will load, and if necessary run the scripts to populate the tables. The front end is available by default over port 3000. The other services will run in the background periodically to refresh data.
