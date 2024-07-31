@@ -1,23 +1,28 @@
+.tab-container {
+    width: 100%;
+    border-bottom: 1px solid darkgreen;
+}
+
 .tabs-header {
     display: flex;
     align-items: center;
-    width: 100%;
-}
-
-.tabs-wrapper {
-    flex-grow: 1;
-    display: flex;
     justify-content: center;
 }
 
-.tab {
+.title {
+    display: flex;
+    flex: 0 0 20%;
+    margin: 10px 10px 0 50px;
 }
 
-.selected-tab {
+.tabs-wrapper {
+    display: flex;
+    flex: 0 0 40%;
+    justify-content: center;
 }
 
 .search-container {
-}
-
-.results-container {
+    display: flex;
+    flex: 0 0 20%;
+    justify-content: center;
 }

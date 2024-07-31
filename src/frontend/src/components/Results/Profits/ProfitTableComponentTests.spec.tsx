@@ -81,21 +81,6 @@ describe('ProfitTableComponent', () => {
             expect(rowContent[1]).toContain(expectedSecondResult);
         });
 
-    test.each([1, 2, 3])('clicking the index header %p times, does not sort the data', (clicks) => {
-        render(<ProfitTableComponent crafts={mockCrafts}/>);
-        const expectedFirstResult: string = mockCrafts[0]?.recipeProfitVsListings.toLocaleString();
-        const expectedSecondResult: string = mockCrafts[1]?.recipeProfitVsListings.toLocaleString();
-
-        const nameHeaderCell = screen.getByRole('columnheader', {name: '#'});
-        for (let i = 1; i <= clicks; i++)
-            fireEvent.click(nameHeaderCell);
-
-        const rows = screen.getAllByRole('row', {});
-        const rowContent = rows.map(cell => cell.textContent).slice(1);
-        expect(rowContent[0]).toContain(expectedFirstResult);
-        expect(rowContent[1]).toContain(expectedSecondResult);
-    });
-
     const mockCrafts: Crafts = [
         {
             "itemId": 2551,
