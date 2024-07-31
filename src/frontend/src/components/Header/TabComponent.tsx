@@ -1,6 +1,5 @@
-import React, { SyntheticEvent, useState } from 'react';
-import { Box, Tab, Tabs } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import React, {SyntheticEvent, useState} from 'react';
+import {Box, Tab, Tabs} from '@mui/material';
 import SearchComponent from './SearchComponent';
 import ResultsComponent from '../Results/Data/ResultsComponent';
 import TitleComponent from '../Header/TitleComponent';
@@ -8,7 +7,6 @@ import DataFetcher from '../DataFetcher';
 import '../../styles/Tab.css';
 
 const TabComponent = () => {
-    const theme = useTheme();
     const [activeTab, setActiveTab] = useState(buttonTitles[0]);
     const [tabData, setTabData] = useState({});
 
@@ -34,23 +32,22 @@ const TabComponent = () => {
     return (
         <div className="tab-container">
             <div className="tabs-header">
-                <TitleComponent />
+                <TitleComponent/>
                 <div className="tabs-wrapper">
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs value={activeTab} onChange={handleChange}>
+                    <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+                        <Tabs value={activeTab} onChange={handleChange} indicatorColor={'primary'}>
                             {buttonTitles.map((title, index) => (
                                 <Tab
                                     key={index}
                                     label={title}
                                     value={title}
-                                    className={activeTab === title ? 'selected-tab' : 'tab'}
+                                    className={activeTab === title ? 'header-tab-selected' : 'header-tab'}
                                     sx={{
                                         '&': {
                                             color: 'white',
-                                            border: `2px solid`,
-                                            borderColor: 'var(--background-selected)',
-                                            borderRadius: '12px 12px 12px 12px',
-                                            margin: '5px',
+                                            border: `2px solid var(--background-selected)`,
+                                            borderRadius: '15px',
+                                            margin: '10px',
                                         },
                                         '&:hover': {
                                             backgroundColor: 'var(--background-hover)',
@@ -58,23 +55,23 @@ const TabComponent = () => {
                                         '&.Mui-selected': {
                                             color: 'white',
                                             backgroundColor: 'var(--background-selected)',
-                                            borderBottom: `2px solid`,
+                                            border: `2px solid white`,
                                             '&:hover': {
                                                 backgroundColor: 'var(--background-selected-hover)',
                                             },
-                                        }
+                                        },
                                     }}
                                 />
                             ))}
                         </Tabs>
                     </Box>
                 </div>
-            </div>
-            <div className="search-container">
-                <SearchComponent onClick={handleSearchClick} />
+                <div className="search-container" >
+                    <SearchComponent onClick={handleSearchClick}/>
+                </div>
             </div>
             <div className="results-container">
-                <ResultsComponent componentName={activeTab} data={tabData} />
+                <ResultsComponent componentName={activeTab} data={tabData}/>
             </div>
         </div>
     );

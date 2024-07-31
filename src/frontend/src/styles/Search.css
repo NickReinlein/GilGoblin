@@ -1,13 +1,10 @@
 .search-container {
-    text-align: center;
-    justify-content: center;
     align-items: center;
     display: flex;
     width: 100%;
+    min-width: 500px;
+    min-height: 120px;
     background-color: transparent;
-    color: white;
-    border-top: 1px solid darkgreen;
-    border-bottom: 1px solid darkgreen;
 }
 
 .search-button {
