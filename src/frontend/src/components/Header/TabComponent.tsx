@@ -41,7 +41,7 @@ const TabComponent = () => {
                                     key={index}
                                     label={title}
                                     value={title}
-                                    className={activeTab === title ? 'header-tab-selected' : 'header-tab'}
+                                    className={activeTab === title ? 'tab-active' : 'tab-inactive'}
                                     sx={{
                                         '&': {
                                             color: 'white',

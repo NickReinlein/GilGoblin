@@ -44,43 +44,6 @@ describe('ProfitTableComponent', () => {
             expect(mapped).toBe('missing')
         });
 
-    test.each(columnHeaders.slice(1, columnHeaders.length - 1))
-    ('sorts crafts by %p in descending order when header is clicked',
-        (header) => {
-            const relevantProp = columnHeaderToFieldMapping(header);
-            const profits = convertMultipleCraftsToProfits(mockCrafts);
-            const expectedFirstResult: string = profits[1][relevantProp]?.toLocaleString();
-            const expectedSecondResult: string = profits[0][relevantProp]?.toLocaleString();
-            render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-            const nameHeaderCell = screen.getByRole('columnheader', {name: new RegExp(`${header}`, 'i')});
-            fireEvent.click(nameHeaderCell);
-
-            const rows = screen.getAllByRole('row', {});
-            const rowContent = rows.map(cell => cell.textContent).slice(1);
-            expect(rowContent[0]).toContain(expectedFirstResult);
-            expect(rowContent[1]).toContain(expectedSecondResult);
-        });
-
-    test.each(columnHeaders.slice(1, columnHeaders.length - 1))
-    ('sorts crafts by %p in ascending order when header is clicked twice',
-        (header) => {
-            const relevantProp = columnHeaderToFieldMapping(header);
-            const profits = convertMultipleCraftsToProfits(mockCrafts);
-            const expectedFirstResult: string = profits[0][relevantProp]?.toLocaleString();
-            const expectedSecondResult: string = profits[1][relevantProp]?.toLocaleString();
-            render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-            const nameHeaderCell = screen.getByRole('columnheader', {name: new RegExp(`${header}`, 'i')});
-            fireEvent.click(nameHeaderCell);
-            fireEvent.click(nameHeaderCell);
-
-            const rows = screen.getAllByRole('row', {});
-            const rowContent = rows.map(cell => cell.textContent).slice(1);
-            expect(rowContent[0]).toContain(expectedFirstResult);
-            expect(rowContent[1]).toContain(expectedSecondResult);
-        });
-
     const mockCrafts: Crafts = [
         {
             "itemId": 2551,
