@@ -30,3 +30,6 @@ yarn-error.log*
 *.iml
 out
 gen
+
+# Jest
+*.run.xml

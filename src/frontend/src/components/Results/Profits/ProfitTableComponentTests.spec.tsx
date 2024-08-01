@@ -1,27 +1,20 @@
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {Crafts} from "../../../types/types";
-import {convertMultipleCraftsToProfits} from "../../../converters/CraftToProfitConverter";
 import ProfitTableComponent from "./ProfitTableComponent";
-
-const columnHeaders =
-    [
-        '#',
-        'Name',
-        'Sold Profit',
-        'Listings Profit',
-        'Avg. Sold',
-        'Avg. Listing',
-        'Cost',
-        'Qty',
-        'Age'
-    ];
-
 describe('ProfitTableComponent', () => {
     test('renders a message when crafts are empty', () => {
         render(<ProfitTableComponent crafts={[]}/>);
 
         expect(screen.getByText("Press the search button to search for the World's best recipes to craft")).toBeInTheDocument();
+    });
+
+    test('renders a table with the correct number of columns', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const columns = screen.getAllByRole('columnheader');
+
+        expect(columns.length).toBe(9);
     });
 
     test('maps the first column header to index field', () => {
@@ -43,6 +36,47 @@ describe('ProfitTableComponent', () => {
 
             expect(mapped).toBe('missing')
         });
+
+    test('renders table rows with the correct data', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const rows = screen.getAllByRole('row');
+
+        expect(rows.length).toBe(mockCrafts.length);
+        mockCrafts.forEach((craft, index) => {
+            const row = rows[index];
+            // expect(row).toHaveTextContent(craft.itemInfo.name);
+            expect(row).toHaveTextContent(craft.recipeProfitVsSold.toString());
+            expect(row).toHaveTextContent(craft.recipeProfitVsListings.toString());
+            expect(row).toHaveTextContent(craft.averageSold.toString());
+            expect(row).toHaveTextContent(craft.averageListingPrice.toString());
+            expect(row).toHaveTextContent(craft.recipeCost.toString());
+            expect(row).toHaveTextContent(craft.resultQuantity.toString());
+            // expect(row).toHaveTextContent(convertTimestampToAge(craft.updated).toString());
+        });
+    });
+
+    test('renders table sorted by sold profit by default', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const rows = screen.getAllByRole('row');
+
+        const firstRow = rows[0];
+        expect(firstRow).toHaveTextContent(mockCrafts[0].recipeProfitVsSold.toString() );
+        expect(mockCrafts[0].recipeProfitVsSold).toBeGreaterThan(mockCrafts[1].recipeProfitVsSold);
+    });
+
+    test('renders table sorted by listing profit when clicked', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const listingProfitColumn = screen.getByRole('columnheader', {name: 'Listings Profit'});
+        fireEvent.click(listingProfitColumn);
+
+        const rows = screen.getAllByRole('row');
+        const firstRow = rows[0];
+        expect(firstRow).toHaveTextContent(mockCrafts[0].recipeProfitVsSold.toString());
+        expect(mockCrafts[0].recipeProfitVsListings).toBeGreaterThan(mockCrafts[1].recipeProfitVsListings);
+    });
 
     const mockCrafts: Crafts = [
         {
