@@ -1,0 +1,31 @@
+:root {
+    --background-headers: rgb(0, 30, 0);
+    --background-even: rgb(0, 0, 0);
+    --background-odd: rgb(20, 20, 20);
+    --background-hover: rgb(0, 100, 0);
+    --background-selected: rgb(0, 30, 0);
+    --background-selected-hover: rgb(0, 125, 0);
+
+    --text-color: white;
+}
+
+.MuiSvgIcon-root {
+    color: inherit;
+}
+
+:root .MuiSvgIcon-root {
+    color: white;
+}
+
+.MuiDataGrid-sortIcon,
+.MuiSvgIcon-root {
+    color: white;
+}
+
+.MuiDataGrid-menuList {
+    color: black;
+}
+
+.MuiDataGrid-menuList .MuiSvgIcon-root {
+    color: inherit;
+}

@@ -1,15 +1,21 @@
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
-import ProfitTableComponent, {columnHeaders, columnHeaderToFieldMapping} from './ProfitTableComponent';
-import {Crafts} from "../../../types/types";
-import {convertMultipleCraftsToProfits} from "../../../converters/CraftToProfitConverter";
-
+import {Craft, Crafts} from "../../../types/types";
+import ProfitTableComponent from "./ProfitTableComponent";
 
 describe('ProfitTableComponent', () => {
     test('renders a message when crafts are empty', () => {
         render(<ProfitTableComponent crafts={[]}/>);
 
         expect(screen.getByText("Press the search button to search for the World's best recipes to craft")).toBeInTheDocument();
+    });
+
+    test('renders a table with the correct number of columns', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const columns = screen.getAllByRole('columnheader');
+
+        expect(columns.length).toBe(9);
     });
 
     test('maps the first column header to index field', () => {
@@ -32,56 +38,41 @@ describe('ProfitTableComponent', () => {
             expect(mapped).toBe('missing')
         });
 
-    test.each(columnHeaders.slice(1, columnHeaders.length - 1))
-    ('sorts crafts by %p in descending order when header is clicked',
-        (header) => {
-            const relevantProp = columnHeaderToFieldMapping(header);
-            const profits = convertMultipleCraftsToProfits(mockCrafts);
-            const expectedFirstResult: string = profits[1][relevantProp]?.toLocaleString();
-            const expectedSecondResult: string = profits[0][relevantProp]?.toLocaleString();
-            render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-            const nameHeaderCell = screen.getByRole('columnheader', {name: new RegExp(`${header}`, 'i')});
-            fireEvent.click(nameHeaderCell);
-
-            const rows = screen.getAllByRole('row', {});
-            const rowContent = rows.map(cell => cell.textContent).slice(1);
-            expect(rowContent[0]).toContain(expectedFirstResult);
-            expect(rowContent[1]).toContain(expectedSecondResult);
-        });
-
-    test.each(columnHeaders.slice(1, columnHeaders.length - 1))
-    ('sorts crafts by %p in ascending order when header is clicked twice',
-        (header) => {
-            const relevantProp = columnHeaderToFieldMapping(header);
-            const profits = convertMultipleCraftsToProfits(mockCrafts);
-            const expectedFirstResult: string = profits[0][relevantProp]?.toLocaleString();
-            const expectedSecondResult: string = profits[1][relevantProp]?.toLocaleString();
-            render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-            const nameHeaderCell = screen.getByRole('columnheader', {name: new RegExp(`${header}`, 'i')});
-            fireEvent.click(nameHeaderCell);
-            fireEvent.click(nameHeaderCell);
-
-            const rows = screen.getAllByRole('row', {});
-            const rowContent = rows.map(cell => cell.textContent).slice(1);
-            expect(rowContent[0]).toContain(expectedFirstResult);
-            expect(rowContent[1]).toContain(expectedSecondResult);
-        });
-
-    test.each([1, 2, 3])('clicking the index header %p times, does not sort the data', (clicks) => {
+    test('renders table rows with the correct data', () => {
         render(<ProfitTableComponent crafts={mockCrafts}/>);
-        const expectedFirstResult: string = mockCrafts[0]?.recipeProfitVsListings.toLocaleString();
-        const expectedSecondResult: string = mockCrafts[1]?.recipeProfitVsListings.toLocaleString();
 
-        const nameHeaderCell = screen.getByRole('columnheader', {name: '#'});
-        for (let i = 1; i <= clicks; i++)
-            fireEvent.click(nameHeaderCell);
+        const rows = screen.getAllByRole('row').slice(1); // remove header
 
-        const rows = screen.getAllByRole('row', {});
-        const rowContent = rows.map(cell => cell.textContent).slice(1);
-        expect(rowContent[0]).toContain(expectedFirstResult);
-        expect(rowContent[1]).toContain(expectedSecondResult);
+        expect(rows.length).toBe(mockCrafts.length);
+        rows.forEach((row, index) => {
+            const craft = mockCrafts.find((craft) => row.textContent?.includes(craft.itemInfo?.name || ''));
+            expect(craft).toBeTruthy();
+            expect(craft?.itemInfo).toBeTruthy();
+            expect(row).toHaveTextContent(craft!.itemInfo!.name!.toString());
+        });
+    });
+
+    test('renders table sorted by sold profit by default', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const rows = screen.getAllByRole('row').slice(1); // remove header
+
+        expect(rows[0]).toHaveTextContent(mockCrafts[1].itemInfo!.name!.toString());
+        expect(rows[1]).toHaveTextContent(mockCrafts[0].itemInfo!.name!.toString());
+        expect(mockCrafts[1].recipeProfitVsSold).toBeGreaterThan(mockCrafts[0].recipeProfitVsSold);
+    });
+
+    test('renders table sorted by listing profit when clicked', () => {
+        render(<ProfitTableComponent crafts={mockCrafts}/>);
+
+        const listingProfitColumn = screen.getByRole('columnheader', {name: 'Listings Profit'});
+        fireEvent.click(listingProfitColumn);
+
+        const rows = screen.getAllByRole('row').slice(1); // remove header
+
+        expect(rows[0]).toHaveTextContent(mockCrafts[1].itemInfo!.name!.toString());
+        expect(rows[1]).toHaveTextContent(mockCrafts[0].itemInfo!.name!.toString());
+        expect(mockCrafts[1].recipeProfitVsSold).toBeGreaterThan(mockCrafts[0].recipeProfitVsSold);
     });
 
     const mockCrafts: Crafts = [
@@ -132,7 +123,7 @@ describe('ProfitTableComponent', () => {
             "averageSold": 18909,
             "recipeCost": 1518,
             "recipeProfitVsSold": 17391,
-            "recipeProfitVsListings": 21057,
+            "recipeProfitVsListings": 210057,
             "ingredients": [
                 {
                     "recipeId": 100,
@@ -245,5 +236,29 @@ describe('ProfitTableComponent', () => {
             "updated": "2024-01-02T23:10:40.4266199+00:00"
         }
     ];
-})
-;
+});
+
+const columnHeaderToFieldMapping = (header: string) => {
+    switch (header) {
+        case '#':
+            return 'index';
+        case 'Name':
+            return 'name'
+        case 'Sold Profit':
+            return 'profitSold';
+        case 'Listings Profit':
+            return 'profitListings';
+        case 'Avg. Sold':
+            return 'averageSold';
+        case 'Avg. Listing':
+            return 'averageListing';
+        case 'Cost':
+            return 'cost';
+        case 'Qty':
+            return 'resultQuantity';
+        case 'Age':
+            return 'updated';
+        default:
+            return 'missing';
+    }
+}

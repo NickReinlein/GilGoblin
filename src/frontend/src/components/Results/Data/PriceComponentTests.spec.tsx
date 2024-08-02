@@ -5,7 +5,7 @@ import {Price} from '../../../types/types';
 
 describe('PriceComponent', () => {
     const convertTime = (time: number | undefined) => {
-        return new Date(time ?? 0 * 1000);
+        return new Date(time ?? 0 * 1000).toUTCString();
     }
 
     const PriceData: Price =
@@ -18,7 +18,7 @@ describe('PriceComponent', () => {
             "averageSoldHQ": 21584.3,
             "worldId": 34,
             "itemId": 1639,
-            "lastUploadTime": 1698281137868
+            "lastUploadTime": 1719292894930
         };
 
     const expectedLabels =

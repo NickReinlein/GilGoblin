@@ -1,31 +1,28 @@
 .tab-container {
-    align-content: end;
-    text-align: center;
-    margin: 20px 0 0 0;
-    border-: 1px solid darkgreen;
+    width: 100%;
+    border-bottom: 1px solid darkgreen;
 }
 
-.tabs {
-    margin: 10px 5px 5px;
+.tabs-header {
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 22px;
-    padding-bottom: 10px;
 }
 
-.tabs button {
-    font-size: 27px;
-    padding: 10px 20px;
-    border: 1px solid darkgreen;
-    cursor: pointer;
-    background-color: transparent;
-    color: white
+.title {
+    display: flex;
+    flex: 0 0 20%;
+    margin: 10px 10px 0 50px;
 }
 
-.tabs button.active {
-    border: 2px solid darkgreen;
-    border-bottom: 5px solid darkgreen;
-    text-decoration: underline;
-    display: inline-block;
-    text-decoration-color: darkgreen;
+.tabs-wrapper {
+    display: flex;
+    flex: 0 0 40%;
+    justify-content: center;
+}
+
+.search-container {
+    display: flex;
+    flex: 0 0 20%;
+    justify-content: center;
 }

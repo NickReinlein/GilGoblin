@@ -3,6 +3,8 @@ import DataFetcher, {DataFetcherType} from './DataFetcher';
 
 beforeAll(() => {
     fetchMock.enableMocks();
+    console.error = jest.fn();
+    console.log = jest.fn();
 });
 
 afterEach(() => {
@@ -17,7 +19,7 @@ describe('DataFetcher', () => {
 
         await fetchData('Items', 123, 456);
 
-        expect.objectContaining({
+        await expect.objectContaining({
             parsedURL: expect.objectContaining({
                 href: 'http://localhost:55448/item/123',
             }),

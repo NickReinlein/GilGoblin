@@ -3,12 +3,19 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TabComponent, {buttonTitles} from './TabComponent';
 import DataFetcher from '../DataFetcher';
+import fetchMock from "jest-fetch-mock";
 
 jest.mock('../DataFetcher', () => ({
     fetchData: jest.fn(),
 }));
 
 describe('TabComponent', () => {
+
+    beforeAll(() => {
+        console.error = jest.fn();
+        console.log = jest.fn();
+    });
+
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -24,11 +31,11 @@ describe('TabComponent', () => {
     test('sets active tab on tab click', () => {
         render(<TabComponent/>);
         const tabToClick = buttonTitles[1];
-        expect(screen.getByText(tabToClick)).not.toHaveClass('active');
+        expect(screen.getByText(tabToClick)).not.toHaveClass('tab-active');
 
         fireEvent.click(screen.getByText(tabToClick));
 
-        expect(screen.getByText(tabToClick)).toHaveClass('active');
+        expect(screen.getByText(tabToClick)).toHaveClass('tab-active');
     });
 
     test('fetches and displays data on search click', async () => {
@@ -40,7 +47,7 @@ describe('TabComponent', () => {
         fireEvent.click(screen.getByText('Search'));
 
         expect(DataFetcher.fetchData).toHaveBeenCalledWith(buttonTitles[2], 1639, 34);
-        expect(screen.getByText(buttonTitles[2])).toHaveClass('active');
+        expect(screen.getByText(buttonTitles[2])).toHaveClass('tab-active');
     });
 
     test('handles error during data fetch', async () => {

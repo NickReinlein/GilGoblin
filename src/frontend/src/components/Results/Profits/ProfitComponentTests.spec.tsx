@@ -18,6 +18,11 @@ const mockProfit = {
 };
 
 describe('ProfitComponent', () => {
+    beforeAll(() => {
+        console.error = jest.fn();
+        console.log = jest.fn();
+    });
+
     test('renders profit data correctly', () => {
         render(<ProfitComponent profit={mockProfit} index={0}/>);
 
