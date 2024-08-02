@@ -12,7 +12,6 @@ const StripedDataGrid = styled(DataGrid)(() => {
             backgroundColor: 'var(--background-headers)',
             color: 'var(--text-color)',
             autosizeOnMount: true,
-
         },
         [`& .${gridClasses.row}`]: {
             color: 'var(--text-color)',
