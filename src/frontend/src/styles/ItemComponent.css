@@ -1,0 +1,14 @@
+.MuiCard-root .MuiCardContent-root {
+    padding: 20px;
+}
+
+.MuiTypography-root {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.MuiTypography-root span {
+    font-weight: bold;
+    color: #ffffff;
+}

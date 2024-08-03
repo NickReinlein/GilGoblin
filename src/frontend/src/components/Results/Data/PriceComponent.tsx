@@ -6,7 +6,7 @@ interface PriceProps {
 }
 
 const PriceComponent: React.FC<PriceProps> = ({price}) => {
-    let time = new Date(price?.lastUploadTime ?? 0 * 1000).toUTCString();
+    let time = new Date(price?.lastUploadTime ?? 0).toUTCString();
 
     return (
         <div>

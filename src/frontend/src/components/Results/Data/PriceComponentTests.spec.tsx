@@ -5,7 +5,7 @@ import {Price} from '../../../types/types';
 
 describe('PriceComponent', () => {
     const convertTime = (time: number | undefined) => {
-        return new Date(time ?? 0 * 1000).toUTCString();
+        return new Date(time ?? 0).toUTCString();
     }
 
     const PriceData: Price =
