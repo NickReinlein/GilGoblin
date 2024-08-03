@@ -3,7 +3,6 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TabComponent, {buttonTitles} from './TabComponent';
 import DataFetcher from '../DataFetcher';
-import fetchMock from "jest-fetch-mock";
 
 jest.mock('../DataFetcher', () => ({
     fetchData: jest.fn(),
