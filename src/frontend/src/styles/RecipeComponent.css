@@ -4,23 +4,24 @@
 
 .MuiTypography-root {
     font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 10px;
+    line-height: 1.5;
+    margin-bottom: 5px;
 }
 
 .MuiTypography-root span {
     color: #ffffff;
 }
 
-.MuiTypography-name {
+.MuiTypography-id {
     font-size: 20px;
 }
 
-.MuiTypography-description {
-    font-size: 14px;
-    font-style: italic;
+.MuiTypography-ingredients-title {
+    font-size: 24px;
+    margin-bottom: 5px;
 }
 
-.MuiTypography-details {
+.MuiTypography-ingredients {
     font-size: 16px;
+    font-style: italic;
 }

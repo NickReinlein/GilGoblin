@@ -1,6 +1,6 @@
-.MuiCard-root {
+.MuiCard-root .MuiCardContent-root {
     border: 1px solid #ddd;
-    border-radius: 20px;
+    border-radius: 10px;
     background-color: rgba(26, 26, 26, 0.94);
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
