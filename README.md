@@ -34,7 +34,7 @@ A webpage front-end is available with the resulting calculations. Filters are av
 * :hatching_chick: Launch and test website 🚀
 
 *Upcoming*
-* :egg: Live release bug fixes 🐛
+* :egg: (Expected) Live release bug fixes 🐛
 
 *Nice-to-have*
 * :question: Top things to gather 🌳🪓 🪨⛏️
@@ -49,8 +49,8 @@ A webpage front-end is available with the resulting calculations. Filters are av
 
 ## Technologies
 * The back-end REST API is written in C# (.NET 8)
-* The back-end tests use NUnit3
-* The front-end code uses the React library, written in Typescript (Node 18)
+* The back-end tests use NUnit and NSubstitute
+* The front-end uses React, written in Typescript
 * The front-end tests use Jest
 * There are 5 Docker images (listed below) specific to GilGoblin
 * K6 benchmarks can be optionally run.
