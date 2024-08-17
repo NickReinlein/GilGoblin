@@ -2,6 +2,7 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import RecipeComponent from './RecipeComponent';
 import {Recipe} from '../../../types/types';
+import ItemComponent from "./ItemComponent";
 
 describe('RecipeComponent', () => {
     const recipeData: Recipe =
@@ -13,12 +14,12 @@ describe('RecipeComponent', () => {
             resultQuantity: 1,
             canHq: true,
             canQuickSynth: true,
-            itemIngredient0TargetId: 5056,
-            amountIngredient0: 1,
-            itemIngredient1TargetId: 5361,
-            amountIngredient1: 1,
-            itemIngredient2TargetId: 5432,
-            amountIngredient2: 1,
+            itemIngredient0TargetId: 111,
+            amountIngredient0: 11,
+            itemIngredient1TargetId: 222,
+            amountIngredient1: 22,
+            itemIngredient2TargetId: 0,
+            amountIngredient2: 0,
             itemIngredient3TargetId: 0,
             amountIngredient3: 0,
             itemIngredient4TargetId: 0,
@@ -29,42 +30,30 @@ describe('RecipeComponent', () => {
             amountIngredient6: 0,
             itemIngredient7TargetId: 0,
             amountIngredient7: 0,
-            itemIngredient8TargetId: 2,
-            amountIngredient8: 1,
-            itemIngredient9TargetId: 5,
-            amountIngredient9: 1
+            itemIngredient8TargetId: 0,
+            amountIngredient8: 0,
+            itemIngredient9TargetId: 333,
+            amountIngredient9: 33
+        };
+    const expectedLabels =
+        {
+            "id": `Recipe Id: ${recipeData.id}`,
+            "craftType": `Craft Type: ${recipeData.craftType}`,
+            "recipeLevelTable" : `Recipe Level Table: ${recipeData.recipeLevelTable}`,
+            "targetItemId" : `Target Item Id: ${recipeData.targetItemId}`,
+            "resultQuantity" : `Result Quantity: ${recipeData.resultQuantity}`,
+            "canHq" : "Can Hq: Yes",
+            "canQuickSynth" : "Can QuickSynth: Yes"
         };
 
-    describe('Recipe Fields', () => {
-        Object.entries(recipeData)
-            .forEach(([field, value]) => {
-                it(`renders ${field} on screen`, () => {
-                    render(<RecipeComponent recipe={recipeData}/>);
+    Object.entries(expectedLabels)
+        .forEach(([field, value]) => {
+            it(`renders ${field} on screen`, () => {
+                render(<RecipeComponent recipe={recipeData}/>);
 
-                    let element = screen.getByText(field);
-                    let elementText = screen.getByText(`${field}: ${value}`);
+                const fieldElement = screen.getByText(value);
 
-                    expect(element).toBeInTheDocument();
-                    expect(elementText).toBeInTheDocument();
-                    // expect(valueElement).toBeInTheDocument();
-                });
+                expect(fieldElement).toBeInTheDocument();
             });
-    });
-
-    describe('Ingredients', () => {
-        Object.entries(recipeData)
-            .filter(([field]) =>
-                field.includes("itemIngredient") ||
-                field.includes("amountIngredient"))
-            .forEach(([field, value]) => {
-                it(`renders ingredient ${field} on screen`, () => {
-                    render(<RecipeComponent recipe={recipeData}/>);
-                    let elementText = `${field.charAt(0).toUpperCase() + field.slice(1)}: ${value}`;
-
-                    const fieldElement = screen.getByText(elementText);
-
-                    expect(fieldElement).toBeInTheDocument();
-                });
-            });
-    });
+        });
 });

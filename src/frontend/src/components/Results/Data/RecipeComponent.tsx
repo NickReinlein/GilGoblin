@@ -23,14 +23,14 @@ const recipeContent = (recipe: Recipe | null | undefined) =>
 const recipeRoot = (recipe: Recipe | null | undefined) =>
     <Typography className="MuiTypography-root">
         <Typography className="MuiTypography-id">
-            <span>Recipe Id:</span> {recipe?.id || 'Missing'}<br/>
+            <span>Recipe Id: {recipe?.id || 'Missing'}</span><br/>
         </Typography>
-        <span>Craft Type:</span> {recipe?.craftType}<br/>
-        <span>Recipe Level Table:</span> {recipe?.recipeLevelTable}<br/>
-        <span>Target Item Id:</span> {recipe?.targetItemId}<br/>
-        <span>Result Quantity:</span> {recipe?.resultQuantity}<br/>
-        <span>Can HQ:</span> {recipe?.canHq ? 'true' : 'false'}<br/>
-        <span>Can QuickSynth:</span> {recipe?.canQuickSynth ? 'true' : 'false'}<br/>
+        <span>Craft Type: {recipe?.craftType}</span><br/>
+        <span>Recipe Level Table: {recipe?.recipeLevelTable}</span><br/>
+        <span>Target Item Id: {recipe?.targetItemId}</span><br/>
+        <span>Result Quantity: {recipe?.resultQuantity}</span><br/>
+        <span>Can Hq: {recipe?.canHq ? 'Yes' : 'No'}</span><br/>
+        <span>Can QuickSynth: {recipe?.canQuickSynth ? 'Yes' : 'No'}</span><br/>
     </Typography>
 
 const ingredientsContent = (recipe: Recipe | null | undefined) =>
