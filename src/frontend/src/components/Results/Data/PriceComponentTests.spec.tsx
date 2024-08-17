@@ -1,13 +1,9 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import PriceComponent from './PriceComponent';
+import PriceComponent, {formatDate} from './PriceComponent';
 import {Price} from '../../../types/types';
 
 describe('PriceComponent', () => {
-    const convertTime = (time: number | undefined) => {
-        return new Date(time ?? 0 * 1000).toUTCString();
-    }
-
     const PriceData: Price =
         {
             "averageListingPrice": 10500,
@@ -31,7 +27,7 @@ describe('PriceComponent', () => {
             "averageSoldHQ": `Average Sold HQ: ${PriceData.averageSoldHQ}`,
             "worldId": `World: ${PriceData.worldId}`,
             "itemId": `Item Id: ${PriceData.itemId}`,
-            "lastUploadTime": `Last Upload Time: ${convertTime(PriceData.lastUploadTime)}`
+            "lastUploadTime": `${formatDate(new Date(PriceData.lastUploadTime ?? 0))}`
         };
 
     Object.entries(expectedLabels)

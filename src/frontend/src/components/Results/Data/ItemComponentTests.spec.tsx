@@ -16,15 +16,26 @@ describe('ItemComponent', () => {
             priceLow: 223,
             canHq: true
         };
-    Object.entries(itemData)
+
+    const expectedLabels =
+        {
+            "id": `Id ${itemData.id}`,
+            "name": `${itemData.name}`,
+            "description": `${itemData.description}`,
+            "iconId": `Icon Id: ${itemData.iconId}`,
+            "level": `Level: ${itemData.level}`,
+            "StackSize": `Stack size: ${itemData.stackSize}`,
+            "priceMid": `PriceMid: ${itemData.priceMid}`,
+            "priceLow": `PriceLow: ${itemData.priceLow}`,
+            "canHq": `CanHq: Yes`
+        }
+
+    Object.entries(expectedLabels)
         .forEach(([field, value]) => {
             it(`renders ${field} on screen`, () => {
                 render(<ItemComponent item={itemData}/>);
-                let elementText = field === 'id'
-                    ? `Item Id: ${itemData.id}`
-                    : `${field.charAt(0).toUpperCase() + field.slice(1)}: ${value}`;
 
-                const fieldElement = screen.getByText(elementText);
+                const fieldElement = screen.getByText(value);
 
                 expect(fieldElement).toBeInTheDocument();
             });
