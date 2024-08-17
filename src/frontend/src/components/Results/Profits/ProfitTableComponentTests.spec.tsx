@@ -44,7 +44,7 @@ describe('ProfitTableComponent', () => {
         const rows = screen.getAllByRole('row').slice(1); // remove header
 
         expect(rows.length).toBe(mockCrafts.length);
-        rows.forEach((row, index) => {
+        rows.forEach((row) => {
             const craft = mockCrafts.find((craft) => row.textContent?.includes(craft.itemInfo?.name || ''));
             expect(craft).toBeTruthy();
             expect(craft?.itemInfo).toBeTruthy();
