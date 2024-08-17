@@ -1,7 +1,7 @@
 import React from 'react';
 import {Recipe} from '../../../types/types';
 import {IDataProps} from "./IDataProps";
-import Typography from "@mui/material/Typography/Typography";
+import Typography from "@mui/material/Typography";
 import BoxedCardComponent from "../BoxedCardComponent";
 import IngredientComponent from "./IngredientComponent";
 import '../../../styles/RecipeComponent.css';

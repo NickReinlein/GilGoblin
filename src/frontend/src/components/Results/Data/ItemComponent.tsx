@@ -1,5 +1,5 @@
 import React from "react";
-import Typography from "@mui/material/Typography/Typography";
+import Typography from "@mui/material/Typography";
 import {Item} from '../../../types/types';
 import {IDataProps} from "./IDataProps";
 import BoxedCardComponent from "../BoxedCardComponent";

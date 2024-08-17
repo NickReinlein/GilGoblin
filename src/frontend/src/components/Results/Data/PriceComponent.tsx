@@ -1,4 +1,4 @@
-import Typography from '@mui/material/Typography/Typography';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import {Price} from '../../../types/types';
 import BoxedCardComponent from "../BoxedCardComponent";
