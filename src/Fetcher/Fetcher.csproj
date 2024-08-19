@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>GilGoblin.Fetcher</RootNamespace>
     <PackageId>GilGoblin.Fetcher</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

@@ -52,11 +52,10 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
         }
     }
 
-    private async Task<U> FetchAsync(int? world, IEnumerable<int> ids)
+    private async Task<U?> FetchAsync(int? world, IEnumerable<int> ids)
     {
         var path = GetUrlPathFromEntries(ids, world);
-        var response = await FetchAndSerializeDataAsync(path);
-        return response;
+        return await FetchAndSerializeDataAsync(path);
     }
 
     private async Task<U?> FetchAndSerializeDataAsync(string path)
@@ -67,7 +66,7 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
             return !response.IsSuccessStatusCode
                 ? null
                 : ReadResponseContentAsync(response.Content);
-        } 
+        }
         catch
         {
             Logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");
@@ -75,8 +74,9 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
         }
     }
 
-    protected virtual U ReadResponseContentAsync(HttpContent content)
-        => content.ReadFromJsonAsync<U>().Result;
+    protected virtual U ReadResponseContentAsync(HttpContent content) =>
+        content.ReadFromJsonAsync<U>().Result ??
+        throw new InvalidOperationException($"Failed to read the fetched response: {content}");
 
     protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {
