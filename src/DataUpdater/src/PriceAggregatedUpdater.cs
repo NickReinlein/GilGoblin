@@ -78,14 +78,16 @@ public class PriceAggregatedUpdater(
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceAggregatedWebPoco> webPocos)
     {
-        var updateList = webPocos.Select(x => new PricePoco
-        {
-            ItemId = x.ItemId,
-            WorldId = x.WorldId,
-            LastUploadTime = x.LastUploadTime,
-            AverageSoldHQ = x.HQ?.AverageSalePrice?.Price ?? 0,
-            AverageSoldNQ = x.NQ?.AverageSalePrice?.Price ?? 0
-        }).ToList();
+        var updateList = webPocos
+            .Where(w => w.HQ?.AverageSalePrice?.Price > 0 || w.NQ?.AverageSalePrice?.Price > 0)
+            .Select(x => x.WorldUploadTimes?.Select(y => new PricePoco
+            {
+                ItemId = x.ItemId,
+                WorldId = y.WorldId,
+                LastUploadTime = y.Timestamp,
+                AverageSoldHQ = x.HQ?.AverageSalePrice?.Price ?? 0,
+                AverageSoldNQ = x.NQ?.AverageSalePrice?.Price ?? 0
+            })).ToList().SelectMany(x => x).ToList();
         if (!updateList.Any())
             return;
 

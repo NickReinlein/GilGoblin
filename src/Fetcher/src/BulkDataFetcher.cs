@@ -77,11 +77,8 @@ public class BulkDataFetcher<T, U>(
         JsonSerializer.Deserialize<U>(await content.ReadAsStringAsync(), GetJsonSerializerOptions()) ??
         throw new InvalidOperationException($"Failed to read the fetched response: {content}");
 
-    private static JsonSerializerOptions GetJsonSerializerOptions()
-    {
-        return new JsonSerializerOptions(
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true });
-    }
+    private static JsonSerializerOptions GetJsonSerializerOptions() =>
+        new() { PropertyNameCaseInsensitive = true, IncludeFields = true };
 
     protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {
