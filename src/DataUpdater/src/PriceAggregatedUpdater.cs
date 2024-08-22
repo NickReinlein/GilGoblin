@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
-using GilGoblin.Batcher;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Database.Savers;
@@ -17,12 +16,12 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class PriceUpdater(
+public class PriceAggregatedUpdater(
     IServiceScopeFactory scopeFactory,
-    ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
-    : DataUpdater<PricePoco, PriceWebPoco>(scopeFactory, logger)
+    ILogger<DataUpdater<PricePoco, PriceAggregatedWebPoco>> logger)
+    : DataUpdater<PricePoco, PriceAggregatedWebPoco>(scopeFactory, logger)
 {
-    public List<int> AllItemIds { get; private set; }
+    private List<int> AllItemIds { get; set; }
     private const int dataExpiryInHours = 48;
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
@@ -43,8 +42,8 @@ public class PriceUpdater(
     protected override async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
         using var scope = ScopeFactory.CreateScope();
-        var fetcher = scope.ServiceProvider.GetRequiredService<IPriceFetcher>();
-        var batcher = new Batcher<int>(fetcher.GetEntriesPerPage());
+        var fetcher = scope.ServiceProvider.GetRequiredService<IPriceAggregatedFetcher>();
+        var batcher = new Batcher.Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
 
         while (!ct.IsCancellationRequested)
@@ -68,7 +67,7 @@ public class PriceUpdater(
                 catch (TaskCanceledException)
                 {
                     const string message =
-                        $"The cancellation token was cancelled. Ending service {nameof(PriceUpdater)}";
+                        $"The cancellation token was cancelled. Ending service {nameof(PriceAggregatedUpdater)}";
                     Logger.LogInformation(message);
                 }
             }
@@ -77,9 +76,16 @@ public class PriceUpdater(
         }
     }
 
-    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
+    protected override async Task ConvertAndSaveToDbAsync(List<PriceAggregatedWebPoco> webPocos)
     {
-        var updateList = webPocos.ToPricePocoList();
+        var updateList = webPocos.Select(x => new PricePoco
+        {
+            ItemId = x.ItemId,
+            WorldId = x.WorldId,
+            LastUploadTime = x.LastUploadTime,
+            AverageSoldHQ = x.HQ?.AverageSalePrice?.Price ?? 0,
+            AverageSoldNQ = x.NQ?.AverageSalePrice?.Price ?? 0
+        }).ToList();
         if (!updateList.Any())
             return;
 

@@ -1,6 +1,6 @@
 namespace GilGoblin.Database.Pocos;
 
-public class PricePoco : BasePricePoco
+public record PricePoco : BasePricePoco
 {
     public float AverageListingPrice { get; set; }
     public float AverageListingPriceNQ { get; set; }

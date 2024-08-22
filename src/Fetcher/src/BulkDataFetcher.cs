@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
@@ -12,20 +13,15 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
+public class BulkDataFetcher<T, U>(
+    string basePath,
+    ILogger<BulkDataFetcher<T, U>> logger,
+    HttpClient? client = null)
+    : DataFetcher<T>(basePath, logger, client), IBulkDataFetcher<T, U>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
     protected int _entriesPerPage = 100;
-
-    public BulkDataFetcher(
-        string basePath,
-        ILogger<BulkDataFetcher<T, U>> logger,
-        HttpClient? client = null
-    )
-        : base(basePath, logger, client)
-    {
-    }
 
     public int GetEntriesPerPage() => _entriesPerPage;
     public void SetEntriesPerPage(int count) => _entriesPerPage = count;
@@ -65,18 +61,27 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
             var response = await Client.GetAsync(path);
             return !response.IsSuccessStatusCode
                 ? null
-                : ReadResponseContentAsync(response.Content);
+                : await ReadResponseContentAsync(response.Content);
         }
-        catch
+        catch (Exception e)
         {
-            Logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");
+            Logger.LogError("Failed the GET call to update {Name} with path {Path}: {Error}",
+                nameof(T),
+                path,
+                e.Message);
             return null;
         }
     }
 
-    protected virtual U ReadResponseContentAsync(HttpContent content) =>
-        content.ReadFromJsonAsync<U>().Result ??
+    protected virtual async Task<U> ReadResponseContentAsync(HttpContent content) =>
+        JsonSerializer.Deserialize<U>(await content.ReadAsStringAsync(), GetJsonSerializerOptions()) ??
         throw new InvalidOperationException($"Failed to read the fetched response: {content}");
+
+    private static JsonSerializerOptions GetJsonSerializerOptions()
+    {
+        return new JsonSerializerOptions(
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true });
+    }
 
     protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {

@@ -3,10 +3,8 @@ using System.Linq;
 
 namespace GilGoblin.Fetcher.Pocos;
 
-public class PriceAggregatedWebResponse(Dictionary<int, PriceAggregatedWebPoco>? items)
+public class PriceAggregatedWebResponse(Dictionary<int, PriceAggregatedWebPoco>? items = null)
     : IResponseToList<PriceAggregatedWebPoco>
 {
-    public Dictionary<int, PriceAggregatedWebPoco> Items { get; set; } = items;
-
-    public List<PriceAggregatedWebPoco> GetContentAsList() => Items.Values.ToList();
+    public List<PriceAggregatedWebPoco> GetContentAsList() => items?.Values.ToList() ?? [];
 }

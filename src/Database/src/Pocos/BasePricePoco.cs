@@ -1,6 +1,6 @@
 namespace GilGoblin.Database.Pocos;
 
-public class BasePricePoco : IIdentifiable
+public record BasePricePoco : IIdentifiable
 {
     public int WorldId { get; set; }
     public int ItemId { get; set; }

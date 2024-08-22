@@ -3,7 +3,7 @@ using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Fetcher.Pocos;
 
-public class PriceWebPoco : BasePricePoco
+public record PriceWebPoco : BasePricePoco
 {
     // The average listing price, with outliers removed beyond 3 standard deviations of the mean.
     public float CurrentAveragePrice { get; set; }

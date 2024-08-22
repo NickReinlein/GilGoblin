@@ -9,15 +9,11 @@ public interface IPriceFetcher : IBulkDataFetcher<PriceWebPoco, PriceWebResponse
 {
 }
 
-public class PriceFetcher : BulkDataFetcher<PriceWebPoco, PriceWebResponse>, IPriceFetcher
+public class PriceFetcher(
+    ILogger<PriceFetcher> logger,
+    HttpClient? client = null)
+    : BulkDataFetcher<PriceWebPoco, PriceWebResponse>(PriceBaseUrl, logger, client), IPriceFetcher
 {
-    public PriceFetcher(
-        ILogger<PriceFetcher> logger,
-        HttpClient? client = null)
-        : base(PriceBaseUrl, logger, client)
-    {
-    }
-
     protected override string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {
         var basePath = base.GetUrlPathFromEntries(ids, worldId);
