@@ -30,10 +30,11 @@ A webpage front-end is available with the resulting calculations. Filters are av
 * :heavy_check_mark: Improve performance for top-crafts endpoint ⏩
 
 *Work-in-progress*
+* :hatching_chick: Fix breaking change in external API dependency 🔧📡
 * :hatching_chick: Make everything *prettier* ✨
-* :hatching_chick: Launch and test website 🚀
 
 *Upcoming*
+* :egg: Launch and test website 🚀
 * :egg: (Expected) Live release bug fixes 🐛
 
 *Nice-to-have*
