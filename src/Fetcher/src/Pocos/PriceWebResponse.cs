@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GilGoblin.Fetcher.Pocos;
 
-public class PriceWebResponse(Dictionary<int, PriceWebPoco>? items) : IResponseToList<PriceWebPoco>
+public record PriceWebResponse(List<PriceWebPoco> Results, List<int> FailedItems)
+    : IResponseToList<PriceWebPoco>
 {
-    public Dictionary<int, PriceWebPoco> Items { get; set; } = items;
-
-    public List<PriceWebPoco> GetContentAsList() => Items.Values.ToList();
+    public List<PriceWebPoco> GetContentAsList() => Results;
 }

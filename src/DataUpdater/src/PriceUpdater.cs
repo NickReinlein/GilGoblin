@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
-using GilGoblin.Batcher;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Database.Savers;
@@ -22,7 +21,7 @@ public class PriceUpdater(
     ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(scopeFactory, logger)
 {
-    public List<int> AllItemIds { get; private set; }
+    private List<int> AllItemIds { get; set; }
     private const int dataExpiryInHours = 48;
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
@@ -44,7 +43,7 @@ public class PriceUpdater(
     {
         using var scope = ScopeFactory.CreateScope();
         var fetcher = scope.ServiceProvider.GetRequiredService<IPriceFetcher>();
-        var batcher = new Batcher<int>(fetcher.GetEntriesPerPage());
+        var batcher = new Batcher.Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
 
         while (!ct.IsCancellationRequested)
@@ -79,7 +78,36 @@ public class PriceUpdater(
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
-        var updateList = webPocos.ToPricePocoList();
+        var updateList = webPocos
+            .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
+                         w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
+                         w.Nq?.AverageSalePrice?.World?.Price > 0))
+            .Select(x => new
+            {
+                x.ItemId,
+                x.WorldUploadTimes,
+                MaxPriceHq = Math.Max(
+                    Math.Max(x.Hq?.AverageSalePrice?.Dc?.Price ?? 0,
+                        x.Hq?.AverageSalePrice?.Region?.Price ?? 0),
+                    x.Hq?.AverageSalePrice?.World?.Price ?? 0),
+                MaxPriceNq = Math.Max(
+                    Math.Max(x.Nq?.AverageSalePrice?.Dc?.Price ?? 0,
+                        x.Nq?.AverageSalePrice?.Region?.Price ?? 0),
+                    x.Nq?.AverageSalePrice?.World?.Price ?? 0
+                ),
+            })
+            .Select(x => x.WorldUploadTimes?.Select(y => new PricePoco
+            {
+                ItemId = x.ItemId,
+                WorldId = y.WorldId ?? 0,
+                LastUploadTime = y.Timestamp,
+                AverageSoldHQ = x.MaxPriceHq,
+                AverageSoldNQ = x.MaxPriceNq
+            }))
+            .ToList()
+            .SelectMany(x => x)
+            .ToList();
+
         if (!updateList.Any())
             return;
 
@@ -125,7 +153,7 @@ public class PriceUpdater(
 
             var outdatedPrices = currentPrices.Where(p =>
             {
-                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(p.LastUploadTime).UtcDateTime;
+                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(p.LastUploadTime ?? 0).UtcDateTime;
                 var ageInHours = (DateTimeOffset.UtcNow - timestamp).TotalHours;
                 return ageInHours > dataExpiryInHours;
             }).ToList();

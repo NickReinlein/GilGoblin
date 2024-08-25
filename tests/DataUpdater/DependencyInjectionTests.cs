@@ -34,7 +34,6 @@ public class DataUpdaterDependencyInjectionTests
 
     [TestCase(typeof(IBulkDataFetcher<PriceWebPoco, PriceWebResponse>))]
     [TestCase(typeof(IPriceFetcher))]
-    [TestCase(typeof(IPriceAggregatedFetcher))]
     [TestCase(typeof(IWorldFetcher))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(IRecipeRepository))]

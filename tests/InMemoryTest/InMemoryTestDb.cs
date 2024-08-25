@@ -13,7 +13,7 @@ public class InMemoryTestDb
 {
     protected DbContextOptions<TestGilGoblinDbContext> _options;
     protected IConfiguration _configuration;
-    
+
     protected static readonly List<int> ValidWorldIds = new() { 34, 99 };
 
     [OneTimeSetUp]
@@ -71,7 +71,7 @@ public class InMemoryTestDb
                 RecipeId = 11,
                 RecipeProfitVsListings = 107,
                 RecipeProfitVsSold = 94,
-                Updated = DateTimeOffset.UtcNow
+                Updated = timestamp
             },
             new RecipeProfitPoco
             {
@@ -79,7 +79,7 @@ public class InMemoryTestDb
                 RecipeId = 12,
                 RecipeProfitVsListings = 297,
                 RecipeProfitVsSold = 254,
-                Updated = DateTimeOffset.UtcNow
+                Updated = timestamp
             },
             new RecipeProfitPoco
             {
@@ -87,7 +87,7 @@ public class InMemoryTestDb
                 RecipeId = 88,
                 RecipeProfitVsListings = 224,
                 RecipeProfitVsSold = 218,
-                Updated = DateTimeOffset.UtcNow
+                Updated = timestamp
             },
             new RecipeProfitPoco
             {
@@ -95,7 +95,7 @@ public class InMemoryTestDb
                 RecipeId = 99,
                 RecipeProfitVsListings = 351,
                 RecipeProfitVsSold = 317,
-                Updated = DateTimeOffset.UtcNow
+                Updated = timestamp
             }
         );
         context.Recipe.AddRange(

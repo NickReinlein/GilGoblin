@@ -48,25 +48,17 @@ public class Startup
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
+        services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
+            .AddScoped<IPriceFetcher, PriceFetcher>()
+            .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
+            .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
+            .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
+            .AddScoped<IWorldFetcher, WorldFetcher>()
+            .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
+            .AddScoped<IWorldUpdater, WorldUpdater>();
 
-        // services.AddScoped<IPriceFetcher, PriceFetcher>();
-        // services.AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        // services.AddScoped<IDataSaver<PricePoco>, PriceSaver>();
-        // services.AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
-
-        services.AddScoped<IPriceAggregatedFetcher, PriceAggregatedFetcher>();
-        services.AddScoped<IBulkDataFetcher<PriceAggregatedWebPoco, PriceAggregatedWebResponse>, PriceAggregatedFetcher>();
-        services.AddScoped<IDataUpdater<PricePoco, PriceAggregatedWebPoco>, PriceAggregatedUpdater>();
-        services.AddScoped<IDataSaver<PricePoco>, PriceSaver>();
-
-        // services.AddScoped<IWorldFetcher, WorldFetcher>();
-        // services.AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
-        // services.AddScoped<IWorldUpdater, WorldUpdater>();
-
-        // services.AddHostedService<PriceUpdater>();
         // services.AddHostedService<WorldUpdater>();
-        services.AddHostedService<PriceAggregatedUpdater>();
+        services.AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCrafting(IServiceCollection services)

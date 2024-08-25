@@ -286,7 +286,7 @@ public class CraftingCalculatorTests
     private void MockReposForSingularTest(
         PricePoco market,
         RecipePoco recipe,
-        BasePricePoco ingredientMarket
+        PricePoco ingredientMarket
     )
     {
         _recipeCosts.GetAsync(market.WorldId, recipe.Id).ReturnsNullForAnyArgs();
@@ -308,7 +308,7 @@ public class CraftingCalculatorTests
 
     private void SetupForBasicItemCraftingCostCase(
         RecipePoco recipe,
-        BasePricePoco ingredientMarketPrice
+        PricePoco ingredientMarketPrice
     )
     {
         var itemId = recipe.TargetItemId;
