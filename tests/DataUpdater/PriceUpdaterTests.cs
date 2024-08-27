@@ -35,6 +35,11 @@
 //     private IServiceProvider _serviceProvider;
 //     private TestGilGoblinDbContext _dbContext;
 //
+//     private const int worldId = 34;
+//     private const int regionId = 28;
+//     private const int itemId1 = 1500;
+//     private const int itemId2 = 3614;
+//
 //     [SetUp]
 //     public override void SetUp()
 //     {
@@ -81,20 +86,6 @@
 //         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
 //         await _priceFetcher.DidNotReceiveWithAnyArgs().FetchByIdsAsync(default, default!);
 //         _logger.Received(1).LogError(errorMessage);
-//     }
-//
-//     [Test]
-//     public async Task GivenFetchAsync_WhenMarketableItemsAreReturned_ThenWeAlsoReturnRecipeIngredients()
-//     {
-//         var allRecipes = _dbContext.Recipe.ToList();
-//         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([631]);
-//
-//         var cts = new CancellationTokenSource();
-//         cts.CancelAfter(500);
-//         await _priceUpdater.FetchAsync(cts.Token, 34);
-//
-//         var idCount = _priceUpdater.AllItemIds.Count;
-//         Assert.That(idCount, Is.EqualTo(allRecipes.Count + 1));
 //     }
 //
 //     [TestCase(0)]
@@ -176,7 +167,7 @@
 //
 //     private List<PricePoco> SetupSave()
 //     {
-//         var saveList = GetPriceWebPocoList();
+//         var saveList = GetMultipleNewPocos();
 //
 //         var idList = new List<int> { 443, 1420 };
 //         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns(idList);
@@ -185,29 +176,40 @@
 //         _priceFetcher
 //             .FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
 //             .Returns(saveList);
-//         return saveList.ToPricePocoList();
+//         return saveList;
 //     }
-//
-//     private static List<PriceWebPoco> GetPriceWebPocoList()
+//     
+//     protected static List<PriceWebPoco> GetMultipleNewPocos()
 //     {
-//         return new List<PriceWebPoco>
+//         var priceGeoDataPointsPoco = new PriceDataPerGeoPoco(
+//             new PriceDataPoco(900),
+//             new PriceDataPoco(800, worldId),
+//             new PriceDataPoco(700, regionId)
+//         );
+//         var anyQ = new GeoPriceDataPoco(
+//             priceGeoDataPointsPoco,
+//             priceGeoDataPointsPoco,
+//             priceGeoDataPointsPoco,
+//             new DailySaleVelocityPoco(50)
+//         );
+//         var worldUploadTimestampPocos = new List<WorldUploadTimestampPoco>
 //         {
-//             new()
-//             {
-//                 WorldId = 34,
-//                 ItemId = 443,
-//                 AveragePrice = 443f,
-//                 CurrentAveragePrice = 240f,
-//                 LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-//             },
-//             new()
-//             {
-//                 WorldId = 34,
-//                 ItemId = 1420,
-//                 AveragePrice = 1420f,
-//                 CurrentAveragePrice = 1210f,
-//                 LastUploadTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-//             }
+//             new(worldId, 67554), new(worldId + 1, 67555)
 //         };
+//
+//         var poco1 = new PriceWebPoco(
+//             itemId1,
+//             anyQ,
+//             anyQ,
+//             worldUploadTimestampPocos
+//         );
+//         var poco2 = new PriceWebPoco(
+//             itemId2,
+//             anyQ,
+//             anyQ,
+//             worldUploadTimestampPocos
+//         );
+//
+//         return new List<PriceWebPoco> { poco1, poco2 };
 //     }
 // }

@@ -5,11 +5,9 @@ using System.Net;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using GilGoblin.Database.Pocos;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
@@ -20,6 +18,11 @@ public class PriceFetcherTests : FetcherTests
 {
     private IPriceFetcher _fetcher;
     private ILogger<PriceFetcher> _logger;
+    
+    private const int worldId = 34;
+    private const int regionId = 56;
+    private const int itemId1 = 4211;
+    private const int itemId2 = 4222;
 
     [SetUp]
     public override void SetUp()
@@ -36,13 +39,13 @@ public class PriceFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
 
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Any(r => r.ItemId == _itemId1));
-            Assert.That(result.Any(r => r.ItemId == _itemId2));
+            Assert.That(result.Any(r => r.ItemId == itemId1));
+            Assert.That(result.Any(r => r.ItemId == itemId2));
             Assert.That(result.All(r => r.WorldUploadTimes?.Count > 0), Is.True);
             // Assert.That(result.All(r => r.Hq?.AverageSalePrice?.Price > 0), Is.True);
             // Assert.That(result.All(r => r.Nq?.AverageSalePrice?.Price > 0), Is.True);
@@ -60,7 +63,7 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -68,7 +71,7 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenNoIDsAreProvided_ThenWeReturnAnEmptyList()
     {
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>(), _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>(), worldId);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
@@ -86,7 +89,7 @@ public class PriceFetcherTests : FetcherTests
                 JsonSerializer.Serialize(GetMultipleNewPocos())
             );
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -99,7 +102,7 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, _worldId);
+        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -111,7 +114,7 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public void GivenWeDeserializeAResponse_WhenMultipleValidEntities_ThenWeDeserializeSuccessfully()
     {
-        var ids = new[] { _itemId1, _itemId2 };
+        var ids = new[] { itemId1, itemId2 };
         var result = JsonSerializer.Deserialize<PriceWebResponse>(
             GetItemsJsonResponse,
             GetSerializerOptions()
@@ -167,56 +170,47 @@ public class PriceFetcherTests : FetcherTests
         return idList;
     }
 
-    protected static IEnumerable<PriceWebPoco> GetMultipleNewPocos()
+    protected static List<PriceWebPoco> GetMultipleNewPocos()
     {
-        var priceGeoDataPointsPoco = new PriceGeoDataPointsPoco(
-            new PriceDataPointPoco(900),
-            new PriceDataPointPoco(800, _worldId),
-            new PriceDataPointPoco(700, _regionId)
+        var priceGeoDataPointsPoco = new PriceDataPerGeoPoco(
+            new PriceDataPoco(900),
+            new PriceDataPoco(800, worldId),
+            new PriceDataPoco(700, regionId)
         );
-        var anyQ = new PriceDataPoco(
+        var anyQ = new GeoPriceDataPoco(
             priceGeoDataPointsPoco,
-            new RecentPurchasePoco(
-                new PriceDataPointForGeoPoco(650, 1724504350000),
-                new PriceDataPointForGeoPoco(600, 1724504350000, _worldId),
-                new PriceDataPointForGeoPoco(550, 1724504350000, _regionId)
-            ),
+            priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,
             new DailySaleVelocityPoco(50)
         );
         var worldUploadTimestampPocos = new List<WorldUploadTimestampPoco>
         {
-            new(_worldId, 67554), new(_worldId + 1, 67555)
+            new(worldId, 67554), new(worldId + 1, 67555)
         };
 
         var poco1 = new PriceWebPoco(
-            _itemId1,
+            itemId1,
             anyQ,
             anyQ,
             worldUploadTimestampPocos
         );
         var poco2 = new PriceWebPoco(
-            _itemId2,
+            itemId2,
             anyQ,
             anyQ,
             worldUploadTimestampPocos
         );
 
-        return new List<PriceWebPoco> { poco1, poco2 };
+        return [poco1, poco2];
     }
 
     protected static JsonSerializerOptions GetSerializerOptions() =>
         new() { PropertyNameCaseInsensitive = true, IncludeFields = true };
 
-    private static readonly int _worldId = 34;
-    private static readonly int _regionId = 56;
-    private static readonly int _itemId1 = 4211;
-    private static readonly int _itemId2 = 4222;
-
     private static string FetchPricesAsyncUrl =>
-        $"https://universalis.app/api/v2/aggregated/{_worldId}/{_itemId1},{_itemId2}";
+        $"https://universalis.app/api/v2/aggregated/{worldId}/{itemId1},{itemId2}";
 
-    private static string GetItemsJsonResponseMarketable => $"[{_itemId1},{_itemId2}]";
+    private static string GetItemsJsonResponseMarketable => $"[{itemId1},{itemId2}]";
 
     private static string GetItemsJsonResponse =>
         """

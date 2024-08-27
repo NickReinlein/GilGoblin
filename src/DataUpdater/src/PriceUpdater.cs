@@ -78,6 +78,7 @@ public class PriceUpdater(
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
+        // TODO the conversion has to match the new data model that is TBD
         var updateList = webPocos
             .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
                          w.Nq?.AverageSalePrice?.Region?.Price > 0 ||

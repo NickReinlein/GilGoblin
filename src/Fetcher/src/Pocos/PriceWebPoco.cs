@@ -5,37 +5,32 @@ namespace GilGoblin.Fetcher.Pocos;
 
 public record PriceWebPoco(
     int ItemId,
-    PriceDataPoco? Hq = null,
-    PriceDataPoco? Nq = null,
+    GeoPriceDataPoco? Hq = null,
+    GeoPriceDataPoco? Nq = null,
     List<WorldUploadTimestampPoco>? WorldUploadTimes = null) : IIdentifiable
 {
     public int GetId() => ItemId;
 }
 
-public record PriceDataPoco(
-    PriceGeoDataPointsPoco? MinListing,
-    RecentPurchasePoco? RecentPurchase,
-    PriceGeoDataPointsPoco? AverageSalePrice,
+public record GeoPriceDataPoco(
+    PriceDataPerGeoPoco? MinListing,
+    PriceDataPerGeoPoco? AverageSalePrice,
+    PriceDataPerGeoPoco? RecentPurchase,
     DailySaleVelocityPoco? DailySaleVelocity
 );
 
-public record PriceGeoDataPointsPoco(
-    PriceDataPointPoco? World,
-    PriceDataPointPoco? Dc,
-    PriceDataPointPoco? Region
+public record PriceDataPerGeoPoco(
+    PriceDataPoco? World = null,
+    PriceDataPoco? Dc = null,
+    PriceDataPoco? Region = null
 );
 
-public record RecentPurchasePoco(
-    PriceDataPointForGeoPoco? World,
-    PriceDataPointForGeoPoco? Dc,
-    PriceDataPointForGeoPoco? Region
+public record PriceDataPoco(
+    float? Price = null,
+    int? WorldId = null,
+    long? Timestamp = null
 );
 
 public record DailySaleVelocityPoco(float? Quantity);
-
-public record PriceDataPointPoco(float? Price = null, int? WorldId = null);
-
-public record PriceDataPointForGeoPoco(float? Price = null, long? Timestamp = null, int? WorldId = null)
-    : PriceDataPointPoco(Price, WorldId);
 
 public record WorldUploadTimestampPoco(int? WorldId = null, long? Timestamp = null);
