@@ -2,6 +2,7 @@ namespace GilGoblin.Database.Pocos;
 
 public class RecipeProfitPoco : BaseRecipeValue
 {
-    public int RecipeProfitVsSold { get; set; }
-    public int RecipeProfitVsListings { get; set; }
+    public int? AverageSalePriceProfit { get; set; }
+    public int? MinListingPriceProfit { get; set; }
+    public int? RecentPurchasePrice { get; set; }
 }

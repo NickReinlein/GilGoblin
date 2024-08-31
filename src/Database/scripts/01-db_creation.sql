@@ -88,18 +88,21 @@ CREATE TABLE IF NOT EXISTS recipe (
 );
 
 CREATE TABLE IF NOT EXISTS recipecost (
-                                          recipe_id INTEGER NOT NULL REFERENCES recipe(id),
-                                          world_id  INTEGER NOT NULL REFERENCES world(id),
-                                          cost      INTEGER NOT NULL,
+                                          recipe_id INTEGER NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
+                                          world_id  INTEGER NOT NULL REFERENCES world(id) ON DELETE CASCADE,
+                                          average_sale_price_cost INTEGER REFERENCES price_data_points(id),
+                                          min_listing_price_cost INTEGER REFERENCES price_data_points(id),
+                                          recent_purchase_cost INTEGER REFERENCES price_data_points(id),
                                           updated   TIMESTAMP WITH TIME ZONE NOT NULL,
                                           PRIMARY KEY (recipe_id, world_id)
 );
 
 CREATE TABLE IF NOT EXISTS recipeprofit (
-                                            recipe_id         INTEGER NOT NULL REFERENCES recipe(id),
-                                            world_id          INTEGER NOT NULL REFERENCES world(id),
-                                            profit_vs_sold    INTEGER NOT NULL,
-                                            profit_vs_listings INTEGER NOT NULL,
+                                            recipe_id         INTEGER NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
+                                            world_id          INTEGER NOT NULL REFERENCES world(id) ON DELETE CASCADE,
+                                            average_sale_price_profit INTEGER REFERENCES price_data_points(id),
+                                            min_listing_price_profit INTEGER REFERENCES price_data_points(id),
+                                            recent_purchase_price INTEGER REFERENCES price_data_points(id),
                                             updated           TIMESTAMP WITH TIME ZONE NOT NULL,
                                             PRIMARY KEY (recipe_id, world_id)
 );

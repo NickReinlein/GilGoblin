@@ -2,8 +2,10 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    image: nickreinlein/gilgoblin-database
-    container_name: database
+    # image: nickreinlein/gilgoblin-database
+    # container_name: database
+    image: database
+    build: src/Database/
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
