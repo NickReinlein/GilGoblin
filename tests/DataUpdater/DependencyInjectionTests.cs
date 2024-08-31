@@ -32,14 +32,14 @@ public class DataUpdaterDependencyInjectionTests
     }
 
 
-    [TestCase(typeof(IBulkDataFetcher<PriceWebPoco, PriceWebResponse>))]
-    [TestCase(typeof(IPriceFetcher))]
+    // [TestCase(typeof(IBulkDataFetcher<PriceWebPoco, PriceWebResponse>))]
+    // [TestCase(typeof(IPriceFetcher))]
     [TestCase(typeof(IWorldFetcher))]
-    [TestCase(typeof(IPriceRepository<PricePoco>))]
+    // [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IMarketableItemIdsFetcher))]
-    [TestCase(typeof(IDataSaver<PricePoco>))]
-    [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
+    // [TestCase(typeof(IDataSaver<PricePoco>))]
+    // [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
     [TestCase(typeof(IWorldUpdater))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {

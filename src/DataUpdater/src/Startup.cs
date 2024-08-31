@@ -49,38 +49,38 @@ public class Startup
             throw new Exception("Failed to get connection string");
 
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
-            .AddScoped<IPriceFetcher, PriceFetcher>()
-            .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
-            .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
-            .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
+            // .AddScoped<IPriceFetcher, PriceFetcher>()
+            // .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
+            // .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
+            // .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
             .AddScoped<IWorldUpdater, WorldUpdater>();
 
         // services.AddHostedService<WorldUpdater>();
-        services.AddHostedService<PriceUpdater>();
+        // services.AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCrafting(IServiceCollection services)
     {
-        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository, CraftRepository>();
+        // services.AddScoped<ICraftingCalculator, CraftingCalculator>();
+        // services.AddScoped<ICraftRepository, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
     public static void AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
-        services.AddScoped<IPriceCache, PriceCache>();
+        // services.AddScoped<IPriceCache, PriceCache>();
         services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
-        services.AddScoped<ICraftCache, CraftCache>();
-        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
-        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
+        // services.AddScoped<ICraftCache, CraftCache>();
+        // services.AddScoped<IRecipeCostCache, RecipeCostCache>();
+        // services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
 
         services.AddScoped<IRepositoryCache, ItemRepository>();
-        services.AddScoped<IRepositoryCache, PriceRepository>();
+        // services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
@@ -92,11 +92,11 @@ public class Startup
 
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        // services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
-        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
+        // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
+        // services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();
     }
 

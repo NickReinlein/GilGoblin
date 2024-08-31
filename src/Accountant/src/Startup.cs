@@ -36,11 +36,11 @@ public class Startup
         Api.Startup.AddGoblinDatabases(services, _configuration);
         Api.Startup.AddGoblinCaches(services);
 
-        services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
-        services.AddScoped<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>();
-
-        services.AddHostedService<RecipeCostAccountant>();
-        services.AddHostedService<RecipeProfitAccountant>();
+        // services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
+        // services.AddScoped<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>();
+        //
+        // services.AddHostedService<RecipeCostAccountant>();
+        // services.AddHostedService<RecipeProfitAccountant>();
     }
 
     private static void DatabaseValidation(IApplicationBuilder app)

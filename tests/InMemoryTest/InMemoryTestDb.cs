@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,12 +12,13 @@ public class InMemoryTestDb
     protected DbContextOptions<TestGilGoblinDbContext> _options;
     protected IConfiguration _configuration;
 
-    protected static readonly List<int> ValidWorldIds = new() { 34, 99 };
+    protected static readonly List<int> ValidWorldIds = [34, 99];
 
     [OneTimeSetUp]
     public virtual void OneTimeSetUp()
     {
         _configuration = Substitute.For<IConfiguration>();
+
         _options = Substitute.For<DbContextOptions<TestGilGoblinDbContext>>();
         _options = new DbContextOptionsBuilder<TestGilGoblinDbContext>().Options;
     }
@@ -27,6 +26,7 @@ public class InMemoryTestDb
     [SetUp]
     public virtual void SetUp()
     {
+        DeleteAllEntries();
         CreateAllEntries();
     }
 
@@ -39,65 +39,69 @@ public class InMemoryTestDb
     private void DeleteAllEntries()
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
-        context.Price.RemoveRange(context.Price);
+        context.RecentPurchase.RemoveRange(context.RecentPurchase);
+        context.AverageSalePrice.RemoveRange(context.AverageSalePrice);
+        context.MinListing.RemoveRange(context.MinListing);
+        context.DailySaleVelocity.RemoveRange(context.DailySaleVelocity);
+        context.World.RemoveRange(context.World);
         context.Item.RemoveRange(context.Item);
         context.Recipe.RemoveRange(context.Recipe);
         context.RecipeCost.RemoveRange(context.RecipeCost);
         context.RecipeProfit.RemoveRange(context.RecipeProfit);
-        context.World.RemoveRange(context.World);
+        context.PriceDataPoints.RemoveRange(context.PriceDataPoints);
         context.SaveChanges();
     }
 
     private void CreateAllEntries()
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
-        var unixEpochTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var timestamp = DateTimeOffset.UtcNow;
-        context.World.AddRange(
-            new List<WorldPoco> { new() { Id = 34, Name = "Brynnhildr" }, new() { Id = 99, Name = "UberGeschenk" } }
-        );
-        context.RecipeCost.AddRange(
-            new List<RecipeCostPoco>
-            {
-                new() { WorldId = 34, RecipeId = 11, Cost = 107, Updated = timestamp },
-                new() { WorldId = 34, RecipeId = 12, Cost = 75, Updated = timestamp },
-                new() { WorldId = 34, RecipeId = 8854, Cost = 351, Updated = timestamp },
-                new() { WorldId = 34, RecipeId = 9841, Cost = 3001, Updated = timestamp }
-            });
-        context.RecipeProfit.AddRange(
-            new RecipeProfitPoco
-            {
-                WorldId = 34,
-                RecipeId = 11,
-                RecipeProfitVsListings = 107,
-                RecipeProfitVsSold = 94,
-                Updated = timestamp
-            },
-            new RecipeProfitPoco
-            {
-                WorldId = 34,
-                RecipeId = 12,
-                RecipeProfitVsListings = 297,
-                RecipeProfitVsSold = 254,
-                Updated = timestamp
-            },
-            new RecipeProfitPoco
-            {
-                WorldId = 34,
-                RecipeId = 88,
-                RecipeProfitVsListings = 224,
-                RecipeProfitVsSold = 218,
-                Updated = timestamp
-            },
-            new RecipeProfitPoco
-            {
-                WorldId = 34,
-                RecipeId = 99,
-                RecipeProfitVsListings = 351,
-                RecipeProfitVsSold = 317,
-                Updated = timestamp
-            }
-        );
+        // context.RecipeCost.AddRange(
+        //     new RecipeCostPoco
+        //     {
+        //         WorldId = 22,
+        //         RecipeId = 11,
+        //         RecentPurchaseCost = 107,
+        //         AverageSalePriceCost = 97,
+        //         MinListingPriceCost = 87,
+        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
+        //     },
+        //     new RecipeCostPoco
+        //     {
+        //         WorldId = 22,
+        //         RecipeId = 11,
+        //         RecentPurchaseCost = 107,
+        //         AverageSalePriceCost = 97,
+        //         MinListingPriceCost = 87,
+        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
+        //     },
+        //     new RecipeCostPoco
+        //     {
+        //         WorldId = 22,
+        //         RecipeId = 13,
+        //         RecentPurchaseCost = 297,
+        //         AverageSalePriceCost = 277,
+        //         MinListingPriceCost = 257,
+        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
+        //     },
+        //     new RecipeCostPoco
+        //     {
+        //         WorldId = 33,
+        //         RecipeId = 88,
+        //         RecentPurchaseCost = 224,
+        //         AverageSalePriceCost = 204,
+        //         MinListingPriceCost = 184,
+        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
+        //     },
+        //     new RecipeCostPoco
+        //     {
+        //         WorldId = 44,
+        //         RecipeId = 99,
+        //         RecentPurchaseCost = 351,
+        //         AverageSalePriceCost = 331,
+        //         MinListingPriceCost = 311,
+        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
+        //     }
+        // );
         context.Recipe.AddRange(
             new RecipePoco { Id = 11, TargetItemId = 5682, ItemIngredient0TargetId = 774, AmountIngredient0 = 3 },
             new RecipePoco { Id = 12, TargetItemId = 9984, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },
@@ -108,76 +112,16 @@ public class InMemoryTestDb
             new RecipePoco { Id = 88, TargetItemId = 88, ItemIngredient0TargetId = 1, AmountIngredient0 = 3 },
             new RecipePoco { Id = 99, TargetItemId = 9984, ItemIngredient0TargetId = 2, AmountIngredient0 = 5 }
         );
-        context.Price.AddRange(
-            new PricePoco
-            {
-                WorldId = 34,
-                ItemId = 11,
-                AverageSold = 133f,
-                AverageListingPrice = 241f,
-                LastUploadTime = unixEpochTimestamp
-            },
-            new PricePoco
-            {
-                WorldId = 34,
-                ItemId = 12,
-                AverageSold = 245f,
-                AverageListingPrice = 377f,
-                LastUploadTime = unixEpochTimestamp
-            },
-            new PricePoco
-            {
-                WorldId = 34,
-                ItemId = 88,
-                AverageSold = 247f,
-                AverageListingPrice = 361f,
-                LastUploadTime = unixEpochTimestamp
-            },
-            new PricePoco
-            {
-                WorldId = 34,
-                ItemId = 5682,
-                AverageSold = 6557f,
-                AverageListingPrice = 3748f,
-                LastUploadTime = unixEpochTimestamp
-            },
-            new PricePoco
-            {
-                WorldId = 34,
-                ItemId = 9984,
-                AverageSold = 387f,
-                AverageListingPrice = 477f,
-                LastUploadTime = unixEpochTimestamp
-            },
-            new PricePoco
-            {
-                WorldId = 34,
-                ItemId = 9001,
-                AverageSold = 1011f,
-                AverageListingPrice = 1051f,
-                LastUploadTime = unixEpochTimestamp
-            }
+        context.Item.AddRange(
+            new ItemPoco { Id = 1, Name = "Item 1" },
+            new ItemPoco { Id = 2, Name = "Item 2" },
+            new ItemPoco { Id = 3, Name = "Item 3" },
+            new ItemPoco { Id = 22, Name = "Item 22" }
         );
-        context.SaveChanges();
-
-        var itemIds = new List<int>
-        {
-            1,
-            2,
-            3,
-            11,
-            12,
-            88,
-            9984
-        };
-        var recipeTargetItemIds = context.Recipe.Select(r => r.TargetItemId).ToList();
-        itemIds.AddRange(recipeTargetItemIds);
-        var ids = itemIds.Distinct().ToList();
-        foreach (var id in ids)
-        {
-            context.Item.Add(new ItemPoco { Id = id, Name = $"Item {id}" });
-        }
-
+        context.World.AddRange(
+            new WorldPoco { Id = 34, Name = "World 34" },
+            new WorldPoco { Id = 99, Name = "World 99" }
+        );
         context.SaveChanges();
     }
 }

@@ -58,16 +58,15 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     public static IServiceCollection AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
-        services.AddScoped<IPriceCache, PriceCache>();
+        // services.AddScoped<IPriceCache, PriceCache>();
         services.AddScoped<IRecipeCache, RecipeCache>();
-        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
-        services.AddScoped<ICraftCache, CraftCache>();
-        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
-        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
-
+        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        // services.AddScoped<IRecipeCostCache, RecipeCostCache>();
+        // services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
+        // services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<IRepositoryCache, ItemRepository>();
-        services.AddScoped<IRepositoryCache, PriceRepository>();
+        // services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
         return services;
     }
@@ -77,16 +76,16 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         services
             .AddControllers()
             .AddApplicationPart(typeof(ItemController).Assembly)
-            .AddApplicationPart(typeof(CraftController).Assembly)
-            .AddApplicationPart(typeof(PriceController).Assembly)
+            // .AddApplicationPart(typeof(CraftController).Assembly)
+            // .AddApplicationPart(typeof(PriceController).Assembly)
             .AddApplicationPart(typeof(RecipeController).Assembly);
         return services;
     }
 
     public static IServiceCollection AddGoblinCrafting(IServiceCollection services)
     {
-        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository, CraftRepository>();
+        // services.AddScoped<ICraftingCalculator, CraftingCalculator>();
+        // services.AddScoped<ICraftRepository, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
         return services;
     }
@@ -99,11 +98,11 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        // services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
-        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
+        // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
+        // services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();
         return services;
     }
@@ -173,19 +172,19 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
                 throw new Exception("Failed to connect to the database");
 
             var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
-            var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            // var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
             var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
             var recipeProfitRepository = serviceProvider.GetRequiredService<IRecipeProfitRepository>();
             var worldRepository = serviceProvider.GetRequiredService<IWorldRepository>();
 
             var itemTask = itemRepository.FillCache();
-            var priceTask = priceRepository.FillCache();
+            // var priceTask = priceRepository.FillCache();
             var recipeTask = recipeRepository.FillCache();
             var recipeCostTask = recipeCostRepository.FillCache();
             var recipeProfitTask = recipeProfitRepository.FillCache();
             var worldsTask = worldRepository.FillCache();
-            await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask, recipeProfitTask, worldsTask);
+            await Task.WhenAll(itemTask, recipeTask, recipeCostTask, recipeProfitTask, worldsTask);
         }
         catch (Exception e)
         {

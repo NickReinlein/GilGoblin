@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
+using GilGoblin.Tests.InMemoryTest;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -16,14 +18,16 @@ public class DataSaverTests : InMemoryTestDb
     private DataSaver<ItemPoco> _saver;
     private ILogger<DataSaver<ItemPoco>> _logger;
     private TestGilGoblinDbContext _context;
+    private DbContextOptions<TestGilGoblinDbContext> _testOptions;
 
     [SetUp]
     public override void SetUp()
     {
+        _testOptions = new DbContextOptionsBuilder<TestGilGoblinDbContext>().Options;
         _logger = Substitute.For<ILogger<DataSaver<ItemPoco>>>();
         base.SetUp();
 
-        _context = new TestGilGoblinDbContext(_options, _configuration);
+        _context = new TestGilGoblinDbContext(_testOptions, _configuration);
         _saver = new DataSaver<ItemPoco>(_context, _logger);
     }
 

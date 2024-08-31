@@ -30,15 +30,15 @@ public class DependencyInjectionTests
 
     [TestCase(typeof(IItemRepository))]
     [TestCase(typeof(IRecipeRepository))]
-    [TestCase(typeof(IPriceRepository<PricePoco>))]
-    [TestCase(typeof(ICraftRepository))]
-    [TestCase(typeof(IPriceCache))]
+    // [TestCase(typeof(IPriceRepository<PricePoco>))]
+    // [TestCase(typeof(ICraftRepository))]
+    // [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]
-    [TestCase(typeof(IRecipeCostCache))]
+    // [TestCase(typeof(IRecipeCostCache))]
     [TestCase(typeof(IItemCache))]
     [TestCase(typeof(IItemRecipeCache))]
     [TestCase(typeof(IRecipeGrocer))]
-    [TestCase(typeof(ICraftingCalculator))]
+    // [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
     public void GivenAGoblinApi_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {

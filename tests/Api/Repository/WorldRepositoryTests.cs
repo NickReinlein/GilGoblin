@@ -166,7 +166,7 @@ public class WorldRepositoryTests : InMemoryTestDb
     [SetUp]
     public override void SetUp()
     {
-        base.SetUp();
         _cache = Substitute.For<IWorldCache>();
+        base.SetUp();
     }
 }

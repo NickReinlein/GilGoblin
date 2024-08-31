@@ -98,8 +98,8 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
-    public virtual Task<T> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
-        => throw new NotImplementedException();
+    // public virtual Task<T> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
+    //     => throw new NotImplementedException();
 
     public virtual int GetDataFreshnessInHours() => throw new NotImplementedException();
 
