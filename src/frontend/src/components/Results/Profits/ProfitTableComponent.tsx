@@ -28,7 +28,7 @@ const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
     },
 ];
 
-const convertTimestampToAge = (timestamp: string): string => {
+export const convertTimestampToAge = (timestamp: string): string => {
     const date = new Date(timestamp);
     const now = new Date();
     const ageInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);

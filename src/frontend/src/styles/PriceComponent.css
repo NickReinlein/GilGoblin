@@ -1,0 +1,23 @@
+.MuiTypography-details, .MuiTypography-ids {
+    border: 2px solid;
+    margin: 0 10px 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.MuiTypography-ids {
+    font-size: 20px;
+    display: inline-block;
+}
+
+.MuiTypography-details {
+    font-size: 16px;
+}
+
+.MuiTypography-details. {
+    font-size: 30px;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    text-align: center;
+}

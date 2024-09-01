@@ -13,7 +13,7 @@ describe('ResultsComponent', () => {
         expect(screen.getByText('Item Name')).toBeInTheDocument();
     });
 
-    it('renders RecipeComponent correctly', () => {
+    it('renders RecipeComponent.css correctly', () => {
         const data = {name: 'Recipe Name'};
         render(<ResultsComponent componentName="Recipes" data={data}/>);
         expect(screen.getByText('Recipe Name')).toBeInTheDocument();

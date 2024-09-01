@@ -1,44 +1,54 @@
 import React from 'react';
 import {Recipe} from '../../../types/types';
+import {IDataProps} from "./IDataProps";
+import Typography from "@mui/material/Typography";
+import BoxedCardComponent from "../BoxedCardComponent";
+import IngredientComponent from "./IngredientComponent";
+import '../../../styles/RecipeComponent.css';
 
-interface RecipeProps {
+interface RecipeProps extends IDataProps {
     recipe: Recipe | null | undefined;
 }
 
 const RecipeComponent: React.FC<RecipeProps> = ({recipe}) => {
-    return (!recipe)
-        ? <div>Missing Recipe</div>
-        : (
-            <div>
-                <p>Recipe Id: {recipe?.id || 'Missing'}</p>
-                <p>Craft Type: {recipe?.craftType}</p>
-                <p>Recipe Level Table: {recipe?.recipeLevelTable}</p>
-                <p>Target Item Id: {recipe?.targetItemId}</p>
-                <p>Result Quantity: {recipe?.resultQuantity}</p>
-                <p>Can HQ: {recipe?.canHq ? 'true' : 'false'}</p>
-                <p>Can QuickSynth: {recipe?.canQuickSynth ? 'true' : 'false'}</p>
-                <p>ItemIngredient0TargetId: {recipe?.itemIngredient0TargetId}</p>
-                <p>AmountIngredient0: {recipe?.amountIngredient0}</p>
-                <p>ItemIngredient1TargetId: {recipe?.itemIngredient1TargetId}</p>
-                <p>AmountIngredient1: {recipe?.amountIngredient1}</p>
-                <p>ItemIngredient2TargetId: {recipe?.itemIngredient2TargetId}</p>
-                <p>AmountIngredient2: {recipe?.amountIngredient2}</p>
-                <p>ItemIngredient3TargetId: {recipe?.itemIngredient3TargetId}</p>
-                <p>AmountIngredient3: {recipe?.amountIngredient3}</p>
-                <p>ItemIngredient4TargetId: {recipe?.itemIngredient4TargetId}</p>
-                <p>AmountIngredient4: {recipe?.amountIngredient4}</p>
-                <p>ItemIngredient5TargetId: {recipe?.itemIngredient5TargetId}</p>
-                <p>AmountIngredient5: {recipe?.amountIngredient5}</p>
-                <p>ItemIngredient6TargetId: {recipe?.itemIngredient6TargetId}</p>
-                <p>AmountIngredient6: {recipe?.amountIngredient6}</p>
-                <p>ItemIngredient7TargetId: {recipe?.itemIngredient7TargetId}</p>
-                <p>AmountIngredient7: {recipe?.amountIngredient7}</p>
-                <p>ItemIngredient8TargetId: {recipe?.itemIngredient8TargetId}</p>
-                <p>AmountIngredient8: {recipe?.amountIngredient8}</p>
-                <p>ItemIngredient9TargetId: {recipe?.itemIngredient9TargetId}</p>
-                <p>AmountIngredient9: {recipe?.amountIngredient9}</p>
-            </div>
-        );
-};
+    return <div><BoxedCardComponent children={recipeContent(recipe)}/></div>;
+}
 
+const recipeContent = (recipe: Recipe | null | undefined) =>
+    <div>
+        <BoxedCardComponent children={recipeRoot(recipe)}/>
+        <BoxedCardComponent children={ingredientsContent(recipe)}/>
+    </div>;
+
+const recipeRoot = (recipe: Recipe | null | undefined) =>
+    <Typography className="MuiTypography-root">
+        <Typography className="MuiTypography-id">
+            <span>Recipe Id: {recipe?.id || 'Missing'}</span><br/>
+        </Typography>
+        <span>Craft Type: {recipe?.craftType}</span><br/>
+        <span>Recipe Level Table: {recipe?.recipeLevelTable}</span><br/>
+        <span>Target Item Id: {recipe?.targetItemId}</span><br/>
+        <span>Result Quantity: {recipe?.resultQuantity}</span><br/>
+        <span>Can Hq: {recipe?.canHq ? 'Yes' : 'No'}</span><br/>
+        <span>Can QuickSynth: {recipe?.canQuickSynth ? 'Yes' : 'No'}</span><br/>
+    </Typography>
+
+const ingredientsContent = (recipe: Recipe | null | undefined) =>
+    <div>
+        <Typography className="MuiTypography-ingredients-title">
+            Ingredients
+        </Typography>
+        <Typography className="MuiTypography-ingredients">
+            <IngredientComponent qty={recipe?.amountIngredient0} id={recipe?.itemIngredient0TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient1} id={recipe?.itemIngredient1TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient2} id={recipe?.itemIngredient2TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient3} id={recipe?.itemIngredient3TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient4} id={recipe?.itemIngredient4TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient5} id={recipe?.itemIngredient5TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient6} id={recipe?.itemIngredient6TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient7} id={recipe?.itemIngredient7TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient8} id={recipe?.itemIngredient8TargetId}/>
+            <IngredientComponent qty={recipe?.amountIngredient9} id={recipe?.itemIngredient9TargetId}/>
+        </Typography>
+    </div>
 export default RecipeComponent;
