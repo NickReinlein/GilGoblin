@@ -34,13 +34,11 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configure WorldPoco
         modelBuilder.Entity<WorldPoco>().ToTable("world");
         modelBuilder.Entity<WorldPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<WorldPoco>().Property(t => t.Id).HasColumnName("id");
         modelBuilder.Entity<WorldPoco>().Property(t => t.Name).HasColumnName("name");
 
-        // Configure ItemPoco
         modelBuilder.Entity<ItemPoco>().ToTable("item");
         modelBuilder.Entity<ItemPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<ItemPoco>().Property(t => t.Id).HasColumnName("id");
@@ -53,7 +51,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<ItemPoco>().Property(t => t.StackSize).HasColumnName("stack_size");
         modelBuilder.Entity<ItemPoco>().Property(t => t.CanHq).HasColumnName("can_hq");
 
-        // Configure PriceDataPointsPoco
         modelBuilder.Entity<PriceDataPointsPoco>().ToTable("price_data_points");
         modelBuilder.Entity<PriceDataPointsPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<PriceDataPointsPoco>().Property(t => t.Id).HasColumnName("id");
@@ -64,7 +61,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PriceDataPointsPoco>().Property(t => t.RegionId).HasColumnName("region_id");
         modelBuilder.Entity<PriceDataPointsPoco>().Property(t => t.Timestamp).HasColumnName("timestamp");
 
-        // Configure DailySaleVelocityPoco
         modelBuilder.Entity<DailySaleVelocityPoco>().ToTable("daily_sale_velocity");
         modelBuilder.Entity<DailySaleVelocityPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Id).HasColumnName("id");
@@ -73,7 +69,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity");
 
-        // Configure MinListingPoco
         modelBuilder.Entity<MinListingPoco>().ToTable("min_listing");
         modelBuilder.Entity<MinListingPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<MinListingPoco>().Property(t => t.Id).HasColumnName("id");
@@ -82,7 +77,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<MinListingPoco>().Property(t => t.DcDataPointId).HasColumnName("dc_data_point_id");
         modelBuilder.Entity<MinListingPoco>().Property(t => t.RegionDataPointId).HasColumnName("region_data_point_id");
 
-        // Configure AverageSalePricePoco
         modelBuilder.Entity<AverageSalePricePoco>().ToTable("average_sale_price");
         modelBuilder.Entity<AverageSalePricePoco>().HasKey(t => t.Id);
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.Id).HasColumnName("id");
@@ -91,7 +85,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.DcDataPointId).HasColumnName("dc_data_point_id");
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.RegionDataPointId).HasColumnName("region_data_point_id");
 
-        // Configure RecentPurchasePoco
         modelBuilder.Entity<RecentPurchasePoco>().ToTable("recent_purchase");
         modelBuilder.Entity<RecentPurchasePoco>().HasKey(t => t.Id);
         modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.Id).HasColumnName("id");
@@ -100,7 +93,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.DcDataPointId).HasColumnName("dc_data_point_id");
         modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.RegionDataPointId).HasColumnName("region_data_point_id");
 
-        // Configure RecipePoco
         modelBuilder.Entity<RecipePoco>().ToTable("recipe");
         modelBuilder.Entity<RecipePoco>().HasKey(t => t.Id);
         modelBuilder.Entity<RecipePoco>().Property(t => t.Id).HasColumnName("id");
@@ -111,7 +103,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanHq).HasColumnName("can_hq");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth).HasColumnName("can_quick_synth");
 
-        // Configure RecipeCostPoco
         modelBuilder.Entity<RecipeCostPoco>().ToTable("recipecost");
         modelBuilder.Entity<RecipeCostPoco>().HasKey(t => new { t.RecipeId, t.WorldId });
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
@@ -121,7 +112,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecentPurchaseCost).HasColumnName("recent_purchase_cost");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Updated).HasColumnName("updated");
 
-        // Configure RecipeProfitPoco
         modelBuilder.Entity<RecipeProfitPoco>().ToTable("recipeprofit");
         modelBuilder.Entity<RecipeProfitPoco>().HasKey(t => new { t.RecipeId, t.WorldId });
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
