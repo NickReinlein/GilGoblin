@@ -5,6 +5,8 @@ using System.Net;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.Logging;
@@ -170,7 +172,7 @@ public class PriceFetcherTests : FetcherTests
         return idList;
     }
 
-    protected static List<PricePoco> GetPocoList()
+    protected static List<PriceWebPoco> GetPocoList()
     {
         var priceGeoDataPointsPoco = new PriceDataPoco(
             new PriceDataDetailPoco(900),
@@ -188,13 +190,13 @@ public class PriceFetcherTests : FetcherTests
             new(worldId, 67554), new(worldId + 1, 67555)
         };
 
-        var poco1 = new PricePoco(
+        var poco1 = new PriceWebPoco(
             itemId1,
             anyQ,
             anyQ,
             worldUploadTimestampPocos
         );
-        var poco2 = new PricePoco(
+        var poco2 = new PriceWebPoco(
             itemId2,
             anyQ,
             anyQ,

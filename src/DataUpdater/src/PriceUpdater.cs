@@ -18,8 +18,8 @@ namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater(
     IServiceScopeFactory scopeFactory,
-    ILogger<DataUpdater<PricePoco, PricePoco>> logger)
-    : DataUpdater<PricePoco, PricePoco>(scopeFactory, logger)
+    ILogger<DataUpdater<PriceWebPoco, PriceWebPoco>> logger)
+    : DataUpdater<PriceWebPoco, PriceWebPoco>(scopeFactory, logger)
 {
     private List<int> AllItemIds { get; set; }
     private const int dataExpiryInHours = 48;
@@ -76,7 +76,7 @@ public class PriceUpdater(
         }
     }
 
-    protected override async Task ConvertAndSaveToDbAsync(List<PricePoco> webPocos)
+    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
         // TODO the conversion has to match the new data model that is TBD
         var updateList = webPocos
@@ -112,14 +112,14 @@ public class PriceUpdater(
         try
         {
             using var scope = ScopeFactory.CreateScope();
-            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
+            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PriceWebPoco>>();
             // var success = await saver.SaveAsync(updateList);
             // if (!success)
             //     throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PricePoco)}: {e.Message}");
+            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PriceWebPoco)}: {e.Message}");
         }
     }
 
@@ -144,7 +144,7 @@ public class PriceUpdater(
             await FillItemIdCache();
 
             using var scope = ScopeFactory.CreateScope();
-            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PriceWebPoco>>();
             var currentPrices = priceRepo.GetAll(world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
             var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
@@ -175,7 +175,7 @@ public class PriceUpdater(
         using var scope = ScopeFactory.CreateScope();
         var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
         var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-        AllItemIds = new List<int>();
+        AllItemIds = [];
 
         var recipes = recipeRepo.GetAll().ToList();
         Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");

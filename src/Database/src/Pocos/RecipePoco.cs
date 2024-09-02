@@ -1,34 +1,84 @@
+using System.Text.Json.Serialization;
+
 namespace GilGoblin.Database.Pocos;
 
 public class RecipePoco
 {
-    public int Id { get; set; }
-    public int CraftType { get; set; }
+    [JsonPropertyName("id")] public int Id { get; set; }
+
+    [JsonPropertyName("craft_type")] public int CraftType { get; set; }
+
+    [JsonPropertyName("recipe_level_table")]
     public int RecipeLevelTable { get; set; }
-    public int TargetItemId { get; set; }
-    public int ResultQuantity { get; set; }
-    public bool CanHq { get; set; }
-    public bool CanQuickSynth { get; set; }
+
+    [JsonPropertyName("target_item_id")] public int TargetItemId { get; set; }
+
+    [JsonPropertyName("result_quantity")] public int ResultQuantity { get; set; }
+
+    [JsonPropertyName("can_hq")] public bool CanHq { get; set; }
+
+    [JsonPropertyName("can_quick_synth")] public bool CanQuickSynth { get; set; }
+
+    [JsonPropertyName("item_ingredient0_target_id")]
     public int ItemIngredient0TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient0")]
     public int AmountIngredient0 { get; set; }
+
+    [JsonPropertyName("item_ingredient1_target_id")]
     public int ItemIngredient1TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient1")]
     public int AmountIngredient1 { get; set; }
+
+    [JsonPropertyName("item_ingredient2_target_id")]
     public int ItemIngredient2TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient2")]
     public int AmountIngredient2 { get; set; }
+
+    [JsonPropertyName("item_ingredient3_target_id")]
     public int ItemIngredient3TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient3")]
     public int AmountIngredient3 { get; set; }
+
+    [JsonPropertyName("item_ingredient4_target_id")]
     public int ItemIngredient4TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient4")]
     public int AmountIngredient4 { get; set; }
+
+    [JsonPropertyName("item_ingredient5_target_id")]
     public int ItemIngredient5TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient5")]
     public int AmountIngredient5 { get; set; }
+
+    [JsonPropertyName("item_ingredient6_target_id")]
     public int ItemIngredient6TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient6")]
     public int AmountIngredient6 { get; set; }
+
+    [JsonPropertyName("item_ingredient7_target_id")]
     public int ItemIngredient7TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient7")]
     public int AmountIngredient7 { get; set; }
+
+    [JsonPropertyName("item_ingredient8_target_id")]
     public int ItemIngredient8TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient8")]
     public int AmountIngredient8 { get; set; }
+
+    [JsonPropertyName("item_ingredient9_target_id")]
     public int ItemIngredient9TargetId { get; set; }
+
+    [JsonPropertyName("amount_ingredient9")]
     public int AmountIngredient9 { get; set; }
+
 
     public RecipePoco() { }
 

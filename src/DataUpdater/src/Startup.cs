@@ -49,16 +49,16 @@ public class Startup
             throw new Exception("Failed to get connection string");
 
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
-            // .AddScoped<IPriceFetcher, PriceFetcher>()
-            // .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
-            // .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
-            // .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
+            .AddScoped<IPriceFetcher, PriceFetcher>()
+            .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
+            .AddScoped<IDataUpdater<PriceWebPoco, PriceWebPoco>, PriceUpdater>()
+            .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
             .AddScoped<IWorldUpdater, WorldUpdater>();
 
-        // services.AddHostedService<WorldUpdater>();
-        // services.AddHostedService<PriceUpdater>();
+        services.AddHostedService<WorldUpdater>();
+        services.AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCrafting(IServiceCollection services)
