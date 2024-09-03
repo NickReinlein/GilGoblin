@@ -60,6 +60,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PriceDataPointsPoco>().Property(t => t.DcId).HasColumnName("dc_id");
         modelBuilder.Entity<PriceDataPointsPoco>().Property(t => t.RegionId).HasColumnName("region_id");
         modelBuilder.Entity<PriceDataPointsPoco>().Property(t => t.Timestamp).HasColumnName("timestamp");
+        modelBuilder.Entity<PriceDataPointsPoco>().HasIndex(p => p.ItemId).HasDatabaseName("idx_price_data_points_item_id");
 
         modelBuilder.Entity<DailySaleVelocityPoco>().ToTable("daily_sale_velocity");
         modelBuilder.Entity<DailySaleVelocityPoco>().HasKey(t => t.Id);
@@ -67,6 +68,8 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldQuantity).HasColumnName("world_quantity");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().HasIndex(d => d.Id)
+            .HasDatabaseName("idx_daily_sale_velocity_item_id");
 
         modelBuilder.Entity<MinListingPoco>().ToTable("min_listing");
         modelBuilder.Entity<MinListingPoco>().HasKey(t => t.Id);
@@ -75,6 +78,13 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<MinListingPoco>().Property(t => t.WorldDataPointId).HasColumnName("world_data_point_id");
         modelBuilder.Entity<MinListingPoco>().Property(t => t.DcDataPointId).HasColumnName("dc_data_point_id");
         modelBuilder.Entity<MinListingPoco>().Property(t => t.RegionDataPointId).HasColumnName("region_data_point_id");
+        modelBuilder.Entity<MinListingPoco>().HasIndex(m => m.ItemId).HasDatabaseName("idx_min_listing_item_id");
+
+
+        // Recent Purchase Indexes
+        modelBuilder.Entity<RecentPurchasePoco>()
+            .HasIndex(r => r.ItemId)
+            .HasDatabaseName("idx_recent_purchase_item_id");
 
         modelBuilder.Entity<AverageSalePricePoco>().ToTable("average_sale_price");
         modelBuilder.Entity<AverageSalePricePoco>().HasKey(t => t.Id);
@@ -85,6 +95,8 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.DcDataPointId).HasColumnName("dc_data_point_id");
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.RegionDataPointId)
             .HasColumnName("region_data_point_id");
+        modelBuilder.Entity<AverageSalePricePoco>().HasIndex(a => a.ItemId)
+            .HasDatabaseName("idx_average_sale_price_item_id");
 
         modelBuilder.Entity<RecentPurchasePoco>().ToTable("recent_purchase");
         modelBuilder.Entity<RecentPurchasePoco>().HasKey(t => t.Id);
@@ -97,7 +109,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
             .HasColumnName("region_data_point_id");
 
         modelBuilder.Entity<RecipePoco>().ToTable("recipe");
-
         modelBuilder.Entity<RecipePoco>().HasKey(t => t.Id);
         modelBuilder.Entity<RecipePoco>().Property(t => t.Id).HasColumnName("id");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CraftType).HasColumnName("craft_type");
@@ -107,36 +118,17 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanHq).HasColumnName("can_hq");
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth).HasColumnName("can_quick_synth");
 
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient0TargetId)
-            .HasColumnName("item_ingredient0_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient0).HasColumnName("amount_ingredient0");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient1TargetId)
-            .HasColumnName("item_ingredient1_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient1).HasColumnName("amount_ingredient1");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient2TargetId)
-            .HasColumnName("item_ingredient2_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient2).HasColumnName("amount_ingredient2");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient3TargetId)
-            .HasColumnName("item_ingredient3_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient3).HasColumnName("amount_ingredient3");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient4TargetId)
-            .HasColumnName("item_ingredient4_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient4).HasColumnName("amount_ingredient4");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient5TargetId)
-            .HasColumnName("item_ingredient5_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient5).HasColumnName("amount_ingredient5");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient6TargetId)
-            .HasColumnName("item_ingredient6_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient6).HasColumnName("amount_ingredient6");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient7TargetId)
-            .HasColumnName("item_ingredient7_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient7).HasColumnName("amount_ingredient7");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient8TargetId)
-            .HasColumnName("item_ingredient8_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient8).HasColumnName("amount_ingredient8");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.ItemIngredient9TargetId)
-            .HasColumnName("item_ingredient9_target_id");
-        modelBuilder.Entity<RecipePoco>().Property(t => t.AmountIngredient9).HasColumnName("amount_ingredient9");
+        // Ingredient Columns
+        for (var i = 0; i <= 9; i++)
+        {
+            modelBuilder.Entity<RecipePoco>()
+                .Property<int>($"ItemIngredient{i}TargetId")
+                .HasColumnName($"item_ingredient{i}_target_id");
+            
+            modelBuilder.Entity<RecipePoco>()
+                .Property<int>($"AmountIngredient{i}")
+                .HasColumnName($"amount_ingredient{i}");
+        }
 
         modelBuilder.Entity<RecipePoco>()
             .HasIndex(t => t.TargetItemId)
