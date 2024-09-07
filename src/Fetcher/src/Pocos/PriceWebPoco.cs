@@ -8,6 +8,6 @@ public record PriceWebPoco(
     QualityPriceDataPoco? Hq = null,
     QualityPriceDataPoco? Nq = null,
     List<WorldUploadTimestampPoco>? WorldUploadTimes = null)
-    : BasePricePoco(ItemId, Hq, Nq, WorldUploadTimes), IIdentifiable
+    : BasePricePoco(ItemId, Hq, Nq, WorldUploadTimes)
 {
 }
