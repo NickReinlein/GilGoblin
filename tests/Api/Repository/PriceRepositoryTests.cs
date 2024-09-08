@@ -54,7 +54,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.Get(WorldId, id);
+        var result = priceRepo.Get(WorldId, id, true);
 
         Assert.Multiple(() =>
         {
@@ -70,7 +70,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.Get(854, id);
+        var result = priceRepo.Get(854, id, true);
 
         Assert.That(result, Is.Null);
     }
@@ -83,7 +83,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.Get(WorldId, id);
+        var result = priceRepo.Get(WorldId, id, true);
 
         Assert.That(result, Is.Null);
     }
@@ -94,7 +94,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 }).ToList();
+        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 }, true).ToList();
 
         Assert.Multiple(() =>
         {
@@ -110,7 +110,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(6845454, new[] { RecipeId, RecipeId2 });
+        var result = priceRepo.GetMultiple(6845454, [RecipeId, RecipeId2], true);
 
         Assert.That(!result.Any());
     }
@@ -121,7 +121,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, 99 }).ToList();
+        var result = priceRepo.GetMultiple(WorldId, [RecipeId, 99], true).ToList();
 
         Assert.Multiple(() =>
         {
@@ -136,7 +136,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(WorldId, new[] { 654645646, 9953121 });
+        var result = priceRepo.GetMultiple(WorldId, [654645646, 9953121], true);
 
         Assert.That(!result.Any());
     }
@@ -147,7 +147,7 @@ public class PriceRepositoryTests : PriceDependentTests
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         var priceRepo = new PriceRepository(context, _cache);
 
-        var result = priceRepo.GetMultiple(WorldId, Array.Empty<int>());
+        var result = priceRepo.GetMultiple(WorldId, Array.Empty<int>(), true);
 
         Assert.That(!result.Any());
     }

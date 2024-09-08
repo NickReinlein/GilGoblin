@@ -19,30 +19,29 @@ public class PriceRepository : IPriceRepository<PricePoco>
         // _cache = cache;
     }
 
-    public PricePoco? Get(int worldId, int id)
+    public PricePoco? Get(int worldId, int id, bool isHq)
     {
         // var cached = _cache.Get((worldId, id));
         // if (cached is not null)
-            // return cached;
+        // return cached;
 
         try
         {
-            var prices = _dbContext.PriceDataPoints
-                .Where(p => p.ItemId == id)
+            var prices = _dbContext.Price
+                .Where(p =>
+                    p.ItemId == id &&
+                    p.WorldId == worldId &&
+                    p.IsHq == isHq)
                 .ToList();
-            
+
             if (!prices.Any())
                 throw new Exception($"No prices found for item id {id}");
-            
-            var world = prices.FirstOrDefault(p => p.WorldId == worldId);
-            if (world is null)
-            {
-                throw new Exception($"No world found for item id {id} and world id {worldId}");
-            }
-            
-                // _cache.Add((worldId, id), world
 
-            return new PricePoco(1);
+            var price = prices.FirstOrDefault(p => p.WorldId == worldId);
+
+            // _cache.Add((worldId, id), world
+
+            return price;
         }
         catch
         {
@@ -50,11 +49,11 @@ public class PriceRepository : IPriceRepository<PricePoco>
         }
     }
 
-    public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids) => [];
-        // _dbContext.Price.Where(p => p.WorldId == worldId && ids.Any(i => i == p.ItemId));
+    public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq) => [];
+    // _dbContext.Price.Where(p => p.WorldId == worldId && ids.Any(i => i == p.ItemId));
 
-        public IEnumerable<PricePoco> GetAll(int worldId) => [];
-        // _dbContext.Price.Where(p => p.WorldId == worldId);
+    public IEnumerable<PricePoco> GetAll(int worldId) => [];
+    // _dbContext.Price.Where(p => p.WorldId == worldId);
 
     public Task FillCache()
     {

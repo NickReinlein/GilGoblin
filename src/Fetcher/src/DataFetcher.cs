@@ -9,7 +9,7 @@ namespace GilGoblin.Fetcher;
 
 public interface IDataFetcher<T> where T : class, IIdentifiable
 {
-    Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null);
+    Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null, CancellationToken ct = default);
 }
 
 public abstract class DataFetcher<T> : IDataFetcher<T> where T : class, IIdentifiable
@@ -28,5 +28,8 @@ public abstract class DataFetcher<T> : IDataFetcher<T> where T : class, IIdentif
         Client = client ?? new HttpClient();
     }
 
-    public abstract Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null);
+    public abstract Task<List<T>> FetchByIdsAsync(
+        IEnumerable<int> ids,
+        int? world = null,
+        CancellationToken ct = default);
 }

@@ -49,45 +49,46 @@ public class InMemoryTestDb
         context.Recipe.RemoveRange(context.Recipe);
         context.RecipeCost.RemoveRange(context.RecipeCost);
         context.RecipeProfit.RemoveRange(context.RecipeProfit);
-        context.PriceDataPoints.RemoveRange(context.PriceDataPoints);
+        context.Price.RemoveRange(context.Price);
+        context.WorldUploadTime.RemoveRange(context.WorldUploadTime);
         context.SaveChanges();
     }
 
     private void CreateAllEntries()
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
-        context.PriceDataPoints.AddRange(
-            new PriceDataPointsPoco
-            {
-                Id = 1,
-                WorldId = 34,
-                ItemId = 11,
-                Price = 657.23m,
-                Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
-                DcId = 57,
-                RegionId = null
-            },
-            new PriceDataPointsPoco
-            {
-                Id = 2,
-                WorldId = 34,
-                ItemId = 12,
-                Price = 268.76m,
-                Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
-                DcId = 57,
-                RegionId = null
-            },
-            new PriceDataPointsPoco
-            {
-                Id = 3,
-                WorldId = 34,
-                ItemId = 13,
-                Price = 6545.11m,
-                Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
-                DcId = 57,
-                RegionId = null
-            }
-            );
+        // context.PriceDataPoint.AddRange(
+        //     new PriceDataPointsPoco
+        //     {
+        //         Id = 1,
+        //         WorldId = 34,
+        //         ItemId = 11,
+        //         Price = 657.23m,
+        //         Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
+        //         DcId = 57,
+        //         RegionId = null
+        //     },
+        //     new PriceDataPointsPoco
+        //     {
+        //         Id = 2,
+        //         WorldId = 34,
+        //         ItemId = 12,
+        //         Price = 268.76m,
+        //         Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
+        //         DcId = 57,
+        //         RegionId = null
+        //     },
+        //     new PriceDataPointsPoco
+        //     {
+        //         Id = 3,
+        //         WorldId = 34,
+        //         ItemId = 13,
+        //         Price = 6545.11m,
+        //         Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
+        //         DcId = 57,
+        //         RegionId = null
+        //     }
+        //     );
 
         // context.RecipeCost.AddRange(
         //     new RecipeCostPoco

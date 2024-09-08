@@ -18,8 +18,8 @@ namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater(
     IServiceScopeFactory scopeFactory,
-    ILogger<DataUpdater<PriceWebPoco, PriceWebPoco>> logger)
-    : DataUpdater<PriceWebPoco, PriceWebPoco>(scopeFactory, logger)
+    ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
+    : DataUpdater<PricePoco, PriceWebPoco>(scopeFactory, logger)
 {
     private List<int> AllItemIds { get; set; }
     private const int dataExpiryInHours = 48;
@@ -52,7 +52,7 @@ public class PriceUpdater(
             {
                 try
                 {
-                    var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
+                    var fetched = await fetcher.FetchByIdsAsync(batch, worldId, ct);
                     await ConvertAndSaveToDbAsync(fetched);
                 }
                 catch (Exception e)
@@ -78,33 +78,7 @@ public class PriceUpdater(
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
-        // TODO the conversion has to match the new data model that is TBD
-        var updateList = webPocos
-            .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
-                         w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
-                         w.Nq?.AverageSalePrice?.World?.Price > 0))
-            .Select(x => new
-            {
-                x.ItemId,
-                x.WorldUploadTimes,
-                MaxPriceHq = Math.Max(
-                    Math.Max(x.Hq?.AverageSalePrice?.Dc?.Price ?? 0,
-                        x.Hq?.AverageSalePrice?.Region?.Price ?? 0),
-                    x.Hq?.AverageSalePrice?.World?.Price ?? 0),
-                MaxPriceNq = Math.Max(
-                    Math.Max(x.Nq?.AverageSalePrice?.Dc?.Price ?? 0,
-                        x.Nq?.AverageSalePrice?.Region?.Price ?? 0),
-                    x.Nq?.AverageSalePrice?.World?.Price ?? 0
-                ),
-            })
-            .ToList();
-            // .Select(x =>
-            //     x.WorldUploadTimes?
-            //         .Select(y => 
-            //             new PricePoco { ItemId = x.ItemId, Hq = x.}))
-            // .ToList()
-            // .SelectMany(x => x)
-            // .ToList();
+        var updateList = ConvertWebToDbFormat(webPocos);
 
         if (!updateList.Any())
             return;
@@ -113,14 +87,32 @@ public class PriceUpdater(
         {
             using var scope = ScopeFactory.CreateScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PriceWebPoco>>();
-            // var success = await saver.SaveAsync(updateList);
-            // if (!success)
-            //     throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
+            var success = await saver.SaveAsync(updateList);
+            if (!success)
+                throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
         }
         catch (Exception e)
         {
             Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PriceWebPoco)}: {e.Message}");
         }
+    }
+
+    private static List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos)
+    {
+        // TODO the conversion has to match the new data model that is TBD
+        var updateList = webPocos
+            .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
+                         w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
+                         w.Nq?.AverageSalePrice?.World?.Price > 0))
+            .Select(x => new PricePoco[]
+                {
+                    new() { ItemId = x.ItemId, Updated = DateTimeOffset.UtcNow, IsHq = true, 
+                        MinListing = new ( x.Hq.MinListing.
+                    new() { ItemId = x.ItemId, Updated = DateTimeOffset.UtcNow, IsHq = false }
+                }
+            )
+            .ToList();
+        return updateList;
     }
 
     protected override List<WorldPoco> GetWorlds()

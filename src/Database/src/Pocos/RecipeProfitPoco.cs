@@ -1,8 +1,14 @@
 namespace GilGoblin.Database.Pocos;
 
-public class RecipeProfitPoco : BaseRecipeValue
+using System;
+
+public record RecipeProfitPoco
 {
-    public int? AverageSalePriceProfit { get; set; }
-    public int? MinListingPriceProfit { get; set; }
-    public int? RecentPurchaseProfit { get; set; }
+    public int RecipeId { get; set; }
+    public int WorldId { get; set; }
+    public bool IsHq { get; set; }
+    public decimal? AverageSaleProfit { get; set; }
+    public decimal? MinListingProfit { get; set; }
+    public decimal? RecentPurchaseProfit { get; set; }
+    public DateTime Updated { get; set; }
 }

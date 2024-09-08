@@ -174,7 +174,7 @@ public class PriceFetcherTests : FetcherTests
 
     protected static List<PriceWebPoco> GetPocoList()
     {
-        var priceGeoDataPointsPoco = new PriceDataPoco(
+        var priceGeoDataPointsPoco = new PriceDataPointWebPoco(
             new PriceDataDetailPoco(900),
             new PriceDataDetailPoco(800, worldId),
             new PriceDataDetailPoco(700, regionId)
@@ -183,9 +183,9 @@ public class PriceFetcherTests : FetcherTests
             priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,
-            new DailySaleVelocityPoco(50, 200f, 300f, 400f)
+            new DailySaleVelocityWebPoco(50, 200f, 300f, 400f)
         );
-        var worldUploadTimestampPocos = new List<WorldUploadTimestampPoco>
+        var worldUploadTimestampPocos = new List<WorldUploadTimeWebPoco>
         {
             new(worldId, 67554), new(worldId + 1, 67555)
         };

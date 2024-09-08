@@ -2,24 +2,24 @@ using System.Collections.Generic;
 
 namespace GilGoblin.Database.Pocos;
 
-public record BasePricePoco(
+public record PriceWebPoco(
     int ItemId,
     QualityPriceDataPoco? Hq = null,
     QualityPriceDataPoco? Nq = null,
-    List<WorldUploadTimestampPoco>? WorldUploadTimes = null)
+    List<WorldUploadTimeWebPoco>? WorldUploadTimes = null)
     : IIdentifiable
 {
     public int GetId() => ItemId;
 }
 
 public record QualityPriceDataPoco(
-    PriceDataPoco? MinListing,
-    PriceDataPoco? AverageSalePrice,
-    PriceDataPoco? RecentPurchase,
-    DailySaleVelocityPoco? DailySaleVelocity
+    PriceDataPointWebPoco? MinListing,
+    PriceDataPointWebPoco? AverageSalePrice,
+    PriceDataPointWebPoco? RecentPurchase,
+    DailySaleVelocityWebPoco? DailySaleVelocity
 );
 
-public record PriceDataPoco(
+public record PriceDataPointWebPoco(
     PriceDataDetailPoco? World,
     PriceDataDetailPoco? Dc,
     PriceDataDetailPoco? Region
@@ -31,11 +31,11 @@ public record PriceDataDetailPoco(
     long? Timestamp = null
 );
 
-public record DailySaleVelocityPoco(
+public record DailySaleVelocityWebPoco(
     int Id,
     float? WorldQuantity,
     float? DcQuantity,
     float? RegionQuantity
 );
 
-public record WorldUploadTimestampPoco(int WorldId, long Timestamp);
+public record WorldUploadTimeWebPoco(int WorldId, long Timestamp);
