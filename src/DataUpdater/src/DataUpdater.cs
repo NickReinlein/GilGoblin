@@ -17,7 +17,7 @@ public interface IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    Task FetchAsync(CancellationToken ct, int? worldId = null);
+    Task FetchAsync(int? worldId = null, CancellationToken ct = default);
 }
 
 public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
@@ -59,12 +59,12 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         var worlds = GetWorlds();
         var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
         Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-        await FetchAsync(ct, worlds.FirstOrDefault()?.GetId());
+        await FetchAsync(worlds.FirstOrDefault()?.GetId(), ct);
     }
 
     protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
 
-    public async Task FetchAsync(CancellationToken ct, int? worldId)
+    public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
     {
         var idList = await GetIdsToUpdateAsync(worldId);
         if (!idList.Any())
@@ -95,7 +95,7 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await fetcher.FetchByIdsAsync(ct, idList, worldId);
+            var updated = await fetcher.FetchByIdsAsync(idList, worldId, ct);
             timer.Stop();
             var callTime = timer.Elapsed.TotalMilliseconds;
 

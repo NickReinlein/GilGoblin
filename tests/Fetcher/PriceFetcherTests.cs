@@ -20,7 +20,7 @@ public class PriceFetcherTests : FetcherTests
 {
     private PriceFetcher _fetcher;
     private ILogger<PriceFetcher> _logger;
-    
+
     private const int worldId = 34;
     private const int regionId = 56;
     private const int itemId1 = 4211;
@@ -41,7 +41,7 @@ public class PriceFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
+        var result = await _fetcher.FetchByIdsAsync(idList, worldId);
 
         Assert.Multiple(() =>
         {
@@ -65,7 +65,7 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
+        var result = await _fetcher.FetchByIdsAsync(idList, worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -73,7 +73,7 @@ public class PriceFetcherTests : FetcherTests
     [Test]
     public async Task GivenWeCallFetchMultiplePricesAsync_WhenNoIDsAreProvided_ThenWeReturnAnEmptyList()
     {
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>(), worldId);
+        var result = await _fetcher.FetchByIdsAsync(Array.Empty<int>(), worldId);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
@@ -91,7 +91,7 @@ public class PriceFetcherTests : FetcherTests
                 JsonSerializer.Serialize(GetPocoList())
             );
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
+        var result = await _fetcher.FetchByIdsAsync(idList, worldId);
 
         Assert.That(result, Is.Empty);
     }
@@ -104,7 +104,7 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList, worldId);
+        var result = await _fetcher.FetchByIdsAsync(idList, worldId);
 
         Assert.That(result, Is.Empty);
     }

@@ -51,7 +51,7 @@ public class Startup
         services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
             .AddScoped<IPriceFetcher, PriceFetcher>()
             .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
-            .AddScoped<IDataUpdater<PriceWebPoco, PriceWebPoco>, PriceUpdater>()
+            .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
             .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()

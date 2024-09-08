@@ -21,7 +21,7 @@ public abstract class SingleDataFetcher<T> : DataFetcher<T>, ISingleDataFetcher<
     {
     }
 
-    public override async Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null)
+    public override async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null, CancellationToken ct = default)
     {
         var result = new List<T>();
         foreach (var id in ids.ToList())

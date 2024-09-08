@@ -9,7 +9,6 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher;
-using GilGoblin.Fetcher.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,7 +31,7 @@ public class PriceUpdater(
         foreach (var world in worlds)
         {
             Logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
-            fetchTasks.Add(FetchAsync(ct, world.Id));
+            fetchTasks.Add(FetchAsync(world.Id, ct));
         }
 
         await Task.WhenAll(fetchTasks);
@@ -86,7 +85,7 @@ public class PriceUpdater(
         try
         {
             using var scope = ScopeFactory.CreateScope();
-            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PriceWebPoco>>();
+            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
             var success = await saver.SaveAsync(updateList);
             if (!success)
                 throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
@@ -100,19 +99,35 @@ public class PriceUpdater(
     private static List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos)
     {
         // TODO the conversion has to match the new data model that is TBD
-        var updateList = webPocos
+        return webPocos
             .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
                          w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
                          w.Nq?.AverageSalePrice?.World?.Price > 0))
-            .Select(x => new PricePoco[]
+            .Select(x => new List<PricePoco>
+            {
+                new()
                 {
-                    new() { ItemId = x.ItemId, Updated = DateTimeOffset.UtcNow, IsHq = true, 
-                        MinListing = new ( x.Hq.MinListing.
-                    new() { ItemId = x.ItemId, Updated = DateTimeOffset.UtcNow, IsHq = false }
+                    ItemId = x.ItemId,
+                    Updated = DateTimeOffset.UtcNow,
+                    IsHq = true,
+                    // AverageSalePrice = x.Hq?.AverageSalePrice,
+                    // MinListing = x.Hq?.MinListing?.Id,
+                    // RecentPurchase = x.Hq?.RecentPurchase?.Id,
+                    // Populate other properties as needed
+                },
+                new PricePoco
+                {
+                    ItemId = x.ItemId,
+                    Updated = DateTimeOffset.UtcNow,
+                    IsHq = false,
+                    // AverageSalePriceId = x.Nq?.AverageSalePrice?.Id,
+                    // MinListingId = x.Nq?.MinListing?.Id,
+                    // RecentPurchaseId = x.Nq?.RecentPurchase?.Id,
+                    // Populate other properties as needed
                 }
-            )
+            })
+            .SelectMany(p => p)
             .ToList();
-        return updateList;
     }
 
     protected override List<WorldPoco> GetWorlds()

@@ -35,7 +35,7 @@ public class ItemFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.Multiple(() =>
         {
@@ -56,7 +56,7 @@ public class ItemFetcherTests : FetcherTests
             .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -65,7 +65,7 @@ public class ItemFetcherTests : FetcherTests
     public async Task GivenFetchByIdsAsync_WhenNoIdsAreProvided_ThenWeReturnAnEmptyList()
     {
         var result
-            = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>());
+            = await _fetcher.FetchByIdsAsync(Array.Empty<int>());
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
@@ -83,7 +83,7 @@ public class ItemFetcherTests : FetcherTests
                 JsonSerializer.Serialize("{}")
             );
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -96,7 +96,7 @@ public class ItemFetcherTests : FetcherTests
             .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -106,7 +106,7 @@ public class ItemFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         foreach (var id in idList)
         {

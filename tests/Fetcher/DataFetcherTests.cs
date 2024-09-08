@@ -35,7 +35,7 @@ public class DataFetcherTests : FetcherTests
         SetupValidResponse(appleId1);
         var idList = new List<int> { appleId1 };
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.That(result, Has.Count.EqualTo(1));
@@ -50,7 +50,7 @@ public class DataFetcherTests : FetcherTests
         SetupValidResponse(appleId1, appleId2);
         var idList = new List<int> { appleId1, appleId2 };
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.That(result, Has.Count.EqualTo(2));

@@ -25,7 +25,7 @@ public class BulkDataFetcher<T, U>(
     public int GetEntriesPerPage() => _entriesPerPage;
     public void SetEntriesPerPage(int count) => _entriesPerPage = count;
 
-    public override async Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null)
+    public override async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null, CancellationToken ct = default)
     {
         var idList = ids.ToList();
         if (!idList.Any())

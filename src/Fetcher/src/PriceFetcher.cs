@@ -1,4 +1,5 @@
 using System.Net.Http;
+using GilGoblin.Database.Pocos;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.Logging;
 
