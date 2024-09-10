@@ -98,36 +98,15 @@ public class PriceUpdater(
 
     private static List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos)
     {
+        return [];
         // TODO the conversion has to match the new data model that is TBD
-        return webPocos
-            .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
-                         w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
-                         w.Nq?.AverageSalePrice?.World?.Price > 0))
-            .Select(x => new List<PricePoco>
-            {
-                new()
-                {
-                    ItemId = x.ItemId,
-                    Updated = DateTimeOffset.UtcNow,
-                    IsHq = true,
-                    // AverageSalePrice = x.Hq?.AverageSalePrice,
-                    // MinListing = x.Hq?.MinListing?.Id,
-                    // RecentPurchase = x.Hq?.RecentPurchase?.Id,
-                    // Populate other properties as needed
-                },
-                new PricePoco
-                {
-                    ItemId = x.ItemId,
-                    Updated = DateTimeOffset.UtcNow,
-                    IsHq = false,
-                    // AverageSalePriceId = x.Nq?.AverageSalePrice?.Id,
-                    // MinListingId = x.Nq?.MinListing?.Id,
-                    // RecentPurchaseId = x.Nq?.RecentPurchase?.Id,
-                    // Populate other properties as needed
-                }
-            })
-            .SelectMany(p => p)
-            .ToList();
+        // return webPocos
+        //     .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
+        //                  w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
+        //                  w.Nq?.AverageSalePrice?.World?.Price > 0))
+        //     .Select(x => new PricePoco(x))
+        //     .SelectMany(p => p)
+        //     .ToList();
     }
 
     protected override List<WorldPoco> GetWorlds()

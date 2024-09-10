@@ -1,16 +1,12 @@
 namespace GilGoblin.Database.Pocos;
 
-public record PriceDataPointDbPoco(
-    PriceDataDetailPoco? World,
-    PriceDataDetailPoco? Dc,
-    PriceDataDetailPoco? Region,
+public record PriceDataPointPoco(
     int Id,
     int ItemId,
     bool IsHq,
     int? WorldDataPointId,
     int? DcDataPointId,
     int? RegionDataPointId)
-    : PriceDataPointWebPoco(World, Dc, Region)
 {
     public int Id { get; set; } = Id;
     public int ItemId { get; set; } = ItemId;

@@ -1,14 +1,11 @@
 namespace GilGoblin.Database.Pocos;
 
 public record RecentPurchasePoco(
-    PriceDataDetailPoco? World,
-    PriceDataDetailPoco? Dc,
-    PriceDataDetailPoco? Region,
     int Id,
     int ItemId,
     bool IsHq,
     int? WorldDataPointId,
     int? DcDataPointId,
     int? RegionDataPointId)
-    : PriceDataPointDbPoco(World, Dc, Region, Id, ItemId, IsHq, WorldDataPointId,
+    : PriceDataPointPoco(Id, ItemId, IsHq, WorldDataPointId,
         DcDataPointId, RegionDataPointId);
