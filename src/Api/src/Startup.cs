@@ -58,7 +58,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     public static IServiceCollection AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
-        // services.AddScoped<IPriceCache, PriceCache>();
+        services.AddScoped<IPriceCache, PriceCache>();
         services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();

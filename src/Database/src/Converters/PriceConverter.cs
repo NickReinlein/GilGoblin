@@ -3,12 +3,33 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Converters;
 
-public class PriceConverter(GilGoblinDbContext dbContext)
+public interface IPriceConverter
 {
-    public async Task<PricePoco> ConvertToPricePocoAsync(PriceWebPoco webPoco, int worldId, bool isHq)
+    Task<(PricePoco?, PricePoco?)> ConvertAsync(PriceWebPoco webPoco, int worldId);
+}
+
+public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter> logger) : IPriceConverter
+{
+    public async Task<(PricePoco?,PricePoco?)> ConvertAsync(PriceWebPoco webPoco, int worldId)
+    {
+        try
+        {
+            var hqPrice = await GetPricePocoForGivenQuality(webPoco, worldId, true);
+            var nqPrice = await GetPricePocoForGivenQuality(webPoco, worldId, false);
+            return (hqPrice, nqPrice);
+        }
+        catch (Exception e)
+        {
+            logger.LogWarning(e, "Failed to convert price data");
+            return (null, null);
+        }
+    }
+
+    private async Task<PricePoco> GetPricePocoForGivenQuality(PriceWebPoco webPoco, int worldId, bool isHq)
     {
         var pricePoco = new PricePoco
         {
@@ -22,6 +43,10 @@ public class PriceConverter(GilGoblinDbContext dbContext)
         else if (!isHq && webPoco.Nq != null)
         {
             await MapQualityDataAsync(webPoco.Nq, pricePoco);
+        }
+        else
+        {
+            throw new Exception("Failed to map price data: No Hq or Nq data found");
         }
 
         return pricePoco;
@@ -47,7 +72,7 @@ public class PriceConverter(GilGoblinDbContext dbContext)
 
         if (qualityData.DailySaleVelocity != null)
         {
-            var dailySaleVelocity = new DailySaleVelocityDbPoco(
+            var dailySaleVelocity = new DailySaleVelocityPoco(
                 0,
                 pricePoco.ItemId,
                 pricePoco.IsHq,
@@ -61,10 +86,10 @@ public class PriceConverter(GilGoblinDbContext dbContext)
         }
     }
 
-    private async Task<int> GetOrCreatePriceDataAsync(PriceDataPointWebPoco dataPoint, string priceDataType)
+    private async Task<int?> GetOrCreatePriceDataAsync(PriceDataPointWebPoco dataPoint, string priceDataType)
     {
         if (!dataPoint.World.HasValidPrice() && !dataPoint.Dc.HasValidPrice() && !dataPoint.Region.HasValidPrice())
-            throw new ArgumentException("No valid price data found");
+            return null;
 
         var priceDataList = new List<PriceDataDbPoco>
         {
@@ -87,7 +112,6 @@ public class PriceConverter(GilGoblinDbContext dbContext)
                 dataPoint.Region?.Timestamp ?? DateTimeOffset.Now.ToUnixTimeSeconds(),
                 dataPoint.Region?.WorldId ?? 0),
         };
-
 
         await dbContext.PriceData.AddRangeAsync(priceDataList);
         await dbContext.SaveChangesAsync();

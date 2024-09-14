@@ -1,6 +1,6 @@
 namespace GilGoblin.Database.Pocos;
 
-public record DailySaleVelocityDbPoco(
+public record DailySaleVelocityPoco(
     int Id,
     int ItemId,
     bool IsHq,

@@ -57,86 +57,11 @@ public class InMemoryTestDb
     private void CreateAllEntries()
     {
         using var context = new TestGilGoblinDbContext(_options, _configuration);
-        // context.PriceDataPoint.AddRange(
-        //     new PriceDataPointsPoco
-        //     {
-        //         Id = 1,
-        //         WorldId = 34,
-        //         ItemId = 11,
-        //         Price = 657.23m,
-        //         Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
-        //         DcId = 57,
-        //         RegionId = null
-        //     },
-        //     new PriceDataPointsPoco
-        //     {
-        //         Id = 2,
-        //         WorldId = 34,
-        //         ItemId = 12,
-        //         Price = 268.76m,
-        //         Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
-        //         DcId = 57,
-        //         RegionId = null
-        //     },
-        //     new PriceDataPointsPoco
-        //     {
-        //         Id = 3,
-        //         WorldId = 34,
-        //         ItemId = 13,
-        //         Price = 6545.11m,
-        //         Timestamp = DateTimeOffset.UtcNow.TotalOffsetMinutes,
-        //         DcId = 57,
-        //         RegionId = null
-        //     }
-        //     );
-
-        // context.RecipeCost.AddRange(
-        //     new RecipeCostPoco
-        //     {
-        //         WorldId = 22,
-        //         RecipeId = 11,
-        //         RecentPurchaseCost = 107,
-        //         AverageSalePriceCost = 97,
-        //         MinListingPriceCost = 87,
-        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
-        //     },
-        //     new RecipeCostPoco
-        //     {
-        //         WorldId = 22,
-        //         RecipeId = 11,
-        //         RecentPurchaseCost = 107,
-        //         AverageSalePriceCost = 97,
-        //         MinListingPriceCost = 87,
-        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
-        //     },
-        //     new RecipeCostPoco
-        //     {
-        //         WorldId = 22,
-        //         RecipeId = 13,
-        //         RecentPurchaseCost = 297,
-        //         AverageSalePriceCost = 277,
-        //         MinListingPriceCost = 257,
-        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
-        //     },
-        //     new RecipeCostPoco
-        //     {
-        //         WorldId = 33,
-        //         RecipeId = 88,
-        //         RecentPurchaseCost = 224,
-        //         AverageSalePriceCost = 204,
-        //         MinListingPriceCost = 184,
-        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
-        //     },
-        //     new RecipeCostPoco
-        //     {
-        //         WorldId = 44,
-        //         RecipeId = 99,
-        //         RecentPurchaseCost = 351,
-        //         AverageSalePriceCost = 331,
-        //         MinListingPriceCost = 311,
-        //         Updated = DateTimeOffset.UtcNow.AddHours(-1)
-        //     }
-        // );
+        // var pricePoint = new PriceDataPointPoco(1, 11, true);
+        context.Price.AddRange(
+            new PricePoco { Id = 1, WorldId = 34, IsHq = true, Updated = DateTimeOffset.Now },
+            new PricePoco { Id = 2, WorldId = 34, IsHq = false, Updated = DateTimeOffset.Now }
+        );
         context.Recipe.AddRange(
             new RecipePoco { Id = 11, TargetItemId = 5682, ItemIngredient0TargetId = 774, AmountIngredient0 = 3 },
             new RecipePoco { Id = 12, TargetItemId = 9984, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },

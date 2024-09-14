@@ -16,7 +16,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
     public DbSet<MinListingPoco> MinListing { get; set; }
     public DbSet<AverageSalePricePoco> AverageSalePrice { get; set; }
     public DbSet<RecentPurchasePoco> RecentPurchase { get; set; }
-    public DbSet<DailySaleVelocityDbPoco> DailySaleVelocity { get; set; }
+    public DbSet<DailySaleVelocityPoco> DailySaleVelocity { get; set; }
     public DbSet<WorldUploadTimeDbPoco> WorldUploadTime { get; set; }
     public DbSet<PricePoco> Price { get; set; }
     public DbSet<PriceDataDbPoco> PriceData { get; set; }
@@ -81,13 +81,13 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PriceDataDbPoco>().Property(t => t.Timestamp).HasColumnName("timestamp");
         modelBuilder.Entity<PriceDataDbPoco>().Property(t => t.WorldId).HasColumnName("world_id");
 
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().ToTable("daily_sale_velocity");
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().HasKey(t => t.Id);
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().Property(t => t.ItemId).HasColumnName("item_id");
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().Property(t => t.WorldQuantity).HasColumnName("world_quantity");
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity");
-        modelBuilder.Entity<DailySaleVelocityDbPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().ToTable("daily_sale_velocity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().HasKey(t => t.Id);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.ItemId).HasColumnName("item_id");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldQuantity).HasColumnName("world_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity");
 
         modelBuilder.Entity<WorldUploadTimeDbPoco>().ToTable("world_upload_times");
         modelBuilder.Entity<WorldUploadTimeDbPoco>().HasKey(t => t.Id);
@@ -153,10 +153,10 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>().HasIndex(t => t.ItemId).HasDatabaseName("idx_price_item_id");
         modelBuilder.Entity<PricePoco>().HasIndex(t => new { t.ItemId, t.WorldId }).HasDatabaseName("idx_price_item_id_and_world_id");
         modelBuilder.Entity<PricePoco>().HasIndex(t => new { t.ItemId, t.WorldId, t.IsHq }).HasDatabaseName("idx_price_item_id_and_world_id_and_is_hq");
-        modelBuilder.Entity<PricePoco>().HasOne<MinListingPoco>().WithMany().HasForeignKey(t => t.MinListingId).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<PricePoco>().HasOne<RecentPurchasePoco>().WithMany().HasForeignKey(t => t.RecentPurchaseId).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<PricePoco>().HasOne<AverageSalePricePoco>().WithMany().HasForeignKey(t => t.AverageSalePriceId).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<PricePoco>().HasOne<DailySaleVelocityDbPoco>().WithMany().HasForeignKey(t => t.DailySaleVelocityId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<PricePoco>().HasOne(p => p.MinListing).WithMany().HasForeignKey(t => t.MinListingId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<PricePoco>().HasOne(p => p.RecentPurchase).WithMany().HasForeignKey(t => t.RecentPurchaseId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<PricePoco>().HasOne(p => p.AverageSalePrice).WithMany().HasForeignKey(t => t.AverageSalePriceId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<PricePoco>().HasOne(p => p.DailySaleVelocity).WithMany().HasForeignKey(t => t.DailySaleVelocityId).OnDelete(DeleteBehavior.Cascade);
 
         base.OnModelCreating(modelBuilder);
     }

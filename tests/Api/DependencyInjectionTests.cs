@@ -32,7 +32,7 @@ public class DependencyInjectionTests
     [TestCase(typeof(IRecipeRepository))]
     // [TestCase(typeof(IPriceRepository<PricePoco>))]
     // [TestCase(typeof(ICraftRepository))]
-    // [TestCase(typeof(IPriceCache))]
+    [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]
     // [TestCase(typeof(IRecipeCostCache))]
     [TestCase(typeof(IItemCache))]

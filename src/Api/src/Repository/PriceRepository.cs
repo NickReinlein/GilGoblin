@@ -11,19 +11,19 @@ namespace GilGoblin.Api.Repository;
 public class PriceRepository : IPriceRepository<PricePoco>
 {
     private readonly GilGoblinDbContext _dbContext;
-    // private readonly IPriceCache _cache;
+    private readonly IPriceCache _cache;
 
     public PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache)
     {
         _dbContext = dbContext;
-        // _cache = cache;
+        _cache = cache;
     }
 
     public PricePoco? Get(int worldId, int id, bool isHq)
     {
-        // var cached = _cache.Get((worldId, id));
-        // if (cached is not null)
-        // return cached;
+        var cached = _cache.Get((worldId, id));
+        if (cached is not null)
+            return cached;
 
         try
         {
@@ -49,16 +49,22 @@ public class PriceRepository : IPriceRepository<PricePoco>
         }
     }
 
-    public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq) => [];
-    // _dbContext.Price.Where(p => p.WorldId == worldId && ids.Any(i => i == p.ItemId));
+    public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq) =>
+        _dbContext.Price.Where(p =>
+            p.WorldId == worldId
+            && ids.Any(i => i == p.ItemId)
+            && p.IsHq == isHq);
 
-    public IEnumerable<PricePoco> GetAll(int worldId) => [];
-    // _dbContext.Price.Where(p => p.WorldId == worldId);
+    public IEnumerable<PricePoco> GetAll(int worldId)
+    {
+        var allPrices = _dbContext.Price.Where(p => p.WorldId == worldId);
+        return allPrices;
+    }
 
     public Task FillCache()
     {
-        // var items = _dbContext?.Price?.ToList();
-        // items?.ForEach(price => _cache.Add((price.WorldId, price.ItemId), price));
+        var items = _dbContext?.Price?.ToList();
+        items?.ForEach(price => _cache.Add((price.WorldId, price.ItemId), price));
         return Task.CompletedTask;
     }
 }

@@ -1,15 +1,15 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace GilGoblin.Database.Pocos;
 
 public class RecipePoco
 {
-    [JsonPropertyName("id")] public int Id { get; set; }
+    [JsonPropertyName("id")] [Column("id")] public int Id { get; set; }
 
     [JsonPropertyName("craft_type")] public int CraftType { get; set; }
 
-    [JsonPropertyName("recipe_level_table")]
-    public int RecipeLevelTable { get; set; }
+    [JsonPropertyName("recipe_level_table")] public int RecipeLevelTable { get; set; }
 
     [JsonPropertyName("target_item_id")] public int TargetItemId { get; set; }
 

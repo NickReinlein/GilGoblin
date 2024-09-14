@@ -3,6 +3,7 @@ using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
+using GilGoblin.Database.Converters;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
@@ -53,6 +54,7 @@ public class Startup
             .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
             .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
             .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
+            .AddScoped<IPriceConverter, PriceConverter>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
             .AddScoped<IWorldUpdater, WorldUpdater>();

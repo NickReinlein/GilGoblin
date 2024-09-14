@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
+using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Database.Savers;
@@ -17,10 +18,11 @@ namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater(
     IServiceScopeFactory scopeFactory,
-    ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
+    ILogger<PriceUpdater> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(scopeFactory, logger)
 {
-    private List<int> AllItemIds { get; set; }
+    private List<int> AllItemIds { get; set; } = [];
+    private DateTimeOffset LastUpdated { get; set; }
     private const int dataExpiryInHours = 48;
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
@@ -77,34 +79,46 @@ public class PriceUpdater(
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
-        var updateList = ConvertWebToDbFormat(webPocos);
-
-        if (!updateList.Any())
-            return;
-
         try
         {
             using var scope = ScopeFactory.CreateScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
+            var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
+
+            var updateList = await ConvertWebToDbFormat(webPocos, converter);
+            if (!updateList.Any())
+                return;
+
             var success = await saver.SaveAsync(updateList);
             if (!success)
                 throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PriceWebPoco)}: {e.Message}");
+            Logger.LogError(e, "Failed to save {Count} entries for {TypeString}", webPocos.Count, nameof(PriceWebPoco));
         }
     }
 
-    private static List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos)
+    private async Task<List<PricePoco>> ConvertWebToDbFormat(List<PriceWebPoco> webPocos, IPriceConverter converter)
     {
-        return webPocos
-            .SelectMany(x => new List<PricePoco>
+        var updateList = new List<PricePoco>();
+        foreach (var webPoco in webPocos)
+        {
+            try
             {
-                new() { ItemId = x.ItemId, Updated = DateTimeOffset.Now, IsHq = true },
-                new() { ItemId = x.ItemId, Updated = DateTimeOffset.Now, IsHq = false }
-            })
-            .ToList();
+                var (hq, nq) = await converter.ConvertAsync(webPoco, webPoco.GetWorldId());
+                if (hq is not null)
+                    updateList.Add(hq);
+                if (nq is not null)
+                    updateList.Add(nq);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
+            }
+        }
+
+        return updateList;
     }
 
     protected override List<WorldPoco> GetWorlds()
@@ -154,33 +168,44 @@ public class PriceUpdater(
 
     private async Task FillItemIdCache()
     {
-        using var scope = ScopeFactory.CreateScope();
-        var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-        AllItemIds = [];
+        if (AllItemIds.Any() && (DateTimeOffset.UtcNow - LastUpdated).TotalHours < 48)
+            return;
 
-        var recipes = recipeRepo.GetAll().ToList();
-        Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
-        var ingredientItemIds =
-            recipes
-                .SelectMany(r =>
-                    r.GetActiveIngredients()
-                        .Select(i => i.ItemId))
-                .Distinct()
-                .ToList();
+        try
+        {
+            using var scope = ScopeFactory.CreateScope();
+            var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
+            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+            AllItemIds.Clear();
+            LastUpdated = DateTimeOffset.UtcNow;
 
-        var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
-        Logger.LogDebug(
-            $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
-        if (!marketableItemIdList.Any())
-            throw new WebException("Failed to fetch marketable item ids");
+            var recipes = recipeRepo.GetAll().ToList();
+            Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
+            var ingredientItemIds =
+                recipes
+                    .SelectMany(r =>
+                        r.GetActiveIngredients()
+                            .Select(i => i.ItemId))
+                    .Distinct()
+                    .ToList();
 
-        AllItemIds =
-            marketableItemIdList
-                .Concat(ingredientItemIds)
-                .Distinct()
-                .ToList();
-        Logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
+            var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
+            Logger.LogDebug(
+                $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
+            if (!marketableItemIdList.Any())
+                throw new WebException("Failed to fetch marketable item ids");
+
+            AllItemIds =
+                marketableItemIdList
+                    .Concat(ingredientItemIds)
+                    .Distinct()
+                    .ToList();
+            Logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Failed to fill item Id cache");
+        }
     }
 
     private async Task AwaitDelay(CancellationToken ct)
