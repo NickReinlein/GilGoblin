@@ -98,15 +98,13 @@ public class PriceUpdater(
 
     private static List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos)
     {
-        return [];
-        // TODO the conversion has to match the new data model that is TBD
-        // return webPocos
-        //     .Where(w => (w.Hq?.AverageSalePrice?.Dc?.Price > 0 ||
-        //                  w.Nq?.AverageSalePrice?.Region?.Price > 0 ||
-        //                  w.Nq?.AverageSalePrice?.World?.Price > 0))
-        //     .Select(x => new PricePoco(x))
-        //     .SelectMany(p => p)
-        //     .ToList();
+        return webPocos
+            .SelectMany(x => new List<PricePoco>
+            {
+                new() { ItemId = x.ItemId, Updated = DateTimeOffset.Now, IsHq = true },
+                new() { ItemId = x.ItemId, Updated = DateTimeOffset.Now, IsHq = false }
+            })
+            .ToList();
     }
 
     protected override List<WorldPoco> GetWorlds()
@@ -130,17 +128,15 @@ public class PriceUpdater(
             await FillItemIdCache();
 
             using var scope = ScopeFactory.CreateScope();
-            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PriceWebPoco>>();
+            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var currentPrices = priceRepo.GetAll(world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
             var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
 
             var outdatedPrices = currentPrices.Where(p =>
             {
-                var priceAge = p.WorldUploadTimes?
-                    .FirstOrDefault(x => x.WorldId == worldId)?.Timestamp ?? 0;
-                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(priceAge).UtcDateTime;
-                var ageInHours = (DateTimeOffset.UtcNow - timestamp).TotalHours;
+                var priceAge = p.Updated;
+                var ageInHours = (DateTimeOffset.UtcNow - priceAge).TotalHours;
                 return ageInHours > dataExpiryInHours;
             }).ToList();
 

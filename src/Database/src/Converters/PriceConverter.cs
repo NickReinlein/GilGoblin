@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
+
+namespace GilGoblin.Database.Converters;
+
+public class PriceConverter(GilGoblinDbContext dbContext)
+{
+    public async Task<PricePoco> ConvertToPricePocoAsync(PriceWebPoco webPoco, int worldId, bool isHq)
+    {
+        var pricePoco = new PricePoco
+        {
+            ItemId = webPoco.ItemId, WorldId = worldId, IsHq = isHq, Updated = DateTimeOffset.UtcNow
+        };
+
+        if (isHq && webPoco.Hq != null)
+        {
+            await MapQualityDataAsync(webPoco.Hq, pricePoco);
+        }
+        else if (!isHq && webPoco.Nq != null)
+        {
+            await MapQualityDataAsync(webPoco.Nq, pricePoco);
+        }
+
+        return pricePoco;
+    }
+
+    private async Task MapQualityDataAsync(QualityPriceDataPoco qualityData, PricePoco pricePoco)
+    {
+        if (qualityData.MinListing != null)
+        {
+            pricePoco.MinListingId = await GetOrCreatePriceDataAsync(qualityData.MinListing, "minListing");
+        }
+
+        if (qualityData.RecentPurchase != null)
+        {
+            pricePoco.RecentPurchaseId = await GetOrCreatePriceDataAsync(qualityData.RecentPurchase, "recentPurchase");
+        }
+
+        if (qualityData.AverageSalePrice != null)
+        {
+            pricePoco.AverageSalePriceId =
+                await GetOrCreatePriceDataAsync(qualityData.AverageSalePrice, "averageSalePrice");
+        }
+
+        if (qualityData.DailySaleVelocity != null)
+        {
+            var dailySaleVelocity = new DailySaleVelocityDbPoco(
+                0,
+                pricePoco.ItemId,
+                pricePoco.IsHq,
+                qualityData.DailySaleVelocity.WorldQuantity,
+                qualityData.DailySaleVelocity.DcQuantity,
+                qualityData.DailySaleVelocity.RegionQuantity);
+
+            await dbContext.DailySaleVelocity.AddAsync(dailySaleVelocity);
+            await dbContext.SaveChangesAsync();
+            pricePoco.DailySaleVelocityId = dailySaleVelocity.Id;
+        }
+    }
+
+    private async Task<int> GetOrCreatePriceDataAsync(PriceDataPointWebPoco dataPoint, string priceDataType)
+    {
+        if (!dataPoint.World.HasValidPrice() && !dataPoint.Dc.HasValidPrice() && !dataPoint.Region.HasValidPrice())
+            throw new ArgumentException("No valid price data found");
+
+        var priceDataList = new List<PriceDataDbPoco>
+        {
+            new(
+                0,
+                priceDataType,
+                dataPoint.World?.Price ?? 0f,
+                dataPoint.World?.Timestamp ?? DateTimeOffset.Now.ToUnixTimeSeconds(),
+                dataPoint.World?.WorldId ?? 0),
+            new(
+                0,
+                priceDataType,
+                dataPoint.Dc?.Price ?? 0f,
+                dataPoint.Dc?.Timestamp ?? DateTimeOffset.Now.ToUnixTimeSeconds(),
+                dataPoint.Dc?.WorldId ?? 0),
+            new(
+                0,
+                priceDataType,
+                dataPoint.Region?.Price ?? 0f,
+                dataPoint.Region?.Timestamp ?? DateTimeOffset.Now.ToUnixTimeSeconds(),
+                dataPoint.Region?.WorldId ?? 0),
+        };
+
+
+        await dbContext.PriceData.AddRangeAsync(priceDataList);
+        await dbContext.SaveChangesAsync();
+        return priceDataList.Count;
+    }
+}

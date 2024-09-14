@@ -71,7 +71,7 @@ public class Startup
     public static void AddGoblinCaches(IServiceCollection services)
     {
         services.AddScoped<IItemCache, ItemCache>();
-        // services.AddScoped<IPriceCache, PriceCache>();
+        services.AddScoped<IPriceCache, PriceCache>();
         services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
@@ -80,7 +80,7 @@ public class Startup
         // services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
 
         services.AddScoped<IRepositoryCache, ItemRepository>();
-        // services.AddScoped<IRepositoryCache, PriceRepository>();
+        services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
@@ -92,7 +92,7 @@ public class Startup
 
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
-        // services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();

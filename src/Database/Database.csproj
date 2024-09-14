@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="src\Pocos\Converters\" />
     <None Include="README.md" Pack="true" PackagePath="/"/>
     <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
     <None Include="resources/icon.png" Pack="true" PackagePath="/"/>

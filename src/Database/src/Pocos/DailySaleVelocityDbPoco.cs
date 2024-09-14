@@ -2,17 +2,9 @@ namespace GilGoblin.Database.Pocos;
 
 public record DailySaleVelocityDbPoco(
     int Id,
+    int ItemId,
+    bool IsHq,
     float? WorldQuantity,
     float? DcQuantity,
-    float? RegionQuantity,
-    int id,
-    int itemId,
-    bool isHq,
-    decimal? worldQuantity,
-    decimal? dcQuantity,
-    decimal? regionQuantity)
-    : DailySaleVelocityWebPoco(Id, WorldQuantity, DcQuantity, RegionQuantity)
-{
-    public int ItemId { get; set; } = itemId;
-    public bool IsHq { get; set; } = isHq;
-}
+    float? RegionQuantity)
+    : DailySaleVelocityWebPoco(Id, WorldQuantity, DcQuantity, RegionQuantity);

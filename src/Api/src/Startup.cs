@@ -19,7 +19,7 @@ namespace GilGoblin.Api;
 
 public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
-    public IConfiguration _configuration = configuration;
+    public readonly IConfiguration _configuration = configuration;
     public IWebHostEnvironment _environment = environment;
 
     public void ConfigureServices(IServiceCollection services)
@@ -77,7 +77,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
             .AddControllers()
             .AddApplicationPart(typeof(ItemController).Assembly)
             // .AddApplicationPart(typeof(CraftController).Assembly)
-            // .AddApplicationPart(typeof(PriceController).Assembly)
+            .AddApplicationPart(typeof(PriceController).Assembly)
             .AddApplicationPart(typeof(RecipeController).Assembly);
         return services;
     }
@@ -98,7 +98,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
-        // services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
@@ -172,7 +172,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
                 throw new Exception("Failed to connect to the database");
 
             var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();
-            // var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+            var priceRepository = serviceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var recipeRepository = serviceProvider.GetRequiredService<IRecipeRepository>();
             var recipeCostRepository = serviceProvider.GetRequiredService<IRecipeCostRepository>();
             var recipeProfitRepository = serviceProvider.GetRequiredService<IRecipeProfitRepository>();
