@@ -55,6 +55,9 @@ public class Startup
             .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
             .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
             .AddScoped<IPriceConverter, PriceConverter>()
+            .AddScoped<IPriceDataDetailConverter, PriceDataDetailConverter>()
+            .AddScoped<IPriceDataPointConverter, PriceDataPointConverter>()
+            .AddScoped<IQualityPriceDataConverter, QualityPriceDataConverter>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
             .AddScoped<IWorldUpdater, WorldUpdater>();

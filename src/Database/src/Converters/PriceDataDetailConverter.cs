@@ -28,7 +28,7 @@ public class PriceDataDetailConverter(GilGoblinDbContext dbContext, ILogger<Pric
         }
         catch (Exception e)
         {
-            logger.LogWarning(e, "Failed to convert price data");
+            logger.LogDebug(e, "Failed to convert price data");
             return null;
         }
     }

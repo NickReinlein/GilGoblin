@@ -179,7 +179,7 @@ public class PriceFetcherTests : FetcherTests
             new PriceDataDetailPoco(800, worldId),
             new PriceDataDetailPoco(700, regionId)
         );
-        var anyQ = new QualityPriceDataPoco(
+        var anyQ = new QualityPriceDataWebPoco(
             priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,

@@ -54,6 +54,15 @@ public class PriceUpdater(
                 try
                 {
                     var fetched = await fetcher.FetchByIdsAsync(batch, worldId, ct);
+                    if (!fetched.Any())
+                    {
+                        Logger.LogDebug(
+                            "Fetched {Count} items for world id {WorldId} but received no price data in response",
+                            batch.Count,
+                            worldId);
+                        continue;
+                    }
+
                     await ConvertAndSaveToDbAsync(fetched);
                 }
                 catch (Exception e)
@@ -85,7 +94,7 @@ public class PriceUpdater(
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
             var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
-            var updateList = ConvertWebToDbFormat(webPocos, converter);
+            var updateList = await ConvertWebToDbFormatAsync(webPocos, converter);
             var filteredList = updateList
                 .Where(u => u.AverageSalePriceId > 0 || u.RecentPurchaseId > 0 || u.MinListingId > 0).ToList();
             if (!filteredList.Any())
@@ -101,7 +110,8 @@ public class PriceUpdater(
         }
     }
 
-    private List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos, IPriceConverter converter)
+    private async Task<List<PricePoco>> ConvertWebToDbFormatAsync(List<PriceWebPoco> webPocos,
+        IPriceConverter converter)
     {
         var updateList = new List<PricePoco>();
         foreach (var webPoco in webPocos)
@@ -115,7 +125,7 @@ public class PriceUpdater(
                     continue;
                 }
 
-                var (hq, nq) = converter.ConvertAsync(webPoco, worldId);
+                var (hq, nq) = await converter.ConvertAsync(webPoco, worldId);
                 if (hq is not null)
                     updateList.Add(hq);
                 if (nq is not null)
@@ -123,7 +133,7 @@ public class PriceUpdater(
             }
             catch (Exception e)
             {
-                logger.LogError(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
+                logger.LogDebug(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
             }
         }
 
@@ -213,7 +223,8 @@ public class PriceUpdater(
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Failed to fill item Id cache");
+            Logger.LogWarning(e, "Failed to fill item Id cache");
+            Logger.LogWarning(e, "Failed to fill item Id cache");
         }
     }
 

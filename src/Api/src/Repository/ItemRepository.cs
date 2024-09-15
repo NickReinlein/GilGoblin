@@ -29,7 +29,7 @@ public class ItemRepository(GilGoblinDbContext dbContext, IItemCache cache, ILog
         }
         catch (Exception e)
         {
-            logger.LogError("Failed to get item {ItemId}: {Message}", itemId, e.Message);
+            logger.LogWarning("Failed to get item {ItemId}: {Message}", itemId, e.Message);
             return null;
         }
     }

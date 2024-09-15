@@ -77,7 +77,7 @@ public class RecipeGrocer : IRecipeGrocer
             }
             catch (Exception e)
             {
-                _logger.LogWarning($"Failed to break down ingredients for recipe {recipe.Id}: {e.Message}");
+                _logger.LogDebug($"Failed to break down ingredients for recipe {recipe.Id}: {e.Message}");
             }
         }
 

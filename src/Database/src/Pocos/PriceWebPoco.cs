@@ -4,15 +4,15 @@ namespace GilGoblin.Database.Pocos;
 
 public record PriceWebPoco(
     int ItemId,
-    QualityPriceDataPoco? Hq = null,
-    QualityPriceDataPoco? Nq = null,
+    QualityPriceDataWebPoco? Hq = null,
+    QualityPriceDataWebPoco? Nq = null,
     List<WorldUploadTimeWebPoco>? WorldUploadTimes = null)
     : IIdentifiable
 {
     public int GetId() => ItemId;
 }
 
-public record QualityPriceDataPoco(
+public record QualityPriceDataWebPoco(
     PriceDataPointWebPoco? MinListing,
     PriceDataPointWebPoco? AverageSalePrice,
     PriceDataPointWebPoco? RecentPurchase,
