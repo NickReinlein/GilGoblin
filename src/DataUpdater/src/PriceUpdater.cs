@@ -115,7 +115,7 @@ public class PriceUpdater(
                     continue;
                 }
 
-                var (hq, nq) = converter.Convert(webPoco, worldId);
+                var (hq, nq) = converter.ConvertAsync(webPoco, worldId);
                 if (hq is not null)
                     updateList.Add(hq);
                 if (nq is not null)
