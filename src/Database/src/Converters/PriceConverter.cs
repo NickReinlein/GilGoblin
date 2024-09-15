@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
@@ -16,6 +17,9 @@ public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter
 {
     public async Task<(PricePoco?,PricePoco?)> ConvertAsync(PriceWebPoco webPoco, int worldId)
     {
+        if (worldId == 0)
+            return (null, null);
+        
         try
         {
             var hqPrice = await GetPricePocoForGivenQuality(webPoco, worldId, true);
@@ -29,7 +33,7 @@ public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter
         }
     }
 
-    private async Task<PricePoco> GetPricePocoForGivenQuality(PriceWebPoco webPoco, int worldId, bool isHq)
+    private async Task<PricePoco?> GetPricePocoForGivenQuality(PriceWebPoco webPoco, int worldId, bool isHq)
     {
         var pricePoco = new PricePoco
         {
@@ -46,7 +50,7 @@ public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter
         }
         else
         {
-            throw new Exception("Failed to map price data: No Hq or Nq data found");
+            return null;
         }
 
         return pricePoco;
@@ -70,20 +74,20 @@ public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter
                 await GetOrCreatePriceDataAsync(qualityData.AverageSalePrice, "averageSalePrice");
         }
 
-        if (qualityData.DailySaleVelocity != null)
-        {
-            var dailySaleVelocity = new DailySaleVelocityPoco(
-                0,
-                pricePoco.ItemId,
-                pricePoco.IsHq,
-                qualityData.DailySaleVelocity.WorldQuantity,
-                qualityData.DailySaleVelocity.DcQuantity,
-                qualityData.DailySaleVelocity.RegionQuantity);
-
-            await dbContext.DailySaleVelocity.AddAsync(dailySaleVelocity);
-            await dbContext.SaveChangesAsync();
-            pricePoco.DailySaleVelocityId = dailySaleVelocity.Id;
-        }
+        // if (qualityData.DailySaleVelocity != null)
+        // {
+        //     var dailySaleVelocity = new DailySaleVelocityPoco(
+        //         0,
+        //         pricePoco.ItemId,
+        //         pricePoco.IsHq,
+        //         qualityData.DailySaleVelocity.WorldQuantity,
+        //         qualityData.DailySaleVelocity.DcQuantity,
+        //         qualityData.DailySaleVelocity.RegionQuantity);
+        //
+        //     await dbContext.DailySaleVelocity.AddAsync(dailySaleVelocity);
+        //     await dbContext.SaveChangesAsync();
+        //     pricePoco.DailySaleVelocityId = dailySaleVelocity.Id;
+        // }
     }
 
     private async Task<int?> GetOrCreatePriceDataAsync(PriceDataPointWebPoco dataPoint, string priceDataType)
@@ -91,7 +95,7 @@ public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter
         if (!dataPoint.World.HasValidPrice() && !dataPoint.Dc.HasValidPrice() && !dataPoint.Region.HasValidPrice())
             return null;
 
-        var priceDataList = new List<PriceDataDbPoco>
+        var priceDataList = new List<PriceDataPoco>
         {
             new(
                 0,
@@ -115,6 +119,6 @@ public class PriceConverter(GilGoblinDbContext dbContext, ILogger<PriceConverter
 
         await dbContext.PriceData.AddRangeAsync(priceDataList);
         await dbContext.SaveChangesAsync();
-        return priceDataList.Count;
+        return priceDataList.FirstOrDefault(p => p.Price > 0)?.Id;
     }
 }

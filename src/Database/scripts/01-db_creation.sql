@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS price_data
     price_type VARCHAR(20)    NOT NULL,
     price      NUMERIC(12, 2) NOT NULL,
     timestamp  BIGINT,
-    world_id   INTEGER REFERENCES world (id) ON DELETE CASCADE
+    world_id   INTEGER
 );
 
 CREATE TABLE world_upload_times
@@ -146,8 +146,8 @@ CREATE TABLE price
 (
     id                     SERIAL PRIMARY KEY,
     item_id                INTEGER REFERENCES item (id) ON DELETE CASCADE,
-    world_id               INTEGER                  NOT NULL REFERENCES world (id) ON DELETE CASCADE,
-    is_hq                  BOOLEAN                  NOT NULL,
+    world_id               INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
+    is_hq                  BOOLEAN NOT NULL,
     min_listing_id         INTEGER REFERENCES min_listing (id) ON DELETE CASCADE,
     recent_purchase_id     INTEGER REFERENCES recent_purchase (id) ON DELETE CASCADE,
     average_sale_price_id  INTEGER REFERENCES average_sale_price (id) ON DELETE CASCADE,

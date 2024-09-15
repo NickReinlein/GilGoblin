@@ -8,26 +8,17 @@ using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Api.Repository;
 
-public class PriceRepository : IPriceRepository<PricePoco>
+public class PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache) : IPriceRepository<PricePoco>
 {
-    private readonly GilGoblinDbContext _dbContext;
-    private readonly IPriceCache _cache;
-
-    public PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache)
-    {
-        _dbContext = dbContext;
-        _cache = cache;
-    }
-
     public PricePoco? Get(int worldId, int id, bool isHq)
     {
-        var cached = _cache.Get((worldId, id));
+        var cached = cache.Get((worldId, id));
         if (cached is not null)
             return cached;
 
         try
         {
-            var prices = _dbContext.Price
+            var prices = dbContext.Price
                 .Where(p =>
                     p.ItemId == id &&
                     p.WorldId == worldId &&
@@ -39,7 +30,8 @@ public class PriceRepository : IPriceRepository<PricePoco>
 
             var price = prices.FirstOrDefault(p => p.WorldId == worldId);
 
-            // _cache.Add((worldId, id), world
+            if (price is not null)
+                cache.Add((worldId, id), price);
 
             return price;
         }
@@ -50,21 +42,21 @@ public class PriceRepository : IPriceRepository<PricePoco>
     }
 
     public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq) =>
-        _dbContext.Price.Where(p =>
+        dbContext.Price.Where(p =>
             p.WorldId == worldId
             && ids.Any(i => i == p.ItemId)
             && p.IsHq == isHq);
 
     public IEnumerable<PricePoco> GetAll(int worldId)
     {
-        var allPrices = _dbContext.Price.Where(p => p.WorldId == worldId);
+        var allPrices = dbContext.Price.Where(p => p.WorldId == worldId);
         return allPrices;
     }
 
     public Task FillCache()
     {
-        var items = _dbContext?.Price?.ToList();
-        items?.ForEach(price => _cache.Add((price.WorldId, price.ItemId), price));
+        var items = dbContext?.Price?.ToList();
+        items?.ForEach(price => cache.Add((price.WorldId, price.ItemId), price));
         return Task.CompletedTask;
     }
 }

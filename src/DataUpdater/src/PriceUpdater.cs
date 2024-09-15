@@ -106,7 +106,14 @@ public class PriceUpdater(
         {
             try
             {
-                var (hq, nq) = await converter.ConvertAsync(webPoco, webPoco.GetWorldId());
+                var worldId = webPoco.GetWorldId();
+                if (worldId == 0)
+                {
+                    logger.LogDebug("Skipping price for {ItemId} with no world id", webPoco.ItemId);
+                    continue;
+                }
+
+                var (hq, nq) = await converter.ConvertAsync(webPoco, worldId);
                 if (hq is not null)
                     updateList.Add(hq);
                 if (nq is not null)
