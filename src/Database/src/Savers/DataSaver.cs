@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
@@ -10,21 +11,16 @@ namespace GilGoblin.Database.Savers;
 
 public interface IDataSaver<in T> where T : class
 {
-    Task<bool> SaveAsync(IEnumerable<T> updates);
+    Task<bool> SaveAsync(IEnumerable<T> updates, CancellationToken ct = default);
 }
 
-public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
+public class DataSaver<T>(GilGoblinDbContext context, ILogger<DataSaver<T>> logger) : IDataSaver<T>
+    where T : class, IIdentifiable
 {
-    protected readonly GilGoblinDbContext Context;
-    private readonly ILogger<DataSaver<T>> _logger;
+    protected readonly GilGoblinDbContext Context = context ?? throw new ArgumentNullException(nameof(context));
+    private readonly ILogger<DataSaver<T>> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public DataSaver(GilGoblinDbContext context, ILogger<DataSaver<T>> logger)
-    {
-        Context = context ?? throw new ArgumentNullException(nameof(context));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    public async Task<bool> SaveAsync(IEnumerable<T> entities)
+    public async Task<bool> SaveAsync(IEnumerable<T> entities, CancellationToken ct = default)
     {
         var entityList = entities.ToList();
         if (!entityList.Any())
@@ -38,7 +34,7 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
 
             UpdateContext(filteredUpdates);
 
-            var savedCount = await Context.SaveChangesAsync();
+            var savedCount = await Context.SaveChangesAsync(ct);
             _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
             var failedCount = entityList.Count - savedCount;
@@ -51,17 +47,17 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError(ex, $"Failed to update due to database error: {ex.Message}");
+            _logger.LogError(ex, "Failed to update due to database error");
             return false;
         }
         catch (ArgumentException ex)
         {
-            _logger.LogError(ex, $"Failed to update due to invalid data: {ex.Message}");
+            _logger.LogError(ex, "Failed to update due to invalid data");
             return false;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to update due to unknown error: {ex.Message}");
+            _logger.LogError(ex, "Failed to update due to unknown error");
             return false;
         }
     }

@@ -85,21 +85,23 @@ public class PriceUpdater(
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
             var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
-            var updateList = await ConvertWebToDbFormat(webPocos, converter);
-            if (!updateList.Any())
+            var updateList = ConvertWebToDbFormat(webPocos, converter);
+            var filteredList = updateList
+                .Where(u => u.AverageSalePriceId > 0 || u.RecentPurchaseId > 0 || u.MinListingId > 0).ToList();
+            if (!filteredList.Any())
                 return;
 
-            var success = await saver.SaveAsync(updateList);
+            var success = await saver.SaveAsync(filteredList);
             if (!success)
                 throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Failed to save {Count} entries for {TypeString}", webPocos.Count, nameof(PriceWebPoco));
+            Logger.LogError(e, "Failed to save {Count} entries for {TypeString}", webPocos.Count, nameof(PricePoco));
         }
     }
 
-    private async Task<List<PricePoco>> ConvertWebToDbFormat(List<PriceWebPoco> webPocos, IPriceConverter converter)
+    private List<PricePoco> ConvertWebToDbFormat(List<PriceWebPoco> webPocos, IPriceConverter converter)
     {
         var updateList = new List<PricePoco>();
         foreach (var webPoco in webPocos)
@@ -113,7 +115,7 @@ public class PriceUpdater(
                     continue;
                 }
 
-                var (hq, nq) = await converter.ConvertAsync(webPoco, worldId);
+                var (hq, nq) = converter.Convert(webPoco, worldId);
                 if (hq is not null)
                     updateList.Add(hq);
                 if (nq is not null)

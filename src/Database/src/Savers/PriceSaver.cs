@@ -26,12 +26,6 @@ public class PriceSaver(GilGoblinDbContext context, ILogger<DataSaver<PricePoco>
 
     protected override List<PricePoco> FilterInvalidEntities(IEnumerable<PricePoco> entities)
     {
-        return entities
-            // .Where(t =>
-            // t is { ItemId: > 0, WorldUploadTimes.Count: > 0 } &&
-            // t.WorldUploadTimes.Any(w => w is { WorldId: > 0, Timestamp: > 0 }) &&
-            // t.Hq.HasValidPrice() &&
-            // t.Nq.HasValidPrice())
-            .ToList();
+        return entities.Where(t => t is { ItemId: > 0, WorldId : > 0 }).ToList();
     }
 }
