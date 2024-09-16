@@ -63,7 +63,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipePoco>().Property(t => t.CanQuickSynth).HasColumnName("can_quick_synth");
 
         // Ingredient Properties
-        for (int i = 0; i <= 9; i++)
+        for (var i = 0; i <= 9; i++)
         {
             modelBuilder.Entity<RecipePoco>()
                 .Property<int>($"ItemIngredient{i}TargetId")
@@ -100,7 +100,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
 
         modelBuilder.Entity<MinListingPoco>().ToTable("min_listing");
         modelBuilder.Entity<MinListingPoco>().HasKey(t => t.Id);
-        modelBuilder.Entity<MinListingPoco>().Property(t => t.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<MinListingPoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<MinListingPoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<MinListingPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
         modelBuilder.Entity<MinListingPoco>().Property(t => t.WorldDataPointId).HasColumnName("world_data_point_id");
@@ -109,7 +109,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
 
         modelBuilder.Entity<AverageSalePricePoco>().ToTable("average_sale_price");
         modelBuilder.Entity<AverageSalePricePoco>().HasKey(t => t.Id);
-        modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.IsHq).HasColumnName("is_hq");
         modelBuilder.Entity<AverageSalePricePoco>().Property(t => t.WorldDataPointId)
@@ -120,7 +120,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
 
         modelBuilder.Entity<RecentPurchasePoco>().ToTable("recent_purchase");
         modelBuilder.Entity<RecentPurchasePoco>().HasKey(t => t.Id);
-        modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.IsHq).HasColumnName("is_hq");
         modelBuilder.Entity<RecentPurchasePoco>().Property(t => t.WorldDataPointId)
@@ -152,7 +152,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
 
         modelBuilder.Entity<PricePoco>().ToTable("price");
         modelBuilder.Entity<PricePoco>().HasKey(t => t.Id);
-        modelBuilder.Entity<PricePoco>().Property(t => t.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<PricePoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<PricePoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.IsHq).HasColumnName("is_hq");
@@ -169,26 +169,28 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>().HasIndex(t => new { t.ItemId, t.WorldId, t.IsHq })
             .HasDatabaseName("idx_price_item_id_and_world_id_and_is_hq");
         modelBuilder.Entity<PricePoco>()
+            .HasOne(p => p.AverageSalePrice)
+            .WithOne()
+            .HasForeignKey<AverageSalePricePoco>(p => p.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.MinListing)
             .WithOne()
-            .HasForeignKey<PricePoco>(t => t.MinListingId)
+            .HasForeignKey<MinListingPoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.RecentPurchase)
             .WithOne()
-            .HasForeignKey<PricePoco>(t => t.RecentPurchaseId)
+            .HasForeignKey<RecentPurchasePoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<PricePoco>()
-            .HasOne(p => p.AverageSalePrice)
-            .WithOne()
-            .HasForeignKey<PricePoco>(t => t.AverageSalePriceId)
-            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.DailySaleVelocity)
             .WithOne()
-            .HasForeignKey<PricePoco>(t => t.DailySaleVelocityId)
+            .HasForeignKey<DailySaleVelocityPoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
-
 
         base.OnModelCreating(modelBuilder);
     }

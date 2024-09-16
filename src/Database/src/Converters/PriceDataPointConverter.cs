@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
@@ -12,7 +11,7 @@ public interface IPriceDataPointConverter
     Task<PriceDataPointPoco?> ConvertAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq);
 }
 
-public class PriceDataPointConverter(GilGoblinDbContext dbContext, IPriceDataDetailConverter detailConverter, ILogger<PriceDataPointConverter> logger)
+public class PriceDataPointConverter(IPriceDataDetailConverter detailConverter, ILogger<PriceDataPointConverter> logger)
     : IPriceDataPointConverter
 {
     public async Task<PriceDataPointPoco?> ConvertAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq)
@@ -25,7 +24,8 @@ public class PriceDataPointConverter(GilGoblinDbContext dbContext, IPriceDataDet
             var dc = await detailConverter.ConvertAsync(dataPoint.Dc, "Dc");
             var region = await detailConverter.ConvertAsync(dataPoint.Region, "Region");
             var world = await detailConverter.ConvertAsync(dataPoint.World, "World");
-            return new PriceDataPointPoco(0, itemId, isHq, dc?.Id, region?.Id, world?.Id);
+            var priceDataPoint = new PriceDataPointPoco(0, itemId, isHq, dc?.Id, region?.Id, world?.Id);
+            return priceDataPoint;
         }
         catch (Exception e)
         {

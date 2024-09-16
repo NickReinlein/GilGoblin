@@ -1,6 +1,5 @@
 using System;
 using GilGoblin.Database;
-using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

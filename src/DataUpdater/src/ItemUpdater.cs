@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher.Pocos;

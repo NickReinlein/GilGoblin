@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using NUnit.Framework;
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using GilGoblin.Tests.InMemoryTest;

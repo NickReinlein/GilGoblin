@@ -49,7 +49,8 @@ public class Startup
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
+        services
+            .AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
             .AddScoped<IPriceFetcher, PriceFetcher>()
             .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
             .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()

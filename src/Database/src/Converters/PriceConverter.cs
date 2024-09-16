@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.Extensions.Logging;
@@ -39,35 +38,24 @@ public class PriceConverter(
                 throw new ArgumentException("Invalid world id", nameof(worldId));
 
             var itemId = webPoco.ItemId;
-            var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, true);
-            var hq =  new PricePoco
-            {
-                ItemId = itemId,
-                WorldId = worldId,
-                IsHq = true,
-                Updated = DateTimeOffset.Now,
-                AverageSalePrice = new AverageSalePricePoco(
-                    hqPrices?.AverageSalePrice?.Id ?? 0,
-                    itemId,
-                    true,
-                    hqPrices?.AverageSalePrice?.WorldDataPointId,
-                    hqPrices?.AverageSalePrice?.DcDataPointId,
-                    hqPrices?.AverageSalePrice?.RegionDataPointId)
-            };
             var nqPrices = await qualityConverter.ConvertAsync(webPoco.Nq, itemId, false);
-            var nq =  new PricePoco
-            {
-                ItemId = itemId,
-                WorldId = worldId,
-                IsHq = false,
-                AverageSalePrice = new AverageSalePricePoco(
-                    nqPrices?.AverageSalePrice?.Id ?? 0,
-                    itemId,
-                    false,
-                    nqPrices?.AverageSalePrice?.WorldDataPointId,
-                    nqPrices?.AverageSalePrice?.DcDataPointId,
-                    nqPrices?.AverageSalePrice?.RegionDataPointId)
-            };
+            var nq = GetPricePocoFromQualityPrices(worldId, nqPrices, itemId);
+
+            var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, false);
+            var hq = GetPricePocoFromQualityPrices(worldId, hqPrices, itemId);
+
+
+            if (hq is null && nq is null)
+                return (null, null);
+
+            if (hq is not null)
+                dbContext.Price.Add(hq);
+
+            if (nq is not null)
+                dbContext.Price.Add(nq);
+
+            await dbContext.SaveChangesAsync();
+
             return (hq, nq);
         }
         catch (Exception e)
@@ -75,5 +63,22 @@ public class PriceConverter(
             logger.LogDebug(e, "Failed to convert price data");
             return (null, null);
         }
+    }
+
+    private static PricePoco? GetPricePocoFromQualityPrices(int worldId, QualityPriceDataPoco? nqPrices, int itemId)
+    {
+        return nqPrices is null
+            ? null
+            : new PricePoco
+            {
+                ItemId = itemId,
+                WorldId = worldId,
+                IsHq = false,
+                Updated = DateTimeOffset.Now,
+                AverageSalePriceId = nqPrices?.AverageSalePrice?.Id ?? 0,
+                MinListingId = nqPrices?.MinListing?.Id ?? 0,
+                RecentPurchaseId = nqPrices?.RecentPurchase?.Id ?? 0,
+                DailySaleVelocityId = nqPrices?.DailySaleVelocity?.Id ?? 0
+            };
     }
 }

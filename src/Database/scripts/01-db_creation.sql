@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS world
 (
-    id   INTEGER PRIMARY KEY,
+    id   SERIAL PRIMARY KEY,
     name TEXT
 );
 
 CREATE TABLE IF NOT EXISTS item
 (
-    id          INTEGER PRIMARY KEY,
+    id          SERIAL PRIMARY KEY,
     name        TEXT,
     description TEXT,
     icon_id     INTEGER NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS item
 
 CREATE TABLE IF NOT EXISTS recipe
 (
-    id                         INTEGER PRIMARY KEY,
+    id                         SERIAL PRIMARY KEY,
     craft_type                 INTEGER NOT NULL,
     recipe_level_table         INTEGER NOT NULL,
     target_item_id             INTEGER NOT NULL REFERENCES item (id),

@@ -1,6 +1,5 @@
 using System;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;

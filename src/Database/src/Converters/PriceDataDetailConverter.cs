@@ -23,7 +23,6 @@ public class PriceDataDetailConverter(GilGoblinDbContext dbContext, ILogger<Pric
             var pricePoint = new PriceDataPoco(0, priceType, dataPoint.Price, dataPoint.WorldId, dataPoint.Timestamp);
             dbContext.PriceData.Add(pricePoint);
             await dbContext.SaveChangesAsync();
-
             return pricePoint;
         }
         catch (Exception e)

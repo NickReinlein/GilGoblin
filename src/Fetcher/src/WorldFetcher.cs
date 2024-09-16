@@ -13,21 +13,22 @@ public interface IWorldFetcher
     Task<List<WorldWebPoco>> GetAllAsync();
 }
 
-public class WorldFetcher(ILogger<WorldFetcher> Logger, HttpClient? Client = null) : IWorldFetcher
+public class WorldFetcher(ILogger<WorldFetcher> logger, HttpClient? httpClient = null) : IWorldFetcher
 {
+    private HttpClient? _httpClient = httpClient;
     public static string WorldBaseUrl => "https://universalis.app/api/v2/worlds";
 
     public async Task<List<WorldWebPoco>> GetAllAsync()
     {
         try
         {
-            Client ??= new HttpClient();
-            var response = await Client.GetAsync(WorldBaseUrl);
+            _httpClient ??= new HttpClient();
+            var response = await _httpClient.GetAsync(WorldBaseUrl);
             return await ReadResponseContentAsync(response);
         }
         catch
         {
-            Logger.LogError("Failed GET call to update all worlds with path: {Path}", WorldBaseUrl);
+            logger.LogError("Failed GET call to update all worlds with path: {Path}", WorldBaseUrl);
             return [];
         }
     }
