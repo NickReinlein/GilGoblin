@@ -113,5 +113,5 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
     protected virtual List<WorldPoco> GetWorlds() => new();
 
     protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
-    protected virtual int GetApiSpamDelayInMs() => 5000;
+    protected virtual int GetApiSpamDelayInMs() => 60000;
 }

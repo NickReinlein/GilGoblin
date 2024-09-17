@@ -40,21 +40,8 @@ public class PriceConverter(
             var itemId = webPoco.ItemId;
             var nqPrices = await qualityConverter.ConvertAsync(webPoco.Nq, itemId, false);
             var nq = GetPricePocoFromQualityPrices(worldId, nqPrices, itemId);
-
             var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, false);
             var hq = GetPricePocoFromQualityPrices(worldId, hqPrices, itemId);
-
-
-            if (hq is null && nq is null)
-                return (null, null);
-
-            if (hq is not null)
-                dbContext.Price.Add(hq);
-
-            if (nq is not null)
-                dbContext.Price.Add(nq);
-
-            await dbContext.SaveChangesAsync();
 
             return (hq, nq);
         }
@@ -78,7 +65,7 @@ public class PriceConverter(
                 AverageSalePriceId = nqPrices?.AverageSalePrice?.Id ?? 0,
                 MinListingId = nqPrices?.MinListing?.Id ?? 0,
                 RecentPurchaseId = nqPrices?.RecentPurchase?.Id ?? 0,
-                DailySaleVelocityId = nqPrices?.DailySaleVelocity?.Id ?? 0
+                DailySaleVelocityId = nqPrices?.DailySaleVelocity?.Id ?? 0,
             };
     }
 }

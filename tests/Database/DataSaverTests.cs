@@ -73,7 +73,7 @@ public class DataSaverTests : InMemoryTestDb
     [Test]
     public async Task GivenASaveAsync_WhenAnUpdateIsInvalid_ThenWeLogAnErrorAndReturnFalse()
     {
-        const string errorMessage = "Failed to update due to invalid data: No valid entities remained after validity check";
+        const string errorMessage = "Failed to update due to invalid data";
         var updates = GetNewPocos();
         updates.First().Id = -1;
 

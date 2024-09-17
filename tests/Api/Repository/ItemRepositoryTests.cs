@@ -85,7 +85,7 @@ public class ItemRepositoryTests : InMemoryTestDb
 
         Assert.That(result, Is.Null);
         _logger.Received(1).Log(
-            LogLevel.Error,
+            LogLevel.Warning,
             0,
             Arg.Is<object>(v => v.ToString()!.Contains("Failed to get item 9238192: Description is null")),
             null,

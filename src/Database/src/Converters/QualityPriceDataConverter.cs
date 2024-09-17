@@ -22,7 +22,7 @@ public class QualityPriceDataConverter(
         try
         {
             if (qualityData is null || itemId < 1 || !qualityData.HasValidPrice())
-                throw new ArgumentException("Invalid price data", nameof(qualityData));
+                return null;
 
             var minListing =
                 await dataPointConverter.ConvertAsync(qualityData.MinListing, itemId, isHq);
