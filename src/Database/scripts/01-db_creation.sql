@@ -152,7 +152,7 @@ CREATE TABLE price
     recent_purchase_id     INTEGER REFERENCES recent_purchase (id) ON DELETE CASCADE,
     average_sale_price_id  INTEGER REFERENCES average_sale_price (id) ON DELETE CASCADE,
     daily_sale_velocity_id INTEGER REFERENCES daily_sale_velocity (id) ON DELETE CASCADE,
-    updated                TIMESTAMP WITH TIME ZONE NOT NULL, -- timestamp of the last update
+    updated                TIMESTAMP WITH TIME ZONE NOT NULL,
     UNIQUE (item_id, world_id, is_hq)
 );
 CREATE INDEX idx_price_item_id ON price (item_id);
