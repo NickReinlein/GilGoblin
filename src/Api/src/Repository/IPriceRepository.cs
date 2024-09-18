@@ -7,6 +7,6 @@ public interface IPriceRepository<T> : IRepositoryCache
     where T : class
 {
     T? Get(int worldId, int id, bool isHq);
-    IEnumerable<T> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq);
-    IEnumerable<T> GetAll(int worldId);
+    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq);
+    List<T> GetAll(int worldId);
 }

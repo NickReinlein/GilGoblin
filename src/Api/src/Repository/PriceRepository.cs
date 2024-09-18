@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
-public class PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache) : IPriceRepository<PricePoco>
+public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache) : IPriceRepository<PricePoco>
 {
     public PricePoco? Get(int worldId, int id, bool isHq)
     {
@@ -18,6 +19,8 @@ public class PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache) : 
 
         try
         {
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var prices = dbContext.Price
                 .Where(p =>
                     p.ItemId == id &&
@@ -41,20 +44,27 @@ public class PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache) : 
         }
     }
 
-    public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq) =>
-        dbContext.Price.Where(p =>
-            p.WorldId == worldId
-            && ids.Any(i => i == p.ItemId)
-            && p.IsHq == isHq);
-
-    public IEnumerable<PricePoco> GetAll(int worldId)
+    public List<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq)
     {
-        var allPrices = dbContext.Price.Where(p => p.WorldId == worldId);
-        return allPrices;
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        return dbContext.Price.Where(p =>
+            p.WorldId == worldId
+            && p.IsHq == isHq
+            && ids.Any(i => i == p.ItemId)).ToList();
+    }
+
+    public List<PricePoco> GetAll(int worldId)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        return dbContext.Price.Where(p => p.WorldId == worldId).ToList();
     }
 
     public Task FillCache()
     {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var items = dbContext?.Price?.ToList();
         items?.ForEach(price => cache.Add((price.WorldId, price.ItemId), price));
         return Task.CompletedTask;

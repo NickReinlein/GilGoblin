@@ -63,7 +63,7 @@ public class Startup
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
             .AddScoped<IWorldUpdater, WorldUpdater>();
 
-        services.AddHostedService<WorldUpdater>();
+        // services.AddHostedService<WorldUpdater>();
         services.AddHostedService<PriceUpdater>();
     }
 

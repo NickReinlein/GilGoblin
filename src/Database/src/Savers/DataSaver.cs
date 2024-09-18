@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
@@ -14,10 +15,10 @@ public interface IDataSaver<in T> where T : class
     Task<bool> SaveAsync(IEnumerable<T> updates, CancellationToken ct = default);
 }
 
-public class DataSaver<T>(GilGoblinDbContext context, ILogger<DataSaver<T>> logger) : IDataSaver<T>
+public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>> logger) : IDataSaver<T>
     where T : class, IIdentifiable
 {
-    protected readonly GilGoblinDbContext Context = context ?? throw new ArgumentNullException(nameof(context));
+    protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     private readonly ILogger<DataSaver<T>> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public async Task<bool> SaveAsync(IEnumerable<T> entities, CancellationToken ct = default)
@@ -32,9 +33,11 @@ public class DataSaver<T>(GilGoblinDbContext context, ILogger<DataSaver<T>> logg
             if (filteredUpdates.Count == 0)
                 throw new ArgumentException("No valid entities remained after validity check");
 
-            UpdateContext(filteredUpdates);
+            await UpdateContextAsync(filteredUpdates);
 
-            var savedCount = await Context.SaveChangesAsync(ct);
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            var savedCount = await dbContext.SaveChangesAsync(ct);
             _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
             var failedCount = entityList.Count - savedCount;
@@ -62,12 +65,15 @@ public class DataSaver<T>(GilGoblinDbContext context, ILogger<DataSaver<T>> logg
         }
     }
 
-    protected virtual void UpdateContext(List<T> entityList)
+    protected virtual async Task<int> UpdateContextAsync(List<T> entityList)
     {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         foreach (var entity in entityList)
         {
-            Context.Entry(entity).State = entity.GetId() == 0 ? EntityState.Added : EntityState.Modified;
+            dbContext.Entry(entity).State = entity.GetId() == 0 ? EntityState.Added : EntityState.Modified;
         }
+        return await dbContext.SaveChangesAsync();
     }
 
     protected virtual List<T> FilterInvalidEntities(IEnumerable<T> entities)

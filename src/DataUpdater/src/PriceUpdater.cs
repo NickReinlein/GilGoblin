@@ -94,7 +94,7 @@ public class PriceUpdater(
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
             var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
-            var updateList = await ConvertWebToDbFormatAsync(webPocos, converter);
+             var updateList = await ConvertWebToDbFormatAsync(webPocos, converter);
             var filteredList = updateList
                 .Where(u => u.AverageSalePriceId > 0 || u.RecentPurchaseId > 0 || u.MinListingId > 0).ToList();
             if (!filteredList.Any())
@@ -223,7 +223,6 @@ public class PriceUpdater(
         }
         catch (Exception e)
         {
-            Logger.LogWarning(e, "Failed to fill item Id cache");
             Logger.LogWarning(e, "Failed to fill item Id cache");
         }
     }

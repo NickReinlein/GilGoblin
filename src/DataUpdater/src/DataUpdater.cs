@@ -20,20 +20,15 @@ public interface IDataUpdater<T, U>
     Task FetchAsync(int? worldId = null, CancellationToken ct = default);
 }
 
-public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
+public abstract class DataUpdater<T, U>(
+    IServiceScopeFactory scopeFactory,
+    ILogger<DataUpdater<T, U>> logger)
+    : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    protected readonly IServiceScopeFactory ScopeFactory;
-    protected readonly ILogger<DataUpdater<T, U>> Logger;
-
-    protected DataUpdater(
-        IServiceScopeFactory scopeFactory,
-        ILogger<DataUpdater<T, U>> logger)
-    {
-        ScopeFactory = scopeFactory;
-        Logger = logger;
-    }
+    protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
+    protected readonly ILogger<DataUpdater<T, U>> Logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {

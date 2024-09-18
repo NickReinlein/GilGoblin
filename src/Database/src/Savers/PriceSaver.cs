@@ -1,17 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
 
-public class PriceSaver(GilGoblinDbContext context, ILogger<DataSaver<PricePoco>> logger)
-    : DataSaver<PricePoco>(context, logger)
+public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<PricePoco>> logger)
+    : DataSaver<PricePoco>(serviceProvider, logger)
 {
-    protected override void UpdateContext(List<PricePoco> priceList)
+    protected override async Task<int> UpdateContextAsync(List<PricePoco> priceList)
     {
-        var existing = Context.Price
+        await using var scope = ServiceProvider.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var existing = dbContext.Price
             .Where(p => priceList.Any(l =>
                 p.WorldId == l.WorldId &&
                 p.ItemId == l.ItemId &&
@@ -20,8 +25,9 @@ public class PriceSaver(GilGoblinDbContext context, ILogger<DataSaver<PricePoco>
             .ToList();
         foreach (var price in priceList)
         {
-            Context.Entry(price).State = existing.Contains(price.ItemId) ? EntityState.Modified : EntityState.Added;
+            dbContext.Entry(price).State = existing.Contains(price.ItemId) ? EntityState.Modified : EntityState.Added;
         }
+        return await dbContext.SaveChangesAsync();
     }
 
     protected override List<PricePoco> FilterInvalidEntities(IEnumerable<PricePoco> entities)

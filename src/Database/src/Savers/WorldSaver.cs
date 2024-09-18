@@ -1,25 +1,28 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
 
-public class WorldSaver : DataSaver<WorldPoco>
+public class WorldSaver(IServiceProvider serviceProvider, ILogger<DataSaver<WorldPoco>> logger)
+    : DataSaver<WorldPoco>(serviceProvider, logger)
 {
-    public WorldSaver(GilGoblinDbContext context, ILogger<DataSaver<WorldPoco>> logger) : base(context, logger)
+    protected override async Task<int> UpdateContextAsync(List<WorldPoco> worlds)
     {
-    }
-
-    protected override void UpdateContext(List<WorldPoco> worlds)
-    {
+        await using var scope = ServiceProvider.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var itemIdList = worlds.Select(p => p.GetId()).ToList();
-        var existing = Context.World
+        var existing = await dbContext.World
             .Where(p => itemIdList.Contains(p.Id))
             .Select(s => s.Id)
-            .ToList();
+            .ToListAsync();
         foreach (var world in worlds)
-            Context.Entry(world).State = existing.Contains(world.Id) ? EntityState.Modified : EntityState.Added;
+            dbContext.Entry(world).State = existing.Contains(world.Id) ? EntityState.Modified : EntityState.Added;
+        return await dbContext.SaveChangesAsync();
     }
 }
