@@ -37,18 +37,18 @@ public class ItemRepository(IServiceProvider serviceProvider, IItemCache cache, 
         }
     }
 
-    public IEnumerable<ItemPoco> GetMultiple(IEnumerable<int> itemIds)
+    public List<ItemPoco> GetMultiple(IEnumerable<int> itemIds)
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.Item.Where(i => itemIds.Any(a => a == i.Id)).AsEnumerable();
+        return dbContext.Item.Where(i => itemIds.Any(a => a == i.Id)).ToList();
     }
 
-    public IEnumerable<ItemPoco> GetAll()
+    public List<ItemPoco> GetAll()
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.Item.AsEnumerable();
+        return dbContext.Item.ToList();
     }
 
     public Task FillCache()

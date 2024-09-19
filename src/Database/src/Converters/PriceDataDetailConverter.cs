@@ -26,7 +26,7 @@ public class PriceDataDetailConverter(IServiceProvider serviceProvider, ILogger<
             await using var scope = serviceProvider.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             await dbContext.PriceData.AddAsync(pricePoint);
-            await dbContext.SaveChangesAsync();
+            // await dbContext.SaveChangesAsync();
 
             return pricePoint;
         }

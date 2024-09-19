@@ -32,7 +32,7 @@ public class PriceUpdater(
 
         foreach (var world in worlds)
         {
-            Logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
+            logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
             fetchTasks.Add(FetchAsync(world.Id, ct));
         }
 
@@ -56,7 +56,7 @@ public class PriceUpdater(
                     var fetched = await fetcher.FetchByIdsAsync(batch, worldId, ct);
                     if (!fetched.Any())
                     {
-                        Logger.LogDebug(
+                        logger.LogDebug(
                             "Fetched {Count} items for world id {WorldId} but received no price data in response",
                             batch.Count,
                             worldId);
@@ -67,7 +67,7 @@ public class PriceUpdater(
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"Failed to get batch: {e.Message}");
+                    logger.LogError($"Failed to get batch: {e.Message}");
                 }
 
                 try
@@ -78,7 +78,7 @@ public class PriceUpdater(
                 {
                     const string message =
                         $"The cancellation token was cancelled. Ending service {nameof(PriceUpdater)}";
-                    Logger.LogInformation(message);
+                    logger.LogInformation(message);
                 }
             }
 
@@ -95,18 +95,18 @@ public class PriceUpdater(
             var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
              var updateList = await ConvertWebToDbFormatAsync(webPocos, converter);
-            var filteredList = updateList
-                .Where(u => u.AverageSalePriceId > 0 || u.RecentPurchaseId > 0 || u.MinListingId > 0).ToList();
-            if (!filteredList.Any())
-                return;
+            // var filteredList = updateList
+            //     .Where(u => u.AverageSalePriceId > 0 || u.RecentPurchaseId > 0 || u.MinListingId > 0).ToList();
+            // if (!filteredList.Any())
+            //     return;
 
-            var success = await saver.SaveAsync(filteredList);
+            var success = await saver.SaveAsync(updateList);
             if (!success)
                 throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Failed to save {Count} entries for {TypeString}", webPocos.Count, nameof(PricePoco));
+            logger.LogError(e, "Failed to save {Count} entries for {TypeString}", webPocos.Count, nameof(PricePoco));
         }
     }
 
@@ -180,7 +180,7 @@ public class PriceUpdater(
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+            logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
             return new List<int>();
         }
     }
@@ -192,14 +192,14 @@ public class PriceUpdater(
 
         try
         {
-            using var scope = ScopeFactory.CreateScope();
+            await using var scope = ScopeFactory.CreateAsyncScope();
             var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
             var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             AllItemIds.Clear();
             LastUpdated = DateTimeOffset.UtcNow;
 
             var recipes = recipeRepo.GetAll().ToList();
-            Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
+            logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
             var ingredientItemIds =
                 recipes
                     .SelectMany(r =>
@@ -209,7 +209,7 @@ public class PriceUpdater(
                     .ToList();
 
             var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
-            Logger.LogDebug(
+            logger.LogDebug(
                 $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
             if (!marketableItemIdList.Any())
                 throw new WebException("Failed to fetch marketable item ids");
@@ -219,18 +219,18 @@ public class PriceUpdater(
                     .Concat(ingredientItemIds)
                     .Distinct()
                     .ToList();
-            Logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
+            logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
         }
         catch (Exception e)
         {
-            Logger.LogWarning(e, "Failed to fill item Id cache");
+            logger.LogWarning(e, "Failed to fill item Id cache");
         }
     }
 
     private async Task AwaitDelay(CancellationToken ct)
     {
         var delay = GetApiSpamDelayInMs();
-        Logger.LogInformation($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
+        logger.LogInformation($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
         await Task.Delay(delay, ct);
     }
 }

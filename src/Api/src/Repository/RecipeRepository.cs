@@ -68,14 +68,14 @@ public class RecipeRepository : IRecipeRepository
         return CacheRecipes(recipes);
     }
 
-    public IEnumerable<RecipePoco> GetMultiple(IEnumerable<int> itemIds)
+    public List<RecipePoco> GetMultiple(IEnumerable<int> itemIds)
     {
         var recipes = _dbContext.Recipe.Where(r =>
             itemIds.Any(a => a == r.Id)).ToList();
         return CacheRecipes(recipes);
     }
 
-    public IEnumerable<RecipePoco> GetAll()
+    public List<RecipePoco> GetAll()
     {
         var recipes = _dbContext.Recipe.ToList();
         return CacheRecipes(recipes);

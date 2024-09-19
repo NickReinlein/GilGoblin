@@ -25,18 +25,18 @@ public class WorldRepository(IServiceProvider serviceProvider, IWorldCache cache
         return world;
     }
 
-    public IEnumerable<WorldPoco> GetMultiple(IEnumerable<int> ids)
+    public List<WorldPoco> GetMultiple(IEnumerable<int> ids)
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.World.Where(w => ids.Contains(w.Id)).AsEnumerable();
+        return dbContext.World.Where(w => ids.Contains(w.Id)).ToList();
     }
 
-    public IEnumerable<WorldPoco> GetAll()
+    public List<WorldPoco> GetAll()
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.World.AsEnumerable();
+        return dbContext.World.ToList();
     }
 
     public Task FillCache()

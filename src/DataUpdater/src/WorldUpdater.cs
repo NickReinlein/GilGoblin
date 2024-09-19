@@ -15,12 +15,8 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public interface IWorldUpdater
-{
-}
-
-public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdater> Logger)
-    : BackgroundService, IWorldUpdater
+public class WorldUpdater(IServiceScopeFactory scopeFactory, ILogger<WorldUpdater> logger)
+    : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -32,12 +28,12 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdate
             }
             catch (Exception ex)
             {
-                Logger.LogError("{Service}: An exception occured during the Api call: {ErrorMessage}",
+                logger.LogError("{Service}: An exception occured during the Api call: {ErrorMessage}",
                     nameof(WorldUpdater), ex.Message);
             }
 
             var delay = TimeSpan.FromMinutes(5);
-            Logger.LogInformation("{Service}: Awaiting delay of {Delay} seconds before performing next update",
+            logger.LogInformation("{Service}: Awaiting delay of {Delay} seconds before performing next update",
                 nameof(WorldUpdater), delay.TotalSeconds);
             await Task.Delay(delay, ct);
         }
@@ -53,25 +49,25 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdate
     {
         try
         {
-            using var scope = ScopeFactory.CreateScope();
+            using var scope = scopeFactory.CreateScope();
             var fetcher = scope.ServiceProvider.GetService<IWorldFetcher>();
-            Logger.LogInformation("Fetching updates for all worlds");
+            logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
             var updated = await fetcher.GetAllAsync();
             timer.Stop();
 
             if (updated.Count == 0)
-                Logger.LogError("Received empty list returned when fetching all worlds");
+                logger.LogError("Received empty list returned when fetching all worlds");
             else
-                Logger.LogInformation("Received updates for {Count} worlds", updated.Count);
+                logger.LogInformation("Received updates for {Count} worlds", updated.Count);
 
-            Logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
+            logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
             return updated;
         }
         catch (Exception e)
         {
-            Logger.LogError("Failed to fetch updates for worlds: {Message}", e.Message);
+            logger.LogError("Failed to fetch updates for worlds: {Message}", e.Message);
             return [];
         }
     }
@@ -84,7 +80,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdate
 
         try
         {
-            using var scope = ScopeFactory.CreateScope();
+            using var scope = scopeFactory.CreateScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<WorldPoco>>();
             var success = await saver.SaveAsync(updateList);
             if (!success)
@@ -92,7 +88,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdate
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(WorldPoco)}: {e.Message}");
+            logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(WorldPoco)}: {e.Message}");
         }
     }
 }

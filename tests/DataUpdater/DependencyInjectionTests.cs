@@ -40,8 +40,6 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IMarketableItemIdsFetcher))]
     [TestCase(typeof(IDataSaver<PricePoco>))]
     [TestCase(typeof(IPriceConverter))]
-    [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
-    [TestCase(typeof(IWorldUpdater))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();

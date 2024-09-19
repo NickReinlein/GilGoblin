@@ -53,17 +53,15 @@ public class Startup
             .AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
             .AddScoped<IPriceFetcher, PriceFetcher>()
             .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
-            .AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>()
             .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
             .AddScoped<IPriceConverter, PriceConverter>()
             .AddScoped<IPriceDataDetailConverter, PriceDataDetailConverter>()
             .AddScoped<IPriceDataPointConverter, PriceDataPointConverter>()
             .AddScoped<IQualityPriceDataConverter, QualityPriceDataConverter>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
-            .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
-            .AddScoped<IWorldUpdater, WorldUpdater>();
+            .AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
 
-        // services.AddHostedService<WorldUpdater>();
+        services.AddHostedService<WorldUpdater>();
         services.AddHostedService<PriceUpdater>();
     }
 

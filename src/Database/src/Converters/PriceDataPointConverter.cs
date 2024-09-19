@@ -18,13 +18,13 @@ public class PriceDataPointConverter(IPriceDataDetailConverter detailConverter, 
     {
         try
         {
-            if (dataPoint is null || itemId < 1 || !dataPoint.HasValidPrice())
+            if (dataPoint is null || itemId < 1)
                 throw new ArgumentException("Invalid item id or datapoint");
 
+            var world = await detailConverter.ConvertAsync(dataPoint.World, "World");
             var dc = await detailConverter.ConvertAsync(dataPoint.Dc, "Dc");
             var region = await detailConverter.ConvertAsync(dataPoint.Region, "Region");
-            var world = await detailConverter.ConvertAsync(dataPoint.World, "World");
-            var priceDataPoint = new PriceDataPointPoco(0, itemId, isHq, dc?.Id, region?.Id, world?.Id);
+            var priceDataPoint = new PriceDataPointPoco(0, itemId, isHq, world?.Id, dc?.Id, region?.Id);
             return priceDataPoint;
         }
         catch (Exception e)
