@@ -17,16 +17,14 @@ public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<Pric
         await using var scope = ServiceProvider.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var existing = dbContext.Price
-            .Where(p => priceList.Any(l =>
-                p.WorldId == l.WorldId &&
-                p.ItemId == l.ItemId &&
-                p.IsHq == l.IsHq))
+            .Where(p => priceList.Any(l => l.Id > 0))
             .Select(s => s.ItemId)
             .ToList();
         foreach (var price in priceList)
         {
             dbContext.Entry(price).State = existing.Contains(price.ItemId) ? EntityState.Modified : EntityState.Added;
         }
+
         return await dbContext.SaveChangesAsync();
     }
 

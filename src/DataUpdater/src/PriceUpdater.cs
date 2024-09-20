@@ -103,7 +103,7 @@ public class PriceUpdater(
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var convertedList = new List<PricePoco>();
 
         foreach (var webPoco in webPocos)
         {
@@ -118,10 +118,10 @@ public class PriceUpdater(
 
                 var (hq, nq) = await converter.ConvertAsync(webPoco, worldId);
                 if (hq is not null)
-                    dbContext.Price.Add(hq);
+                    convertedList.Add(hq);
 
                 if (nq is not null)
-                    dbContext.Price.Add(nq);
+                    convertedList.Add(nq);
             }
             catch (Exception e)
             {
@@ -129,6 +129,8 @@ public class PriceUpdater(
             }
         }
 
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await dbContext.Price.AddRangeAsync(convertedList);
         await dbContext.SaveChangesAsync();
     }
 

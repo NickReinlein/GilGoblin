@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Converters;
@@ -42,7 +45,18 @@ public class PriceConverter(
             var nq = GetPricePocoFromQualityPrices(worldId, nqPrices, itemId);
             var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, false);
             var hq = GetPricePocoFromQualityPrices(worldId, hqPrices, itemId);
+            
+            await using var scope = serviceProvider.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            if (hq is not null)
+                dbContext.Price.Add(hq);
 
+            if (nq is not null)
+                dbContext.Price.Add(nq);
+
+            var saved = await dbContext.SaveChangesAsync();
+            logger.LogDebug("Saved {Saved} prices", saved);
+            
             return (hq, nq);
         }
         catch (Exception e)
@@ -52,20 +66,20 @@ public class PriceConverter(
         }
     }
 
-    private static PricePoco? GetPricePocoFromQualityPrices(int worldId, QualityPriceDataPoco? nqPrices, int itemId)
+    private static PricePoco? GetPricePocoFromQualityPrices(int worldId, QualityPriceDataPoco? quality, int itemId)
     {
-        return nqPrices is null
+        return quality is null
             ? null
             : new PricePoco
             {
                 ItemId = itemId,
                 WorldId = worldId,
                 IsHq = false,
-                Updated = DateTimeOffset.Now,
-                AverageSalePriceId = nqPrices?.AverageSalePrice?.Id ?? 0,
-                MinListingId = nqPrices?.MinListing?.Id ?? 0,
-                RecentPurchaseId = nqPrices?.RecentPurchase?.Id ?? 0,
-                DailySaleVelocityId = nqPrices?.DailySaleVelocity?.Id ?? 0,
+                Updated = DateTimeOffset.UtcNow,
+                AverageSalePriceId = quality?.AverageSalePrice?.Id ?? 0,
+                MinListingId = quality?.MinListing?.Id ?? 0,
+                RecentPurchaseId = quality?.RecentPurchase?.Id ?? 0,
+                // DailySaleVelocityId = quality?.DailySaleVelocity?.Id ?? 0,
             };
     }
 }

@@ -27,11 +27,10 @@ public class PriceDataPointConverter(
             if (dataPoint is null || itemId < 1 || !dataPoint.HasValidPrice())
                 throw new ArgumentException("Invalid item id or datapoint");
 
-            var world = await detailConverter.ConvertAsync(dataPoint.World, "World");
-            var dc = await detailConverter.ConvertAsync(dataPoint.Dc, "Dc");
-            var region = await detailConverter.ConvertAsync(dataPoint.Region, "Region");
-            await using var scope = serviceProvider.CreateAsyncScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            var world = detailConverter.Convert(dataPoint.World, "World");
+            var dc = detailConverter.Convert(dataPoint.Dc, "Dc");
+            var region = detailConverter.Convert(dataPoint.Region, "Region");
+
             var pricePoints =
                 new List<PriceDataPoco?> { world, dc, region }
                     .Where(x => x is not null)
@@ -40,6 +39,8 @@ public class PriceDataPointConverter(
             if (!pricePoints.Any())
                 return null;
 
+            await using var scope = serviceProvider.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             await dbContext.PriceData.AddRangeAsync(pricePoints);
             var savedCount = await dbContext.SaveChangesAsync();
             if (savedCount < pricePoints.Count)

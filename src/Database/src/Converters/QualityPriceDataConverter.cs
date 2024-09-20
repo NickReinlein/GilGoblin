@@ -25,15 +25,15 @@ public class QualityPriceDataConverter(
             if (qualityData is null || itemId < 1 || !qualityData.HasValidPrice())
                 return null;
 
-            await using var scope = serviceProvider.CreateAsyncScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-
             var minListing =
                 await dataPointConverter.ConvertAsync(qualityData.MinListing, itemId, isHq);
             var averageSalePrice =
                 await dataPointConverter.ConvertAsync(qualityData.AverageSalePrice, itemId, isHq);
             var recentPurchase =
                 await dataPointConverter.ConvertAsync(qualityData.RecentPurchase, itemId, isHq);
+            
+            await using var scope = serviceProvider.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
             var minListingDb = minListing is null
                 ? null
