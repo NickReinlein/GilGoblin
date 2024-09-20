@@ -53,7 +53,7 @@ public class Startup
             .AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
             .AddScoped<IPriceFetcher, PriceFetcher>()
             .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
-            .AddScoped<IDataSaver<PricePoco>, PriceSaver>()
+            .AddScoped<IPriceSaver, PriceSaver>()
             .AddScoped<IPriceConverter, PriceConverter>()
             .AddScoped<IPriceDataDetailConverter, PriceDataDetailConverter>()
             .AddScoped<IPriceDataPointConverter, PriceDataPointConverter>()

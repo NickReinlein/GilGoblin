@@ -19,6 +19,7 @@ namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater(
     IServiceProvider serviceProvider,
+    IPriceSaver priceSaver,
     ILogger<PriceUpdater> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
@@ -129,9 +130,8 @@ public class PriceUpdater(
             }
         }
 
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        await dbContext.Price.AddRangeAsync(convertedList);
-        await dbContext.SaveChangesAsync();
+        if (convertedList.Any())
+            await priceSaver.SaveAsync(convertedList);
     }
 
     protected override List<WorldPoco> GetWorlds()
