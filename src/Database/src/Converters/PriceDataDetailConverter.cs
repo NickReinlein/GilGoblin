@@ -23,9 +23,9 @@ public class PriceDataDetailConverter(IServiceProvider serviceProvider, ILogger<
                 throw new ArgumentException("Invalid price data", nameof(dataPoint));
 
             var pricePoint = new PriceDataPoco(0, priceType, dataPoint.Price, dataPoint.WorldId, dataPoint.Timestamp);
-            await using var scope = serviceProvider.CreateAsyncScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            await dbContext.PriceData.AddAsync(pricePoint);
+            // await using var scope = serviceProvider.CreateAsyncScope();
+            // var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            // await dbContext.PriceData.AddAsync(pricePoint);
             // await dbContext.SaveChangesAsync();
 
             return pricePoint;

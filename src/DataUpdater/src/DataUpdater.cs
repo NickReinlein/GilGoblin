@@ -21,13 +21,12 @@ public interface IDataUpdater<T, U>
 }
 
 public abstract class DataUpdater<T, U>(
-    IServiceScopeFactory scopeFactory,
+    IServiceProvider serviceProvider,
     ILogger<DataUpdater<T, U>> logger)
     : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
     protected readonly ILogger<DataUpdater<T, U>> Logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -84,7 +83,7 @@ public abstract class DataUpdater<T, U>(
         {
             var idList = idsToUpdate.ToList();
 
-            using var scope = ScopeFactory.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
             var worldString = worldId > 0 ? $"for world id {worldId}" : string.Empty;
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");

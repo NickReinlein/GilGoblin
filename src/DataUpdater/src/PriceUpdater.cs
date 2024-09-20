@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
+using GilGoblin.Database;
 using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
@@ -17,9 +18,9 @@ using Microsoft.Extensions.Logging;
 namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater(
-    IServiceScopeFactory scopeFactory,
+    IServiceProvider serviceProvider,
     ILogger<PriceUpdater> logger)
-    : DataUpdater<PricePoco, PriceWebPoco>(scopeFactory, logger)
+    : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
     private List<int> AllItemIds { get; set; } = [];
     private DateTimeOffset LastUpdated { get; set; }
@@ -42,7 +43,7 @@ public class PriceUpdater(
 
     protected override async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
-        using var scope = ScopeFactory.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var fetcher = scope.ServiceProvider.GetRequiredService<IPriceFetcher>();
         var batcher = new Batcher.Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
@@ -90,19 +91,7 @@ public class PriceUpdater(
     {
         try
         {
-            using var scope = ScopeFactory.CreateScope();
-            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
-            var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
-
-             var updateList = await ConvertWebToDbFormatAsync(webPocos, converter);
-            // var filteredList = updateList
-            //     .Where(u => u.AverageSalePriceId > 0 || u.RecentPurchaseId > 0 || u.MinListingId > 0).ToList();
-            // if (!filteredList.Any())
-            //     return;
-
-            var success = await saver.SaveAsync(updateList);
-            if (!success)
-                throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
+            await ConvertAndSaveAsync(webPocos);
         }
         catch (Exception e)
         {
@@ -110,10 +99,12 @@ public class PriceUpdater(
         }
     }
 
-    private async Task<List<PricePoco>> ConvertWebToDbFormatAsync(List<PriceWebPoco> webPocos,
-        IPriceConverter converter)
+    private async Task ConvertAndSaveAsync(List<PriceWebPoco> webPocos)
     {
-        var updateList = new List<PricePoco>();
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+
         foreach (var webPoco in webPocos)
         {
             try
@@ -127,9 +118,10 @@ public class PriceUpdater(
 
                 var (hq, nq) = await converter.ConvertAsync(webPoco, worldId);
                 if (hq is not null)
-                    updateList.Add(hq);
+                    dbContext.Price.Add(hq);
+
                 if (nq is not null)
-                    updateList.Add(nq);
+                    dbContext.Price.Add(nq);
             }
             catch (Exception e)
             {
@@ -137,12 +129,12 @@ public class PriceUpdater(
             }
         }
 
-        return updateList;
+        await dbContext.SaveChangesAsync();
     }
 
     protected override List<WorldPoco> GetWorlds()
     {
-        using var scope = ScopeFactory.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
         return worldRepo.GetAll().ToList();
     }
@@ -160,7 +152,7 @@ public class PriceUpdater(
 
             await FillItemIdCache();
 
-            using var scope = ScopeFactory.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var currentPrices = priceRepo.GetAll(world).ToList();
             var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
@@ -192,7 +184,7 @@ public class PriceUpdater(
 
         try
         {
-            await using var scope = ScopeFactory.CreateAsyncScope();
+            await using var scope = serviceProvider.CreateAsyncScope();
             var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
             var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             AllItemIds.Clear();

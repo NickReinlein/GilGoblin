@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class WorldUpdater(IServiceScopeFactory scopeFactory, ILogger<WorldUpdater> logger)
+public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater> logger)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -49,7 +49,7 @@ public class WorldUpdater(IServiceScopeFactory scopeFactory, ILogger<WorldUpdate
     {
         try
         {
-            using var scope = scopeFactory.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var fetcher = scope.ServiceProvider.GetService<IWorldFetcher>();
             logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
@@ -80,7 +80,7 @@ public class WorldUpdater(IServiceScopeFactory scopeFactory, ILogger<WorldUpdate
 
         try
         {
-            using var scope = scopeFactory.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<WorldPoco>>();
             var success = await saver.SaveAsync(updateList);
             if (!success)

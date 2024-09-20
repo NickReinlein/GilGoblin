@@ -11,7 +11,7 @@ public interface IPriceConverter
 }
 
 public class PriceConverter(
-    GilGoblinDbContext dbContext,
+    IServiceProvider serviceProvider,
     IQualityPriceDataConverter qualityConverter,
     ILogger<PriceConverter> logger) : IPriceConverter
 {

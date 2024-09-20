@@ -33,11 +33,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
             if (filteredUpdates.Count == 0)
                 throw new ArgumentException("No valid entities remained after validity check");
 
-            await UpdateContextAsync(filteredUpdates);
-
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            var savedCount = await dbContext.SaveChangesAsync(ct);
+            var savedCount = await UpdateContextAsync(filteredUpdates);
             _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
 
             var failedCount = entityList.Count - savedCount;
@@ -73,11 +69,12 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
         {
             dbContext.Entry(entity).State = entity.GetId() == 0 ? EntityState.Added : EntityState.Modified;
         }
+
         return await dbContext.SaveChangesAsync();
     }
 
     protected virtual List<T> FilterInvalidEntities(IEnumerable<T> entities)
     {
-        return entities.Where(t => t.GetId() >= 0).ToList();
+        return entities.ToList();
     }
 }

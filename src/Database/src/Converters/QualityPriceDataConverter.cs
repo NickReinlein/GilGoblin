@@ -24,7 +24,7 @@ public class QualityPriceDataConverter(
         {
             if (qualityData is null || itemId < 1 || !qualityData.HasValidPrice())
                 return null;
-            
+
             await using var scope = serviceProvider.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
@@ -37,41 +37,40 @@ public class QualityPriceDataConverter(
 
             var minListingDb = minListing is null
                 ? null
-                : new MinListingPoco(0, 
-                    itemId, 
-                    isHq, 
+                : new MinListingPoco(0,
+                    itemId,
+                    isHq,
                     minListing.WorldDataPointId,
-                    minListing.DcDataPointId, 
+                    minListing.DcDataPointId,
                     minListing.RegionDataPointId);
             if (minListingDb is not null)
                 await dbContext.MinListing.AddAsync(minListingDb);
 
             var averageSalePriceDb = averageSalePrice is null
                 ? null
-                : new AverageSalePricePoco(0, 
-                    itemId, 
-                    isHq, 
+                : new AverageSalePricePoco(0,
+                    itemId,
+                    isHq,
                     averageSalePrice.WorldDataPointId,
-                    averageSalePrice.DcDataPointId, 
+                    averageSalePrice.DcDataPointId,
                     averageSalePrice.RegionDataPointId);
             if (averageSalePriceDb is not null)
                 await dbContext.AverageSalePrice.AddAsync(averageSalePriceDb);
 
             var recentPurchaseDb = recentPurchase is null
                 ? null
-                : new RecentPurchasePoco(0, 
-                    itemId, 
-                    isHq, 
+                : new RecentPurchasePoco(0,
+                    itemId,
+                    isHq,
                     recentPurchase.WorldDataPointId,
-                    recentPurchase.DcDataPointId, 
+                    recentPurchase.DcDataPointId,
                     recentPurchase.RegionDataPointId);
             if (recentPurchaseDb is not null)
                 await dbContext.RecentPurchase.AddAsync(recentPurchaseDb);
-            
-            // await dbContext.SaveChangesAsync();
 
-            var converted = new QualityPriceDataPoco(minListingDb, averageSalePriceDb, recentPurchaseDb, null);
-            return converted;
+            await dbContext.SaveChangesAsync();
+
+            return new QualityPriceDataPoco(minListingDb, averageSalePriceDb, recentPurchaseDb, null);
         }
         catch (Exception e)
         {
