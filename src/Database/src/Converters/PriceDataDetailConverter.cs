@@ -12,7 +12,7 @@ public interface IPriceDataDetailConverter
     PriceDataPoco? Convert(PriceDataDetailPoco? dataPoint, string priceType);
 }
 
-public class PriceDataDetailConverter(IServiceProvider serviceProvider, ILogger<PriceDataDetailConverter> logger)
+public class PriceDataDetailConverter(ILogger<PriceDataDetailConverter> logger)
     : IPriceDataDetailConverter
 {
     public PriceDataPoco? Convert(PriceDataDetailPoco? dataPoint, string priceType)

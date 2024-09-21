@@ -5,15 +5,14 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using EFCore.BulkExtensions;
 
 namespace GilGoblin.DataUpdater;
 
@@ -92,7 +91,12 @@ public class PriceUpdater(
     {
         try
         {
-            await ConvertAndSaveAsync(webPocos);
+            var convertedList = await ConvertAsync(webPocos);
+
+            if (!convertedList.Any())
+                return;
+
+            await priceSaver.SaveAsync(convertedList);
         }
         catch (Exception e)
         {
@@ -100,7 +104,7 @@ public class PriceUpdater(
         }
     }
 
-    private async Task ConvertAndSaveAsync(List<PriceWebPoco> webPocos)
+    private async Task<List<PricePoco>> ConvertAsync(List<PriceWebPoco> webPocos)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
@@ -130,8 +134,7 @@ public class PriceUpdater(
             }
         }
 
-        if (convertedList.Any())
-            await priceSaver.SaveAsync(convertedList);
+        return convertedList;
     }
 
     protected override List<WorldPoco> GetWorlds()
