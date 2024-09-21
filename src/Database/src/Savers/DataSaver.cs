@@ -64,7 +64,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
     protected virtual async Task<int> UpdateContextAsync(List<T> entityList)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         foreach (var entity in entityList)
         {
             dbContext.Entry(entity).State = entity.GetId() == 0 ? EntityState.Added : EntityState.Modified;

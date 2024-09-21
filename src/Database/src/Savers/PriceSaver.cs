@@ -18,7 +18,7 @@ public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<Pric
     protected override async Task<int> UpdateContextAsync(List<PricePoco> priceList)
     {
         await using var scope = ServiceProvider.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var existing = dbContext.Price
             .Select(s => s.ItemId)
             .ToList();
@@ -27,15 +27,6 @@ public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<Pric
         {
             dbContext.Entry(price).State = existing.Contains(price.ItemId) ? EntityState.Modified : EntityState.Added;
         }
-        
-        // dbContext.Price.Upsert(newPrice)
-        //     .On(p => new { p.ItemId, p.WorldId, p.IsHq })
-        //     .WhenMatched((existing, updated) => new Price 
-        //     {
-        //         PriceValue = updated.PriceValue,
-        //         // ... other fields
-        //     })
-        //     .Run();
 
         return await dbContext.SaveChangesAsync();
     }

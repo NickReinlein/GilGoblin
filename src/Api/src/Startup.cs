@@ -167,7 +167,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         {
             var serviceProvider = services.BuildServiceProvider();
 
-            var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+            await using var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
             if (await dbContextService.Database.CanConnectAsync() != true)
                 throw new Exception("Failed to connect to the database");
 

@@ -22,7 +22,7 @@ public class ItemRepository(IServiceProvider serviceProvider, IItemCache cache, 
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var item = dbContext.Item.FirstOrDefault(i => i.Id == itemId);
             if (item is null)
                 return null;
@@ -40,21 +40,21 @@ public class ItemRepository(IServiceProvider serviceProvider, IItemCache cache, 
     public List<ItemPoco> GetMultiple(IEnumerable<int> itemIds)
     {
         using var scope = serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.Item.Where(i => itemIds.Any(a => a == i.Id)).ToList();
     }
 
     public List<ItemPoco> GetAll()
     {
         using var scope = serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.Item.ToList();
     }
 
     public Task FillCache()
     {
         using var scope = serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var items = dbContext.Item.ToList();
         items.ForEach(item => cache.Add(item.Id, item));
         return Task.CompletedTask;

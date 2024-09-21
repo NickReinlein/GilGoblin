@@ -40,7 +40,7 @@ public class PriceDataPointConverter(
                 return null;
 
             await using var scope = serviceProvider.CreateAsyncScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             await dbContext.PriceData.AddRangeAsync(pricePoints);
             var savedCount = await dbContext.SaveChangesAsync();
             if (savedCount < pricePoints.Count)

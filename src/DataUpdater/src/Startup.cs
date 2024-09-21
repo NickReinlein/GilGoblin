@@ -121,7 +121,7 @@ public class Startup
 
     private void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
-        var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        using var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var canConnect = dbContextService.Database.CanConnect();
         if (canConnect != true)
             throw new Exception("Failed to connect to the database");

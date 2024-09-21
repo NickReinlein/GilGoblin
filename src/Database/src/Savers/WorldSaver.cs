@@ -15,7 +15,7 @@ public class WorldSaver(IServiceProvider serviceProvider, ILogger<DataSaver<Worl
     protected override async Task<int> UpdateContextAsync(List<WorldPoco> worlds)
     {
         await using var scope = ServiceProvider.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var itemIdList = worlds.Select(p => p.GetId()).ToList();
         var existing = await dbContext.World
             .Where(p => itemIdList.Contains(p.Id))

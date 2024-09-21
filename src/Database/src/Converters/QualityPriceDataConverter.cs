@@ -33,7 +33,7 @@ public class QualityPriceDataConverter(
                 await dataPointConverter.ConvertAsync(qualityData.RecentPurchase, itemId, isHq);
             
             await using var scope = serviceProvider.CreateAsyncScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
             var minListingDb = minListing is null
                 ? null

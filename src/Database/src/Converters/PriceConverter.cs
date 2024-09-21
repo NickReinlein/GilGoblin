@@ -47,7 +47,7 @@ public class PriceConverter(
             var hq = GetPricePocoFromQualityPrices(worldId, hqPrices, itemId);
             
             await using var scope = serviceProvider.CreateAsyncScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             if (hq is not null)
                 dbContext.Price.Add(hq);
 
