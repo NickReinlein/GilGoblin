@@ -58,6 +58,7 @@ public class Startup
             .AddScoped<IPriceDataDetailConverter, PriceDataDetailConverter>()
             .AddScoped<IPriceDataPointConverter, PriceDataPointConverter>()
             .AddScoped<IQualityPriceDataConverter, QualityPriceDataConverter>()
+            .AddScoped<IDailySaleVelocityConverter, DailySaleVelocityConverter>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
 
