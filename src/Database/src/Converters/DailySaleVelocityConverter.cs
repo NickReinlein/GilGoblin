@@ -24,16 +24,12 @@ public class DailySaleVelocityConverter(
     {
         try
         {
-            if (saleVelocity is null || !saleVelocity.HasAValidQuantity())
+            if (saleVelocity is null || itemId < 1 || !saleVelocity.HasAValidQuantity())
                 throw new ArgumentException("Invalid sale velocity");
 
             var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, isHq);
 
-            await using var scope = serviceProvider.CreateAsyncScope();
-            await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            await dbContext.DailySaleVelocity.AddRangeAsync(dailySaleVelocityDb);
-            await dbContext.SaveChangesAsync();
-
+            await SaveToDatabaseAsync(dailySaleVelocityDb);
             return dailySaleVelocityDb;
         }
         catch (Exception e)
@@ -42,7 +38,15 @@ public class DailySaleVelocityConverter(
             return null;
         }
     }
-    
+
+    private async Task SaveToDatabaseAsync(DailySaleVelocityPoco dailySaleVelocityDb)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await dbContext.DailySaleVelocity.AddRangeAsync(dailySaleVelocityDb);
+        await dbContext.SaveChangesAsync();
+    }
+
     private static DailySaleVelocityPoco ConvertToDbFormat(DailySaleVelocityWebPoco? saleVelocity, int itemId, bool isHq)
     {
         return new DailySaleVelocityPoco(0, 

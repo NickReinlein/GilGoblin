@@ -181,8 +181,8 @@ public class PriceFetcherTests : FetcherTests
             priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,
             priceGeoDataPointsPoco,
-            new DailySaleVelocityWebPoco(50, 200f, 300f, 400f)
-        );
+            new DailySaleVelocityWebPoco(new WebPocoQuantity(100f), new WebPocoQuantity(200f), new WebPocoQuantity(300f)));
+
         var worldUploadTimestampPocos = new List<WorldUploadTimeWebPoco>
         {
             new(worldId, 67554), new(worldId + 1, 67555)

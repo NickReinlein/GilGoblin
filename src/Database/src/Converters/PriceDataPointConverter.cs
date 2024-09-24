@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
@@ -24,8 +25,11 @@ public class PriceDataPointConverter(
     {
         try
         {
-            if (dataPoint is null || itemId < 1 || !dataPoint.HasValidPrice())
+            if (dataPoint is null || itemId < 1)
                 throw new ArgumentException("Invalid item id or datapoint");
+            
+            if (!dataPoint.HasValidPrice())
+                throw new DataException("Invalid price data");
 
             var world = detailConverter.Convert(dataPoint.World, "World");
             var dc = detailConverter.Convert(dataPoint.Dc, "Dc");

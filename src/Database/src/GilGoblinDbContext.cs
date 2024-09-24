@@ -1,4 +1,5 @@
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -81,14 +82,15 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PriceDataPoco>().Property(t => t.Timestamp).HasColumnName("timestamp");
         modelBuilder.Entity<PriceDataPoco>().Property(t => t.WorldId).HasColumnName("world_id");
 
+        var webPocoQuantityConverter = new WebPocoQuantityConverter();
         modelBuilder.Entity<DailySaleVelocityPoco>().ToTable("daily_sale_velocity");
         modelBuilder.Entity<DailySaleVelocityPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldQuantity).HasColumnName("world_quantity");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldQuantity).HasColumnName("world_quantity").HasConversion(webPocoQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity").HasConversion(webPocoQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity").HasConversion(webPocoQuantityConverter);
 
         modelBuilder.Entity<WorldUploadTimeDbPoco>().ToTable("world_upload_times");
         modelBuilder.Entity<WorldUploadTimeDbPoco>().HasKey(t => t.Id);

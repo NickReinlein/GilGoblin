@@ -33,10 +33,13 @@ public class QualityPriceDataConverter(
                 await dataPointConverter.ConvertAsync(qualityData.AverageSalePrice, itemId, isHq);
             var recentPurchase =
                 await dataPointConverter.ConvertAsync(qualityData.RecentPurchase, itemId, isHq);
+            if (qualityData.DailySaleVelocity.HasAValidQuantity())
+                logger.LogWarning("Found one");
+
             var dailySaleVelocity =
                 await saleVelocityConverter.ConvertAsync(qualityData.DailySaleVelocity, itemId, isHq);
 
-            return await SaveToDatabase(itemId, isHq, minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
+            return await SaveToDatabaseAsync(itemId, isHq, minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
         }
         catch (Exception e)
         {
@@ -45,7 +48,7 @@ public class QualityPriceDataConverter(
         }
     }
 
-    private async Task<QualityPriceDataPoco> SaveToDatabase(
+    private async Task<QualityPriceDataPoco> SaveToDatabaseAsync(
         int itemId,
         bool isHq,
         PriceDataPointPoco? minListing,

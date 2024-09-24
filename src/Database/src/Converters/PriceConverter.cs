@@ -31,17 +31,8 @@ public class PriceConverter(
             var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, false);
             var hq = GetPricePocoFromQualityPrices(worldId, hqPrices, itemId);
             
-            await using var scope = serviceProvider.CreateAsyncScope();
-            await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            if (hq is not null)
-                dbContext.Price.Add(hq);
+            await SaveToDatabaseAsync(hq, nq);
 
-            if (nq is not null)
-                dbContext.Price.Add(nq);
-
-            var saved = await dbContext.SaveChangesAsync();
-            logger.LogDebug("Saved {Saved} prices", saved);
-            
             return (hq, nq);
         }
         catch (Exception e)
@@ -49,6 +40,20 @@ public class PriceConverter(
             logger.LogDebug(e, "Failed to convert price data");
             return (null, null);
         }
+    }
+
+    private async Task SaveToDatabaseAsync(PricePoco? hq, PricePoco? nq)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        if (hq is not null)
+            dbContext.Price.Add(hq);
+
+        if (nq is not null)
+            dbContext.Price.Add(nq);
+
+        var saved = await dbContext.SaveChangesAsync();
+        logger.LogDebug("Saved {Saved} prices", saved);
     }
 
     private static PricePoco? GetPricePocoFromQualityPrices(int worldId, QualityPriceDataPoco? quality, int itemId)

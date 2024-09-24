@@ -32,10 +32,11 @@ public record PriceDataDetailPoco(
 );
 
 public record DailySaleVelocityWebPoco(
-    int Id,
-    float? WorldQuantity,
-    float? DcQuantity,
-    float? RegionQuantity
+    WebPocoQuantity? WorldQuantity,
+    WebPocoQuantity? DcQuantity,
+    WebPocoQuantity? RegionQuantity
 );
+
+public record WebPocoQuantity(float? Quantity);
 
 public record WorldUploadTimeWebPoco(int WorldId, long Timestamp);
