@@ -32,9 +32,9 @@ public record PriceDataDetailPoco(
 );
 
 public record DailySaleVelocityWebPoco(
-    WebPocoQuantity? WorldQuantity,
-    WebPocoQuantity? DcQuantity,
-    WebPocoQuantity? RegionQuantity
+    WebPocoQuantity? World,
+    WebPocoQuantity? Dc,
+    WebPocoQuantity? Region
 );
 
 public record WebPocoQuantity(float? Quantity);

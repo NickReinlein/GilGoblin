@@ -25,6 +25,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
+        connectionString += "Include Error Detail=true;";
         optionsBuilder.UseNpgsql(connectionString);
 
         // Only used during development and debugging
@@ -88,9 +89,9 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldQuantity).HasColumnName("world_quantity").HasConversion(webPocoQuantityConverter);
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.DcQuantity).HasColumnName("dc_quantity").HasConversion(webPocoQuantityConverter);
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.RegionQuantity).HasColumnName("region_quantity").HasConversion(webPocoQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world_quantity").HasConversion(webPocoQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc_quantity").HasConversion(webPocoQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region_quantity").HasConversion(webPocoQuantityConverter);
 
         modelBuilder.Entity<WorldUploadTimeDbPoco>().ToTable("world_upload_times");
         modelBuilder.Entity<WorldUploadTimeDbPoco>().HasKey(t => t.Id);
@@ -173,25 +174,25 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.AverageSalePrice)
             .WithOne()
-            .HasForeignKey<AverageSalePricePoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.MinListing)
             .WithOne()
-            .HasForeignKey<MinListingPoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.RecentPurchase)
             .WithOne()
-            .HasForeignKey<RecentPurchasePoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.DailySaleVelocity)
             .WithOne()
-            .HasForeignKey<DailySaleVelocityPoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
         base.OnModelCreating(modelBuilder);

@@ -33,7 +33,7 @@ public class BulkDataFetcher<T, U>(
 
         try
         {
-            var response = await FetchAsync(world, idList);
+            var response = await FetchAsync(world, idList, ct);
             if (response is null)
                 return new List<T>();
 
@@ -47,17 +47,17 @@ public class BulkDataFetcher<T, U>(
         }
     }
 
-    private async Task<U?> FetchAsync(int? world, IEnumerable<int> ids)
+    private async Task<U?> FetchAsync(int? world, IEnumerable<int> ids, CancellationToken ct)
     {
         var path = GetUrlPathFromEntries(ids, world);
-        return await FetchAndSerializeDataAsync(path);
+        return await FetchAndSerializeDataAsync(path, ct);
     }
 
-    private async Task<U?> FetchAndSerializeDataAsync(string path)
+    private async Task<U?> FetchAndSerializeDataAsync(string path, CancellationToken ct)
     {
         try
         {
-            var response = await Client.GetAsync(path);
+            var response = await Client.GetAsync(path, ct);
             return !response.IsSuccessStatusCode
                 ? null
                 : await ReadResponseContentAsync(response.Content);

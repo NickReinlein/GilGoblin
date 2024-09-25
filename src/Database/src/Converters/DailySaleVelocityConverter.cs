@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
@@ -24,9 +25,11 @@ public class DailySaleVelocityConverter(
     {
         try
         {
-            if (saleVelocity is null || itemId < 1 || !saleVelocity.HasAValidQuantity())
-                throw new ArgumentException("Invalid sale velocity");
-
+            if (saleVelocity is null || itemId < 1)
+                throw new ArgumentException("Invalid sale velocity: null or invalid item id", nameof(saleVelocity));
+            if (!saleVelocity.HasAValidQuantity())
+                throw new DataException("Has no valid quantity");
+            
             var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, isHq);
 
             await SaveToDatabaseAsync(dailySaleVelocityDb);
@@ -52,8 +55,8 @@ public class DailySaleVelocityConverter(
         return new DailySaleVelocityPoco(0, 
             itemId, 
             isHq,
-            saleVelocity?.WorldQuantity, 
-            saleVelocity?.DcQuantity,
-            saleVelocity?.RegionQuantity);
+            saleVelocity?.World, 
+            saleVelocity?.Dc,
+            saleVelocity?.Region);
     }
 }

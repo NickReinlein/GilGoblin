@@ -33,13 +33,11 @@ public class QualityPriceDataConverter(
                 await dataPointConverter.ConvertAsync(qualityData.AverageSalePrice, itemId, isHq);
             var recentPurchase =
                 await dataPointConverter.ConvertAsync(qualityData.RecentPurchase, itemId, isHq);
-            if (qualityData.DailySaleVelocity.HasAValidQuantity())
-                logger.LogWarning("Found one");
-
             var dailySaleVelocity =
                 await saleVelocityConverter.ConvertAsync(qualityData.DailySaleVelocity, itemId, isHq);
 
-            return await SaveToDatabaseAsync(itemId, isHq, minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
+            return await SaveToDatabaseAsync(itemId, isHq, minListing, averageSalePrice, recentPurchase,
+                dailySaleVelocity);
         }
         catch (Exception e)
         {
@@ -64,8 +62,6 @@ public class QualityPriceDataConverter(
         RecentPurchasePoco? recentPurchaseDb = null;
         DailySaleVelocityPoco? dailySaleVelocityDb = null;
 
-        var tasks = new List<Task>();
-
         if (minListing is not null)
         {
             minListingDb = new MinListingPoco(0,
@@ -74,7 +70,7 @@ public class QualityPriceDataConverter(
                 minListing.WorldDataPointId,
                 minListing.DcDataPointId,
                 minListing.RegionDataPointId);
-            tasks.Add(dbContext.MinListing.AddAsync(minListingDb).AsTask());
+            dbContext.MinListing.Add(minListingDb);
         }
 
         if (averageSalePrice is not null)
@@ -85,7 +81,7 @@ public class QualityPriceDataConverter(
                 averageSalePrice.WorldDataPointId,
                 averageSalePrice.DcDataPointId,
                 averageSalePrice.RegionDataPointId);
-            tasks.Add(dbContext.AverageSalePrice.AddAsync(averageSalePriceDb).AsTask());
+            dbContext.AverageSalePrice.Add(averageSalePriceDb);
         }
 
         if (recentPurchase is not null)
@@ -96,7 +92,7 @@ public class QualityPriceDataConverter(
                 recentPurchase.WorldDataPointId,
                 recentPurchase.DcDataPointId,
                 recentPurchase.RegionDataPointId);
-            tasks.Add(dbContext.RecentPurchase.AddAsync(recentPurchaseDb).AsTask());
+            dbContext.RecentPurchase.Add(recentPurchaseDb);
         }
 
         if (dailySaleVelocity is not null)
@@ -104,13 +100,12 @@ public class QualityPriceDataConverter(
             dailySaleVelocityDb = new DailySaleVelocityPoco(0,
                 itemId,
                 isHq,
-                dailySaleVelocity.WorldQuantity,
-                dailySaleVelocity.DcQuantity,
-                dailySaleVelocity.RegionQuantity);
-            tasks.Add(dbContext.DailySaleVelocity.AddAsync(dailySaleVelocityDb).AsTask());
+                dailySaleVelocity.World,
+                dailySaleVelocity.Dc,
+                dailySaleVelocity.Region);
+            dbContext.DailySaleVelocity.Add(dailySaleVelocityDb);
         }
 
-        await Task.WhenAll(tasks);
         await dbContext.SaveChangesAsync();
 
         return new QualityPriceDataPoco(minListingDb, averageSalePriceDb, recentPurchaseDb, dailySaleVelocityDb);

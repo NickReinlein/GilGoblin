@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Controllers;
@@ -8,7 +9,6 @@ using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +17,9 @@ using Prometheus;
 
 namespace GilGoblin.Api;
 
-public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
+public class Startup(IConfiguration configuration)
 {
-    public readonly IConfiguration _configuration = configuration;
-    public IWebHostEnvironment _environment = environment;
+    public readonly IConfiguration Configuration = configuration;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -48,7 +47,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
     private void AddGoblinServices(IServiceCollection services)
     {
-        services = AddGoblinDatabases(services, _configuration);
+        services = AddGoblinDatabases(services, Configuration);
         services = AddGoblinCrafting(services);
         services = AddGoblinControllers(services);
         services = AddBasicBuilderServices(services);
@@ -95,6 +94,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         var connectionString = configuration.GetConnectionString("GilGoblinDbContext");
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
+        
+        connectionString += "Include Error Detail=true;";
 
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -179,12 +180,12 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
             var worldRepository = serviceProvider.GetRequiredService<IWorldRepository>();
 
             var itemTask = itemRepository.FillCache();
-            // var priceTask = priceRepository.FillCache();
+            var priceTask = priceRepository.FillCache();
             var recipeTask = recipeRepository.FillCache();
             var recipeCostTask = recipeCostRepository.FillCache();
             var recipeProfitTask = recipeProfitRepository.FillCache();
             var worldsTask = worldRepository.FillCache();
-            await Task.WhenAll(itemTask, recipeTask, recipeCostTask, recipeProfitTask, worldsTask);
+            await Task.WhenAll(itemTask, priceTask, recipeTask, recipeCostTask, recipeProfitTask, worldsTask);
         }
         catch (Exception e)
         {

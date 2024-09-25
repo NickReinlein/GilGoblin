@@ -41,8 +41,9 @@ public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<Pric
         return new BulkConfig
         {
             UpdateByProperties = ["ItemId", "WorldId", "IsHq"], // unique keys
-            PreserveInsertOrder = false,
-            SetOutputIdentity = true
+            PreserveInsertOrder = true,
+            SetOutputIdentity = true,
+            OnSaveChangesSetFK = true
         };
     }
 }

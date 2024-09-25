@@ -8,17 +8,14 @@ using GilGoblin.Api.Repository;
 using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
-using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using EFCore.BulkExtensions;
 
 namespace GilGoblin.DataUpdater;
 
 public class PriceUpdater(
     IServiceProvider serviceProvider,
-    IPriceSaver priceSaver,
     ILogger<PriceUpdater> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
@@ -48,67 +45,43 @@ public class PriceUpdater(
         var batcher = new Batcher.Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
 
-        while (!ct.IsCancellationRequested)
+        foreach (var batch in batches)
         {
-            foreach (var batch in batches)
+            try
             {
-                try
-                {
-                    var fetched = await fetcher.FetchByIdsAsync(batch, worldId, ct);
-                    if (!fetched.Any())
-                    {
-                        logger.LogDebug(
-                            "Fetched {Count} items for world id {WorldId} but received no price data in response",
-                            batch.Count,
-                            worldId);
-                        continue;
-                    }
+                if (ct.IsCancellationRequested)
+                    throw new TaskCanceledException();
 
-                    await ConvertAndSaveToDbAsync(fetched);
-                }
-                catch (Exception e)
+                var fetched = await fetcher.FetchByIdsAsync(batch, worldId, ct);
+                if (!fetched.Any())
                 {
-                    logger.LogError($"Failed to get batch: {e.Message}");
+                    logger.LogDebug(
+                        "Fetched {Count} items for world id {WorldId} but received no price data in response",
+                        batch.Count,
+                        worldId);
+                    continue;
                 }
 
-                try
-                {
-                    await AwaitDelay(ct);
-                }
-                catch (TaskCanceledException)
-                {
-                    const string message =
-                        $"The cancellation token was cancelled. Ending service {nameof(PriceUpdater)}";
-                    logger.LogInformation(message);
-                }
+                await ConvertAndSaveToDbAsync(fetched);
             }
-
-            return;
+            catch (TaskCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Failed to get batch: {e.Message}");
+            }
+            finally
+            {
+                await AwaitDelay(ct);
+            }
         }
     }
 
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
     {
-        try
-        {
-            var convertedList = await ConvertAsync(webPocos);
-
-            if (!convertedList.Any())
-                return;
-
-            await priceSaver.SaveAsync(convertedList);
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Failed to save {Count} entries for {TypeString}", webPocos.Count, nameof(PricePoco));
-        }
-    }
-
-    private async Task<List<PricePoco>> ConvertAsync(List<PriceWebPoco> webPocos)
-    {
         await using var scope = serviceProvider.CreateAsyncScope();
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
-        var convertedList = new List<PricePoco>();
 
         foreach (var webPoco in webPocos)
         {
@@ -121,20 +94,13 @@ public class PriceUpdater(
                     continue;
                 }
 
-                var (hq, nq) = await converter.ConvertAsync(webPoco, worldId);
-                if (hq is not null)
-                    convertedList.Add(hq);
-
-                if (nq is not null)
-                    convertedList.Add(nq);
+                await converter.ConvertAsync(webPoco, worldId);
             }
             catch (Exception e)
             {
                 logger.LogDebug(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
             }
         }
-
-        return convertedList;
     }
 
     protected override List<WorldPoco> GetWorlds()
