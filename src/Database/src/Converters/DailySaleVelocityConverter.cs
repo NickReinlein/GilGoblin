@@ -52,11 +52,10 @@ public class DailySaleVelocityConverter(
 
     private static DailySaleVelocityPoco ConvertToDbFormat(DailySaleVelocityWebPoco? saleVelocity, int itemId, bool isHq)
     {
-        return new DailySaleVelocityPoco(0, 
-            itemId, 
+        return new DailySaleVelocityPoco(itemId, 
             isHq,
-            saleVelocity?.World, 
-            saleVelocity?.Dc,
-            saleVelocity?.Region);
+            saleVelocity?.World?.Quantity, 
+            saleVelocity?.Dc?.Quantity,
+            saleVelocity?.Region?.Quantity);
     }
 }

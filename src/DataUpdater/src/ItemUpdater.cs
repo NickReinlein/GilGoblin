@@ -15,7 +15,7 @@ public class ItemUpdater(
     ILogger<DataUpdater<ItemPoco, ItemWebPoco>> logger)
     : DataUpdater<ItemPoco, ItemWebPoco>(serviceProvider, logger)
 {
-    protected override async Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated)
+    protected override async Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated, int? worldId = null)
     {
         using var scope = serviceProvider.CreateScope();
         var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<ItemPoco>>();

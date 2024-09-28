@@ -21,7 +21,7 @@ public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<Pric
         {
             await using var scope = ServiceProvider.CreateAsyncScope();
             await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            await dbContext.BulkInsertOrUpdateAsync(entityList, GetBulkConfig(), cancellationToken: ct);
+            await dbContext.BulkInsertOrUpdateAsync(entityList, GetBulkConfig(), type: typeof(PricePoco), cancellationToken: ct);
             return entityList.Count;
         }
         catch (Exception ex)

@@ -73,9 +73,9 @@ CREATE TABLE IF NOT EXISTS daily_sale_velocity
     id              SERIAL PRIMARY KEY,
     item_id         INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
     is_hq           BOOLEAN NOT NULL,
-    world_quantity  NUMERIC(12, 6),
-    dc_quantity     NUMERIC(12, 6),
-    region_quantity NUMERIC(12, 6)
+    world_quantity  NUMERIC(12, 2),
+    dc_quantity     NUMERIC(12, 2),
+    region_quantity NUMERIC(12, 2)
 );
 CREATE INDEX idx_daily_sale_velocity_item_id ON daily_sale_velocity (item_id);
 CREATE INDEX idx_daily_sale_velocity_item_id_and_is_hq ON daily_sale_velocity (item_id, is_hq);

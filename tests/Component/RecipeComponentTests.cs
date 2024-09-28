@@ -20,7 +20,7 @@ public class RecipeComponentTests : ComponentTests
         var recipe = await response.Content.ReadFromJsonAsync<RecipePoco?>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
-            Assert.That(recipe.Id, Is.EqualTo(32635));
+            Assert.That(recipe!.Id, Is.EqualTo(32635));
             Assert.That(recipe.CraftType, Is.EqualTo(3));
             Assert.That(recipe.TargetItemId, Is.EqualTo(22428));
             Assert.That(recipe.CanHq);

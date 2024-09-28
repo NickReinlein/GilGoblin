@@ -20,7 +20,7 @@ public class ItemWebPocoConverter : JsonConverter<ItemWebPoco>
         var level = root.GetProperty("LevelItem").GetInt32();
         var canBeHq = root.GetProperty("CanBeHq").GetInt32();
 
-        return new ItemWebPoco(id, name, description, iconId, priceLow, priceMid, stackSize, level, canBeHq);
+        return new ItemWebPoco(id, name!, description!, iconId, priceLow, priceMid, stackSize, level, canBeHq);
     }
 
     public override void Write(Utf8JsonWriter writer, ItemWebPoco value, JsonSerializerOptions options)

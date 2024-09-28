@@ -38,7 +38,7 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IMarketableItemIdsFetcher))]
-    [TestCase(typeof(IDataSaver<PricePoco>))]
+    [TestCase(typeof(IPriceSaver))]
     [TestCase(typeof(IPriceConverter))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {

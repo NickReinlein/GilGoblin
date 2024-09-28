@@ -53,8 +53,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-dataupdater:
-    image: nickreinlein/gilgoblin-dataupdater
-    container_name: dataupdater
+    # image: nickreinlein/gilgoblin-dataupdater
+    # container_name: dataupdater
+    image: updater
+    build: src/DataUpdater/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api

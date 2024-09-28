@@ -45,9 +45,10 @@ public class RecipeGrocer : IRecipeGrocer
         IEnumerable<IngredientPoco?> ingredientList)
     {
         var ingredientsBrokenDownList = new List<IngredientPoco>();
-        foreach (var ingredient in ingredientList.Where(i => i?.Quantity > 0))
+        var validIngredients = ingredientList.Where(i => i is { Quantity: > 0, ItemId: > 0 });
+        foreach (var ingredient in validIngredients)
         {
-            var breakdown = await BreakdownItem(ingredient.ItemId);
+            var breakdown = await BreakdownItem(ingredient!.ItemId);
             var breakdownIngredients = breakdown.ToList();
             if (!breakdownIngredients.Any())
             {
@@ -90,8 +91,8 @@ public class RecipeGrocer : IRecipeGrocer
     )
     {
         foreach (
-            var ingredient in recipeIngredients.Where(ing => 
-                ing.Quantity is not 0 && 
+            var ingredient in recipeIngredients.Where(ing =>
+                ing.Quantity is not 0 &&
                 ing.RecipeId == recipe.Id)
         )
         {

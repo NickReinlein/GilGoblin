@@ -26,7 +26,7 @@ public record PriceDataPointWebPoco(
 );
 
 public record PriceDataDetailPoco(
-    float Price,
+    decimal Price,
     int? WorldId = null,
     long? Timestamp = null
 );
@@ -37,6 +37,6 @@ public record DailySaleVelocityWebPoco(
     WebPocoQuantity? Region
 );
 
-public record WebPocoQuantity(float? Quantity);
+public record WebPocoQuantity(decimal? Quantity);
 
 public record WorldUploadTimeWebPoco(int WorldId, long Timestamp);

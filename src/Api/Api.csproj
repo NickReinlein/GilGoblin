@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <None Update="appsettings.json">
-      <CopyToPublishDirectory>"PreserveNewest"</CopyToPublishDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>appsettings.json</TargetPath>
     </None>

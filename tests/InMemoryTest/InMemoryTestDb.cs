@@ -59,8 +59,8 @@ public class InMemoryTestDb
         using var context = new TestGilGoblinDbContext(_options, _configuration);
         // var pricePoint = new PriceDataPointPoco(1, 11, true);
         context.Price.AddRange(
-            new PricePoco { Id = 1, WorldId = 34, IsHq = true, Updated = DateTimeOffset.UtcNow },
-            new PricePoco { Id = 2, WorldId = 34, IsHq = false, Updated = DateTimeOffset.UtcNow }
+            new PricePoco(ItemId: 1, WorldId: 34, IsHq: true, Updated: DateTimeOffset.UtcNow),
+            new PricePoco(ItemId: 2, WorldId: 34, IsHq: false, Updated: DateTimeOffset.UtcNow)
         );
         context.Recipe.AddRange(
             new RecipePoco { Id = 11, TargetItemId = 5682, ItemIngredient0TargetId = 774, AmountIngredient0 = 3 },

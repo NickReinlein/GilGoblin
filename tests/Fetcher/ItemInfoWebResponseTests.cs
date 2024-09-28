@@ -42,7 +42,7 @@ public class ItemWebResponseTests
         Assert.Multiple(() =>
         {
             Assert.That(result is not null);
-            Assert.That(result.Items is not null);
+            Assert.That(result!.Items is not null);
             Assert.That(result.Items, Is.Empty);
         });
     }
@@ -88,7 +88,7 @@ public class ItemWebResponseTests
         Assert.Multiple(() =>
         {
             Assert.That(result is not null);
-            Assert.That(result.Items is not null);
+            Assert.That(result!.Items is not null);
             Assert.That(result.Items, Is.Empty);
         });
     }

@@ -50,7 +50,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var fetcher = scope.ServiceProvider.GetService<IWorldFetcher>();
+            var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
             logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();

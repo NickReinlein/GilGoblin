@@ -8,7 +8,6 @@ namespace GilGoblin.Database;
 public class GilGoblinDbContext(DbContextOptions options, IConfiguration configuration) : DbContext(options)
 {
     protected readonly IConfiguration Configuration = configuration;
-
     public DbSet<ItemPoco> Item { get; set; }
     public DbSet<WorldPoco> World { get; set; }
     public DbSet<RecipePoco> Recipe { get; set; }

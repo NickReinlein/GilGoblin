@@ -56,7 +56,7 @@ public abstract class DataUpdater<T, U>(
         await FetchAsync(worlds.FirstOrDefault()?.GetId(), ct);
     }
 
-    protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
+    protected virtual Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null) => Task.CompletedTask;
 
     public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
     {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Database.Savers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,6 @@ public interface IPriceConverter
 }
 
 public class PriceConverter(
-    IServiceProvider serviceProvider,
     IQualityPriceDataConverter qualityConverter,
     IPriceSaver priceSaver,
     ILogger<PriceConverter> logger) : IPriceConverter
@@ -75,16 +75,15 @@ public class PriceConverter(
     {
         return quality is null
             ? null
-            : new PricePoco
-            {
-                ItemId = itemId,
-                WorldId = worldId,
-                IsHq = false,
-                Updated = DateTimeOffset.UtcNow,
-                AverageSalePriceId = quality?.AverageSalePrice?.Id ?? 0,
-                MinListingId = quality?.MinListing?.Id ?? 0,
-                RecentPurchaseId = quality?.RecentPurchase?.Id ?? 0,
-                DailySaleVelocityId = quality?.DailySaleVelocity?.Id ?? 0,
-            };
+            : new PricePoco(
+                ItemId: itemId,
+                WorldId: worldId,
+                IsHq: false,
+                Updated: DateTimeOffset.UtcNow,
+                MinListing: quality.MinListing?.ToMinListing(),
+                RecentPurchase: quality?.RecentPurchase?.ToRecentPurchase(),
+                AverageSalePrice: quality?.AverageSalePrice?.ToAverageSalePrice(),
+                DailySaleVelocity: quality?.DailySaleVelocity
+            );
     }
 }

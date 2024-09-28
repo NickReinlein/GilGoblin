@@ -51,7 +51,7 @@ public class PriceDataPointConverter(
                 logger.LogWarning(
                     $"Failed to save {pricePoints.Count - savedCount} of {pricePoints.Count} price data points");
 
-            return new PriceDataPointPoco(0, itemId, isHq, world?.Id, dc?.Id, region?.Id);
+            return new PriceDataPointPoco(itemId, isHq, world?.Id, dc?.Id, region?.Id);
         }
         catch (Exception e)
         {

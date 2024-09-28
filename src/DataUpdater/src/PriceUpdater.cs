@@ -9,6 +9,7 @@ using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
 using GilGoblin.Fetcher;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -62,7 +63,7 @@ public class PriceUpdater(
                     continue;
                 }
 
-                await ConvertAndSaveToDbAsync(fetched);
+                await ConvertAndSaveToDbAsync(fetched, worldId);
             }
             catch (TaskCanceledException)
             {
@@ -78,23 +79,20 @@ public class PriceUpdater(
         }
     }
 
-    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
+    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
+
+        var world = worldId ?? 0;
+        if (world < 1)
+            return;
 
         foreach (var webPoco in webPocos)
         {
             try
             {
-                var worldId = webPoco.GetWorldId();
-                if (worldId == 0)
-                {
-                    logger.LogDebug("Skipping price for {ItemId} with no world id", webPoco.ItemId);
-                    continue;
-                }
-
-                await converter.ConvertAsync(webPoco, worldId);
+                await converter.ConvertAsync(webPoco, world);
             }
             catch (Exception e)
             {

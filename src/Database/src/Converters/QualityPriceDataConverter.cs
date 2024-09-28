@@ -64,7 +64,7 @@ public class QualityPriceDataConverter(
 
         if (minListing is not null)
         {
-            minListingDb = new MinListingPoco(0,
+            minListingDb = new MinListingPoco(
                 itemId,
                 isHq,
                 minListing.WorldDataPointId,
@@ -75,7 +75,7 @@ public class QualityPriceDataConverter(
 
         if (averageSalePrice is not null)
         {
-            averageSalePriceDb = new AverageSalePricePoco(0,
+            averageSalePriceDb = new AverageSalePricePoco(
                 itemId,
                 isHq,
                 averageSalePrice.WorldDataPointId,
@@ -86,7 +86,7 @@ public class QualityPriceDataConverter(
 
         if (recentPurchase is not null)
         {
-            recentPurchaseDb = new RecentPurchasePoco(0,
+            recentPurchaseDb = new RecentPurchasePoco(
                 itemId,
                 isHq,
                 recentPurchase.WorldDataPointId,
@@ -97,7 +97,7 @@ public class QualityPriceDataConverter(
 
         if (dailySaleVelocity is not null)
         {
-            dailySaleVelocityDb = new DailySaleVelocityPoco(0,
+            dailySaleVelocityDb = new DailySaleVelocityPoco(
                 itemId,
                 isHq,
                 dailySaleVelocity.World,
