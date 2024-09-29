@@ -33,9 +33,9 @@ public class PriceConverter(
 
             var itemId = webPoco.ItemId;
             var nqPrices = await qualityConverter.ConvertAsync(webPoco.Nq, itemId, false);
-            var nq = GetPricePocoFromQualityPrices(worldId, nqPrices, itemId);
+            var nq = GetPricePocoFromQualityPrices(nqPrices, worldId, itemId, false);
             var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, true);
-            var hq = GetPricePocoFromQualityPrices(worldId, hqPrices, itemId);
+            var hq = GetPricePocoFromQualityPrices(hqPrices, worldId, itemId, true);
 
             await SaveToDatabaseAsync(hq, nq, ct);
             return (hq, nq);
@@ -71,19 +71,20 @@ public class PriceConverter(
         }
     }
 
-    private static PricePoco? GetPricePocoFromQualityPrices(int worldId, QualityPriceDataPoco? quality, int itemId)
+    private static PricePoco? GetPricePocoFromQualityPrices(QualityPriceDataPoco? quality, int worldId, int itemId,
+        bool isHq)
     {
         return quality is null
             ? null
             : new PricePoco(
                 ItemId: itemId,
                 WorldId: worldId,
-                IsHq: false,
+                IsHq: isHq,
                 Updated: DateTimeOffset.UtcNow,
-                MinListing: quality.MinListing?.ToMinListing(),
-                RecentPurchase: quality?.RecentPurchase?.ToRecentPurchase(),
-                AverageSalePrice: quality?.AverageSalePrice?.ToAverageSalePrice(),
-                DailySaleVelocity: quality?.DailySaleVelocity
+                quality.MinListing?.Id,
+                quality.RecentPurchase?.Id,
+                quality.AverageSalePrice?.Id,
+                quality.DailySaleVelocity?.Id
             );
     }
 }

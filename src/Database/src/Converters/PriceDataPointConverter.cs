@@ -12,7 +12,7 @@ namespace GilGoblin.Database.Converters;
 
 public interface IPriceDataPointConverter
 {
-    Task<PriceDataPointPoco?> ConvertAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq);
+    Task<PriceDataPointPoco?> ConvertAndSaveAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq);
 }
 
 public class PriceDataPointConverter(
@@ -21,7 +21,7 @@ public class PriceDataPointConverter(
     ILogger<PriceDataPointConverter> logger)
     : IPriceDataPointConverter
 {
-    public async Task<PriceDataPointPoco?> ConvertAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq)
+    public async Task<PriceDataPointPoco?> ConvertAndSaveAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq)
     {
         try
         {

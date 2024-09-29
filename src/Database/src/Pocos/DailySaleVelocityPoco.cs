@@ -7,3 +7,4 @@ public record DailySaleVelocityPoco(
     SaleQuantity? Dc,
     SaleQuantity? Region)
     : IdentifiablePoco;
+    

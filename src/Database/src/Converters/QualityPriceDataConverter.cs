@@ -28,11 +28,11 @@ public class QualityPriceDataConverter(
                 return null;
 
             var minListing =
-                await dataPointConverter.ConvertAsync(qualityData.MinListing, itemId, isHq);
+                await dataPointConverter.ConvertAndSaveAsync(qualityData.MinListing, itemId, isHq);
             var averageSalePrice =
-                await dataPointConverter.ConvertAsync(qualityData.AverageSalePrice, itemId, isHq);
+                await dataPointConverter.ConvertAndSaveAsync(qualityData.AverageSalePrice, itemId, isHq);
             var recentPurchase =
-                await dataPointConverter.ConvertAsync(qualityData.RecentPurchase, itemId, isHq);
+                await dataPointConverter.ConvertAndSaveAsync(qualityData.RecentPurchase, itemId, isHq);
             var dailySaleVelocity =
                 await saleVelocityConverter.ConvertAsync(qualityData.DailySaleVelocity, itemId, isHq);
 

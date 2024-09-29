@@ -50,11 +50,12 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
+            // var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
             logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await fetcher.GetAllAsync();
+            // var updated = await fetcher.GetAllAsync();
+            var updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
             timer.Stop();
 
             if (updated.Count == 0)

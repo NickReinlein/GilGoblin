@@ -1,6 +1,7 @@
 using System;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Converters;
+// using GilGoblin.Database.Pocos.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -143,6 +144,10 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.IsHq).HasColumnName("is_hq");
+        // modelBuilder.Entity<PricePoco>().Property(t => t.MinListing);
+        // modelBuilder.Entity<PricePoco>().Property(t => t.RecentPurchase);
+        // modelBuilder.Entity<PricePoco>().Property(t => t.AverageSalePrice);
+        // modelBuilder.Entity<PricePoco>().Property(t => t.DailySaleVelocity);
         modelBuilder.Entity<PricePoco>().Property(t => t.MinListingId).HasColumnName("min_listing_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.RecentPurchaseId).HasColumnName("recent_purchase_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSalePriceId).HasColumnName("average_sale_price_id");
@@ -160,19 +165,18 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.AverageSalePriceId)
             .OnDelete(DeleteBehavior.Cascade);
-
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.MinListing)
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.MinListingId)
             .OnDelete(DeleteBehavior.Cascade);
-
+        
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.RecentPurchase)
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.RecentPurchaseId)
             .OnDelete(DeleteBehavior.Cascade);
-
+        
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.DailySaleVelocity)
             .WithOne()
