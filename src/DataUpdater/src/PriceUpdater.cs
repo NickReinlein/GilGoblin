@@ -22,7 +22,7 @@ public class PriceUpdater(
 {
     private List<int> AllItemIds { get; set; } = [];
     private DateTimeOffset LastUpdated { get; set; }
-    private const int dataExpiryInHours = 48;
+    private const int dataExpiryInHours = 96;
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
     {
@@ -92,7 +92,7 @@ public class PriceUpdater(
         {
             try
             {
-                await converter.ConvertAsync(webPoco, world);
+                await converter.ConvertAndSaveAsync(webPoco, world);
             }
             catch (Exception e)
             {

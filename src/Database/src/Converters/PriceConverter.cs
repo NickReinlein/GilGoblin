@@ -15,7 +15,7 @@ namespace GilGoblin.Database.Converters;
 
 public interface IPriceConverter
 {
-    Task<(PricePoco?, PricePoco?)> ConvertAsync(PriceWebPoco webPoco, int worldId, CancellationToken ct = default);
+    Task<(PricePoco?, PricePoco?)> ConvertAndSaveAsync(PriceWebPoco webPoco, int worldId, CancellationToken ct = default);
 }
 
 public class PriceConverter(
@@ -23,11 +23,12 @@ public class PriceConverter(
     IPriceSaver priceSaver,
     ILogger<PriceConverter> logger) : IPriceConverter
 {
-    public async Task<(PricePoco?, PricePoco?)> ConvertAsync(PriceWebPoco webPoco, int worldId,
+    public async Task<(PricePoco?, PricePoco?)> ConvertAndSaveAsync(PriceWebPoco webPoco, int worldId,
         CancellationToken ct = default)
     {
         try
         {
+            
             if (webPoco is null || worldId < 1)
                 throw new ArgumentException("Invalid world id", nameof(worldId));
 
