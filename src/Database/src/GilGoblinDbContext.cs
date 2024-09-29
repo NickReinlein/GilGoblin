@@ -1,3 +1,4 @@
+using System;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -7,23 +8,25 @@ namespace GilGoblin.Database;
 
 public class GilGoblinDbContext(DbContextOptions options, IConfiguration configuration) : DbContext(options)
 {
-    protected readonly IConfiguration Configuration = configuration;
-    public DbSet<ItemPoco> Item { get; set; }
-    public DbSet<WorldPoco> World { get; set; }
-    public DbSet<RecipePoco> Recipe { get; set; }
-    public DbSet<RecipeCostPoco> RecipeCost { get; set; }
-    public DbSet<RecipeProfitPoco> RecipeProfit { get; set; }
-    public DbSet<MinListingPoco> MinListing { get; set; }
-    public DbSet<AverageSalePricePoco> AverageSalePrice { get; set; }
-    public DbSet<RecentPurchasePoco> RecentPurchase { get; set; }
-    public DbSet<DailySaleVelocityPoco> DailySaleVelocity { get; set; }
-    public DbSet<WorldUploadTimeDbPoco> WorldUploadTime { get; set; }
-    public DbSet<PricePoco> Price { get; set; }
-    public DbSet<PriceDataPoco> PriceData { get; set; }
+    public DbSet<ItemPoco> Item { get; init; }
+    public DbSet<WorldPoco> World { get; init; }
+    public DbSet<RecipePoco> Recipe { get; init; }
+    public DbSet<RecipeCostPoco> RecipeCost { get; init; }
+    public DbSet<RecipeProfitPoco> RecipeProfit { get; init; }
+    public DbSet<MinListingPoco> MinListing { get; init; }
+    public DbSet<AverageSalePricePoco> AverageSalePrice { get; init; }
+    public DbSet<RecentPurchasePoco> RecentPurchase { get; init; }
+    public DbSet<DailySaleVelocityPoco> DailySaleVelocity { get; init; }
+    public DbSet<WorldUploadTimeDbPoco> WorldUploadTime { get; init; }
+    public DbSet<PricePoco> Price { get; init; }
+    public DbSet<PriceDataPoco> PriceData { get; init; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connectionString = Configuration.GetConnectionString(nameof(GilGoblinDbContext));
+        var connectionString = Environment.GetEnvironmentVariable(nameof(GilGoblinDbContext))
+                               ?? configuration.GetConnectionString(nameof(GilGoblinDbContext))
+                               ?? throw new InvalidOperationException(
+                                   "Connection string not found in environment variables or configuration.");
         connectionString += "Include Error Detail=true;";
         optionsBuilder.UseNpgsql(connectionString);
 
@@ -82,15 +85,18 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PriceDataPoco>().Property(t => t.Timestamp).HasColumnName("timestamp");
         modelBuilder.Entity<PriceDataPoco>().Property(t => t.WorldId).HasColumnName("world_id");
 
-        var webPocoQuantityConverter = new WebPocoQuantityConverter();
+        var saleQuantityConverter = new SaleQuantityConverter();
         modelBuilder.Entity<DailySaleVelocityPoco>().ToTable("daily_sale_velocity");
         modelBuilder.Entity<DailySaleVelocityPoco>().HasKey(t => t.Id);
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world_quantity").HasConversion(webPocoQuantityConverter);
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc_quantity").HasConversion(webPocoQuantityConverter);
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region_quantity").HasConversion(webPocoQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world_quantity")
+            .HasConversion(saleQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc_quantity")
+            .HasConversion(saleQuantityConverter);
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region_quantity")
+            .HasConversion(saleQuantityConverter);
 
         modelBuilder.Entity<WorldUploadTimeDbPoco>().ToTable("world_upload_times");
         modelBuilder.Entity<WorldUploadTimeDbPoco>().HasKey(t => t.Id);
@@ -172,7 +178,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.DailySaleVelocityId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<RecipeCostPoco>().ToTable("recipe_cost");
         modelBuilder.Entity<RecipeCostPoco>().HasKey(t => new { t.RecipeId, t.WorldId, t.IsHq });
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");

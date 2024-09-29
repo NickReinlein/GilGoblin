@@ -3,7 +3,7 @@ namespace GilGoblin.Database.Pocos;
 public record DailySaleVelocityPoco(
     int ItemId,
     bool IsHq,
-    decimal? World,
-    decimal? Dc,
-    decimal? Region)
+    SaleQuantity? World,
+    SaleQuantity? Dc,
+    SaleQuantity? Region)
     : IdentifiablePoco;

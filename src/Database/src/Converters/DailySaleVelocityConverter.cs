@@ -29,7 +29,7 @@ public class DailySaleVelocityConverter(
                 throw new ArgumentException("Invalid sale velocity: null or invalid item id", nameof(saleVelocity));
             if (!saleVelocity.HasAValidQuantity())
                 throw new DataException("Has no valid quantity");
-            
+
             var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, isHq);
 
             await SaveToDatabaseAsync(dailySaleVelocityDb);
@@ -50,12 +50,13 @@ public class DailySaleVelocityConverter(
         await dbContext.SaveChangesAsync();
     }
 
-    private static DailySaleVelocityPoco ConvertToDbFormat(DailySaleVelocityWebPoco? saleVelocity, int itemId, bool isHq)
-    {
-        return new DailySaleVelocityPoco(itemId, 
+    private static DailySaleVelocityPoco ConvertToDbFormat(
+        DailySaleVelocityWebPoco? saleVelocity,
+        int itemId,
+        bool isHq)
+        => new(itemId,
             isHq,
-            saleVelocity?.World?.Quantity, 
-            saleVelocity?.Dc?.Quantity,
-            saleVelocity?.Region?.Quantity);
-    }
+            saleVelocity?.World,
+            saleVelocity?.Dc,
+            saleVelocity?.Region);
 }
