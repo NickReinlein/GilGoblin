@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="GilGoblin.Api" Version="1.2.*"/>
     <PackageReference Include="GilGoblin.Fetcher" Version="1.2.*"/>
-    <PackageReference Include="GilGoblin.Batcher" Version="1.0.*"/>
+    <PackageReference Include="GilGoblin.Batcher" Version="1.1.0" />
     <PackageReference Include="GilGoblin.Database" Version="1.1.*"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>

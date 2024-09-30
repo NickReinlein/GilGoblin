@@ -9,7 +9,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="BenchmarkDotNet" Version="0.14.*" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.*" />
@@ -33,9 +32,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.*" />
-    <PackageReference Include="TestContainers.Container.Database.PostgreSql" Version="1.5.*" />
-    <PackageReference Include="Testcontainers.PostgreSql" Version="3.10.*" />
-    <PackageReference Include="Docker.DotNet" Version="3.125.* " />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="3.10.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Accountant/Accountant.csproj" />
