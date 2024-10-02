@@ -12,8 +12,9 @@ namespace GilGoblin.Tests.Database.Integration;
 
 public class PriceDataPointTests
 {
-    private GilGoblinDbContext _dbContext;
-    private PostgreSqlContainer _postgresContainer;
+    private PostgreSqlContainer? _postgresContainer;
+    private IConfigurationRoot _configuration;
+    private DbContextOptions<GilGoblinDbContext> _options;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
@@ -25,35 +26,32 @@ public class PriceDataPointTests
                 .WithDatabase("goblin_db")
                 .WithUsername("goblin")
                 .WithPassword("goblin_pw")
+                .WithPortBinding(0, 5432)
                 .WithCleanUp(true)
-                .WithPortBinding(5432, true)
                 .Build();
 
             await _postgresContainer.StartAsync();
 
-            var connectionString = _postgresContainer.GetConnectionString();
+            Console.WriteLine($"PostgreSQL started on: {_postgresContainer.GetConnectionString()}");
 
             var configKvps = new Dictionary<string, string?>
             {
-                { "ConnectionStrings:GilGoblinDbContext", connectionString }
+                { "ConnectionStrings:GilGoblinDbContext", GetConnectionString() }
             };
-            var configuration = new ConfigurationBuilder()
+            _configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(configKvps)
                 .Build();
 
-            var options = new DbContextOptionsBuilder<GilGoblinDbContext>()
+            _options = new DbContextOptionsBuilder<GilGoblinDbContext>()
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
-                .UseNpgsql(connectionString)
+                .UseNpgsql(GetConnectionString())
                 .Options;
 
-            _dbContext = new GilGoblinDbContext(options, configuration);
-            await _dbContext.Database.EnsureCreatedAsync();
-            var created = await _dbContext.Database.EnsureCreatedAsync();
+            await using var ctx = GetNewDbContext();
+            var created = await ctx.Database.EnsureCreatedAsync();
             if (!created)
                 throw new Exception("Failed to connect to database");
-
-            Console.WriteLine("Database context created.");
         }
         catch (Exception e)
         {
@@ -67,12 +65,12 @@ public class PriceDataPointTests
     {
         var averageSalePrice = new AverageSalePricePoco(100, true, 100, 200, 300);
 
-        await _dbContext.AverageSalePrice.AddAsync(averageSalePrice);
-        var savedCount = await _dbContext.SaveChangesAsync();
+        await using var ctx = GetNewDbContext();
+        await ctx.AverageSalePrice.AddAsync(averageSalePrice);
+        var savedCount = await ctx.SaveChangesAsync();
+
         Assert.That(savedCount, Is.EqualTo(1));
-
-        var result = await _dbContext.AverageSalePrice.FirstOrDefaultAsync(x => x.ItemId == 22);
-
+        var result = await ctx.AverageSalePrice.FirstOrDefaultAsync(x => x.ItemId == averageSalePrice.ItemId);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
@@ -83,17 +81,59 @@ public class PriceDataPointTests
             Assert.That(result.RegionDataPointId, Is.EqualTo(averageSalePrice.RegionDataPointId));
         });
     }
-
-    [TearDown]
-    public void TearDown()
+    
+    [Test]
+    public async Task GivenRecentPurchasePocoPoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
     {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        var recentPurchasePoco = new RecentPurchasePoco(100, true, 100, 200, 300);
+
+        await using var ctx = GetNewDbContext();
+        await ctx.RecentPurchase.AddAsync(recentPurchasePoco);
+        var savedCount = await ctx.SaveChangesAsync();
+
+        Assert.That(savedCount, Is.EqualTo(1));
+        var result = await ctx.RecentPurchase.FirstOrDefaultAsync(x => x.ItemId == recentPurchasePoco.ItemId);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.ItemId, Is.EqualTo(recentPurchasePoco.ItemId));
+            Assert.That(result.IsHq, Is.EqualTo(recentPurchasePoco.IsHq));
+            Assert.That(result.WorldDataPointId, Is.EqualTo(recentPurchasePoco.WorldDataPointId));
+            Assert.That(result.DcDataPointId, Is.EqualTo(recentPurchasePoco.DcDataPointId));
+            Assert.That(result.RegionDataPointId, Is.EqualTo(recentPurchasePoco.RegionDataPointId));
+        });
+    }
+    
+    [Test]
+    public async Task GivenMinListingPoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
+    {
+        var minListing = new MinListingPoco(100, true, 100, 200, 300);
+
+        await using var ctx = GetNewDbContext();
+        await ctx.MinListing.AddAsync(minListing);
+        var savedCount = await ctx.SaveChangesAsync();
+
+        Assert.That(savedCount, Is.EqualTo(1));
+        var result = await ctx.MinListing.FirstOrDefaultAsync(x => x.ItemId == minListing.ItemId);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.ItemId, Is.EqualTo(minListing.ItemId));
+            Assert.That(result.IsHq, Is.EqualTo(minListing.IsHq));
+            Assert.That(result.WorldDataPointId, Is.EqualTo(minListing.WorldDataPointId));
+            Assert.That(result.DcDataPointId, Is.EqualTo(minListing.DcDataPointId));
+            Assert.That(result.RegionDataPointId, Is.EqualTo(minListing.RegionDataPointId));
+        });
     }
 
     [OneTimeTearDown]
     public async Task OneTimeTearDown()
     {
-        await _postgresContainer.StopAsync();
+        
+        if (_postgresContainer != null)
+            await _postgresContainer.DisposeAsync();
     }
+
+    private GilGoblinDbContext GetNewDbContext() => new(_options, _configuration);
+    private string GetConnectionString() => _postgresContainer!.GetConnectionString();
 }
