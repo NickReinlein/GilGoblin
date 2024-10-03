@@ -1,65 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using Testcontainers.PostgreSql;
 
 namespace GilGoblin.Tests.Database.Integration;
 
-public class PriceDataPointTests
+public class PriceDataPointTests : GilGoblinDatabaseFixture
 {
-    private PostgreSqlContainer? _postgresContainer;
-    private IConfigurationRoot _configuration;
-    private DbContextOptions<GilGoblinDbContext> _options;
-
-    [OneTimeSetUp]
-    public async Task OneTimeSetUp()
-    {
-        try
-        {
-            _postgresContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:latest")
-                .WithDatabase("goblin_db")
-                .WithUsername("goblin")
-                .WithPassword("goblin_pw")
-                .WithPortBinding(0, 5432)
-                .WithCleanUp(true)
-                .Build();
-
-            await _postgresContainer.StartAsync();
-
-            Console.WriteLine($"PostgreSQL started on: {_postgresContainer.GetConnectionString()}");
-
-            var configKvps = new Dictionary<string, string?>
-            {
-                { "ConnectionStrings:GilGoblinDbContext", GetConnectionString() }
-            };
-            _configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(configKvps)
-                .Build();
-
-            _options = new DbContextOptionsBuilder<GilGoblinDbContext>()
-                .EnableDetailedErrors()
-                .EnableSensitiveDataLogging()
-                .UseNpgsql(GetConnectionString())
-                .Options;
-
-            await using var ctx = GetNewDbContext();
-            var created = await ctx.Database.EnsureCreatedAsync();
-            if (!created)
-                throw new Exception("Failed to connect to database");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
     [Test]
     public async Task GivenAverageSalePricePoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
     {
@@ -70,7 +17,9 @@ public class PriceDataPointTests
         var savedCount = await ctx.SaveChangesAsync();
 
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.AverageSalePrice.FirstOrDefaultAsync(x => x.ItemId == averageSalePrice.ItemId);
+        var result = await ctx.AverageSalePrice.FirstOrDefaultAsync(
+            x => x.ItemId == averageSalePrice.ItemId &&
+                 x.IsHq == averageSalePrice.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
@@ -81,7 +30,7 @@ public class PriceDataPointTests
             Assert.That(result.RegionDataPointId, Is.EqualTo(averageSalePrice.RegionDataPointId));
         });
     }
-    
+
     [Test]
     public async Task GivenRecentPurchasePocoPoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
     {
@@ -92,7 +41,9 @@ public class PriceDataPointTests
         var savedCount = await ctx.SaveChangesAsync();
 
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.RecentPurchase.FirstOrDefaultAsync(x => x.ItemId == recentPurchasePoco.ItemId);
+        var result = await ctx.RecentPurchase.FirstOrDefaultAsync(x =>
+            x.ItemId == recentPurchasePoco.ItemId &&
+            x.IsHq == recentPurchasePoco.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
@@ -103,7 +54,7 @@ public class PriceDataPointTests
             Assert.That(result.RegionDataPointId, Is.EqualTo(recentPurchasePoco.RegionDataPointId));
         });
     }
-    
+
     [Test]
     public async Task GivenMinListingPoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
     {
@@ -114,7 +65,9 @@ public class PriceDataPointTests
         var savedCount = await ctx.SaveChangesAsync();
 
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.MinListing.FirstOrDefaultAsync(x => x.ItemId == minListing.ItemId);
+        var result = await ctx.MinListing.FirstOrDefaultAsync(x =>
+            x.ItemId == minListing.ItemId &&
+            x.IsHq == minListing.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
@@ -125,15 +78,4 @@ public class PriceDataPointTests
             Assert.That(result.RegionDataPointId, Is.EqualTo(minListing.RegionDataPointId));
         });
     }
-
-    [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
-        
-        if (_postgresContainer != null)
-            await _postgresContainer.DisposeAsync();
-    }
-
-    private GilGoblinDbContext GetNewDbContext() => new(_options, _configuration);
-    private string GetConnectionString() => _postgresContainer!.GetConnectionString();
 }
