@@ -26,7 +26,7 @@ public class RecipeSavingTests : SaveEntityToDbTests<RecipePoco>
     {
         await using var ctx = GetNewDbContext();
 
-        var result = await ctx.Recipe.FirstOrDefaultAsync(x => x.Id == entity.Id);
+        var result = await ctx.Recipe.SingleAsync(x => x.Id == entity.Id);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);

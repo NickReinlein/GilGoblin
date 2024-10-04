@@ -17,13 +17,13 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
         var savedCount = await ctx.SaveChangesAsync();
 
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.AverageSalePrice.FirstOrDefaultAsync(
+        var result = await ctx.AverageSalePrice.SingleAsync(
             x => x.ItemId == averageSalePrice.ItemId &&
                  x.IsHq == averageSalePrice.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.ItemId, Is.EqualTo(averageSalePrice.ItemId));
+            Assert.That(result.ItemId, Is.EqualTo(averageSalePrice.ItemId));
             Assert.That(result.IsHq, Is.EqualTo(averageSalePrice.IsHq));
             Assert.That(result.WorldDataPointId, Is.EqualTo(averageSalePrice.WorldDataPointId));
             Assert.That(result.DcDataPointId, Is.EqualTo(averageSalePrice.DcDataPointId));
@@ -41,13 +41,13 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
         var savedCount = await ctx.SaveChangesAsync();
 
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.RecentPurchase.FirstOrDefaultAsync(x =>
+        var result = await ctx.RecentPurchase.SingleAsync(x =>
             x.ItemId == recentPurchasePoco.ItemId &&
             x.IsHq == recentPurchasePoco.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.ItemId, Is.EqualTo(recentPurchasePoco.ItemId));
+            Assert.That(result.ItemId, Is.EqualTo(recentPurchasePoco.ItemId));
             Assert.That(result.IsHq, Is.EqualTo(recentPurchasePoco.IsHq));
             Assert.That(result.WorldDataPointId, Is.EqualTo(recentPurchasePoco.WorldDataPointId));
             Assert.That(result.DcDataPointId, Is.EqualTo(recentPurchasePoco.DcDataPointId));
@@ -65,13 +65,13 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
         var savedCount = await ctx.SaveChangesAsync();
 
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.MinListing.FirstOrDefaultAsync(x =>
+        var result = await ctx.MinListing.SingleAsync(x =>
             x.ItemId == minListing.ItemId &&
             x.IsHq == minListing.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.ItemId, Is.EqualTo(minListing.ItemId));
+            Assert.That(result.ItemId, Is.EqualTo(minListing.ItemId));
             Assert.That(result.IsHq, Is.EqualTo(minListing.IsHq));
             Assert.That(result.WorldDataPointId, Is.EqualTo(minListing.WorldDataPointId));
             Assert.That(result.DcDataPointId, Is.EqualTo(minListing.DcDataPointId));

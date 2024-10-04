@@ -1,4 +1,4 @@
 namespace GilGoblin.Database.Pocos;
 
-public record PriceDataPoco(int Id, string PriceType, decimal Price, int? WorldId, long? Timestamp)
-: PriceDataDetailPoco(Price, WorldId, Timestamp);
+public record PriceDataPoco(string PriceType, decimal Price, int? WorldId = null, long? Timestamp = null)
+    : IdentifiablePoco;

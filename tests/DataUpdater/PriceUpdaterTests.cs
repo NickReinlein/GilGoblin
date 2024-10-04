@@ -70,7 +70,7 @@
 //         var recipes = _dbContext.Recipe.ToList();
 //         _recipeRepo.GetAll().Returns(recipes);
 //
-//         _priceUpdater = new PriceUpdater(_scopeFactory, _logger);
+//         _priceUpdater = new PriceUpdater(_serviceProvider, _logger);
 //     }
 //
 //     [Test]
@@ -81,7 +81,7 @@
 //
 //         var cts = new CancellationTokenSource();
 //         cts.CancelAfter(500);
-//         await _priceUpdater.FetchAsync(cts.Token, 34);
+//         await _priceUpdater.FetchAsync(34);
 //
 //         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
 //         await _priceFetcher.DidNotReceiveWithAnyArgs().FetchByIdsAsync(default, default!);
@@ -95,7 +95,7 @@
 //     {
 //         var cts = new CancellationTokenSource();
 //         cts.CancelAfter(500);
-//         await _priceUpdater.FetchAsync(cts.Token, worldIdString);
+//         await _priceUpdater.FetchAsync(worldIdString, cts.Token);
 //
 //         var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";
 //         _logger.Received().LogError(message);
@@ -107,12 +107,12 @@
 //         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([443, 1420, 3500, 900]);
 //         _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
 //         _priceFetcher.GetEntriesPerPage().Returns(2);
-//         _priceFetcher.FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
-//             .Returns(new List<PriceWebPoco>());
+//         _priceFetcher.FetchByIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<int?>(), Arg.Any<CancellationToken>())
+//             .Returns([]);
 //
 //         var cts = new CancellationTokenSource();
 //         cts.CancelAfter(500);
-//         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(cts.Token, 34));
+//         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(34, cts.Token));
 //
 //         _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
 //     }
@@ -124,15 +124,15 @@
 //
 //         var cts = new CancellationTokenSource();
 //         cts.CancelAfter(500);
-//         await _priceUpdater.FetchAsync(cts.Token, 34);
+//         await _priceUpdater.FetchAsync(34, cts.Token);
 //
 //         Assert.That(saveList, Has.Count.GreaterThanOrEqualTo(2));
 //         await _saver.Received().SaveAsync(
 //             Arg.Is<List<PricePoco>>(x => saveList.All(
 //                 s => x.Any(i =>
 //                     i.ItemId == s.ItemId &&
-//                     i.WorldId == s.WorldId)))
-//         );
+//                     i.WorldId == s.WorldId))), 
+//             cts.Token);
 //     }
 //
 //     [Test]
@@ -144,7 +144,7 @@
 //
 //         var cts = new CancellationTokenSource();
 //         cts.CancelAfter(500);
-//         await _priceUpdater.FetchAsync(cts.Token, 34);
+//         await _priceUpdater.FetchAsync(34, cts.Token);
 //
 //         _logger.Received().LogError($"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: test");
 //     }
@@ -159,13 +159,13 @@
 //
 //         var cts = new CancellationTokenSource();
 //         cts.CancelAfter(500);
-//         await _priceUpdater.FetchAsync(cts.Token, 34);
+//         await _priceUpdater.FetchAsync(34, cts.Token);
 //
 //         _logger.Received().LogError(errorMessage);
 //     }
 //
 //
-//     private List<PricePoco> SetupSave()
+//     private List<PriceWebPoco> SetupSave()
 //     {
 //         var saveList = GetMultipleNewPocos();
 //
@@ -174,17 +174,18 @@
 //         _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
 //         _priceFetcher.GetEntriesPerPage().Returns(2);
 //         _priceFetcher
-//             .FetchByIdsAsync(Arg.Any<CancellationToken>(), Arg.Any<IEnumerable<int>>(), Arg.Any<int?>())
+//             .FetchByIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<int?>(), Arg.Any<CancellationToken>())
 //             .Returns(saveList);
 //         return saveList;
 //     }
-//     
+//
 //     protected static List<PriceWebPoco> GetMultipleNewPocos()
 //     {
-//         var priceGeoDataPointsPoco = new PriceDataPerGeoPoco(
+//         var priceGeoDataPointsPoco = new QualityPriceDataPoco(
 //             new PriceDataPoco(900),
 //             new PriceDataPoco(800, worldId),
-//             new PriceDataPoco(700, regionId)
+//             new PriceDataPoco(700, regionId),
+//             new DailySaleVelocityPoco(1, true, new SaleQuantity(22m), new SaleQuantity(34m))
 //         );
 //         var anyQ = new GeoPriceDataPoco(
 //             priceGeoDataPointsPoco,
@@ -210,6 +211,6 @@
 //             worldUploadTimestampPocos
 //         );
 //
-//         return new List<PriceWebPoco> { poco1, poco2 };
+//         return [poco1, poco2];
 //     }
 // }
