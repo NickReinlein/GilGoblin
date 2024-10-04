@@ -5,10 +5,10 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;
 
-public class PriceDataPointTests : GilGoblinDatabaseFixture
+public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
 {
     [Test]
-    public async Task GivenAverageSalePricePoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
+    public async Task GivenValidAverageSalePricePoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
         var averageSalePrice = new AverageSalePricePoco(100, true, 100, 200, 300);
 
@@ -32,7 +32,7 @@ public class PriceDataPointTests : GilGoblinDatabaseFixture
     }
 
     [Test]
-    public async Task GivenRecentPurchasePocoPoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
+    public async Task GivenValidRecentPurchasePocoPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
         var recentPurchasePoco = new RecentPurchasePoco(100, true, 100, 200, 300);
 
@@ -56,7 +56,7 @@ public class PriceDataPointTests : GilGoblinDatabaseFixture
     }
 
     [Test]
-    public async Task GivenMinListingPoco_IsValid_WhenSaving_ThenObjectIsSavedSuccessfully()
+    public async Task GivenValidMinListingPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
         var minListing = new MinListingPoco(100, true, 100, 200, 300);
 

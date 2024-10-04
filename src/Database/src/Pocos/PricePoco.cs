@@ -7,10 +7,10 @@ public record PricePoco(
     int WorldId,
     bool IsHq,
     DateTimeOffset Updated,
-    int? MinListingId,
-    int? RecentPurchaseId,
-    int? AverageSalePriceId,
-    int? DailySaleVelocityId)
+    int? MinListingId = null,
+    int? RecentPurchaseId = null,
+    int? AverageSalePriceId = null,
+    int? DailySaleVelocityId = null)
     : IdentifiablePoco
 {
     // Navigation properties
