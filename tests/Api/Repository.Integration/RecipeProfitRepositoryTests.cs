@@ -23,7 +23,7 @@
 //     [Test]
 //     public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetAll(WorldId);
@@ -40,7 +40,7 @@
 //     [Test]
 //     public void GivenAGetAll_WhenTheWorldIdDoesNotExist_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetAll(999);
@@ -52,7 +52,7 @@
 //     [TestCase(12)]
 //     public async Task GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = await recipeProfitRepo.GetAsync(WorldId, id);
@@ -68,7 +68,7 @@
 //     [TestCase(12)]
 //     public async Task GivenAGet_WhenTheIdIsValidButNotTheWorldId_ThenNullIsReturned(int id)
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = await recipeProfitRepo.GetAsync(854, id);
@@ -81,7 +81,7 @@
 //     [TestCase(100)]
 //     public async Task GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = await recipeProfitRepo.GetAsync(WorldId, id);
@@ -92,7 +92,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 });
@@ -108,7 +108,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValidButNotWorldId_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetMultiple(654564654, new[] { RecipeId, RecipeId2 });
@@ -119,7 +119,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetMultiple(WorldId, new[] { RecipeId, 95459 });
@@ -135,7 +135,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreInvalid_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetMultiple(WorldId, new[] { 654645646, 9953121 });
@@ -146,7 +146,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsEmpty_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
 //         var result = recipeProfitRepo.GetMultiple(WorldId, Array.Empty<int>());
@@ -157,7 +157,7 @@
 //     [Test]
 //     public async Task GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null!);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
@@ -179,7 +179,7 @@
 //     public async Task GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
 //     {
 //         var recipeProfit = GetRecipeProfitPoco();
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _profitCache.Get((WorldId, RecipeId)).Returns(recipeProfit);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
@@ -192,7 +192,7 @@
 //     [Test]
 //     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //         var allRecipeProfits = context.RecipeProfit.ToList();
 //
@@ -209,7 +209,7 @@
 //     [Test]
 //     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         context.RecipeProfit.RemoveRange(context.RecipeProfit);
 //         await context.SaveChangesAsync();
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
@@ -223,7 +223,7 @@
 //     public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
 //     {
 //         var poco = GetRecipeProfitPoco();
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _profitCache.Get((WorldId, RecipeId)).Returns(poco);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
@@ -237,7 +237,7 @@
 //     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
 //     {
 //         var poco = GetRecipeProfitPoco();
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _profitCache.Get((WorldId, RecipeId)).Returns((RecipeProfitPoco)null!);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //
@@ -250,7 +250,7 @@
 //     [Test]
 //     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeSaveItToTheDatabase()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeProfitRepo = new RecipeProfitRepository(context, _profitCache);
 //         var poco = new RecipeProfitPoco
 //         {

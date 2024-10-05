@@ -21,7 +21,7 @@
 //     [Test]
 //     public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetAll(WorldId).ToList();
@@ -37,7 +37,7 @@
 //     [Test]
 //     public void GivenAGetAll_WhenTheWorldIdDoesNotExist_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetAll(999);
@@ -49,7 +49,7 @@
 //     [TestCase(12)]
 //     public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.Get(WorldId, id, true);
@@ -65,7 +65,7 @@
 //     [TestCase(12)]
 //     public void GivenAGet_WhenTheIdIsValidButNotTheWorldId_ThenNullIsReturned(int id)
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.Get(854, id, true);
@@ -78,7 +78,7 @@
 //     [TestCase(100)]
 //     public void GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.Get(WorldId, id, true);
@@ -89,7 +89,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 }, true).ToList();
@@ -105,7 +105,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValidButNotWorldId_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetMultiple(6845454, [RecipeId, RecipeId2], true);
@@ -116,7 +116,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetMultiple(WorldId, [RecipeId, 99], true).ToList();
@@ -131,7 +131,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreInvalid_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetMultiple(WorldId, [654645646, 9953121], true);
@@ -142,7 +142,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsEmpty_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var priceRepo = new PriceRepository(context, _cache);
 //
 //         var result = priceRepo.GetMultiple(WorldId, Array.Empty<int>(), true);
@@ -155,7 +155,7 @@
 //     // [Test]
 //     // public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
 //     // {
-//     //     using var context = new TestGilGoblinDbContext(_options, _configuration);
+//     //     using var context = new GilGoblinDbContext(_options, _configuration);
 //     //     var priceRepo = new PriceRepository(context, _cache);
 //     //
 //     //     _ = priceRepo.Get(WorldId, ItemId);
@@ -172,7 +172,7 @@
 //     // [Test]
 //     // public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
 //     // {
-//     //     using var context = new TestGilGoblinDbContext(_options, _configuration);
+//     //     using var context = new GilGoblinDbContext(_options, _configuration);
 //     //     var poco = new PricePoco { WorldId = WorldId, ItemId = ItemId };
 //     //     _cache.Get((WorldId, ItemId)).Returns(null, poco);
 //     //     var priceRepo = new PriceRepository(context, _cache);
@@ -192,7 +192,7 @@
 //     // [Test]
 //     // public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
 //     // {
-//     //     await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//     //     await using var context = new GilGoblinDbContext(_options, _configuration);
 //     //     var priceRepo = new PriceRepository(context, _cache);
 //     //     var allPrices = context.Price.ToList();
 //     //
@@ -204,7 +204,7 @@
 //     // [Test]
 //     // public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
 //     // {
-//     //     await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//     //     await using var context = new GilGoblinDbContext(_options, _configuration);
 //     //     context.Price.RemoveRange(context.Price);
 //     //     await context.SaveChangesAsync();
 //     //     var priceRepo = new PriceRepository(context, _cache);

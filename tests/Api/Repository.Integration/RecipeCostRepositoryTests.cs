@@ -16,7 +16,7 @@
 //     [Test]
 //     public void GivenAGetAll_WhenTheWorldIdExists_ThenTheRepositoryReturnsAllEntriesForThatWorld()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetAll(WorldId);
@@ -33,7 +33,7 @@
 //     [Test]
 //     public void GivenAGetAll_WhenTheWorldIdDoesNotExist_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetAll(999);
@@ -45,7 +45,7 @@
 //     [TestCase(12)]
 //     public async Task GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = await recipeCostRepo.GetAsync(WorldId, id);
@@ -61,7 +61,7 @@
 //     [TestCase(12)]
 //     public async Task GivenAGet_WhenTheIdIsValidButTheWorldIdIsNot_ThenNullIsReturned(int id)
 //     {
-//         var context = new TestGilGoblinDbContext(_options, _configuration);
+//         var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = await recipeCostRepo.GetAsync(854, id);
@@ -74,7 +74,7 @@
 //     [TestCase(9984545)]
 //     public async Task GivenAGet_WhenIdIsInvalid_ThenNullIsReturned(int id)
 //     {
-//         var context = new TestGilGoblinDbContext(_options, _configuration);
+//         var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = await recipeCostRepo.GetAsync(WorldId, id);
@@ -85,7 +85,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetMultiple(WorldId, new[] { RecipeId, RecipeId2 });
@@ -101,7 +101,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValidButNotWorldId_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetMultiple(654687, new[] { RecipeId, RecipeId2 });
@@ -112,7 +112,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetMultiple(WorldId, new[] { RecipeId, 95419 });
@@ -128,7 +128,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreInvalid_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetMultiple(WorldId, new[] { 654645646, 9953121 });
@@ -139,7 +139,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsEmpty_ThenAnEmptyResponseIsReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
 //         var result = recipeCostRepo.GetMultiple(WorldId, Array.Empty<int>());
@@ -150,7 +150,7 @@
 //     [Test]
 //     public async Task GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null!);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
@@ -170,7 +170,7 @@
 //     [Test]
 //     public async Task GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCost = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
 //         _costCache.Get((WorldId, RecipeId)).Returns(recipeCost);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
@@ -184,7 +184,7 @@
 //     [Test]
 //     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //         var allRecipeCosts = context.RecipeCost.ToList();
 //
@@ -201,7 +201,7 @@
 //     [Test]
 //     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         context.RecipeCost.RemoveRange(context.RecipeCost);
 //         context.SaveChanges();
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
@@ -215,7 +215,7 @@
 //     public async Task GivenAnAdd_WhenEntryExists_ThenWeReturnItAndDoNotAddToCacheAgain()
 //     {
 //         var poco = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _costCache.Get((WorldId, RecipeId)).Returns(poco);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
@@ -229,7 +229,7 @@
 //     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeCacheIt()
 //     {
 //         var poco = new RecipeCostPoco { WorldId = WorldId, RecipeId = RecipeId };
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         _costCache.Get((WorldId, RecipeId)).Returns((RecipeCostPoco)null!);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //
@@ -242,7 +242,7 @@
 //     [Test]
 //     public async Task GivenAnAdd_WhenEntryIsNew_ThenWeSaveItToTheDatabase()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeCostRepo = new RecipeCostRepository(context, _costCache);
 //         var poco = new RecipeCostPoco { WorldId = 77, RecipeId = 999 };
 //         await recipeCostRepo.AddAsync(poco);

@@ -24,7 +24,7 @@ public class RecipeSavingTests : SaveEntityToDbTests<RecipePoco>
 
     protected override async Task ValidateResultSavedToDatabaseAsync(RecipePoco entity)
     {
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
 
         var result = await ctx.Recipe.SingleAsync(x => x.Id == entity.Id);
         Assert.Multiple(() =>

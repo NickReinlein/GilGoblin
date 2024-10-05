@@ -29,7 +29,7 @@
 //     [Test]
 //     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.GetAll().ToList();
@@ -47,7 +47,7 @@
 //     [TestCase(2)]
 //     public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.Get(id);
@@ -64,7 +64,7 @@
 //     [TestCase(9238192)]
 //     public void GivenAGet_WhenIdIsInvalid_ThenTheRepositoryReturnsNull(int id)
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.Get(id);
@@ -77,7 +77,7 @@
 //     {
 //         const int itemId = 9238192;
 //         const string errorMessage = "Description is null";
-//         var fakeContext = Substitute.ForPartsOf<TestGilGoblinDbContext>(_options, _configuration);
+//         var fakeContext = Substitute.ForPartsOf<GilGoblinDbContext>(_options, _configuration);
 //         fakeContext.Item.FirstOrDefault().ThrowsForAnyArgs(new InvalidDataException(errorMessage));
 //         var itemRepo = new ItemRepository(fakeContext, _cache, _logger);
 //
@@ -95,7 +95,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreValid_ThenTheCorrectEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.GetMultiple(new[] { 1, 2 }).ToList();
@@ -111,7 +111,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenSomeIdsAreValid_ThenTheValidEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.GetMultiple(new[] { 1, 99 }).ToList();
@@ -126,7 +126,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsAreInvalid_ThenNoEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.GetMultiple(new[] { 654645646, 9953121 });
@@ -137,7 +137,7 @@
 //     [Test]
 //     public void GivenAGetMultiple_WhenIdsEmpty_ThenNoEntriesAreReturned()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         var result = itemRepo.GetMultiple(Array.Empty<int>());
@@ -148,7 +148,7 @@
 //     [Test]
 //     public void GivenAGet_WhenTheIdIsValidAndUncached_ThenWeCacheTheEntry()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //
 //         _ = itemRepo.Get(2);
@@ -160,7 +160,7 @@
 //     [Test]
 //     public void GivenAGet_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry()
 //     {
-//         using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //         _cache.Get(2).Returns(null, new ItemPoco() { Id = 2 });
 //         _ = itemRepo.Get(2);
@@ -174,7 +174,7 @@
 //     [Test]
 //     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var itemRepo = new ItemRepository(context, _cache, _logger);
 //         var allItems = context.Item.ToList();
 //
@@ -186,7 +186,7 @@
 //     [Test]
 //     public async Task GivenAFillCache_WhenEntriesDoNotExist_ThenWeDoNothing()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         context.Item.RemoveRange(context.Item);
 //         await context.SaveChangesAsync();
 //         var itemRepo = new ItemRepository(context, _cache, _logger);

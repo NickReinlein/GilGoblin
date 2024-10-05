@@ -14,7 +14,7 @@ public class WorldSavingTests : SaveEntityToDbTests<WorldPoco>
 
     protected override async Task ValidateResultSavedToDatabaseAsync(WorldPoco entity)
     {
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
 
         var result = await ctx.World.SingleAsync(x => x.Id == entity.Id);
         Assert.Multiple(() =>

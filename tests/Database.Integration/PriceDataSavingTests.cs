@@ -16,7 +16,7 @@ public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
 
     protected override async Task ValidateResultSavedToDatabaseAsync(PriceDataPoco entity)
     {
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
         var result = await ctx.PriceData.SingleAsync(
             x => x.Id == entity.Id &&
                  x.PriceType == entity.PriceType &&

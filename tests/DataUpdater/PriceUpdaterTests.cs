@@ -33,7 +33,7 @@
 //     private IServiceScopeFactory _scopeFactory;
 //     private IServiceScope _scope;
 //     private IServiceProvider _serviceProvider;
-//     private TestGilGoblinDbContext _dbContext;
+//     private GilGoblinDbContext _dbContext;
 //
 //     private const int worldId = 34;
 //     private const int regionId = 28;
@@ -44,7 +44,7 @@
 //     public override void SetUp()
 //     {
 //         base.SetUp();
-//         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
+//         _dbContext = new GilGoblinDbContext(_options, _configuration);
 //         _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
 //         _scopeFactory = Substitute.For<IServiceScopeFactory>();
 //         _priceFetcher = Substitute.For<IPriceFetcher>();

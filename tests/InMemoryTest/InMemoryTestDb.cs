@@ -1,87 +1,139 @@
-using System;
-using System.Collections.Generic;
-using GilGoblin.Database.Pocos;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using NUnit.Framework;
-
-namespace GilGoblin.Tests.InMemoryTest;
-
-public class InMemoryTestDb
-{
-    protected DbContextOptions<TestGilGoblinDbContext> _options;
-    protected IConfiguration _configuration;
-
-    protected static readonly List<int> ValidWorldIds = [34, 99];
-
-    [OneTimeSetUp]
-    public virtual void OneTimeSetUp()
-    {
-        _configuration = Substitute.For<IConfiguration>();
-
-        _options = Substitute.For<DbContextOptions<TestGilGoblinDbContext>>();
-        _options = new DbContextOptionsBuilder<TestGilGoblinDbContext>().Options;
-    }
-
-    [SetUp]
-    public virtual void SetUp()
-    {
-        DeleteAllEntries();
-        CreateAllEntries();
-    }
-
-    [TearDown]
-    public virtual void TearDown()
-    {
-        DeleteAllEntries();
-    }
-
-    private void DeleteAllEntries()
-    {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        context.RecentPurchase.RemoveRange(context.RecentPurchase);
-        context.AverageSalePrice.RemoveRange(context.AverageSalePrice);
-        context.MinListing.RemoveRange(context.MinListing);
-        context.DailySaleVelocity.RemoveRange(context.DailySaleVelocity);
-        context.World.RemoveRange(context.World);
-        context.Item.RemoveRange(context.Item);
-        context.Recipe.RemoveRange(context.Recipe);
-        context.RecipeCost.RemoveRange(context.RecipeCost);
-        context.RecipeProfit.RemoveRange(context.RecipeProfit);
-        context.Price.RemoveRange(context.Price);
-        context.WorldUploadTime.RemoveRange(context.WorldUploadTime);
-        context.SaveChanges();
-    }
-
-    private void CreateAllEntries()
-    {
-        using var context = new TestGilGoblinDbContext(_options, _configuration);
-        // var pricePoint = new PriceDataPointPoco(1, 11, true);
-        // context.Price.AddRange(
-        //     new PricePoco(ItemId: 1, WorldId: 34, IsHq: true, Updated: DateTimeOffset.UtcNow, null, null, null, null),
-        //     new PricePoco(ItemId: 2, WorldId: 34, IsHq: false, Updated: DateTimeOffset.UtcNow, null, null, null, null)
-        // );
-        context.Recipe.AddRange(
-            new RecipePoco { Id = 11, TargetItemId = 5682, ItemIngredient0TargetId = 774, AmountIngredient0 = 3 },
-            new RecipePoco { Id = 12, TargetItemId = 9984, ItemIngredient0TargetId = 12, AmountIngredient0 = 5 },
-            new RecipePoco { Id = 13, TargetItemId = 111, ItemIngredient0TargetId = 14, AmountIngredient0 = 2 },
-            new RecipePoco { Id = 33, TargetItemId = 222, ItemIngredient0TargetId = 88, AmountIngredient0 = 7 },
-            new RecipePoco { Id = 44, TargetItemId = 333, ItemIngredient0TargetId = 99, AmountIngredient0 = 2 },
-            new RecipePoco { Id = 55, TargetItemId = 88, ItemIngredient0TargetId = 3, AmountIngredient0 = 3 },
-            new RecipePoco { Id = 88, TargetItemId = 88, ItemIngredient0TargetId = 1, AmountIngredient0 = 3 },
-            new RecipePoco { Id = 99, TargetItemId = 9984, ItemIngredient0TargetId = 2, AmountIngredient0 = 5 }
-        );
-        context.Item.AddRange(
-            new ItemPoco { Id = 1, Name = "Item 1" },
-            new ItemPoco { Id = 2, Name = "Item 2" },
-            new ItemPoco { Id = 3, Name = "Item 3" },
-            new ItemPoco { Id = 22, Name = "Item 22" }
-        );
-        context.World.AddRange(
-            new WorldPoco { Id = 34, Name = "World 34" },
-            new WorldPoco { Id = 99, Name = "World 99" }
-        );
-        context.SaveChanges();
-    }
-}
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Threading.Tasks;
+// using GilGoblin.Api;
+// using GilGoblin.Database;
+// using GilGoblin.Database.Pocos;
+// using GilGoblin.Tests.Database;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.Extensions.Configuration;
+// using Microsoft.Extensions.DependencyInjection;
+// using NSubstitute;
+// using NUnit.Framework;
+//
+// namespace GilGoblin.Tests.InMemoryTest;
+//
+// public class InMemoryTestDb
+// {
+//     protected DbContextOptions<GilGoblinDbContext> _options;
+//     protected IConfiguration _configuration;
+//     protected IServiceProvider _serviceProvider;
+//
+//     protected static readonly List<int> ValidWorldIds = [34, 99];
+//     protected static readonly List<int> ValidItemsIds = [134, 584, 654, 842];
+//     protected static readonly List<int> ValidRecipeIds = [111, 122];
+//
+//     [OneTimeSetUp]
+//     public virtual void OneTimeSetUp()
+//     {
+//         _configuration = Substitute.For<IConfiguration>();
+//
+//         _options = new DbContextOptionsBuilder<GilGoblinDbContext>()
+//             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+//             .Options;
+//
+//         _serviceProvider = new ServiceCollection()
+//             .AddDbContext<GilGoblinDbContext>(options =>
+//                 options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()))
+//             .BuildServiceProvider();
+//     }
+//
+//     [SetUp]
+//     public virtual async Task SetUp()
+//     {
+//         await DeleteAllEntriesAsync();
+//         await CreateAllEntriesAsync();
+//     }
+//
+//     [TearDown]
+//     public virtual async Task TearDown()
+//     {
+//         await DeleteAllEntriesAsync();
+//     }
+//
+//     private async Task DeleteAllEntriesAsync()
+//     {
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
+//         context.RecentPurchase.RemoveRange(context.RecentPurchase);
+//         context.AverageSalePrice.RemoveRange(context.AverageSalePrice);
+//         context.MinListing.RemoveRange(context.MinListing);
+//         context.DailySaleVelocity.RemoveRange(context.DailySaleVelocity);
+//         context.World.RemoveRange(context.World);
+//         context.Item.RemoveRange(context.Item);
+//         context.Recipe.RemoveRange(context.Recipe);
+//         context.RecipeCost.RemoveRange(context.RecipeCost);
+//         context.RecipeProfit.RemoveRange(context.RecipeProfit);
+//         context.Price.RemoveRange(context.Price);
+//         context.PriceData.RemoveRange(context.PriceData);
+//         context.WorldUploadTime.RemoveRange(context.WorldUploadTime);
+//         await context.SaveChangesAsync();
+//     }
+//
+//     private async Task CreateAllEntriesAsync()
+//     {
+//         await using var context = GetDbContext();
+//
+//         var recipeList = new RecipePoco[]
+//             {
+//                 new()
+//                 {
+//                     Id = ValidRecipeIds[0],
+//                     TargetItemId = ValidItemsIds[0],
+//                     ItemIngredient0TargetId = ValidItemsIds[1],
+//                     AmountIngredient0 = 2,
+//                     CanHq = true,
+//                     CraftType = 3,
+//                     CanQuickSynth = true,
+//                     ResultQuantity = 1,
+//                     RecipeLevelTable = 123
+//                 },
+//                 new()
+//                 {
+//                     Id = ValidRecipeIds[1],
+//                     TargetItemId = ValidItemsIds[2],
+//                     ItemIngredient0TargetId = ValidItemsIds[3],
+//                     AmountIngredient0 = 3,
+//                     CanHq = true,
+//                     CraftType = 7,
+//                     CanQuickSynth = true,
+//                     ResultQuantity = 2,
+//                     RecipeLevelTable = 123
+//                 }
+//             }
+//             .ToList();
+//         await context.Recipe.AddRangeAsync(recipeList);
+//
+//         var itemList = ValidItemsIds.Select(i => new ItemPoco
+//         {
+//             Name = $"Item {i}",
+//             Description = $"Item {i} description",
+//             IconId = i + 111,
+//             CanHq = i % 2 == 0,
+//             PriceLow = i * 3 + 11,
+//             PriceMid = i * 3 + 12,
+//             Level = i + 13,
+//             StackSize = 1
+//         }).ToList();
+//         await context.Item.AddRangeAsync(itemList);
+//
+//         var validWorlds = ValidWorldIds
+//             .Select(w => new WorldPoco { Id = w, Name = $"World {w}" })
+//             .ToList();
+//         await context.World.AddRangeAsync(validWorlds);
+//
+//
+//         // var pricePoint = new PriceDataPointPoco(1, 11, true);
+//         // context.Price.AddRange(
+//         //     new PricePoco(ItemId: 1, WorldId: 34, IsHq: true, Updated: DateTimeOffset.UtcNow, null, null, null, null),
+//         //     new PricePoco(ItemId: 2, WorldId: 34, IsHq: false, Updated: DateTimeOffset.UtcNow, null, null, null, null)
+//         // );
+//
+//         await context.SaveChangesAsync();
+//     }
+//
+//     protected GilGoblinDbContext GetDbContext()
+//     {
+//         return new GilGoblinDbContext(_options, _configuration);
+//     }
+// }

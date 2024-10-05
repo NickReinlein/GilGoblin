@@ -16,16 +16,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.DataUpdater;
 
-public class Startup
+public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
-    public IConfiguration _configuration;
-    public IWebHostEnvironment _environment;
-
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
-    {
-        _configuration = configuration;
-        _environment = environment;
-    }
+    public IConfiguration _configuration = configuration;
+    public IWebHostEnvironment _environment = environment;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -62,8 +56,9 @@ public class Startup
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
 
-        services.AddHostedService<WorldUpdater>();
-        services.AddHostedService<PriceUpdater>();
+        services
+            .AddHostedService<WorldUpdater>()
+            .AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCrafting(IServiceCollection services)
@@ -75,18 +70,20 @@ public class Startup
 
     public static void AddGoblinCaches(IServiceCollection services)
     {
-        services.AddScoped<IItemCache, ItemCache>();
-        services.AddScoped<IPriceCache, PriceCache>();
-        services.AddScoped<IRecipeCache, RecipeCache>();
-        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
-        services.AddScoped<IWorldCache, WorldCache>();
+        services
+            .AddScoped<IItemCache, ItemCache>()
+            .AddScoped<IPriceCache, PriceCache>()
+            .AddScoped<IRecipeCache, RecipeCache>()
+            .AddScoped<IItemRecipeCache, ItemRecipeCache>()
+            .AddScoped<IWorldCache, WorldCache>();
         // services.AddScoped<ICraftCache, CraftCache>();
         // services.AddScoped<IRecipeCostCache, RecipeCostCache>();
         // services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
 
-        services.AddScoped<IRepositoryCache, ItemRepository>();
-        services.AddScoped<IRepositoryCache, PriceRepository>();
-        services.AddScoped<IRepositoryCache, RecipeRepository>();
+        services
+            .AddScoped<IRepositoryCache, ItemRepository>()
+            .AddScoped<IRepositoryCache, PriceRepository>()
+            .AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
     private void AddGoblinDatabases(IServiceCollection services)
@@ -98,9 +95,10 @@ public class Startup
         connectionString += "Include Error Detail=true;";
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
-        services.AddScoped<IItemRepository, ItemRepository>();
-        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services
+            .AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
+            .AddScoped<IItemRepository, ItemRepository>()
+            .AddScoped<IRecipeRepository, RecipeRepository>();
         // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
         // services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();

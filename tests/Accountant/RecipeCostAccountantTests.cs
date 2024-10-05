@@ -26,7 +26,7 @@
 //     private IServiceScopeFactory _scopeFactory;
 //     private IServiceScope _scope;
 //     private IServiceProvider _serviceProvider;
-//     private TestGilGoblinDbContext _dbContext;
+//     private GilGoblinDbContext _dbContext;
 //     private ICraftingCalculator _calc;
 //     private IRecipeCostRepository _recipeCostRepo;
 //     private IRecipeRepository _recipeRepo;
@@ -38,7 +38,7 @@
 //     public override void SetUp()
 //     {
 //         base.SetUp();
-//         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
+//         _dbContext = new GilGoblinDbContext(_options, _configuration);
 //         _scopeFactory = Substitute.For<IServiceScopeFactory>();
 //         _logger = Substitute.For<NullLogger<RecipeCostAccountant>>();
 //         _scope = Substitute.For<IServiceScope>();
@@ -109,7 +109,7 @@
 //         cts.CancelAfter(2000);
 //         await _accountant.ComputeListAsync(WorldId, [RecipeId], CancellationToken.None);
 //
-//         await using var costAfter = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var costAfter = new GilGoblinDbContext(_options, _configuration);
 //         var result = costAfter.RecipeCost.FirstOrDefault(after => after.RecipeId == RecipeId);
 //         Assert.That(result, Is.Not.Null);
 //         Assert.Multiple(() =>
@@ -125,7 +125,7 @@
 //     [Test]
 //     public async Task GivenComputeListAsync_WhenNewCostsAreCalculated_ThenWeAddEachNewToTheRepo()
 //     {
-//         await using var context = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var context = new GilGoblinDbContext(_options, _configuration);
 //         var recipeIds = context.Recipe.Select(r => r.Id).ToList();
 //         var costIds = context.RecipeCost.Select(r => r.RecipeId).ToList();
 //         var missingCostIds = recipeIds.Except(costIds).ToList();

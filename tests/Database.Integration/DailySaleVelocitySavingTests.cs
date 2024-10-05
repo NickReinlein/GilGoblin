@@ -23,7 +23,7 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
 
     protected override async Task ValidateResultSavedToDatabaseAsync(DailySaleVelocityPoco entity)
     {
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
 
         var result = await ctx.DailySaleVelocity.FirstOrDefaultAsync(
             x =>

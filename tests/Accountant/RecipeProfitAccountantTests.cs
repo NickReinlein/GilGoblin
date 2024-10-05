@@ -28,7 +28,7 @@
 //     private IServiceScopeFactory _scopeFactory;
 //     private IServiceScope _scope;
 //     private IServiceProvider _serviceProvider;
-//     private TestGilGoblinDbContext _dbContext;
+//     private GilGoblinDbContext _dbContext;
 //     private ICraftingCalculator _calc;
 //     private IRecipeProfitRepository _profitRepo;
 //     private IRecipeRepository _recipeRepo;
@@ -42,7 +42,7 @@
 //     public override void SetUp()
 //     {
 //         base.SetUp();
-//         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
+//         _dbContext = new GilGoblinDbContext(_options, _configuration);
 //         _scopeFactory = Substitute.For<IServiceScopeFactory>();
 //         _logger = Substitute.For<NullLogger<RecipeProfitAccountant>>();
 //         _scope = Substitute.For<IServiceScope>();
@@ -122,7 +122,7 @@
 //
 //         await _accountant.ComputeListAsync(worldId, new List<int> { recipeId }, CancellationToken.None);
 //
-//         await using var profitAfter = new TestGilGoblinDbContext(_options, _configuration);
+//         await using var profitAfter = new GilGoblinDbContext(_options, _configuration);
 //         var result = profitAfter.RecipeProfit.FirstOrDefault(after => after.RecipeId == recipeId);
 //         Assert.That(result, Is.Not.Null);
 //         Assert.Multiple(() =>

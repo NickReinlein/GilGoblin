@@ -23,7 +23,7 @@
 //     private IServiceScopeFactory _scopeFactory;
 //     private IServiceScope _scope;
 //     private IServiceProvider _serviceProvider;
-//     private TestGilGoblinDbContext _dbContext;
+//     private GilGoblinDbContext _dbContext;
 //     private ICraftingCalculator _calc;
 //     private IRecipeCostRepository _recipeCostRepo;
 //     private const int worldId = 34;
@@ -32,7 +32,7 @@
 //     public override void SetUp()
 //     {
 //         base.SetUp();
-//         _dbContext = new TestGilGoblinDbContext(_options, _configuration);
+//         _dbContext = new GilGoblinDbContext(_options, _configuration);
 //         _scopeFactory = Substitute.For<IServiceScopeFactory>();
 //         _logger = Substitute.For<ILogger<Accountant<RecipeCostPoco>>>();
 //         _scope = Substitute.For<IServiceScope>();

@@ -9,7 +9,7 @@ public class ItemSavingTests : SaveEntityToDbTests<ItemPoco>
 {
     protected override async Task ValidateResultSavedToDatabaseAsync(ItemPoco entity)
     {
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
         var result = await ctx.Item.FirstOrDefaultAsync(
             x => x.Name == entity.Name &&
                  x.Description == entity.Description &&

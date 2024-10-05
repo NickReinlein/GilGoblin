@@ -31,7 +31,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
 
     private async Task SavePocoToDatabase(T entity, bool update = false)
     {
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
         if (update)
             ctx.Set<T>().Update(entity);
         else

@@ -12,7 +12,7 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     {
         var averageSalePrice = new AverageSalePricePoco(100, true, 100, 200, 300);
 
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
         await ctx.AverageSalePrice.AddAsync(averageSalePrice);
         var savedCount = await ctx.SaveChangesAsync();
 
@@ -36,7 +36,7 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     {
         var recentPurchasePoco = new RecentPurchasePoco(100, true, 100, 200, 300);
 
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
         await ctx.RecentPurchase.AddAsync(recentPurchasePoco);
         var savedCount = await ctx.SaveChangesAsync();
 
@@ -60,7 +60,7 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     {
         var minListing = new MinListingPoco(100, true, 100, 200, 300);
 
-        await using var ctx = GetNewDbContext();
+        await using var ctx = GetDbContext();
         await ctx.MinListing.AddAsync(minListing);
         var savedCount = await ctx.SaveChangesAsync();
 

@@ -39,12 +39,11 @@ public class WorldRepository(IServiceProvider serviceProvider, IWorldCache cache
         return dbContext.World.ToList();
     }
 
-    public Task FillCache()
+    public async Task FillCache()
     {
-        using var scope = serviceProvider.CreateScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        var worlds = dbContext.World?.ToList();
-        worlds?.ForEach(world => cache.Add(world.Id, world));
-        return Task.CompletedTask;
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var worlds = dbContext.World.ToList();
+        worlds.ForEach(world => cache.Add(world.Id, world));
     }
 }
