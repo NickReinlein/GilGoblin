@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Repository;
+using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.Database.Integration;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -14,13 +16,16 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
 {
     private IWorldCache _cache;
     private WorldRepository _worldRepo;
-    private IServiceProvider _serviceProvider;
+    private IServiceScope _serviceScope;
+    private IServiceScopeFactory _factory;
 
     [SetUp]
     public override async Task SetUp()
     {
         _cache = Substitute.For<IWorldCache>();
-        _serviceProvider = Substitute.For<IServiceProvider>();
+        _serviceScope = Substitute.For<IServiceScope>();
+        _factory = Substitute.For<IServiceScopeFactory>();
+        _serviceScope.ServiceProvider.Returns(_serviceProvider);
         await base.SetUp();
 
         _worldRepo = new WorldRepository(_serviceProvider, _cache);
@@ -124,18 +129,18 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         _ = _worldRepo.Get(worldId);
 
         _cache.Received(2).Get(worldId);
-        _cache.Received(1).Add(worldId,
-            Arg.Is<WorldPoco>(world => world.Id == worldId));
+        _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.Id == worldId));
     }
 
     [Test]
     public async Task GivenAFillCache_WhenEntriesExist_ThenWeFillTheCache()
     {
-        await using var GilGoblinDbContext = GetDbContext();
-        var allWorlds = GilGoblinDbContext.World.ToList();
+        await using var dbContext = GetDbContext();
+        var allWorlds = dbContext.World.ToList();
 
         await _worldRepo.FillCache();
 
+        Assert.That(allWorlds, Has.Count.EqualTo(ValidWorldIds.Count));
         allWorlds.ForEach(world => _cache.Received(1).Add(world.Id, world));
     }
 

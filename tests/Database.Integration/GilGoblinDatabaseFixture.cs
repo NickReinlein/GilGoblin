@@ -17,7 +17,7 @@ public class GilGoblinDatabaseFixture
     protected PostgreSqlContainer _postgresContainer;
     protected IConfigurationRoot _configuration;
     protected DbContextOptions<GilGoblinDbContext> _options;
-    private ServiceProvider _serviceProvider;
+    protected ServiceProvider _serviceProvider;
 
     protected static readonly List<int> ValidWorldIds = [34, 99];
     protected static readonly List<int> ValidItemsIds = [134, 584, 654, 842];
@@ -166,12 +166,6 @@ public class GilGoblinDatabaseFixture
             .Select(w => new WorldPoco { Id = w, Name = $"World {w}" })
             .ToList();
         await context.World.AddRangeAsync(validWorlds);
-
-        // var pricePoint = new PriceDataPointPoco(1, 11, true);
-        // context.Price.AddRange(
-        //     new PricePoco(ItemId: 1, WorldId: 34, IsHq: true, Updated: DateTimeOffset.UtcNow, null, null, null, null),
-        //     new PricePoco(ItemId: 2, WorldId: 34, IsHq: false, Updated: DateTimeOffset.UtcNow, null, null, null, null)
-        // );
 
         await context.SaveChangesAsync();
     }

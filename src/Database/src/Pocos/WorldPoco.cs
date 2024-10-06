@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GilGoblin.Database.Pocos;
 
-public class WorldPoco : IIdentifiable
+public record WorldPoco : IIdentifiable
 {
     public int Id { get; set; }
     [MaxLength(100)]
