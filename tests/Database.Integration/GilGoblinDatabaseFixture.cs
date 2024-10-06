@@ -7,6 +7,7 @@ using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using NUnit.Framework;
 using Testcontainers.PostgreSql;
 
@@ -18,6 +19,7 @@ public class GilGoblinDatabaseFixture
     protected IConfigurationRoot _configuration;
     protected DbContextOptions<GilGoblinDbContext> _options;
     protected ServiceProvider _serviceProvider;
+    private IServiceScope _serviceScope;
 
     protected static readonly List<int> ValidWorldIds = [34, 99];
     protected static readonly List<int> ValidItemsIds = [134, 584, 654, 842];
@@ -54,6 +56,8 @@ public class GilGoblinDatabaseFixture
             .BuildServiceProvider();
         _options = _serviceProvider
             .GetRequiredService<DbContextOptions<GilGoblinDbContext>>();
+        _serviceScope = Substitute.For<IServiceScope>();
+        _serviceScope.ServiceProvider.Returns(_serviceProvider);
     }
 
     private async Task EnsureDatabaseIsCreated()
@@ -75,7 +79,6 @@ public class GilGoblinDatabaseFixture
             .WithCleanUp(true)
             .Build();
         await _postgresContainer.StartAsync();
-        Console.WriteLine($"PostgreSQL started on: {_postgresContainer.GetConnectionString()}");
     }
 
     [OneTimeTearDown]
@@ -120,33 +123,32 @@ public class GilGoblinDatabaseFixture
         await using var context = GetDbContext();
 
         var recipeList = new RecipePoco[]
+        {
+            new()
             {
-                new()
-                {
-                    Id = ValidRecipeIds[0],
-                    TargetItemId = ValidItemsIds[0],
-                    ItemIngredient0TargetId = ValidItemsIds[1],
-                    AmountIngredient0 = 2,
-                    CanHq = true,
-                    CraftType = 3,
-                    CanQuickSynth = true,
-                    ResultQuantity = 1,
-                    RecipeLevelTable = 123
-                },
-                new()
-                {
-                    Id = ValidRecipeIds[1],
-                    TargetItemId = ValidItemsIds[2],
-                    ItemIngredient0TargetId = ValidItemsIds[3],
-                    AmountIngredient0 = 3,
-                    CanHq = true,
-                    CraftType = 7,
-                    CanQuickSynth = true,
-                    ResultQuantity = 2,
-                    RecipeLevelTable = 123
-                }
+                Id = ValidRecipeIds[0],
+                TargetItemId = ValidItemsIds[0],
+                ItemIngredient0TargetId = ValidItemsIds[1],
+                AmountIngredient0 = 2,
+                CanHq = true,
+                CraftType = 3,
+                CanQuickSynth = true,
+                ResultQuantity = 1,
+                RecipeLevelTable = 123
+            },
+            new()
+            {
+                Id = ValidRecipeIds[1],
+                TargetItemId = ValidItemsIds[2],
+                ItemIngredient0TargetId = ValidItemsIds[3],
+                AmountIngredient0 = 3,
+                CanHq = true,
+                CraftType = 7,
+                CanQuickSynth = true,
+                ResultQuantity = 2,
+                RecipeLevelTable = 123
             }
-            .ToList();
+        }.ToList();
         await context.Recipe.AddRangeAsync(recipeList);
 
         var itemList = ValidItemsIds.Select(i => new ItemPoco
@@ -166,6 +168,16 @@ public class GilGoblinDatabaseFixture
             .Select(w => new WorldPoco { Id = w, Name = $"World {w}" })
             .ToList();
         await context.World.AddRangeAsync(validWorlds);
+
+        var qualities = new[] { true, false };
+        var updateTime = DateTimeOffset.UtcNow.AddHours(-1);
+        var allPrices =
+            (from itemId in ValidItemsIds
+                from worldId in ValidWorldIds
+                from quality in qualities
+                select new PricePoco(itemId, worldId, quality, updateTime)).ToList();
+
+        await context.Price.AddRangeAsync(allPrices);
 
         await context.SaveChangesAsync();
     }

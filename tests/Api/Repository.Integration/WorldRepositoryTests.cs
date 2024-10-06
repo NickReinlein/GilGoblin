@@ -1,12 +1,9 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.Database.Integration;
-using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -16,16 +13,11 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
 {
     private IWorldCache _cache;
     private WorldRepository _worldRepo;
-    private IServiceScope _serviceScope;
-    private IServiceScopeFactory _factory;
 
     [SetUp]
     public override async Task SetUp()
     {
         _cache = Substitute.For<IWorldCache>();
-        _serviceScope = Substitute.For<IServiceScope>();
-        _factory = Substitute.For<IServiceScopeFactory>();
-        _serviceScope.ServiceProvider.Returns(_serviceProvider);
         await base.SetUp();
 
         _worldRepo = new WorldRepository(_serviceProvider, _cache);
