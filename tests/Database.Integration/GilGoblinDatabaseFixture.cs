@@ -22,7 +22,7 @@ public class GilGoblinDatabaseFixture
     private IServiceScope _serviceScope;
 
     protected static readonly List<int> ValidWorldIds = [34, 99];
-    protected static readonly List<int> ValidItemsIds = [134, 584, 654, 842];
+    protected static readonly List<int> ValidItemsIds = [134, 585, 654, 847];
     protected static readonly List<int> ValidRecipeIds = [111, 122];
 
     [OneTimeSetUp]
@@ -33,6 +33,25 @@ public class GilGoblinDatabaseFixture
         ConfigureServices();
 
         await EnsureDatabaseIsCreated();
+    }
+
+    [SetUp]
+    public virtual async Task SetUp()
+    {
+        await DeleteAllEntriesAsync();
+        await CreateAllEntriesAsync();
+    }
+
+    [OneTimeTearDown]
+    public async Task OneTimeTearDown()
+    {
+        await _postgresContainer.DisposeAsync();
+    }
+
+    [TearDown]
+    public virtual async Task TearDown()
+    {
+        await DeleteAllEntriesAsync();
     }
 
     private void ConfigureServices()
@@ -81,25 +100,6 @@ public class GilGoblinDatabaseFixture
         await _postgresContainer.StartAsync();
     }
 
-    [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
-        await _postgresContainer.DisposeAsync();
-    }
-
-    [SetUp]
-    public virtual async Task SetUp()
-    {
-        await DeleteAllEntriesAsync();
-        await CreateAllEntriesAsync();
-    }
-
-    [TearDown]
-    public virtual async Task TearDown()
-    {
-        await DeleteAllEntriesAsync();
-    }
-
     protected async Task DeleteAllEntriesAsync()
     {
         await using var context = new GilGoblinDbContext(_options, _configuration);
@@ -121,47 +121,38 @@ public class GilGoblinDatabaseFixture
     protected async Task CreateAllEntriesAsync()
     {
         await using var context = GetDbContext();
+        var qualities = new[] { true, false };
 
-        var recipeList = new RecipePoco[]
-        {
-            new()
-            {
-                Id = ValidRecipeIds[0],
-                TargetItemId = ValidItemsIds[0],
-                ItemIngredient0TargetId = ValidItemsIds[1],
-                AmountIngredient0 = 2,
-                CanHq = true,
-                CraftType = 3,
-                CanQuickSynth = true,
-                ResultQuantity = 1,
-                RecipeLevelTable = 123
-            },
-            new()
-            {
-                Id = ValidRecipeIds[1],
-                TargetItemId = ValidItemsIds[2],
-                ItemIngredient0TargetId = ValidItemsIds[3],
-                AmountIngredient0 = 3,
-                CanHq = true,
-                CraftType = 7,
-                CanQuickSynth = true,
-                ResultQuantity = 2,
-                RecipeLevelTable = 123
-            }
-        }.ToList();
-        await context.Recipe.AddRangeAsync(recipeList);
+        var allRecipes =
+            (from id in ValidRecipeIds
+                select new RecipePoco
+                {
+                    Id = id,
+                    CanHq = id % 2 == 0,
+                    CraftType = id % 2 == 0 ? 3 : 7,
+                    CanQuickSynth = id % 2 == 0,
+                    ResultQuantity = 1,
+                    RecipeLevelTable = 123,
+                    TargetItemId = id + 1,
+                    AmountIngredient0 = id + 2,
+                    ItemIngredient0TargetId = id + 3
+                })
+            .ToList();
+        await context.Recipe.AddRangeAsync(allRecipes);
 
         var itemList = ValidItemsIds.Select(i => new ItemPoco
-        {
-            Name = $"Item {i}",
-            Description = $"Item {i} description",
-            IconId = i + 111,
-            CanHq = i % 2 == 0,
-            PriceLow = i * 3 + 11,
-            PriceMid = i * 3 + 12,
-            Level = i + 13,
-            StackSize = 1
-        }).ToList();
+            {
+                Id = i,
+                Name = $"Item {i}",
+                Description = $"Item {i} description",
+                IconId = i + 111,
+                CanHq = i % 2 == 0,
+                PriceLow = i * 3 + 11,
+                PriceMid = i * 3 + 12,
+                Level = i + 13,
+                StackSize = 1
+            })
+            .ToList();
         await context.Item.AddRangeAsync(itemList);
 
         var validWorlds = ValidWorldIds
@@ -169,13 +160,13 @@ public class GilGoblinDatabaseFixture
             .ToList();
         await context.World.AddRangeAsync(validWorlds);
 
-        var qualities = new[] { true, false };
         var updateTime = DateTimeOffset.UtcNow.AddHours(-1);
         var allPrices =
             (from itemId in ValidItemsIds
                 from worldId in ValidWorldIds
                 from quality in qualities
-                select new PricePoco(itemId, worldId, quality, updateTime)).ToList();
+                select new PricePoco(itemId, worldId, quality, updateTime))
+            .ToList();
 
         await context.Price.AddRangeAsync(allPrices);
 

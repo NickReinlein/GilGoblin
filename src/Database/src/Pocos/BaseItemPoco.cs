@@ -1,6 +1,6 @@
 namespace GilGoblin.Database.Pocos;
 
-public class BaseItemPoco : IIdentifiable
+public record BaseItemPoco : IIdentifiable
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -14,7 +14,7 @@ public class BaseItemPoco : IIdentifiable
 
     public BaseItemPoco() { }
 
-    public BaseItemPoco(
+    protected BaseItemPoco(
         int id,
         string name,
         string description,

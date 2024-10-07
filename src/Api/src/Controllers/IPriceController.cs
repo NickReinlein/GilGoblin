@@ -6,9 +6,9 @@ namespace GilGoblin.Api.Controllers;
 
 public interface IPriceController
 {
+    [HttpGet("{worldId:int}/{id:int}/{isHq:bool}")]
+    PricePoco? Get(int worldId, int id, bool isHq);
+
     [HttpGet("{worldId:int}")]
     IEnumerable<PricePoco> GetAll(int worldId);
-
-    [HttpGet("{worldId:int}/{id:int}/{isHq:bool}")]
-    PricePoco? Get(int worldId, int id, bool isHq = false);
 }

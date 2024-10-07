@@ -8,28 +8,24 @@ namespace GilGoblin.Api.Controllers;
 
 [ApiController]
 [Route("[controller]/{worldId:int}")]
-public class PriceController : ControllerBase, IPriceController
+public class PriceController(IPriceRepository<PricePoco> priceRepo, ILogger<PriceController> logger)
+    : ControllerBase, IPriceController
 {
-    private readonly IPriceRepository<PricePoco> _priceRepo;
-    private readonly ILogger<PriceController> _logger;
-
-    public PriceController(IPriceRepository<PricePoco> priceRepo, ILogger<PriceController> logger)
+    [HttpGet("{id:int}/{isHq:bool}")]
+    public PricePoco? Get(int worldId, int id, bool isHq)
     {
-        _logger = logger;
-        _priceRepo = priceRepo;
-    }
-
-    [HttpGet("{id:int}")]
-    public PricePoco? Get(int worldId, int id, bool isHq = false)
-    {
-        _logger.LogInformation($"Fetching market data world {worldId}, id: {id}");
-        return _priceRepo.Get(worldId, id, isHq);
+        logger.LogInformation(
+            "Fetching market data for item id {Id} in world {WorldId}, hq: {IsHq}",
+            id,
+            worldId,
+            isHq);
+        return priceRepo.Get(worldId, id, isHq);
     }
 
     [HttpGet("")]
     public IEnumerable<PricePoco> GetAll(int worldId)
     {
-        _logger.LogInformation($"Fetching all market data for world {worldId}");
-        return _priceRepo.GetAll(worldId);
+        logger.LogInformation("Fetching all market data for world {WorldId}", worldId);
+        return priceRepo.GetAll(worldId);
     }
 }
