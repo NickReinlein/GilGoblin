@@ -31,8 +31,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    image: nickreinlein/gilgoblin-api
-    container_name: api
+    # image: nickreinlein/gilgoblin-api
+    # container_name: api
+    image: api
+    build: src/Api/
     depends_on:
       - gilgoblin-database
     environment:

@@ -1,7 +1,6 @@
 using System;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Converters;
-// using GilGoblin.Database.Pocos.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -28,7 +27,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
                                ?? configuration.GetConnectionString(nameof(GilGoblinDbContext))
                                ?? throw new InvalidOperationException(
                                    "Connection string not found in environment variables or configuration.");
-        // connectionString += "Include Error Detail=true;";
         optionsBuilder.UseNpgsql(connectionString);
 
         // Only used during development and debugging
