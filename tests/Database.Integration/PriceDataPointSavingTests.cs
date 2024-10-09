@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Tests.IntegrationDatabaseFixture;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 

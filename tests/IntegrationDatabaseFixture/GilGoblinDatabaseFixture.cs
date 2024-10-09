@@ -11,7 +11,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Testcontainers.PostgreSql;
 
-namespace GilGoblin.Tests.Database.Integration;
+namespace GilGoblin.Tests.IntegrationDatabaseFixture;
 
 public class GilGoblinDatabaseFixture
 {
@@ -133,7 +133,7 @@ public class GilGoblinDatabaseFixture
                     CanQuickSynth = id % 2 == 0,
                     ResultQuantity = 1,
                     RecipeLevelTable = 123,
-                    TargetItemId = id + 1,
+                    TargetItemId = ValidItemsIds.ElementAt(Random.Shared.Next(ValidItemsIds.Count)),
                     AmountIngredient0 = id + 2,
                     ItemIngredient0TargetId = id + 3
                 })

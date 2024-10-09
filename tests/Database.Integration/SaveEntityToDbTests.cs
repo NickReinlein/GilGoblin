@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using GilGoblin.Tests.IntegrationDatabaseFixture;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;

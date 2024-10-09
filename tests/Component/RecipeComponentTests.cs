@@ -13,11 +13,11 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveARecipe()
     {
-        var fullEndpoint = "http://localhost:55448/recipe/32635";
+        const string fullEndpoint = "http://localhost:55448/recipe/32635";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var recipe = await response.Content.ReadFromJsonAsync<RecipePoco?>(GetSerializerOptions());
+        var recipe = await response.Content.ReadFromJsonAsync<RecipePoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
             Assert.That(recipe!.Id, Is.EqualTo(32635));

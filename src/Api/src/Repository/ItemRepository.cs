@@ -10,7 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Api.Repository;
 
-public class ItemRepository(IServiceProvider serviceProvider, IItemCache cache, ILogger<ItemRepository> logger)
+public class ItemRepository(
+    IServiceProvider serviceProvider,
+    IItemCache cache,
+    ILogger<ItemRepository> logger)
     : IItemRepository
 {
     public ItemPoco? Get(int itemId)

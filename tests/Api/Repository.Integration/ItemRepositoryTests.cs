@@ -6,6 +6,7 @@ using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.Database.Integration;
+using GilGoblin.Tests.IntegrationDatabaseFixture;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -33,7 +34,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
     [Test]
     public void GivenAGetAll_ThenTheRepositoryReturnsAllEntries()
     {
-        using var context = new GilGoblinDbContext(_options, _configuration);
+        using var context = GetDbContext();
 
         var result = _itemRepo.GetAll().ToList();
 
