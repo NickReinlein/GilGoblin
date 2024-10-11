@@ -19,8 +19,8 @@ public abstract class DataFetcher<T>(
     : IDataFetcher<T>
     where T : class, IIdentifiable
 {
-    protected string BasePath { get; set; } = basePath;
-    protected HttpClient Client { get; set; } = client ?? new HttpClient();
+    protected string BasePath { get; init; } = basePath;
+    protected HttpClient Client { get; init; } = client ?? new HttpClient();
     protected readonly ILogger<DataFetcher<T>> Logger = logger;
 
     public abstract Task<List<T>> FetchByIdsAsync(

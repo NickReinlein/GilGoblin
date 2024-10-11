@@ -6,20 +6,13 @@ using System.Threading.Tasks;
 
 namespace GilGoblin.Api.Middleware;
 
-public class RequestInfoMiddleware
+public class RequestInfoMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-    private readonly Histogram _httpRequestDurationHistogram;
-
-    public RequestInfoMiddleware(RequestDelegate next)
-    {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
-
-        _httpRequestDurationHistogram = Metrics.CreateHistogram(
-            "http_request_duration_seconds",
-            "Duration of HTTP requests",
-            new HistogramConfiguration { LabelNames = new[] { "method", "status_code" } });
-    }
+    private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
+    private readonly Histogram _httpRequestDurationHistogram = Metrics.CreateHistogram(
+        "http_request_duration_seconds",
+        "Duration of HTTP requests",
+        new HistogramConfiguration { LabelNames = new[] { "method", "status_code" } });
 
     public async Task Invoke(HttpContext context)
     {

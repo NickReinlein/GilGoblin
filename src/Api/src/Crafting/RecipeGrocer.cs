@@ -9,23 +9,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Api.Crafting;
 
-public class RecipeGrocer : IRecipeGrocer
+public class RecipeGrocer(IRecipeRepository recipes, ILogger<RecipeGrocer> logger) : IRecipeGrocer
 {
-    private readonly IRecipeRepository _recipes;
-    private readonly ILogger<RecipeGrocer> _logger;
-
-    public RecipeGrocer(IRecipeRepository recipes, ILogger<RecipeGrocer> logger)
-    {
-        _recipes = recipes;
-        _logger = logger;
-    }
-
     public async Task<IEnumerable<IngredientPoco>> BreakdownRecipeById(int recipeId)
     {
         var failure = Array.Empty<IngredientPoco>();
         try
         {
-            var recipe = _recipes.Get(recipeId);
+            var recipe = recipes.Get(recipeId);
             if (recipe is null)
                 return failure;
 
@@ -33,7 +24,7 @@ public class RecipeGrocer : IRecipeGrocer
         }
         catch (Exception e)
         {
-            _logger.LogError($"Failed to break down ingredients for recipe {recipeId}: {e.Message}");
+            logger.LogError($"Failed to break down ingredients for recipe {recipeId}: {e.Message}");
             return failure;
         }
     }
@@ -66,7 +57,7 @@ public class RecipeGrocer : IRecipeGrocer
     public async Task<IEnumerable<IngredientPoco>> BreakdownItem(int itemId)
     {
         var allIngredients = new List<IngredientPoco>();
-        var allRecipes = _recipes.GetRecipesForItem(itemId);
+        var allRecipes = recipes.GetRecipesForItem(itemId);
 
         foreach (var recipe in allRecipes)
         {
@@ -78,7 +69,7 @@ public class RecipeGrocer : IRecipeGrocer
             }
             catch (Exception e)
             {
-                _logger.LogDebug($"Failed to break down ingredients for recipe {recipe.Id}: {e.Message}");
+                logger.LogDebug($"Failed to break down ingredients for recipe {recipe.Id}: {e.Message}");
             }
         }
 

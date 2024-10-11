@@ -168,8 +168,8 @@ public class Startup(IConfiguration configuration)
         {
             var serviceProvider = services.BuildServiceProvider();
 
-            await using var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
-            if (await dbContextService.Database.CanConnectAsync() != true)
+            await using var dbContext = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+            if (await dbContext.Database.CanConnectAsync() != true)
                 throw new Exception("Failed to connect to the database");
 
             var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();

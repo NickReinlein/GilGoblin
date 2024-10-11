@@ -26,6 +26,14 @@ public class DataFetcherTests : FetcherTests
         _logger = Substitute.For<ILogger<BulkDataFetcher<Apple, AppleResponse>>>();
         _fetcher = new MockBulkDataFetcher(basePath, _logger, _client);
     }
+    
+    [Test]
+    public async Task GivenAFetchByIdsAsync_WhenReceivingAnEmptyList_ThenAnEmptyListIsReturned()
+    {
+        var result = await _fetcher.FetchByIdsAsync([]);
+
+        Assert.That(result, Is.Empty);
+    }
 
     [Test]
     public async Task GivenAFetchByIdsAsync_WhenReceivingASingleValidEntry_ThenThatEntryIsReturned()

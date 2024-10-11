@@ -64,6 +64,7 @@ public class PriceUpdater(
                 }
 
                 await ConvertAndSaveToDbAsync(fetched, worldId);
+                await AwaitDelay(ct);
             }
             catch (TaskCanceledException)
             {
@@ -71,10 +72,6 @@ public class PriceUpdater(
             catch (Exception e)
             {
                 logger.LogError($"Failed to get batch: {e.Message}");
-            }
-            finally
-            {
-                await AwaitDelay(ct);
             }
         }
     }
@@ -151,41 +148,35 @@ public class PriceUpdater(
         if (AllItemIds.Any() && (DateTimeOffset.UtcNow - LastUpdated).TotalHours < 48)
             return;
 
-        try
-        {
-            await using var scope = serviceProvider.CreateAsyncScope();
-            var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
-            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-            AllItemIds.Clear();
-            LastUpdated = DateTimeOffset.UtcNow;
 
-            var recipes = recipeRepo.GetAll().ToList();
-            logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
-            var ingredientItemIds =
-                recipes
-                    .SelectMany(r =>
-                        r.GetActiveIngredients()
-                            .Select(i => i.ItemId))
-                    .Distinct()
-                    .ToList();
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
+        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+        AllItemIds.Clear();
+        LastUpdated = DateTimeOffset.UtcNow;
 
-            var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
-            logger.LogDebug(
-                $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
-            if (!marketableItemIdList.Any())
-                throw new WebException("Failed to fetch marketable item ids");
+        var recipes = recipeRepo.GetAll().ToList();
+        logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
+        var ingredientItemIds =
+            recipes
+                .SelectMany(r =>
+                    r.GetActiveIngredients()
+                        .Select(i => i.ItemId))
+                .Distinct()
+                .ToList();
 
-            AllItemIds =
-                marketableItemIdList
-                    .Concat(ingredientItemIds)
-                    .Distinct()
-                    .ToList();
-            logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
-        }
-        catch (Exception e)
-        {
-            logger.LogWarning(e, "Failed to fill item Id cache");
-        }
+        var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
+        logger.LogDebug(
+            $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
+        if (!marketableItemIdList.Any())
+            throw new WebException("Failed to fetch marketable item ids");
+
+        AllItemIds =
+            marketableItemIdList
+                .Concat(ingredientItemIds)
+                .Distinct()
+                .ToList();
+        logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
     }
 
     private async Task AwaitDelay(CancellationToken ct)
