@@ -48,15 +48,9 @@ public abstract class DataUpdater<T, U>(
         }
     }
 
-    protected virtual async Task ExecuteUpdateAsync(CancellationToken ct)
-    {
-        var worlds = GetWorlds();
-        var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
-        Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-        await FetchAsync(worlds.FirstOrDefault()?.GetId(), ct);
-    }
+    protected abstract Task ExecuteUpdateAsync(CancellationToken ct);
 
-    protected virtual Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null) => Task.CompletedTask;
+    protected abstract Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null);
 
     public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
     {
@@ -106,6 +100,6 @@ public abstract class DataUpdater<T, U>(
 
     protected virtual List<WorldPoco> GetWorlds() => new();
 
-    protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
+    protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
     protected virtual int GetApiSpamDelayInMs() => 60000;
 }

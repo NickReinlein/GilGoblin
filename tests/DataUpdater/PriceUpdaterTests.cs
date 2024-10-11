@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
+using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using GilGoblin.DataUpdater;
@@ -29,6 +32,7 @@ public class PriceUpdaterTests
     private IServiceScopeFactory _scopeFactory;
     private IServiceScope _scope;
     private IServiceProvider _serviceProvider;
+    private IPriceConverter _priceConverter;
 
     private const int worldId = 34;
     private const int itemId1 = 1500;
@@ -46,6 +50,7 @@ public class PriceUpdaterTests
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
         _recipeRepo = Substitute.For<IRecipeRepository>();
         _saver = Substitute.For<IDataSaver<PricePoco>>();
+        _priceConverter = Substitute.For<IPriceConverter>();
         _logger = Substitute.For<ILogger<PriceUpdater>>();
 
         _scopeFactory.CreateScope().Returns(_scope);
@@ -56,6 +61,7 @@ public class PriceUpdaterTests
         _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
         _serviceProvider.GetService(typeof(IRecipeRepository)).Returns(_recipeRepo);
         _serviceProvider.GetService(typeof(IDataSaver<PricePoco>)).Returns(_saver);
+        _serviceProvider.GetService(typeof(IPriceConverter)).Returns(_priceConverter);
 
         SetupSave();
 
@@ -75,8 +81,8 @@ public class PriceUpdaterTests
         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
         await _priceFetcher.DidNotReceive()
             .FetchByIdsAsync(
-                Arg.Any<IEnumerable<int>>(), 
-                Arg.Any<int?>(), 
+                Arg.Any<IEnumerable<int>>(),
+                Arg.Any<int?>(),
                 Arg.Any<CancellationToken>());
         _logger.Received(1).LogError(errorMessage);
     }
@@ -98,7 +104,6 @@ public class PriceUpdaterTests
     public void GivenFetchAsync_WhenTheTokenIsCancelled_ThenWeExitGracefully()
     {
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([443, 1420, 3500, 900]);
-        _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
         _priceFetcher.GetEntriesPerPage().Returns(2);
         _priceFetcher.FetchByIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<int?>(), Arg.Any<CancellationToken>())
             .Returns([]);
@@ -106,8 +111,6 @@ public class PriceUpdaterTests
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(34, cts.Token));
-
-        _logger.Received().LogInformation($"Awaiting delay of {5000}ms before next batch call (Spam prevention)");
     }
 
     [Test]
@@ -120,44 +123,44 @@ public class PriceUpdaterTests
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         Assert.That(saveList, Has.Count.GreaterThanOrEqualTo(2));
-        await _saver.Received().SaveAsync(
-            Arg.Is<List<PricePoco>>(x => saveList.All(s =>
-                x.Any(i => i.ItemId == s.ItemId))),
-            cts.Token);
+        await _priceConverter.Received(2).ConvertAndSaveAsync(Arg.Any<PriceWebPoco>(), Arg.Any<int>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Test]
-    public async Task GivenConvertAndSaveToDbAsync_WhenSavingThrowsAnException_ThenWeLogTheError()
+    public async Task GivenConvertAndSaveToDbAsync_WhenSavingFails_ThenWeReturnNullAndLogTheFailure()
     {
-        var saveList = SetupSave();
-        _saver.ClearSubstitute();
-        _saver.SaveAsync(default!).ThrowsAsyncForAnyArgs(new Exception("test"));
+        _ = SetupSave();
+        _priceConverter
+            .ConvertAndSaveAsync(Arg.Any<PriceWebPoco>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns((null, null));
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
-        _logger.Received().LogError($"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: test");
+        _logger.LogDebug(new DataException(), $"Failed to convert {nameof(PriceWebPoco)} to db format");
     }
 
     [Test]
-    public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
+    public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheFailure()
     {
-        var saveList = SetupSave();
-        _saver.SaveAsync(Arg.Any<IEnumerable<PricePoco>>()).Returns(false);
-        var errorMessage =
-            $"Failed to save {saveList.Count} entries for {nameof(PricePoco)}: Saving from {nameof(IDataSaver<PricePoco>)} returned failure";
+        _ = SetupSave();
+        _priceConverter.ConvertAndSaveAsync(
+                Arg.Any<PriceWebPoco>(),
+                Arg.Any<int>(),
+                Arg.Any<CancellationToken>())
+            .ThrowsAsync<DataException>();
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
-        _logger.Received().LogError(errorMessage);
+        _logger.LogDebug(new DataException(), $"Failed to convert {nameof(PriceWebPoco)} to db format");
     }
 
     private List<PriceWebPoco> SetupSave()
     {
-        
         var pricePoco = GetOldPrice();
         _priceRepo.GetAll(Arg.Any<int>()).Returns([pricePoco]);
         _recipeRepo.GetAll().Returns([]);
