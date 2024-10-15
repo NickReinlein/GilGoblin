@@ -41,11 +41,11 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
 
     public async Task GetAllWorldsAsync()
     {
-        var result = await FetchAllWorlds();
+        var result = await FetchAllWorldsAsync();
         await ConvertAndSaveToDbAsync(result);
     }
 
-    private async Task<List<WorldWebPoco>> FetchAllWorlds()
+    private async Task<List<WorldWebPoco>> FetchAllWorldsAsync()
     {
         try
         {
@@ -55,7 +55,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
             var timer = new Stopwatch();
             timer.Start();
             //temporarily fetch less data while developing
-            // var uselessForNow = await fetcher.GetAllAsync();
+            // var updated = await fetcher.GetAllAsync();
             var updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
             timer.Stop();
 
@@ -82,7 +82,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
 
         try
         {
-            using var scope = serviceProvider.CreateScope();
+            await using var scope = serviceProvider.CreateAsyncScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<WorldPoco>>();
             var success = await saver.SaveAsync(updateList);
             if (!success)

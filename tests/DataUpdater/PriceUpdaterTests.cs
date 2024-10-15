@@ -20,7 +20,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.DataUpdater;
 
-public class PriceUpdaterTests
+public class PriceUpdaterTests : DataUpdaterTests
 {
     private IMarketableItemIdsFetcher _marketableIdsFetcher;
     private IPriceFetcher _priceFetcher;
@@ -29,9 +29,6 @@ public class PriceUpdaterTests
     private IPriceRepository<PricePoco> _priceRepo;
     private ILogger<PriceUpdater> _logger;
     private IRecipeRepository _recipeRepo;
-    private IServiceScopeFactory _scopeFactory;
-    private IServiceScope _scope;
-    private IServiceProvider _serviceProvider;
     private IPriceConverter _priceConverter;
 
     private const int worldId = 34;
@@ -39,12 +36,9 @@ public class PriceUpdaterTests
     private const int itemId2 = 3614;
 
     [SetUp]
-    public void SetUp()
+    public override void SetUp()
     {
-        _scopeFactory = Substitute.For<IServiceScopeFactory>();
-        _scope = Substitute.For<IServiceScope>();
-        _serviceProvider = Substitute.For<IServiceProvider>();
-
+        base.SetUp();
         _marketableIdsFetcher = Substitute.For<IMarketableItemIdsFetcher>();
         _priceFetcher = Substitute.For<IPriceFetcher>();
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
@@ -53,9 +47,6 @@ public class PriceUpdaterTests
         _priceConverter = Substitute.For<IPriceConverter>();
         _logger = Substitute.For<ILogger<PriceUpdater>>();
 
-        _scopeFactory.CreateScope().Returns(_scope);
-        _scope.ServiceProvider.Returns(_serviceProvider);
-        _serviceProvider.GetService(typeof(IServiceScopeFactory)).Returns(_scopeFactory);
         _serviceProvider.GetService(typeof(IMarketableItemIdsFetcher)).Returns(_marketableIdsFetcher);
         _serviceProvider.GetService(typeof(IPriceFetcher)).Returns(_priceFetcher);
         _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);

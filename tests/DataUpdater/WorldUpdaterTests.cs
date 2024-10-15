@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,33 +18,25 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.DataUpdater;
 
-public class WorldUpdaterTests
+public class WorldUpdaterTests : DataUpdaterTests
 {
-    private WorldUpdater _worldUpdater;
-    private IWorldFetcher _fetcher;
-    private IDataSaver<WorldPoco> _saver;
-    private ILogger<WorldUpdater> _logger;
-    private IServiceScope _scope;
-    private IServiceProvider _serviceProvider;
-    private List<WorldWebPoco> _worldList;
-    private IServiceScopeFactory _scopeFactory;
+    protected WorldUpdater _worldUpdater;
+    protected IWorldFetcher _fetcher;
+    protected IDataSaver<WorldPoco> _saver;
+    protected ILogger<WorldUpdater> _logger;
+    protected List<WorldWebPoco> _worldList;
 
     [SetUp]
-    public void SetUp()
+    public override void SetUp()
     {
+        base.SetUp();
         _saver = Substitute.For<IDataSaver<WorldPoco>>();
         _fetcher = Substitute.For<IWorldFetcher>();
         _logger = Substitute.For<ILogger<WorldUpdater>>();
-        _scope = Substitute.For<IServiceScope>();
-        _serviceProvider = Substitute.For<IServiceProvider>();
-        _scopeFactory = Substitute.For<IServiceScopeFactory>();
 
-        _scope.ServiceProvider.Returns(_serviceProvider);
-        _serviceProvider.GetService(typeof(IServiceScopeFactory)).Returns(_scopeFactory); 
         _serviceProvider.GetService(typeof(IWorldFetcher)).Returns(_fetcher);
         _serviceProvider.GetService(typeof(IDataSaver<WorldPoco>)).Returns(_saver);
-        _serviceProvider.CreateAsyncScope().Returns(_scope);
-        
+
         _worldList = [new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich")];
         _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
         _fetcher.GetAllAsync().Returns(_worldList);
@@ -67,7 +60,6 @@ public class WorldUpdaterTests
     [Test, Ignore("Disabled while leaving it to a hard-coded 3 worlds")]
     public async Task GivenGetAllAsync_WhenWorldsAreReturned_ThenWeDoNotLogAnError()
     {
-
         var cts = new CancellationTokenSource();
         cts.CancelAfter(500);
         await _worldUpdater.GetAllWorldsAsync();
@@ -94,6 +86,42 @@ public class WorldUpdaterTests
         await _fetcher.Received(1).GetAllAsync();
         var errorMessage = $"Failed to fetch updates for worlds: {exception.Message}";
         _logger.ReceivedWithAnyArgs().LogError(errorMessage);
+    }
+
+    [Test]
+    public async Task GivenGetAllWorldsAsync_WhenThereAreValidEntriesToSave_ThenWeTryToSaveThem()
+    {
+        await _worldUpdater.GetAllWorldsAsync();
+
+        _scope.ServiceProvider.Received(1).GetService(typeof(IDataSaver<WorldPoco>));
+        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(
+            i => i.Count == _worldList.Count &&
+                 i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
+    }
+
+    [Test, Ignore("Disabled while leaving it to a hard-coded 3 worlds")]
+    public async Task GivenGetAllWorldsAsync_WhenThereAreNoValidEntriesToSave_ThenWeDoNotToSave()
+    {
+        _fetcher.GetAllAsync().Returns([]);
+
+        await _worldUpdater.GetAllWorldsAsync();
+
+        _scope.ServiceProvider.DidNotReceive().GetService(typeof(IDataSaver<WorldPoco>));
+        await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<WorldPoco>>());
+    }
+
+    [Test]
+    public async Task GivenGetAllWorldsAsync_WhenSavingThrowsAnException_ThenWeExitGracefullyAndLogTheError()
+    {
+        _saver.SaveAsync(Arg.Any<IEnumerable<WorldPoco>>()).ThrowsForAnyArgs(new DataException("test"));
+
+        await _worldUpdater.GetAllWorldsAsync();
+
+        _scope.ServiceProvider.Received(1).GetService(typeof(IDataSaver<WorldPoco>));
+        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(
+            i => i.Count == _worldList.Count &&
+                 i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
+        _logger.LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
     }
 
     [Test]
