@@ -1,5 +1,6 @@
 using System;
 using GilGoblin.Database;
+using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,10 +36,10 @@ public class Startup
         Api.Startup.AddGoblinDatabases(services, _configuration);
         Api.Startup.AddGoblinCaches(services);
 
-        // services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
+        services.AddScoped<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
         // services.AddScoped<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>();
         //
-        // services.AddHostedService<RecipeCostAccountant>();
+        services.AddHostedService<RecipeCostAccountant>();
         // services.AddHostedService<RecipeProfitAccountant>();
     }
 

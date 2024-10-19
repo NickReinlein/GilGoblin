@@ -13,14 +13,14 @@ using Microsoft.Extensions.Hosting;
 namespace GilGoblin.Accountant;
 
 // ReSharper disable once UnusedTypeParameter
-public interface IAccountant<T> where T : class, IIdentifiable
+public interface IAccountant<T> where T : class
 {
     Task CalculateAsync(CancellationToken ct, int worldId);
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
 public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant<T>> logger)
-    : BackgroundService, IAccountant<T> where T : class, IIdentifiable
+    : BackgroundService, IAccountant<T> where T : class
 {
     protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
     protected readonly ILogger<Accountant<T>> Logger = logger;

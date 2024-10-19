@@ -18,4 +18,7 @@ public record PricePoco(
     public RecentPurchasePoco? RecentPurchase { get; init; }
     public AverageSalePricePoco? AverageSalePrice { get; init; }
     public DailySaleVelocityPoco? DailySaleVelocity { get; init; }
+    
+    public int? GetBestPrice =>
+        RecentPurchase?. ?? AverageSalePrice?.Price ;
 }

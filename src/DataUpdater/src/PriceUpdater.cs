@@ -22,7 +22,7 @@ public class PriceUpdater(
 {
     private List<int> AllItemIds { get; set; } = [];
     private DateTimeOffset LastUpdated { get; set; }
-    private const int dataExpiryInHours = 96;
+    private const int hoursBeforeDataExpiry = 96;
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
     {
@@ -128,7 +128,7 @@ public class PriceUpdater(
             {
                 var priceAge = p.Updated;
                 var ageInHours = (DateTimeOffset.UtcNow - priceAge).TotalHours;
-                return ageInHours > dataExpiryInHours;
+                return ageInHours > hoursBeforeDataExpiry;
             }).ToList();
 
             var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
@@ -145,7 +145,7 @@ public class PriceUpdater(
 
     private async Task FillItemIdCache()
     {
-        if (AllItemIds.Any() && (DateTimeOffset.UtcNow - LastUpdated).TotalHours < 48)
+        if (AllItemIds.Any() && (DateTimeOffset.UtcNow - LastUpdated).TotalHours < hoursBeforeDataExpiry)
             return;
 
 

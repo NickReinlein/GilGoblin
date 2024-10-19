@@ -6,4 +6,7 @@ public record PriceDataPointPoco(
     int? WorldDataPointId = null,
     int? DcDataPointId = null,
     int? RegionDataPointId = null)
-    : IdentifiablePoco;
+    : IdentifiablePoco
+{
+    public 
+}
