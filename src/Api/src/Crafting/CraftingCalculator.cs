@@ -47,12 +47,12 @@ public class CraftingCalculator(
         return (recipeId, lowestCraftingCost);
     }
 
-    public async Task<RecipeCostPoco?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
+    public async Task<int> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
     {
-        var calculated = await recipeCosts.GetAsync(worldId, recipeId, isHq);
-        if (calculated is not null &&
-            calculated.LastUpdated >= DateTime.UtcNow.AddHours(-hoursBeforeDataExpiry))
-            return calculated;
+        var existing = await recipeCosts.GetAsync(worldId, recipeId, isHq);
+        if (existing is not null &&
+            existing.LastUpdated >= DateTime.UtcNow.AddHours(-hoursBeforeDataExpiry))
+            return existing.;
 
         try
         {
@@ -64,13 +64,15 @@ public class CraftingCalculator(
 
             var ingredientPrices = GetIngredientPrices(worldId, ingredients).ToList();
 
-            var craftingCost = await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
-
-            if (craftingCost is <= 1 or >= 1147483647)
-                throw new ArithmeticException(
-                    $"Failed to calculate crafting cost for ingredients of recipe {recipeId} in world {worldId}");
-
-            return craftingCost;
+            var calculated = await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
+            return new RecipeCostPoco()
+            {
+                RecipeId = recipeId,
+                WorldId = worldId,
+                IsHq = isHq,
+                LastUpdated = DateTime.UtcNow,
+                
+            }
         }
         catch (DataException)
         {
@@ -111,8 +113,9 @@ public class CraftingCalculator(
         var totalCraftingCost = 0;
         foreach (var craft in craftIngredients)
         {
+            // Compare crafting the ingredient vs purchasing it on the market board
             var (_, craftingCost) = await CalculateCraftingCostForItem(worldId, craft.ItemId);
-            var minCost = (int)Math.Min(craft.Price.AverageSalePrice., craftingCost);
+            var minCost = (int)Math.Min(craft.Price.GetBestPriceCost(), craftingCost);
             totalCraftingCost += craft.Quantity * minCost;
         }
 

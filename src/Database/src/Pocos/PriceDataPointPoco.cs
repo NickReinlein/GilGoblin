@@ -8,5 +8,10 @@ public record PriceDataPointPoco(
     int? RegionDataPointId = null)
     : IdentifiablePoco
 {
-    public 
+    public PriceDataPoco? DcData { get; set; }
+    public PriceDataPoco? RegionData { get; set; }
+    public PriceDataPoco? WorldData { get; set; }
+    
+    public PriceDataPoco? GetBestPrice() => DcData ?? RegionData ?? WorldData;
+    public decimal GetBestPriceCost() => GetBestPrice()?.Price ?? -1m;
 }

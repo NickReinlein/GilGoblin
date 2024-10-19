@@ -8,7 +8,7 @@ public static class RecipePocoExtension
     public static List<IngredientPoco> GetIngredientsList(this RecipePoco poco) =>
         new()
         {
-            new IngredientPoco(poco.ItemIngredient0TargetId, poco.AmountIngredient0, poco.Id),
+            new IngredientPoco(poco.ItemIngredient0TargetId, poco.AmountIngredient0, poco.Id, poco),
             new IngredientPoco(poco.ItemIngredient1TargetId, poco.AmountIngredient1, poco.Id),
             new IngredientPoco(poco.ItemIngredient2TargetId, poco.AmountIngredient2, poco.Id),
             new IngredientPoco(poco.ItemIngredient3TargetId, poco.AmountIngredient3, poco.Id),
