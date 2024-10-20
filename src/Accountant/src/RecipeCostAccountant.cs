@@ -21,31 +21,24 @@ public class RecipeCostAccountant(
 {
     public override int GetDataFreshnessInHours() => 96;
 
-    private const string ageMessage = "Recipe cost calculation is only {Age} hours old and fresh, " +
-                                      "therefore not updating for recipe {RecipeId} for world {WorldId}";
-
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
         try
         {
+            var (recipeCosts, relevantRecipes) = await GetRecipesAndCosts(worldId, idList);
+
+            logger.LogDebug(
+                "Found {Count} relevant recipes for world {WorldId}, compared to the {ParamCount} requested recipes",
+                relevantRecipes.Count,
+                worldId,
+                idList.Count);
+            logger.LogDebug("Found {Count} costs for world {worldId}", recipeCosts.Count, worldId);
+
             await using var scope = serviceProvider.CreateAsyncScope();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
 
-            var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-            var existingRecipeCosts = await costRepo.GetAllAsync(worldId);
-
-            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-            var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
-
-            logger.LogInformation(
-                "Found {Count} relevant recipes for world {WorldId}, compared to the {ParamCount} requested recipes",
-                allRelevantRecipes.Count,
-                worldId,
-                idList.Count);
-            logger.LogInformation("Found {Count} costs for world {worldId}", existingRecipeCosts.Count, worldId);
-
             var newRecipeCosts = new List<RecipeCostPoco>();
-            foreach (var recipe in allRelevantRecipes)
+            foreach (var recipe in relevantRecipes)
             {
                 if (ct.IsCancellationRequested)
                     throw new TaskCanceledException();
@@ -53,11 +46,12 @@ public class RecipeCostAccountant(
                 try
                 {
                     var recipeId = recipe.Id;
+                    
 
                     logger.LogDebug("Calculating new costs for {RecipeId} for world {WorldId}", recipeId, worldId);
                     foreach (var quality in new[] { true, false })
                     {
-                        var current = existingRecipeCosts.FirstOrDefault(c =>
+                        var current = recipeCosts.FirstOrDefault(c =>
                             c.RecipeId == recipeId && c.WorldId == worldId && c.IsHq == quality);
                         if (current is not null)
                         {
@@ -105,6 +99,17 @@ public class RecipeCostAccountant(
                 worldId,
                 ex.Message);
         }
+    }
+
+    private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)> GetRecipesAndCosts(int worldId, List<int> idList)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+        var existingRecipeCosts = await costRepo.GetAllAsync(worldId);
+
+        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+        var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
+        return (existingRecipeCosts, allRelevantRecipes);
     }
 
     public override async Task<List<int>> GetIdsToUpdate(int worldId)

@@ -33,6 +33,23 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         _accountant = new RecipeCostAccountant(_serviceProvider, _saver, _logger);
     }
 
+    [Test]
+    public async Task GetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnExpiredCosts()
+    {
+        await using var dbContext = GetDbContext();
+        var recipeCostPocos = dbContext.RecipeCost.ToList();
+        var recipeCount = recipeCostPocos.Count;
+        foreach (var cost in recipeCostPocos)
+            cost.LastUpdated = cost.LastUpdated.AddDays(-7);
+        await dbContext.SaveChangesAsync();
+
+        var result = await _accountant.GetIdsToUpdate(_worldId);
+
+        _priceRepo.Received(1).GetAll(_worldId);
+        _recipeRepo.Received(1).GetAll();
+        Assert.That(result, Has.Count.EqualTo(recipeCount));
+    }
+
     [TestCase(0)]
     [TestCase(-1)]
     public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int invalidWorldId)
@@ -54,15 +71,16 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     [Test]
     public async Task GivenComputeListAsync_WhenSuccessful_ThenWeReturnAPoco()
     {
-        const int expectedCost = 107;
-
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(2000);
-        await _accountant.ComputeListAsync(_worldId, [_recipeId], CancellationToken.None);
+        cts.CancelAfter(500);
+        await _accountant.ComputeListAsync(_worldId, [_recipeId], cts.Token);
 
-        await using var costAfter = new GilGoblinDbContext(_options, _configuration);
+        await using var costAfter = GetDbContext();
         var result = costAfter.RecipeCost
-            .FirstOrDefault(after => after.RecipeId == _recipeId);
+            .FirstOrDefault(after =>
+                after.RecipeId == _recipeId &&
+                after.WorldId == _worldId);
+
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -90,7 +108,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         _recipeRepo.GetAll().Returns([]);
 
-        Assert.DoesNotThrowAsync(async () => 
+        Assert.DoesNotThrowAsync(async () =>
             await _accountant.CalculateAsync(_worldId, CancellationToken.None));
     }
 
@@ -105,5 +123,13 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
 
         _logger.Received(1).LogError(messageError);
         await _recipeCostRepo.DidNotReceive().GetAllAsync(Arg.Any<int>());
+    }
+
+    [Test]
+    public void GivenGetDataFreshnessInHours_WhenCalled_ThenWeReturnTheValue()
+    {
+        var result = _accountant.GetDataFreshnessInHours();
+
+        Assert.That(result, Is.GreaterThanOrEqualTo(24));
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
@@ -35,7 +36,22 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
         _recipeCostRepo = Substitute.For<IRecipeCostRepository>();
         _recipeRepo = Substitute.For<IRecipeRepository>();
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
-        
+
+        _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
+        foreach (var worldId in ValidWorldIds)
+        {
+            _priceRepo
+                .GetAll(worldId)
+                .Returns(GetDbContext().Price
+                    .Where(p => p.WorldId == worldId)
+                    .ToList());
+            _recipeCostRepo
+                .GetAllAsync(worldId)
+                .Returns(GetDbContext().RecipeCost
+                    .Where(p => p.WorldId == worldId)
+                    .ToList());
+        }
+
         var startup = new Startup(_configuration);
         var services = new ServiceCollection();
         _serviceProvider = services.BuildServiceProvider();
