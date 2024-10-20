@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
-using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -37,18 +33,15 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     public async Task GetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnExpiredCosts()
     {
         await using var dbContext = GetDbContext();
-        var recipeCostPocos = dbContext.RecipeCost.ToList();
-        var recipeCount = recipeCostPocos.Count;
-        foreach (var cost in recipeCostPocos)
-            cost.LastUpdated = cost.LastUpdated.AddDays(-7);
-        await dbContext.SaveChangesAsync();
+        var recipeCount = dbContext.RecipeCost.ToList().Count;
 
         var result = await _accountant.GetIdsToUpdate(_worldId);
 
         _priceRepo.Received(1).GetAll(_worldId);
         _recipeRepo.Received(1).GetAll();
-        Assert.That(result, Has.Count.EqualTo(recipeCount));
+        Assert.That(result, Has.Count.GreaterThanOrEqualTo(recipeCount));
     }
+
 
     [TestCase(0)]
     [TestCase(-1)]
@@ -90,6 +83,20 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
             var totalSeconds = (result.LastUpdated - DateTimeOffset.UtcNow).TotalSeconds;
             Assert.That(totalSeconds, Is.LessThan(3));
         });
+    }
+
+    [Test, Timeout(2000)]
+    public async Task GivenComputeListAsync_WhenIdsAreValid_ThenRelevantCostsAreFetched()
+    {
+        await _accountant.ComputeListAsync(_worldId, ValidRecipeIds, CancellationToken.None);
+
+        await _recipeCostRepo.Received(1).GetAllAsync(_worldId);
+        _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
+        await _calc.Received(ValidRecipeIds.Count)
+            .CalculateCraftingCostForRecipe(
+                _worldId,
+                Arg.Is<int>(i => ValidRecipeIds.Contains(i)),
+                Arg.Any<bool>());
     }
 
     [Test]

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,10 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
 
         _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
+        _recipeRepo.GetMultiple(Arg.Any<IEnumerable<int>>())
+            .Returns(c => GetDbContext().Recipe
+                .Where(r => c.Arg<IEnumerable<int>>().Contains(r.Id))
+                .ToList());
         foreach (var worldId in ValidWorldIds)
         {
             _priceRepo
@@ -67,19 +72,6 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
 
         _accountant = new Accountant<T>(_serviceProvider, _logger);
     }
-
-    // [Test]
-    // public void GivenComputeListAsync_WhenMethodIsNotImplemented_ThenWeThrowAnException()
-    // {
-    //     Assert.ThrowsAsync<NotImplementedException>(async () =>
-    //         await _accountant.ComputeListAsync(ValidWorldIds[0], [1, 2], CancellationToken.None));
-    // }
-    //
-    // [Test]
-    // public void GivenGetDataFreshnessInHours_WhenMethodIsNotImplemented_ThenWeThrowAnException()
-    // {
-    //     Assert.Throws<NotImplementedException>(() => _accountant.GetDataFreshnessInHours());
-    // }
 
     [Test]
     public async Task GivenGetIdsToUpdate_WhenMethodIsNotImplemented_ThenWeReturnEmptyList()

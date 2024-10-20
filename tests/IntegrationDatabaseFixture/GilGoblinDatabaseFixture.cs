@@ -160,7 +160,7 @@ public class GilGoblinDatabaseFixture
             .ToList();
         await context.World.AddRangeAsync(validWorlds);
 
-        var updateTime = DateTimeOffset.UtcNow.AddHours(-1);
+        var updateTime = DateTimeOffset.UtcNow.AddDays(-7);
         var allPrices =
             (from itemId in ValidItemsIds
                 from worldId in ValidWorldIds

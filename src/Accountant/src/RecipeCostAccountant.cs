@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +54,7 @@ public class RecipeCostAccountant(
                             c.RecipeId == recipeId && c.WorldId == worldId && c.IsHq == quality);
                         if (current is not null)
                         {
-                            var age = (DateTimeOffset.Now - current.LastUpdated).TotalHours;
+                            var age = (DateTimeOffset.UtcNow - current.LastUpdated).TotalHours;
                             if (age <= GetDataFreshnessInHours())
                                 continue;
                         }
