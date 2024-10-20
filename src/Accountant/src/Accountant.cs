@@ -15,16 +15,13 @@ namespace GilGoblin.Accountant;
 // ReSharper disable once UnusedTypeParameter
 public interface IAccountant<T> where T : class
 {
-    Task CalculateAsync(CancellationToken ct, int worldId);
+    Task CalculateAsync(int worldId, CancellationToken ct);
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
-public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant<T>> logger)
+public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<T>> logger)
     : BackgroundService, IAccountant<T> where T : class
 {
-    protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
-    protected readonly ILogger<Accountant<T>> Logger = logger;
-
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -38,58 +35,58 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
                 var accountingTasks = new List<Task>();
                 foreach (var world in worlds)
                 {
-                    Logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
+                    logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
                         typeof(T), world.Id, world.Name);
-                    accountingTasks.Add(CalculateAsync(ct, world.Id));
+                    accountingTasks.Add(CalculateAsync(world.Id, ct));
                 }
 
                 await Task.WhenAll(accountingTasks);
             }
             catch (DataException ex)
             {
-                Logger.LogCritical($"A critical error occured: {ex.Message}");
+                logger.LogCritical($"A critical error occured: {ex.Message}");
                 return;
             }
             catch (Exception ex)
             {
-                Logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
+                logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
             }
 
             var delay = TimeSpan.FromMinutes(5);
-            Logger.LogInformation($"Awaiting delay of {delay}");
+            logger.LogInformation($"Awaiting delay of {delay}");
             await Task.Delay(delay, ct);
         }
     }
 
-    public async Task CalculateAsync(CancellationToken ct, int worldId)
+    public async Task CalculateAsync(int worldId, CancellationToken ct)
     {
         var idList = await GetIdsToUpdate(worldId);
         if (!idList.Any())
         {
-            Logger.LogInformation($"Nothing to calculate for {worldId}");
+            logger.LogInformation($"Nothing to calculate for {worldId}");
             return;
         }
 
         if (ct.IsCancellationRequested)
         {
-            Logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
+            logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
             return;
         }
 
         try
         {
             await ComputeListAsync(worldId, idList, ct);
-            Logger.LogInformation($"Boss, books are closed for world {worldId}");
+            logger.LogInformation($"Boss, books are closed for world {worldId}");
         }
         catch (Exception e)
         {
-            Logger.LogError("Failed to balance the books for world {WorldId}: {Error}", worldId, e.Message);
+            logger.LogError("Failed to balance the books for world {WorldId}: {Error}", worldId, e.Message);
         }
     }
 
     protected List<WorldPoco> GetWorlds()
     {
-        using var scope = ScopeFactory.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
         return worldRepo.GetAll().ToList();
     }

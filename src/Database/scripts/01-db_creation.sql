@@ -121,26 +121,22 @@ CREATE TABLE IF NOT EXISTS recipe_cost
     recipe_id               INTEGER                  NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
     world_id                INTEGER                  NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq                   BOOLEAN                  NOT NULL,
-    average_sale_price_cost NUMERIC(12, 2),
-    min_listing_price_cost  NUMERIC(12, 2),
-    recent_purchase_cost    NUMERIC(12, 2),
-    updated                 TIMESTAMP WITH TIME ZONE NOT NULL,
+    cost                    INTEGER                  NOT NULL,
+    last_updated            TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY (recipe_id, world_id, is_hq)
 );
-CREATE INDEX idx_recipe_cost_recipe_and_world_id ON recipe_cost (recipe_id, world_id);
+CREATE INDEX idx_recipe_cost_recipe_and_world_id_and_is_hq ON recipe_cost (recipe_id, world_id, is_hq);
 
 CREATE TABLE IF NOT EXISTS recipe_profit
 (
     recipe_id              INTEGER                  NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
     world_id               INTEGER                  NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq                  BOOLEAN                  NOT NULL,
-    average_sale_profit    NUMERIC(12, 2),
-    min_listing_profit     NUMERIC(12, 2),
-    recent_purchase_profit NUMERIC(12, 2),
-    updated                TIMESTAMP WITH TIME ZONE NOT NULL,
+    profit                 INTEGER                  NOT NULL,
+    last_updated           TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY (recipe_id, world_id, is_hq)
 );
-CREATE INDEX idx_recipe_profit_recipe_and_world_id ON recipe_profit (recipe_id, world_id);
+CREATE INDEX idx_recipe_profit_recipe_and_world_id_and_is_hq ON recipe_profit (recipe_id, world_id, is_hq);
 
 CREATE TABLE price
 (

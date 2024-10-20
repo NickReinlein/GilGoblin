@@ -12,7 +12,7 @@ namespace GilGoblin.Api.Crafting;
 
 public interface ICraftingCalculator
 {
-    Task<RecipeCostPoco?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq);
+    Task<int?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq);
     // Task<(int, int)> CalculateCraftingCostForItem(int worldId, int itemId);
 
     // Task<int> CalculateCraftingCostForIngredients(
@@ -38,21 +38,21 @@ public class CraftingCalculator(
         if (worldId < 1 || itemId < 1)
             return errorReturn;
 
-        var recipes1 = recipes.GetRecipesForItem(itemId);
-        if (!recipes1.Any())
+        var itemRecipes = recipes.GetRecipesForItem(itemId);
+        if (!itemRecipes.Any())
             return errorReturn;
 
-        var (recipeId, lowestCraftingCost) = await GetLowestCraftingCost(worldId, recipes1);
-        LogCraftingResult(worldId, itemId, recipes1.Count, lowestCraftingCost);
+        var (recipeId, lowestCraftingCost) = await GetLowestCraftingCost(worldId, itemRecipes);
+        LogCraftingResult(worldId, itemId, itemRecipes.Count, lowestCraftingCost);
         return (recipeId, lowestCraftingCost);
     }
 
-    public async Task<int> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
+    public async Task<int?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
     {
         var existing = await recipeCosts.GetAsync(worldId, recipeId, isHq);
         if (existing is not null &&
             existing.LastUpdated >= DateTime.UtcNow.AddHours(-hoursBeforeDataExpiry))
-            return existing.;
+            return existing.Cost;
 
         try
         {
@@ -64,15 +64,7 @@ public class CraftingCalculator(
 
             var ingredientPrices = GetIngredientPrices(worldId, ingredients).ToList();
 
-            var calculated = await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
-            return new RecipeCostPoco()
-            {
-                RecipeId = recipeId,
-                WorldId = worldId,
-                IsHq = isHq,
-                LastUpdated = DateTime.UtcNow,
-                
-            }
+            return await CalculateCraftingCostFromIngredients(worldId, ingredients, ingredientPrices);
         }
         catch (DataException)
         {
@@ -182,12 +174,15 @@ public class CraftingCalculator(
         {
             var cached = await recipeCosts.GetAsync(worldId, recipe!.Id);
 
-            var recipeCost = cached?.Cost ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id);
+            var recipeCost = cached?.Cost ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id, false);
+            
+            if (recipeCost is null)
+                throw new ArithmeticException($"Failed to calculate recipe cost for {recipe.Id} in world {worldId}");
 
             if (recipeCost >= lowestCost)
                 continue;
 
-            lowestCost = recipeCost;
+            lowestCost = (int)recipeCost ;
             recipeId = recipe.Id;
         }
 

@@ -142,10 +142,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        // modelBuilder.Entity<PricePoco>().Property(t => t.MinListing);
-        // modelBuilder.Entity<PricePoco>().Property(t => t.RecentPurchase);
-        // modelBuilder.Entity<PricePoco>().Property(t => t.AverageSalePrice);
-        // modelBuilder.Entity<PricePoco>().Property(t => t.DailySaleVelocity);
         modelBuilder.Entity<PricePoco>().Property(t => t.MinListingId).HasColumnName("min_listing_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.RecentPurchaseId).HasColumnName("recent_purchase_id");
         modelBuilder.Entity<PricePoco>().Property(t => t.AverageSalePriceId).HasColumnName("average_sale_price_id");
@@ -186,21 +182,20 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.AverageSaleCost).HasColumnName("average_sale_price_cost");
-        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.MinListingCost).HasColumnName("min_listing_price_cost");
-        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecentPurchaseCost).HasColumnName("recent_purchase_cost");
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Cost).HasColumnName("cost");
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.LastUpdated).HasColumnName("last_updated");
+        modelBuilder.Entity<RecipeCostPoco>().HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
+            .HasDatabaseName("idx_recipe_cost_recipe_id_and_world_id_and_is_hq");
 
         modelBuilder.Entity<RecipeProfitPoco>().ToTable("recipe_profit");
         modelBuilder.Entity<RecipeProfitPoco>().HasKey(t => new { t.RecipeId, t.WorldId, t.IsHq });
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.AverageSaleProfit)
-            .HasColumnName("average_sale_price_profit");
-        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.MinListingProfit)
-            .HasColumnName("min_listing_price_profit");
-        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecentPurchaseProfit)
-            .HasColumnName("recent_purchase_profit");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Profit).HasColumnName("profit");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.LastUpdated).HasColumnName("last_updated");
+        modelBuilder.Entity<RecipeProfitPoco>().HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
+            .HasDatabaseName("idx_recipe_profit_recipe_and_world_id_and_is_hq");
 
         base.OnModelCreating(modelBuilder);
     }

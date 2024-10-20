@@ -6,12 +6,12 @@ public class IngredientPoco : IComparable
 {
     public int RecipeId { get; init; }
     public int ItemId { get; init; }
-    public int Quantity { get; init; }
+    public int Quantity { get; set; }
     public bool IsHq { get; init; }
 
     public IngredientPoco() { }
 
-    public IngredientPoco(int itemId, int quantity, int recipeId, bool isHq)
+    public IngredientPoco(int itemId, int quantity, int recipeId, bool isHq = false)
     {
         ItemId = itemId;
         Quantity = quantity;

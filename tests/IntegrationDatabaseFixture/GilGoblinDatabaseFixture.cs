@@ -19,7 +19,8 @@ public class GilGoblinDatabaseFixture
     protected IConfigurationRoot _configuration;
     protected DbContextOptions<GilGoblinDbContext> _options;
     protected ServiceProvider _serviceProvider;
-    private IServiceScope _serviceScope;
+    protected IServiceScope _serviceScope;
+    protected IServiceCollection _serviceCollection;
 
     protected static readonly List<int> ValidWorldIds = [34, 99];
     protected static readonly List<int> ValidItemsIds = [134, 585, 654, 847];
@@ -64,17 +65,16 @@ public class GilGoblinDatabaseFixture
         _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configKvps)
             .Build();
-        _serviceProvider = new ServiceCollection()
+        _serviceCollection = new ServiceCollection()
             .AddSingleton<IConfiguration>(_configuration)
             .AddDbContext<GilGoblinDbContext>(options =>
             {
                 options.UseNpgsql(connectionString);
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
-            })
-            .BuildServiceProvider();
-        _options = _serviceProvider
-            .GetRequiredService<DbContextOptions<GilGoblinDbContext>>();
+            });
+        _serviceProvider = _serviceCollection.BuildServiceProvider();
+        _options = _serviceProvider.GetRequiredService<DbContextOptions<GilGoblinDbContext>>();
         _serviceScope = Substitute.For<IServiceScope>();
         _serviceScope.ServiceProvider.Returns(_serviceProvider);
     }
@@ -169,6 +169,22 @@ public class GilGoblinDatabaseFixture
             .ToList();
 
         await context.Price.AddRangeAsync(allPrices);
+
+        var recipeCosts =
+            (from recipeId in ValidRecipeIds
+                from worldId in ValidWorldIds
+                from quality in qualities
+                select new RecipeCostPoco
+                {
+                    WorldId = worldId, 
+                    RecipeId = recipeId, 
+                    IsHq = quality, 
+                    Cost = Random.Shared.Next(120, 800),
+                    LastUpdated = updateTime.UtcDateTime
+                })
+            .ToList();
+        
+        await context.RecipeCost.AddRangeAsync(recipeCosts);
 
         await context.SaveChangesAsync();
     }
