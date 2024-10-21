@@ -13,12 +13,6 @@ namespace GilGoblin.Api.Crafting;
 public interface ICraftingCalculator
 {
     Task<int?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq);
-    // Task<(int, int)> CalculateCraftingCostForItem(int worldId, int itemId);
-
-    // Task<int> CalculateCraftingCostForIngredients(
-    //     int worldId,
-    //     IEnumerable<CraftIngredientPoco> craftIngredients
-    // );
 }
 
 public class CraftingCalculator(
@@ -97,7 +91,7 @@ public class CraftingCalculator(
         return craftingCost;
     }
 
-    public async Task<int> CalculateCraftingCostForIngredients(
+    private async Task<int> CalculateCraftingCostForIngredients(
         int worldId,
         IEnumerable<CraftIngredientPoco> craftIngredients
     )
@@ -114,7 +108,7 @@ public class CraftingCalculator(
         return totalCraftingCost;
     }
 
-    public List<CraftIngredientPoco> AddPricesToIngredients(
+    private List<CraftIngredientPoco> AddPricesToIngredients(
         IEnumerable<IngredientPoco> ingredients,
         IEnumerable<PricePoco> price
     )
@@ -149,7 +143,7 @@ public class CraftingCalculator(
         }
     }
 
-    public IEnumerable<PricePoco> GetIngredientPrices(
+    private IEnumerable<PricePoco> GetIngredientPrices(
         int worldId,
         IEnumerable<IngredientPoco> ingredients
     )
@@ -166,7 +160,7 @@ public class CraftingCalculator(
         }
     }
 
-    public async Task<(int, int)> GetLowestCraftingCost(int worldId, IEnumerable<RecipePoco?> recipeList)
+    private async Task<(int, int)> GetLowestCraftingCost(int worldId, IEnumerable<RecipePoco?> recipeList)
     {
         var lowestCost = ErrorDefaultCost;
         var recipeId = -1;

@@ -14,10 +14,10 @@ public record PricePoco(
     : IdentifiablePoco
 {
     // Navigation properties
-    public MinListingPoco? MinListing { get; init; }
-    public RecentPurchasePoco? RecentPurchase { get; init; }
-    public AverageSalePricePoco? AverageSalePrice { get; init; }
-    public DailySaleVelocityPoco? DailySaleVelocity { get; init; }
+    public MinListingPoco? MinListing { get; set; }
+    public RecentPurchasePoco? RecentPurchase { get; set; }
+    public AverageSalePricePoco? AverageSalePrice { get; set; }
+    public DailySaleVelocityPoco? DailySaleVelocity { get; set; }
 
     public PriceDataPoco? GetBestPrice() => AverageSalePrice?.GetBestPrice() ??
                                             RecentPurchase?.GetBestPrice() ??
