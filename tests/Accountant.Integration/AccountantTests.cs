@@ -74,10 +74,27 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
     }
 
     [Test]
-    public async Task GivenGetIdsToUpdate_WhenMethodIsNotImplemented_ThenWeReturnEmptyList()
+    public void GivenGetDataFreshnessInHours_WhenCalled_ThenAValueIsReturned()
     {
-        var ids = await _accountant.GetIdsToUpdate(1);
+        var result = _accountant.GetDataFreshnessInHours();
 
-        Assert.That(ids, Is.Empty);
+        Assert.That(result, Is.GreaterThanOrEqualTo(24));
+    }
+
+    [Test]
+    public async Task GivenGetIdsToUpdate_WhenCalled_ThenAValueIsReturned()
+    {
+        var result = await _accountant.GetIdsToUpdate(ValidWorldIds[0]);
+
+        Assert.That(result, Is.Not.Null.And.Not.Empty);
+    }
+
+    [TestCaseSource(nameof(ValidWorldIds))]
+    public async Task GivenComputeListAsync_WhenCalled_ThenAValueIsReturned(int worldId)
+    {
+        await _accountant.ComputeListAsync(worldId, ValidRecipeIds, CancellationToken.None);
+
+        foreach (var recipeId in ValidRecipeIds)
+            await _calc.Received(1).CalculateCraftingCostForRecipe(worldId, recipeId, true);
     }
 }

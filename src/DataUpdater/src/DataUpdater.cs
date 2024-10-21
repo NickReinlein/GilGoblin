@@ -98,7 +98,7 @@ public abstract class DataUpdater<T, U>(
         }
     }
 
-    protected virtual List<WorldPoco> GetWorlds() => new();
+    protected virtual List<WorldPoco> GetWorlds() => [];
 
     protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
     protected virtual int GetApiSpamDelayInMs() => 60000;

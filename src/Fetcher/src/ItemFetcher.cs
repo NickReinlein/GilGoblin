@@ -8,17 +8,11 @@ using GilGoblin.Fetcher.Pocos;
 
 namespace GilGoblin.Fetcher;
 
-public interface IItemFetcher : ISingleDataFetcher<ItemWebPoco>
-{
-}
+public interface IItemFetcher : ISingleDataFetcher<ItemWebPoco>;
 
-public class ItemFetcher : SingleDataFetcher<ItemWebPoco>, IItemFetcher
+public class ItemFetcher(ILogger<ItemFetcher> logger, HttpClient? client = null)
+    : SingleDataFetcher<ItemWebPoco>(BaseUrl, logger, client), IItemFetcher
 {
-    public ItemFetcher(ILogger<ItemFetcher> logger, HttpClient? client = null)
-        : base(BaseUrl, logger, client)
-    {
-    }
-
     protected override string GetUrlPathFromEntry(int id, int? worldId = null)
     {
         var sb = new StringBuilder();
