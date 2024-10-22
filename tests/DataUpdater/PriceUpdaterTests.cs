@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,10 +10,8 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ClearExtensions;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 

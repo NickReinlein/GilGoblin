@@ -10,7 +10,7 @@ public class WorldSavingTests : SaveEntityToDbTests<WorldPoco>
     protected override WorldPoco GetEntity() => new() { Name = "World" };
 
     protected override WorldPoco GetModifiedEntity(WorldPoco entity) =>
-        new() { Id = entity.Id, Name = $"{entity.Name} modified" };
+        entity with { Name = $"{entity.Name} modified" };
 
     protected override async Task ValidateResultSavedToDatabaseAsync(WorldPoco entity)
     {
@@ -20,7 +20,7 @@ public class WorldSavingTests : SaveEntityToDbTests<WorldPoco>
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Id, Is.EqualTo(entity.Id));
+            Assert.That(result.Id, Is.EqualTo(entity.Id));
             Assert.That(result.Name, Is.EqualTo(entity.Name));
         });
     }

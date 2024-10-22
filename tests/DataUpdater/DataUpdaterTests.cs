@@ -1,10 +1,4 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using GilGoblin.Database.Pocos;
-using GilGoblin.Database.Savers;
-using GilGoblin.DataUpdater;
-using GilGoblin.Fetcher;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;

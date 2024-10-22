@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
@@ -68,8 +67,8 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        var items = dbContext?.Price?.ToList();
-        items?.ForEach(price => cache.Add((price.WorldId, price.ItemId), price));
+        var items = dbContext.Price.ToList();
+        items.ForEach(price => cache.Add((price.WorldId, price.ItemId), price));
         return Task.CompletedTask;
     }
 }

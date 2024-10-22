@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
-using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.IntegrationDatabaseFixture;
 using NSubstitute;
 using NUnit.Framework;

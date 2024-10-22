@@ -30,7 +30,7 @@ public class RecipeSavingTests : SaveEntityToDbTests<RecipePoco>
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Id, Is.EqualTo(entity.Id));
+            Assert.That(result.Id, Is.EqualTo(entity.Id));
             Assert.That(result.CanHq, Is.EqualTo(entity.CanHq));
             Assert.That(result.CraftType, Is.EqualTo(entity.CraftType));
             Assert.That(result.CanQuickSynth, Is.EqualTo(entity.CanQuickSynth));

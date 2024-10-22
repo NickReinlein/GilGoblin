@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
-using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,7 +49,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
         try
         {
             await using var scope = serviceProvider.CreateAsyncScope();
-            var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
+            // var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
             logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();

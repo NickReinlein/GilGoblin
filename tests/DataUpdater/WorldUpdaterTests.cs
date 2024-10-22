@@ -9,7 +9,6 @@ using GilGoblin.Database.Savers;
 using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ClearExtensions;

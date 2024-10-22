@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Tests.Database.Integration;
 using GilGoblin.Tests.IntegrationDatabaseFixture;
 using NSubstitute;
 using NUnit.Framework;

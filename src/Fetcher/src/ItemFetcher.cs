@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Text;
@@ -29,9 +30,10 @@ public class ItemFetcher(ILogger<ItemFetcher> logger, HttpClient? client = null)
 
     public override async Task<ItemWebPoco> ReadResponseContentAsync(HttpContent content)
         => await JsonSerializer.DeserializeAsync<ItemWebPoco>(
-            await content.ReadAsStreamAsync(),
-            GetSerializerOptions(),
-            CancellationToken.None);
+               await content.ReadAsStreamAsync(),
+               GetSerializerOptions(),
+               CancellationToken.None)
+           ?? throw new InvalidOperationException($"Failed to read the fetched response: {content}");
 
     public static JsonSerializerOptions GetSerializerOptions() => new()
     {
