@@ -12,7 +12,7 @@ namespace GilGoblin.Api.Crafting;
 
 public interface ICraftingCalculator
 {
-    Task<int?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq);
+    Task<int> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq);
 }
 
 public class CraftingCalculator(
@@ -41,7 +41,7 @@ public class CraftingCalculator(
         return (recipeId, lowestCraftingCost);
     }
 
-    public async Task<int?> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
+    public async Task<int> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
     {
         var existing = await recipeCosts.GetAsync(worldId, recipeId, isHq);
         if (existing is not null &&
@@ -54,7 +54,7 @@ public class CraftingCalculator(
             var result = await grocer.BreakdownRecipeById(recipeId);
             var ingredients = result.ToList();
             if (recipe is null || !ingredients.Any())
-                return null;
+                return ErrorDefaultCost;
 
             var ingredientPrices = GetIngredientPrices(worldId, ingredients).ToList();
 
@@ -71,7 +71,7 @@ public class CraftingCalculator(
             logger.LogError($"Failed to calculate crafting cost: {e.Message}");
         }
 
-        return null;
+        return ErrorDefaultCost;
     }
 
     private async Task<int> CalculateCraftingCostFromIngredients(int worldId, IEnumerable<IngredientPoco> ingredients,
@@ -100,8 +100,9 @@ public class CraftingCalculator(
         foreach (var craft in craftIngredients)
         {
             // Compare crafting the ingredient vs purchasing it on the market board
+            var bestPriceCost = craft.Price.GetBestPriceCost();
             var (_, craftingCost) = await CalculateCraftingCostForItem(worldId, craft.ItemId);
-            var minCost = (int)Math.Min(craft.Price.GetBestPriceCost(), craftingCost);
+            var minCost = (int)Math.Min(bestPriceCost, craftingCost);
             totalCraftingCost += craft.Quantity * minCost;
         }
 
@@ -169,14 +170,14 @@ public class CraftingCalculator(
             var cached = await recipeCosts.GetAsync(worldId, recipe!.Id);
 
             var recipeCost = cached?.Cost ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id, false);
-            
-            if (recipeCost is null)
+
+            if (recipeCost > ErrorDefaultCost - 20000 || recipeCost < 0)
                 throw new ArithmeticException($"Failed to calculate recipe cost for {recipe.Id} in world {worldId}");
 
             if (recipeCost >= lowestCost)
                 continue;
 
-            lowestCost = (int)recipeCost ;
+            lowestCost = recipeCost;
             recipeId = recipe.Id;
         }
 
