@@ -53,6 +53,7 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IQualityPriceDataConverter))]
     [TestCase(typeof(IDailySaleVelocityConverter))]
     [TestCase(typeof(IDataSaver<WorldPoco>))]
+    [TestCase(typeof(ICraftingCalculator))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();

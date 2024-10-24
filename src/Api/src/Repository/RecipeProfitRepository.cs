@@ -22,12 +22,13 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
 {
     public async Task<RecipeProfitPoco?> GetAsync(int worldId, int recipeId, bool isHq = false)
     {
-        var cached = cache.Get((worldId, recipeId));
+        var key = (worldId, recipeId, isHq);
+        var cached = cache.Get(key);
         if (cached is not null)
         {
             if (DataIsFresh(cached.LastUpdated))
                 return cached;
-            cache.Delete(worldId, recipeId);
+            cache.Delete(key);
         }
 
         await using var scope = serviceProvider.CreateAsyncScope();
@@ -38,10 +39,8 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
         if (recipeProfit is null)
             return null;
 
-        if (DataIsFresh(recipeProfit.LastUpdated))
-            await AddAsync(recipeProfit);
-        else
-            cache.Delete(worldId, recipeId);
+        if (!DataIsFresh(recipeProfit.LastUpdated))
+            cache.Delete(key);
 
         return recipeProfit;
     }

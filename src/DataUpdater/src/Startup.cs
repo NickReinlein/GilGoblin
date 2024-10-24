@@ -99,7 +99,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
             .AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
             .AddScoped<IItemRepository, ItemRepository>()
             .AddScoped<IRecipeRepository, RecipeRepository>();
-        // services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
+        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
         services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();
     }

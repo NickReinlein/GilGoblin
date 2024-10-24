@@ -1,10 +1,9 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Tests.IntegrationDatabaseFixture;
 using NSubstitute;
 using NUnit.Framework;
@@ -13,13 +12,13 @@ namespace GilGoblin.Tests.Api.Repository.Integration;
 
 public class RecipeProfitRepositoryTests : GilGoblinDatabaseFixture
 {
-    private IRecipeProfitCache _cache;
+    private ICalculatedMetricCache<RecipeProfitPoco> _cache;
     private RecipeProfitRepository _repo;
 
     [SetUp]
     public override async Task SetUp()
     {
-        _cache = Substitute.For<IRecipeProfitCache>();
+        _cache = Substitute.For<ICalculatedMetricCache<RecipeProfitPoco>>();
         await base.SetUp();
 
         _repo = new RecipeProfitRepository(_serviceProvider, _cache);

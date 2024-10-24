@@ -50,7 +50,7 @@ public class Startup(IConfiguration configuration)
         services = AddGoblinCrafting(services);
         services = AddGoblinControllers(services);
         services = AddBasicBuilderServices(services);
-        _ = AddGoblinCaches(services); 
+        _ = AddGoblinCaches(services);
     }
 
     public static IServiceCollection AddGoblinCaches(IServiceCollection services)
@@ -60,8 +60,8 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
-        services.AddScoped<ICalculatedMetricCache, RecipeCostCache>();
-        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
+        services.AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>();
+        services.AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>();
         // services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<IRepositoryCache, ItemRepository>();
         services.AddScoped<IRepositoryCache, PriceRepository>();
@@ -93,7 +93,7 @@ public class Startup(IConfiguration configuration)
         var connectionString = configuration.GetConnectionString("GilGoblinDbContext");
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
-        
+
         connectionString += "Include Error Detail=true;";
 
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));

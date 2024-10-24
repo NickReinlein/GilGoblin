@@ -17,7 +17,7 @@ public interface IRecipeCostRepository : IRepositoryCache
     Task<List<RecipeCostPoco>> GetAllAsync(int worldId);
 }
 
-public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedMetricCache cache) : IRecipeCostRepository
+public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedMetricCache<RecipeCostPoco> cache) : IRecipeCostRepository
 {
     public async Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId, bool isHq = false)
     {
