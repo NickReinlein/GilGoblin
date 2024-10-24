@@ -34,7 +34,7 @@ public class ItemUpdater(
             Logger.LogError("Failed to save updates!");
     }
 
-    protected override Task<List<int>> GetIdsToUpdateAsync(int? worldId)
+    protected override Task<List<int>> GetIdsToUpdateAsync(int? worldId, CancellationToken ct)
     {
         return Task.FromResult(new List<int>());
     }

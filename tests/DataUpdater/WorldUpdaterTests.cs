@@ -43,24 +43,24 @@ public class WorldUpdaterTests : DataUpdaterTests
         _worldUpdater = new WorldUpdater(_serviceProvider, _logger);
     }
 
-    [Test, Ignore("Disabled while leaving it to a hard-coded 3 worlds")]
+    [Test]
     public async Task GivenGetAllAsync_WhenNoWorldsAreReturned_ThenWeLogAnError()
     {
         _fetcher.GetAllAsync().Returns([]);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _worldUpdater.GetAllWorldsAsync();
 
         await _fetcher.Received(1).GetAllAsync();
         _logger.Received(1).LogError("Received empty list returned when fetching all worlds");
     }
 
-    [Test, Ignore("Disabled while leaving it to a hard-coded 3 worlds")]
+    [Test]
     public async Task GivenGetAllAsync_WhenWorldsAreReturned_ThenWeDoNotLogAnError()
     {
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _worldUpdater.GetAllWorldsAsync();
 
         await _fetcher.Received(1).GetAllAsync();
@@ -72,14 +72,14 @@ public class WorldUpdaterTests : DataUpdaterTests
         });
     }
 
-    [Test, Ignore("Disabled while leaving it to a hard-coded 3 worlds")]
+    [Test]
     public async Task GivenGetAllAsync_WhenAnExceptionIsThrown_ThenWeLogAnError()
     {
         var exception = new InvalidOperationException();
         _fetcher.GetAllAsync().ThrowsAsyncForAnyArgs(exception);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _worldUpdater.GetAllWorldsAsync();
 
         await _fetcher.Received(1).GetAllAsync();
@@ -98,7 +98,7 @@ public class WorldUpdaterTests : DataUpdaterTests
                  i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
     }
 
-    [Test, Ignore("Disabled while leaving it to a hard-coded 3 worlds")]
+    [Test, Ignore("While in development, hard-coded world Ids are used")]
     public async Task GivenGetAllWorldsAsync_WhenThereAreNoValidEntriesToSave_ThenWeDoNotToSave()
     {
         _fetcher.GetAllAsync().Returns([]);

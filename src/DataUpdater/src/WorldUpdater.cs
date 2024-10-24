@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
+using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,15 +22,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
     {
         while (!ct.IsCancellationRequested)
         {
-            try
-            {
-                await GetAllWorldsAsync();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("{Service}: An exception occured during the Api call: {ErrorMessage}",
-                    nameof(WorldUpdater), ex.Message);
-            }
+            await GetAllWorldsAsync();
 
             var delay = TimeSpan.FromMinutes(5);
             logger.LogInformation("{Service}: Awaiting delay of {Delay} seconds before performing next update",
@@ -49,13 +42,11 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
         try
         {
             await using var scope = serviceProvider.CreateAsyncScope();
-            // var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
+            var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
             logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
-            //temporarily fetch less data while developing
-            // var updated = await fetcher.GetAllAsync();
-            var updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
+            var updated = await fetcher.GetAllAsync();
             timer.Stop();
 
             if (updated.Count == 0)
@@ -64,6 +55,11 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
                 logger.LogInformation("Received updates for {Count} worlds", updated.Count);
 
             logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
+
+
+            //temporarily fetch less data while developing
+            updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
+            ///// 
             return updated;
         }
         catch (Exception e)

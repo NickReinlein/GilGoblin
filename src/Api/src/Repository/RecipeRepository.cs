@@ -9,6 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
+public interface IRecipeRepository : IDataRepository<RecipePoco>
+{
+    List<RecipePoco> GetRecipesForItem(int itemId);
+    List<RecipePoco> GetRecipesForItemIds(IEnumerable<int> itemIds);
+}
+
 public class RecipeRepository(
     IServiceProvider serviceProvider,
     IRecipeCache recipeCache,

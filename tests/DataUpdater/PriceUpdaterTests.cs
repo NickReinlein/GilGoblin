@@ -57,13 +57,38 @@ public class PriceUpdaterTests : DataUpdaterTests
     }
 
     [Test]
+    public async Task GivenFetchAsync_WhenSuccessful_ThenWeSaveResults()
+    {
+        SetupSave();
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(200);
+        var ct = cts.Token;
+        var idList = GetMultipleNewPocos().Select(i => i.GetId()).ToList();
+
+        await _priceUpdater.FetchAsync(34, ct);
+
+        await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
+        await _priceFetcher.Received(1).FetchByIdsAsync(
+            Arg.Any<IEnumerable<int>>(),
+            34,
+            ct);
+        foreach (var pocoId in idList)
+            await _priceConverter.Received(1)
+                .ConvertAndSaveAsync(
+                    Arg.Is<PriceWebPoco>(p => p.GetId() == pocoId),
+                    worldId,
+                    CancellationToken.None);
+    }
+
+    [Test]
     public async Task GivenFetchAsync_WhenNoMarketableItemsAreReturned_ThenWeLogAnError()
     {
         var errorMessage = $"Failed to get the Ids to update for world {worldId}: Failed to fetch marketable item ids";
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([]);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
@@ -81,7 +106,7 @@ public class PriceUpdaterTests : DataUpdaterTests
     public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int? worldIdString)
     {
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _priceUpdater.FetchAsync(worldIdString, cts.Token);
 
         var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";
@@ -97,7 +122,7 @@ public class PriceUpdaterTests : DataUpdaterTests
             .Returns([]);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         Assert.DoesNotThrowAsync(async () => await _priceUpdater.FetchAsync(34, cts.Token));
     }
 
@@ -107,7 +132,7 @@ public class PriceUpdaterTests : DataUpdaterTests
         var saveList = SetupSave();
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         Assert.That(saveList, Has.Count.GreaterThanOrEqualTo(2));
@@ -124,7 +149,7 @@ public class PriceUpdaterTests : DataUpdaterTests
             .Returns((null, null));
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         _logger.LogDebug(new DataException(), $"Failed to convert {nameof(PriceWebPoco)} to db format");
@@ -141,7 +166,7 @@ public class PriceUpdaterTests : DataUpdaterTests
             .ThrowsAsync<DataException>();
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(500);
+        cts.CancelAfter(200);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         _logger.LogDebug(new DataException(), $"Failed to convert {nameof(PriceWebPoco)} to db format");
@@ -159,7 +184,7 @@ public class PriceUpdaterTests : DataUpdaterTests
             .GetMarketableItemIdsAsync()
             .Returns(idList);
         _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
-        _priceFetcher.GetEntriesPerPage().Returns(2);
+        _priceFetcher.GetEntriesPerPage().Returns(10);
         _priceFetcher
             .FetchByIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<int?>(), Arg.Any<CancellationToken>())
             .Returns(saveList);

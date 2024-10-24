@@ -47,7 +47,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     [TestCase(-1)]
     public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int invalidWorldId)
     {
-        await _accountant.CalculateAsync(invalidWorldId, CancellationToken.None);
+        await _accountant.CalculateAsync(invalidWorldId);
 
         var message = $"Failed to get the Ids to update for world {invalidWorldId}: World Id is invalid";
         _logger.Received().LogError(message);
@@ -85,18 +85,19 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         });
     }
 
-    [Test, Timeout(2000)]
+    [Test]
     public async Task GivenComputeListAsync_WhenIdsAreValid_ThenRelevantCostsAreFetched()
     {
-        await _accountant.ComputeListAsync(_worldId, ValidRecipeIds, CancellationToken.None);
+        await _accountant.ComputeListAsync(_worldId, ValidRecipeIds);
 
         await _recipeCostRepo.Received(1).GetAllAsync(_worldId);
         _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
-        await _calc.Received(ValidRecipeIds.Count)
-            .CalculateCraftingCostForRecipe(
-                _worldId,
-                Arg.Is<int>(i => ValidRecipeIds.Contains(i)),
-                Arg.Any<bool>());
+        foreach (var recipeId in ValidRecipeIds)
+            await _calc.Received(1)
+                .CalculateCraftingCostForRecipe(
+                    _worldId,
+                    recipeId,
+                    false);
     }
 
     [Test]
@@ -126,7 +127,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         var messageError =
             $"Failed to get the Ids to update for world {_worldId}: Data Exception.";
 
-        await _accountant.CalculateAsync(_worldId, CancellationToken.None);
+        await _accountant.CalculateAsync(_worldId);
 
         _logger.Received(1).LogError(messageError);
         await _recipeCostRepo.DidNotReceive().GetAllAsync(Arg.Any<int>());

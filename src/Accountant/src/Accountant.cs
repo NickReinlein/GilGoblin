@@ -58,7 +58,7 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
         }
     }
 
-    public async Task CalculateAsync(int worldId, CancellationToken ct)
+    public async Task CalculateAsync(int worldId, CancellationToken ct = default)
     {
         var idList = await GetIdsToUpdate(worldId);
         if (!idList.Any())
@@ -92,6 +92,9 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
     }
 
     // dotcover disable
+    public virtual Task ComputeListAsync(int worldId, List<int> idList) =>
+        ComputeListAsync(worldId, idList, CancellationToken.None);
+
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 

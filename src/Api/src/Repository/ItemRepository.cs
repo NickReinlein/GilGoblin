@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Api.Repository;
 
+public interface IItemRepository : IDataRepository<ItemPoco> { }
+
 public class ItemRepository(
     IServiceProvider serviceProvider,
     IItemCache cache,

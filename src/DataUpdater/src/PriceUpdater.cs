@@ -92,7 +92,7 @@ public class PriceUpdater(
             }
             catch (Exception e)
             {
-                logger.LogDebug(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
+                logger.LogInformation(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
             }
         }
     }
@@ -104,7 +104,7 @@ public class PriceUpdater(
         return worldRepo.GetAll().ToList();
     }
 
-    protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId)
+    protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId, CancellationToken ct)
     {
         try
         {
@@ -135,11 +135,16 @@ public class PriceUpdater(
 
             return idsToUpdate;
         }
+        catch (TaskCanceledException)
+        {
+            logger.LogInformation("Task was cancelled");
+        }
         catch (Exception e)
         {
             logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
-            return new List<int>();
         }
+
+        return [];
     }
 
     private async Task FillItemIdCache()

@@ -9,6 +9,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
+public interface IPriceRepository<T> : IRepositoryCache
+    where T : class
+{
+    T? Get(int worldId, int id, bool isHq);
+    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq);
+    List<T> GetAll(int worldId);
+}
+
 public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache) : IPriceRepository<PricePoco>
 {
     public PricePoco? Get(int worldId, int id, bool isHq)

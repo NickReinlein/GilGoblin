@@ -60,11 +60,11 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<IRecipeCache, RecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
-        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
-        // services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
+        services.AddScoped<ICalculatedMetricCache, RecipeCostCache>();
+        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
         // services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<IRepositoryCache, ItemRepository>();
-        // services.AddScoped<IRepositoryCache, PriceRepository>();
+        services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
         return services;
     }
@@ -102,7 +102,7 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        // services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
+        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();
         return services;
     }

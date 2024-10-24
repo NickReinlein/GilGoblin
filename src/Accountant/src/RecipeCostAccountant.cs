@@ -66,7 +66,7 @@ public class RecipeCostAccountant(
                                 $"Failed to calculate crafting cost of recipe {recipeId} for world {worldId}, quality {quality}");
                         }
 
-                        var newRecipeCost = new RecipeCostPoco()
+                        var newRecipeCost = new RecipeCostPoco
                         {
                             RecipeId = recipeId,
                             WorldId = worldId,

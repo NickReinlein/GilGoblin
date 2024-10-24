@@ -54,7 +54,7 @@ public abstract class DataUpdater<T, U>(
 
     public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
     {
-        var idList = await GetIdsToUpdateAsync(worldId);
+        var idList = await GetIdsToUpdateAsync(worldId, ct);
         if (!idList.Any())
             return;
 
@@ -87,19 +87,23 @@ public abstract class DataUpdater<T, U>(
             timer.Stop();
             var callTime = timer.Elapsed.TotalMilliseconds;
 
-            Logger.LogInformation($"Received updates for {updated.Count} {nameof(T)} entries {worldString}");
-            Logger.LogInformation($"Total call time: {callTime}");
+            Logger.LogInformation(
+                "Received updates for {Count} {Name} entries {WorldString}, total call time: {CallTime}",
+                updated.Count,
+                nameof(T),
+                worldString,
+                callTime);
             return updated;
         }
         catch (Exception e)
         {
             Logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
-            return new List<U>();
+            return [];
         }
     }
 
     protected virtual List<WorldPoco> GetWorlds() => [];
 
-    protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId);
+    protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId, CancellationToken ct);
     protected virtual int GetApiSpamDelayInMs() => 60000;
 }
