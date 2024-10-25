@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS recipe_cost
     recipe_id               INTEGER                  NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
     world_id                INTEGER                  NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq                   BOOLEAN                  NOT NULL,
-    cost                    INTEGER                  NOT NULL,
+    amount                  INTEGER                  NOT NULL,
     last_updated            TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY (recipe_id, world_id, is_hq)
 );
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS recipe_profit
     recipe_id              INTEGER                  NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
     world_id               INTEGER                  NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq                  BOOLEAN                  NOT NULL,
-    profit                 INTEGER                  NOT NULL,
+    amout                  INTEGER                  NOT NULL,
     last_updated           TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY (recipe_id, world_id, is_hq)
 );

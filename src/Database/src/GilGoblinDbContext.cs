@@ -164,13 +164,13 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.MinListingId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.RecentPurchase)
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.RecentPurchaseId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.DailySaleVelocity)
             .WithOne()
@@ -182,7 +182,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Cost).HasColumnName("cost");
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Amount).HasColumnName("amount");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.LastUpdated).HasColumnName("last_updated");
         modelBuilder.Entity<RecipeCostPoco>().HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
             .HasDatabaseName("idx_recipe_cost_recipe_id_and_world_id_and_is_hq");
@@ -192,7 +192,7 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Profit).HasColumnName("profit");
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Amount).HasColumnName("amount");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.LastUpdated).HasColumnName("last_updated");
         modelBuilder.Entity<RecipeProfitPoco>().HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
             .HasDatabaseName("idx_recipe_profit_recipe_and_world_id_and_is_hq");

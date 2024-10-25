@@ -29,6 +29,15 @@ public abstract class DataUpdater<T, U>(
 {
     protected readonly ILogger<DataUpdater<T, U>> Logger = logger;
 
+    public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
+    {
+        var idList = await GetIdsToUpdateAsync(worldId, ct);
+        if (!idList.Any())
+            return;
+
+        await FetchUpdatesAsync(worldId, idList, ct);
+    }
+
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -51,15 +60,6 @@ public abstract class DataUpdater<T, U>(
     protected abstract Task ExecuteUpdateAsync(CancellationToken ct);
 
     protected abstract Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null);
-
-    public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
-    {
-        var idList = await GetIdsToUpdateAsync(worldId, ct);
-        if (!idList.Any())
-            return;
-
-        await FetchUpdatesAsync(worldId, idList, ct);
-    }
 
     protected virtual async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {

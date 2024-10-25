@@ -174,23 +174,36 @@ public class GilGoblinDatabaseFixture
             (from recipeId in ValidRecipeIds
                 from worldId in ValidWorldIds
                 from quality in qualities
-                select new RecipeCostPoco
-                {
-                    WorldId = worldId, 
-                    RecipeId = recipeId, 
-                    IsHq = quality, 
-                    Cost = Random.Shared.Next(120, 800),
-                    LastUpdated = updateTime.UtcDateTime
-                })
+                select new RecipeCostPoco(
+                    recipeId,
+                    worldId,
+                    quality,
+                    Random.Shared.Next(120, 800),
+                    updateTime.UtcDateTime))
             .ToList();
-        
+
         await context.RecipeCost.AddRangeAsync(recipeCosts);
+
+        var recipeProfits =
+            (from recipeId in ValidRecipeIds
+                from worldId in ValidWorldIds
+                from quality in qualities
+                select new RecipeProfitPoco(
+                    recipeId,
+                    worldId,
+                    quality,
+                    Random.Shared.Next(120, 800),
+                    updateTime.UtcDateTime))
+            .ToList();
+
+        await context.RecipeProfit.AddRangeAsync(recipeProfits);
 
         await context.SaveChangesAsync();
     }
 
     protected GilGoblinDbContext GetDbContext() => new(_options, _configuration);
 
-    protected string GetConnectionString() => _postgresContainer.GetConnectionString() ??
-                                              throw new InvalidOperationException("Connection string not found.");
+    protected string GetConnectionString() =>
+        _postgresContainer.GetConnectionString()
+        ?? throw new InvalidOperationException("Connection string not found");
 }

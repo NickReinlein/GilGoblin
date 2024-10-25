@@ -13,7 +13,7 @@ public interface IPriceRepository<T> : IRepositoryCache
     where T : class
 {
     T? Get(int worldId, int id, bool isHq);
-    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq);
+    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq);
     List<T> GetAll(int worldId);
 }
 
@@ -52,14 +52,14 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         }
     }
 
-    public List<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool isHq)
+    public List<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq)
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.Price
             .Where(p =>
                 p.WorldId == worldId &&
-                p.IsHq == isHq &&
+                (isHq == null || p.IsHq == isHq.Value) &&
                 ids.Any(i => i == p.ItemId))
             .ToList();
     }

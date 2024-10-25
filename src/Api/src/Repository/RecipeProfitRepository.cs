@@ -35,7 +35,8 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var recipeProfit = dbContext.RecipeProfit.FirstOrDefault(p =>
             p.WorldId == worldId &&
-            p.RecipeId == recipeId);
+            p.RecipeId == recipeId &&
+            p.IsHq == isHq);
         if (recipeProfit is null)
             return null;
 
@@ -72,8 +73,6 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
         await dbContext.RecipeProfit
             .ForEachAsync(cost =>
                 cache.Add((cost.WorldId, cost.RecipeId, cost.IsHq), cost));
-        await dbContext.RecipeProfit.ForEachAsync(cost =>
-            cache.Add((cost.WorldId, cost.RecipeId, cost.IsHq), cost));
     }
 
     private static bool DataIsFresh(DateTimeOffset timestamp) =>

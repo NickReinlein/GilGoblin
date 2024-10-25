@@ -15,7 +15,7 @@ namespace GilGoblin.Accountant;
 public class RecipeCostAccountant(
     IServiceProvider serviceProvider,
     IDataSaver<RecipeCostPoco> costSaver,
-    ILogger<Accountant<RecipeCostPoco>> logger)
+    ILogger<RecipeCostAccountant> logger)
     : Accountant<RecipeCostPoco>(serviceProvider, logger)
 {
     public override int GetDataFreshnessInHours() => 96;
@@ -36,7 +36,7 @@ public class RecipeCostAccountant(
             await using var scope = serviceProvider.CreateAsyncScope();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
 
-            var newRecipeCosts = new List<RecipeCostPoco>();
+            var newCosts = new List<RecipeCostPoco>();
             foreach (var recipe in relevantRecipes)
             {
                 if (ct.IsCancellationRequested)
@@ -45,8 +45,6 @@ public class RecipeCostAccountant(
                 try
                 {
                     var recipeId = recipe.Id;
-                    
-
                     logger.LogDebug("Calculating new costs for {RecipeId} for world {WorldId}", recipeId, worldId);
                     foreach (var quality in new[] { true, false })
                     {
@@ -66,15 +64,13 @@ public class RecipeCostAccountant(
                                 $"Failed to calculate crafting cost of recipe {recipeId} for world {worldId}, quality {quality}");
                         }
 
-                        var newRecipeCost = new RecipeCostPoco
-                        {
-                            RecipeId = recipeId,
-                            WorldId = worldId,
-                            IsHq = quality,
-                            Cost = result,
-                            LastUpdated = DateTimeOffset.UtcNow.DateTime
-                        };
-                        newRecipeCosts.Add(newRecipeCost);
+                        var newRecipeCost = new RecipeCostPoco(
+                            recipeId,
+                            worldId,
+                            quality,
+                            result,
+                            DateTimeOffset.UtcNow.DateTime);
+                        newCosts.Add(newRecipeCost);
                     }
                 }
                 catch (Exception)
@@ -85,7 +81,7 @@ public class RecipeCostAccountant(
                 }
             }
 
-            await costSaver.SaveAsync(newRecipeCosts, ct);
+            await costSaver.SaveAsync(newCosts, ct);
         }
         catch (TaskCanceledException)
         {
@@ -100,7 +96,8 @@ public class RecipeCostAccountant(
         }
     }
 
-    private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)> GetRecipesAndCosts(int worldId, List<int> idList)
+    private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)>
+        GetRecipesAndCosts(int worldId, List<int> idList)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();

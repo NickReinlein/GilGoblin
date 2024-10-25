@@ -17,7 +17,8 @@ public interface IRecipeCostRepository : IRepositoryCache
     Task<List<RecipeCostPoco>> GetAllAsync(int worldId);
 }
 
-public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedMetricCache<RecipeCostPoco> cache) : IRecipeCostRepository
+public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedMetricCache<RecipeCostPoco> cache)
+    : IRecipeCostRepository
 {
     public async Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId, bool isHq = false)
     {
@@ -32,8 +33,8 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
         await using var scope = serviceProvider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.RecipeCost.FirstOrDefault(p =>
-            p.WorldId == worldId &&
             p.RecipeId == recipeId &&
+            p.WorldId == worldId &&
             p.IsHq == isHq);
     }
 
@@ -42,7 +43,8 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
         await using var scope = serviceProvider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.RecipeCost
-            .Where(p => p.WorldId == worldId && recipeIds.Any(i => i == p.RecipeId))
+            .Where(p => p.WorldId == worldId &&
+                        recipeIds.Any(i => i == p.RecipeId))
             .ToList();
     }
 
@@ -50,9 +52,12 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.RecipeCost.Where(p => p.WorldId == worldId)
+        var recipeCostPocos = dbContext.RecipeCost
+            .Where(p => p.WorldId == worldId)
             .ToList();
+        return recipeCostPocos;
     }
+
     public async Task FillCache()
     {
         await using var scope = serviceProvider.CreateAsyncScope();
@@ -63,8 +68,7 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
     }
 
     private static int DataFreshnessInHours => 48;
-    
+
     private static bool IsDataFresh(DateTimeOffset timestamp) =>
         timestamp >= DateTime.UtcNow.AddHours(-DataFreshnessInHours);
-
 }

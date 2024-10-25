@@ -52,8 +52,8 @@ public class RecipeProfitRepositoryTests : GilGoblinDatabaseFixture
         await using var context = GetDbContext();
         var expectedRecipes = context.RecipeProfit
             .FirstOrDefault(c =>
-                c.WorldId == data.worldId &&
                 c.RecipeId == data.id &&
+                c.WorldId == data.worldId &&
                 c.IsHq == data.isHq);
 
         var result = await _repo.GetAsync(data.worldId, data.id, data.isHq);

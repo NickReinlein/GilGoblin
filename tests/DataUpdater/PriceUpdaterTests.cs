@@ -55,6 +55,29 @@ public class PriceUpdaterTests : DataUpdaterTests
 
         _priceUpdater = new PriceUpdater(_serviceProvider, _logger);
     }
+    
+    [Test]
+    public async Task GivenExecuteTask_WhenWorldsAreReturned_ThenWeFetchForEach()
+    {
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(200);
+        var ct = cts.Token;
+        var idList = GetMultipleNewPocos().Select(i => i.GetId()).ToList();
+
+        await _priceUpdater.FetchAsync(34, ct);
+
+        await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
+        await _priceFetcher.Received(1).FetchByIdsAsync(
+            Arg.Any<IEnumerable<int>>(),
+            34,
+            ct);
+        foreach (var pocoId in idList)
+            await _priceConverter.Received(1)
+                .ConvertAndSaveAsync(
+                    Arg.Is<PriceWebPoco>(p => p.GetId() == pocoId),
+                    worldId,
+                    CancellationToken.None);
+    }
 
     [Test]
     public async Task GivenFetchAsync_WhenSuccessful_ThenWeSaveResults()

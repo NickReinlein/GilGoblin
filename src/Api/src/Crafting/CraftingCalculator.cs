@@ -46,7 +46,7 @@ public class CraftingCalculator(
         var existing = await recipeCosts.GetAsync(worldId, recipeId, isHq);
         if (existing is not null &&
             existing.LastUpdated >= DateTime.UtcNow.AddHours(-hoursBeforeDataExpiry))
-            return existing.Cost;
+            return existing.Amount;
 
         try
         {
@@ -169,7 +169,7 @@ public class CraftingCalculator(
         {
             var cached = await recipeCosts.GetAsync(worldId, recipe!.Id);
 
-            var recipeCost = cached?.Cost ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id, false);
+            var recipeCost = cached?.Amount ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id, false);
 
             if (recipeCost > ErrorDefaultCost - 20000 || recipeCost < 0)
                 throw new ArithmeticException($"Failed to calculate recipe cost for {recipe.Id} in world {worldId}");
