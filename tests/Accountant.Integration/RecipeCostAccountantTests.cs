@@ -47,13 +47,12 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
 
     [TestCase(0)]
     [TestCase(-1)]
-    public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int invalidWorldId)
+    public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeStopGracefully(int invalidWorldId)
     {
         await _accountant.CalculateAsync(invalidWorldId, CancellationToken.None);
 
-        // var message = $"Failed to get the Ids to update for world {invalidWorldId}: World Id is invalid";
-        // _logger.Received().Log(LogLevel.Error, message);
-        _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
+        await _recipeCostRepo.DidNotReceive().GetAllAsync(invalidWorldId);
+        _priceRepo.DidNotReceive().GetAll(invalidWorldId);
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
         _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
         await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
@@ -67,7 +66,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         cts.Cancel();
         Assert.DoesNotThrowAsync(async () => await _accountant.CalculateAsync(_worldId, cts.Token));
 
-        _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
+        _priceRepo.Received(1).GetAll(34);
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
         _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
         _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
@@ -130,30 +129,32 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     }
 
     [Test]
-    public void GivenGetIdsToUpdate_WhenNoIdsAreReturned_ThenNoExceptionIsThrown()
+    public async Task GivenGetIdsToUpdate_WhenNoIdsAreReturned_ThenNoExceptionIsThrown()
     {
         _recipeRepo.GetAll().Returns([]);
 
-        Assert.DoesNotThrowAsync(async () =>
-            await _accountant.CalculateAsync(_worldId, CancellationToken.None));
-        _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
+         await _accountant.CalculateAsync(_worldId, CancellationToken.None);
+
+        _priceRepo.Received(1).GetAll(_worldId);
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
         _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
-        _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
-        _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+        await _saver.DidNotReceive().SaveAsync([], Arg.Any<CancellationToken>());
+        await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
     }
 
     [Test]
-    public async Task GivenGetIdsToUpdate_WhenAnExceptionIsThrown_ThenWeLogTheErrorAndStop()
+    public async Task GivenGetIdsToUpdate_WhenAnExceptionIsThrown_ThenWeStopGracefully()
     {
         _recipeRepo.GetAll().ThrowsForAnyArgs<DataException>();
-        var messageError =
-            $"Failed to get the Ids to update for world {_worldId}: Data Exception.";
 
         await _accountant.CalculateAsync(_worldId);
 
-        _logger.Received(1).LogError(messageError);
         await _recipeCostRepo.DidNotReceive().GetAllAsync(Arg.Any<int>());
+        _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
+        _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
+        _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+        await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
+        await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
     }
 
     [Test]
