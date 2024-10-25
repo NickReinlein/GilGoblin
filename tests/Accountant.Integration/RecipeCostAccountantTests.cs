@@ -17,6 +17,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
 {
     private ILogger<RecipeCostAccountant> _costLogger;
     private IDataSaver<RecipeCostPoco> _saver;
+    private RecipeCostAccountant _accountant;
 
     private static readonly int _worldId = ValidWorldIds[0];
     private static readonly int _recipeId = ValidRecipeIds[0];
@@ -51,7 +52,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         await _accountant.CalculateAsync(invalidWorldId, CancellationToken.None);
 
-        await _recipeCostRepo.DidNotReceive().GetAllAsync(invalidWorldId);
+        await _costRepo.DidNotReceive().GetAllAsync(invalidWorldId);
         _priceRepo.DidNotReceive().GetAll(invalidWorldId);
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
         _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
@@ -102,7 +103,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         await _accountant.ComputeListAsync(_worldId, ValidRecipeIds);
 
-        await _recipeCostRepo.Received(1).GetAllAsync(_worldId);
+        await _costRepo.Received(1).GetAllAsync(_worldId);
         _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
         foreach (var recipeId in ValidRecipeIds)
             await _calc.Received(1)
@@ -133,7 +134,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         _recipeRepo.GetAll().Returns([]);
 
-         await _accountant.CalculateAsync(_worldId, CancellationToken.None);
+        await _accountant.CalculateAsync(_worldId, CancellationToken.None);
 
         _priceRepo.Received(1).GetAll(_worldId);
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
@@ -149,7 +150,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
 
         await _accountant.CalculateAsync(_worldId);
 
-        await _recipeCostRepo.DidNotReceive().GetAllAsync(Arg.Any<int>());
+        await _costRepo.DidNotReceive().GetAllAsync(Arg.Any<int>());
         _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
         _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());

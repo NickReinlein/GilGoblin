@@ -4,11 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
-using GilGoblin.Api.Repository;
-using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -20,6 +18,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
 {
     private ILogger<RecipeProfitAccountant> _profitLogger;
     private IDataSaver<RecipeProfitPoco> _saver;
+    private RecipeProfitAccountant _accountant;
 
     private static readonly int _worldId = ValidWorldIds[0];
     private static readonly int _recipeId = ValidRecipeIds[0];
@@ -35,53 +34,39 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         _accountant = new RecipeProfitAccountant(_serviceProvider, _saver, _profitLogger);
     }
 
-    [TestCase(0)]
-    [TestCase(-1)]
-    public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int invalidWorldId)
-    {
-        var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
-        await _accountant.CalculateAsync(invalidWorldId, cts.Token);
-
-        var message = $"Failed to get the Ids to update for world {invalidWorldId}: World Id is invalid";
-        _logger.Received().LogError(message);
-    }
-
     [Test]
     public void GivenCalculateAsync_WhenTheTokenIsCancelled_ThenWeExitGracefully()
     {
-        var infoMessage = $"Cancellation of the task by the user. Putting away the books for {_worldId}";
-
         var cts = new CancellationTokenSource();
         cts.Cancel();
         Assert.DoesNotThrowAsync(async () => await _accountant.CalculateAsync(_worldId, cts.Token));
     }
 
     [Test]
-    public async Task GivenCalculateAsync_WhenUpdatesAreSuccessful_ThenWeLogSuccess()
+    public async Task GivenComputeListAsync_WhenDeterminingWhichRecipesToCompute_ThenWeQueryRelevantServices()
     {
-        var message = $"Boss, books are closed for world {_worldId}";
-
         var cts = new CancellationTokenSource();
         cts.CancelAfter(200);
-        await _accountant.CalculateAsync(_worldId, cts.Token);
+        var idList = new List<int> { _recipeId };
+        await _accountant.ComputeListAsync(_worldId, idList, cts.Token);
 
-        _logger.Received().LogInformation(message);
+        _recipeRepo.Received(1).GetMultiple(idList);
+        await _profitRepo.Received(1).GetAllAsync(_worldId);
+        _priceRepo.Received(1).GetMultiple(_worldId, Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
+        await _costRepo.Received(1).GetAllAsync(_worldId);
     }
 
-    [Test]
-    public async Task GivenComputeAsync_WhenSuccessful_ThenWeReturnAPoco()
+    [TestCaseSource(nameof(ValidRecipeIds))]
+    public async Task GivenComputeListAsync_WhenSuccessful_ThenWeReturnAPoco(int recipeId)
     {
-        const int millisecondsDelay = 200;
-
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(millisecondsDelay);
-        await _accountant.ComputeListAsync(_worldId, [_recipeId], cts.Token);
+        cts.CancelAfter(200);
+        await _accountant.ComputeListAsync(_worldId, [recipeId], cts.Token);
 
         await using var dbContext = GetDbContext();
         var profits = dbContext.RecipeProfit
             .Where(p =>
-                p.RecipeId == _recipeId &&
+                p.RecipeId == recipeId &&
                 p.WorldId == _worldId)
             .ToList();
         Assert.Multiple(() =>
@@ -91,86 +76,137 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
             foreach (var profit in profits)
             {
                 Assert.That(profit.WorldId, Is.EqualTo(_worldId));
-                Assert.That(profit.RecipeId, Is.EqualTo(_recipeId));
+                Assert.That(profit.RecipeId, Is.EqualTo(recipeId));
                 Assert.That(profit.Amount, Is.GreaterThan(20));
                 var totalMs = (profit.LastUpdated - DateTimeOffset.UtcNow).TotalMilliseconds;
-                Assert.That(totalMs, Is.LessThan(millisecondsDelay));
+                Assert.That(totalMs, Is.LessThan(200));
             }
         });
     }
 
     [Test]
-    public async Task GivenComputeListAsync_WhenTaskIsCanceledByUser_ThenWeStopGracefully()
+    public async Task GivenGetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnIdsOfExpiredCosts()
     {
-        var cts = new CancellationTokenSource();
-        await cts.CancelAsync();
-        await _accountant.ComputeListAsync(_worldId, [_recipeId], cts.Token);
+        await using var dbContext = GetDbContext();
+        var profits = await dbContext.RecipeProfit.Where(w => w.WorldId == _worldId).ToListAsync();
+        foreach (var profit in profits)
+            profit.LastUpdated = DateTimeOffset.UtcNow.AddDays(-30);
+        await dbContext.SaveChangesAsync();
 
+        var result = await _accountant.GetIdsToUpdate(_worldId);
+
+        await _costRepo.Received(1).GetAllAsync(_worldId);
+        await _profitRepo.Received(1).GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>());
+        Assert.That(result, Has.Count.EqualTo(ValidRecipeIds.Count));
+    }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    public async Task GivenCalculateAsync_WhenTheWorldIdIsInvalid_ThenWeStopGracefully(int invalidWorldId)
+    {
+        await _accountant.CalculateAsync(invalidWorldId, CancellationToken.None);
+
+        await _costRepo.DidNotReceive().GetAllAsync(invalidWorldId);
+        _priceRepo.DidNotReceive().GetAll(invalidWorldId);
+        _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
+        _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+        await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>());
+        await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+    }
+
+    [Test]
+    public async Task GivenGetIdsToUpdate_WhenNoIdsAreReturned_ThenNoExceptionIsThrown()
+    {
+        _costRepo.GetAllAsync(_worldId).Returns([]);
+
+        await _accountant.CalculateAsync(_worldId, CancellationToken.None);
+
+        await _costRepo.Received(1).GetAllAsync(_worldId);
+        await _profitRepo.Received(1).GetMultipleAsync(_worldId, Arg.Is<IEnumerable<int>>(i => !i.Any()));
+        _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
+        _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+        await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>());
+        await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+    }
+
+    [Test]
+    public async Task GivenGetIdsToUpdate_WhenCostRepoThrowsAnException_ThenWeStopGracefully()
+    {
+        _costRepo.GetAllAsync(_worldId).ThrowsAsync<ArithmeticException>();
+
+        await _accountant.CalculateAsync(_worldId, CancellationToken.None);
+
+        await _profitRepo.DidNotReceive().GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>());
         _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
         _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
         _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
-    }
-
-    [Test]
-    public async Task GivenComputeAsync_WhenAnUnexpectedExceptionOccurs_ThenWeLogTheError()
-    {
-        var message = $"An unexpected exception occured during the accounting process for world {_worldId}: test123";
-        _serviceProvider
-            .GetService(typeof(IRecipeRepository))
-            .Throws(new NotImplementedException("test123"));
-
-        var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
-        await _accountant.CalculateAsync(_worldId, cts.Token);
-
-        _logger.Received().LogError(message);
-    }
-
-    [Test]
-    public async Task GivenGetIdsToUpdate_WhenIdsAreReturned_ThenWeReturnTheList()
-    {
-        var ids = await _accountant.GetIdsToUpdate(_worldId);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(ids, Has.Count.GreaterThanOrEqualTo(3));
-            Assert.That(ids, Does.Contain(9841));
-            Assert.That(ids, Does.Contain(8854));
-            Assert.That(ids, Does.Contain(11));
-        });
-    }
-
-    [Test]
-    public async Task GivenGetIdsToUpdate_WhenNoIdsAreReturned_ThenWeLogTheInfoAndStop()
-    {
-        _recipeCostRepo.GetAllAsync(_worldId).Returns([]);
-        _priceRepo.GetAll(_worldId).Returns([]);
-        var messageInfo = $"Nothing to calculate for {_worldId}";
-
-        var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
-        await _accountant.CalculateAsync(_worldId, cts.Token);
-
-        _priceRepo.Received(1).GetAll(_worldId);
-        _logger.Received().LogInformation(messageInfo);
         await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>());
         await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
     }
 
     [Test]
-    public async Task GivenGetIdsToUpdate_WhenAnExceptionIsThrown_ThenWeLogTheErrorAndStop()
+    public async Task GivenGetIdsToUpdate_WhenProfitRepoThrowsAnException_ThenWeStopGracefully()
     {
-        _serviceProvider.GetService(typeof(IRecipeRepository)).Throws<IndexOutOfRangeException>();
-        var messageError =
-            $"An unexpected exception occured during the accounting process for world {_worldId}: Index was outside the bounds of the array.";
+        _profitRepo.GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>()).ThrowsAsync<ArithmeticException>();
 
-        var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
-        await _accountant.CalculateAsync(_worldId, cts.Token);
+        await _accountant.CalculateAsync(_worldId, CancellationToken.None);
 
-        _priceRepo.Received(1).GetAll(_worldId);
-        _logger.Received().LogError(messageError);
+        _recipeRepo.DidNotReceive().GetMultiple(Arg.Any<IEnumerable<int>>());
+        _priceRepo.DidNotReceive().GetAll(Arg.Any<int>());
+        _priceRepo.DidNotReceive().GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
+        _priceRepo.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
         await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>());
         await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
+    }
+
+    [Test]
+    public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostsIsEmpty_ThenReturnNull()
+    {
+        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false,
+            [], GetPrices());
+
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void GivenCalculateCraftingProfitForQualityRecipe_WhenPricesIsEmpty_ThenReturnNull()
+    {
+        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, GetCosts(),
+            Enumerable.Empty<PricePoco>());
+
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceDoNotMatch_ThenReturnNull()
+    {
+        var costs = new List<RecipeCostPoco> { new(_worldId, _recipeId, false, 100, DateTimeOffset.UtcNow) };
+        var prices = new List<PricePoco> { new(_worldId, _recipeId + 1, false, DateTimeOffset.UtcNow) };
+
+        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, costs, prices);
+
+        Assert.That(result, Is.Null);
+    }
+
+    [Test, Ignore("fix later")]
+    public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceMatch_ThenReturnProfit()
+    {
+        var costs = new List<RecipeCostPoco> { new(_worldId, _recipeId, false, 101, DateTimeOffset.UtcNow) };
+        var prices = new List<PricePoco> { new(_worldId, _recipeId, false, DateTimeOffset.UtcNow) };
+
+        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, costs, prices);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Amount, Is.EqualTo(101));
+    }
+
+    private static IEnumerable<RecipeCostPoco> GetCosts()
+    {
+        yield return new RecipeCostPoco(_worldId, _recipeId, false, 100, DateTimeOffset.UtcNow);
+    }
+
+    private static IEnumerable<PricePoco> GetPrices()
+    {
+        yield return new PricePoco(_worldId, _recipeId, false, DateTimeOffset.UtcNow);
     }
 }

@@ -23,7 +23,7 @@ public interface IRecipeProfitAccountant
 
 public class RecipeProfitAccountant(
     IServiceProvider serviceProvider,
-    IDataSaver<RecipeProfitPoco> costSaver,
+    IDataSaver<RecipeProfitPoco> saver,
     ILogger<RecipeProfitAccountant> logger)
     : Accountant<RecipeProfitPoco>(serviceProvider, logger), IRecipeProfitAccountant
 {
@@ -31,6 +31,9 @@ public class RecipeProfitAccountant(
 
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
+        if (worldId <= 0 || !idList.Any() || ct.IsCancellationRequested)
+            return;
+
         try
         {
             await using var scope = serviceProvider.CreateAsyncScope();
@@ -63,7 +66,7 @@ public class RecipeProfitAccountant(
                                 c.IsHq == quality);
                         if (profit is not null)
                         {
-                            var age = (DateTimeOffset.Now - profit.LastUpdated).TotalHours;
+                            var age = (DateTimeOffset.UtcNow - profit.LastUpdated).TotalHours;
                             if (age <= GetDataFreshnessInHours())
                                 continue;
                         }
@@ -81,7 +84,7 @@ public class RecipeProfitAccountant(
                         worldId);
                 }
 
-                await costSaver.SaveAsync(newProfits, ct);
+                await saver.SaveAsync(newProfits, ct);
             }
         }
         catch (TaskCanceledException)
@@ -145,21 +148,23 @@ public class RecipeProfitAccountant(
 
             var costs = (await costRepo.GetAllAsync(worldId)).ToList();
             var costIds = costs.Select(i => i.GetId()).ToList();
-            var existingProfits = (await profitRepo.GetMultipleAsync(worldId, costIds)).ToList();
+            var recipeProfitPocos = await profitRepo.GetMultipleAsync(worldId, costIds);
+            var existingProfits = recipeProfitPocos.ToList();
 
             foreach (var cost in costs)
             {
                 var id = cost.GetId();
                 var existing = existingProfits.FirstOrDefault(e =>
                     e.GetId() == id &&
-                    e.WorldId == worldId);
+                    e.WorldId == worldId &&
+                    cost.IsHq);
                 if (existing is null)
                 {
                     idsToUpdate.Add(id);
                     continue;
                 }
 
-                var age = (DateTimeOffset.Now - existing.LastUpdated).TotalHours;
+                var age = (DateTimeOffset.UtcNow - existing.LastUpdated).TotalHours;
                 if (age >= GetDataFreshnessInHours())
                     idsToUpdate.Add(id);
             }

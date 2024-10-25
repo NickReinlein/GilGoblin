@@ -7,8 +7,11 @@ public abstract record CalculatedMetricPoco(
     int WorldId,
     bool IsHq,
     int Amount,
-    DateTime LastUpdated)
+    DateTimeOffset LastUpdated)
     : IIdentifiable
 {
+    public int Amount { get; set; } = Amount;
+    public DateTimeOffset LastUpdated { get; set; } = LastUpdated;
+
     public int GetId() => RecipeId;
 }

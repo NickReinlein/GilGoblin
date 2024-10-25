@@ -14,7 +14,7 @@ namespace GilGoblin.Accountant;
 
 public class RecipeCostAccountant(
     IServiceProvider serviceProvider,
-    IDataSaver<RecipeCostPoco> costSaver,
+    IDataSaver<RecipeCostPoco> saver,
     ILogger<RecipeCostAccountant> logger)
     : Accountant<RecipeCostPoco>(serviceProvider, logger)
 {
@@ -81,7 +81,7 @@ public class RecipeCostAccountant(
                 }
             }
 
-            await costSaver.SaveAsync(newCosts, ct);
+            await saver.SaveAsync(newCosts, ct);
         }
         catch (TaskCanceledException)
         {
@@ -140,7 +140,7 @@ public class RecipeCostAccountant(
                 {
                     logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id,
                         worldId);
-                    var age = (DateTimeOffset.Now - current.LastUpdated).TotalHours;
+                    var age = (DateTimeOffset.UtcNow - current.LastUpdated).TotalHours;
                     if (age <= GetDataFreshnessInHours())
                         continue; // Fresh data is skipped
                 }

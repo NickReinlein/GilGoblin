@@ -14,16 +14,16 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Accountant.Integration;
 
+[TestFixture]
 public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIdentifiable
 {
     protected ILogger<Accountant<T>> _logger;
 
     protected ICraftingCalculator _calc;
-    protected IRecipeCostRepository _recipeCostRepo;
+    protected IRecipeCostRepository _costRepo;
     protected IRecipeRepository _recipeRepo;
     protected IPriceRepository<PricePoco> _priceRepo;
-
-    protected Accountant<T> _accountant;
+    protected IRecipeProfitRepository _profitRepo;
 
     [SetUp]
     public override async Task SetUp()
@@ -32,7 +32,8 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
 
         _logger = Substitute.For<ILogger<Accountant<T>>>();
         _calc = Substitute.For<ICraftingCalculator>();
-        _recipeCostRepo = Substitute.For<IRecipeCostRepository>();
+        _costRepo = Substitute.For<IRecipeCostRepository>();
+        _profitRepo = Substitute.For<IRecipeProfitRepository>();
         _recipeRepo = Substitute.For<IRecipeRepository>();
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
 
@@ -48,10 +49,31 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
                 .Returns(GetDbContext().Price
                     .Where(p => p.WorldId == worldId)
                     .ToList());
-            _recipeCostRepo
+            _priceRepo
+                .GetMultiple(
+                    worldId,
+                    Arg.Any<IEnumerable<int>>(),
+                    Arg.Any<bool>())
+                .Returns(GetDbContext().Price
+                    .Where(p => p.WorldId == worldId &&
+                                ValidItemsIds.Contains(p.ItemId))
+                    .ToList());
+            _costRepo
                 .GetAllAsync(worldId)
                 .Returns(GetDbContext().RecipeCost
                     .Where(p => p.WorldId == worldId)
+                    .ToList());
+            _profitRepo
+                .GetAllAsync(worldId)
+                .Returns(GetDbContext().RecipeProfit
+                    .Where(p => p.WorldId == worldId)
+                    .ToList());
+            _profitRepo
+                .GetMultipleAsync(worldId, Arg.Any<IEnumerable<int>>())
+                .Returns(GetDbContext().RecipeProfit
+                    .Where(p =>
+                        ValidRecipeIds.Contains(p.RecipeId) &&
+                        p.WorldId == worldId)
                     .ToList());
         }
 
@@ -61,38 +83,12 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
         startup.ConfigureServices(_serviceCollection);
 
         _serviceCollection.AddSingleton(_calc);
-        _serviceCollection.AddSingleton(_recipeCostRepo);
+        _serviceCollection.AddSingleton(_costRepo);
         _serviceCollection.AddSingleton(_recipeRepo);
         _serviceCollection.AddSingleton(_priceRepo);
+        _serviceCollection.AddSingleton(_profitRepo);
 
         _serviceProvider = _serviceCollection.BuildServiceProvider();
         _serviceScope = _serviceProvider.CreateScope();
-
-        _accountant = new Accountant<T>(_serviceProvider, _logger);
-    }
-
-    [Test]
-    public void GivenGetDataFreshnessInHours_WhenCalled_ThenAValueIsReturned()
-    {
-        var result = _accountant.GetDataFreshnessInHours();
-
-        Assert.That(result, Is.GreaterThanOrEqualTo(24));
-    }
-
-    [Test]
-    public async Task GivenGetIdsToUpdate_WhenCalled_ThenAValueIsReturned()
-    {
-        var result = await _accountant.GetIdsToUpdate(ValidWorldIds[0]);
-
-        Assert.That(result, Is.Not.Null.And.Not.Empty);
-    }
-
-    [TestCaseSource(nameof(ValidWorldIds))]
-    public async Task GivenComputeListAsync_WhenCalled_ThenAValueIsReturned(int worldId)
-    {
-        await _accountant.ComputeListAsync(worldId, ValidRecipeIds, CancellationToken.None);
-
-        foreach (var recipeId in ValidRecipeIds)
-            await _calc.Received(1).CalculateCraftingCostForRecipe(worldId, recipeId, true);
     }
 }

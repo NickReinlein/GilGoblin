@@ -7,5 +7,5 @@ public record RecipeProfitPoco(
     int WorldId,
     bool IsHq,
     int Amount,
-    DateTime LastUpdated)
+    DateTimeOffset LastUpdated)
     : CalculatedMetricPoco(RecipeId, WorldId, IsHq, Amount, LastUpdated);
