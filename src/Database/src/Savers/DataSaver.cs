@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EFCore.BulkExtensions;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,13 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
 
-public interface IDataSaver<in T> where T : class
+public interface IDataSaver<in T> where T : IdentifiablePoco
 {
     Task<bool> SaveAsync(IEnumerable<T> updates, CancellationToken ct = default);
 }
 
 public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>> logger) : IDataSaver<T>
-    where T : class, IIdentifiable
+    where T : IdentifiablePoco
 {
     protected readonly IServiceProvider ServiceProvider =
         serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -60,9 +59,26 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
         {
             await using var scope = ServiceProvider.CreateAsyncScope();
             await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            await dbContext.BulkInsertOrUpdateAsync(entityList, GetBulkConfig(), type: typeof(T),
-                cancellationToken: ct);
-            return entityList.Count;
+
+            var idList = entityList.Select(e => e.GetId()).ToList();
+            var existing = dbContext
+                .Set<T>()
+                .AsEnumerable()
+                .Where(e => idList.Contains(e.GetId()))
+                .ToList();
+            var toUpdate = entityList.Where(e => existing.Any(x => x.GetId() == e.GetId())).ToList();
+
+            var toAdd = entityList.Except(toUpdate);
+            dbContext.AddRange(toAdd);
+
+            foreach (var entity in toUpdate)
+            {
+                var existingEntity = existing.FirstOrDefault(x => x.GetId() == entity.GetId());
+                if (existingEntity is not null)
+                    dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+            }
+
+            return await dbContext.SaveChangesAsync(ct);
         }
         catch (Exception ex)
         {
@@ -74,15 +90,5 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
     protected virtual List<T> FilterInvalidEntities(IEnumerable<T> entities)
     {
         return entities.ToList();
-    }
-
-    protected virtual BulkConfig GetBulkConfig()
-    {
-        return new BulkConfig
-        {
-            UpdateByProperties = ["Id"], // unique keys
-            PreserveInsertOrder = false,
-            SetOutputIdentity = true
-        };
     }
 }

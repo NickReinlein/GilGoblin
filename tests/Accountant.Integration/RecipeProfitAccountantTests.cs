@@ -29,7 +29,8 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         await base.SetUp();
         _profitLogger = Substitute.For<ILogger<RecipeProfitAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeProfitPoco>>();
-        _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
+        _saver.SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>())
+            .ReturnsForAnyArgs(true);
 
         _accountant = new RecipeProfitAccountant(_serviceProvider, _saver, _profitLogger);
     }
@@ -88,7 +89,8 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     public async Task GivenGetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnIdsOfExpiredCosts()
     {
         await using var dbContext = GetDbContext();
-        var profits = await dbContext.RecipeProfit.Where(w => w.WorldId == _worldId).ToListAsync();
+        var profits = await dbContext.RecipeProfit
+            .Where(w => w.WorldId == _worldId).ToListAsync();
         foreach (var profit in profits)
             profit.LastUpdated = DateTimeOffset.UtcNow.AddDays(-30);
         await dbContext.SaveChangesAsync();
@@ -97,7 +99,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
 
         await _costRepo.Received(1).GetAllAsync(_worldId);
         await _profitRepo.Received(1).GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>());
-        Assert.That(result, Has.Count.EqualTo(ValidRecipeIds.Count));
+        Assert.That(result, Has.Count.EqualTo(ValidRecipeIds.Count * 2)); // Hq & Nq
     }
 
     [TestCase(0)]

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Api.Controllers;
 using GilGoblin.Database.Pocos;
@@ -30,15 +29,14 @@ public class ItemControllerTests
     public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfItemsIsReturned()
     {
         var poco1 = CreatePoco();
-        var poco2 = CreatePoco();
-        poco2.Id = poco1.Id + 100;
-        _repo.GetAll().Returns(new List<ItemPoco>() { poco1, poco2 });
+        var poco2 = CreatePoco(poco1.Id + 100);
+        _repo.GetAll().Returns([poco1, poco2]);
 
-        var result = _controller.GetAll();
+        var result = _controller.GetAll().ToList();
 
         Assert.Multiple(() =>
         {
-            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result, Has.Count.EqualTo(2));
             Assert.That(result.Count(i => i.Id == poco1.Id), Is.EqualTo(1));
             Assert.That(result.Count(i => i.Id == poco2.Id), Is.EqualTo(1));
         });
@@ -63,10 +61,10 @@ public class ItemControllerTests
         Assert.That(result, Is.Null);
     }
 
-    private static ItemPoco CreatePoco() =>
+    private static ItemPoco CreatePoco(int id = 200) =>
         new()
         {
-            Id = 200,
+            Id = id,
             CanHq = true,
             IconId = 2332,
             Description = "testDesc",

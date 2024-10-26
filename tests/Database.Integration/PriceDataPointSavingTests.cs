@@ -11,7 +11,7 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     [Test]
     public async Task GivenValidAverageSalePricePoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
-        var averageSalePrice = new AverageSalePricePoco(100, true, 100, 200, 300);
+        var averageSalePrice = new AverageSalePricePoco(100, true);
 
         await using var ctx = GetDbContext();
         await ctx.AverageSalePrice.AddAsync(averageSalePrice);
@@ -35,7 +35,7 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     [Test]
     public async Task GivenValidRecentPurchasePocoPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
-        var recentPurchasePoco = new RecentPurchasePoco(100, true, 100, 200, 300);
+        var recentPurchasePoco = new RecentPurchasePoco(1001, false);
 
         await using var ctx = GetDbContext();
         await ctx.RecentPurchase.AddAsync(recentPurchasePoco);
@@ -59,7 +59,7 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     [Test]
     public async Task GivenValidMinListingPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
-        var minListing = new MinListingPoco(100, true, 100, 200, 300);
+        var minListing = new MinListingPoco(100, true);
 
         await using var ctx = GetDbContext();
         await ctx.MinListing.AddAsync(minListing);

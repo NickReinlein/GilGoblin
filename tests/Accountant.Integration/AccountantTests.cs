@@ -17,8 +17,6 @@ namespace GilGoblin.Tests.Accountant.Integration;
 [TestFixture]
 public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIdentifiable
 {
-    protected ILogger<Accountant<T>> _logger;
-
     protected ICraftingCalculator _calc;
     protected IRecipeCostRepository _costRepo;
     protected IRecipeRepository _recipeRepo;
@@ -30,7 +28,7 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
     {
         await base.SetUp();
 
-        _logger = Substitute.For<ILogger<Accountant<T>>>();
+        Substitute.For<ILogger<Accountant<T>>>();
         _calc = Substitute.For<ICraftingCalculator>();
         _costRepo = Substitute.For<IRecipeCostRepository>();
         _profitRepo = Substitute.For<IRecipeProfitRepository>();
@@ -78,8 +76,7 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
         }
 
         var startup = new Startup(_configuration);
-        var services = new ServiceCollection();
-        _serviceProvider = services.BuildServiceProvider();
+        _serviceProvider = new ServiceCollection().BuildServiceProvider();
         startup.ConfigureServices(_serviceCollection);
 
         _serviceCollection.AddSingleton(_calc);

@@ -149,11 +149,13 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>().Property(t => t.Updated).HasColumnName("updated");
 
         // Applying unique constraints, indexes, and relationships
-        modelBuilder.Entity<PricePoco>().HasIndex(t => t.ItemId).HasDatabaseName("idx_price_item_id");
-        modelBuilder.Entity<PricePoco>().HasIndex(t => new { t.ItemId, t.WorldId })
+        modelBuilder.Entity<PricePoco>()
+            .HasIndex(t => new { t.ItemId, t.WorldId })
             .HasDatabaseName("idx_price_item_id_and_world_id");
-        modelBuilder.Entity<PricePoco>().HasIndex(t => new { t.ItemId, t.WorldId, t.IsHq })
-            .HasDatabaseName("idx_price_item_id_and_world_id_and_is_hq");
+        modelBuilder.Entity<PricePoco>()
+            .HasIndex(t => new { t.ItemId, t.WorldId, t.IsHq })
+            .HasDatabaseName("idx_price_item_id_and_world_id_and_is_hq")
+            .IsUnique();
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.AverageSalePrice)
             .WithOne()
@@ -176,24 +178,30 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<RecipeCostPoco>().ToTable("recipe_cost");
-        modelBuilder.Entity<RecipeCostPoco>().HasKey(t => new { t.RecipeId, t.WorldId, t.IsHq });
+        modelBuilder.Entity<RecipeCostPoco>().HasKey(t => t.Id);
+        modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.Amount).HasColumnName("amount");
         modelBuilder.Entity<RecipeCostPoco>().Property(t => t.LastUpdated).HasColumnName("last_updated");
-        modelBuilder.Entity<RecipeCostPoco>().HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
-            .HasDatabaseName("idx_recipe_cost_recipe_id_and_world_id_and_is_hq");
+        modelBuilder.Entity<RecipeCostPoco>()
+            .HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
+            .HasDatabaseName("idx_recipe_cost_recipe_id_and_world_id_and_is_hq")
+            .IsUnique();
 
         modelBuilder.Entity<RecipeProfitPoco>().ToTable("recipe_profit");
-        modelBuilder.Entity<RecipeProfitPoco>().HasKey(t => new { t.RecipeId, t.WorldId, t.IsHq });
+        modelBuilder.Entity<RecipeProfitPoco>().HasKey(t => t.Id);
+        modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.RecipeId).HasColumnName("recipe_id");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.Amount).HasColumnName("amount");
         modelBuilder.Entity<RecipeProfitPoco>().Property(t => t.LastUpdated).HasColumnName("last_updated");
-        modelBuilder.Entity<RecipeProfitPoco>().HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
-            .HasDatabaseName("idx_recipe_profit_recipe_and_world_id_and_is_hq");
+        modelBuilder.Entity<RecipeProfitPoco>()
+            .HasIndex(t => new { t.RecipeId, t.WorldId, t.IsHq })
+            .HasDatabaseName("idx_recipe_profit_recipe_and_world_id_and_is_hq")
+            .IsUnique();
 
         base.OnModelCreating(modelBuilder);
     }

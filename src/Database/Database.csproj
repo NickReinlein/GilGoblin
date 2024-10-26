@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EFCore.BulkExtensions" Version="8.1.*"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.*" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />
