@@ -243,7 +243,7 @@ public class CraftingCalculatorTests
     {
         var priceDataPoco = new PriceDataPoco("DC", 300, 280, 300);
         var priceDetail =
-            new AverageSalePricePoco(itemId, false, 300, 280, 300) { DcData = priceDataPoco };
+            new AverageSalePricePoco(itemId, false, 300, 280, 300) { DcDataPoint = priceDataPoco };
         return priceDetail;
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
@@ -59,7 +60,6 @@ public class QualityPriceDataConverter(
         MinListingPoco? minListingDb = null;
         AverageSalePricePoco? averageSalePriceDb = null;
         RecentPurchasePoco? recentPurchaseDb = null;
-        DailySaleVelocityPoco? dailySaleVelocityDb = null;
 
         if (minListing is not null)
         {
@@ -96,17 +96,15 @@ public class QualityPriceDataConverter(
 
         if (dailySaleVelocity is not null)
         {
-            dailySaleVelocityDb = new DailySaleVelocityPoco(
-                itemId,
-                isHq,
-                dailySaleVelocity.World,
-                dailySaleVelocity.Dc,
-                dailySaleVelocity.Region);
-            dbContext.DailySaleVelocity.Add(dailySaleVelocityDb);
+            dbContext.DailySaleVelocity.Add(dailySaleVelocity);
         }
 
-        await dbContext.SaveChangesAsync();
+        var saved = await dbContext.SaveChangesAsync();
+        if (saved < 1)
+            throw new DataException("Failed to save quality price data");
 
-        return new QualityPriceDataPoco(minListingDb, averageSalePriceDb, recentPurchaseDb, dailySaleVelocityDb);
+        var qualityPriceDataPoco =
+            new QualityPriceDataPoco(minListingDb, averageSalePriceDb, recentPurchaseDb, dailySaleVelocity);
+        return qualityPriceDataPoco;
     }
 }

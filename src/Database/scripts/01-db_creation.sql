@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS daily_sale_velocity
     dc_quantity     NUMERIC(12, 2),
     region_quantity NUMERIC(12, 2)
 );
-CREATE INDEX idx_daily_sale_velocity_item_id ON daily_sale_velocity (item_id);
 CREATE INDEX idx_daily_sale_velocity_item_id_and_is_hq ON daily_sale_velocity (item_id, is_hq);
 
 CREATE TABLE IF NOT EXISTS average_sale_price
@@ -89,7 +88,6 @@ CREATE TABLE IF NOT EXISTS average_sale_price
     dc_data_point_id     INT REFERENCES price_data (id) ON DELETE CASCADE,
     region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE
 );
-CREATE INDEX idx_average_sale_price_item_id ON average_sale_price (item_id);
 CREATE INDEX idx_average_sale_price_item_id_and_is_hq ON average_sale_price (item_id, is_hq);
 
 CREATE TABLE IF NOT EXISTS min_listing
@@ -101,7 +99,6 @@ CREATE TABLE IF NOT EXISTS min_listing
     dc_data_point_id     INT REFERENCES price_data (id) ON DELETE CASCADE,
     region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE
 );
-CREATE INDEX idx_min_listing_item_id ON min_listing (item_id);
 CREATE INDEX idx_min_listing_item_id_and_is_hq ON min_listing (item_id, is_hq);
 
 CREATE TABLE IF NOT EXISTS recent_purchase
@@ -113,7 +110,6 @@ CREATE TABLE IF NOT EXISTS recent_purchase
     dc_data_point_id     INT REFERENCES price_data (id) ON DELETE CASCADE,
     region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE
 );
-CREATE INDEX idx_recent_purchase_item_id ON recent_purchase (item_id);
 CREATE INDEX idx_recent_purchase_item_id_and_is_hq ON recent_purchase (item_id, is_hq);
 
 CREATE TABLE IF NOT EXISTS recipe_cost
@@ -151,6 +147,5 @@ CREATE TABLE price
     updated                TIMESTAMP WITH TIME ZONE NOT NULL,
     UNIQUE (item_id, world_id, is_hq)
 );
-CREATE INDEX idx_price_item_id ON price (item_id);
 CREATE INDEX idx_price_item_id_and_world_id ON price (item_id, world_id);
 CREATE INDEX idx_price_item_id_and_world_id_and_is_hq ON price (item_id, world_id, is_hq);

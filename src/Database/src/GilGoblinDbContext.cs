@@ -164,13 +164,11 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.MinListingId)
             .OnDelete(DeleteBehavior.Cascade);
-
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.RecentPurchase)
             .WithOne()
             .HasForeignKey<PricePoco>(p => p.RecentPurchaseId)
             .OnDelete(DeleteBehavior.Cascade);
-
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.DailySaleVelocity)
             .WithOne()
