@@ -1,25 +1,31 @@
 using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+using GilGoblin.Database.Savers;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Converters;
 
 public interface IDailySaleVelocityConverter
 {
-    Task<DailySaleVelocityPoco?> ConvertAsync(DailySaleVelocityWebPoco? saleVelocity, int itemId, bool isHq);
+    Task<DailySaleVelocityPoco?> ConvertAsync(
+        DailySaleVelocityWebPoco? saleVelocity,
+        int itemId,
+        bool isHq,
+        CancellationToken ct = default);
 }
 
 public class DailySaleVelocityConverter(
     IServiceProvider serviceProvider,
+    IDataSaver<DailySaleVelocityPoco> saver,
     ILogger<PriceDataPointConverter> logger)
     : IDailySaleVelocityConverter
 {
     public async Task<DailySaleVelocityPoco?> ConvertAsync(DailySaleVelocityWebPoco? saleVelocity, int itemId,
-        bool isHq)
+        bool isHq, CancellationToken ct = default)
     {
         try
         {
@@ -30,7 +36,7 @@ public class DailySaleVelocityConverter(
 
             var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, isHq);
 
-            await SaveToDatabaseAsync(dailySaleVelocityDb);
+            // await saver.SaveAsync([dailySaleVelocityDb], ct);
             return dailySaleVelocityDb;
         }
         catch (Exception e)
@@ -40,13 +46,13 @@ public class DailySaleVelocityConverter(
         }
     }
 
-    private async Task SaveToDatabaseAsync(DailySaleVelocityPoco dailySaleVelocityDb)
-    {
-        await using var scope = serviceProvider.CreateAsyncScope();
-        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        await dbContext.DailySaleVelocity.AddRangeAsync(dailySaleVelocityDb);
-        await dbContext.SaveChangesAsync();
-    }
+    // private async Task SaveToDatabaseAsync(DailySaleVelocityPoco dailySaleVelocityDb)
+    // {
+    //     await using var scope = serviceProvider.CreateAsyncScope();
+    //     await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+    //     await dbContext.DailySaleVelocity.AddRangeAsync(dailySaleVelocityDb);
+    //     await dbContext.SaveChangesAsync();
+    // }
 
     private static DailySaleVelocityPoco ConvertToDbFormat(
         DailySaleVelocityWebPoco? saleVelocity,

@@ -60,7 +60,8 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
         {
             await using var scope = ServiceProvider.CreateAsyncScope();
             await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-            await dbContext.BulkInsertOrUpdateAsync(entityList, GetBulkConfig(), cancellationToken: ct);
+            await dbContext.BulkInsertOrUpdateAsync(entityList, GetBulkConfig(), type: typeof(T),
+                cancellationToken: ct);
             return entityList.Count;
         }
         catch (Exception ex)
@@ -74,7 +75,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
     {
         return entities.ToList();
     }
-    
+
     protected virtual BulkConfig GetBulkConfig()
     {
         return new BulkConfig

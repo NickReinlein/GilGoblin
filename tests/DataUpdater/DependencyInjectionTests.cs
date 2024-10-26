@@ -52,6 +52,7 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IPriceDataPointConverter))]
     [TestCase(typeof(IQualityPriceDataConverter))]
     [TestCase(typeof(IDailySaleVelocityConverter))]
+    [TestCase(typeof(IDataSaver<DailySaleVelocityPoco>))]
     [TestCase(typeof(IDataSaver<WorldPoco>))]
     [TestCase(typeof(ICraftingCalculator))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)

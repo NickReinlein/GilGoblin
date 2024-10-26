@@ -54,6 +54,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
             .AddScoped<IQualityPriceDataConverter, QualityPriceDataConverter>()
             .AddScoped<IDailySaleVelocityConverter, DailySaleVelocityConverter>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
+            .AddScoped<IDataSaver<DailySaleVelocityPoco>, DataSaver<DailySaleVelocityPoco>>()
             .AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
 
         services
