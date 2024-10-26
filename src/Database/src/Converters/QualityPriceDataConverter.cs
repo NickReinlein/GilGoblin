@@ -10,7 +10,7 @@ namespace GilGoblin.Database.Converters;
 
 public interface IQualityPriceDataConverter
 {
-    Task<QualityPriceDataPoco?> ConvertAsync(QualityPriceDataWebPoco? qualityData, int itemId, bool isHq);
+    Task<QualityPriceDataPoco?> ConvertAndSaveDetailsAsync(QualityPriceDataWebPoco? qualityData, int itemId, bool isHq);
 }
 
 public class QualityPriceDataConverter(
@@ -20,7 +20,8 @@ public class QualityPriceDataConverter(
     ILogger<QualityPriceDataConverter> logger)
     : IQualityPriceDataConverter
 {
-    public async Task<QualityPriceDataPoco?> ConvertAsync(QualityPriceDataWebPoco? qualityData, int itemId, bool isHq)
+    public async Task<QualityPriceDataPoco?> ConvertAndSaveDetailsAsync(QualityPriceDataWebPoco? qualityData,
+        int itemId, bool isHq)
     {
         try
         {
@@ -34,10 +35,19 @@ public class QualityPriceDataConverter(
             var recentPurchase =
                 await dataPointConverter.ConvertAndSaveAsync(qualityData.RecentPurchase, itemId, isHq);
             var dailySaleVelocity =
-                await saleVelocityConverter.ConvertAsync(qualityData.DailySaleVelocity, itemId, isHq);
+                await saleVelocityConverter.ConvertAndSaveAsync(qualityData.DailySaleVelocity, itemId, isHq);
 
-            var qualityPriceData = await ConvertToQualityPriceData(itemId, isHq, minListing, averageSalePrice, recentPurchase,
+            var qualityPriceData = await ConvertToQualityPriceDataAndSave(itemId, isHq, minListing, averageSalePrice,
+                recentPurchase,
                 dailySaleVelocity);
+
+            // await using var scope = serviceProvider.CreateAsyncScope();
+            // await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            // dbContext.PriceData.Add(qualityPriceData);
+            // var saved = await dbContext.SaveChangesAsync();
+            // if (saved < 1)
+            //     throw new DataException("Failed to save quality price data");
+
             return qualityPriceData;
         }
         catch (Exception e)
@@ -47,7 +57,7 @@ public class QualityPriceDataConverter(
         }
     }
 
-    private async Task<QualityPriceDataPoco> ConvertToQualityPriceData(
+    private async Task<QualityPriceDataPoco> ConvertToQualityPriceDataAndSave(
         int itemId,
         bool isHq,
         PriceDataPointPoco? minListing,
@@ -55,8 +65,8 @@ public class QualityPriceDataConverter(
         PriceDataPointPoco? recentPurchase,
         DailySaleVelocityPoco? dailySaleVelocity)
     {
-        // await using var scope = serviceProvider.CreateAsyncScope();
-        // await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
         MinListingPoco? minListingDb = null;
         AverageSalePricePoco? averageSalePriceDb = null;
@@ -70,7 +80,7 @@ public class QualityPriceDataConverter(
                 minListing.WorldDataPointId,
                 minListing.DcDataPointId,
                 minListing.RegionDataPointId);
-            // dbContext.MinListing.Add(minListingDb);
+            dbContext.MinListing.Add(minListingDb);
         }
 
         if (averageSalePrice is not null)
@@ -81,7 +91,7 @@ public class QualityPriceDataConverter(
                 averageSalePrice.WorldDataPointId,
                 averageSalePrice.DcDataPointId,
                 averageSalePrice.RegionDataPointId);
-            // dbContext.AverageSalePrice.Add(averageSalePriceDb);
+            dbContext.AverageSalePrice.Add(averageSalePriceDb);
         }
 
         if (recentPurchase is not null)
@@ -92,17 +102,17 @@ public class QualityPriceDataConverter(
                 recentPurchase.WorldDataPointId,
                 recentPurchase.DcDataPointId,
                 recentPurchase.RegionDataPointId);
-            // dbContext.RecentPurchase.Add(recentPurchaseDb);
+            dbContext.RecentPurchase.Add(recentPurchaseDb);
         }
 
-        // if (dailySaleVelocity is not null)
-        // {
-        //     dbContext.DailySaleVelocity.Add(dailySaleVelocity);
-        // }
-        //
-        // var saved = await dbContext.SaveChangesAsync();
-        // if (saved < 1)
-        //     throw new DataException("Failed to save quality price data");
+        if (dailySaleVelocity is not null)
+        {
+            dbContext.DailySaleVelocity.Add(dailySaleVelocity);
+        }
+
+        var saved = await dbContext.SaveChangesAsync();
+        if (saved < 1)
+            throw new DataException("Failed to save quality price data");
 
         var qualityPriceDataPoco =
             new QualityPriceDataPoco(minListingDb, averageSalePriceDb, recentPurchaseDb, dailySaleVelocity);

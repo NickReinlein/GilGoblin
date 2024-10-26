@@ -11,7 +11,7 @@ namespace GilGoblin.Database.Converters;
 
 public interface IDailySaleVelocityConverter
 {
-    Task<DailySaleVelocityPoco?> ConvertAsync(
+    Task<DailySaleVelocityPoco?> ConvertAndSaveAsync(
         DailySaleVelocityWebPoco? saleVelocity,
         int itemId,
         bool isHq,
@@ -24,7 +24,7 @@ public class DailySaleVelocityConverter(
     ILogger<PriceDataPointConverter> logger)
     : IDailySaleVelocityConverter
 {
-    public async Task<DailySaleVelocityPoco?> ConvertAsync(DailySaleVelocityWebPoco? saleVelocity, int itemId,
+    public async Task<DailySaleVelocityPoco?> ConvertAndSaveAsync(DailySaleVelocityWebPoco? saleVelocity, int itemId,
         bool isHq, CancellationToken ct = default)
     {
         try
@@ -36,7 +36,7 @@ public class DailySaleVelocityConverter(
 
             var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, isHq);
 
-            // await saver.SaveAsync([dailySaleVelocityDb], ct);
+            await saver.SaveAsync([dailySaleVelocityDb], ct);
             return dailySaleVelocityDb;
         }
         catch (Exception e)

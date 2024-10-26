@@ -21,13 +21,11 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
     protected readonly IServiceProvider ServiceProvider =
         serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-    private readonly ILogger<DataSaver<T>> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
     public async Task<bool> SaveAsync(IEnumerable<T> entities, CancellationToken ct = default)
     {
         var entityList = entities.ToList();
         if (!entityList.Any())
-            return false;
+            return true;
 
         try
         {
@@ -36,19 +34,12 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
                 throw new ArgumentException("No valid entities remained after validity check");
 
             var savedCount = await UpdateContextAsync(filteredUpdates, ct);
-            _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
-
-            var failedCount = entityList.Count - savedCount;
-            if (failedCount == 0)
-                return true;
-
-            _logger.LogError(
-                $"Failed to save {failedCount} entities, out of {entityList.Count} total entities");
-            throw new DbUpdateException();
+            logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
+            return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to update due to error");
+            logger.LogError(ex, "Failed to update due to error");
             return false;
         }
     }
@@ -82,7 +73,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to update due to error");
+            logger.LogError(ex, "Failed to update due to error");
             return 0;
         }
     }

@@ -30,9 +30,9 @@ public class PriceConverter(
                 throw new ArgumentException("Invalid world id", nameof(worldId));
 
             var itemId = webPoco.ItemId;
-            var nqPrices = await qualityConverter.ConvertAsync(webPoco.Nq, itemId, false);
+            var nqPrices = await qualityConverter.ConvertAndSaveDetailsAsync(webPoco.Nq, itemId, false);
             var nq = nqPrices is null ? null : GetPricePocoFromQualityPrices(nqPrices, worldId, itemId, false);
-            var hqPrices = await qualityConverter.ConvertAsync(webPoco.Hq, itemId, true);
+            var hqPrices = await qualityConverter.ConvertAndSaveDetailsAsync(webPoco.Hq, itemId, true);
             var hq = hqPrices is null ? null : GetPricePocoFromQualityPrices(hqPrices, worldId, itemId, true);
 
             await SaveToDatabaseAsync(hq, nq, ct);
