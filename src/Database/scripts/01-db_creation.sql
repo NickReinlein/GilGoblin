@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS daily_sale_velocity
 (
     id              SERIAL PRIMARY KEY,
     item_id         INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
+    world_id        INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq           BOOLEAN NOT NULL,
     world_quantity  NUMERIC(12, 2),
     dc_quantity     NUMERIC(12, 2),

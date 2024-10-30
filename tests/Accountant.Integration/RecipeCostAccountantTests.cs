@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using GilGoblin.Accountant;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -99,18 +101,33 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     }
 
     [Test]
-    public async Task GivenComputeListAsync_WhenIdsAreValid_ThenRelevantCostsAreFetched()
+    public async Task GivenComputeListAsync_WhenIdsAreValidAndCostsOutdated_ThenRelevantCostsAreFetched()
     {
+        await using var dbContext = GetDbContext();
+        var costs = await dbContext.RecipeCost
+            .Where(w => w.WorldId == _worldId)
+            .ToListAsync();
+        foreach (var cost in costs)
+            cost.LastUpdated = DateTimeOffset.UtcNow.AddDays(-7);
+        _costRepo.GetAllAsync(_worldId).Returns(costs);
+        
         await _accountant.ComputeListAsync(_worldId, ValidRecipeIds);
 
         await _costRepo.Received(1).GetAllAsync(_worldId);
         _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
         foreach (var recipeId in ValidRecipeIds)
+        {
+            await _calc.Received(1)
+                .CalculateCraftingCostForRecipe(
+                    _worldId,
+                    recipeId,
+                    true);
             await _calc.Received(1)
                 .CalculateCraftingCostForRecipe(
                     _worldId,
                     recipeId,
                     false);
+        }
     }
 
     [Test]

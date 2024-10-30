@@ -14,17 +14,18 @@ public interface IDailySaleVelocityConverter
     Task<DailySaleVelocityPoco?> ConvertAndSaveAsync(
         DailySaleVelocityWebPoco? saleVelocity,
         int itemId,
+        int worldId,
         bool isHq,
         CancellationToken ct = default);
 }
 
 public class DailySaleVelocityConverter(
-    IServiceProvider serviceProvider,
     IDataSaver<DailySaleVelocityPoco> saver,
     ILogger<PriceDataPointConverter> logger)
     : IDailySaleVelocityConverter
 {
     public async Task<DailySaleVelocityPoco?> ConvertAndSaveAsync(DailySaleVelocityWebPoco? saleVelocity, int itemId,
+        int worldId,
         bool isHq, CancellationToken ct = default)
     {
         try
@@ -34,7 +35,7 @@ public class DailySaleVelocityConverter(
             if (!saleVelocity.HasAValidQuantity())
                 throw new DataException("Has no valid quantity");
 
-            var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, isHq);
+            var dailySaleVelocityDb = ConvertToDbFormat(saleVelocity, itemId, worldId, isHq);
 
             await saver.SaveAsync([dailySaleVelocityDb], ct);
             return dailySaleVelocityDb;
@@ -46,19 +47,13 @@ public class DailySaleVelocityConverter(
         }
     }
 
-    // private async Task SaveToDatabaseAsync(DailySaleVelocityPoco dailySaleVelocityDb)
-    // {
-    //     await using var scope = serviceProvider.CreateAsyncScope();
-    //     await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-    //     await dbContext.DailySaleVelocity.AddRangeAsync(dailySaleVelocityDb);
-    //     await dbContext.SaveChangesAsync();
-    // }
-
     private static DailySaleVelocityPoco ConvertToDbFormat(
         DailySaleVelocityWebPoco? saleVelocity,
         int itemId,
+        int worldId,
         bool isHq)
         => new(itemId,
+            worldId,
             isHq,
             saleVelocity?.World,
             saleVelocity?.Dc,

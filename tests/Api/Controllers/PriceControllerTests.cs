@@ -69,5 +69,5 @@ public class PriceControllerTests
         Assert.That(result, Is.Null);
     }
 
-    private static PricePoco GetPricePoco() => new(1, worldId, true, DateTimeOffset.UtcNow);
+    private static PricePoco GetPricePoco() => new(1, worldId, true);
 }

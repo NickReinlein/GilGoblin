@@ -185,7 +185,6 @@ public class CraftingCalculatorTests
         foreach (var ingredient in recipe.GetActiveIngredients())
         {
             var ingredientPrice = new PricePoco(ingredient.ItemId, worldId, false,
-                DateTimeOffset.UtcNow,
                 averageSalePricePoco.Id) { AverageSalePrice = averageSalePricePoco };
             _prices.Get(worldId, ingredient.ItemId, false).Returns(ingredientPrice);
             _recipes.GetRecipesForItem(ingredient.ItemId).Returns([]);
@@ -243,7 +242,7 @@ public class CraftingCalculatorTests
     {
         var priceDataPoco = new PriceDataPoco("DC", 300, 280, 300);
         var priceDetail =
-            new AverageSalePricePoco(itemId, false, 300, 280, 300) { DcData = priceDataPoco };
+            new AverageSalePricePoco(itemId, false, 300, 280, 300) { DcDataPoint = priceDataPoco };
         return priceDetail;
     }
 
@@ -252,7 +251,6 @@ public class CraftingCalculatorTests
             1,
             _worldId,
             false,
-            DateTimeOffset.UtcNow,
             300,
             200,
             400,

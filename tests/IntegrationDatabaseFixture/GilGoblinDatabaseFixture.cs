@@ -160,12 +160,11 @@ public class GilGoblinDatabaseFixture
             .ToList();
         await context.World.AddRangeAsync(validWorlds);
 
-        var updateTime = DateTimeOffset.UtcNow.AddDays(-7);
         var allPrices =
             (from itemId in ValidItemsIds
                 from worldId in ValidWorldIds
                 from quality in qualities
-                select new PricePoco(itemId, worldId, quality, updateTime))
+                select new PricePoco(itemId, worldId, quality))
             .ToList();
 
         await context.Price.AddRangeAsync(allPrices);
@@ -179,7 +178,7 @@ public class GilGoblinDatabaseFixture
                     worldId,
                     quality,
                     Random.Shared.Next(120, 800),
-                    updateTime.UtcDateTime))
+                    DateTimeOffset.UtcNow))
             .ToList();
 
         await context.RecipeCost.AddRangeAsync(recipeCosts);
@@ -193,7 +192,7 @@ public class GilGoblinDatabaseFixture
                     worldId,
                     quality,
                     Random.Shared.Next(120, 800),
-                    updateTime.UtcDateTime))
+                    DateTimeOffset.UtcNow))
             .ToList();
 
         await context.RecipeProfit.AddRangeAsync(recipeProfits);

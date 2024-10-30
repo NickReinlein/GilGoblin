@@ -131,11 +131,8 @@ public class PriceFetcherTests : FetcherTests
             {
                 Assert.That(ids, Does.Contain(price.ItemId));
                 Assert.That(price.WorldUploadTimes?.Count, Is.GreaterThan(0));
-                // Assert.That(price.Hq?.AverageSalePrice?.Price, Is.GreaterThan(0));
-                // Assert.That(price.Nq?.AverageSalePrice?.Price, Is.GreaterThan(0));
-                // Assert.That(price.WorldUploadTimes?.Count, Is.GreaterThan(0));
-                // Assert.That(price.WorldUploadTimes?.All(w => w.WorldId > 0), Is.True);
-                // Assert.That(price.WorldUploadTimes?.All(w => w.Timestamp > 0), Is.True);
+                Assert.That(price.WorldUploadTimes?.All(w => w.WorldId > 0), Is.True);
+                Assert.That(price.WorldUploadTimes?.All(w => w.Timestamp > 0), Is.True);
             });
         }
     }

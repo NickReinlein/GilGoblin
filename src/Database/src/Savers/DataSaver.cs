@@ -4,19 +4,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
 
-public interface IDataSaver<in T> where T : IdentifiablePoco
+public interface IDataSaver<in T> where T : IIdentifiable
 {
     Task<bool> SaveAsync(IEnumerable<T> updates, CancellationToken ct = default);
 }
 
-public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>> logger) : IDataSaver<T>
-    where T : IdentifiablePoco
+public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>> logger)
+    : IDataSaver<T> where T : class, IIdentifiable
 {
     protected readonly IServiceProvider ServiceProvider =
         serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -57,11 +56,10 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
                 .AsEnumerable()
                 .Where(e => idList.Contains(e.GetId()))
                 .ToList();
-            var toUpdate = entityList.Where(e => existing.Any(x => x.GetId() == e.GetId())).ToList();
+            var toAdd = entityList.Where(e => existing.Any(x => x.GetId() == 0)).ToList();
+            var toUpdate = entityList.Except(toAdd).ToList();
 
-            var toAdd = entityList.Except(toUpdate);
             dbContext.AddRange(toAdd);
-
             foreach (var entity in toUpdate)
             {
                 var existingEntity = existing.FirstOrDefault(x => x.GetId() == entity.GetId());

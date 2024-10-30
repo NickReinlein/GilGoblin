@@ -30,7 +30,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
         await ValidateResultSavedToDatabaseAsync(modifiedEntity);
     }
 
-    private async Task SavePocoToDatabase(T entity, bool update = false)
+    protected virtual async Task SavePocoToDatabase(T entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)

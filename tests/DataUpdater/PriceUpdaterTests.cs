@@ -55,7 +55,7 @@ public class PriceUpdaterTests : DataUpdaterTests
 
         _priceUpdater = new PriceUpdater(_serviceProvider, _logger);
     }
-    
+
     [Test]
     public async Task GivenExecuteTask_WhenWorldsAreReturned_ThenWeFetchForEach()
     {
@@ -216,7 +216,7 @@ public class PriceUpdaterTests : DataUpdaterTests
 
     private static PricePoco GetOldPrice()
     {
-        return new PricePoco(itemId1, worldId, true, DateTimeOffset.UtcNow.AddDays(-7));
+        return new PricePoco(itemId1, worldId, true) { Updated = DateTimeOffset.UtcNow.AddDays(-7) };
     }
 
     protected static List<PriceWebPoco> GetMultipleNewPocos()

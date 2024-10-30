@@ -93,13 +93,13 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
             .Where(w => w.WorldId == _worldId).ToListAsync();
         foreach (var profit in profits)
             profit.LastUpdated = DateTimeOffset.UtcNow.AddDays(-30);
-        await dbContext.SaveChangesAsync();
+        _profitRepo.GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>()).Returns(profits);
 
         var result = await _accountant.GetIdsToUpdate(_worldId);
 
         await _costRepo.Received(1).GetAllAsync(_worldId);
         await _profitRepo.Received(1).GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>());
-        Assert.That(result, Has.Count.EqualTo(ValidRecipeIds.Count * 2)); // Hq & Nq
+        Assert.That(result, Has.Count.EqualTo(ValidRecipeIds.Count));
     }
 
     [TestCase(0)]
@@ -183,7 +183,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceDoNotMatch_ThenReturnNull()
     {
         var costs = new List<RecipeCostPoco> { new(_worldId, _recipeId, false, 100, DateTimeOffset.UtcNow) };
-        var prices = new List<PricePoco> { new(_worldId, _recipeId + 1, false, DateTimeOffset.UtcNow) };
+        var prices = new List<PricePoco> { new(_worldId, _recipeId + 1, false) };
 
         var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, costs, prices);
 
@@ -194,7 +194,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceMatch_ThenReturnProfit()
     {
         var costs = new List<RecipeCostPoco> { new(_worldId, _recipeId, false, 101, DateTimeOffset.UtcNow) };
-        var prices = new List<PricePoco> { new(_worldId, _recipeId, false, DateTimeOffset.UtcNow) };
+        var prices = new List<PricePoco> { new(_worldId, _recipeId, false) };
 
         var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, costs, prices);
 
@@ -209,6 +209,6 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
 
     private static IEnumerable<PricePoco> GetPrices()
     {
-        yield return new PricePoco(_worldId, _recipeId, false, DateTimeOffset.UtcNow);
+        yield return new PricePoco(_worldId, _recipeId, false);
     }
 }

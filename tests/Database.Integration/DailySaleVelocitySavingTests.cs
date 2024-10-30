@@ -8,7 +8,8 @@ namespace GilGoblin.Tests.Database.Integration;
 public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocityPoco>
 {
     protected override DailySaleVelocityPoco GetEntity() =>
-        new(100,
+        new(ValidItemsIds[0],
+            ValidWorldIds[0],
             true,
             new SaleQuantity(100),
             new SaleQuantity(200),
@@ -16,6 +17,7 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
 
     protected override DailySaleVelocityPoco GetModifiedEntity(DailySaleVelocityPoco entity) =>
         new(entity.ItemId + 11,
+            entity.WorldId,
             !entity.IsHq,
             new SaleQuantity(entity.World?.Quantity ?? 0 + 11),
             new SaleQuantity(entity.Dc?.Quantity ?? 0 + 11),

@@ -6,13 +6,13 @@ public record PricePoco(
     int ItemId,
     int WorldId,
     bool IsHq,
-    DateTimeOffset Updated,
     int? MinListingId = null,
     int? RecentPurchaseId = null,
     int? AverageSalePriceId = null,
     int? DailySaleVelocityId = null)
-    : IdentifiablePoco
+    : IdentifiableTripleKeyPoco(ItemId, WorldId, IsHq)
 {
+    public DateTimeOffset Updated { get; set; } = DateTimeOffset.UtcNow;
     // Navigation properties
     public MinListingPoco? MinListing { get; set; }
     public RecentPurchasePoco? RecentPurchase { get; set; }
@@ -22,5 +22,6 @@ public record PricePoco(
     public PriceDataPoco? GetBestPrice() => AverageSalePrice?.GetBestPrice() ??
                                             RecentPurchase?.GetBestPrice() ??
                                             MinListing?.GetBestPrice();
+
     public decimal GetBestPriceCost() => GetBestPrice()?.Price ?? int.MaxValue;
 }

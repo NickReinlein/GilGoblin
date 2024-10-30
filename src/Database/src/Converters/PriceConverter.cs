@@ -21,7 +21,9 @@ public class PriceConverter(
     IPriceSaver priceSaver,
     ILogger<PriceConverter> logger) : IPriceConverter
 {
-    public async Task<(PricePoco?, PricePoco?)> ConvertAndSaveAsync(PriceWebPoco webPoco, int worldId,
+    public async Task<(PricePoco?, PricePoco?)> ConvertAndSaveAsync(
+        PriceWebPoco webPoco,
+        int worldId,
         CancellationToken ct = default)
     {
         try
@@ -30,9 +32,9 @@ public class PriceConverter(
                 throw new ArgumentException("Invalid world id", nameof(worldId));
 
             var itemId = webPoco.ItemId;
-            var nqPrices = await qualityConverter.ConvertAndSaveDetailsAsync(webPoco.Nq, itemId, false);
+            var nqPrices = await qualityConverter.ConvertAndSaveDetailsAsync(webPoco.Nq, worldId, itemId, false);
             var nq = nqPrices is null ? null : GetPricePocoFromQualityPrices(nqPrices, worldId, itemId, false);
-            var hqPrices = await qualityConverter.ConvertAndSaveDetailsAsync(webPoco.Hq, itemId, true);
+            var hqPrices = await qualityConverter.ConvertAndSaveDetailsAsync(webPoco.Hq, worldId, itemId, true);
             var hq = hqPrices is null ? null : GetPricePocoFromQualityPrices(hqPrices, worldId, itemId, true);
 
             await SaveToDatabaseAsync(hq, nq, ct);
@@ -78,7 +80,6 @@ public class PriceConverter(
                 ItemId: itemId,
                 WorldId: worldId,
                 IsHq: isHq,
-                Updated: DateTimeOffset.UtcNow,
                 quality.MinListing?.Id,
                 quality.RecentPurchase?.Id,
                 quality.AverageSalePrice?.Id,
