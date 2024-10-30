@@ -56,7 +56,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
                 .AsEnumerable()
                 .Where(e => idList.Contains(e.GetId()))
                 .ToList();
-            var toAdd = entityList.Where(e => existing.Any(x => x.GetId() == 0)).ToList();
+            var toAdd = entityList.Where(e => existing.All(x => x.GetId() != e.GetId())).ToList();
             var toUpdate = entityList.Except(toAdd).ToList();
 
             dbContext.AddRange(toAdd);

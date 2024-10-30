@@ -9,6 +9,6 @@ public static class WorldWebPocoExtensions
     public static WorldPoco ToWorldPoco(this WorldWebPoco webPoco) =>
         new() { Id = webPoco.GetId(), Name = webPoco.Name };
 
-    public static List<WorldPoco> ToWorldPocoList(this IEnumerable<WorldWebPoco?> pocos) =>
+    public static List<WorldPoco> ToDatabasePoco(this IEnumerable<WorldWebPoco?> pocos) =>
         pocos.Where(poco => poco is not null).Select(world => world!.ToWorldPoco()).ToList();
 }

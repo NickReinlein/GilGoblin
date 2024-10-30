@@ -56,7 +56,6 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
 
             logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
 
-
             //temporarily fetch less data while developing
             updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
             ///// 
@@ -71,7 +70,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
 
     private async Task ConvertAndSaveToDbAsync(List<WorldWebPoco> webPocos)
     {
-        var updateList = webPocos.ToWorldPocoList();
+        var updateList = webPocos.ToDatabasePoco();
         if (!updateList.Any())
             return;
 
