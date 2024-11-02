@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -33,13 +34,13 @@ public class QualityPriceDataConverter(
                 return null;
 
             var minListing =
-                (await dataPointConverter.ConvertAndSaveAsync(qualityData.MinListing, itemId, isHq))
+                (await dataPointConverter.ConvertAndSaveAsync(qualityData.MinListing, itemId, worldId, isHq))
                 .AsMinListingPoco();
             var averageSalePrice =
-                (await dataPointConverter.ConvertAndSaveAsync(qualityData.AverageSalePrice, itemId, isHq))
+                (await dataPointConverter.ConvertAndSaveAsync(qualityData.AverageSalePrice, itemId, worldId, isHq))
                 .AsAverageSalePricePoco();
             var recentPurchase =
-                (await dataPointConverter.ConvertAndSaveAsync(qualityData.RecentPurchase, itemId, isHq))
+                (await dataPointConverter.ConvertAndSaveAsync(qualityData.RecentPurchase, itemId, worldId, isHq))
                 .AsRecentPurchasePoco();
             var dailySaleVelocity =
                 await saleVelocityConverter.ConvertAndSaveAsync(qualityData.DailySaleVelocity, itemId, worldId, isHq);
@@ -64,23 +65,41 @@ public class QualityPriceDataConverter(
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
         if (minListing is not null)
-            dbContext.MinListing.Add(minListing);
+        {
+            await UpdateOrAddToContext(minListing, dbContext);
+        }
 
         if (averageSalePrice is not null)
-            dbContext.AverageSalePrice.Add(averageSalePrice);
+        {
+            await UpdateOrAddToContext(averageSalePrice, dbContext);
+        }
 
         if (recentPurchase is not null)
-            dbContext.RecentPurchase.Add(recentPurchase);
+        {
+            await UpdateOrAddToContext(recentPurchase, dbContext);
+        }
 
         if (dailySaleVelocity is not null)
-            dbContext.DailySaleVelocity.Add(dailySaleVelocity);
+            await UpdateOrAddToContext(dailySaleVelocity, dbContext);
 
         var saved = await dbContext.SaveChangesAsync();
         if (saved < 1)
             throw new DataException("Failed to save quality price data");
 
-        var qualityPriceDataPoco =
-            new QualityPriceDataPoco(minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
-        return qualityPriceDataPoco;
+        return new QualityPriceDataPoco(minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
+    }
+
+    private static async Task UpdateOrAddToContext(IdentifiableTripleKeyPoco poco, GilGoblinDbContext dbContext)
+    {
+        var key = poco.GetKey();
+        var existing = await dbContext.AverageSalePrice.FirstOrDefaultAsync(e =>
+            e.ItemId == key.Item1 &&
+            e.WorldId == key.Item2
+            && e.IsHq == key.Item3);
+
+        if (existing is not null)
+            dbContext.Update(poco);
+        else
+            dbContext.Add(poco);
     }
 }

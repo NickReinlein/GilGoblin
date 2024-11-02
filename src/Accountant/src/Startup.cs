@@ -27,15 +27,14 @@ public class Startup(IConfiguration configuration)
         Api.Startup.AddGoblinDatabases(services, configuration);
         Api.Startup.AddGoblinCaches(services);
 
-        services.AddSingleton<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>();
-        services.AddSingleton<IPriceSaver, PriceSaver>();
-
-        services.AddSingleton<IAccountant<RecipeCostPoco>, RecipeCostAccountant>();
-        // services.AddScoped<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>();
-
-        services.AddHostedService<RecipeCostAccountant>();
-        // services.AddHostedService<RecipeProfitAccountant>();
-
+        services
+            .AddSingleton<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>()
+            .AddSingleton<IDataSaver<RecipeProfitPoco>, DataSaver<RecipeProfitPoco>>()
+            .AddSingleton<IPriceSaver, PriceSaver>()
+            .AddSingleton<IAccountant<RecipeCostPoco>, RecipeCostAccountant>()
+            .AddSingleton<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>()
+            .AddHostedService<RecipeCostAccountant>()
+            .AddHostedService<RecipeProfitAccountant>();
     }
 
     private static void DatabaseValidation(IApplicationBuilder app)
@@ -56,8 +55,7 @@ public class Startup(IConfiguration configuration)
     private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
         using var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        var canConnect = dbContextService.Database.CanConnect();
-        if (canConnect != true)
+        if (!dbContextService.Database.CanConnect())
             throw new Exception("Failed to connect to the database");
     }
 }

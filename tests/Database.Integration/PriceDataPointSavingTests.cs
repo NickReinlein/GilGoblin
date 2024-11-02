@@ -11,72 +11,67 @@ public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
     [Test]
     public async Task GivenValidAverageSalePricePoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
-        var averageSalePrice = new AverageSalePricePoco(100, true);
+        var averageSalePrice = new AverageSalePricePoco(ValidItemsIds[0], ValidWorldIds[0], true, 300, 401, 503);
 
         await using var ctx = GetDbContext();
-        await ctx.AverageSalePrice.AddAsync(averageSalePrice);
+        await ctx.AddAsync(averageSalePrice);
         var savedCount = await ctx.SaveChangesAsync();
-
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.AverageSalePrice.SingleAsync(
+
+        var result = await ctx.AverageSalePrice.FirstOrDefaultAsync(
             x => x.ItemId == averageSalePrice.ItemId &&
+                 x.WorldId == averageSalePrice.WorldId &&
                  x.IsHq == averageSalePrice.IsHq);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ItemId, Is.EqualTo(averageSalePrice.ItemId));
-            Assert.That(result.IsHq, Is.EqualTo(averageSalePrice.IsHq));
-            Assert.That(result.WorldDataPointId, Is.EqualTo(averageSalePrice.WorldDataPointId));
-            Assert.That(result.DcDataPointId, Is.EqualTo(averageSalePrice.DcDataPointId));
-            Assert.That(result.RegionDataPointId, Is.EqualTo(averageSalePrice.RegionDataPointId));
-        });
+
+        ValidateResult(result, averageSalePrice);
     }
 
     [Test]
     public async Task GivenValidRecentPurchasePocoPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
-        var recentPurchasePoco = new RecentPurchasePoco(1001, false);
+        var recentPurchasePoco = new RecentPurchasePoco(ValidItemsIds[0], ValidWorldIds[0], true, 300, 401, 503);
 
         await using var ctx = GetDbContext();
         await ctx.RecentPurchase.AddAsync(recentPurchasePoco);
         var savedCount = await ctx.SaveChangesAsync();
-
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.RecentPurchase.SingleAsync(x =>
+
+        var result = await ctx.RecentPurchase.FirstOrDefaultAsync(x =>
             x.ItemId == recentPurchasePoco.ItemId &&
+            x.WorldId == recentPurchasePoco.WorldId &&
             x.IsHq == recentPurchasePoco.IsHq);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ItemId, Is.EqualTo(recentPurchasePoco.ItemId));
-            Assert.That(result.IsHq, Is.EqualTo(recentPurchasePoco.IsHq));
-            Assert.That(result.WorldDataPointId, Is.EqualTo(recentPurchasePoco.WorldDataPointId));
-            Assert.That(result.DcDataPointId, Is.EqualTo(recentPurchasePoco.DcDataPointId));
-            Assert.That(result.RegionDataPointId, Is.EqualTo(recentPurchasePoco.RegionDataPointId));
-        });
+
+        ValidateResult(result, recentPurchasePoco);
     }
 
     [Test]
     public async Task GivenValidMinListingPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
-        var minListing = new MinListingPoco(100, true);
-
+        var minListing = new MinListingPoco(ValidItemsIds[0], ValidWorldIds[0], true, 300, 401, 503);
         await using var ctx = GetDbContext();
         await ctx.MinListing.AddAsync(minListing);
         var savedCount = await ctx.SaveChangesAsync();
-
         Assert.That(savedCount, Is.EqualTo(1));
-        var result = await ctx.MinListing.SingleAsync(x =>
+
+        var result = await ctx.MinListing.FirstOrDefaultAsync(x =>
             x.ItemId == minListing.ItemId &&
+            x.WorldId == minListing.WorldId &&
             x.IsHq == minListing.IsHq);
+
+        ValidateResult(result, minListing);
+    }
+
+    private static void ValidateResult(PriceDataPointPoco? result, PriceDataPointPoco expected)
+    {
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.ItemId, Is.EqualTo(minListing.ItemId));
-            Assert.That(result.IsHq, Is.EqualTo(minListing.IsHq));
-            Assert.That(result.WorldDataPointId, Is.EqualTo(minListing.WorldDataPointId));
-            Assert.That(result.DcDataPointId, Is.EqualTo(minListing.DcDataPointId));
-            Assert.That(result.RegionDataPointId, Is.EqualTo(minListing.RegionDataPointId));
+            Assert.That(result!.ItemId, Is.EqualTo(expected.ItemId));
+            Assert.That(result.WorldId, Is.EqualTo(expected.WorldId));
+            Assert.That(result.IsHq, Is.EqualTo(expected.IsHq));
+            Assert.That(result.WorldDataPointId, Is.EqualTo(expected.WorldDataPointId));
+            Assert.That(result.DcDataPointId, Is.EqualTo(expected.DcDataPointId));
+            Assert.That(result.RegionDataPointId, Is.EqualTo(expected.RegionDataPointId));
         });
     }
 }

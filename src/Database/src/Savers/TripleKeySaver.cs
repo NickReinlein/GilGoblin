@@ -21,17 +21,13 @@ public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<DataSav
             await using var scope = ServiceProvider.CreateAsyncScope();
             await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
-            var toUpdate = await dbContext
-                .Set<T>()
-                .Where(sale => entityList.Any(e => e.GetKey().Equals(sale.GetKey())))
-                .ToListAsync(cancellationToken: ct);
-            var toAdd = entityList.Except(toUpdate).ToList();
-
-            if (toAdd.Any())
-                await dbContext.Set<T>().AddRangeAsync(toAdd, ct);
-
+            var toUpdate = await GetEntitiesToUpdateAsync(entityList, ct, dbContext);
             if (toUpdate.Any())
                 dbContext.Set<T>().UpdateRange(toUpdate);
+
+            var toAdd = entityList.Except(toUpdate).ToList();
+            if (toAdd.Any())
+                await dbContext.Set<T>().AddRangeAsync(toAdd, ct);
 
             return await dbContext.SaveChangesAsync(ct);
         }
@@ -40,5 +36,25 @@ public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<DataSav
             logger.LogError(ex, "Failed to update due to error");
             return 0;
         }
+    }
+
+    private static async Task<List<T>> GetEntitiesToUpdateAsync(
+        List<T> entityList,
+        CancellationToken ct,
+        GilGoblinDbContext dbContext)
+    {
+        var entityKeys = entityList.Select(e => e.GetKey()).ToList();
+        var result = new List<T>();
+        foreach (var key in entityKeys)
+        {
+            var existingKeys = await dbContext
+                .Set<T>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.ItemId == key.Item1 && e.WorldId == key.Item2 && e.IsHq == key.Item3, ct);
+            if (existingKeys is not null)
+                result.Add(existingKeys);
+        }
+
+        return result;
     }
 }

@@ -81,9 +81,6 @@ public class PriceUpdater(
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
         var world = worldId ?? 0;
-        if (world < 1)
-            return;
-
         foreach (var webPoco in webPocos)
         {
             try

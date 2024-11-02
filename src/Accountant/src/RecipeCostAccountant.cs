@@ -133,20 +133,21 @@ public class RecipeCostAccountant(
 
             foreach (var recipe in recipes)
             {
-                var current = currentRecipeCosts.FirstOrDefault(c =>
-                    c.RecipeId == recipe.Id &&
-                    c.WorldId == worldId);
-                if (current is not null)
+                var existing = currentRecipeCosts.Where(c =>
+                        c.RecipeId == recipe.Id &&
+                        c.WorldId == worldId)
+                    .ToList();
+                foreach (var cost in existing)
                 {
                     logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id,
                         worldId);
-                    var age = (DateTimeOffset.UtcNow - current.LastUpdated).TotalHours;
+                    var age = (DateTimeOffset.UtcNow - cost.LastUpdated).TotalHours;
                     if (age <= GetDataFreshnessInHours())
                         continue; // Fresh data is skipped
+                    idsToUpdate.Add(recipe.Id);
                 }
-
-                idsToUpdate.Add(recipe.Id);
             }
+            return idsToUpdate.Distinct().ToList();
         }
         catch (Exception e)
         {

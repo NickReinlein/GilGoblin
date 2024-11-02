@@ -114,7 +114,7 @@ public class CraftingCalculatorTests
         var recipeId = recipe.Id;
         var price = GetNewPrice();
         SetupBasicTestCase(recipe, price);
-        SetupPricesForIngredients(recipe, GetAverageSalePricePoco(recipe.TargetItemId));
+        SetupPricesForIngredients(recipe, GetAverageSalePricePoco(recipe.TargetItemId, price.WorldId));
 
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
@@ -220,30 +220,26 @@ public class CraftingCalculatorTests
     )
     {
         var itemId = recipe.TargetItemId;
+        var worldId = ingredientMarketPrice.WorldId;
         var ingredientId = recipe.ItemIngredient0TargetId;
         recipe.TargetItemId = itemId;
         recipe.ResultQuantity = 1;
         recipe.ItemIngredient0TargetId = ingredientId;
         recipe.AmountIngredient0 = 10;
-        var averageSalePricePoco = GetAverageSalePricePoco(itemId);
+        var averageSalePricePoco = GetAverageSalePricePoco(itemId, worldId);
         var market = GetNewPrice() with
         {
-            ItemId = itemId,
-            IsHq = false,
-            WorldId = ingredientMarketPrice.WorldId,
-            AverageSalePrice = averageSalePricePoco
+            ItemId = itemId, WorldId = worldId, IsHq = false, AverageSalePrice = averageSalePricePoco
         };
-        var ingredientPrice = ingredientMarketPrice with { ItemId = ingredientId };
+        var ingredientPrice = ingredientMarketPrice with { ItemId = ingredientId, WorldId = worldId };
         MockReposForSingularTest(market, recipe, ingredientPrice);
         SetupPricesForIngredients(recipe, averageSalePricePoco);
     }
 
-    private static AverageSalePricePoco GetAverageSalePricePoco(int itemId)
+    private static AverageSalePricePoco GetAverageSalePricePoco(int itemId, int worldId)
     {
         var priceDataPoco = new PriceDataPoco("DC", 300, 280, 300);
-        var priceDetail =
-            new AverageSalePricePoco(itemId, false, 300, 280, 300) { DcDataPoint = priceDataPoco };
-        return priceDetail;
+        return new AverageSalePricePoco(itemId, worldId, false, 300, 280, 300) { DcDataPoint = priceDataPoco };
     }
 
     private static PricePoco GetNewPrice() =>

@@ -80,10 +80,10 @@ public class PriceConverter(
                 ItemId: itemId,
                 WorldId: worldId,
                 IsHq: isHq,
-                quality.MinListing?.Id,
-                quality.RecentPurchase?.Id,
-                quality.AverageSalePrice?.Id,
-                quality.DailySaleVelocity?.Id
+                MinListingId: quality.MinListing?.Id,
+                AverageSalePriceId: quality.AverageSalePrice?.Id,
+                RecentPurchaseId: quality.RecentPurchase?.Id,
+                DailySaleVelocityId: quality.DailySaleVelocity?.Id
             );
     }
 }

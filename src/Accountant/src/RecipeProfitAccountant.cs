@@ -157,7 +157,7 @@ public class RecipeProfitAccountant(
                 var existing = existingProfits.FirstOrDefault(e =>
                     e.GetId() == id &&
                     e.WorldId == worldId &&
-                    cost.IsHq);
+                    e.IsHq == cost.IsHq);
                 if (existing is null)
                 {
                     idsToUpdate.Add(id);

@@ -16,6 +16,7 @@ public static class PriceDataPointWebPocoExtensions
     public static RecentPurchasePoco? AsRecentPurchasePoco(this PriceDataPointPoco? poco) =>
         poco.AsPoco(recent => new RecentPurchasePoco(
             recent.ItemId,
+            recent.WorldId,
             recent.IsHq,
             recent.WorldDataPointId,
             recent.DcDataPointId,
@@ -24,6 +25,7 @@ public static class PriceDataPointWebPocoExtensions
     public static AverageSalePricePoco? AsAverageSalePricePoco(this PriceDataPointPoco? poco) =>
         poco.AsPoco(average => new AverageSalePricePoco(
             average.ItemId,
+            average.WorldId,
             average.IsHq,
             average.WorldDataPointId,
             average.DcDataPointId,
@@ -32,6 +34,7 @@ public static class PriceDataPointWebPocoExtensions
     public static MinListingPoco? AsMinListingPoco(this PriceDataPointPoco? poco) =>
         poco.AsPoco(min => new MinListingPoco(
             min.ItemId,
+            min.WorldId,
             min.IsHq,
             min.WorldDataPointId,
             min.DcDataPointId,

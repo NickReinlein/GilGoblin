@@ -12,7 +12,7 @@ namespace GilGoblin.Database.Converters;
 
 public interface IPriceDataPointConverter
 {
-    Task<PriceDataPointPoco?> ConvertAndSaveAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq);
+    Task<PriceDataPointPoco?> ConvertAndSaveAsync(PriceDataPointWebPoco? dataPoint, int itemId, int worldId, bool isHq);
 }
 
 public class PriceDataPointConverter(
@@ -21,19 +21,20 @@ public class PriceDataPointConverter(
     ILogger<PriceDataPointConverter> logger)
     : IPriceDataPointConverter
 {
-    public async Task<PriceDataPointPoco?> ConvertAndSaveAsync(PriceDataPointWebPoco? dataPoint, int itemId, bool isHq)
+    public async Task<PriceDataPointPoco?> ConvertAndSaveAsync(PriceDataPointWebPoco? dataPoint, int itemId,
+        int worldId, bool isHq)
     {
         try
         {
             if (dataPoint is null || itemId < 1)
                 throw new ArgumentException("Invalid item id or datapoint");
-            
+
             if (!dataPoint.HasValidPrice())
                 throw new DataException("Invalid price data");
 
-            var world = detailConverter.Convert(dataPoint.World, "World");
-            var dc = detailConverter.Convert(dataPoint.Dc, "Dc");
-            var region = detailConverter.Convert(dataPoint.Region, "Region");
+            var world = detailConverter.Convert(dataPoint.World, "World", worldId);
+            var dc = detailConverter.Convert(dataPoint.Dc, "Dc", worldId);
+            var region = detailConverter.Convert(dataPoint.Region, "Region", worldId);
 
             var pricePoints =
                 new List<PriceDataPoco?> { world, dc, region }
@@ -51,7 +52,7 @@ public class PriceDataPointConverter(
                 logger.LogWarning(
                     $"Failed to save {pricePoints.Count - savedCount} of {pricePoints.Count} price data points");
 
-            return new PriceDataPointPoco(itemId, isHq, world?.Id, dc?.Id, region?.Id);
+            return new PriceDataPointPoco(itemId, worldId, isHq, world?.Id, dc?.Id, region?.Id);
         }
         catch (Exception e)
         {

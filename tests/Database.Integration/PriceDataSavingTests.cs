@@ -9,7 +9,7 @@ namespace GilGoblin.Tests.Database.Integration;
 public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
 {
     protected override PriceDataPoco GetEntity() =>
-        new("someType", 123m, 22, DateTimeOffset.UtcNow.UtcTicks);
+        new("someType", 123m, ValidWorldIds[0], DateTimeOffset.UtcNow.AddDays(-1).UtcTicks);
 
     protected override PriceDataPoco GetModifiedEntity(PriceDataPoco entity) =>
         new(entity.PriceType, entity.Price, entity.WorldId, DateTimeOffset.UtcNow.UtcTicks);
@@ -18,9 +18,12 @@ public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
     {
         await using var ctx = GetDbContext();
         var result = await ctx.PriceData.SingleAsync(
-            x => x.Id == entity.Id &&
-                 x.PriceType == entity.PriceType &&
-                 x.WorldId == entity.WorldId);
+            x =>
+                x.Id > 0 &&
+                x.Price == entity.Price &&
+                x.PriceType == entity.PriceType &&
+                x.WorldId == entity.WorldId &&
+                x.Timestamp == entity.Timestamp);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
