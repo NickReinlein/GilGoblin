@@ -7,7 +7,7 @@ namespace GilGoblin.Tests.Database.Integration;
 
 public class WorldSavingTests : SaveEntityToDbTests<WorldPoco>
 {
-    protected override WorldPoco GetEntity() => new() { Name = "World" };
+    protected override WorldPoco GetEntity() => new() { Id = 11, Name = "World" };
 
     protected override WorldPoco GetModifiedEntity(WorldPoco entity) =>
         entity with { Name = $"{entity.Name} modified" };
@@ -16,11 +16,11 @@ public class WorldSavingTests : SaveEntityToDbTests<WorldPoco>
     {
         await using var ctx = GetDbContext();
 
-        var result = await ctx.World.SingleAsync(x => x.Id == entity.Id);
+        var result = await ctx.World.FirstOrDefaultAsync(x => x.Id == entity.Id);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(entity.Id));
+            Assert.That(result!.Id, Is.EqualTo(entity.Id));
             Assert.That(result.Name, Is.EqualTo(entity.Name));
         });
     }

@@ -86,7 +86,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     }
 
     [Test]
-    public async Task GivenGetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnIdsOfExpiredCosts()
+    public async Task GivenGetIdsToUpdate_WhenProfitsAreExpired_ThenWeReturnIdsOfExpiredProfits()
     {
         await using var dbContext = GetDbContext();
         var profits = await dbContext.RecipeProfit

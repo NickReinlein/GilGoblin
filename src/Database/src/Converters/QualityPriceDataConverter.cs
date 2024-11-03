@@ -94,8 +94,8 @@ public class QualityPriceDataConverter(
         var key = poco.GetKey();
         var existing = await dbContext.AverageSalePrice.FirstOrDefaultAsync(e =>
             e.ItemId == key.Item1 &&
-            e.WorldId == key.Item2
-            && e.IsHq == key.Item3);
+            e.WorldId == key.Item2 &&
+            e.IsHq == key.Item3);
 
         if (existing is not null)
             dbContext.Update(poco);

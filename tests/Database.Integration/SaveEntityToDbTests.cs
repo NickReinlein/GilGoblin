@@ -9,7 +9,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
     where T : class
 {
     [Test]
-    public async Task GivenValidNewEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
+    public virtual async Task GivenValidNewEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
         var entity = GetEntity();
 
@@ -19,27 +19,28 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
     }
 
     [Test]
-    public async Task GivenValidExistingEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
+    public virtual async Task GivenValidExistingEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
         var entity = GetEntity();
-        await SavePocoToDatabase(entity);
-        var modifiedEntity = GetModifiedEntity(entity);
+        entity = await SavePocoToDatabase(entity);
+        var modifiedSavedEntity = GetModifiedEntity(entity);
 
-        await SavePocoToDatabase(modifiedEntity, true);
+        await SavePocoToDatabase(modifiedSavedEntity, true);
 
-        await ValidateResultSavedToDatabaseAsync(modifiedEntity);
+        await ValidateResultSavedToDatabaseAsync(modifiedSavedEntity);
     }
 
-    protected virtual async Task SavePocoToDatabase(T entity, bool update = false)
+    protected virtual async Task<T> SavePocoToDatabase(T entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)
-            ctx.Set<T>().Update(entity);
+            ctx.Update(entity);
         else
-            await ctx.Set<T>().AddAsync(entity);
+            await ctx.AddAsync(entity);
 
         var savedCount = await ctx.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));
+        return entity;
     }
 
     protected abstract T GetEntity();

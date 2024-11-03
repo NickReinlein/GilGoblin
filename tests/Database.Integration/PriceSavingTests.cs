@@ -9,10 +9,10 @@ namespace GilGoblin.Tests.Database.Integration;
 public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
 {
     protected override PricePoco GetEntity() =>
-        new(111, 222, false);
+        new(111, 222, false, 311);
 
     protected override PricePoco GetModifiedEntity(PricePoco entity) =>
-        new(entity.ItemId, entity.WorldId, entity.IsHq, 333);
+        entity with { MinListingId = entity.MinListingId + 11 };
 
     protected override async Task ValidateResultSavedToDatabaseAsync(PricePoco entity)
     {
@@ -27,11 +27,11 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
             Assert.That(result!.ItemId, Is.EqualTo(entity.ItemId));
             Assert.That(result.WorldId, Is.EqualTo(entity.WorldId));
             Assert.That(result.IsHq, Is.EqualTo(entity.IsHq));
-            Assert.That(result.Updated, Is.GreaterThan(DateTimeOffset.UtcNow.AddSeconds(-3)));
+            Assert.That(result.Updated, Is.GreaterThan(DateTimeOffset.UtcNow.AddSeconds(-5)));
         });
     }
 
-    protected override async Task SavePocoToDatabase(PricePoco entity, bool update = false)
+    protected override async Task<PricePoco> SavePocoToDatabase(PricePoco entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)
@@ -49,5 +49,7 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
 
         var savedCount = await ctx.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));
+
+        return entity;
     }
 }

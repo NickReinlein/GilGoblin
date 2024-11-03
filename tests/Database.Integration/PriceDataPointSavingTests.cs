@@ -1,77 +1,85 @@
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Tests.IntegrationDatabaseFixture;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;
 
-public class PriceDataPointSavingTests : GilGoblinDatabaseFixture
+public class AverageSalePricePocoSavingTests : PriceDataPointSavingTests<AverageSalePricePoco>
 {
-    [Test]
-    public async Task GivenValidAverageSalePricePoco_WhenSaving_ThenEntityIsSavedSuccessfully()
+    protected override AverageSalePricePoco GetEntity() => new(12345, ValidWorldIds[0], false);
+}
+
+public class RecentPurchasePocoPocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
+{
+    protected override RecentPurchasePoco GetEntity() => new(12345, ValidWorldIds[0], false);
+}
+
+public class MinListingPocoPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
+{
+    protected override MinListingPoco GetEntity() => new(12345, ValidWorldIds[0], false);
+}
+
+public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> where T : PriceDataPointPoco
+{
+    [SetUp]
+    public override async Task SetUp()
     {
-        var averageSalePrice = new AverageSalePricePoco(ValidItemsIds[0], ValidWorldIds[0], true, 300, 401, 503);
-
         await using var ctx = GetDbContext();
-        await ctx.AddAsync(averageSalePrice);
-        var savedCount = await ctx.SaveChangesAsync();
-        Assert.That(savedCount, Is.EqualTo(1));
-
-        var result = await ctx.AverageSalePrice.FirstOrDefaultAsync(
-            x => x.ItemId == averageSalePrice.ItemId &&
-                 x.WorldId == averageSalePrice.WorldId &&
-                 x.IsHq == averageSalePrice.IsHq);
-
-        ValidateResult(result, averageSalePrice);
+        ctx.AverageSalePrice.RemoveRange(ctx.AverageSalePrice);
+        ctx.RecentPurchase.RemoveRange(ctx.RecentPurchase);
+        ctx.MinListing.RemoveRange(ctx.MinListing);
+        await ctx.SaveChangesAsync();
     }
 
-    [Test]
-    public async Task GivenValidRecentPurchasePocoPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
+    protected override T GetModifiedEntity(T entity)
     {
-        var recentPurchasePoco = new RecentPurchasePoco(ValidItemsIds[0], ValidWorldIds[0], true, 300, 401, 503);
-
-        await using var ctx = GetDbContext();
-        await ctx.RecentPurchase.AddAsync(recentPurchasePoco);
-        var savedCount = await ctx.SaveChangesAsync();
-        Assert.That(savedCount, Is.EqualTo(1));
-
-        var result = await ctx.RecentPurchase.FirstOrDefaultAsync(x =>
-            x.ItemId == recentPurchasePoco.ItemId &&
-            x.WorldId == recentPurchasePoco.WorldId &&
-            x.IsHq == recentPurchasePoco.IsHq);
-
-        ValidateResult(result, recentPurchasePoco);
+        return entity with
+        {
+            DcDataPointId = entity.DcDataPointId + 11,
+            RegionDataPointId = entity.RegionDataPointId + 11,
+            WorldDataPointId = entity.WorldDataPointId + 11
+        };
     }
 
-    [Test]
-    public async Task GivenValidMinListingPoco_WhenSaving_ThenEntityIsSavedSuccessfully()
+    // protected override async Task<T> SavePocoToDatabase(T entity, bool update = false)
+    // {
+    //     await using var ctx = GetDbContext();
+    //     if (update)
+    //     {
+    //         var existing = await ctx.Set<T>().FirstAsync(x =>
+    //             x.ItemId == entity.ItemId &&
+    //             x.WorldId == entity.WorldId &&
+    //             x.IsHq == entity.IsHq);
+    //
+    //         ctx.Update(existing);
+    //     }
+    //     else
+    //         await ctx.AddAsync(entity);
+    //
+    //     var savedCount = await ctx.SaveChangesAsync();
+    //     Assert.That(savedCount, Is.EqualTo(1));
+    //
+    //     return entity;
+    // }
+
+    protected override async Task ValidateResultSavedToDatabaseAsync(T entity)
     {
-        var minListing = new MinListingPoco(ValidItemsIds[0], ValidWorldIds[0], true, 300, 401, 503);
         await using var ctx = GetDbContext();
-        await ctx.MinListing.AddAsync(minListing);
-        var savedCount = await ctx.SaveChangesAsync();
-        Assert.That(savedCount, Is.EqualTo(1));
+        var result = await ctx.Set<T>().FirstOrDefaultAsync(
+            x => x.ItemId == entity.ItemId &&
+                 x.IsHq == entity.IsHq &&
+                 x.WorldId == entity.WorldId);
 
-        var result = await ctx.MinListing.FirstOrDefaultAsync(x =>
-            x.ItemId == minListing.ItemId &&
-            x.WorldId == minListing.WorldId &&
-            x.IsHq == minListing.IsHq);
-
-        ValidateResult(result, minListing);
-    }
-
-    private static void ValidateResult(PriceDataPointPoco? result, PriceDataPointPoco expected)
-    {
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.ItemId, Is.EqualTo(expected.ItemId));
-            Assert.That(result.WorldId, Is.EqualTo(expected.WorldId));
-            Assert.That(result.IsHq, Is.EqualTo(expected.IsHq));
-            Assert.That(result.WorldDataPointId, Is.EqualTo(expected.WorldDataPointId));
-            Assert.That(result.DcDataPointId, Is.EqualTo(expected.DcDataPointId));
-            Assert.That(result.RegionDataPointId, Is.EqualTo(expected.RegionDataPointId));
+            Assert.That(result!.ItemId, Is.EqualTo(entity.ItemId));
+            Assert.That(result.WorldId, Is.EqualTo(entity.WorldId));
+            Assert.That(result.IsHq, Is.EqualTo(entity.IsHq));
+            Assert.That(result.DcDataPointId, Is.EqualTo(entity.DcDataPointId));
+            Assert.That(result.RegionDataPointId, Is.EqualTo(entity.RegionDataPointId));
+            Assert.That(result.WorldDataPointId, Is.EqualTo(entity.WorldDataPointId));
         });
     }
 }
