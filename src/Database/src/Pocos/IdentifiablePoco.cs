@@ -7,6 +7,6 @@ public interface IIdentifiable
 
 public record IdentifiablePoco : IIdentifiable
 {
-    public int Id { get; init; }
-    public int GetId() => Id;
+    public int? Id { get; init; }
+    public int GetId() => Id ?? 0;
 }

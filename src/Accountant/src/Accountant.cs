@@ -37,7 +37,7 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
                 {
                     logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
                         typeof(T), world.Id, world.Name);
-                    accountingTasks.Add(CalculateAsync(world.Id, ct));
+                    accountingTasks.Add(CalculateAsync(world.GetId(), ct));
                 }
 
                 await Task.WhenAll(accountingTasks);

@@ -32,7 +32,7 @@ public class ItemRepository(
             if (item is null)
                 return null;
 
-            cache.Add(item.Id, item);
+            cache.Add(item.GetId(), item);
             return item;
         }
         catch (Exception e)
@@ -61,7 +61,7 @@ public class ItemRepository(
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var items = dbContext.Item.ToList();
-        items.ForEach(item => cache.Add(item.Id, item));
+        items.ForEach(item => cache.Add(item.GetId(), item));
         return Task.CompletedTask;
     }
 }

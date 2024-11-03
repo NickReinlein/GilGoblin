@@ -21,7 +21,7 @@ public class WorldRepository(IServiceProvider serviceProvider, IWorldCache cache
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var world = dbContext.World.FirstOrDefault(i => i.Id == id);
         if (world is not null)
-            cache.Add(world.Id, world);
+            cache.Add(world.GetId(), world);
         return world;
     }
 
@@ -29,7 +29,7 @@ public class WorldRepository(IServiceProvider serviceProvider, IWorldCache cache
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.World.Where(w => ids.Contains(w.Id)).ToList();
+        return dbContext.World.Where(w => ids.Contains(w.Id ?? 0)).ToList();
     }
 
     public List<WorldPoco> GetAll()
@@ -44,6 +44,6 @@ public class WorldRepository(IServiceProvider serviceProvider, IWorldCache cache
         await using var scope = serviceProvider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var worlds = dbContext.World.ToList();
-        worlds.ForEach(world => cache.Add(world.Id, world));
+        worlds.ForEach(world => cache.Add(world.GetId(), world));
     }
 }

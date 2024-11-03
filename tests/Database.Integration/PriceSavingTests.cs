@@ -31,7 +31,7 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
         });
     }
 
-    protected override async Task<PricePoco> SavePocoToDatabase(PricePoco entity, bool update = false)
+    protected override async Task SavePocoToDatabase(PricePoco entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)
@@ -49,7 +49,5 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
 
         var savedCount = await ctx.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));
-
-        return entity;
     }
 }

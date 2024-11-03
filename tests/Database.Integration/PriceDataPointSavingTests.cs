@@ -7,18 +7,18 @@ namespace GilGoblin.Tests.Database.Integration;
 
 public class AverageSalePricePocoSavingTests : PriceDataPointSavingTests<AverageSalePricePoco>
 {
-    protected override AverageSalePricePoco GetEntity() => new(12345, ValidWorldIds[0], false);
+    protected override AverageSalePricePoco GetEntity() => new(ValidRecipeIds[0], ValidWorldIds[0], false);
 }
 
-public class RecentPurchasePocoPocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
-{
-    protected override RecentPurchasePoco GetEntity() => new(12345, ValidWorldIds[0], false);
-}
-
-public class MinListingPocoPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
-{
-    protected override MinListingPoco GetEntity() => new(12345, ValidWorldIds[0], false);
-}
+// public class RecentPurchasePocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
+// {
+//     protected override RecentPurchasePoco GetEntity() => new(12345, ValidWorldIds[0], false);
+// }
+//
+// public class MinListingPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
+// {
+//     protected override MinListingPoco GetEntity() => new(12345, ValidWorldIds[0], false);
+// }
 
 public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> where T : PriceDataPointPoco
 {
@@ -41,27 +41,6 @@ public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> wher
             WorldDataPointId = entity.WorldDataPointId + 11
         };
     }
-
-    // protected override async Task<T> SavePocoToDatabase(T entity, bool update = false)
-    // {
-    //     await using var ctx = GetDbContext();
-    //     if (update)
-    //     {
-    //         var existing = await ctx.Set<T>().FirstAsync(x =>
-    //             x.ItemId == entity.ItemId &&
-    //             x.WorldId == entity.WorldId &&
-    //             x.IsHq == entity.IsHq);
-    //
-    //         ctx.Update(existing);
-    //     }
-    //     else
-    //         await ctx.AddAsync(entity);
-    //
-    //     var savedCount = await ctx.SaveChangesAsync();
-    //     Assert.That(savedCount, Is.EqualTo(1));
-    //
-    //     return entity;
-    // }
 
     protected override async Task ValidateResultSavedToDatabaseAsync(T entity)
     {

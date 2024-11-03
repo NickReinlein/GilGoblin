@@ -29,7 +29,7 @@ public class ItemControllerTests
     public void GivenAController_WhenWeReceiveAGetAllRequest_ThenAListOfItemsIsReturned()
     {
         var poco1 = CreatePoco();
-        var poco2 = CreatePoco(poco1.Id + 100);
+        var poco2 = CreatePoco(poco1.GetId() + 100);
         _repo.GetAll().Returns([poco1, poco2]);
 
         var result = _controller.GetAll().ToList();
@@ -37,8 +37,8 @@ public class ItemControllerTests
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(2));
-            Assert.That(result.Count(i => i.Id == poco1.Id), Is.EqualTo(1));
-            Assert.That(result.Count(i => i.Id == poco2.Id), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.GetId() == poco1.GetId()), Is.EqualTo(1));
+            Assert.That(result.Count(i => i.GetId() == poco2.GetId()), Is.EqualTo(1));
         });
     }
 
@@ -46,9 +46,9 @@ public class ItemControllerTests
     public void GivenAController_WhenWeReceiveAGetRequest_ThenAItemIsReturned()
     {
         var poco1 = CreatePoco();
-        _repo.Get(poco1.Id).Returns(poco1);
+        _repo.Get(poco1.GetId()).Returns(poco1);
 
-        var result = _controller.Get(poco1.Id);
+        var result = _controller.Get(poco1.GetId());
 
         Assert.That(result, Is.EqualTo(poco1));
     }

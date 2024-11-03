@@ -4,8 +4,7 @@ public record IdentifiableTripleKeyPoco(
     int ItemId,
     int WorldId,
     bool IsHq)
-    : TripleKey(ItemId, WorldId, IsHq), IIdentifiable
+    : IdentifiablePoco
 {
-    public int Id { get; set; }
-    public int GetId() => Id;
+    public (int, int, bool) GetKey() => (ItemId, WorldId, IsHq);
 }

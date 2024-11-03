@@ -19,7 +19,7 @@ public class ItemWebResponseTests
     [Test]
     public void GivenANewItemWebResponse_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
     {
-        var dict = _pocos.ToDictionary(l => l.Id);
+        var dict = _pocos.ToDictionary(l => l.GetId());
 
         var result = new ItemWebResponse(dict);
 
@@ -50,7 +50,7 @@ public class ItemWebResponseTests
     [Test]
     public void GivenGetContentAsList_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
     {
-        var dict = _pocos.ToDictionary(l => l.Id);
+        var dict = _pocos.ToDictionary(l => l.GetId());
         var response = new ItemWebResponse(dict);
 
         var content = response.GetContentAsList();

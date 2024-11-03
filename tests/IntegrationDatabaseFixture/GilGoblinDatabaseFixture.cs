@@ -102,7 +102,7 @@ public class GilGoblinDatabaseFixture
 
     protected async Task DeleteAllEntriesAsync()
     {
-        await using var context = new GilGoblinDbContext(_options, _configuration);
+        await using var context = GetDbContext();
         context.RecentPurchase.RemoveRange(context.RecentPurchase);
         context.AverageSalePrice.RemoveRange(context.AverageSalePrice);
         context.MinListing.RemoveRange(context.MinListing);

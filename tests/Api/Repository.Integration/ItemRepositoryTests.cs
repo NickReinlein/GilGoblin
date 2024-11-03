@@ -42,7 +42,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
         {
             Assert.That(result, Has.Count.EqualTo(allItems.Count));
             allItems.ForEach(item => Assert.That(result.Any(p => p.Name == item.Name)));
-            allItems.ForEach(item => Assert.That(result.Any(p => p.Id == item.Id)));
+            allItems.ForEach(item => Assert.That(result.Any(p => p.GetId() == item.GetId())));
             Assert.That(allItems, Has.Count.EqualTo(ValidItemsIds.Count));
         });
     }
@@ -51,7 +51,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
     public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
         var ctx = GetDbContext();
-        var item = ctx.Item.First(i => i.Id == id);
+        var item = ctx.Item.First(i => i.Id > 0 && i.Id == id);
 
         var result = _itemRepo.Get(id);
 
@@ -59,7 +59,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
         {
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Name, Is.EqualTo(item.Name));
-            Assert.That(result.Id, Is.EqualTo(id));
+            Assert.That(result.GetId(), Is.EqualTo(id));
             Assert.That(result.Level, Is.EqualTo(item.Level));
             Assert.That(result.StackSize, Is.EqualTo(item.StackSize));
             Assert.That(result.PriceLow, Is.EqualTo(item.PriceLow));
@@ -108,7 +108,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(ValidItemsIds.Count));
-            Assert.That(ValidItemsIds.All(v => result.Any(p => p.Id == v)));
+            Assert.That(ValidItemsIds.All(v => result.Any(p => p.GetId() == v)));
         });
     }
 
@@ -120,8 +120,8 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(ValidItemsIds.Count));
-            Assert.That(ValidItemsIds.All(v => result.Any(p => p.Id == v)));
-            Assert.That(result.All(r => r.Id != 99));
+            Assert.That(ValidItemsIds.All(v => result.Any(p => p.GetId() == v)));
+            Assert.That(result.All(r => r.GetId() != 99));
         });
     }
 
@@ -147,7 +147,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
         _ = _itemRepo.Get(id);
 
         _cache.Received(1).Get(id);
-        _cache.Received(1).Add(id, Arg.Is<ItemPoco>(item => item.Id == id));
+        _cache.Received(1).Add(id, Arg.Is<ItemPoco>(item => item.GetId() == id));
     }
 
     [TestCaseSource(nameof(ValidItemsIds))]
@@ -159,7 +159,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
         _ = _itemRepo.Get(id);
 
         _cache.Received(2).Get(id);
-        _cache.Received(1).Add(id, Arg.Is<ItemPoco>(item => item.Id == id));
+        _cache.Received(1).Add(id, Arg.Is<ItemPoco>(item => item.GetId() == id));
     }
 
     [Test]
@@ -170,7 +170,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
 
         await _itemRepo.FillCache();
 
-        allItems.ForEach(item => _cache.Received(1).Add(item.Id, item));
+        allItems.ForEach(item => _cache.Received(1).Add(item.GetId(), item));
     }
 
     [Test]

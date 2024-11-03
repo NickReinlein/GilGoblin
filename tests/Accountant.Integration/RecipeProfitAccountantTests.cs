@@ -99,7 +99,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
 
         await _costRepo.Received(1).GetAllAsync(_worldId);
         await _profitRepo.Received(1).GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>());
-        Assert.That(result, Has.Count.EqualTo(ValidRecipeIds.Count));
+        Assert.That(result, Has.Count.EqualTo(profits.Count));
     }
 
     [TestCase(0)]

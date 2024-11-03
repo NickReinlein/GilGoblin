@@ -36,7 +36,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         {
             Assert.That(result, Has.Count.EqualTo(allWorlds.Count));
             allWorlds.ForEach(world => Assert.That(result.Any(p => p.Name == world.Name)));
-            allWorlds.ForEach(world => Assert.That(result.Any(p => p.Id == world.Id)));
+            allWorlds.ForEach(world => Assert.That(result.Any(p => p.GetId() == world.GetId())));
         });
     }
 
@@ -48,7 +48,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         Assert.Multiple(() =>
         {
             Assert.That(result?.Name, Has.Length.GreaterThan(0));
-            Assert.That(result != null && result.Id == id);
+            Assert.That(result != null && result.GetId() == id);
         });
     }
 
@@ -70,7 +70,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(ValidWorldIds.Count));
-            Assert.That(result.All(w => ValidWorldIds.Contains(w.Id)));
+            Assert.That(result.All(w => ValidWorldIds.Contains(w.GetId())));
         });
     }
 
@@ -84,7 +84,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(ValidWorldIds.Count));
-            Assert.That(result.All(w => ValidWorldIds.Contains(w.Id)));
+            Assert.That(result.All(w => ValidWorldIds.Contains(w.GetId())));
         });
     }
 
@@ -110,7 +110,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         _ = _worldRepo.Get(worldId);
 
         _cache.Received(1).Get(worldId);
-        _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.Id == worldId));
+        _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.GetId() == worldId));
     }
 
     [TestCaseSource(nameof(ValidWorldIds))]
@@ -122,7 +122,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         _ = _worldRepo.Get(worldId);
 
         _cache.Received(2).Get(worldId);
-        _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.Id == worldId));
+        _cache.Received(1).Add(worldId, Arg.Is<WorldPoco>(world => world.GetId() == worldId));
     }
 
     [Test]
@@ -134,7 +134,7 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
         await _worldRepo.FillCache();
 
         Assert.That(allWorlds, Has.Count.EqualTo(ValidWorldIds.Count));
-        allWorlds.ForEach(world => _cache.Received(1).Add(world.Id, world));
+        allWorlds.ForEach(world => _cache.Received(1).Add(world.GetId(), world));
     }
 
     [Test]
