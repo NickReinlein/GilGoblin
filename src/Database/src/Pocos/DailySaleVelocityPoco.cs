@@ -7,4 +7,9 @@ public record DailySaleVelocityPoco(
     SaleQuantity? World,
     SaleQuantity? Dc,
     SaleQuantity? Region)
-    : IdentifiableTripleKeyPoco(ItemId, WorldId, IsHq);
+    : IdentifiableTripleKeyPoco(ItemId, WorldId, IsHq)
+{
+    public SaleQuantity? World { get; set; } = World;
+    public SaleQuantity? Dc { get; set; } = Dc;
+    public SaleQuantity? Region { get; set; } = Region;
+}

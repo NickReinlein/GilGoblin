@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace GilGoblin.Database.Pocos;
 
 public interface IIdentifiable
@@ -7,6 +9,8 @@ public interface IIdentifiable
 
 public record IdentifiablePoco : IIdentifiable
 {
-    public int? Id { get; init; }
-    public int GetId() => Id ?? 0;
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; init; }
+
+    public int GetId() => Id;
 }

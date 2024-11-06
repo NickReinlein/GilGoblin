@@ -5,8 +5,7 @@ using NUnit.Framework;
 namespace GilGoblin.Tests.Database.Integration;
 
 [TestFixture]
-public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
-    where T : class
+public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T : class
 {
     [Test]
     public virtual async Task GivenValidNewEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
@@ -15,7 +14,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
 
         await SavePocoToDatabase(entity);
 
-        await ValidateResultSavedToDatabaseAsync(entity);
+        await ValidateResultSavedToDatabase(entity);
     }
 
     [Test]
@@ -27,7 +26,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
 
         await SavePocoToDatabase(modifiedSavedEntity, true);
 
-        await ValidateResultSavedToDatabaseAsync(modifiedSavedEntity);
+        await ValidateResultSavedToDatabase(modifiedSavedEntity);
     }
 
     protected virtual async Task SavePocoToDatabase(T entity, bool update = false)
@@ -44,5 +43,5 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture
 
     protected abstract T GetEntity();
     protected abstract T GetModifiedEntity(T entity);
-    protected abstract Task ValidateResultSavedToDatabaseAsync(T entity);
+    protected abstract Task ValidateResultSavedToDatabase(T entity);
 }

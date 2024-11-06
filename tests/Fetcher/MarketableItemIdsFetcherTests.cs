@@ -68,7 +68,7 @@ public class MarketableItemIdsFetcherTests : FetcherTests
 
     private static List<int> GetIdList()
     {
-        return GetMultipleNewPocos().Select(i => i.Id ?? 0).Where(i => i > 0).ToList();
+        return GetMultipleNewPocos().Select(i => i.Id).ToList();
     }
 
     [Test]

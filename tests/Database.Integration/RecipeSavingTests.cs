@@ -22,7 +22,7 @@ public class RecipeSavingTests : SaveEntityToDbTests<RecipePoco>
     protected override RecipePoco GetModifiedEntity(RecipePoco entity) =>
         new() { Id = entity.Id, CanHq = false };
 
-    protected override async Task ValidateResultSavedToDatabaseAsync(RecipePoco entity)
+    protected override async Task ValidateResultSavedToDatabase(RecipePoco entity)
     {
         await using var ctx = GetDbContext();
 

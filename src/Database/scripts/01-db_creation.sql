@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS price_data
 CREATE TABLE IF NOT EXISTS world_upload_times
 (
     id        SERIAL PRIMARY KEY,
-    item_id   INTEGER REFERENCES item (id) ON DELETE CASCADE,
+    item_id   INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
     world_id  INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq     BOOLEAN NOT NULL,
     timestamp BIGINT  NOT NULL
@@ -119,10 +119,10 @@ CREATE INDEX idx_recent_purchase_item_id_and_world_id_and_is_hq ON recent_purcha
 CREATE TABLE IF NOT EXISTS recipe_cost
 (
     id                      SERIAL PRIMARY KEY,
-    recipe_id               INTEGER                  NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
-    world_id                INTEGER                  NOT NULL REFERENCES world (id) ON DELETE CASCADE,
-    is_hq                   BOOLEAN                  NOT NULL,
-    amount                  INTEGER                  NOT NULL,
+    recipe_id               INTEGER NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
+    world_id                INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
+    is_hq                   BOOLEAN NOT NULL,
+    amount                  INTEGER NOT NULL,
     last_updated            TIMESTAMP WITH TIME ZONE NOT NULL,
     UNIQUE (recipe_id, world_id, is_hq)
 );
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS recipe_profit
     recipe_id              INTEGER NOT NULL REFERENCES recipe (id) ON DELETE CASCADE,
     world_id               INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq                  BOOLEAN NOT NULL,
-    amout                  INTEGER NOT NULL,
+    amount                 INTEGER NOT NULL,
     last_updated           TIMESTAMP WITH TIME ZONE NOT NULL,
     UNIQUE (recipe_id, world_id, is_hq)
 );
@@ -143,7 +143,7 @@ CREATE INDEX idx_recipe_profit_recipe_and_world_id_and_is_hq ON recipe_profit (r
 CREATE TABLE IF NOT EXISTS price
 (
     id                     SERIAL PRIMARY KEY,
-    item_id                INTEGER REFERENCES item (id) ON DELETE CASCADE,
+    item_id                INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
     world_id               INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq                  BOOLEAN NOT NULL,
     min_listing_id         INTEGER REFERENCES min_listing (id) ON DELETE CASCADE,

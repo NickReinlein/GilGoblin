@@ -12,7 +12,7 @@ public class WorldSavingTests : SaveEntityToDbTests<WorldPoco>
     protected override WorldPoco GetModifiedEntity(WorldPoco entity) =>
         entity with { Name = $"{entity.Name} modified" };
 
-    protected override async Task ValidateResultSavedToDatabaseAsync(WorldPoco entity)
+    protected override async Task ValidateResultSavedToDatabase(WorldPoco entity)
     {
         await using var ctx = GetDbContext();
 

@@ -29,7 +29,7 @@ public class WorldRepository(IServiceProvider serviceProvider, IWorldCache cache
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.World.Where(w => ids.Contains(w.Id ?? 0)).ToList();
+        return dbContext.World.Where(w => ids.Contains(w.Id)).ToList();
     }
 
     public List<WorldPoco> GetAll()

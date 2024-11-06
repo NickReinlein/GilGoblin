@@ -8,7 +8,7 @@ namespace GilGoblin.Tests.Database.Integration;
 public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocityPoco>
 {
     protected override DailySaleVelocityPoco GetEntity() =>
-        new(ValidItemsIds[0],
+        new(1232,
             ValidWorldIds[0],
             true,
             new SaleQuantity(100),
@@ -19,17 +19,18 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
         new(entity.ItemId + 11,
             entity.WorldId,
             !entity.IsHq,
-            new SaleQuantity(entity.World?.Quantity ?? 0 + 11),
-            new SaleQuantity(entity.Dc?.Quantity ?? 0 + 11),
-            new SaleQuantity(entity.Region?.Quantity ?? 0 + 11));
+            entity.World with { Quantity = entity.World?.Quantity ?? 0 + 11 },
+            entity.Dc with { Quantity = entity.Dc?.Quantity ?? 0 + 11 },
+            entity.Region with { Quantity = entity.Region?.Quantity ?? 0 + 11 });
 
-    protected override async Task ValidateResultSavedToDatabaseAsync(DailySaleVelocityPoco entity)
+    protected override async Task ValidateResultSavedToDatabase(DailySaleVelocityPoco entity)
     {
         await using var ctx = GetDbContext();
 
         var result = await ctx.DailySaleVelocity.FirstOrDefaultAsync(
             x =>
                 x.ItemId == entity.ItemId &&
+                x.WorldId == entity.WorldId &&
                 x.IsHq == entity.IsHq);
         Assert.Multiple(() =>
         {
@@ -40,5 +41,27 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
             Assert.That(result.Dc, Is.EqualTo(entity.Dc));
             Assert.That(result.Region, Is.EqualTo(entity.Region));
         });
+    }
+
+    protected override async Task SavePocoToDatabase(DailySaleVelocityPoco entity, bool update = false)
+    {
+        await using var ctx = GetDbContext();
+        if (update)
+        {
+            var existing = await ctx.DailySaleVelocity.FirstAsync(x =>
+                x.ItemId == entity.ItemId &&
+                x.WorldId == entity.WorldId &&
+                x.IsHq == entity.IsHq);
+            existing.Region = entity.Region;
+            existing.Dc = entity.Dc;
+            existing.World = entity.World;
+
+            ctx.Update(existing);
+        }
+        else
+            await ctx.Set<DailySaleVelocityPoco>().AddAsync(entity);
+
+        var savedCount = await ctx.SaveChangesAsync();
+        Assert.That(savedCount, Is.EqualTo(1));
     }
 }

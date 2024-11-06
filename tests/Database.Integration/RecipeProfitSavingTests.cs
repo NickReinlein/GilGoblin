@@ -6,18 +6,18 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;
 
-public class RecipeCostSavingTests : SaveEntityToDbTests<RecipeCostPoco>
+public class RecipeProfitSavingTests : SaveEntityToDbTests<RecipeProfitPoco>
 {
-    protected override RecipeCostPoco GetEntity() =>
+    protected override RecipeProfitPoco GetEntity() =>
         new(9812, ValidWorldIds[0], false, 311, DateTimeOffset.UtcNow.AddDays(-3));
 
-    protected override RecipeCostPoco GetModifiedEntity(RecipeCostPoco entity) =>
+    protected override RecipeProfitPoco GetModifiedEntity(RecipeProfitPoco entity) =>
         entity with { Amount = entity.Amount + 11, LastUpdated = DateTimeOffset.UtcNow };
 
-    protected override async Task ValidateResultSavedToDatabase(RecipeCostPoco entity)
+    protected override async Task ValidateResultSavedToDatabase(RecipeProfitPoco entity)
     {
         await using var ctx = GetDbContext();
-        var result = await ctx.RecipeCost.FirstOrDefaultAsync(
+        var result = await ctx.RecipeProfit.FirstOrDefaultAsync(
             x =>
                 x.RecipeId == entity.RecipeId &&
                 x.IsHq == entity.IsHq &&

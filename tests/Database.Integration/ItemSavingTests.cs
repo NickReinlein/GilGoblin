@@ -7,7 +7,7 @@ namespace GilGoblin.Tests.Database.Integration;
 
 public class ItemSavingTests : SaveEntityToDbTests<ItemPoco>
 {
-    protected override async Task ValidateResultSavedToDatabaseAsync(ItemPoco entity)
+    protected override async Task ValidateResultSavedToDatabase(ItemPoco entity)
     {
         await using var ctx = GetDbContext();
         var result = await ctx.Item.FirstOrDefaultAsync(
