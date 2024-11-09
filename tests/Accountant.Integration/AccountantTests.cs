@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Tests.IntegrationDatabaseFixture;
+using GilGoblin.Tests.Database.Integration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

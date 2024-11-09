@@ -7,6 +7,7 @@ using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Testcontainers.PostgreSql;
@@ -25,6 +26,8 @@ public class GilGoblinDatabaseFixture
     protected static readonly List<int> ValidWorldIds = [34, 99];
     protected static readonly List<int> ValidItemsIds = [134, 585, 654, 847];
     protected static readonly List<int> ValidRecipeIds = [111, 122];
+
+    private static readonly bool Debug = true;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
@@ -71,8 +74,10 @@ public class GilGoblinDatabaseFixture
             {
                 options.UseNpgsql(connectionString);
                 // Only used during development and debugging
-                options.EnableDetailedErrors();
-                options.EnableSensitiveDataLogging();
+                if (Debug)
+                    options.EnableDetailedErrors()
+                        .EnableSensitiveDataLogging()
+                        .LogTo(Console.WriteLine, LogLevel.Information);
             });
         _serviceProvider = _serviceCollection.BuildServiceProvider();
         _options = _serviceProvider.GetRequiredService<DbContextOptions<GilGoblinDbContext>>();
@@ -203,7 +208,11 @@ public class GilGoblinDatabaseFixture
 
     protected GilGoblinDbContext GetDbContext() => new(_options, _configuration);
 
-    protected string GetConnectionString() =>
-        _postgresContainer.GetConnectionString()
-        ?? throw new InvalidOperationException("Connection string not found");
+    protected string GetConnectionString()
+    {
+        var includeErrorDetailTrue = Debug ? ";Include Error Detail=true" : string.Empty;
+        var connectionString = string.Concat(_postgresContainer.GetConnectionString(), includeErrorDetailTrue)
+                               ?? throw new InvalidOperationException("Connection string not found");
+        return connectionString;
+    }
 }

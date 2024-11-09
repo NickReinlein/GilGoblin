@@ -80,7 +80,7 @@ public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> wher
             ctx.Update(existing);
         }
         else
-            await ctx.Set<T>().AddAsync(entity);
+            await ctx.AddAsync(entity);
 
         var savedCount = await ctx.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));

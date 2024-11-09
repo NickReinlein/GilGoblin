@@ -68,18 +68,6 @@ CREATE TABLE IF NOT EXISTS world_upload_times
 );
 CREATE INDEX idx_world_upload_times_item_id_and_world_id_and_is_hq ON world_upload_times (item_id, world_id, is_hq);
 
-CREATE TABLE IF NOT EXISTS daily_sale_velocity
-(
-    id              SERIAL PRIMARY KEY,
-    item_id         INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
-    world_id        INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
-    is_hq           BOOLEAN NOT NULL,
-    world           NUMERIC(12, 2),
-    dc              NUMERIC(12, 2),
-    region          NUMERIC(12, 2),
-    UNIQUE (item_id, world_id, is_hq)
-);
-CREATE INDEX idx_daily_sale_velocity_item_id_and_world_id_and_is_hq ON daily_sale_velocity (item_id, world_id, is_hq);
 
 CREATE TABLE IF NOT EXISTS average_sale_price
 (
@@ -120,6 +108,35 @@ CREATE TABLE IF NOT EXISTS recent_purchase
 );
 CREATE INDEX idx_recent_purchase_item_id_and_world_id_and_is_hq ON recent_purchase (item_id, world_id, is_hq);
 
+CREATE TABLE IF NOT EXISTS daily_sale_velocity
+(
+    id              SERIAL PRIMARY KEY,
+    item_id         INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
+    world_id        INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
+    is_hq           BOOLEAN NOT NULL,
+    world           NUMERIC(12, 2),
+    dc              NUMERIC(12, 2),
+    region          NUMERIC(12, 2),
+    UNIQUE (item_id, world_id, is_hq)
+);
+CREATE INDEX idx_daily_sale_velocity_item_id_and_world_id_and_is_hq ON daily_sale_velocity (item_id, world_id, is_hq);
+
+CREATE TABLE IF NOT EXISTS price
+(
+    id                     SERIAL PRIMARY KEY,
+    item_id                INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
+    world_id               INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
+    is_hq                  BOOLEAN NOT NULL,
+    min_listing_id         INTEGER REFERENCES min_listing (id) ON DELETE CASCADE,
+    recent_purchase_id     INTEGER REFERENCES recent_purchase (id) ON DELETE CASCADE,
+    average_sale_price_id  INTEGER REFERENCES average_sale_price (id) ON DELETE CASCADE,
+    daily_sale_velocity_id INTEGER REFERENCES daily_sale_velocity (id) ON DELETE CASCADE,
+    updated                TIMESTAMP WITH TIME ZONE NOT NULL,
+    UNIQUE (item_id, world_id, is_hq)
+);
+CREATE INDEX idx_price_item_id_and_world_id ON price (item_id, world_id);
+CREATE INDEX idx_price_item_id_and_world_id_and_is_hq ON price (item_id, world_id, is_hq);
+
 CREATE TABLE IF NOT EXISTS recipe_cost
 (
     id                      SERIAL PRIMARY KEY,
@@ -143,19 +160,3 @@ CREATE TABLE IF NOT EXISTS recipe_profit
     UNIQUE (recipe_id, world_id, is_hq)
 );
 CREATE INDEX idx_recipe_profit_recipe_and_world_id_and_is_hq ON recipe_profit (recipe_id, world_id, is_hq);
-
-CREATE TABLE IF NOT EXISTS price
-(
-    id                     SERIAL PRIMARY KEY,
-    item_id                INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
-    world_id               INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
-    is_hq                  BOOLEAN NOT NULL,
-    min_listing_id         INTEGER REFERENCES min_listing (id) ON DELETE CASCADE,
-    recent_purchase_id     INTEGER REFERENCES recent_purchase (id) ON DELETE CASCADE,
-    average_sale_price_id  INTEGER REFERENCES average_sale_price (id) ON DELETE CASCADE,
-    daily_sale_velocity_id INTEGER REFERENCES daily_sale_velocity (id) ON DELETE CASCADE,
-    updated                TIMESTAMP WITH TIME ZONE NOT NULL,
-    UNIQUE (item_id, world_id, is_hq)
-);
-CREATE INDEX idx_price_item_id_and_world_id ON price (item_id, world_id);
-CREATE INDEX idx_price_item_id_and_world_id_and_is_hq ON price (item_id, world_id, is_hq);

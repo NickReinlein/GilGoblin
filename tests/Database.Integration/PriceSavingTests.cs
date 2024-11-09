@@ -9,7 +9,7 @@ namespace GilGoblin.Tests.Database.Integration;
 public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
 {
     protected override PricePoco GetEntity() =>
-        new(35445, ValidWorldIds[0], false, 311);
+        new(13245, ValidWorldIds[0], false, 311);
 
     protected override PricePoco GetModifiedEntity(PricePoco entity) =>
         entity with { MinListingId = (entity.MinListingId ?? 0) + 11 };
@@ -19,9 +19,8 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
         await using var ctx = GetDbContext();
         var result = await ctx.Price.FirstOrDefaultAsync(x =>
             x.ItemId == entity.ItemId &&
-            x.IsHq == entity.IsHq &&
-            x.WorldId == entity.WorldId);
-
+            x.WorldId == entity.WorldId &&
+            x.IsHq == entity.IsHq);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);

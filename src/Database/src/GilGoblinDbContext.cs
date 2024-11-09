@@ -89,9 +89,9 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region_quantity");
         modelBuilder.Entity<DailySaleVelocityPoco>()
             .HasIndex(t => new { t.ItemId, t.WorldId, t.IsHq })
             .HasDatabaseName("idx_daily_sale_velocity_item_id_and_world_id_and_is_hq")

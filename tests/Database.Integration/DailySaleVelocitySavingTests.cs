@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
@@ -11,25 +12,16 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
         new(ValidItemsIds[0],
             ValidWorldIds[0],
             true,
-            111,
-            131,
-            271);
+            111m,
+            131m,
+            271m);
 
     protected override DailySaleVelocityPoco GetModifiedEntity(DailySaleVelocityPoco entity) =>
-        entity with
-        {
-            ItemId = entity.ItemId,
-            WorldId = entity.WorldId,
-            IsHq = entity.IsHq,
-            World = entity.World ?? 0 + 11,
-            Dc = entity.Dc ?? 0 + 11,
-            Region = entity.Region ?? 0 + 11
-        };
+        entity with { World = entity.World ?? 0 + 11, Dc = entity.Dc ?? 0 + 11, Region = entity.Region ?? 0 + 11 };
 
     protected override async Task ValidateResultSavedToDatabase(DailySaleVelocityPoco entity)
     {
         await using var ctx = GetDbContext();
-
         var result = await ctx.DailySaleVelocity.FirstOrDefaultAsync(
             x =>
                 x.ItemId == entity.ItemId &&
@@ -56,10 +48,19 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
                 x.WorldId == entity.WorldId &&
                 x.IsHq == entity.IsHq);
 
-            dbContext.Entry(existing).CurrentValues.SetValues(entity);
+            existing.Dc = entity.Dc;
+            existing.Region = entity.Region;
+            existing.World = entity.World;
+
+            dbContext.Update(existing);
         }
         else
-            await dbContext.Set<DailySaleVelocityPoco>().AddAsync(entity);
+        {
+            entity = new DailySaleVelocityPoco(entity.ItemId, entity.WorldId, entity.IsHq, entity.Dc, entity.Region,
+                entity.World);
+            await dbContext.AddAsync(entity);
+        }
+
 
         var savedCount = await dbContext.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));
