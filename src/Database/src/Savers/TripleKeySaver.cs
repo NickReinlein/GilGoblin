@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,20 +15,30 @@ public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<DataSav
     : DataSaver<T>(serviceProvider, logger)
     where T : IdentifiableTripleKeyPoco
 {
-    protected override async Task<int> UpdateContextAsync(List<T> entityList, CancellationToken ct = default)
+    protected override async Task<int> SaveToDatabaseAsync(List<T> entityList, CancellationToken ct = default)
     {
         try
         {
             await using var scope = ServiceProvider.CreateAsyncScope();
             await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
 
-            var toUpdate = await GetEntitiesToUpdateAsync(entityList, ct, dbContext);
-            if (toUpdate.Any())
-                dbContext.Set<T>().UpdateRange(toUpdate);
+            var toUpdate = new List<T>();
+            var toAdd = new List<T>();
+            foreach (var entity in entityList)
+            {
+                var key = entity.GetKey();
+                var existingKeys = await dbContext
+                    .Set<T>()
+                    .FirstOrDefaultAsync(e => e.ItemId == key.Item1 && e.WorldId == key.Item2 && e.IsHq == key.Item3,
+                        ct);
+                if (existingKeys is not null)
+                    toUpdate.Add(existingKeys);
+                else
+                    toAdd.Add(entity);
+            }
 
-            var toAdd = entityList.Except(toUpdate).ToList();
-            if (toAdd.Any())
-                await dbContext.Set<T>().AddRangeAsync(toAdd, ct);
+            dbContext.UpdateRange(toUpdate);
+            dbContext.AddRange(toAdd);
 
             return await dbContext.SaveChangesAsync(ct);
         }
@@ -40,8 +51,8 @@ public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<DataSav
 
     private static async Task<List<T>> GetEntitiesToUpdateAsync(
         List<T> entityList,
-        CancellationToken ct,
-        GilGoblinDbContext dbContext)
+        GilGoblinDbContext dbContext,
+        CancellationToken ct)
     {
         var entityKeys = entityList.Select(e => e.GetKey()).ToList();
         var result = new List<T>();
@@ -49,7 +60,6 @@ public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<DataSav
         {
             var existingKeys = await dbContext
                 .Set<T>()
-                .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.ItemId == key.Item1 && e.WorldId == key.Item2 && e.IsHq == key.Item3, ct);
             if (existingKeys is not null)
                 result.Add(existingKeys);

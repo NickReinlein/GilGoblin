@@ -32,7 +32,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
             if (filteredUpdates.Count == 0)
                 throw new ArgumentException("No valid entities remained after validity check");
 
-            var savedCount = await UpdateContextAsync(filteredUpdates, ct);
+            var savedCount = await SaveToDatabaseAsync(filteredUpdates, ct);
             logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
             return true;
         }
@@ -43,7 +43,7 @@ public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>
         }
     }
 
-    protected virtual async Task<int> UpdateContextAsync(List<T> entityList, CancellationToken ct = default)
+    protected virtual async Task<int> SaveToDatabaseAsync(List<T> entityList, CancellationToken ct = default)
     {
         try
         {

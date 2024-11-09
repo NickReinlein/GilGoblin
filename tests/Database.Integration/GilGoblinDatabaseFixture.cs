@@ -11,7 +11,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Testcontainers.PostgreSql;
 
-namespace GilGoblin.Tests.IntegrationDatabaseFixture;
+namespace GilGoblin.Tests.Database.Integration;
 
 public class GilGoblinDatabaseFixture
 {

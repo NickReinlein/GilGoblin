@@ -61,47 +61,33 @@ public class QualityPriceDataConverter(
         RecentPurchasePoco? recentPurchase,
         DailySaleVelocityPoco? dailySaleVelocity)
     {
-        await using var scope = serviceProvider.CreateAsyncScope();
-        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-
-        if (minListing is not null)
-        {
-            await UpdateOrAddToContext(minListing, dbContext);
-        }
-
-        if (averageSalePrice is not null)
-        {
-            await UpdateOrAddToContext(averageSalePrice, dbContext);
-        }
-
-        if (recentPurchase is not null)
-        {
-            await UpdateOrAddToContext(recentPurchase, dbContext);
-        }
-
-        if (dailySaleVelocity is not null)
-            await UpdateOrAddToContext(dailySaleVelocity, dbContext);
-
-        var saved = await dbContext.SaveChangesAsync();
-        if (saved < 1)
-            throw new DataException("Failed to save quality price data");
+        await SaveToDatabase(minListing);
+        await SaveToDatabase(averageSalePrice);
+        await SaveToDatabase(recentPurchase);
+        await SaveToDatabase(dailySaleVelocity);
 
         return new QualityPriceDataPoco(minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
     }
 
-    private static async Task UpdateOrAddToContext<T>(T poco, GilGoblinDbContext dbContext)
+    private async Task SaveToDatabase<T>(T? poco)
         where T : IdentifiableTripleKeyPoco
     {
-        var key = poco.GetKey();
+        if (poco is null)
+            return;
+
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var existing = await dbContext.Set<T>()
             .FirstOrDefaultAsync(e =>
-                e.ItemId == key.Item1 &&
-                e.WorldId == key.Item2 &&
-                e.IsHq == key.Item3);
+                e.ItemId == poco.ItemId &&
+                e.WorldId == poco.WorldId &&
+                e.IsHq == poco.IsHq);
 
-        if (existing is not null)
-            dbContext.Entry(existing).CurrentValues.SetValues(poco);
-        else
-            dbContext.Add(poco);
+        if (existing is not null) return;
+
+        dbContext.Add(poco);
+        await dbContext.SaveChangesAsync();
+        // todo double-check nothing needs to be updated?
+        // this is mostly storing reference Ids for other tables
     }
 }

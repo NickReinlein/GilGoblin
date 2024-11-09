@@ -120,8 +120,8 @@ public class CraftingCalculator(
             var uniqueIngredients =
                 ingredients
                     .GroupBy(poco => poco.ItemId)
-                    .Select(group
-                        => new IngredientPoco { ItemId = group.Key, Quantity = group.Sum(poco => poco.Quantity) })
+                    .Select(group =>
+                        new IngredientPoco { ItemId = group.Key, Quantity = group.Sum(poco => poco.Quantity) })
                     .ToHashSet()
                     .ToList();
             var priceList = price.ToList();
