@@ -95,7 +95,6 @@ public class Startup(IConfiguration configuration)
             throw new Exception("Failed to get connection string");
 
         connectionString += "Include Error Detail=true;";
-
         services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();

@@ -12,7 +12,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T 
     {
         var entity = GetEntity();
 
-        await SavePocoToDatabase(entity);
+        await SaveEntityToDatabase(entity);
 
         await ValidateResultSavedToDatabase(entity);
     }
@@ -21,15 +21,15 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T 
     public virtual async Task GivenValidExistingEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
         var entity = GetEntity();
-        await SavePocoToDatabase(entity);
+        await SaveEntityToDatabase(entity);
         var modifiedSavedEntity = GetModifiedEntity(entity);
 
-        await SavePocoToDatabase(modifiedSavedEntity, true);
+        await SaveEntityToDatabase(modifiedSavedEntity, true);
 
         await ValidateResultSavedToDatabase(modifiedSavedEntity);
     }
 
-    protected virtual async Task SavePocoToDatabase(T entity, bool update = false)
+    protected virtual async Task SaveEntityToDatabase(T entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)

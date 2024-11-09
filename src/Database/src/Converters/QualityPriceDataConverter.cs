@@ -89,16 +89,18 @@ public class QualityPriceDataConverter(
         return new QualityPriceDataPoco(minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
     }
 
-    private static async Task UpdateOrAddToContext(IdentifiableTripleKeyPoco poco, GilGoblinDbContext dbContext)
+    private static async Task UpdateOrAddToContext<T>(T poco, GilGoblinDbContext dbContext)
+        where T : IdentifiableTripleKeyPoco
     {
         var key = poco.GetKey();
-        var existing = await dbContext.AverageSalePrice.FirstOrDefaultAsync(e =>
-            e.ItemId == key.Item1 &&
-            e.WorldId == key.Item2 &&
-            e.IsHq == key.Item3);
+        var existing = await dbContext.Set<T>()
+            .FirstOrDefaultAsync(e =>
+                e.ItemId == key.Item1 &&
+                e.WorldId == key.Item2 &&
+                e.IsHq == key.Item3);
 
         if (existing is not null)
-            dbContext.Update(poco);
+            dbContext.Entry(existing).CurrentValues.SetValues(poco);
         else
             dbContext.Add(poco);
     }

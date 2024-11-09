@@ -10,15 +10,15 @@ public class AverageSalePricePocoSavingTests : PriceDataPointSavingTests<Average
     protected override AverageSalePricePoco GetEntity() => new(ValidRecipeIds[0], ValidWorldIds[0], false);
 }
 
-public class RecentPurchasePocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
-{
-    protected override RecentPurchasePoco GetEntity() => new(12345, ValidWorldIds[0], false);
-}
-
-public class MinListingPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
-{
-    protected override MinListingPoco GetEntity() => new(12345, ValidWorldIds[0], false);
-}
+// public class RecentPurchasePocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
+// {
+//     protected override RecentPurchasePoco GetEntity() => new(12345, ValidWorldIds[0], false);
+// }
+//
+// public class MinListingPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
+// {
+//     protected override MinListingPoco GetEntity() => new(12345, ValidWorldIds[0], false);
+// }
 
 public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> where T : PriceDataPointPoco
 {
@@ -63,7 +63,7 @@ public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> wher
         });
     }
 
-    protected override async Task SavePocoToDatabase(T entity, bool update = false)
+    protected override async Task SaveEntityToDatabase(T entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)

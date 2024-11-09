@@ -74,9 +74,10 @@ CREATE TABLE IF NOT EXISTS daily_sale_velocity
     item_id         INTEGER NOT NULL REFERENCES item (id) ON DELETE CASCADE,
     world_id        INTEGER NOT NULL REFERENCES world (id) ON DELETE CASCADE,
     is_hq           BOOLEAN NOT NULL,
-    world_quantity  NUMERIC(12, 2),
-    dc_quantity     NUMERIC(12, 2),
-    region_quantity NUMERIC(12, 2)
+    world           NUMERIC(12, 2),
+    dc              NUMERIC(12, 2),
+    region          NUMERIC(12, 2),
+    UNIQUE (item_id, world_id, is_hq)
 );
 CREATE INDEX idx_daily_sale_velocity_item_id_and_world_id_and_is_hq ON daily_sale_velocity (item_id, world_id, is_hq);
 
@@ -88,7 +89,8 @@ CREATE TABLE IF NOT EXISTS average_sale_price
     is_hq                BOOLEAN NOT NULL,
     world_data_point_id  INT REFERENCES price_data (id) ON DELETE CASCADE,
     dc_data_point_id     INT REFERENCES price_data (id) ON DELETE CASCADE,
-    region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE
+    region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE,
+    UNIQUE (item_id, world_id, is_hq)
 );
 CREATE INDEX idx_average_sale_price_item_id_and_world_id_and_is_hq ON average_sale_price (item_id, world_id, is_hq);
 
@@ -100,7 +102,8 @@ CREATE TABLE IF NOT EXISTS min_listing
     is_hq                BOOLEAN NOT NULL,
     world_data_point_id  INT REFERENCES price_data (id) ON DELETE CASCADE,
     dc_data_point_id     INT REFERENCES price_data (id) ON DELETE CASCADE,
-    region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE
+    region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE,
+    UNIQUE (item_id, world_id, is_hq)
 );
 CREATE INDEX idx_min_listing_item_id_and_world_id_and_is_hq ON min_listing (item_id, world_id, is_hq);
 
@@ -112,7 +115,8 @@ CREATE TABLE IF NOT EXISTS recent_purchase
     is_hq                BOOLEAN NOT NULL,
     world_data_point_id  INT REFERENCES price_data (id) ON DELETE CASCADE,
     dc_data_point_id     INT REFERENCES price_data (id) ON DELETE CASCADE,
-    region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE
+    region_data_point_id INT REFERENCES price_data (id) ON DELETE CASCADE,
+    UNIQUE (item_id, world_id, is_hq)
 );
 CREATE INDEX idx_recent_purchase_item_id_and_world_id_and_is_hq ON recent_purchase (item_id, world_id, is_hq);
 

@@ -10,8 +10,9 @@ public static class PriceDataPointWebPocoExtensions
          poco.Region.HasValidPrice() ||
          poco.World.HasValidPrice());
 
-    public static T? AsPoco<T>(this PriceDataPointPoco? poco, Func<PriceDataPointPoco, T> factory) where T : class =>
-        poco is null ? null : factory(poco);
+    public static T? AsPoco<T>(this PriceDataPointPoco? poco, Func<PriceDataPointPoco, T> factory)
+        where T : class
+        => poco is null ? null : factory(poco);
 
     public static RecentPurchasePoco? AsRecentPurchasePoco(this PriceDataPointPoco? poco) =>
         poco.AsPoco(recent => new RecentPurchasePoco(

@@ -32,7 +32,7 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
         });
     }
 
-    protected override async Task SavePocoToDatabase(PricePoco entity, bool update = false)
+    protected override async Task SaveEntityToDatabase(PricePoco entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)

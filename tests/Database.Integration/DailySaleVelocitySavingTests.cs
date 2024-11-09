@@ -8,20 +8,23 @@ namespace GilGoblin.Tests.Database.Integration;
 public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocityPoco>
 {
     protected override DailySaleVelocityPoco GetEntity() =>
-        new(1232,
+        new(ValidItemsIds[0],
             ValidWorldIds[0],
             true,
-            new SaleQuantity(100),
-            new SaleQuantity(200),
-            new SaleQuantity(300));
+            111,
+            131,
+            271);
 
     protected override DailySaleVelocityPoco GetModifiedEntity(DailySaleVelocityPoco entity) =>
-        new(entity.ItemId + 11,
-            entity.WorldId,
-            !entity.IsHq,
-            entity.World with { Quantity = entity.World?.Quantity ?? 0 + 11 },
-            entity.Dc with { Quantity = entity.Dc?.Quantity ?? 0 + 11 },
-            entity.Region with { Quantity = entity.Region?.Quantity ?? 0 + 11 });
+        entity with
+        {
+            ItemId = entity.ItemId,
+            WorldId = entity.WorldId,
+            IsHq = entity.IsHq,
+            World = entity.World ?? 0 + 11,
+            Dc = entity.Dc ?? 0 + 11,
+            Region = entity.Region ?? 0 + 11
+        };
 
     protected override async Task ValidateResultSavedToDatabase(DailySaleVelocityPoco entity)
     {
@@ -43,25 +46,22 @@ public class DailySaleVelocitySavingTests : SaveEntityToDbTests<DailySaleVelocit
         });
     }
 
-    protected override async Task SavePocoToDatabase(DailySaleVelocityPoco entity, bool update = false)
+    protected override async Task SaveEntityToDatabase(DailySaleVelocityPoco entity, bool update = false)
     {
-        await using var ctx = GetDbContext();
+        await using var dbContext = GetDbContext();
         if (update)
         {
-            var existing = await ctx.DailySaleVelocity.FirstAsync(x =>
+            var existing = await dbContext.DailySaleVelocity.FirstAsync(x =>
                 x.ItemId == entity.ItemId &&
                 x.WorldId == entity.WorldId &&
                 x.IsHq == entity.IsHq);
-            existing.Region = entity.Region;
-            existing.Dc = entity.Dc;
-            existing.World = entity.World;
 
-            ctx.Update(existing);
+            dbContext.Entry(existing).CurrentValues.SetValues(entity);
         }
         else
-            await ctx.Set<DailySaleVelocityPoco>().AddAsync(entity);
+            await dbContext.Set<DailySaleVelocityPoco>().AddAsync(entity);
 
-        var savedCount = await ctx.SaveChangesAsync();
+        var savedCount = await dbContext.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));
     }
 }

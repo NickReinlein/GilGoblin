@@ -12,7 +12,7 @@ public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
         new("someType", 123m, ValidWorldIds[0], DateTimeOffset.UtcNow.AddDays(-1).UtcTicks);
 
     protected override PriceDataPoco GetModifiedEntity(PriceDataPoco entity) =>
-        entity with { Price = entity.Price + 11, Timestamp = DateTimeOffset.UtcNow.UtcTicks };
+        entity with { Price = entity.Price + 11, Timestamp = entity.Timestamp + 1111 };
 
     protected override async Task ValidateResultSavedToDatabase(PriceDataPoco entity)
     {
@@ -31,14 +31,15 @@ public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
         });
     }
 
-    protected override async Task SavePocoToDatabase(PriceDataPoco entity, bool update = false)
+    protected override async Task SaveEntityToDatabase(PriceDataPoco entity, bool update = false)
     {
         await using var ctx = GetDbContext();
         if (update)
         {
-            var existing = await ctx.PriceData.FirstAsync(x =>
+            var existing = await ctx.PriceData.FirstOrDefaultAsync(x =>
                 x.PriceType == entity.PriceType &&
                 x.WorldId == entity.WorldId);
+            Assert.That(existing, Is.Not.Null, "Existing entity not found");
             existing.Timestamp = entity.Timestamp;
             existing.Price = entity.Price;
 

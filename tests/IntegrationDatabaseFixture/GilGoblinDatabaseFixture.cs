@@ -70,6 +70,7 @@ public class GilGoblinDatabaseFixture
             .AddDbContext<GilGoblinDbContext>(options =>
             {
                 options.UseNpgsql(connectionString);
+                // Only used during development and debugging
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
             });

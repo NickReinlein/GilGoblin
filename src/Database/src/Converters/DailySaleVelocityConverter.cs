@@ -55,7 +55,7 @@ public class DailySaleVelocityConverter(
         => new(itemId,
             worldId,
             isHq,
-            saleVelocity?.World,
-            saleVelocity?.Dc,
-            saleVelocity?.Region);
+            saleVelocity?.World?.Quantity,
+            saleVelocity?.Dc?.Quantity,
+            saleVelocity?.Region?.Quantity);
 }

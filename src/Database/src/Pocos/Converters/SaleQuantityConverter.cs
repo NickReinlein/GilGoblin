@@ -2,5 +2,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GilGoblin.Database.Pocos.Converters;
 
-public class SaleQuantityConverter() : ValueConverter<SaleQuantity?, decimal?>(sq => sq.Quantity,
-    quantity => quantity.HasValue ? new SaleQuantity(quantity.Value) : null);
+public class SaleQuantityConverter() : ValueConverter<SaleQuantity?, decimal?>(
+    v => v != null ? v.Quantity : 0,
+    v => new SaleQuantity(v ?? 0));
