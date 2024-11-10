@@ -89,9 +89,9 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.ItemId).HasColumnName("item_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.WorldId).HasColumnName("world_id");
         modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.IsHq).HasColumnName("is_hq");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world_quantity");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc_quantity");
-        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region_quantity");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.World).HasColumnName("world");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Dc).HasColumnName("dc");
+        modelBuilder.Entity<DailySaleVelocityPoco>().Property(t => t.Region).HasColumnName("region");
         modelBuilder.Entity<DailySaleVelocityPoco>()
             .HasIndex(t => new { t.ItemId, t.WorldId, t.IsHq })
             .HasDatabaseName("idx_daily_sale_velocity_item_id_and_world_id_and_is_hq")
@@ -113,17 +113,17 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<MinListingPoco>()
             .HasOne(p => p.DcDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<MinListingPoco>(p => p.DcDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<MinListingPoco>()
             .HasOne(p => p.RegionDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<MinListingPoco>(p => p.RegionDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<MinListingPoco>()
             .HasOne(p => p.WorldDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<MinListingPoco>(p => p.WorldDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<AverageSalePricePoco>().ToTable("average_sale_price");
@@ -145,17 +145,17 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<AverageSalePricePoco>()
             .HasOne(p => p.DcDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<AverageSalePricePoco>(p => p.DcDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<AverageSalePricePoco>()
             .HasOne(p => p.RegionDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<AverageSalePricePoco>(p => p.RegionDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<AverageSalePricePoco>()
             .HasOne(p => p.WorldDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<AverageSalePricePoco>(p => p.WorldDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<RecentPurchasePoco>().ToTable("recent_purchase");
@@ -177,17 +177,17 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<RecentPurchasePoco>()
             .HasOne(p => p.DcDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<RecentPurchasePoco>(p => p.DcDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<RecentPurchasePoco>()
             .HasOne(p => p.RegionDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<RecentPurchasePoco>(p => p.RegionDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<RecentPurchasePoco>()
             .HasOne(p => p.WorldDataPoint)
             .WithOne()
-            .HasForeignKey<PriceDataPoco>(p => p.Id)
+            .HasForeignKey<RecentPurchasePoco>(p => p.WorldDataPointId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<PricePoco>().ToTable("price");
@@ -211,22 +211,22 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.AverageSalePrice)
             .WithOne()
-            .HasForeignKey<AverageSalePricePoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.AverageSalePriceId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.MinListing)
             .WithOne()
-            .HasForeignKey<MinListingPoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.MinListingId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.RecentPurchase)
             .WithOne()
-            .HasForeignKey<RecentPurchasePoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.RecentPurchaseId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<PricePoco>()
             .HasOne(p => p.DailySaleVelocity)
             .WithOne()
-            .HasForeignKey<DailySaleVelocityPoco>(p => p.Id)
+            .HasForeignKey<PricePoco>(p => p.DailySaleVelocityId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<WorldUploadTimeDbPoco>().ToTable("world_upload_times");

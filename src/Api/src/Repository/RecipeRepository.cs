@@ -51,7 +51,7 @@ public class RecipeRepository(
             return [];
 
         var cached = itemRecipeCache.Get(itemId);
-        if (cached is not null)
+        if (cached is not null && cached.Count > 0)
             return cached;
 
         using var scope = serviceProvider.CreateScope();

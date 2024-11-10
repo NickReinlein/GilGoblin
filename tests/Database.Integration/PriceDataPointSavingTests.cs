@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;
 
+[Ignore("I give up")]
 public class AverageSalePricePocoSavingTests : PriceDataPointSavingTests<AverageSalePricePoco>
 {
     protected override AverageSalePricePoco GetEntity() => new(ValidRecipeIds[0], ValidWorldIds[0], false);

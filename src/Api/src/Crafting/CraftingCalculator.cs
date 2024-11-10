@@ -16,10 +16,10 @@ public interface ICraftingCalculator
 }
 
 public class CraftingCalculator(
-    IRecipeRepository recipes,
-    IPriceRepository<PricePoco> prices,
-    IRecipeCostRepository recipeCosts,
-    IRecipeGrocer grocer,
+    IRecipeRepository recipeRepo,
+    IPriceRepository<PricePoco> priceRepo,
+    IRecipeCostRepository recipeCostsRepo,
+    IRecipeGrocer recipeGrocer,
     ILogger<CraftingCalculator> logger)
     : ICraftingCalculator
 {
@@ -32,7 +32,7 @@ public class CraftingCalculator(
         if (worldId < 1 || itemId < 1)
             return errorReturn;
 
-        var itemRecipes = recipes.GetRecipesForItem(itemId);
+        var itemRecipes = recipeRepo.GetRecipesForItem(itemId);
         if (!itemRecipes.Any())
             return errorReturn;
 
@@ -43,15 +43,15 @@ public class CraftingCalculator(
 
     public async Task<int> CalculateCraftingCostForRecipe(int worldId, int recipeId, bool isHq)
     {
-        var existing = await recipeCosts.GetAsync(worldId, recipeId, isHq);
+        var existing = await recipeCostsRepo.GetAsync(worldId, recipeId, isHq);
         if (existing is not null &&
             existing.LastUpdated >= DateTime.UtcNow.AddHours(-hoursBeforeDataExpiry))
             return existing.Amount;
 
         try
         {
-            var recipe = recipes.Get(recipeId);
-            var result = await grocer.BreakdownRecipeById(recipeId);
+            var recipe = recipeRepo.Get(recipeId);
+            var result = await recipeGrocer.BreakdownRecipeById(recipeId);
             var ingredients = result.ToList();
             if (recipe is null || !ingredients.Any())
                 return ErrorDefaultCost;
@@ -111,7 +111,7 @@ public class CraftingCalculator(
 
     private List<CraftIngredientPoco> AddPricesToIngredients(
         IEnumerable<IngredientPoco> ingredients,
-        IEnumerable<PricePoco> price
+        IEnumerable<PricePoco> prices
     )
     {
         try
@@ -124,7 +124,7 @@ public class CraftingCalculator(
                         new IngredientPoco { ItemId = group.Key, Quantity = group.Sum(poco => poco.Quantity) })
                     .ToHashSet()
                     .ToList();
-            var priceList = price.ToList();
+            var priceList = prices.ToList();
             foreach (var ingredient in uniqueIngredients)
             {
                 var marketPrices = priceList.Where(e =>
@@ -151,7 +151,7 @@ public class CraftingCalculator(
     {
         foreach (var ingredient in ingredients)
         {
-            var price = prices.Get(worldId, ingredient.ItemId, ingredient.IsHq);
+            var price = priceRepo.Get(worldId, ingredient.ItemId, ingredient.IsHq);
             if (price is not null)
                 yield return price;
             else
@@ -167,7 +167,7 @@ public class CraftingCalculator(
         var recipeId = -1;
         foreach (var recipe in recipeList.Where(recipe => recipe is not null))
         {
-            var cached = await recipeCosts.GetAsync(worldId, recipe!.Id);
+            var cached = await recipeCostsRepo.GetAsync(worldId, recipe!.Id);
 
             var recipeCost = cached?.Amount ?? await CalculateCraftingCostForRecipe(worldId, recipe.Id, false);
 
