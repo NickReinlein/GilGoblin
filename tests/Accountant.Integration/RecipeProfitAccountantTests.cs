@@ -22,6 +22,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
 
     private static readonly int _worldId = ValidWorldIds[0];
     private static readonly int _recipeId = ValidRecipeIds[0];
+    private static readonly int _targetItemId = ValidItemsIds[0];
 
     [SetUp]
     public override async Task SetUp()
@@ -164,8 +165,13 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [Test]
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostsIsEmpty_ThenReturnNull()
     {
-        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false,
-            [], GetPrices());
+        var result = _accountant.CalculateCraftingProfitForRecipe(
+            recipeId: _recipeId,
+            worldId: _worldId,
+            isHq: false,
+            targetItemId: _targetItemId,
+            costs: [],
+            prices: GetPrices());
 
         Assert.That(result, Is.Null);
     }
@@ -173,8 +179,13 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [Test]
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenPricesIsEmpty_ThenReturnNull()
     {
-        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, GetCosts(),
-            Enumerable.Empty<PricePoco>());
+        var result = _accountant.CalculateCraftingProfitForRecipe(
+            recipeId: _recipeId,
+            worldId: _worldId,
+            isHq: false,
+            targetItemId: _targetItemId,
+            costs: GetCosts(),
+            prices: []);
 
         Assert.That(result, Is.Null);
     }
@@ -182,24 +193,51 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [Test]
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceDoNotMatch_ThenReturnNull()
     {
-        var costs = new List<RecipeCostPoco> { new(_worldId, _recipeId, false, 100, DateTimeOffset.UtcNow) };
+        var costs = new List<RecipeCostPoco> { new(_recipeId, _worldId, false, 100, DateTimeOffset.UtcNow) };
         var prices = new List<PricePoco> { new(_worldId, _recipeId + 1, false) };
 
-        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, costs, prices);
+        var result = _accountant.CalculateCraftingProfitForRecipe(
+            recipeId: _recipeId,
+            worldId: _worldId,
+            isHq: false,
+            targetItemId: _targetItemId,
+            costs: costs,
+            prices: prices);
 
         Assert.That(result, Is.Null);
     }
 
-    [Test, Ignore("fix later")]
+    [Test]
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceMatch_ThenReturnProfit()
     {
-        var costs = new List<RecipeCostPoco> { new(_worldId, _recipeId, false, 101, DateTimeOffset.UtcNow) };
-        var prices = new List<PricePoco> { new(_worldId, _recipeId, false) };
+        var averageSalePrice = new AverageSalePricePoco(_targetItemId, _worldId, false, 111, 122, 133)
+        {
+            DcDataPoint = new PriceDataPoco("dc", 555, _worldId, DateTimeOffset.UtcNow.Ticks)
+        };
+        var costs = new List<RecipeCostPoco> { new(_recipeId, _worldId, false, 133, DateTimeOffset.UtcNow) };
+        var price = new PricePoco(_targetItemId, _worldId, false, averageSalePrice.Id)
+        {
+            AverageSalePrice = averageSalePrice
+        };
+        var prices = new List<PricePoco> { price };
 
-        var result = _accountant.CalculateCraftingProfitForQualityRecipe(_worldId, _recipeId, false, costs, prices);
+        var result = _accountant.CalculateCraftingProfitForRecipe(
+            recipeId: _recipeId,
+            worldId: _worldId,
+            isHq: false,
+            targetItemId: _targetItemId,
+            costs: costs,
+            prices: prices);
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.Amount, Is.EqualTo(101));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            var itemSalePrice = (int)price.GetBestPriceCost();
+            Assert.That(itemSalePrice, Is.EqualTo(555));
+            var expectedProfit = itemSalePrice - costs[0].Amount;
+            Assert.That(expectedProfit, Is.EqualTo(422));
+            Assert.That(result!.Amount, Is.EqualTo(expectedProfit));
+        });
     }
 
     private static IEnumerable<RecipeCostPoco> GetCosts()
@@ -210,5 +248,6 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     private static IEnumerable<PricePoco> GetPrices()
     {
         yield return new PricePoco(_worldId, _recipeId, false);
+        yield return new PricePoco(_worldId, _recipeId, true);
     }
 }

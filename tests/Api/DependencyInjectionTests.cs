@@ -42,7 +42,7 @@ public class DependencyInjectionTests
     [TestCase(typeof(IItemCache))]
     [TestCase(typeof(IItemRecipeCache))]
     [TestCase(typeof(IRecipeGrocer))]
-    // [TestCase(typeof(ICraftingCalculator))]
+    [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(IRepositoryCache))]
     public void GivenAGoblinApi_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {

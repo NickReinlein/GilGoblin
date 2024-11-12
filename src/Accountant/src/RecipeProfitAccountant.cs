@@ -13,10 +13,11 @@ namespace GilGoblin.Accountant;
 
 public interface IRecipeProfitAccountant
 {
-    public RecipeProfitPoco? CalculateCraftingProfitForQualityRecipe(
+    public RecipeProfitPoco? CalculateCraftingProfitForRecipe(
         int worldId,
         int recipeId,
         bool isHq,
+        int targetItemId,
         IEnumerable<RecipeCostPoco> costs,
         IEnumerable<PricePoco> prices);
 }
@@ -72,7 +73,13 @@ public class RecipeProfitAccountant(
                         }
 
                         var calculatedProfit =
-                            CalculateCraftingProfitForQualityRecipe(worldId, recipeId, quality, costs, prices);
+                            CalculateCraftingProfitForRecipe(
+                                recipeId,
+                                worldId,
+                                quality,
+                                recipe.TargetItemId,
+                                costs,
+                                prices);
                         if (calculatedProfit is not null)
                             newProfits.Add(calculatedProfit);
                     }
@@ -99,27 +106,29 @@ public class RecipeProfitAccountant(
         }
     }
 
-    public RecipeProfitPoco? CalculateCraftingProfitForQualityRecipe(
-        int worldId,
+    public RecipeProfitPoco? CalculateCraftingProfitForRecipe(
         int recipeId,
+        int worldId,
         bool isHq,
+        int targetItemId,
         IEnumerable<RecipeCostPoco> costs,
         IEnumerable<PricePoco> prices)
     {
         var cost = costs.FirstOrDefault(c =>
-            c.GetId() == recipeId &&
+            c.RecipeId == recipeId &&
             c.WorldId == worldId &&
             c.IsHq == isHq);
         if (cost is null)
         {
-            logger.LogError("Failed to match crafting cost of recipe {RecipeId} for world {WorldId}",
+            logger.LogError("Failed to match crafting cost of recipe {RecipeId} for world {WorldId}, isHq:{IsHq}",
                 recipeId,
-                worldId);
+                worldId,
+                isHq);
             return null;
         }
 
         var price = prices.FirstOrDefault(c =>
-            c.GetId() == recipeId &&
+            c.ItemId == targetItemId &&
             c.WorldId == worldId &&
             c.IsHq == isHq);
         if (price is null)
@@ -131,7 +140,7 @@ public class RecipeProfitAccountant(
 
         var profitAmount = (int)price.GetBestPriceCost() - cost.Amount;
 
-        return new RecipeProfitPoco(worldId, recipeId, isHq, profitAmount, DateTimeOffset.UtcNow.DateTime);
+        return new RecipeProfitPoco(recipeId, worldId, isHq, profitAmount, DateTimeOffset.UtcNow.DateTime);
     }
 
     public override async Task<List<int>> GetIdsToUpdate(int worldId)
@@ -155,7 +164,7 @@ public class RecipeProfitAccountant(
             {
                 var id = cost.GetId();
                 var existing = existingProfits.FirstOrDefault(e =>
-                    e.GetId() == id &&
+                    e.Id == id &&
                     e.WorldId == worldId &&
                     e.IsHq == cost.IsHq);
                 if (existing is null)

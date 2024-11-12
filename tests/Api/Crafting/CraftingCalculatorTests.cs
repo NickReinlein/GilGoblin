@@ -62,20 +62,18 @@ public class CraftingCalculatorTests
     [Test]
     public async Task GivenCalculateCraftingCostForItem_WhenARecipeExists_ThenCraftingCostIsReturned()
     {
-        var itemId = NewRecipe.TargetItemId;
-        var recipe = NewRecipe;
-        SetupForBasicItemCraftingCostCase(recipe, GetNewPrice());
+        SetupForBasicItemCraftingCostCase(NewRecipe, GetNewPrice());
 
-        var (recipeId, cost) = await _calc.CalculateCraftingCostForItem(_worldId, itemId);
+        var (recipeId, cost) = await _calc.CalculateCraftingCostForItem(_worldId, NewRecipe.TargetItemId);
 
-        _recipes.Received().Get(recipe.Id);
-        await _grocer.Received(1).BreakdownRecipeById(recipe.Id);
+        _recipes.Received().Get(NewRecipe.Id);
+        await _grocer.Received(1).BreakdownRecipeById(NewRecipe.Id);
 
-        Assert.That(recipeId, Is.EqualTo(recipe.Id));
-        _recipes.Received().GetRecipesForItem(itemId);
+        Assert.That(recipeId, Is.EqualTo(NewRecipe.Id));
+        _recipes.Received().GetRecipesForItem(NewRecipe.TargetItemId);
         _recipes.Received().GetRecipesForItem(NewRecipe.ItemIngredient0TargetId);
-        // _prices.Received().Get(_worldId, itemId, false);
-        // _prices.Received().Get(_worldId, ingredientId, false);
+        _prices.Received().Get(_worldId, NewRecipe.ItemIngredient0TargetId, false);
+        _prices.Received().Get(_worldId, NewRecipe.ItemIngredient1TargetId, false);
     }
 
     [Test]
@@ -129,12 +127,12 @@ public class CraftingCalculatorTests
     public async Task WhenAnDataNotFoundExceptionOccurs_ThenAnErrorIsLoggedAndErrorCostReturned()
     {
         var recipeId = NewRecipe.Id;
-        // _recipes.When(x => x.Get(recipeId)).Do(_ => throw new DataException());
+        _recipes.When(x => x.Get(recipeId)).Do(_ => throw new DataException());
         _recipes.Get(default).ThrowsForAnyArgs<DataException>();
 
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
-        // Assert.That(result, Is.EqualTo(_errorCost));
+        Assert.That(result, Is.EqualTo(_errorCost));
         _logger.Received()
             .LogError(
                 $"Failed to find market data while calculating crafting cost for recipe {recipeId} in world {_worldId}"

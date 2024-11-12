@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
@@ -11,8 +10,11 @@ namespace GilGoblin.Database.Converters;
 
 public interface IQualityPriceDataConverter
 {
-    Task<QualityPriceDataPoco?> ConvertAndSaveDetailsAsync(QualityPriceDataWebPoco? qualityData, int worldId,
-        int itemId, bool isHq);
+    Task<QualityPriceDataPoco?> ConvertAndSaveDetailsAsync(
+        QualityPriceDataWebPoco? qualityData,
+        int worldId,
+        int itemId,
+        bool isHq);
 }
 
 public class QualityPriceDataConverter(
@@ -61,12 +63,12 @@ public class QualityPriceDataConverter(
         RecentPurchasePoco? recentPurchase,
         DailySaleVelocityPoco? dailySaleVelocity)
     {
-        await SaveToDatabase(minListing);
         await SaveToDatabase(averageSalePrice);
+        await SaveToDatabase(minListing);
         await SaveToDatabase(recentPurchase);
         await SaveToDatabase(dailySaleVelocity);
 
-        return new QualityPriceDataPoco(minListing, averageSalePrice, recentPurchase, dailySaleVelocity);
+        return new QualityPriceDataPoco(averageSalePrice, minListing, recentPurchase, dailySaleVelocity);
     }
 
     private async Task SaveToDatabase<T>(T? poco)
@@ -87,7 +89,5 @@ public class QualityPriceDataConverter(
 
         dbContext.Add(poco);
         await dbContext.SaveChangesAsync();
-        // todo double-check nothing needs to be updated?
-        // this is mostly storing reference Ids for other tables
     }
 }

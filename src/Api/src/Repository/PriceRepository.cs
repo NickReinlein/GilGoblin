@@ -10,8 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
-public interface IPriceRepository<T> : IRepositoryCache
-    where T : class
+public interface IPriceRepository<T> : IRepositoryCache where T : class
 {
     T? Get(int worldId, int id, bool isHq);
     List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq);
@@ -22,9 +21,9 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
 {
     public PricePoco? Get(int worldId, int id, bool isHq)
     {
-        // var cached = cache.Get((worldId, id));
-        // if (cached is not null)
-        //     return cached;
+        var cached = cache.Get((worldId, id, isHq));
+        if (cached is not null)
+            return cached;
 
         try
         {
@@ -39,9 +38,8 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
                     p.ItemId == id &&
                     p.WorldId == worldId &&
                     p.IsHq == isHq);
-            //
-            // if (price is not null)
-            //     cache.Add((worldId, id), price);
+            if (price is not null)
+                cache.Add((worldId, id, isHq), price);
 
             return price;
         }
@@ -81,10 +79,10 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
 
     public Task FillCache()
     {
-        // using var scope = serviceProvider.CreateScope();
-        // using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        // var items = dbContext.Price.ToList();
-        // items.ForEach(price => cache.Add((price.WorldId, price.ItemId), price));
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var items = dbContext.Price.ToList();
+        items.ForEach(price => cache.Add((price.WorldId, price.ItemId, price.IsHq), price));
         return Task.CompletedTask;
     }
 }

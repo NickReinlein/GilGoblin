@@ -80,8 +80,8 @@ public class PriceConverter(
                 ItemId: itemId,
                 WorldId: worldId,
                 IsHq: isHq,
-                MinListingId: quality.MinListing?.Id,
                 AverageSalePriceId: quality.AverageSalePrice?.Id,
+                MinListingId: quality.MinListing?.Id,
                 RecentPurchaseId: quality.RecentPurchase?.Id,
                 DailySaleVelocityId: quality.DailySaleVelocity?.Id
             );

@@ -16,7 +16,7 @@ namespace GilGoblin.Tests.Database.Integration;
 
 public class GilGoblinDatabaseFixture
 {
-    protected PostgreSqlContainer _postgresContainer;
+    protected PostgreSqlContainer? _postgresContainer = null;
     protected IConfigurationRoot _configuration;
     protected DbContextOptions<GilGoblinDbContext> _options;
     protected ServiceProvider _serviceProvider;
@@ -30,7 +30,7 @@ public class GilGoblinDatabaseFixture
     private static readonly bool Debug = true;
 
     [OneTimeSetUp]
-    public async Task OneTimeSetUp()
+    public virtual async Task OneTimeSetUp()
     {
         await StartContainerAsync();
 
@@ -49,7 +49,11 @@ public class GilGoblinDatabaseFixture
     [OneTimeTearDown]
     public async Task OneTimeTearDown()
     {
-        await _postgresContainer.DisposeAsync();
+        if (_postgresContainer != null)
+        {
+            await _postgresContainer.StopAsync();
+            await _postgresContainer.DisposeAsync();
+        }
     }
 
     [TearDown]
@@ -131,33 +135,33 @@ public class GilGoblinDatabaseFixture
 
         var allRecipes =
             (from id in ValidRecipeIds
-                select new RecipePoco
-                {
-                    Id = id,
-                    CanHq = id % 2 == 0,
-                    CraftType = id % 2 == 0 ? 3 : 7,
-                    CanQuickSynth = id % 2 == 0,
-                    ResultQuantity = 1,
-                    RecipeLevelTable = 123,
-                    TargetItemId = ValidItemsIds.ElementAt(Random.Shared.Next(ValidItemsIds.Count)),
-                    AmountIngredient0 = id + 2,
-                    ItemIngredient0TargetId = id + 3
-                })
+             select new RecipePoco
+             {
+                 Id = id,
+                 CanHq = id % 2 == 0,
+                 CraftType = id % 2 == 0 ? 3 : 7,
+                 CanQuickSynth = id % 2 == 0,
+                 ResultQuantity = 1,
+                 RecipeLevelTable = 123,
+                 TargetItemId = ValidItemsIds.ElementAt(Random.Shared.Next(ValidItemsIds.Count)),
+                 AmountIngredient0 = id + 2,
+                 ItemIngredient0TargetId = id + 3
+             })
             .ToList();
         await context.Recipe.AddRangeAsync(allRecipes);
 
         var itemList = ValidItemsIds.Select(i => new ItemPoco
-            {
-                Id = i,
-                Name = $"Item {i}",
-                Description = $"Item {i} description",
-                IconId = i + 111,
-                CanHq = i % 2 == 0,
-                PriceLow = i * 3 + 11,
-                PriceMid = i * 3 + 12,
-                Level = i + 13,
-                StackSize = 1
-            })
+        {
+            Id = i,
+            Name = $"Item {i}",
+            Description = $"Item {i} description",
+            IconId = i + 111,
+            CanHq = i % 2 == 0,
+            PriceLow = i * 3 + 11,
+            PriceMid = i * 3 + 12,
+            Level = i + 13,
+            StackSize = 1
+        })
             .ToList();
         await context.Item.AddRangeAsync(itemList);
 
@@ -168,37 +172,37 @@ public class GilGoblinDatabaseFixture
 
         var allPrices =
             (from itemId in ValidItemsIds
-                from worldId in ValidWorldIds
-                from quality in qualities
-                select new PricePoco(itemId, worldId, quality))
+             from worldId in ValidWorldIds
+             from quality in qualities
+             select new PricePoco(itemId, worldId, quality))
             .ToList();
 
         await context.Price.AddRangeAsync(allPrices);
 
         var recipeCosts =
             (from recipeId in ValidRecipeIds
-                from worldId in ValidWorldIds
-                from quality in qualities
-                select new RecipeCostPoco(
-                    recipeId,
-                    worldId,
-                    quality,
-                    Random.Shared.Next(120, 800),
-                    DateTimeOffset.UtcNow))
+             from worldId in ValidWorldIds
+             from quality in qualities
+             select new RecipeCostPoco(
+                 recipeId,
+                 worldId,
+                 quality,
+                 Random.Shared.Next(120, 800),
+                 DateTimeOffset.UtcNow))
             .ToList();
 
         await context.RecipeCost.AddRangeAsync(recipeCosts);
 
         var recipeProfits =
             (from recipeId in ValidRecipeIds
-                from worldId in ValidWorldIds
-                from quality in qualities
-                select new RecipeProfitPoco(
-                    recipeId,
-                    worldId,
-                    quality,
-                    Random.Shared.Next(120, 800),
-                    DateTimeOffset.UtcNow))
+             from worldId in ValidWorldIds
+             from quality in qualities
+             select new RecipeProfitPoco(
+                 recipeId,
+                 worldId,
+                 quality,
+                 Random.Shared.Next(120, 800),
+                 DateTimeOffset.UtcNow))
             .ToList();
 
         await context.RecipeProfit.AddRangeAsync(recipeProfits);
@@ -210,6 +214,9 @@ public class GilGoblinDatabaseFixture
 
     protected string GetConnectionString()
     {
+        if (_postgresContainer == null)
+            throw new InvalidOperationException("Postgres container not started");
+
         var includeErrorDetailTrue = Debug ? ";Include Error Detail=true" : string.Empty;
         var connectionString = string.Concat(_postgresContainer.GetConnectionString(), includeErrorDetailTrue)
                                ?? throw new InvalidOperationException("Connection string not found");

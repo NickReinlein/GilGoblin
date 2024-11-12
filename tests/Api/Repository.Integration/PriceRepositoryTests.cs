@@ -147,10 +147,10 @@ public class PriceRepositoryTests : GilGoblinDatabaseFixture
 
         _ = _priceRepo.Get(validWorldId, validItemsId, true);
 
-        _cache.Received(1).Get((validWorldId, validItemsId));
+        _cache.Received(1).Get((validWorldId, validItemsId, true));
         _cache
             .Received(1)
-            .Add((validWorldId, validItemsId),
+            .Add((validWorldId, validItemsId, true),
                 Arg.Is<PricePoco>(price =>
                     price.WorldId == validWorldId &&
                     price.ItemId == validItemsId));
@@ -161,18 +161,19 @@ public class PriceRepositoryTests : GilGoblinDatabaseFixture
     {
         using var context = GetDbContext();
         var poco = context.Price.First();
-        _cache.Get((poco.WorldId, poco.ItemId)).Returns(null, poco);
+        _cache.Get((poco.WorldId, poco.ItemId, true)).Returns(null, poco);
 
         _ = _priceRepo.Get(poco.WorldId, poco.ItemId, true);
         _ = _priceRepo.Get(poco.WorldId, poco.ItemId, true);
 
-        _cache.Received(2).Get((poco.WorldId, poco.ItemId));
+        _cache.Received(2).Get((poco.WorldId, poco.ItemId, true));
         _cache
             .Received(1)
-            .Add((poco.WorldId, poco.ItemId),
+            .Add((poco.WorldId, poco.ItemId, true),
                 Arg.Is<PricePoco>(price =>
                     price.WorldId == poco.WorldId &&
-                    price.ItemId == poco.ItemId)
+                    price.ItemId == poco.ItemId &&
+                    price.IsHq == poco.IsHq)
             );
     }
 
@@ -184,7 +185,7 @@ public class PriceRepositoryTests : GilGoblinDatabaseFixture
 
         await _priceRepo.FillCache();
 
-        allPrices.ForEach(price => _cache.Received(1).Add((price.WorldId, price.ItemId), price));
+        allPrices.ForEach(price => _cache.Received(1).Add((price.WorldId, price.ItemId, price.IsHq), price));
     }
 
     [Test]
@@ -196,7 +197,7 @@ public class PriceRepositoryTests : GilGoblinDatabaseFixture
 
         await _priceRepo.FillCache();
 
-        _cache.DidNotReceive().Add(Arg.Any<(int, int)>(), Arg.Any<PricePoco>());
+        _cache.DidNotReceive().Add(Arg.Any<(int, int, bool)>(), Arg.Any<PricePoco>());
     }
 
     #endregion Caching

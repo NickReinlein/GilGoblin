@@ -7,7 +7,8 @@ public record AverageSalePricePoco(
     int? WorldDataPointId = null,
     int? DcDataPointId = null,
     int? RegionDataPointId = null)
-    : PriceDataPointPoco(ItemId,
+    : PriceDataPointPoco(
+        ItemId,
         WorldId,
         IsHq,
         WorldDataPointId,
