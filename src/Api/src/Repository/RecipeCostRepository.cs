@@ -22,12 +22,12 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
 {
     public async Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId, bool isHq = false)
     {
-        var cached = cache.Get((worldId, recipeId, isHq));
+        var cached = cache.Get(new TripleKey(worldId, recipeId, isHq));
         if (cached is not null)
         {
             if (IsDataFresh(cached.LastUpdated))
                 return cached;
-            cache.Delete((worldId, recipeId, isHq));
+            cache.Delete(new TripleKey(worldId, recipeId, isHq));
         }
 
         await using var scope = serviceProvider.CreateAsyncScope();
@@ -64,7 +64,7 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         await dbContext.RecipeCost
             .ForEachAsync(cost =>
-                cache.Add((cost.WorldId, cost.RecipeId, cost.IsHq), cost));
+                cache.Add(new TripleKey(cost.WorldId, cost.RecipeId, cost.IsHq), cost));
     }
 
     private static int DataFreshnessInHours => 48;

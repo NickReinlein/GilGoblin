@@ -1,7 +1,8 @@
-// using GilGoblin.Api.Pocos;
-//
-// namespace GilGoblin.Api.Cache;
-//
-// public interface ICraftCache : IDataCache<(int, int), CraftSummaryPoco> { }
-//
-// public class CraftCache : DataCache<(int, int), CraftSummaryPoco>, ICraftCache { }
+using GilGoblin.Api.Pocos;
+using GilGoblin.Database.Pocos;
+
+namespace GilGoblin.Api.Cache;
+
+public interface ICraftCache : IDataCache<TripleKey, CraftSummaryPoco>;
+
+public class CraftCache : DataCache<TripleKey, CraftSummaryPoco>, ICraftCache;

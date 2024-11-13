@@ -57,6 +57,28 @@ public class PriceUpdaterTests : DataUpdaterTests
     }
 
     [Test]
+    public async Task GivenFetchAsync_WhenTokenIsCancelled_ThenWeStopGracefully()
+    {
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(200);
+        var ct = cts.Token;
+
+        await cts.CancelAsync();
+        await _priceUpdater.FetchAsync(34, ct);
+
+        await _marketableIdsFetcher.DidNotReceive().GetMarketableItemIdsAsync();
+        await _priceFetcher.DidNotReceive().FetchByIdsAsync(
+            Arg.Any<IEnumerable<int>>(),
+            Arg.Any<int>(),
+            Arg.Any<CancellationToken>());
+        await _priceConverter.DidNotReceive()
+            .ConvertAndSaveAsync(
+                Arg.Any<PriceWebPoco>(),
+                Arg.Any<int>(),
+                Arg.Any<CancellationToken>());
+    }
+
+    [Test]
     public async Task GivenExecuteTask_WhenWorldsAreReturned_ThenWeFetchForEach()
     {
         var cts = new CancellationTokenSource();
@@ -72,12 +94,16 @@ public class PriceUpdaterTests : DataUpdaterTests
             34,
             ct);
         foreach (var pocoId in idList)
+        {
+            await _priceFetcher.Received(1).FetchByIdsAsync(Arg.Any<List<int>>(), 34, ct);
             await _priceConverter.Received(1)
                 .ConvertAndSaveAsync(
                     Arg.Is<PriceWebPoco>(p => p.GetId() == pocoId),
                     worldId,
                     CancellationToken.None);
+        }
     }
+
 
     [Test]
     public async Task GivenFetchAsync_WhenSuccessful_ThenWeSaveResults()
@@ -111,16 +137,16 @@ public class PriceUpdaterTests : DataUpdaterTests
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([]);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
+        cts.CancelAfter(100);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
-        await _marketableIdsFetcher.Received(1).GetMarketableItemIdsAsync();
+        await _marketableIdsFetcher.Received().GetMarketableItemIdsAsync();
         await _priceFetcher.DidNotReceive()
             .FetchByIdsAsync(
                 Arg.Any<IEnumerable<int>>(),
                 Arg.Any<int?>(),
                 Arg.Any<CancellationToken>());
-        _logger.Received(1).LogError(errorMessage);
+        _logger.Received().LogError(errorMessage);
     }
 
     [TestCase(0)]

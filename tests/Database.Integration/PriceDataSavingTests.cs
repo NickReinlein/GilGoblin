@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;
 
-[Ignore("I give up")]
 public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
 {
     [Test]
@@ -31,7 +30,9 @@ public class PriceDataSavingTests : SaveEntityToDbTests<PriceDataPoco>
     protected override async Task ValidateResultSavedToDatabase(PriceDataPoco entity)
     {
         await using var ctx = GetDbContext();
-        var result = await ctx.PriceData.FirstOrDefaultAsync(x =>
+        var result = await ctx.PriceData
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
             x.PriceType == entity.PriceType &&
             x.Price == entity.Price &&
             x.WorldId == entity.WorldId);

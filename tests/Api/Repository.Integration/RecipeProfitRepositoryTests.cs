@@ -46,17 +46,16 @@ public class RecipeProfitRepositoryTests : GilGoblinDatabaseFixture
     }
 
     [TestCaseSource(nameof(GetValidRecipeKeys))]
-    public async Task GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(
-        (int id, int worldId, bool isHq) data)
+    public async Task GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(TripleKey key)
     {
         await using var context = GetDbContext();
         var expectedRecipes = context.RecipeProfit
             .FirstOrDefault(c =>
-                c.RecipeId == data.id &&
-                c.WorldId == data.worldId &&
-                c.IsHq == data.isHq);
+                c.RecipeId == key.Id &&
+                c.WorldId == key.WorldId &&
+                c.IsHq == key.IsHq);
 
-        var result = await _repo.GetAsync(data.worldId, data.id, data.isHq);
+        var result = await _repo.GetAsync(key.WorldId, key.Id, key.IsHq);
 
         Assert.Multiple(() =>
             {
@@ -68,18 +67,18 @@ public class RecipeProfitRepositoryTests : GilGoblinDatabaseFixture
 
     [TestCaseSource(nameof(GetValidRecipeKeys))]
     public async Task GivenAGet_WhenTheIdIsValidButTheWorldIdIsNot_ThenNullIsReturned(
-        (int id, int worldId, bool isHq) data)
+        TripleKey data)
     {
-        var result = await _repo.GetAsync(9898, data.id, data.isHq);
+        var result = await _repo.GetAsync(9898, data.Id, data.IsHq);
 
         Assert.That(result, Is.Null);
     }
 
-    private static IEnumerable<(int, int, bool)> GetValidRecipeKeys()
+    private static IEnumerable<TripleKey> GetValidRecipeKeys()
     {
         return from recipeId in ValidRecipeIds
             from worldId in ValidWorldIds
             from hq in new[] { true, false }
-            select (recipeId, worldId, hq);
+            select new TripleKey(worldId, recipeId, hq);
     }
 }

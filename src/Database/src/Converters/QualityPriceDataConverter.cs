@@ -47,8 +47,11 @@ public class QualityPriceDataConverter(
             var dailySaleVelocity =
                 await saleVelocityConverter.ConvertAndSaveAsync(qualityData.DailySaleVelocity, itemId, worldId, isHq);
 
-            return await ConvertToQualityPriceDataAndSave(minListing, averageSalePrice,
-                recentPurchase, dailySaleVelocity);
+            return await ConvertToQualityPriceDataAndSave(
+                averageSalePrice,
+                minListing,
+                recentPurchase,
+                 dailySaleVelocity);
         }
         catch (Exception e)
         {
@@ -58,8 +61,8 @@ public class QualityPriceDataConverter(
     }
 
     private async Task<QualityPriceDataPoco> ConvertToQualityPriceDataAndSave(
-        MinListingPoco? minListing,
         AverageSalePricePoco? averageSalePrice,
+        MinListingPoco? minListing,
         RecentPurchasePoco? recentPurchase,
         DailySaleVelocityPoco? dailySaleVelocity)
     {

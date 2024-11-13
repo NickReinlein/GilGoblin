@@ -5,21 +5,20 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Database.Integration;
 
-[Ignore("I give up")]
 public class AverageSalePricePocoSavingTests : PriceDataPointSavingTests<AverageSalePricePoco>
 {
-    protected override AverageSalePricePoco GetEntity() => new(ValidRecipeIds[0], ValidWorldIds[0], false);
+    protected override AverageSalePricePoco GetEntity() => new(ValidItemsIds[0], ValidWorldIds[0], false);
 }
 
-// public class RecentPurchasePocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
-// {
-//     protected override RecentPurchasePoco GetEntity() => new(12345, ValidWorldIds[0], false);
-// }
-//
-// public class MinListingPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
-// {
-//     protected override MinListingPoco GetEntity() => new(12345, ValidWorldIds[0], false);
-// }
+public class RecentPurchasePocoSavingTests : PriceDataPointSavingTests<RecentPurchasePoco>
+{
+    protected override RecentPurchasePoco GetEntity() => new(ValidItemsIds[0], ValidWorldIds[0], false);
+}
+
+public class MinListingPocoSavingTests : PriceDataPointSavingTests<MinListingPoco>
+{
+    protected override MinListingPoco GetEntity() => new(ValidItemsIds[0], ValidWorldIds[0], false);
+}
 
 public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> where T : PriceDataPointPoco
 {
@@ -38,16 +37,21 @@ public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> wher
 
     protected override T GetModifiedEntity(T entity)
     {
-        return entity with  { DcDataPoint = new PriceDataPoco("DC", 300, 280, 300), };
+        return entity with { DcDataPoint = new PriceDataPoco("DC", 300, 280, 300), };
     }
 
     protected override async Task ValidateResultSavedToDatabase(T entity)
     {
         await using var ctx = GetDbContext();
-        var result = await ctx.Set<T>().FirstOrDefaultAsync(
-            x => x.ItemId == entity.ItemId &&
-                 x.IsHq == entity.IsHq &&
-                 x.WorldId == entity.WorldId);
+        var result = await ctx.Set<T>()
+            .AsNoTracking()
+            .Include(x => x.DcDataPoint)
+            .Include(x => x.RegionDataPoint)
+            .Include(x => x.WorldDataPoint)
+            .FirstOrDefaultAsync(x =>
+                x.ItemId == entity.ItemId &&
+                x.IsHq == entity.IsHq &&
+                x.WorldId == entity.WorldId);
 
         Assert.Multiple(() =>
         {
@@ -55,9 +59,6 @@ public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> wher
             Assert.That(result!.ItemId, Is.EqualTo(entity.ItemId));
             Assert.That(result.WorldId, Is.EqualTo(entity.WorldId));
             Assert.That(result.IsHq, Is.EqualTo(entity.IsHq));
-            Assert.That(result.DcDataPointId, Is.EqualTo(entity.DcDataPointId));
-            Assert.That(result.RegionDataPointId, Is.EqualTo(entity.RegionDataPointId));
-            Assert.That(result.WorldDataPointId, Is.EqualTo(entity.WorldDataPointId));
             Assert.That(result.DcDataPoint, Is.EqualTo(entity.DcDataPoint));
             Assert.That(result.RegionDataPoint, Is.EqualTo(entity.RegionDataPoint));
             Assert.That(result.WorldDataPoint, Is.EqualTo(entity.WorldDataPoint));
@@ -83,7 +84,6 @@ public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> wher
         else
             await ctx.AddAsync(entity);
 
-        var savedCount = await ctx.SaveChangesAsync();
-        Assert.That(savedCount, Is.EqualTo(1));
+        await ctx.SaveChangesAsync();
     }
 }

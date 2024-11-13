@@ -16,7 +16,7 @@ namespace GilGoblin.Tests.Database.Integration;
 
 public class GilGoblinDatabaseFixture
 {
-    protected PostgreSqlContainer? _postgresContainer = null;
+    protected PostgreSqlContainer? _postgresContainer;
     protected IConfigurationRoot _configuration;
     protected DbContextOptions<GilGoblinDbContext> _options;
     protected ServiceProvider _serviceProvider;

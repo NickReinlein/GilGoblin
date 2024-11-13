@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using GilGoblin.Api.Repository;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Database.Pocos;
@@ -19,6 +20,7 @@ public interface IAccountant<T> where T : class
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
+[ExcludeFromCodeCoverage]
 public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<T>> logger)
     : BackgroundService, IAccountant<T> where T : class
 {

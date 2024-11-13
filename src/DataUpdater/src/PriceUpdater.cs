@@ -103,42 +103,45 @@ public class PriceUpdater(
 
     protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId, CancellationToken ct)
     {
-        try
+        while (!ct.IsCancellationRequested)
         {
-            if (worldId is null or < 1)
-                throw new Exception("World Id is invalid");
-
-            var world = worldId.GetValueOrDefault();
-            if (world <= 0)
-                throw new ArgumentException($"Interpreted world id as {world}");
-
-            await FillItemIdCache();
-
-            using var scope = serviceProvider.CreateScope();
-            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
-            var currentPrices = priceRepo.GetAll(world).ToList();
-            var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
-            var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
-
-            var outdatedPrices = currentPrices.Where(p =>
+            try
             {
-                var priceAge = p.Updated;
-                var ageInHours = (DateTimeOffset.UtcNow - priceAge).TotalHours;
-                return ageInHours > hoursBeforeDataExpiry;
-            }).ToList();
+                if (worldId is null or < 1)
+                    throw new Exception("World Id is invalid");
 
-            var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
-            var idsToUpdate = outdatedPriceIdList.Concat(newPriceIds).ToList();
+                var world = worldId.GetValueOrDefault();
+                if (world <= 0)
+                    throw new ArgumentException($"Interpreted world id as {world}");
 
-            return idsToUpdate;
-        }
-        catch (TaskCanceledException)
-        {
-            logger.LogInformation("Task was cancelled");
-        }
-        catch (Exception e)
-        {
-            logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+                await FillItemIdCache();
+
+                using var scope = serviceProvider.CreateScope();
+                var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+                var currentPrices = priceRepo.GetAll(world).ToList();
+                var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
+                var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
+
+                var outdatedPrices = currentPrices.Where(p =>
+                {
+                    var priceAge = p.Updated;
+                    var ageInHours = (DateTimeOffset.UtcNow - priceAge).TotalHours;
+                    return ageInHours > hoursBeforeDataExpiry;
+                }).ToList();
+
+                var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
+                var idsToUpdate = outdatedPriceIdList.Concat(newPriceIds).ToList();
+
+                return idsToUpdate;
+            }
+            catch (TaskCanceledException)
+            {
+                logger.LogInformation("Task was cancelled");
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+            }
         }
 
         return [];

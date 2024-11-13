@@ -12,7 +12,9 @@ namespace GilGoblin.Database.Converters;
 
 public interface IPriceConverter
 {
-    Task<(PricePoco?, PricePoco?)> ConvertAndSaveAsync(PriceWebPoco webPoco, int worldId,
+    Task<(PricePoco?, PricePoco?)> ConvertAndSaveAsync(
+        PriceWebPoco webPoco,
+        int worldId,
         CancellationToken ct = default);
 }
 

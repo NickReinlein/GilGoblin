@@ -17,7 +17,9 @@ public class RecipeCostSavingTests : SaveEntityToDbTests<RecipeCostPoco>
     protected override async Task ValidateResultSavedToDatabase(RecipeCostPoco entity)
     {
         await using var ctx = GetDbContext();
-        var result = await ctx.RecipeCost.FirstOrDefaultAsync(
+        var result = await ctx.RecipeCost
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
             x =>
                 x.RecipeId == entity.RecipeId &&
                 x.IsHq == entity.IsHq &&

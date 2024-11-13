@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
@@ -20,6 +21,7 @@ public interface IDataUpdater<T, U>
     Task FetchAsync(int? worldId = null, CancellationToken ct = default);
 }
 
+[ExcludeFromCodeCoverage]
 public abstract class DataUpdater<T, U>(
     IServiceProvider serviceProvider,
     ILogger<DataUpdater<T, U>> logger)

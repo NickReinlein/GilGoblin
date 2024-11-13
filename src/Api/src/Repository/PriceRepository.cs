@@ -21,7 +21,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
 {
     public PricePoco? Get(int worldId, int id, bool isHq)
     {
-        var cached = cache.Get((worldId, id, isHq));
+        var cached = cache.Get(new TripleKey(worldId, id, isHq));
         if (cached is not null)
             return cached;
 
@@ -39,7 +39,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
                     p.WorldId == worldId &&
                     p.IsHq == isHq);
             if (price is not null)
-                cache.Add((worldId, id, isHq), price);
+                cache.Add(new TripleKey(worldId, id, isHq), price);
 
             return price;
         }
@@ -82,7 +82,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var items = dbContext.Price.ToList();
-        items.ForEach(price => cache.Add((price.WorldId, price.ItemId, price.IsHq), price));
+        items.ForEach(price => cache.Add(new TripleKey(price.WorldId, price.ItemId, price.IsHq), price));
         return Task.CompletedTask;
     }
 }

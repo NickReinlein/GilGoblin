@@ -10,10 +10,12 @@ public class ItemSavingTests : SaveEntityToDbTests<ItemPoco>
     protected override async Task ValidateResultSavedToDatabase(ItemPoco entity)
     {
         await using var ctx = GetDbContext();
-        var result = await ctx.Item.FirstOrDefaultAsync(
-            x => x.Name == entity.Name &&
-                 x.Description == entity.Description &&
-                 x.IconId == entity.IconId);
+        var result = await ctx.Item
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Name == entity.Name &&
+                     x.Description == entity.Description &&
+                     x.IconId == entity.IconId);
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);

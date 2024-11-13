@@ -1,6 +1,5 @@
 using System;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Database.Pocos.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

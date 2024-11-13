@@ -18,7 +18,7 @@ public class BatcherTests
     [Test]
     public void GivenAnEmptyList_WhenWeSplitIntoBatchJobs_WeReturnAnEmptyResult()
     {
-        var result = _batcher.SplitIntoBatchJobs(new List<int>());
+        var result = _batcher.SplitIntoBatchJobs([]);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Any(), Is.False);

@@ -22,7 +22,7 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
 {
     public async Task<RecipeProfitPoco?> GetAsync(int worldId, int recipeId, bool isHq = false)
     {
-        var key = (worldId, recipeId, isHq);
+        var key = new TripleKey(worldId, recipeId, isHq);
         var cached = cache.Get(key);
         if (cached is not null)
         {
@@ -72,7 +72,7 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         await dbContext.RecipeProfit
             .ForEachAsync(cost =>
-                cache.Add((cost.WorldId, cost.RecipeId, cost.IsHq), cost));
+                cache.Add(new TripleKey(cost.WorldId, cost.RecipeId, cost.IsHq), cost));
     }
 
     private static bool DataIsFresh(DateTimeOffset timestamp) =>

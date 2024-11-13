@@ -64,7 +64,7 @@ public class CraftingCalculatorTests
     {
         SetupForBasicItemCraftingCostCase(NewRecipe, GetNewPrice());
 
-        var (recipeId, cost) = await _calc.CalculateCraftingCostForItem(_worldId, NewRecipe.TargetItemId);
+        var (recipeId, _) = await _calc.CalculateCraftingCostForItem(_worldId, NewRecipe.TargetItemId);
 
         _recipes.Received().Get(NewRecipe.Id);
         await _grocer.Received(1).BreakdownRecipeById(NewRecipe.Id);
@@ -114,7 +114,7 @@ public class CraftingCalculatorTests
         SetupBasicTestCase(recipe, price);
         SetupPricesForIngredients(recipe, GetAverageSalePricePoco(recipe.TargetItemId, price.WorldId));
 
-        var result = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
+        _ = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
         _recipes.Received().Get(recipeId);
         _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetId);

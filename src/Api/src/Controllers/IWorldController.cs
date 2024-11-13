@@ -7,5 +7,5 @@ namespace GilGoblin.Api.Controllers;
 public interface IWorldController
 {
     IEnumerable<WorldPoco> GetAllWorlds();
-    ActionResult<WorldPoco> GetWorld(int id);
+    ActionResult<WorldPoco?> GetWorld(int id);
 }

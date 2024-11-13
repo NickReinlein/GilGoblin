@@ -21,5 +21,7 @@ public static class ItemWebPocoExtensions
         };
 
     public static List<ItemPoco> ToItemPocoList(this IEnumerable<ItemWebPoco?> pocos) =>
-        pocos.Where(poco => poco is not null).Select(item => item.ToItemPoco()).ToList();
+        pocos.Where(poco => poco is not null)
+            .Select(poco => poco!.ToItemPoco())
+            .ToList();
 }
