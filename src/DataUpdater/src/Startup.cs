@@ -65,7 +65,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     private static void AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        // services.AddScoped<ICraftRepository, CraftRepository>();
+        services.AddScoped<ICraftRepository, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
@@ -76,12 +76,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
             .AddScoped<IPriceCache, PriceCache>()
             .AddScoped<IRecipeCache, RecipeCache>()
             .AddScoped<IItemRecipeCache, ItemRecipeCache>()
-            .AddScoped<IWorldCache, WorldCache>();
-        // services.AddScoped<ICraftCache, CraftCache>();
-        services.AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>();
-        services.AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>();
-
-        services
+            .AddScoped<IWorldCache, WorldCache>()
+            .AddScoped<ICraftCache, CraftCache>()
+            .AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>()
+            .AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>()
             .AddScoped<IRepositoryCache, ItemRepository>()
             .AddScoped<IRepositoryCache, PriceRepository>()
             .AddScoped<IRepositoryCache, RecipeRepository>();

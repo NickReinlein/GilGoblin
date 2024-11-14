@@ -117,15 +117,19 @@ public class RecipeRepositoryTests : GilGoblinDatabaseFixture
     public async Task GivenGetRecipesForItem_WhenTheIdIsValidAndCached_ThenWeReturnTheCachedEntry(int targetItemId)
     {
         await using var ctx = GetDbContext();
-        var recipeCount = ctx.Recipe.Count(r => r.TargetItemId == targetItemId);
+        var recipes = ctx.Recipe.Where(r => r.TargetItemId == targetItemId).ToList();
+        _itemRecipeCache.Get(targetItemId)
+            .Returns(recipes
+                .Where(r => r.TargetItemId == targetItemId)
+                .ToList());
 
         var result = _recipeRepo.GetRecipesForItem(targetItemId);
 
         _itemRecipeCache.Received(1).Get(targetItemId);
-        Assert.That(result, Has.Count.EqualTo(recipeCount));
+        Assert.That(result, Has.Count.EqualTo(recipes.Count));
         Assert.That(result.All(r => r.TargetItemId == targetItemId));
-        // if (recipeCount > 0)
-            // _itemRecipeCache.DidNotReceive().Add(targetItemId, Arg.Any<List<RecipePoco>>());
+        if (recipes.Any())
+            _itemRecipeCache.DidNotReceive().Add(targetItemId, Arg.Any<List<RecipePoco>>());
     }
 
     [TestCase(-1)]

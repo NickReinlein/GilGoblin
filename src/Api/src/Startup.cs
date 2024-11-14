@@ -62,7 +62,7 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>();
         services.AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>();
-        // services.AddScoped<ICraftCache, CraftCache>();
+        services.AddScoped<ICraftCache, CraftCache>();
         services.AddScoped<IRepositoryCache, ItemRepository>();
         services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
@@ -74,7 +74,7 @@ public class Startup(IConfiguration configuration)
         services
             .AddControllers()
             .AddApplicationPart(typeof(ItemController).Assembly)
-            // .AddApplicationPart(typeof(CraftController).Assembly)
+            .AddApplicationPart(typeof(CraftController).Assembly)
             .AddApplicationPart(typeof(PriceController).Assembly)
             .AddApplicationPart(typeof(RecipeController).Assembly);
         return services;
@@ -83,7 +83,7 @@ public class Startup(IConfiguration configuration)
     public static IServiceCollection AddGoblinCrafting(IServiceCollection services)
     {
         services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        // services.AddScoped<ICraftRepository, CraftRepository>();
+        services.AddScoped<ICraftRepository, CraftRepository>();
         services.AddScoped<IRecipeGrocer, RecipeGrocer>();
         return services;
     }

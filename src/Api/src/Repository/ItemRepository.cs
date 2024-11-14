@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Api.Repository;
 
-public interface IItemRepository : IDataRepository<ItemPoco> { }
+public interface IItemRepository : IDataRepository<ItemPoco>;
 
 public class ItemRepository(
     IServiceProvider serviceProvider,
@@ -42,11 +42,11 @@ public class ItemRepository(
         }
     }
 
-    public List<ItemPoco> GetMultiple(IEnumerable<int> itemIds)
+    public List<ItemPoco> GetMultiple(IEnumerable<int> ids)
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        return dbContext.Item.Where(i => itemIds.Any(a => a == i.Id)).ToList();
+        return dbContext.Item.Where(i => ids.Any(a => a == i.Id)).ToList();
     }
 
     public List<ItemPoco> GetAll()

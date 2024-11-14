@@ -69,12 +69,12 @@ public class RecipeRepository(
         return CacheRecipes(recipes);
     }
 
-    public List<RecipePoco> GetMultiple(IEnumerable<int> itemIds)
+    public List<RecipePoco> GetMultiple(IEnumerable<int> ids)
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var recipes = dbContext.Recipe.Where(r =>
-            itemIds.Any(a => a == r.Id)).ToList();
+            ids.Any(a => a == r.Id)).ToList();
         return CacheRecipes(recipes);
     }
 

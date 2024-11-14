@@ -25,11 +25,12 @@ public class ItemUpdater(
         await FetchAsync(worlds.FirstOrDefault()?.GetId(), ct);
     }
 
-    protected override async Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated, int? worldId = null)
+    protected override async Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated, int? worldId = null,
+        CancellationToken ct = default)
     {
-        using var scope = serviceProvider.CreateScope();
+        await using var scope = serviceProvider.CreateAsyncScope();
         var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<ItemPoco>>();
-        var success = await saver.SaveAsync(updated.ToItemPocoList());
+        var success = await saver.SaveAsync(updated.ToItemPocoList(), ct);
         if (!success)
             Logger.LogError("Failed to save updates!");
     }

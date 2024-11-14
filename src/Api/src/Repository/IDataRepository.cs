@@ -6,6 +6,6 @@ namespace GilGoblin.Api.Repository;
 public interface IDataRepository<T> : IRepositoryCache
 {
     T? Get(int itemId);
-    List<T> GetMultiple(IEnumerable<int> itemIds);
+    List<T> GetMultiple(IEnumerable<int> ids);
     List<T> GetAll();
 }

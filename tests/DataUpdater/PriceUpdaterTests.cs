@@ -27,6 +27,7 @@ public class PriceUpdaterTests : DataUpdaterTests
     private ILogger<PriceUpdater> _logger;
     private IRecipeRepository _recipeRepo;
     private IPriceConverter _priceConverter;
+    private IWorldRepository _worldRepo;
 
     private const int worldId = 34;
     private const int itemId1 = 1500;
@@ -40,6 +41,7 @@ public class PriceUpdaterTests : DataUpdaterTests
         _priceFetcher = Substitute.For<IPriceFetcher>();
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
         _recipeRepo = Substitute.For<IRecipeRepository>();
+        _worldRepo = Substitute.For<IWorldRepository>();
         _saver = Substitute.For<IDataSaver<PricePoco>>();
         _priceConverter = Substitute.For<IPriceConverter>();
         _logger = Substitute.For<ILogger<PriceUpdater>>();
@@ -48,6 +50,7 @@ public class PriceUpdaterTests : DataUpdaterTests
         _serviceProvider.GetService(typeof(IPriceFetcher)).Returns(_priceFetcher);
         _serviceProvider.GetService(typeof(IPriceRepository<PricePoco>)).Returns(_priceRepo);
         _serviceProvider.GetService(typeof(IRecipeRepository)).Returns(_recipeRepo);
+        _serviceProvider.GetService(typeof(IWorldRepository)).Returns(_worldRepo);
         _serviceProvider.GetService(typeof(IDataSaver<PricePoco>)).Returns(_saver);
         _serviceProvider.GetService(typeof(IPriceConverter)).Returns(_priceConverter);
 
@@ -84,6 +87,26 @@ public class PriceUpdaterTests : DataUpdaterTests
         var cts = new CancellationTokenSource();
         cts.CancelAfter(200);
         var ct = cts.Token;
+        var worlds = Enumerable.Range(1, 10)
+            .Select(i => new WorldPoco { Id = i })
+            .ToList();
+        _worldRepo.GetAll().Returns(worlds);
+
+        await _priceUpdater.StartAsync(ct);
+
+        foreach (var world in worlds)
+            await _priceFetcher.Received(1).FetchByIdsAsync(
+                Arg.Any<IEnumerable<int>>(),
+                world.Id,
+                Arg.Any<CancellationToken>());
+    }
+
+    [Test]
+    public async Task GivenFetchAsync_WhenRun_ThenWeFetchConvertAndSaveResults()
+    {
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(200);
+        var ct = cts.Token;
         var idList = GetMultipleNewPocos().Select(i => i.GetId()).ToList();
 
         await _priceUpdater.FetchAsync(34, ct);
@@ -95,15 +118,13 @@ public class PriceUpdaterTests : DataUpdaterTests
             ct);
         foreach (var pocoId in idList)
         {
-            await _priceFetcher.Received(1).FetchByIdsAsync(Arg.Any<List<int>>(), 34, ct);
             await _priceConverter.Received(1)
                 .ConvertAndSaveAsync(
                     Arg.Is<PriceWebPoco>(p => p.GetId() == pocoId),
                     worldId,
-                    CancellationToken.None);
+                    ct);
         }
     }
-
 
     [Test]
     public async Task GivenFetchAsync_WhenSuccessful_ThenWeSaveResults()
@@ -127,7 +148,7 @@ public class PriceUpdaterTests : DataUpdaterTests
                 .ConvertAndSaveAsync(
                     Arg.Is<PriceWebPoco>(p => p.GetId() == pocoId),
                     worldId,
-                    CancellationToken.None);
+                    ct);
     }
 
     [Test]
@@ -226,6 +247,7 @@ public class PriceUpdaterTests : DataUpdaterTests
         var pricePoco = GetOldPrice();
         _priceRepo.GetAll(Arg.Any<int>()).Returns([pricePoco]);
         _recipeRepo.GetAll().Returns([]);
+        _worldRepo.GetAll().Returns([new WorldPoco() { Id = worldId }]);
 
         var saveList = GetMultipleNewPocos();
         var idList = saveList.Select(i => i.GetId()).ToList();

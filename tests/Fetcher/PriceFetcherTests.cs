@@ -47,8 +47,6 @@ public class PriceFetcherTests : FetcherTests
             Assert.That(result.Any(r => r.ItemId == itemId1));
             Assert.That(result.Any(r => r.ItemId == itemId2));
             Assert.That(result.All(r => r.WorldUploadTimes?.Count > 0), Is.True);
-            // Assert.That(result.All(r => r.Hq?.AverageSalePrice?.Price > 0), Is.True);
-            // Assert.That(result.All(r => r.Nq?.AverageSalePrice?.Price > 0), Is.True);
         });
     }
 

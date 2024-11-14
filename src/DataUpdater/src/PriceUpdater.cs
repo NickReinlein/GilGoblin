@@ -62,7 +62,7 @@ public class PriceUpdater(
                     continue;
                 }
 
-                await ConvertAndSaveToDbAsync(fetched, worldId);
+                await ConvertAndSaveToDbAsync(fetched, worldId, ct);
                 await AwaitDelay(ct);
             }
             catch (TaskCanceledException)
@@ -75,7 +75,7 @@ public class PriceUpdater(
         }
     }
 
-    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null)
+    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null, CancellationToken ct = default)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
@@ -85,7 +85,7 @@ public class PriceUpdater(
         {
             try
             {
-                await converter.ConvertAndSaveAsync(webPoco, world);
+                await converter.ConvertAndSaveAsync(webPoco, world, ct);
             }
             catch (Exception e)
             {
@@ -149,7 +149,8 @@ public class PriceUpdater(
 
     private async Task FillItemIdCache()
     {
-        if (AllItemIds.Any() && (DateTimeOffset.UtcNow - LastUpdated).TotalHours < hoursBeforeDataExpiry)
+        if (AllItemIds.Any() && 
+            (DateTimeOffset.UtcNow - LastUpdated).TotalHours < hoursBeforeDataExpiry)
             return;
 
 

@@ -61,13 +61,13 @@ public abstract class DataUpdater<T, U>(
 
     protected abstract Task ExecuteUpdateAsync(CancellationToken ct);
 
-    protected abstract Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null);
+    protected abstract Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null, CancellationToken ct = default);
 
     protected virtual async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
         var updated = await FetchUpdatesForIdsAsync(idList, worldId, ct);
         if (updated.Any())
-            await ConvertAndSaveToDbAsync(updated);
+            await ConvertAndSaveToDbAsync(updated, worldId, ct);
     }
 
     private async Task<List<U>> FetchUpdatesForIdsAsync(
