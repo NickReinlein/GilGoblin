@@ -30,7 +30,14 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
             using var scope = serviceProvider.CreateScope();
             using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var price = dbContext.Price
+                .AsNoTracking()
+                .Include(rd => rd.MinListing)
+                .ThenInclude(ml => ml.DcDataPoint)
                 .Include(p => p.MinListing)
+                .ThenInclude(ml => ml.RegionDataPoint)
+                .Include(rd => rd.MinListing)
+                .ThenInclude(ml => ml.WorldDataPoint)
+                .Include(p => p.RecentPurchase)
                 .Include(p => p.RecentPurchase)
                 .Include(p => p.AverageSalePrice)
                 .Include(p => p.DailySaleVelocity)
@@ -54,6 +61,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.Price
+            .AsNoTracking()
             .Include(p => p.MinListing)
             .Include(p => p.RecentPurchase)
             .Include(p => p.AverageSalePrice)
@@ -70,6 +78,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return dbContext.Price
+            .AsNoTracking()
             .Include(p => p.MinListing)
             .Include(p => p.RecentPurchase)
             .Include(p => p.AverageSalePrice)

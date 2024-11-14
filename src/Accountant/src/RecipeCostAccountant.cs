@@ -49,7 +49,9 @@ public class RecipeCostAccountant(
                     foreach (var quality in new[] { true, false })
                     {
                         var current = recipeCosts.FirstOrDefault(c =>
-                            c.RecipeId == recipeId && c.WorldId == worldId && c.IsHq == quality);
+                            c.RecipeId == recipeId && 
+                            c.WorldId == worldId && 
+                            c.IsHq == quality);
                         if (current is not null)
                         {
                             var age = (DateTimeOffset.UtcNow - current.LastUpdated).TotalHours;
@@ -69,7 +71,7 @@ public class RecipeCostAccountant(
                             worldId,
                             quality,
                             result,
-                            DateTimeOffset.UtcNow.DateTime);
+                            DateTimeOffset.UtcNow);
                         newCosts.Add(newRecipeCost);
                     }
                 }
@@ -117,19 +119,10 @@ public class RecipeCostAccountant(
                 throw new Exception("World Id is invalid");
 
             await using var scope = serviceProvider.CreateAsyncScope();
-            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
             var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             var recipes = recipeRepo.GetAll().ToList();
             var currentRecipeCosts = await costRepo.GetAllAsync(worldId);
-            var prices = priceRepo.GetAll(worldId).ToList();
-            var priceIds = prices.Select(i => i.GetId()).ToList();
-            var currentRecipeIds = currentRecipeCosts
-                .Where(r => r.WorldId == worldId)
-                .Select(c => c.RecipeId)
-                .ToList();
-            var missingPriceIds = priceIds.Except(currentRecipeIds).ToList();
-            idsToUpdate.AddRange(missingPriceIds);
 
             foreach (var recipe in recipes)
             {
@@ -145,6 +138,7 @@ public class RecipeCostAccountant(
                     if (age <= GetDataFreshnessInHours())
                         continue; // Fresh data is skipped
                     idsToUpdate.Add(recipe.Id);
+                    break;
                 }
             }
             return idsToUpdate.Distinct().ToList();

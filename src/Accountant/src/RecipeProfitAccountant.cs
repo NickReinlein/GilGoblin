@@ -140,7 +140,7 @@ public class RecipeProfitAccountant(
 
         var profitAmount = (int)price.GetBestPriceCost() - cost.Amount;
 
-        return new RecipeProfitPoco(recipeId, worldId, isHq, profitAmount, DateTimeOffset.UtcNow.DateTime);
+        return new RecipeProfitPoco(recipeId, worldId, isHq, profitAmount, DateTimeOffset.UtcNow);
     }
 
     public override async Task<List<int>> GetIdsToUpdate(int worldId)

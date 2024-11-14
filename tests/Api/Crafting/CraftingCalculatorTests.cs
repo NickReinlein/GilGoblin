@@ -142,7 +142,7 @@ public class CraftingCalculatorTests
     [Test]
     public async Task GivenCalculateCraftingCostForRecipe_WhenTheCostIsCached_ThenItIsReturnedImmediately()
     {
-        var poco = new RecipeCostPoco(_recipeId, _worldId, false, 9001, DateTimeOffset.UtcNow.DateTime);
+        var poco = new RecipeCostPoco(_recipeId, _worldId, false, 9001, DateTimeOffset.UtcNow);
         _recipeCosts.GetAsync(_worldId, _recipeId).Returns(poco);
 
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, _recipeId, false);

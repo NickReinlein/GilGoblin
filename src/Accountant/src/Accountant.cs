@@ -77,7 +77,11 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
 
         try
         {
-            await ComputeListAsync(worldId, idList, ct);
+            var batcher = new Batcher.Batcher<int>();
+            var batchesOfIds = batcher.SplitIntoBatchJobs(idList);
+            foreach (var idBatch in batchesOfIds)
+                await ComputeListAsync(worldId, idBatch, ct);
+
             logger.LogInformation($"Boss, books are closed for world {worldId}");
         }
         catch (Exception e)
