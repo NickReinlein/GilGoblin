@@ -33,7 +33,7 @@ public class Startup(IConfiguration configuration)
             .AddSingleton<IPriceSaver, PriceSaver>()
             .AddSingleton<IAccountant<RecipeCostPoco>, RecipeCostAccountant>()
             .AddSingleton<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>()
-            .AddHostedService<RecipeCostAccountant>()
+            // .AddHostedService<RecipeCostAccountant>()
             .AddHostedService<RecipeProfitAccountant>();
     }
 

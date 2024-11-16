@@ -13,9 +13,9 @@ public record PriceWebPoco(
 }
 
 public record QualityPriceDataWebPoco(
-    PriceDataPointWebPoco? MinListing,
     PriceDataPointWebPoco? AverageSalePrice,
     PriceDataPointWebPoco? RecentPurchase,
+    PriceDataPointWebPoco? MinListing,
     DailySaleVelocityWebPoco? DailySaleVelocity
 );
 

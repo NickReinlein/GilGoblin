@@ -13,7 +13,7 @@ namespace GilGoblin.Api.Repository;
 public interface IRecipeProfitRepository : IRepositoryCache
 {
     Task<RecipeProfitPoco?> GetAsync(int worldId, int recipeId, bool isHq = false);
-    Task<List<RecipeProfitPoco>> GetMultipleAsync(int worldId, IEnumerable<int> recipeIds);
+    Task<List<RecipeProfitPoco>> GetMultipleAsync(int worldId, IEnumerable<int> ids);
     Task<List<RecipeProfitPoco>> GetAllAsync(int worldId);
 }
 
@@ -46,14 +46,14 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
         return recipeProfit;
     }
 
-    public async Task<List<RecipeProfitPoco>> GetMultipleAsync(int worldId, IEnumerable<int> recipeIds)
+    public async Task<List<RecipeProfitPoco>> GetMultipleAsync(int worldId, IEnumerable<int> ids)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         return await dbContext.RecipeProfit
             .Where(p =>
                 p.WorldId == worldId &&
-                recipeIds.Any(i => i == p.RecipeId))
+                ids.Any(i => i == p.Id))
             .ToListAsync();
     }
 

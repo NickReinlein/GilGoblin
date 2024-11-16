@@ -42,12 +42,13 @@ public class RecipeProfitAccountant(
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
 
             var currentCosts = await costRepo.GetMultipleAsync(worldId, idList);
-            var currentProfits = await profitRepo.GetMultipleAsync(worldId, idList);
-            var recipes = recipeRepo.GetMultiple(idList).ToList();
+            if (!currentCosts.Any())
+                return;
 
-            // var targetItemIds = recipes.Select(req => req.TargetItemId).ToList();
-            // var prices = priceRepo.GetMultiple(worldId, targetItemIds).ToList();
-            // todo change back if this is not a solution
+            var currentProfits = await profitRepo.GetMultipleAsync(worldId, idList);
+            var recipes = recipeRepo
+                .GetMultiple(currentCosts.Select(c => c.RecipeId))
+                .ToList();
             var prices = priceRepo.GetAll(worldId).ToList();
 
             var newProfits = new List<RecipeProfitPoco>();
@@ -141,7 +142,7 @@ public class RecipeProfitAccountant(
             c.IsHq == isHq);
         if (price is null)
         {
-            logger.LogError("Failed to match market price of recipe {RecipeId} for world {WorldId}", recipeId,
+            logger.LogDebug("Failed to match market price of recipe {RecipeId} for world {WorldId}", recipeId,
                 worldId);
             return null;
         }

@@ -122,7 +122,8 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
             .Include(p => p.AverageSalePrice)
             .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.DailySaleVelocity)
-            .Where(p => p.WorldId == worldId).ToList();
+            .Where(p => p.WorldId == worldId)
+            .ToList();
     }
 
     public Task FillCache()

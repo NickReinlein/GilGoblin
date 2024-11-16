@@ -215,9 +215,7 @@ public class GilGoblinDatabaseFixture
         if (_postgresContainer == null)
             throw new InvalidOperationException("Postgres container not started");
 
-        var includeErrorDetailTrue = isDebug ? ";Include Error Detail=true" : string.Empty;
-        var connectionString = string.Concat(_postgresContainer.GetConnectionString(), includeErrorDetailTrue)
-                               ?? throw new InvalidOperationException("Connection string not found");
-        return connectionString;
+        return _postgresContainer.GetConnectionString()
+               ?? throw new InvalidOperationException("Connection string not found");
     }
 }

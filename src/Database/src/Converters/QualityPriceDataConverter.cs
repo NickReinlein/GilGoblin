@@ -35,15 +35,15 @@ public class QualityPriceDataConverter(
             if (qualityData is null || itemId < 1 || !qualityData.HasValidPrice())
                 return null;
 
-            var minListing =
-                (await dataPointConverter.ConvertAndSaveAsync(qualityData.MinListing, itemId, worldId, isHq))
-                .AsMinListingPoco();
             var averageSalePrice =
                 (await dataPointConverter.ConvertAndSaveAsync(qualityData.AverageSalePrice, itemId, worldId, isHq))
                 .AsAverageSalePricePoco();
             var recentPurchase =
                 (await dataPointConverter.ConvertAndSaveAsync(qualityData.RecentPurchase, itemId, worldId, isHq))
                 .AsRecentPurchasePoco();
+            var minListing =
+                (await dataPointConverter.ConvertAndSaveAsync(qualityData.MinListing, itemId, worldId, isHq))
+                .AsMinListingPoco();
             var dailySaleVelocity =
                 await saleVelocityConverter.ConvertAndSaveAsync(qualityData.DailySaleVelocity, itemId, worldId, isHq);
 
