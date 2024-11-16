@@ -103,7 +103,7 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
-    public virtual int GetDataFreshnessInHours() => throw new NotImplementedException();
+    public virtual int GetDataFreshnessInHours() => 96;
 
     public virtual Task<List<int>> GetIdsToUpdate(int worldId) => Task.FromResult(new List<int>());
 }

@@ -28,8 +28,6 @@ public class RecipeProfitAccountant(
     ILogger<RecipeProfitAccountant> logger)
     : Accountant<RecipeProfitPoco>(serviceProvider, logger), IRecipeProfitAccountant
 {
-    public override int GetDataFreshnessInHours() => 96;
-
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
         if (worldId <= 0 || !idList.Any() || ct.IsCancellationRequested)
@@ -42,57 +40,67 @@ public class RecipeProfitAccountant(
             var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-            var allRequestedRecipes = recipeRepo.GetMultiple(idList).ToList();
-            var existingProfits = (await profitRepo.GetAllAsync(worldId)).ToList();
-            var targetItemIds = allRequestedRecipes.Select(req => req.TargetItemId).ToList();
-            var prices = priceRepo.GetMultiple(worldId, targetItemIds, false).ToList();
-            var costs = (await costRepo.GetAllAsync(worldId)).ToList();
+
+            var currentCosts = await costRepo.GetMultipleAsync(worldId, idList);
+            var currentProfits = await profitRepo.GetMultipleAsync(worldId, idList);
+            var recipes = recipeRepo.GetMultiple(idList).ToList();
+
+            // var targetItemIds = recipes.Select(req => req.TargetItemId).ToList();
+            // var prices = priceRepo.GetMultiple(worldId, targetItemIds).ToList();
+            // todo change back if this is not a solution
+            var prices = priceRepo.GetAll(worldId).ToList();
 
             var newProfits = new List<RecipeProfitPoco>();
-            foreach (var recipe in allRequestedRecipes)
+            foreach (var cost in currentCosts)
             {
                 if (ct.IsCancellationRequested)
-                    throw new TaskCanceledException();
+                    break;
 
                 try
                 {
-                    var recipeId = recipe.Id;
-                    logger.LogDebug("Calculating new profits for {RecipeId} for world {WorldId}", recipeId, worldId);
-                    foreach (var quality in new[] { true, false })
+                    logger.LogDebug("Calculating new profits for {RecipeId} for world {WorldId}, isHQ:{IsHq}",
+                        cost.RecipeId,
+                        cost.WorldId,
+                        cost.IsHq);
+                    var profit = currentProfits
+                        .FirstOrDefault(c =>
+                            c.RecipeId == cost.RecipeId &&
+                            c.WorldId == cost.WorldId &&
+                            c.IsHq == cost.IsHq);
+                    if (profit is not null)
                     {
-                        var profit = existingProfits
-                            .FirstOrDefault(c =>
-                                c.GetId() == recipeId &&
-                                c.WorldId == worldId &&
-                                c.IsHq == quality);
-                        if (profit is not null)
-                        {
-                            var age = (DateTimeOffset.UtcNow - profit.LastUpdated).TotalHours;
-                            if (age <= GetDataFreshnessInHours())
-                                continue;
-                        }
-
-                        var calculatedProfit =
-                            CalculateCraftingProfitForRecipe(
-                                recipeId,
-                                worldId,
-                                quality,
-                                recipe.TargetItemId,
-                                costs,
-                                prices);
-                        if (calculatedProfit is not null)
-                            newProfits.Add(calculatedProfit);
+                        var age = (DateTimeOffset.UtcNow - profit.LastUpdated).TotalHours;
+                        if (age <= GetDataFreshnessInHours())
+                            continue;
                     }
+
+                    var recipe = recipes.FirstOrDefault(r => r.Id == cost.RecipeId);
+                    if (recipe is null)
+                    {
+                        logger.LogWarning("Failed to find recipe {RecipeId}", cost.RecipeId);
+                        continue;
+                    }
+
+                    var calculatedProfit =
+                        CalculateCraftingProfitForRecipe(
+                            cost.RecipeId,
+                            cost.WorldId,
+                            cost.IsHq,
+                            recipe.TargetItemId,
+                            currentCosts,
+                            prices);
+                    if (calculatedProfit is not null)
+                        newProfits.Add(calculatedProfit);
                 }
                 catch (Exception)
                 {
                     logger.LogWarning("Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}",
-                        recipe.Id,
-                        worldId);
+                        cost.RecipeId,
+                        cost.WorldId);
                 }
-
-                await saver.SaveAsync(newProfits, ct);
             }
+
+            await saver.SaveAsync(newProfits, ct);
         }
         catch (TaskCanceledException)
         {
@@ -138,7 +146,8 @@ public class RecipeProfitAccountant(
             return null;
         }
 
-        var profitAmount = (int)price.GetBestPriceCost() - cost.Amount;
+        var salePrice = (int)price.GetBestPriceAmount();
+        var profitAmount = salePrice - cost.Amount;
 
         return new RecipeProfitPoco(recipeId, worldId, isHq, profitAmount, DateTimeOffset.UtcNow);
     }
@@ -180,7 +189,7 @@ public class RecipeProfitAccountant(
         }
         catch (Exception e)
         {
-            logger.LogError("Failed to get the Ids to update for world {WorldId}: {Message}", worldId, e.Message);
+            logger.LogError(e, "Failed to get the Ids to update for world {WorldId}", worldId);
         }
 
         return idsToUpdate.Distinct().ToList();

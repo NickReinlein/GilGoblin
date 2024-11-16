@@ -13,7 +13,7 @@ namespace GilGoblin.Api.Repository;
 public interface IPriceRepository<T> : IRepositoryCache where T : class
 {
     T? Get(int worldId, int id, bool isHq);
-    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq);
+    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq = null);
     List<T> GetAll(int worldId);
 }
 
@@ -31,15 +31,24 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
             using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
             var price = dbContext.Price
                 .AsNoTracking()
-                .Include(rd => rd.MinListing)
-                .ThenInclude(ml => ml.DcDataPoint)
                 .Include(p => p.MinListing)
-                .ThenInclude(ml => ml.RegionDataPoint)
-                .Include(rd => rd.MinListing)
-                .ThenInclude(ml => ml.WorldDataPoint)
+                .ThenInclude(p => p.DcDataPoint)
+                .Include(p => p.MinListing)
+                .ThenInclude(p => p.RegionDataPoint)
+                .Include(p => p.MinListing)
+                .ThenInclude(p => p.WorldDataPoint)
                 .Include(p => p.RecentPurchase)
+                .ThenInclude(p => p.DcDataPoint)
                 .Include(p => p.RecentPurchase)
+                .ThenInclude(p => p.RegionDataPoint)
+                .Include(p => p.RecentPurchase)
+                .ThenInclude(p => p.WorldDataPoint)
                 .Include(p => p.AverageSalePrice)
+                .ThenInclude(p => p.DcDataPoint)
+                .Include(p => p.AverageSalePrice)
+                .ThenInclude(p => p.RegionDataPoint)
+                .Include(p => p.AverageSalePrice)
+                .ThenInclude(p => p.WorldDataPoint)
                 .Include(p => p.DailySaleVelocity)
                 .FirstOrDefault(p =>
                     p.ItemId == id &&
@@ -63,8 +72,23 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         return dbContext.Price
             .AsNoTracking()
             .Include(p => p.MinListing)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.DailySaleVelocity)
             .Where(p =>
                 p.WorldId == worldId &&
@@ -80,8 +104,23 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         return dbContext.Price
             .AsNoTracking()
             .Include(p => p.MinListing)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.WorldDataPoint)
             .Include(p => p.DailySaleVelocity)
             .Where(p => p.WorldId == worldId).ToList();
     }

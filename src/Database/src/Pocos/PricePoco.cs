@@ -24,5 +24,5 @@ public record PricePoco(
                                             RecentPurchase?.GetBestPrice() ??
                                             MinListing?.GetBestPrice();
 
-    public decimal GetBestPriceCost() => GetBestPrice()?.Price ?? int.MaxValue;
+    public decimal GetBestPriceAmount() => GetBestPrice()?.Price ?? int.MaxValue;
 }

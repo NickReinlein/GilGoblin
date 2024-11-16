@@ -232,7 +232,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.Not.Null);
-            var itemSalePrice = (int)price.GetBestPriceCost();
+            var itemSalePrice = (int)price.GetBestPriceAmount();
             Assert.That(itemSalePrice, Is.EqualTo(555));
             var expectedProfit = itemSalePrice - costs[0].Amount;
             Assert.That(expectedProfit, Is.EqualTo(422));

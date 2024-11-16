@@ -13,13 +13,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
 public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
+    public IWebHostEnvironment Environment { get; } = environment;
     public IConfiguration _configuration = configuration;
-    public IWebHostEnvironment _environment = environment;
+
+    public const bool isDebug = false;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -91,17 +94,18 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        connectionString += "Include Error Detail=true;";
+        if (isDebug)
+            connectionString += "Include Error Detail=true;";
+
         services.AddDbContext<GilGoblinDbContext>(options =>
         {
-            options.UseNpgsql(connectionString);
-            // Only used during development and debugging
-            options.EnableDetailedErrors();
-            options.EnableSensitiveDataLogging();
+            options.UseNpgsql(connectionString)
+                .EnableDetailedErrors(isDebug)
+                .EnableSensitiveDataLogging(isDebug)
+                .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
         });
 
-        services
-            .AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
             .AddScoped<IItemRepository, ItemRepository>()
             .AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();

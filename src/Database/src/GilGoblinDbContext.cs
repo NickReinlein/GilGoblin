@@ -2,6 +2,7 @@ using System;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
@@ -20,16 +21,18 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
     public DbSet<PricePoco> Price { get; init; }
     public DbSet<PriceDataPoco> PriceData { get; init; }
 
+    public const bool isDebug = false;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connectionString = Environment.GetEnvironmentVariable(nameof(GilGoblinDbContext))
                                ?? configuration.GetConnectionString(nameof(GilGoblinDbContext))
                                ?? throw new InvalidOperationException(
                                    "Connection string not found in environment variables or configuration.");
-        optionsBuilder.UseNpgsql(connectionString);
-        // Only used during development and debugging
-        optionsBuilder.EnableDetailedErrors();
-        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.UseNpgsql(connectionString)
+            .EnableDetailedErrors(isDebug)
+            .EnableSensitiveDataLogging(isDebug)
+            .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
 
         base.OnConfiguring(optionsBuilder);
     }

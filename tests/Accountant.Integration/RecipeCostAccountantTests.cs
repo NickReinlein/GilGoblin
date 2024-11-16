@@ -21,9 +21,6 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     private IDataSaver<RecipeCostPoco> _saver;
     private RecipeCostAccountant _accountant;
 
-    private static readonly int _worldId = ValidWorldIds[0];
-    private static readonly int _recipeId = ValidRecipeIds[0];
-
     [SetUp]
     public override async Task SetUp()
     {
@@ -31,8 +28,6 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         _costLogger = Substitute.For<ILogger<RecipeCostAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeCostPoco>>();
         _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
-
-        SetupReposToReturnSpecifiedNumberOfEntities();
 
         _accountant = new RecipeCostAccountant(_serviceProvider, _saver, _costLogger);
     }
@@ -43,10 +38,10 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         await using var dbContext = GetDbContext();
         var recipeCount = dbContext.RecipeCost.ToList().Count;
 
-        var result = await _accountant.GetIdsToUpdate(_worldId);
+        var result = await _accountant.GetIdsToUpdate(WorldId);
 
         _recipeRepo.Received(1).GetAll();
-        await _costRepo.GetAllAsync(_worldId);
+        await _costRepo.GetAllAsync(WorldId);
         Assert.That(result, Has.Count.GreaterThanOrEqualTo(recipeCount));
     }
 
@@ -66,7 +61,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         var cts = new CancellationTokenSource();
         cts.Cancel();
-        Assert.DoesNotThrowAsync(async () => await _accountant.CalculateAsync(_worldId, cts.Token));
+        Assert.DoesNotThrowAsync(async () => await _accountant.CalculateAsync(WorldId, cts.Token));
 
         _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
         _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
@@ -77,20 +72,20 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         var cts = new CancellationTokenSource();
         cts.CancelAfter(200);
-        await _accountant.ComputeListAsync(_worldId, [_recipeId], cts.Token);
+        await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
 
         await using var costAfter = GetDbContext();
         var result = costAfter.RecipeCost
             .Where(after =>
-                after.RecipeId == _recipeId &&
-                after.WorldId == _worldId)
+                after.RecipeId == RecipeId &&
+                after.WorldId == WorldId)
             .ToList();
 
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.Multiple(() =>
         {
-            Assert.That(result.All(r => r.WorldId == _worldId));
-            Assert.That(result.All(r => r.RecipeId == _recipeId));
+            Assert.That(result.All(r => r.WorldId == WorldId));
+            Assert.That(result.All(r => r.RecipeId == RecipeId));
             Assert.That(result.All(r => r.Amount > 30));
             Assert.That(result.All(r => r.Amount < 1000));
         });
@@ -101,26 +96,26 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         await using var dbContext = GetDbContext();
         var costs = await dbContext.RecipeCost
-            .Where(w => w.WorldId == _worldId)
+            .Where(w => w.WorldId == WorldId)
             .ToListAsync();
         foreach (var cost in costs)
             cost.LastUpdated = DateTimeOffset.UtcNow.AddDays(-7);
-        _costRepo.GetAllAsync(_worldId).Returns(costs);
+        _costRepo.GetAllAsync(WorldId).Returns(costs);
 
-        await _accountant.ComputeListAsync(_worldId, ValidRecipeIds);
+        await _accountant.ComputeListAsync(WorldId, ValidRecipeIds);
 
-        await _costRepo.Received(1).GetAllAsync(_worldId);
+        await _costRepo.Received(1).GetAllAsync(WorldId);
         _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
         foreach (var recipeId in ValidRecipeIds)
         {
             await _calc.Received(1)
                 .CalculateCraftingCostForRecipe(
-                    _worldId,
+                    WorldId,
                     recipeId,
                     true);
             await _calc.Received(1)
                 .CalculateCraftingCostForRecipe(
-                    _worldId,
+                    WorldId,
                     recipeId,
                     false);
         }
@@ -131,7 +126,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         var cts = new CancellationTokenSource();
         await cts.CancelAsync();
-        await _accountant.ComputeListAsync(_worldId, [_recipeId], cts.Token);
+        await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
 
         await _calc.DidNotReceive()
             .CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
@@ -144,7 +139,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         _recipeRepo.GetAll().Returns([]);
 
-        await _accountant.CalculateAsync(_worldId, CancellationToken.None);
+        await _accountant.CalculateAsync(WorldId, CancellationToken.None);
 
         await _saver.DidNotReceive().SaveAsync([], Arg.Any<CancellationToken>());
         await _calc.DidNotReceive().CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
@@ -155,7 +150,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     {
         _recipeRepo.GetAll().ThrowsForAnyArgs<DataException>();
 
-        await _accountant.CalculateAsync(_worldId);
+        await _accountant.CalculateAsync(WorldId);
 
         await _costRepo.DidNotReceive().GetAllAsync(Arg.Any<int>());
         await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
@@ -165,9 +160,9 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     [Test]
     public async Task GivenGetIdsToUpdate_WhenALargeNumberOfIdsAreReturned_ThenIdsAreBatchedForProcessing()
     {
-        SetupReposToReturnSpecifiedNumberOfEntities(10000);
+        SetupReposToReturnEntities(10000);
 
-        await _accountant.CalculateAsync(_worldId);
+        await _accountant.CalculateAsync(WorldId);
 
         // TODO
         _recipeRepo.Received(1).GetMultiple(Arg.Any<IEnumerable<int>>());
@@ -182,24 +177,5 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         var result = _accountant.GetDataFreshnessInHours();
 
         Assert.That(result, Is.GreaterThanOrEqualTo(48));
-    }
-
-    private void SetupReposToReturnSpecifiedNumberOfEntities(int count = 20)
-    {
-        var ids = Enumerable.Range(1, 20).ToList();
-        var recipes = ids.Select(i =>
-            new RecipePoco { Id = i, TargetItemId = i + 1111, CanHq = i % 2 == 0 }).ToList();
-        var prices = ids.Select(i => new PricePoco(i, _worldId, i % 2 == 0)).ToList();
-        var costs = ids.Select(c =>
-                new RecipeCostPoco(
-                    c,
-                    _worldId,
-                    true,
-                    c * 3,
-                    DateTimeOffset.UtcNow.AddDays(-7)))
-            .ToList();
-        _recipeRepo.GetAll().Returns(recipes);
-        _priceRepo.GetAll(_worldId).Returns(prices);
-        _costRepo.GetAllAsync(_worldId).Returns(costs);
     }
 }

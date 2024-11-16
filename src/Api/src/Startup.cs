@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 
@@ -19,6 +20,8 @@ namespace GilGoblin.Api;
 public class Startup(IConfiguration configuration)
 {
     public readonly IConfiguration Configuration = configuration;
+
+    public const bool isDebug = false;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -94,8 +97,16 @@ public class Startup(IConfiguration configuration)
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        connectionString += "Include Error Detail=true;";
-        services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
+        if (isDebug)
+            connectionString += "Include Error Detail=true;";
+
+        services.AddDbContext<GilGoblinDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString)
+                .EnableDetailedErrors(isDebug)
+                .EnableSensitiveDataLogging(isDebug)
+                .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
+        });
 
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();

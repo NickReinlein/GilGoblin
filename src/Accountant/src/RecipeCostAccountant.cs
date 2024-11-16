@@ -18,10 +18,11 @@ public class RecipeCostAccountant(
     ILogger<RecipeCostAccountant> logger)
     : Accountant<RecipeCostPoco>(serviceProvider, logger)
 {
-    public override int GetDataFreshnessInHours() => 96;
-
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
+        if (worldId <= 0 || !idList.Any() || ct.IsCancellationRequested)
+            return;
+
         try
         {
             var (recipeCosts, relevantRecipes) = await GetRecipesAndCosts(worldId, idList);
@@ -49,8 +50,8 @@ public class RecipeCostAccountant(
                     foreach (var quality in new[] { true, false })
                     {
                         var current = recipeCosts.FirstOrDefault(c =>
-                            c.RecipeId == recipeId && 
-                            c.WorldId == worldId && 
+                            c.RecipeId == recipeId &&
+                            c.WorldId == worldId &&
                             c.IsHq == quality);
                         if (current is not null)
                         {
@@ -98,18 +99,6 @@ public class RecipeCostAccountant(
         }
     }
 
-    private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)>
-        GetRecipesAndCosts(int worldId, List<int> idList)
-    {
-        await using var scope = serviceProvider.CreateAsyncScope();
-        var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-        var existingRecipeCosts = await costRepo.GetAllAsync(worldId);
-
-        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-        var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
-        return (existingRecipeCosts, allRelevantRecipes);
-    }
-
     public override async Task<List<int>> GetIdsToUpdate(int worldId)
     {
         var idsToUpdate = new List<int>();
@@ -130,6 +119,13 @@ public class RecipeCostAccountant(
                         c.RecipeId == recipe.Id &&
                         c.WorldId == worldId)
                     .ToList();
+
+                if (!existing.Any())
+                {
+                    idsToUpdate.Add(recipe.Id);
+                    continue;
+                }
+
                 foreach (var cost in existing)
                 {
                     logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id,
@@ -141,6 +137,7 @@ public class RecipeCostAccountant(
                     break;
                 }
             }
+
             return idsToUpdate.Distinct().ToList();
         }
         catch (Exception e)
@@ -149,5 +146,17 @@ public class RecipeCostAccountant(
         }
 
         return idsToUpdate.Distinct().ToList();
+    }
+
+    private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)>
+        GetRecipesAndCosts(int worldId, List<int> idList)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+        var existingRecipeCosts = await costRepo.GetAllAsync(worldId);
+
+        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+        var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
+        return (existingRecipeCosts, allRelevantRecipes);
     }
 }

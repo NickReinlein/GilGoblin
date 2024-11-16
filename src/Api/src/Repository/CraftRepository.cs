@@ -142,7 +142,7 @@ public class CraftRepository : ICraftRepository
                 continue;
             }
 
-            var salePrice = (int)price.GetBestPriceCost();
+            var salePrice = (int)price.GetBestPriceAmount();
             var craftingCost = recipeCost.Value;
             var craftingProfit = salePrice - craftingCost;
             var summary = new CraftSummaryPoco

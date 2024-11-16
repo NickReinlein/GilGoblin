@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,10 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
     protected IRecipeRepository _recipeRepo;
     protected IPriceRepository<PricePoco> _priceRepo;
     protected IRecipeProfitRepository _profitRepo;
+    
+    
+    protected static readonly int WorldId = ValidWorldIds[0];
+    protected static readonly int RecipeId = ValidRecipeIds[0];
 
     [SetUp]
     public override async Task SetUp()
@@ -73,6 +78,8 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
                         p.WorldId == worldId)
                     .ToList());
         }
+        
+        SetupReposToReturnEntities();
 
         var startup = new Startup(_configuration);
         _serviceProvider = new ServiceCollection().BuildServiceProvider();
@@ -86,5 +93,24 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
 
         _serviceProvider = _serviceCollection.BuildServiceProvider();
         _serviceScope = _serviceProvider.CreateScope();
+    }
+    
+    protected void SetupReposToReturnEntities(int entityCount = 20)
+    {
+        var ids = Enumerable.Range(1, 20).ToList();
+        var recipes = ids.Select(i =>
+            new RecipePoco { Id = i, TargetItemId = i + 1111, CanHq = i % 2 == 0 }).ToList();
+        var prices = ids.Select(i => new PricePoco(i, WorldId, i % 2 == 0)).ToList();
+        var costs = ids.Select(c =>
+                new RecipeCostPoco(
+                    c,
+                    WorldId,
+                    true,
+                    c * 3,
+                    DateTimeOffset.UtcNow.AddDays(-7)))
+            .ToList();
+        _recipeRepo.GetAll().Returns(recipes);
+        _priceRepo.GetAll(WorldId).Returns(prices);
+        _costRepo.GetAllAsync(WorldId).Returns(costs);
     }
 }

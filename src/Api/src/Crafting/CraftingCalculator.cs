@@ -100,7 +100,7 @@ public class CraftingCalculator(
         foreach (var craft in craftIngredients)
         {
             // Compare crafting the ingredient vs purchasing it on the market board
-            var bestPriceCost = craft.Price.GetBestPriceCost();
+            var bestPriceCost = craft.Price.GetBestPriceAmount();
             var (_, craftingCost) = await CalculateCraftingCostForItem(worldId, craft.ItemId);
             var minCost = (int)Math.Min(bestPriceCost, craftingCost);
             totalCraftingCost += craft.Quantity * minCost;
