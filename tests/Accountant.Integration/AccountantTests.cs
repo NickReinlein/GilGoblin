@@ -22,10 +22,10 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
     protected IRecipeRepository _recipeRepo;
     protected IPriceRepository<PricePoco> _priceRepo;
     protected IRecipeProfitRepository _profitRepo;
-    
-    
-    protected static readonly int WorldId = ValidWorldIds[0];
-    protected static readonly int RecipeId = ValidRecipeIds[0];
+
+
+    protected readonly int WorldId = ValidWorldIds[0];
+    protected readonly int RecipeId = ValidRecipeIds[0];
 
     [SetUp]
     public override async Task SetUp()
@@ -41,8 +41,7 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
 
         _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
         _recipeRepo.GetMultiple(Arg.Any<IEnumerable<int>>())
-            .Returns(c => GetDbContext().Recipe
-                .Where(r => c.Arg<IEnumerable<int>>().Contains(r.Id))
+            .Returns(c => GetDbContext().Recipe.ToList()
                 .ToList());
         foreach (var worldId in ValidWorldIds)
         {
@@ -78,8 +77,8 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
                         p.WorldId == worldId)
                     .ToList());
         }
-        
-        SetupReposToReturnEntities();
+
+        SetupReposToReturnXEntities();
 
         var startup = new Startup(_configuration);
         _serviceProvider = new ServiceCollection().BuildServiceProvider();
@@ -94,23 +93,41 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
         _serviceProvider = _serviceCollection.BuildServiceProvider();
         _serviceScope = _serviceProvider.CreateScope();
     }
-    
-    protected void SetupReposToReturnEntities(int entityCount = 20)
+
+    protected void SetupReposToReturnXEntities(int entityCount = 20)
     {
-        var ids = Enumerable.Range(1, 20).ToList();
+        RemoveExisting();
+
+        var ids = Enumerable.Range(1, entityCount)
+            .ToList();
         var recipes = ids.Select(i =>
-            new RecipePoco { Id = i, TargetItemId = i + 1111, CanHq = i % 2 == 0 }).ToList();
-        var prices = ids.Select(i => new PricePoco(i, WorldId, i % 2 == 0)).ToList();
+                new RecipePoco { Id = i * 11, TargetItemId = i + 3111, CanHq = i % 2 == 0 })
+            .ToList();
+        var prices = ids.Select(i =>
+                new PricePoco(i + 3111, WorldId, i % 2 == 0))
+            .ToList();
         var costs = ids.Select(c =>
                 new RecipeCostPoco(
-                    c,
+                    c * 11,
                     WorldId,
-                    true,
-                    c * 3,
-                    DateTimeOffset.UtcNow.AddDays(-7)))
+                    c % 2 == 0,
+                    c * 33,
+                    DateTimeOffset.UtcNow.AddDays(-10)))
             .ToList();
-        _recipeRepo.GetAll().Returns(recipes);
-        _priceRepo.GetAll(WorldId).Returns(prices);
-        _costRepo.GetAllAsync(WorldId).Returns(costs);
+
+        using var dbContext = GetDbContext();
+        dbContext.Recipe.AddRange(recipes);
+        dbContext.Price.AddRange(prices);
+        dbContext.RecipeCost.AddRange(costs);
+        Assert.That(dbContext.SaveChanges(), Is.GreaterThanOrEqualTo(entityCount));
+    }
+
+    private void RemoveExisting()
+    {
+        using var removeExistingCtx = GetDbContext();
+        removeExistingCtx.Recipe.RemoveRange(removeExistingCtx.Recipe);
+        removeExistingCtx.Price.RemoveRange(removeExistingCtx.Price);
+        removeExistingCtx.RecipeCost.RemoveRange(removeExistingCtx.RecipeCost);
+        removeExistingCtx.SaveChanges();
     }
 }

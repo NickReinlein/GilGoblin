@@ -153,7 +153,7 @@ public class RecipeCostAccountant(
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-        var existingRecipeCosts = await costRepo.GetAllAsync(worldId);
+        var existingRecipeCosts = await costRepo.GetMultipleAsync(worldId, idList);
 
         var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
         var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();

@@ -47,7 +47,7 @@ public class RecipeProfitAccountant(
 
             var currentProfits = await profitRepo.GetMultipleAsync(worldId, idList);
             var recipes = recipeRepo
-                .GetMultiple(currentCosts.Select(c => c.RecipeId))
+                .GetMultiple(idList)
                 .ToList();
             var prices = priceRepo.GetAll(worldId).ToList();
 
@@ -59,10 +59,6 @@ public class RecipeProfitAccountant(
 
                 try
                 {
-                    logger.LogDebug("Calculating new profits for {RecipeId} for world {WorldId}, isHQ:{IsHq}",
-                        cost.RecipeId,
-                        cost.WorldId,
-                        cost.IsHq);
                     var profit = currentProfits
                         .FirstOrDefault(c =>
                             c.RecipeId == cost.RecipeId &&
@@ -172,20 +168,19 @@ public class RecipeProfitAccountant(
 
             foreach (var cost in costs)
             {
-                var id = cost.GetId();
                 var existing = existingProfits.FirstOrDefault(e =>
-                    e.Id == id &&
-                    e.WorldId == worldId &&
+                    e.Id == cost.Id &&
+                    e.WorldId == cost.WorldId &&
                     e.IsHq == cost.IsHq);
                 if (existing is null)
                 {
-                    idsToUpdate.Add(id);
+                    idsToUpdate.Add(cost.Id);
                     continue;
                 }
 
                 var age = (DateTimeOffset.UtcNow - existing.LastUpdated).TotalHours;
                 if (age >= GetDataFreshnessInHours())
-                    idsToUpdate.Add(id);
+                    idsToUpdate.Add(cost.Id);
             }
         }
         catch (Exception e)

@@ -28,6 +28,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     public override async Task SetUp()
     {
         await base.SetUp();
+
         _profitLogger = Substitute.For<ILogger<RecipeProfitAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeProfitPoco>>();
         _saver.SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>())
@@ -47,19 +48,24 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [Test]
     public async Task GivenComputeListAsync_WhenDeterminingWhichRecipesToCompute_ThenWeQueryRelevantServices()
     {
-        var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
         var idList = new List<int> { _recipeId };
-        await _accountant.ComputeListAsync(_worldId, idList, cts.Token);
+        await RemoveExistingProfitEntries();
+        var recipeCosts = GetCosts().ToList();
+        foreach (var cost in recipeCosts)
+            cost.LastUpdated = DateTimeOffset.UtcNow.AddDays(-10);
+        _costRepo.GetMultipleAsync(_worldId, idList).Returns(recipeCosts);
 
+        await _accountant.ComputeListAsync(_worldId, idList);
+
+        await _costRepo.Received(1).GetMultipleAsync(_worldId, idList);
+        await _profitRepo.Received(1).GetMultipleAsync(_worldId, idList);
         _recipeRepo.Received(1).GetMultiple(idList);
-        await _profitRepo.Received(1).GetAllAsync(_worldId);
-        _priceRepo.Received(1).GetMultiple(_worldId, Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
-        await _costRepo.Received(1).GetAllAsync(_worldId);
+        _priceRepo.Received(1).GetAll(_worldId);
+        await _saver.Received().SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>());
     }
 
     [TestCaseSource(nameof(ValidRecipeIds))]
-    public async Task GivenComputeListAsync_WhenSuccessful_ThenWeReturnAPoco(int recipeId)
+    public async Task GivenComputeListAsync_WhenSuccessful_ThenProfitsAreReturned(int recipeId)
     {
         var cts = new CancellationTokenSource();
         cts.CancelAfter(200);
@@ -94,13 +100,14 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
             .Where(w => w.WorldId == _worldId).ToListAsync();
         foreach (var profit in profits)
             profit.LastUpdated = DateTimeOffset.UtcNow.AddDays(-30);
+        await dbContext.SaveChangesAsync();
         _profitRepo.GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>()).Returns(profits);
 
         var result = await _accountant.GetIdsToUpdate(_worldId);
 
+        Assert.That(result, Has.Count.EqualTo(profits.Count));
         await _costRepo.Received(1).GetAllAsync(_worldId);
         await _profitRepo.Received(1).GetMultipleAsync(_worldId, Arg.Any<IEnumerable<int>>());
-        Assert.That(result, Has.Count.EqualTo(profits.Count));
     }
 
     [TestCase(0)]
@@ -208,7 +215,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     }
 
     [Test]
-    public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceMatch_ThenReturnProfit()
+    public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostAndPriceMatch_ThenProfitIsReturned()
     {
         var averageSalePrice = new AverageSalePricePoco(_targetItemId, _worldId, false, 111, 122, 133)
         {
@@ -240,14 +247,23 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         });
     }
 
+    private async Task RemoveExistingProfitEntries()
+    {
+        await using var dbContext = GetDbContext();
+        var count = dbContext.RecipeProfit.Count();
+        dbContext.RecipeProfit.RemoveRange(dbContext.RecipeProfit);
+        Assert.That(await dbContext.SaveChangesAsync(), Is.EqualTo(count));
+    }
+
     private static IEnumerable<RecipeCostPoco> GetCosts()
     {
-        yield return new RecipeCostPoco(_worldId, _recipeId, false, 100, DateTimeOffset.UtcNow);
+        yield return new RecipeCostPoco(_recipeId, _worldId, false, 100, DateTimeOffset.UtcNow);
+        yield return new RecipeCostPoco(_recipeId, _worldId, true, 100, DateTimeOffset.UtcNow);
     }
 
     private static IEnumerable<PricePoco> GetPrices()
     {
-        yield return new PricePoco(_worldId, _recipeId, false);
-        yield return new PricePoco(_worldId, _recipeId, true);
+        yield return new PricePoco(_targetItemId, _worldId, false);
+        yield return new PricePoco(_targetItemId, _worldId, true);
     }
 }

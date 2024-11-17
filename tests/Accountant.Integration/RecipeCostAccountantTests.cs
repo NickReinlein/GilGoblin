@@ -100,11 +100,12 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
             .ToListAsync();
         foreach (var cost in costs)
             cost.LastUpdated = DateTimeOffset.UtcNow.AddDays(-7);
-        _costRepo.GetAllAsync(WorldId).Returns(costs);
+        await dbContext.SaveChangesAsync();
+        _costRepo.GetMultipleAsync(WorldId, ValidRecipeIds).Returns(costs);
 
         await _accountant.ComputeListAsync(WorldId, ValidRecipeIds);
 
-        await _costRepo.Received(1).GetAllAsync(WorldId);
+        await _costRepo.Received(1).GetMultipleAsync(WorldId, ValidRecipeIds);
         _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
         foreach (var recipeId in ValidRecipeIds)
         {
@@ -160,15 +161,12 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     [Test]
     public async Task GivenGetIdsToUpdate_WhenALargeNumberOfIdsAreReturned_ThenIdsAreBatchedForProcessing()
     {
-        SetupReposToReturnEntities(10000);
+        SetupReposToReturnXEntities(10000);
 
         await _accountant.CalculateAsync(WorldId);
 
-        // TODO
+        await _costRepo.Received(1).GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>());
         _recipeRepo.Received(1).GetMultiple(Arg.Any<IEnumerable<int>>());
-        // _priceRepo.Received(1).GetMultiple(Arg.Any<int>(), Arg.Any<IEnumerable<int>>(), Arg.Any<bool>());
-        // await _calc.Received(1).CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
-        // await _saver.Received(1).SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
     }
 
     [Test]
