@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace GilGoblin.Tests.Accountant.Integration;
 
 [TestFixture]
-public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIdentifiable
+public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIdentifiable
 {
     protected ICraftingCalculator _calc;
     protected IRecipeCostRepository _costRepo;
@@ -120,6 +120,8 @@ public class AccountantTests<T> : GilGoblinDatabaseFixture where T : class, IIde
         dbContext.Price.AddRange(prices);
         dbContext.RecipeCost.AddRange(costs);
         Assert.That(dbContext.SaveChanges(), Is.GreaterThanOrEqualTo(entityCount));
+        _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
+        _costRepo.GetAllAsync(WorldId).Returns(GetDbContext().RecipeCost.ToList());
     }
 
     private void RemoveExisting()

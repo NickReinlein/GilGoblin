@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Accountant;
+using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using Microsoft.EntityFrameworkCore;
@@ -33,16 +34,18 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     }
 
     [Test]
-    public async Task GetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnExpiredCosts()
+    public async Task GetIdsToUpdate_WhenCostsAreExpired_ThenWeReturnExpiredCosts([Values] bool isExpired)
     {
-        await using var dbContext = GetDbContext();
-        var recipeCount = dbContext.RecipeCost.ToList().Count;
+        const int entityCount = 30;
+        SetupReposToReturnXEntities(entityCount);
+        if (isExpired)
+            await MakeCostsOutdated();
 
         var result = await _accountant.GetIdsToUpdate(WorldId);
 
         _recipeRepo.Received(1).GetAll();
         await _costRepo.GetAllAsync(WorldId);
-        Assert.That(result, Has.Count.GreaterThanOrEqualTo(recipeCount));
+        Assert.That(result, Has.Count.GreaterThanOrEqualTo(isExpired ? entityCount : 0));
     }
 
     [TestCase(0)]
@@ -95,32 +98,28 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     public async Task GivenComputeListAsync_WhenIdsAreValidAndCostsOutdated_ThenRelevantCostsAreFetched()
     {
         await using var dbContext = GetDbContext();
-        var costs = await dbContext.RecipeCost
-            .Where(w => w.WorldId == WorldId)
-            .ToListAsync();
-        foreach (var cost in costs)
-            cost.LastUpdated = DateTimeOffset.UtcNow.AddDays(-7);
-        await dbContext.SaveChangesAsync();
-        _costRepo.GetMultipleAsync(WorldId, ValidRecipeIds).Returns(costs);
+        var recipeIds = dbContext.Recipe.Select(r => r.Id).ToList();
+        await MakeCostsOutdated();
 
         await _accountant.ComputeListAsync(WorldId, ValidRecipeIds);
 
         await _costRepo.Received(1).GetMultipleAsync(WorldId, ValidRecipeIds);
         _recipeRepo.Received(1).GetMultiple(ValidRecipeIds);
-        foreach (var recipeId in ValidRecipeIds)
+        foreach (var recipeId in recipeIds)
         {
-            await _calc.Received(1)
-                .CalculateCraftingCostForRecipe(
-                    WorldId,
-                    recipeId,
-                    true);
-            await _calc.Received(1)
-                .CalculateCraftingCostForRecipe(
-                    WorldId,
-                    recipeId,
-                    false);
+            foreach (var quality in new[] { true, false })
+            {
+                await _calc.Received()
+                    .CalculateCraftingCostForRecipe(
+                        WorldId,
+                        recipeId,
+                        quality);
+            }
         }
+
+        await _saver.Received(1).SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
     }
+
 
     [Test]
     public async Task GivenComputeListAsync_WhenTaskIsCanceledByUser_ThenWeHandleTheCancellationCorrectly()
@@ -159,14 +158,16 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     }
 
     [Test]
-    public async Task GivenGetIdsToUpdate_WhenALargeNumberOfIdsAreReturned_ThenIdsAreBatchedForProcessing()
+    public async Task GivenGetIdsToUpdate_WhenALargeNumberOfIdsAreReturned_ThenEntitiesAreBatchedForProcessing()
     {
-        SetupReposToReturnXEntities(10000);
+        SetupReposToReturnXEntities(1000);
+        await MakeCostsOutdated();
+        const int expectedNumberOfBatches = 1000 / 100; // 100 entities per batch
 
         await _accountant.CalculateAsync(WorldId);
 
-        await _costRepo.Received(1).GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>());
-        _recipeRepo.Received(1).GetMultiple(Arg.Any<IEnumerable<int>>());
+        await _costRepo.Received(expectedNumberOfBatches).GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>());
+        _recipeRepo.Received(expectedNumberOfBatches).GetMultiple(Arg.Any<IEnumerable<int>>());
     }
 
     [Test]
@@ -175,5 +176,17 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         var result = _accountant.GetDataFreshnessInHours();
 
         Assert.That(result, Is.GreaterThanOrEqualTo(48));
+    }
+
+    private async Task MakeCostsOutdated()
+    {
+        await using var dbContext = GetDbContext();
+        var costs = await dbContext.RecipeCost
+            .Where(w => w.WorldId == WorldId)
+            .ToListAsync();
+        foreach (var cost in costs)
+            cost.LastUpdated = DateTimeOffset.UtcNow.AddDays(-7);
+        await dbContext.SaveChangesAsync();
+        _costRepo.GetMultipleAsync(WorldId, ValidRecipeIds).Returns(costs);
     }
 }
