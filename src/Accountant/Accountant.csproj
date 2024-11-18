@@ -4,7 +4,7 @@
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <RootNamespace>GilGoblin.Accountant</RootNamespace>
     <PackageId>GilGoblin.Accountant</PackageId>
-    <Version>1.2.3</Version>
+    <Version>2.0.0</Version>
     <OutputType>Exe</OutputType>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
@@ -29,7 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="../Api/Api.csproj"/>
     <ProjectReference Include="../Database/Database.csproj"/>
-    <ProjectReference Include="..\Batcher\Batcher.csproj" />
+    <ProjectReference Include="../Batcher/Batcher.csproj" />
   </ItemGroup>
 
   <ItemGroup>

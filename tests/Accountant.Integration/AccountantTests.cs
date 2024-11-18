@@ -41,8 +41,7 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
 
         _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
         _recipeRepo.GetMultiple(Arg.Any<IEnumerable<int>>())
-            .Returns(c => GetDbContext().Recipe.ToList()
-                .ToList());
+            .Returns(_ => GetDbContext().Recipe.ToList());
         foreach (var worldId in ValidWorldIds)
         {
             _priceRepo
