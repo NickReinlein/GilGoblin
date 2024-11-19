@@ -163,7 +163,7 @@ public class RecipeRepositoryTests : GilGoblinDatabaseFixture
                 Arg.Is<RecipePoco>(r =>
                     r.Id == recipe.Id &&
                     r.TargetItemId == recipe.TargetItemId));
-            _itemRecipeCache.Received().Add(recipe.TargetItemId, Arg.Any<List<RecipePoco>>());
+            _itemRecipeCache.Received(1).Add(recipe.TargetItemId, Arg.Any<List<RecipePoco>>());
         }
     }
 

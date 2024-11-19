@@ -18,8 +18,13 @@ public class EndpointComponentTests : ComponentTests
     }
 
     private static string[] _allEndPoints =
-    {
-        "/recipe/", "/recipe/1639", "/price/34/", "/price/34/1639/true", "/item/", "/item/1639"
-        // "/craft/34/", 
-    };
+    [
+        "/recipe/",
+        "/recipe/1639",
+        "/price/34/",
+        "/price/34/1639/true",
+        "/item/",
+        "/item/1639",
+        "/craft/34/"
+    ];
 }

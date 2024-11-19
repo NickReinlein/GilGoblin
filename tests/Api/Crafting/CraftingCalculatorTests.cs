@@ -66,14 +66,14 @@ public class CraftingCalculatorTests
 
         var (recipeId, _) = await _calc.CalculateCraftingCostForItem(_worldId, NewRecipe.TargetItemId);
 
-        _recipes.Received().Get(NewRecipe.Id);
+        _recipes.Received(1).Get(NewRecipe.Id);
         await _grocer.Received(1).BreakdownRecipeById(NewRecipe.Id);
 
         Assert.That(recipeId, Is.EqualTo(NewRecipe.Id));
-        _recipes.Received().GetRecipesForItem(NewRecipe.TargetItemId);
-        _recipes.Received().GetRecipesForItem(NewRecipe.ItemIngredient0TargetId);
-        _prices.Received().Get(_worldId, NewRecipe.ItemIngredient0TargetId, false);
-        _prices.Received().Get(_worldId, NewRecipe.ItemIngredient1TargetId, false);
+        _recipes.Received(1).GetRecipesForItem(NewRecipe.TargetItemId);
+        _recipes.Received(1).GetRecipesForItem(NewRecipe.ItemIngredient0TargetId);
+        _prices.Received(1).Get(_worldId, NewRecipe.ItemIngredient0TargetId, false);
+        _prices.Received(1).Get(_worldId, NewRecipe.ItemIngredient1TargetId, false);
     }
 
     [Test]
@@ -84,7 +84,7 @@ public class CraftingCalculatorTests
 
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, inexistentRecipeId, false);
 
-        _recipes.Received().Get(inexistentRecipeId);
+        _recipes.Received(1).Get(inexistentRecipeId);
         _prices.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
         Assert.That(result, Is.EqualTo(_errorCost));
     }
@@ -100,8 +100,8 @@ public class CraftingCalculatorTests
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
         Assert.That(result, Is.EqualTo(_errorCost));
-        _recipes.Received().Get(recipeId);
-        await _grocer.Received().BreakdownRecipeById(recipeId);
+        _recipes.Received(1).Get(recipeId);
+        await _grocer.Received(1).BreakdownRecipeById(recipeId);
         _prices.DidNotReceive().Get(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
     }
 
@@ -116,11 +116,12 @@ public class CraftingCalculatorTests
 
         _ = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
-        _recipes.Received().Get(recipeId);
-        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient0TargetId);
-        _recipes.Received().GetRecipesForItem(recipe.ItemIngredient1TargetId);
+        _recipes.Received(1).Get(recipeId);
+        _recipes.Received(1).GetRecipesForItem(recipe.ItemIngredient0TargetId);
+        _recipes.Received(1).GetRecipesForItem(recipe.ItemIngredient1TargetId);
         _recipes.DidNotReceive().GetRecipesForItem(recipe.TargetItemId);
-        _prices.Received().Get(_worldId, Arg.Any<int>(), false);
+        _prices.Received(1).Get(_worldId, _firstItemId, false);
+        _prices.Received(1).Get(_worldId, _secondItemId, false);
     }
 
     [Test]
@@ -133,7 +134,7 @@ public class CraftingCalculatorTests
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
         Assert.That(result, Is.EqualTo(_errorCost));
-        _logger.Received()
+        _logger.Received(1)
             .LogError(
                 $"Failed to find market data while calculating crafting cost for recipe {recipeId} in world {_worldId}"
             );
@@ -162,7 +163,7 @@ public class CraftingCalculatorTests
         var result = await _calc.CalculateCraftingCostForRecipe(_worldId, recipeId, false);
 
         Assert.That(result, Is.EqualTo(_errorCost));
-        _logger.Received().LogError($"Failed to calculate crafting cost: {errorMessage}");
+        _logger.Received(1).LogError($"Failed to calculate crafting cost: {errorMessage}");
     }
 
     private void SetupBasicTestCase(RecipePoco recipe, PricePoco price)

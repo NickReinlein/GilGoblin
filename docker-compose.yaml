@@ -2,8 +2,6 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    # image: nickreinlein/gilgoblin-database
-    # container_name: database
     image: database
     build: src/Database/
     environment:
@@ -31,10 +29,8 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    # image: nickreinlein/gilgoblin-api
-    # container_name: api
-    image: api
-    build: src/Api/
+    image: nickreinlein/gilgoblin-api
+    container_name: api
     depends_on:
       - gilgoblin-database
     environment:

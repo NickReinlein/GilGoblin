@@ -39,9 +39,12 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
         _recipeRepo = Substitute.For<IRecipeRepository>();
         _priceRepo = Substitute.For<IPriceRepository<PricePoco>>();
 
+        _costRepo.GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>()).Returns(GetDbContext().RecipeCost.ToList());
         _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
         _recipeRepo.GetMultiple(Arg.Any<IEnumerable<int>>())
-            .Returns(_ => GetDbContext().Recipe.ToList());
+            .Returns(_ => GetDbContext().Recipe
+                .Where(r => ValidRecipeIds.Contains(r.Id))
+                .ToList());
         foreach (var worldId in ValidWorldIds)
         {
             _priceRepo
@@ -76,8 +79,6 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
                         p.WorldId == worldId)
                     .ToList());
         }
-
-        SetupReposToReturnXEntities();
 
         var startup = new Startup(_configuration);
         _serviceProvider = new ServiceCollection().BuildServiceProvider();
@@ -121,6 +122,8 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
         Assert.That(dbContext.SaveChanges(), Is.GreaterThanOrEqualTo(entityCount));
         _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
         _costRepo.GetAllAsync(WorldId).Returns(GetDbContext().RecipeCost.ToList());
+        _costRepo.GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>()).Returns(GetDbContext().RecipeCost.ToList());
+        _priceRepo.GetAll(WorldId).Returns(GetDbContext().Price.ToList());
     }
 
     private void RemoveExisting()

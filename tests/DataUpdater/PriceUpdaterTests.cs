@@ -158,7 +158,7 @@ public class PriceUpdaterTests : DataUpdaterTests
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([]);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(100);
+        cts.CancelAfter(25);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         await _marketableIdsFetcher.Received().GetMarketableItemIdsAsync();
@@ -176,7 +176,7 @@ public class PriceUpdaterTests : DataUpdaterTests
     public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int? worldIdString)
     {
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
+        cts.CancelAfter(25);
         await _priceUpdater.FetchAsync(worldIdString, cts.Token);
 
         var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";

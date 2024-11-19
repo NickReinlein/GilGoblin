@@ -54,9 +54,6 @@ public class RecipeProfitAccountant(
             var newProfits = new List<RecipeProfitPoco>();
             foreach (var cost in currentCosts)
             {
-                if (ct.IsCancellationRequested)
-                    break;
-
                 try
                 {
                     var profit = currentProfits

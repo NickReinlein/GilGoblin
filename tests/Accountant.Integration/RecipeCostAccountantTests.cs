@@ -108,7 +108,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         {
             foreach (var quality in new[] { true, false })
             {
-                await _calc.Received()
+                await _calc.Received(1)
                     .CalculateCraftingCostForRecipe(
                         WorldId,
                         recipeId,

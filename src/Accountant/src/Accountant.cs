@@ -62,16 +62,16 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
 
     public async Task CalculateAsync(int worldId, CancellationToken ct = default)
     {
+        if (ct.IsCancellationRequested)
+        {
+            logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
+            return;
+        }
+
         var idList = await GetIdsToUpdate(worldId);
         if (!idList.Any())
         {
             logger.LogInformation($"Nothing to calculate for {worldId}");
-            return;
-        }
-
-        if (ct.IsCancellationRequested)
-        {
-            logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
             return;
         }
 

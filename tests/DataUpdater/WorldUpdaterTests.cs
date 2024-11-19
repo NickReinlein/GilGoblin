@@ -129,7 +129,7 @@ public class WorldUpdaterTests : DataUpdaterTests
         await _worldUpdater.GetAllWorldsAsync();
 
         Assert.That(_worldList, Has.Count.GreaterThanOrEqualTo(2));
-        await _saver.Received().SaveAsync(Arg.Is<List<WorldPoco>>(x =>
+        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(x =>
             x.All(y => y.Id > 0 && !string.IsNullOrWhiteSpace(y.Name))));
     }
 
@@ -141,7 +141,7 @@ public class WorldUpdaterTests : DataUpdaterTests
 
         await _worldUpdater.GetAllWorldsAsync();
 
-        _logger.Received().LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
+        _logger.Received(1).LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
     }
 
     [Test]
