@@ -27,6 +27,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug Secrets
+        run: |
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
+          echo "Connection String=${{ secrets.DB_CONNECTION_STRING }}"
+        shell: bash
+
       - name: Setup .NET8
         uses: actions/setup-dotnet@v4
         with:
