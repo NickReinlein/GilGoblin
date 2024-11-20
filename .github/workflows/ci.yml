@@ -27,18 +27,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug Secrets
-        run: |
-          echo "POSTGRES_PASSWORD=12312321"
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}"
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
-          echo "Connection String=${{ secrets.DB_CONNECTION_STRING }}"
-        shell: bash
-
-      - name: Print Environment Variables
-        run: env
-        shell: bash
-
+      # - name: Debug Secrets
+      #   run: |
+      #     echo "POSTGRES_PASSWORD=12312321"
+      #     echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}"
+      #     echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
+      #     echo "Connection String=${{ secrets.DB_CONNECTION_STRING }}"
+      #   shell: bash
 
       - name: Setup .NET8
         uses: actions/setup-dotnet@v4
@@ -51,12 +46,11 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Set DB Connection String
-        id: set-connection-string
-        run: |
-          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
+      # - name: Set DB Connection String
+      #   id: set-connection-string
+      #   run: |
+      #     echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
 
       - name: Test
-        env:
-          ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
+        env: ConnectionStrings__GilGoblinDbContext:"Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=placeholder_password;"
         run: dotnet test --no-build --verbosity detailed --filter "Category!=Component"
