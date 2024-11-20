@@ -35,6 +35,11 @@ jobs:
           echo "Connection String=${{ secrets.DB_CONNECTION_STRING }}"
         shell: bash
 
+      - name: Print Environment Variables
+        run: env
+        shell: bash
+
+
       - name: Setup .NET8
         uses: actions/setup-dotnet@v4
         with:
