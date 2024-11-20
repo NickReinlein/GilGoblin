@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_PASSWORD: placeholder_password
         ports:
           - 5432:5432
         options: >-
@@ -37,6 +37,11 @@ jobs:
 
       - name: Build
         run: dotnet build --no-restore
+
+      - name: Set DB Connection String
+        id: set-connection-string
+        run: |
+          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
 
       - name: Test
         env:
