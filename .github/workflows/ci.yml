@@ -19,7 +19,7 @@ jobs:
           PGUSER: ${{ secrets.PGUSER }}
           PGDATA: ${{ secrets.PGDATA }}
         ports:
-          - ${{ secrets.PORT_DATABASE }}:5432
+          - 5432:5432
         options: >-
           --health-cmd "pg_isready -d ${{ secrets.POSTGRES_DB }} -U ${{ secrets.PGUSER }}"
           --health-interval 10s
