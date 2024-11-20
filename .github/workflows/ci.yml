@@ -46,10 +46,10 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Set DB Connection String
-        id: set-connection-string
-        run: |
-          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
+      # - name: Set DB Connection String
+      #   id: set-connection-string
+      #   run: |
+      #     echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
 
       - name: Test
         env:
