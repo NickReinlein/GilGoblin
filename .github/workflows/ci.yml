@@ -45,7 +45,8 @@ jobs:
 
       - name: Echo DB Connection String
         run: |
-          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};"
+          echo "constructed: Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" |
+          echo "DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING}}"
 
       - name: Test
         env:
