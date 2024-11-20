@@ -45,5 +45,5 @@ jobs:
 
       - name: Test
         env:
-          ConnectionStrings__GilGoblinDbContext: "Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=placeholder_password;"
+          ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
         run: dotnet test --no-build --verbosity detailed --filter "Category!=Component"
