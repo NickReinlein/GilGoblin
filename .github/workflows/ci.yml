@@ -29,6 +29,8 @@ jobs:
 
       - name: Debug Secrets
         run: |
+          echo "POSTGRES_PASSWORD=12312321"
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}"
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
           echo "Connection String=${{ secrets.DB_CONNECTION_STRING }}"
         shell: bash
