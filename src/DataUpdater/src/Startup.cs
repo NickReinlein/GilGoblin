@@ -42,10 +42,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     {
         services.AddHttpClient();
 
-        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new Exception("Failed to get connection string");
-
         services
             .AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
             .AddScoped<IPriceFetcher, PriceFetcher>()
