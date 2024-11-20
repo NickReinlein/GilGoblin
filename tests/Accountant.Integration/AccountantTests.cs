@@ -8,7 +8,6 @@ using GilGoblin.Api.Repository;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.Database.Integration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -23,7 +22,6 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
     protected IPriceRepository<PricePoco> _priceRepo;
     protected IRecipeProfitRepository _profitRepo;
 
-
     protected readonly int WorldId = ValidWorldIds[0];
     protected readonly int RecipeId = ValidRecipeIds[0];
 
@@ -32,7 +30,6 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
     {
         await base.SetUp();
 
-        Substitute.For<ILogger<Accountant<T>>>();
         _calc = Substitute.For<ICraftingCalculator>();
         _costRepo = Substitute.For<IRecipeCostRepository>();
         _profitRepo = Substitute.For<IRecipeProfitRepository>();

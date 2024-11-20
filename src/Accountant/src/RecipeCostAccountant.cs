@@ -86,10 +86,6 @@ public class RecipeCostAccountant(
 
             await saver.SaveAsync(newCosts, ct);
         }
-        catch (TaskCanceledException)
-        {
-            logger.LogInformation("Task was cancelled by user. Putting away the books, boss!");
-        }
         catch (Exception ex)
         {
             logger.LogError(
