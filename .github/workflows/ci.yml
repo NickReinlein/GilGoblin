@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
-          POSTGRES_PASSWORD: placeholder_password
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
