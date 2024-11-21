@@ -41,6 +41,10 @@ jobs:
       - name: Set DB Connection String
         id: set-connection-string
         run: |
+          if [ -z "${{ secrets.POSTGRES_PASSWORD }}" ]; then
+            echo "Error: POSTGRES_PASSWORD secret is not set."
+            exit 1
+          fi
           echo "DB_CONNECTION_STRING=Host=gilgoblin-database;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
 
       - name: Wait for Database
