@@ -1,34 +1,61 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
-public class PriceRepository : IPriceRepository<PricePoco>
+public interface IPriceRepository<T> : IRepositoryCache where T : class
 {
-    private readonly GilGoblinDbContext _dbContext;
-    private readonly IPriceCache _cache;
+    T? Get(int worldId, int id, bool isHq);
+    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq = null);
+    List<T> GetAll(int worldId);
+}
 
-    public PriceRepository(GilGoblinDbContext dbContext, IPriceCache cache)
+public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache) : IPriceRepository<PricePoco>
+{
+    public PricePoco? Get(int worldId, int id, bool isHq)
     {
-        _dbContext = dbContext;
-        _cache = cache;
-    }
-
-    public PricePoco? Get(int worldId, int id)
-    {
-        var cached = _cache.Get((worldId, id));
+        var cached = cache.Get(new TripleKey(worldId, id, isHq));
         if (cached is not null)
             return cached;
 
         try
         {
-            var price = _dbContext.Price.FirstOrDefault(p => p.WorldId == worldId && p.ItemId == id);
+            using var scope = serviceProvider.CreateScope();
+            using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            var price = dbContext.Price
+                .AsNoTracking()
+                .Include(p => p.MinListing)
+                .ThenInclude(p => p.DcDataPoint)
+                .Include(p => p.MinListing)
+                .ThenInclude(p => p.RegionDataPoint)
+                .Include(p => p.MinListing)
+                .ThenInclude(p => p.WorldDataPoint)
+                .Include(p => p.RecentPurchase)
+                .ThenInclude(p => p.DcDataPoint)
+                .Include(p => p.RecentPurchase)
+                .ThenInclude(p => p.RegionDataPoint)
+                .Include(p => p.RecentPurchase)
+                .ThenInclude(p => p.WorldDataPoint)
+                .Include(p => p.AverageSalePrice)
+                .ThenInclude(p => p.DcDataPoint)
+                .Include(p => p.AverageSalePrice)
+                .ThenInclude(p => p.RegionDataPoint)
+                .Include(p => p.AverageSalePrice)
+                .ThenInclude(p => p.WorldDataPoint)
+                .Include(p => p.DailySaleVelocity)
+                .FirstOrDefault(p =>
+                    p.ItemId == id &&
+                    p.WorldId == worldId &&
+                    p.IsHq == isHq);
             if (price is not null)
-                _cache.Add((price.WorldId, price.ItemId), price);
+                cache.Add(new TripleKey(worldId, id, isHq), price);
 
             return price;
         }
@@ -38,16 +65,73 @@ public class PriceRepository : IPriceRepository<PricePoco>
         }
     }
 
-    public IEnumerable<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids) =>
-        _dbContext.Price.Where(p => p.WorldId == worldId && ids.Any(i => i == p.ItemId));
+    public List<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq)
+    {
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        return dbContext.Price
+            .AsNoTracking()
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p.WorldDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p.WorldDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.DcDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.RegionDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p.WorldDataPoint)
+            .Include(p => p.DailySaleVelocity)
+            .Where(p =>
+                p.WorldId == worldId &&
+                (isHq == null || p.IsHq == isHq.Value) &&
+                ids.Any(i => i == p.ItemId))
+            .ToList();
+    }
 
-    public IEnumerable<PricePoco> GetAll(int worldId) =>
-        _dbContext.Price.Where(p => p.WorldId == worldId);
+    public List<PricePoco> GetAll(int worldId)
+    {
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        return dbContext.Price
+            .AsNoTracking()
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p!.DcDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p!.RegionDataPoint)
+            .Include(p => p.MinListing)
+            .ThenInclude(p => p!.WorldDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p!.DcDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p!.RegionDataPoint)
+            .Include(p => p.RecentPurchase)
+            .ThenInclude(p => p!.WorldDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p!.DcDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p!.RegionDataPoint)
+            .Include(p => p.AverageSalePrice)
+            .ThenInclude(p => p!.WorldDataPoint)
+            .Include(p => p.DailySaleVelocity)
+            .Where(p => p.WorldId == worldId)
+            .ToList();
+    }
 
     public Task FillCache()
     {
-        var items = _dbContext?.Price?.ToList();
-        items?.ForEach(price => _cache.Add((price.WorldId, price.ItemId), price));
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var items = dbContext.Price.ToList();
+        items.ForEach(price => cache.Add(new TripleKey(price.WorldId, price.ItemId, price.IsHq), price));
         return Task.CompletedTask;
     }
 }

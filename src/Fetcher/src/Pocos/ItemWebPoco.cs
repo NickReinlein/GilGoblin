@@ -3,7 +3,7 @@ using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Fetcher.Pocos;
 
-public class ItemWebPoco : BaseItemPoco
+public record ItemWebPoco : BaseItemPoco
 {
     public ItemWebPoco() { }
 

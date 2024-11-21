@@ -1,8 +1,7 @@
 namespace GilGoblin.Database.Pocos;
 
-public class BaseItemPoco : IIdentifiable
+public record BaseItemPoco : IdentifiablePoco
 {
-    public int Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
     public int IconId { get; set; }
@@ -14,7 +13,7 @@ public class BaseItemPoco : IIdentifiable
 
     public BaseItemPoco() { }
 
-    public BaseItemPoco(
+    protected BaseItemPoco(
         int id,
         string name,
         string description,
@@ -35,6 +34,4 @@ public class BaseItemPoco : IIdentifiable
         StackSize = stackSize;
         CanHq = canHq;
     }
-
-    public int GetId() => Id;
 }

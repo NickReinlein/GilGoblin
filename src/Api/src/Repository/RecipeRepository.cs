@@ -5,26 +5,22 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
-public class RecipeRepository : IRecipeRepository
+public interface IRecipeRepository : IDataRepository<RecipePoco>
 {
-    private readonly GilGoblinDbContext _dbContext;
-    private readonly IRecipeCache _recipeCache;
-    private readonly IItemRecipeCache _itemRecipesCache;
+    List<RecipePoco> GetRecipesForItem(int itemId);
+    List<RecipePoco> GetRecipesForItemIds(IEnumerable<int> itemIds);
+}
 
-    public RecipeRepository(
-        GilGoblinDbContext dbContext,
-        IRecipeCache cache,
-        IItemRecipeCache itemRecipeCache
-    )
-    {
-        _dbContext = dbContext;
-        _recipeCache = cache;
-        _itemRecipesCache = itemRecipeCache;
-    }
-
+public class RecipeRepository(
+    IServiceProvider serviceProvider,
+    IRecipeCache recipeCache,
+    IItemRecipeCache itemRecipeCache)
+    : IRecipeRepository
+{
     public RecipePoco? Get(int itemId)
     {
         if (itemId < 1)
@@ -32,14 +28,15 @@ public class RecipeRepository : IRecipeRepository
 
         try
         {
-            var cached = _recipeCache.Get(itemId);
+            var cached = recipeCache.Get(itemId);
             if (cached is not null)
                 return cached;
 
-            var recipe = _dbContext.Recipe.FirstOrDefault(i => i.Id == itemId);
+            using var scope = serviceProvider.CreateScope();
+            using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+            var recipe = dbContext.Recipe.FirstOrDefault(i => i.Id == itemId);
             if (recipe is not null)
-                _recipeCache.Add(recipe.Id, recipe);
-
+                recipeCache.Add(recipe.Id, recipe);
             return recipe;
         }
         catch (Exception)
@@ -53,37 +50,47 @@ public class RecipeRepository : IRecipeRepository
         if (itemId < 1)
             return [];
 
-        var cached = _itemRecipesCache.Get(itemId);
-        if (cached is not null)
+        var cached = itemRecipeCache.Get(itemId);
+        if (cached is not null && cached.Count > 0)
             return cached;
 
-        var recipes = _dbContext.Recipe.Where(r => r.TargetItemId == itemId).ToList();
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipes = dbContext.Recipe.Where(r => r.TargetItemId == itemId).ToList();
         return CacheRecipes(recipes);
     }
 
     public List<RecipePoco> GetRecipesForItemIds(IEnumerable<int> itemIds)
     {
-        var recipes = _dbContext.Recipe.Where(r =>
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipes = dbContext.Recipe.Where(r =>
             itemIds.Any(a => a == r.TargetItemId)).ToList();
         return CacheRecipes(recipes);
     }
 
-    public IEnumerable<RecipePoco> GetMultiple(IEnumerable<int> itemIds)
+    public List<RecipePoco> GetMultiple(IEnumerable<int> ids)
     {
-        var recipes = _dbContext.Recipe.Where(r =>
-            itemIds.Any(a => a == r.Id)).ToList();
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipes = dbContext.Recipe.Where(r =>
+            ids.Any(a => a == r.Id)).ToList();
         return CacheRecipes(recipes);
     }
 
-    public IEnumerable<RecipePoco> GetAll()
+    public List<RecipePoco> GetAll()
     {
-        var recipes = _dbContext.Recipe.ToList();
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipes = dbContext.Recipe.ToList();
         return CacheRecipes(recipes);
     }
 
     public Task FillCache()
     {
-        var recipes = _dbContext.Recipe.ToList();
+        using var scope = serviceProvider.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipes = dbContext.Recipe.ToList();
         _ = CacheRecipes(recipes);
         return Task.CompletedTask;
     }
@@ -91,11 +98,11 @@ public class RecipeRepository : IRecipeRepository
     private List<RecipePoco> CacheRecipes(List<RecipePoco> recipes)
     {
         foreach (var recipe in recipes)
-            _recipeCache.Add(recipe.Id, recipe);
+            recipeCache.Add(recipe.Id, recipe);
 
         var ids = recipes.Select(r => r.TargetItemId).Distinct().ToList();
         foreach (var itemId in ids)
-            _itemRecipesCache.Add(itemId, recipes.Where(itemRecipe => itemRecipe.Id == itemId).ToList());
+            itemRecipeCache.Add(itemId, recipes.Where(itemRecipe => itemRecipe.Id == itemId).ToList());
 
         return recipes;
     }

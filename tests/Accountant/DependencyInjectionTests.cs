@@ -1,9 +1,10 @@
 using System;
-using GilGoblin.Database.Pocos;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
+using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -35,9 +36,8 @@ public class AccountantDependencyInjectionTests
     [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]
     [TestCase(typeof(IItemRecipeCache))]
-    [TestCase(typeof(ICraftCache))]
-    [TestCase(typeof(IRecipeCostCache))]
-    [TestCase(typeof(IRecipeProfitCache))]
+    [TestCase(typeof(ICalculatedMetricCache<RecipeCostPoco>))]
+    [TestCase(typeof(ICalculatedMetricCache<RecipeProfitPoco>))]
     [TestCase(typeof(ICraftingCalculator))]
     [TestCase(typeof(ICraftRepository))]
     [TestCase(typeof(IRecipeGrocer))]
@@ -46,6 +46,8 @@ public class AccountantDependencyInjectionTests
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IRecipeCostRepository))]
     [TestCase(typeof(IRecipeProfitRepository))]
+    [TestCase(typeof(IPriceSaver))]
+    [TestCase(typeof(IDataSaver<RecipeCostPoco>))]
     public void GivenAGoblinAccountant_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();

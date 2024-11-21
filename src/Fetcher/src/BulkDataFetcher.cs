@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
@@ -12,25 +12,20 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
+public class BulkDataFetcher<T, U>(
+    string basePath,
+    ILogger<BulkDataFetcher<T, U>> logger,
+    HttpClient? client = null)
+    : DataFetcher<T>(basePath, logger, client), IBulkDataFetcher<T, U>
     where T : class, IIdentifiable
     where U : class, IResponseToList<T>
 {
     protected int _entriesPerPage = 100;
 
-    public BulkDataFetcher(
-        string basePath,
-        ILogger<BulkDataFetcher<T, U>> logger,
-        HttpClient? client = null
-    )
-        : base(basePath, logger, client)
-    {
-    }
-
     public int GetEntriesPerPage() => _entriesPerPage;
     public void SetEntriesPerPage(int count) => _entriesPerPage = count;
 
-    public override async Task<List<T>> FetchByIdsAsync(CancellationToken ct, IEnumerable<int> ids, int? world = null)
+    public override async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null, CancellationToken ct = default)
     {
         var idList = ids.ToList();
         if (!idList.Any())
@@ -38,7 +33,7 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
 
         try
         {
-            var response = await FetchAsync(world, idList);
+            var response = await FetchAsync(world, idList, ct);
             if (response is null)
                 return new List<T>();
 
@@ -52,31 +47,37 @@ public class BulkDataFetcher<T, U> : DataFetcher<T>, IBulkDataFetcher<T, U>
         }
     }
 
-    private async Task<U> FetchAsync(int? world, IEnumerable<int> ids)
+    private async Task<U?> FetchAsync(int? world, IEnumerable<int> ids, CancellationToken ct)
     {
         var path = GetUrlPathFromEntries(ids, world);
-        var response = await FetchAndSerializeDataAsync(path);
-        return response;
+        return await FetchAndSerializeDataAsync(path, ct);
     }
 
-    private async Task<U?> FetchAndSerializeDataAsync(string path)
+    private async Task<U?> FetchAndSerializeDataAsync(string path, CancellationToken ct)
     {
         try
         {
-            var response = await Client.GetAsync(path);
+            var response = await Client.GetAsync(path, ct);
             return !response.IsSuccessStatusCode
                 ? null
-                : ReadResponseContentAsync(response.Content);
-        } 
-        catch
+                : await ReadResponseContentAsync(response.Content);
+        }
+        catch (Exception e)
         {
-            Logger.LogError($"Failed GET call to update {nameof(T)} with path: {path}");
+            Logger.LogError("Failed the GET call to update {Name} with path {Path}: {Error}",
+                nameof(T),
+                path,
+                e.Message);
             return null;
         }
     }
 
-    protected virtual U ReadResponseContentAsync(HttpContent content)
-        => content.ReadFromJsonAsync<U>().Result;
+    protected virtual async Task<U> ReadResponseContentAsync(HttpContent content) =>
+        JsonSerializer.Deserialize<U>(await content.ReadAsStringAsync(), GetJsonSerializerOptions()) ??
+        throw new InvalidOperationException($"Failed to read the fetched response: {content}");
+
+    private static JsonSerializerOptions GetJsonSerializerOptions() =>
+        new() { PropertyNameCaseInsensitive = true, IncludeFields = true };
 
     protected virtual string GetUrlPathFromEntries(IEnumerable<int> ids, int? worldId = null)
     {

@@ -3,9 +3,9 @@ using GilGoblin.Api.Cache;
 
 namespace GilGoblin.Api.Repository;
 
-public interface IDataRepository<out T> : IRepositoryCache
+public interface IDataRepository<T> : IRepositoryCache
 {
     T? Get(int itemId);
-    IEnumerable<T> GetMultiple(IEnumerable<int> itemIds);
-    IEnumerable<T> GetAll();
+    List<T> GetMultiple(IEnumerable<int> ids);
+    List<T> GetAll();
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,13 +18,11 @@ public class PriceComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
 
         var price = await response.Content.ReadFromJsonAsync<PricePoco?>(GetSerializerOptions());
-        var highestPrice = (int)Math.Max(price!.AverageListingPrice, price.AverageSold);
         Assert.Multiple(() =>
         {
-            Assert.That(price.ItemId, Is.EqualTo(10348));
+            Assert.That(price, Is.Not.Null);
+            Assert.That(price!.ItemId, Is.EqualTo(10348));
             Assert.That(price.WorldId, Is.EqualTo(34));
-            Assert.That(price.LastUploadTime, Is.GreaterThanOrEqualTo(1674800561942));
-            Assert.That(highestPrice, Is.GreaterThanOrEqualTo(100));
         });
     }
 
@@ -46,29 +43,15 @@ public class PriceComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var prices = await response.Content.ReadFromJsonAsync<IEnumerable<PricePoco>>(
-            GetSerializerOptions()
-        );
-        var priceCount = prices.Count();
+        var prices = (await response.Content.ReadFromJsonAsync<IEnumerable<PricePoco>>(
+            GetSerializerOptions()) ?? []).ToList();
+
         Assert.Multiple(() =>
         {
+            var priceCount = prices.Count;
             Assert.That(priceCount, Is.GreaterThan(1000), "Not enough entries received");
             Assert.That(prices.All(p => p.ItemId > 0), "ItemId is invalid");
             Assert.That(prices.All(p => p.WorldId == 34), "WorldId is incorrect");
-            Assert.That(
-                prices.All(p => p.LastUploadTime > 1574800561942),
-                "LastUploadTime timestamp is invalid"
-            );
-            Assert.That(
-                prices.Count(p => p.AverageListingPrice == 0),
-                Is.LessThan(priceCount * missingEntryPercentageThreshold),
-                "Number of missing AverageListingPrice is suspiciously high"
-            );
-            Assert.That(
-                prices.Count(p => p.AverageSold == 0),
-                Is.LessThan(priceCount * missingEntryPercentageThreshold),
-                "Number of missing AverageSold is suspiciously high"
-            );
         });
     }
 

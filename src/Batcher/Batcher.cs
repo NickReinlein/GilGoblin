@@ -3,19 +3,14 @@ using System.Linq;
 
 namespace GilGoblin.Batcher;
 
-public class Batcher<T> : IBatcher<T>
+public class Batcher<T>(int pageSize = 100) : IBatcher<T>
 {
-    protected readonly int PageSize;
-
-    public Batcher(int pageSize = 100)
-    {
-        PageSize = pageSize;
-    }
+    protected readonly int PageSize = pageSize;
 
     public List<List<T>> SplitIntoBatchJobs(List<T> entries)
     {
         if (!entries.Any() || PageSize < 1)
-            return new List<List<T>>();
+            return [];
 
         var cumulativeList = new List<List<T>>();
         var tempList = new List<T>();
@@ -25,11 +20,11 @@ public class Batcher<T> : IBatcher<T>
             var entry = queue.Dequeue();
             tempList.Add(entry);
 
-            if (tempList.Count == PageSize)
-            {
-                cumulativeList.Add(tempList);
-                tempList = new List<T>();
-            }
+            if (tempList.Count != PageSize)
+                continue;
+
+            cumulativeList.Add(tempList);
+            tempList = [];
         }
 
         if (tempList.Any())

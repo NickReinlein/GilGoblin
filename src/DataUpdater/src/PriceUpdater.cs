@@ -5,29 +5,23 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Api.Repository;
-using GilGoblin.Batcher;
+using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Pocos.Extensions;
-using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher;
-using GilGoblin.Fetcher.Pocos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
+public class PriceUpdater(
+    IServiceProvider serviceProvider,
+    ILogger<PriceUpdater> logger)
+    : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
-    public List<int> AllItemIds { get; private set; }
-    private const int dataExpiryInHours = 48;
-
-    public PriceUpdater(
-        IServiceScopeFactory scopeFactory,
-        ILogger<DataUpdater<PricePoco, PriceWebPoco>> logger)
-        : base(scopeFactory, logger)
-    {
-    }
+    private List<int> AllItemIds { get; set; } = [];
+    private DateTimeOffset LastUpdated { get; set; }
+    private const int hoursBeforeDataExpiry = 96;
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
     {
@@ -36,8 +30,8 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
         foreach (var world in worlds)
         {
-            Logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
-            fetchTasks.Add(FetchAsync(ct, world.Id));
+            logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
+            fetchTasks.Add(FetchAsync(world.Id, ct));
         }
 
         await Task.WhenAll(fetchTasks);
@@ -46,115 +40,129 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
 
     protected override async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
-        using var scope = ScopeFactory.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var fetcher = scope.ServiceProvider.GetRequiredService<IPriceFetcher>();
-        var batcher = new Batcher<int>(fetcher.GetEntriesPerPage());
+        var batcher = new Batcher.Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
 
-        while (!ct.IsCancellationRequested)
+        foreach (var batch in batches)
         {
-            foreach (var batch in batches)
+            try
             {
-                try
+                if (ct.IsCancellationRequested)
+                    throw new TaskCanceledException();
+
+                var fetched = await fetcher.FetchByIdsAsync(batch, worldId, ct);
+                if (!fetched.Any())
                 {
-                    var fetched = await fetcher.FetchByIdsAsync(ct, batch, worldId);
-                    await ConvertAndSaveToDbAsync(fetched);
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"Failed to get batch: {e.Message}");
+                    logger.LogDebug(
+                        "Fetched {Count} items for world id {WorldId} but received no price data in response",
+                        batch.Count,
+                        worldId);
+                    continue;
                 }
 
-                try
-                {
-                    await AwaitDelay(ct);
-                }
-                catch (TaskCanceledException)
-                {
-                    const string message =
-                        $"The cancellation token was cancelled. Ending service {nameof(PriceUpdater)}";
-                    Logger.LogInformation(message);
-                }
+                await ConvertAndSaveToDbAsync(fetched, worldId, ct);
+                await AwaitDelay(ct);
             }
-
-            return;
+            catch (TaskCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Failed to get batch: {e.Message}");
+            }
         }
     }
 
-    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos)
+    protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null,
+        CancellationToken ct = default)
     {
-        var updateList = webPocos.ToPricePocoList();
-        if (!updateList.Any())
-            return;
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
-        try
+        var world = worldId ?? 0;
+        foreach (var webPoco in webPocos)
         {
-            using var scope = ScopeFactory.CreateScope();
-            var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<PricePoco>>();
-            var success = await saver.SaveAsync(updateList);
-            if (!success)
-                throw new DbUpdateException($"Saving from {nameof(IDataSaver<PricePoco>)} returned failure");
-        }
-        catch (Exception e)
-        {
-            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(PricePoco)}: {e.Message}");
+            try
+            {
+                await converter.ConvertAndSaveAsync(webPoco, world, ct);
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
+            }
         }
     }
 
     protected override List<WorldPoco> GetWorlds()
     {
-        using var scope = ScopeFactory.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
         return worldRepo.GetAll().ToList();
     }
 
-    protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId)
+    protected override async Task<List<int>> GetIdsToUpdateAsync(int? worldId, CancellationToken ct)
     {
-        try
+        while (!ct.IsCancellationRequested)
         {
-            if (worldId is null or < 1)
-                throw new Exception("World Id is invalid");
-
-            var world = worldId.GetValueOrDefault();
-            if (world <= 0)
-                throw new ArgumentException($"Interpreted world id as {world}");
-
-            await FillItemIdCache();
-
-            using var scope = ScopeFactory.CreateScope();
-            var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
-            var currentPrices = priceRepo.GetAll(world).ToList();
-            var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
-            var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
-
-            var outdatedPrices = currentPrices.Where(p =>
+            try
             {
-                var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(p.LastUploadTime).UtcDateTime;
-                var ageInHours = (DateTimeOffset.UtcNow - timestamp).TotalHours;
-                return ageInHours > dataExpiryInHours;
-            }).ToList();
+                if (worldId is null or < 1)
+                    throw new Exception("World Id is invalid");
 
-            var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
-            var idsToUpdate = outdatedPriceIdList.Concat(newPriceIds).ToList();
+                var world = worldId.GetValueOrDefault();
+                if (world <= 0)
+                    throw new ArgumentException($"Interpreted world id as {world}");
 
-            return idsToUpdate;
+                await FillItemIdCache();
+
+                using var scope = serviceProvider.CreateScope();
+                var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
+                var currentPrices = priceRepo.GetAll(world).ToList();
+                var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
+                var newPriceIds = AllItemIds.Except(currentPriceIds).ToList();
+
+                var outdatedPrices = currentPrices.Where(p =>
+                {
+                    var priceAge = p.Updated;
+                    var ageInHours = (DateTimeOffset.UtcNow - priceAge).TotalHours;
+                    return ageInHours > hoursBeforeDataExpiry;
+                }).ToList();
+
+                var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
+                var idsToUpdate = outdatedPriceIdList.Concat(newPriceIds).ToList();
+
+                return idsToUpdate;
+            }
+            catch (TaskCanceledException)
+            {
+                logger.LogInformation("Task was cancelled");
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+            }
         }
-        catch (Exception e)
-        {
-            Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
-            return new List<int>();
-        }
+
+        return [];
     }
 
     private async Task FillItemIdCache()
     {
-        using var scope = ScopeFactory.CreateScope();
+        if (AllItemIds.Any() &&
+            (DateTimeOffset.UtcNow - LastUpdated).TotalHours < hoursBeforeDataExpiry)
+            return;
+
+
+        await using var scope = serviceProvider.CreateAsyncScope();
         var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
         var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-        AllItemIds = new List<int>();
+        AllItemIds.Clear();
+        LastUpdated = DateTimeOffset.UtcNow;
 
         var recipes = recipeRepo.GetAll().ToList();
-        Logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
+        logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
         var ingredientItemIds =
             recipes
                 .SelectMany(r =>
@@ -164,7 +172,7 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 .ToList();
 
         var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
-        Logger.LogDebug(
+        logger.LogDebug(
             $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
         if (!marketableItemIdList.Any())
             throw new WebException("Failed to fetch marketable item ids");
@@ -174,13 +182,13 @@ public class PriceUpdater : DataUpdater<PricePoco, PriceWebPoco>
                 .Concat(ingredientItemIds)
                 .Distinct()
                 .ToList();
-        Logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
+        logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
     }
 
     private async Task AwaitDelay(CancellationToken ct)
     {
         var delay = GetApiSpamDelayInMs();
-        Logger.LogInformation($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
+        logger.LogInformation($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
         await Task.Delay(delay, ct);
     }
 }

@@ -1,37 +1,28 @@
+using System;
+
 namespace GilGoblin.Database.Pocos;
 
-public class PricePoco : BasePricePoco
+public record PricePoco(
+    int ItemId,
+    int WorldId,
+    bool IsHq,
+    int? MinListingId = null,
+    int? RecentPurchaseId = null,
+    int? AverageSalePriceId = null,
+    int? DailySaleVelocityId = null)
+    : IdentifiableTripleKeyPoco(ItemId, WorldId, IsHq)
 {
-    public float AverageListingPrice { get; set; }
-    public float AverageListingPriceNQ { get; set; }
-    public float AverageListingPriceHQ { get; set; }
+    public DateTimeOffset Updated { get; set; } = DateTimeOffset.UtcNow;
 
-    public float AverageSold { get; set; }
-    public float AverageSoldNQ { get; set; }
-    public float AverageSoldHQ { get; set; }
+    // Navigation properties
+    public MinListingPoco? MinListing { get; set; }
+    public RecentPurchasePoco? RecentPurchase { get; set; }
+    public AverageSalePricePoco? AverageSalePrice { get; set; }
+    public DailySaleVelocityPoco? DailySaleVelocity { get; set; }
 
-    public PricePoco() { }
+    public PriceDataPoco? GetBestPrice() => AverageSalePrice?.GetBestPrice() ??
+                                            RecentPurchase?.GetBestPrice() ??
+                                            MinListing?.GetBestPrice();
 
-    public PricePoco(
-        int itemId,
-        int worldId,
-        long lastUploadTime,
-        float currentAveragePrice,
-        float currentAveragePriceNQ,
-        float currentAveragePriceHQ,
-        float averagePrice,
-        float averagePriceNQ,
-        float averagePriceHQ
-    )
-    {
-        ItemId = itemId;
-        WorldId = worldId;
-        LastUploadTime = lastUploadTime;
-        AverageListingPrice = currentAveragePrice;
-        AverageListingPriceNQ = currentAveragePriceNQ;
-        AverageListingPriceHQ = currentAveragePriceHQ;
-        AverageSold = averagePrice;
-        AverageSoldNQ = averagePriceNQ;
-        AverageSoldHQ = averagePriceHQ;
-    }
+    public decimal GetBestPriceAmount() => GetBestPrice()?.Price ?? int.MaxValue;
 }

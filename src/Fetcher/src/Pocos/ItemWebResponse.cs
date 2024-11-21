@@ -19,7 +19,7 @@ public class ItemWebResponse : IResponseToList<ItemWebPoco>
         foreach (var item in dbItems)
         {
             var converted = new ItemWebPoco(item);
-            Items.Add(converted.Id, converted);
+            Items.Add(converted.GetId(), converted);
         }
     }
 

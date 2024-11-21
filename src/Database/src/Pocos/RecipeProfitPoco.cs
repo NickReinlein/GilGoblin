@@ -1,7 +1,11 @@
+using System;
+
 namespace GilGoblin.Database.Pocos;
 
-public class RecipeProfitPoco : BaseRecipeValue
-{
-    public int RecipeProfitVsSold { get; set; }
-    public int RecipeProfitVsListings { get; set; }
-}
+public record RecipeProfitPoco(
+    int RecipeId,
+    int WorldId,
+    bool IsHq,
+    int Amount,
+    DateTimeOffset LastUpdated)
+    : CalculatedMetricPoco(RecipeId, WorldId, IsHq, Amount, LastUpdated);

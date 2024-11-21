@@ -2,8 +2,8 @@ using System;
 using GilGoblin.Api;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
-using GilGoblin.Database.Pocos;
 using GilGoblin.Api.Repository;
+using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -26,15 +26,20 @@ public class DependencyInjectionTests
         var client = _factory.CreateClient();
 
         Assert.That(client, Is.Not.Null);
+        Assert.That(client.BaseAddress, Is.Not.Null);
     }
 
     [TestCase(typeof(IItemRepository))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IPriceRepository<PricePoco>))]
+    [TestCase(typeof(IWorldRepository))]
+    [TestCase(typeof(IRecipeCostRepository))]
+    [TestCase(typeof(IRecipeProfitRepository))]
     [TestCase(typeof(ICraftRepository))]
     [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]
-    [TestCase(typeof(IRecipeCostCache))]
+    [TestCase(typeof(ICalculatedMetricCache<RecipeCostPoco>))]
+    [TestCase(typeof(ICalculatedMetricCache<RecipeProfitPoco>))]
     [TestCase(typeof(IItemCache))]
     [TestCase(typeof(IItemRecipeCache))]
     [TestCase(typeof(IRecipeGrocer))]

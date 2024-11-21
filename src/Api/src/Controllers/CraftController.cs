@@ -9,21 +9,13 @@ namespace GilGoblin.Api.Controllers;
 
 [ApiController]
 [Route("[controller]/{worldId:int}")]
-public class CraftController : ControllerBase, ICraftController<CraftSummaryPoco> 
+public class CraftController(ICraftRepository craftRepo, ILogger<CraftController> logger)
+    : ControllerBase, ICraftController<CraftSummaryPoco>
 {
-    private readonly ICraftRepository _craftRepo;
-    private readonly ILogger<CraftController> _logger;
-
-    public CraftController(ICraftRepository craftRepo, ILogger<CraftController> logger)
-    {
-        _craftRepo = craftRepo;
-        _logger = logger;
-    }
-
     [HttpGet("")]
     public async Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId)
     {
-        _logger.LogInformation($"Fetching best crafting results for world {worldId}");
-        return await _craftRepo.GetBestAsync(worldId);
+        logger.LogInformation($"Fetching best crafting results for world {worldId}");
+        return await craftRepo.GetBestAsync(worldId);
     }
 }

@@ -1,5 +1,3 @@
 namespace GilGoblin.Database.Pocos;
 
-public class ItemPoco : BaseItemPoco
-{
-}
+public record ItemPoco : BaseItemPoco;

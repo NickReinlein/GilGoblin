@@ -13,21 +13,10 @@ public interface IMarketableItemIdsFetcher
     Task<List<int>> GetMarketableItemIdsAsync();
 }
 
-public class MarketableItemIdsFetcher : IMarketableItemIdsFetcher
+public class MarketableItemIdsFetcher(ILogger<MarketableItemIdsFetcher> logger, HttpClient? client = null)
+    : IMarketableItemIdsFetcher
 {
-    private readonly ILogger<MarketableItemIdsFetcher> _logger;
-    private HttpClient Client { get; set; }
-
-    public MarketableItemIdsFetcher(ILogger<MarketableItemIdsFetcher> logger, HttpClient? client = null)
-    {
-        _logger = logger;
-        Client = client ?? new HttpClient();
-    }
-
-    public MarketableItemIdsFetcher(ILogger<MarketableItemIdsFetcher> logger)
-    {
-        _logger = logger;
-    }
+    private HttpClient Client { get; set; } = client ?? new HttpClient();
 
     public async Task<List<int>> GetMarketableItemIdsAsync()
     {
@@ -40,11 +29,11 @@ public class MarketableItemIdsFetcher : IMarketableItemIdsFetcher
                 throw new WebException();
 
             var returnedList = await response.Content.ReadFromJsonAsync<List<int>>();
-            return returnedList?.Where(i => i > 0).ToList() ?? []; 
+            return returnedList?.Where(i => i > 0).ToList() ?? [];
         }
         catch
         {
-            _logger.LogError("Failure during call to get marketable item Ids");
+            logger.LogError("Failure during call to get marketable item Ids");
             return new List<int>();
         }
     }

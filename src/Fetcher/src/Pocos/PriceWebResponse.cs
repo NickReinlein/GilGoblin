@@ -1,16 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
+using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Fetcher.Pocos;
 
-public class PriceWebResponse : IResponseToList<PriceWebPoco>
+public record PriceWebResponse(List<PriceWebPoco> Results, List<int> FailedItems)
+    : IResponseToList<PriceWebPoco>
 {
-    public Dictionary<int, PriceWebPoco> Items { get; set; }
-
-    public PriceWebResponse(Dictionary<int, PriceWebPoco>? items)
-    {
-        Items = items;
-    }
-
-    public List<PriceWebPoco> GetContentAsList() => Items.Values.ToList();
+    public List<PriceWebPoco> GetContentAsList() => Results;
 }

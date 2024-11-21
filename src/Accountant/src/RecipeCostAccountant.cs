@@ -6,40 +6,39 @@ using System.Linq;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database.Pocos;
+using GilGoblin.Database.Savers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Accountant;
 
-public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Accountant<RecipeCostPoco>> logger)
-    : Accountant<RecipeCostPoco>(scopeFactory, logger)
+public class RecipeCostAccountant(
+    IServiceProvider serviceProvider,
+    IDataSaver<RecipeCostPoco> saver,
+    ILogger<RecipeCostAccountant> logger)
+    : Accountant<RecipeCostPoco>(serviceProvider, logger)
 {
-    public override int GetDataFreshnessInHours() => 48;
-
-    private const string ageMessage = "Recipe cost calculation is only {Age} hours old and fresh, " +
-                                      "therefore not updating for recipe {RecipeId} for world {WorldId}";
-
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {
+        if (worldId <= 0 || !idList.Any() || ct.IsCancellationRequested)
+            return;
+
         try
         {
-            using var scope = ScopeFactory.CreateScope();
-            var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
+            var (recipeCosts, relevantRecipes) = await GetRecipesAndCosts(worldId, idList);
 
-            var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-            var existingRecipeCosts = costRepo.GetAll(worldId).ToList();
-
-            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-            var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
-
-            Logger.LogInformation(
+            logger.LogDebug(
                 "Found {Count} relevant recipes for world {WorldId}, compared to the {ParamCount} requested recipes",
-                allRelevantRecipes.Count,
+                relevantRecipes.Count,
                 worldId,
                 idList.Count);
-            Logger.LogInformation("Found {Count} costs for world {worldId}", existingRecipeCosts.Count, worldId);
+            logger.LogDebug("Found {Count} costs for world {worldId}", recipeCosts.Count, worldId);
 
-            foreach (var recipe in allRelevantRecipes)
+            await using var scope = serviceProvider.CreateAsyncScope();
+            var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
+
+            var newCosts = new List<RecipeCostPoco>();
+            foreach (var recipe in relevantRecipes)
             {
                 if (ct.IsCancellationRequested)
                     throw new TaskCanceledException();
@@ -47,101 +46,113 @@ public class RecipeCostAccountant(IServiceScopeFactory scopeFactory, ILogger<Acc
                 try
                 {
                     var recipeId = recipe.Id;
-                    var current = existingRecipeCosts.FirstOrDefault(c => c.GetId() == recipeId);
-                    if (current is not null)
+                    logger.LogDebug("Calculating new costs for {RecipeId} for world {WorldId}", recipeId, worldId);
+                    foreach (var quality in new[] { true, false })
                     {
-                        Logger.LogDebug("Found current recipe cost for Recipe {RecipeId} for world {WorldId}",
-                            recipe.Id, worldId);
-                        var age = (DateTimeOffset.Now - current.Updated).TotalHours;
-                        if (age <= GetDataFreshnessInHours())
+                        var current = recipeCosts.FirstOrDefault(c =>
+                            c.RecipeId == recipeId &&
+                            c.WorldId == worldId &&
+                            c.IsHq == quality);
+                        if (current is not null)
                         {
-                            Logger.LogDebug(ageMessage, age, recipe.Id, worldId);
-                            continue;
+                            var age = (DateTimeOffset.UtcNow - current.LastUpdated).TotalHours;
+                            if (age <= GetDataFreshnessInHours())
+                                continue;
                         }
+
+                        var result = await calc.CalculateCraftingCostForRecipe(worldId, recipeId, quality);
+                        if (result > CraftingCalculator.ErrorDefaultCost - 20000 || result < 0)
+                        {
+                            throw new Exception(
+                                $"Failed to calculate crafting cost of recipe {recipeId} for world {worldId}, quality {quality}");
+                        }
+
+                        var newRecipeCost = new RecipeCostPoco(
+                            recipeId,
+                            worldId,
+                            quality,
+                            result,
+                            DateTimeOffset.UtcNow);
+                        newCosts.Add(newRecipeCost);
                     }
-
-                    Logger.LogDebug("Calculating new cost for {RecipeId} for world {WorldId}", recipeId, worldId);
-                    var calculatedCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId);
-                    if (calculatedCost is <= 1 or >= 1147483647)
-                        throw new ArithmeticException();
-
-                    var newCost = new RecipeCostPoco
-                    {
-                        WorldId = worldId,
-                        RecipeId = recipeId,
-                        Cost = calculatedCost,
-                        Updated = DateTimeOffset.UtcNow
-                    };
-                    Logger.LogDebug("Cost of recipe {RecipeId} for world {WorldId} is successfully calculated: {Cost}",
-                        newCost.RecipeId, newCost.WorldId, newCost.Cost);
-                    await costRepo.AddAsync(newCost);
                 }
                 catch (Exception)
                 {
-                    Logger.LogWarning("Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}",
-                        recipe.Id, worldId);
+                    logger.LogWarning("Failed to calculate crafting cost of recipe {RecipeId} for world {WorldId}",
+                        recipe.Id,
+                        worldId);
                 }
             }
-        }
-        catch (TaskCanceledException)
-        {
-            Logger.LogInformation("Task was cancelled by user. Putting away the books, boss!");
+
+            await saver.SaveAsync(newCosts, ct);
         }
         catch (Exception ex)
         {
-            Logger.LogError(
+            logger.LogError(
                 "An unexpected exception occured during the accounting process for world {WorldId}: {Message}",
                 worldId,
                 ex.Message);
         }
     }
 
-    public override Task<List<int>> GetIdsToUpdate(int worldId)
+    public override async Task<List<int>> GetIdsToUpdate(int worldId)
     {
-        return Task.Run(() =>
+        var idsToUpdate = new List<int>();
+        try
         {
-            var idsToUpdate = new List<int>();
-            try
+            if (worldId < 1)
+                throw new Exception("World Id is invalid");
+
+            await using var scope = serviceProvider.CreateAsyncScope();
+            var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+            var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+            var recipes = recipeRepo.GetAll().ToList();
+            var currentRecipeCosts = await costRepo.GetAllAsync(worldId);
+
+            foreach (var recipe in recipes)
             {
-                if (worldId < 1)
-                    throw new Exception("World Id is invalid");
+                var existing = currentRecipeCosts.Where(c =>
+                        c.RecipeId == recipe.Id &&
+                        c.WorldId == worldId)
+                    .ToList();
 
-                using var scope = ScopeFactory.CreateScope();
-                var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
-                var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
-                var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
-                var recipes = recipeRepo.GetAll().ToList();
-                var currentRecipeCosts = costRepo.GetAll(worldId).ToList();
-                var prices = priceRepo.GetAll(worldId).ToList();
-                var currentRecipeIds = currentRecipeCosts.Select(i => i.GetId()).ToList();
-                var priceIds = prices.Select(i => i.GetId()).ToList();
-                var missingPriceIds = priceIds.Except(currentRecipeIds).ToList();
-                idsToUpdate.AddRange(missingPriceIds);
-
-                foreach (var recipe in recipes)
+                if (!existing.Any())
                 {
-                    var current = currentRecipeCosts.FirstOrDefault(c => c.GetId() == recipe.Id);
-                    if (current is not null)
-                    {
-                        Logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id,
-                            worldId);
-                        var age = (DateTimeOffset.Now - current.Updated).TotalHours;
-                        if (age <= GetDataFreshnessInHours())
-                        {
-                            Logger.LogDebug(ageMessage, age, recipe.Id, worldId);
-                            continue;
-                        }
-                    }
-
                     idsToUpdate.Add(recipe.Id);
+                    continue;
                 }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+
+                foreach (var cost in existing)
+                {
+                    logger.LogDebug("Found recipe cost for Recipe {RecipeId} for world {WorldId}", recipe.Id,
+                        worldId);
+                    var age = (DateTimeOffset.UtcNow - cost.LastUpdated).TotalHours;
+                    if (age <= GetDataFreshnessInHours())
+                        continue; // Fresh data is skipped
+                    idsToUpdate.Add(recipe.Id);
+                    break;
+                }
             }
 
             return idsToUpdate.Distinct().ToList();
-        });
+        }
+        catch (Exception e)
+        {
+            logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+        }
+
+        return idsToUpdate.Distinct().ToList();
+    }
+
+    private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)>
+        GetRecipesAndCosts(int worldId, List<int> idList)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
+        var existingRecipeCosts = await costRepo.GetMultipleAsync(worldId, idList);
+
+        var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
+        var allRelevantRecipes = recipeRepo.GetMultiple(idList).ToList();
+        return (existingRecipeCosts, allRelevantRecipes);
     }
 }

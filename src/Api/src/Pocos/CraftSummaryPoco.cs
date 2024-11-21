@@ -1,47 +1,22 @@
 using System;
-using System.Collections.Generic;
 using GilGoblin.Database.Pocos;
 
 namespace GilGoblin.Api.Pocos;
 
 public class CraftSummaryPoco : IComparable
 {
+    public int RecipeId { get; set; }
     public int ItemId { get; set; }
     public int WorldId { get; set; }
-    public ItemPoco ItemInfo { get; set; }
-    public RecipePoco Recipe { get; set; }
-    public int AverageListingPrice { get; set; }
-    public int AverageSold { get; set; }
-    public int RecipeCost { get; set; }
-    public int RecipeProfitVsSold { get; set; }
-    public int RecipeProfitVsListings { get; set; }
-    public IEnumerable<IngredientPoco> Ingredients { get; set; }
+    public bool IsHq { get; set; }
+    public ItemPoco? ItemInfo { get; set; }
+    public RecipePoco? Recipe { get; set; }
+    public int SalePrice { get; set; }
+    public int CraftingCost { get; set; }
+    public int Profit { get; set; }
     public DateTimeOffset Updated { get; set; }
 
-    public CraftSummaryPoco() { }
-
-    public CraftSummaryPoco(
-        PricePoco price,
-        ItemPoco? item,
-        int recipeCost,
-        RecipePoco? recipe,
-        IEnumerable<IngredientPoco> ingredients
-    )
-    {
-        WorldId = price.WorldId;
-        ItemId = price.ItemId;
-        ItemInfo = item;
-        Recipe = recipe;
-        RecipeCost = recipeCost;
-        AverageListingPrice = (int)price.AverageListingPrice;
-        AverageSold = (int)price.AverageSold;
-        RecipeProfitVsListings = (int)price.AverageListingPrice - recipeCost;
-        RecipeProfitVsSold = (int)price.AverageSold - recipeCost;
-        Ingredients = ingredients;
-        Updated = DateTimeOffset.FromUnixTimeMilliseconds(price.LastUploadTime);
-    }
-
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         if (obj == null)
             return 1;
@@ -49,26 +24,30 @@ public class CraftSummaryPoco : IComparable
         if (obj is not CraftSummaryPoco otherCraftSummary)
             return 0;
 
-        var worldIdComparison = WorldId.CompareTo(otherCraftSummary.WorldId);
-        if (worldIdComparison != 0)
-            return worldIdComparison;
+        if (WorldId.CompareTo(otherCraftSummary.WorldId) != 0)
+            return WorldId.CompareTo(otherCraftSummary.WorldId);
 
-        var profitVsSoldComparison = RecipeProfitVsSold.CompareTo(otherCraftSummary.RecipeProfitVsSold);
-        if (profitVsSoldComparison != 0)
-            return -1 * profitVsSoldComparison;
+        if (Profit.CompareTo(otherCraftSummary.Profit) != 0)
+            return Profit.CompareTo(otherCraftSummary.Profit);
 
-        var profitVsListingsComparison = RecipeProfitVsListings.CompareTo(otherCraftSummary.RecipeProfitVsListings);
-        if (profitVsListingsComparison != 0)
-            return -1 * profitVsListingsComparison;
+        if (RecipeId.CompareTo(otherCraftSummary.RecipeId) != 0)
+            return RecipeId.CompareTo(otherCraftSummary.RecipeId);
 
-        var priceMidComparison = ItemInfo.PriceMid.CompareTo(otherCraftSummary.ItemInfo.PriceMid);
-        if (priceMidComparison != 0)
-            return -1 * priceMidComparison;
+        if (ItemId.CompareTo(otherCraftSummary.ItemId) != 0)
+            return ItemId.CompareTo(otherCraftSummary.ItemId);
 
-        var priceLowComparison = ItemInfo.PriceLow.CompareTo(otherCraftSummary.ItemInfo.PriceLow);
-        if (priceLowComparison != 0)
-            return -1 * priceLowComparison;
+        if (IsHq.CompareTo(otherCraftSummary.IsHq) != 0)
+            return IsHq.CompareTo(otherCraftSummary.IsHq);
 
-        return ItemId.CompareTo(otherCraftSummary.ItemId);
+        if (SalePrice.CompareTo(otherCraftSummary.SalePrice) != 0)
+            return SalePrice.CompareTo(otherCraftSummary.SalePrice);
+
+        if (CraftingCost.CompareTo(otherCraftSummary.CraftingCost) != 0)
+            return CraftingCost.CompareTo(otherCraftSummary.CraftingCost);
+
+        if (Updated.CompareTo(otherCraftSummary.Updated) != 0)
+            return Updated.CompareTo(otherCraftSummary.Updated);
+
+        return 0;
     }
 }

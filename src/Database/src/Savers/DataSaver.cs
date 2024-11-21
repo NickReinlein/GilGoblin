@@ -1,34 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
 
-public interface IDataSaver<in T> where T : class
+public interface IDataSaver<in T> where T : IIdentifiable
 {
-    Task<bool> SaveAsync(IEnumerable<T> updates);
+    Task<bool> SaveAsync(IEnumerable<T> updates, CancellationToken ct = default);
 }
 
-public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
+public class DataSaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>> logger)
+    : IDataSaver<T> where T : class, IIdentifiable
 {
-    protected readonly GilGoblinDbContext Context;
-    private readonly ILogger<DataSaver<T>> _logger;
+    protected readonly IServiceProvider ServiceProvider =
+        serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-    public DataSaver(GilGoblinDbContext context, ILogger<DataSaver<T>> logger)
-    {
-        Context = context ?? throw new ArgumentNullException(nameof(context));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    public async Task<bool> SaveAsync(IEnumerable<T> entities)
+    public async Task<bool> SaveAsync(IEnumerable<T> entities, CancellationToken ct = default)
     {
         var entityList = entities.ToList();
         if (!entityList.Any())
-            return false;
+            return true;
 
         try
         {
@@ -36,46 +32,52 @@ public class DataSaver<T> : IDataSaver<T> where T : class, IIdentifiable
             if (filteredUpdates.Count == 0)
                 throw new ArgumentException("No valid entities remained after validity check");
 
-            UpdateContext(filteredUpdates);
-
-            var savedCount = await Context.SaveChangesAsync();
-            _logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
-
-            var failedCount = entityList.Count - savedCount;
-            if (failedCount == 0)
-                return true;
-
-            _logger.LogError(
-                $"Failed to save {failedCount} entities, out of {entityList.Count} total entities");
-            throw new DbUpdateException();
-        }
-        catch (DbUpdateException ex)
-        {
-            _logger.LogError(ex, $"Failed to update due to database error: {ex.Message}");
-            return false;
-        }
-        catch (ArgumentException ex)
-        {
-            _logger.LogError(ex, $"Failed to update due to invalid data: {ex.Message}");
-            return false;
+            var savedCount = await SaveToDatabaseAsync(filteredUpdates, ct);
+            logger.LogInformation($"Saved {savedCount} new entries for type {typeof(T).Name}");
+            return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to update due to unknown error: {ex.Message}");
+            logger.LogError(ex, "Failed to update due to error");
             return false;
         }
     }
 
-    protected virtual void UpdateContext(List<T> entityList)
+    protected virtual async Task<int> SaveToDatabaseAsync(List<T> entityList, CancellationToken ct = default)
     {
-        foreach (var entity in entityList)
+        try
         {
-            Context.Entry(entity).State = entity.GetId() == 0 ? EntityState.Added : EntityState.Modified;
+            await using var scope = ServiceProvider.CreateAsyncScope();
+            await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+
+            var idList = entityList.Select(e => e.GetId()).ToList();
+            var existing = dbContext
+                .Set<T>()
+                .AsEnumerable()
+                .Where(e => idList.Contains(e.GetId()))
+                .ToList();
+            var toAdd = entityList.Where(e => existing.All(x => x.GetId() != e.GetId())).ToList();
+            var toUpdate = entityList.Except(toAdd).ToList();
+
+            dbContext.AddRange(toAdd);
+            foreach (var entity in toUpdate)
+            {
+                var existingEntity = existing.FirstOrDefault(x => x.GetId() == entity.GetId());
+                if (existingEntity is not null)
+                    dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+            }
+
+            return await dbContext.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to update due to error");
+            return 0;
         }
     }
 
     protected virtual List<T> FilterInvalidEntities(IEnumerable<T> entities)
     {
-        return entities.Where(t => t.GetId() >= 0).ToList();
+        return entities.ToList();
     }
 }

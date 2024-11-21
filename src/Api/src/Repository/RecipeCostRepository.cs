@@ -5,85 +5,72 @@ using System.Threading.Tasks;
 using GilGoblin.Api.Cache;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GilGoblin.Api.Repository;
 
-public class RecipeCostRepository : IRecipeCostRepository
+public interface IRecipeCostRepository : IRepositoryCache
 {
-    private readonly GilGoblinDbContext _dbContext;
-    private static IRecipeCostCache _cache;
+    Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId, bool isHq = false);
+    Task<List<RecipeCostPoco>> GetMultipleAsync(int worldId, IEnumerable<int> ids);
+    Task<List<RecipeCostPoco>> GetAllAsync(int worldId);
+}
 
-    public RecipeCostRepository(GilGoblinDbContext dbContext, IRecipeCostCache cache)
+public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedMetricCache<RecipeCostPoco> cache)
+    : IRecipeCostRepository
+{
+    public async Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId, bool isHq = false)
     {
-        _dbContext = dbContext;
-        _cache = cache;
-    }
-
-    public async Task<RecipeCostPoco?> GetAsync(int worldId, int recipeId)
-    {
-        var cached = _cache.Get((worldId, recipeId));
+        var cached = cache.Get(new TripleKey(worldId, recipeId, isHq));
         if (cached is not null)
         {
-            if (DataIsFresh(cached.Updated))
+            if (IsDataFresh(cached.LastUpdated))
                 return cached;
-            _cache.Delete(worldId, recipeId);
+            cache.Delete(new TripleKey(worldId, recipeId, isHq));
         }
 
-        var recipeCost = _dbContext.RecipeCost.FirstOrDefault(p =>
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        return dbContext.RecipeCost.FirstOrDefault(p =>
+            p.RecipeId == recipeId &&
             p.WorldId == worldId &&
-            p.RecipeId == recipeId);
-        if (recipeCost is null)
-            return null;
-
-        if (DataIsFresh(recipeCost.Updated))
-            await AddAsync(recipeCost);
-        else
-            _cache.Delete(worldId, recipeId);
-
-        return recipeCost;
+            p.IsHq == isHq);
     }
 
-    private static bool DataIsFresh(DateTimeOffset timestamp) =>
-        timestamp >= DateTime.UtcNow.AddHours(-GetDataFreshnessInHours());
-
-    public IEnumerable<RecipeCostPoco> GetMultiple(int worldId, IEnumerable<int> recipeIds) =>
-        _dbContext.RecipeCost.Where(p => p.WorldId == worldId && recipeIds.Any(i => i == p.RecipeId));
-
-    public IEnumerable<RecipeCostPoco> GetAll(int worldId) =>
-        _dbContext.RecipeCost.Where(p => p.WorldId == worldId);
-
-    public async Task AddAsync(RecipeCostPoco entity)
+    public async Task<List<RecipeCostPoco>> GetMultipleAsync(int worldId, IEnumerable<int> ids)
     {
-        (int, int) key = (entity.WorldId, entity.RecipeId);
-        var cached = _cache.Get(key);
-        if (cached is not null)
-        {
-            if (DataIsFresh(cached.Updated))
-                return;
-            _cache.Delete(entity.WorldId, entity.RecipeId);
-        }
-
-        _cache.Add(key, entity);
-
-        var existing = await _dbContext.FindAsync<RecipeCostPoco>(entity.RecipeId, entity.WorldId);
-        if (existing is null)
-        {
-            _dbContext.RecipeCost.Add(entity);
-        }
-        else
-        {
-            _dbContext.Entry(existing).CurrentValues.SetValues(entity);
-        }
-
-        await _dbContext.SaveChangesAsync();
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipeCostPocos = dbContext.RecipeCost
+            .Where(p =>
+                p.WorldId == worldId &&
+                ids.Contains(p.Id))
+            .ToList();
+        return recipeCostPocos;
     }
 
-    private static int GetDataFreshnessInHours() => 48;
-
-    public Task FillCache()
+    public async Task<List<RecipeCostPoco>> GetAllAsync(int worldId)
     {
-        var costs = _dbContext.RecipeCost.ToList();
-        costs?.ForEach(cost => _cache.Add((cost.WorldId, cost.RecipeId), cost));
-        return Task.CompletedTask;
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        var recipeCostPocos = dbContext.RecipeCost
+            .Where(p => p.WorldId == worldId)
+            .ToList();
+        return recipeCostPocos;
     }
+
+    public async Task FillCache()
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await dbContext.RecipeCost
+            .ForEachAsync(cost =>
+                cache.Add(new TripleKey(cost.WorldId, cost.RecipeId, cost.IsHq), cost));
+    }
+
+    private static int DataFreshnessInHours => 48;
+
+    private static bool IsDataFresh(DateTimeOffset timestamp) =>
+        timestamp >= DateTime.UtcNow.AddHours(-DataFreshnessInHours);
 }

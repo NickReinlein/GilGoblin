@@ -9,18 +9,41 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      gilgoblin-database:
+        image: nickreinlein/gilgoblin-database
+        env:
+          POSTGRES_DB: gilgoblin_db
+          POSTGRES_USER: gilgoblin
+          POSTGRES_PASSWORD: placeholder_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -d gilgoblin_db -U gilgoblin"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup .NET8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
         run: dotnet build --no-restore
+
+      - name: Set DB Connection String
+        id: set-connection-string
+        run: |
+          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
+
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
+        run: dotnet test --no-build --verbosity detailed --filter "Category!=Component"

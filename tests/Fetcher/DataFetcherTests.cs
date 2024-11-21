@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Fetcher;
@@ -27,6 +26,14 @@ public class DataFetcherTests : FetcherTests
         _logger = Substitute.For<ILogger<BulkDataFetcher<Apple, AppleResponse>>>();
         _fetcher = new MockBulkDataFetcher(basePath, _logger, _client);
     }
+    
+    [Test]
+    public async Task GivenAFetchByIdsAsync_WhenReceivingAnEmptyList_ThenAnEmptyListIsReturned()
+    {
+        var result = await _fetcher.FetchByIdsAsync([]);
+
+        Assert.That(result, Is.Empty);
+    }
 
     [Test]
     public async Task GivenAFetchByIdsAsync_WhenReceivingASingleValidEntry_ThenThatEntryIsReturned()
@@ -35,7 +42,7 @@ public class DataFetcherTests : FetcherTests
         SetupValidResponse(appleId1);
         var idList = new List<int> { appleId1 };
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.That(result, Has.Count.EqualTo(1));
@@ -50,7 +57,7 @@ public class DataFetcherTests : FetcherTests
         SetupValidResponse(appleId1, appleId2);
         var idList = new List<int> { appleId1, appleId2 };
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.That(result, Has.Count.EqualTo(2));

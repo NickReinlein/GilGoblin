@@ -4,17 +4,19 @@ namespace GilGoblin.Database.Pocos;
 
 public class IngredientPoco : IComparable
 {
-    public int RecipeId { get; set; }
-    public int ItemId { get; set; }
+    public int RecipeId { get; init; }
+    public int ItemId { get; init; }
     public int Quantity { get; set; }
+    public bool IsHq { get; init; }
 
     public IngredientPoco() { }
 
-    public IngredientPoco(int itemId, int quantity, int recipeId)
+    public IngredientPoco(int itemId, int quantity, int recipeId, bool isHq = false)
     {
         ItemId = itemId;
         Quantity = quantity;
         RecipeId = recipeId;
+        IsHq = isHq;
     }
 
     public IngredientPoco(IngredientPoco copyMe)
@@ -22,6 +24,7 @@ public class IngredientPoco : IComparable
         RecipeId = copyMe.RecipeId;
         ItemId = copyMe.ItemId;
         Quantity = copyMe.Quantity;
+        IsHq = copyMe.IsHq;
     }
 
     public int CompareTo(object? obj)
@@ -31,13 +34,14 @@ public class IngredientPoco : IComparable
 
         if (obj is IngredientPoco otherIngredient)
         {
-            var recipeIdComparison = RecipeId.CompareTo(otherIngredient.RecipeId);
-            if (recipeIdComparison != 0)
-                return recipeIdComparison;
-
-            var itemIdComparison = ItemId.CompareTo(otherIngredient.ItemId);
-            if (itemIdComparison != 0)
-                return itemIdComparison;
+            if (ItemId != otherIngredient.ItemId)
+                return ItemId.CompareTo(otherIngredient.ItemId);
+            
+            if (RecipeId != otherIngredient.RecipeId)
+                return RecipeId.CompareTo(otherIngredient.RecipeId);
+            
+            if (IsHq != otherIngredient.IsHq)
+                return IsHq.CompareTo(otherIngredient.IsHq);
 
             return Quantity.CompareTo(otherIngredient.Quantity);
         }

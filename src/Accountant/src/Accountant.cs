@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
-using GilGoblin.Api.Crafting;
+using System.Diagnostics.CodeAnalysis;
 using GilGoblin.Api.Repository;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Database.Pocos;
@@ -14,18 +14,16 @@ using Microsoft.Extensions.Hosting;
 namespace GilGoblin.Accountant;
 
 // ReSharper disable once UnusedTypeParameter
-public interface IAccountant<T> where T : class, IIdentifiable
+public interface IAccountant<T> where T : class
 {
-    Task CalculateAsync(CancellationToken ct, int worldId);
+    Task CalculateAsync(int worldId, CancellationToken ct);
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
-public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant<T>> logger)
-    : BackgroundService, IAccountant<T> where T : class, IIdentifiable
+[ExcludeFromCodeCoverage]
+public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<T>> logger)
+    : BackgroundService, IAccountant<T> where T : class
 {
-    protected readonly IServiceScopeFactory ScopeFactory = scopeFactory;
-    protected readonly ILogger<Accountant<T>> Logger = logger;
-
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -39,69 +37,73 @@ public class Accountant<T>(IServiceScopeFactory scopeFactory, ILogger<Accountant
                 var accountingTasks = new List<Task>();
                 foreach (var world in worlds)
                 {
-                    Logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
+                    logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
                         typeof(T), world.Id, world.Name);
-                    accountingTasks.Add(CalculateAsync(ct, world.Id));
+                    accountingTasks.Add(CalculateAsync(world.GetId(), ct));
                 }
 
                 await Task.WhenAll(accountingTasks);
             }
             catch (DataException ex)
             {
-                Logger.LogCritical($"A critical error occured: {ex.Message}");
+                logger.LogCritical($"A critical error occured: {ex.Message}");
                 return;
             }
             catch (Exception ex)
             {
-                Logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
+                logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
             }
 
             var delay = TimeSpan.FromMinutes(5);
-            Logger.LogInformation($"Awaiting delay of {delay}");
+            logger.LogInformation($"Awaiting delay of {delay}");
             await Task.Delay(delay, ct);
         }
     }
 
-    public async Task CalculateAsync(CancellationToken ct, int worldId)
+    public async Task CalculateAsync(int worldId, CancellationToken ct = default)
     {
-        var idList = await GetIdsToUpdate(worldId);
-        if (!idList.Any())
+        if (ct.IsCancellationRequested)
         {
-            Logger.LogInformation($"Nothing to calculate for {worldId}");
+            logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
             return;
         }
 
-        if (ct.IsCancellationRequested)
+        var idList = await GetIdsToUpdate(worldId);
+        if (!idList.Any())
         {
-            Logger.LogInformation($"Cancellation of the task by the user. Putting away the books for {worldId}");
+            logger.LogInformation($"Nothing to calculate for {worldId}");
             return;
         }
 
         try
         {
-            await ComputeListAsync(worldId, idList, ct);
-            Logger.LogInformation($"Boss, books are closed for world {worldId}");
+            var batcher = new Batcher.Batcher<int>();
+            var batchesOfIds = batcher.SplitIntoBatchJobs(idList);
+            foreach (var idBatch in batchesOfIds)
+                await ComputeListAsync(worldId, idBatch, ct);
+
+            logger.LogInformation($"Boss, books are closed for world {worldId}");
         }
         catch (Exception e)
         {
-            Logger.LogError("Failed to balance the books for world {WorldId}: {Error}", worldId, e.Message);
+            logger.LogError("Failed to balance the books for world {WorldId}: {Error}", worldId, e.Message);
         }
     }
 
     protected List<WorldPoco> GetWorlds()
     {
-        using var scope = ScopeFactory.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
         return worldRepo.GetAll().ToList();
     }
 
+    public Task ComputeListAsync(int worldId, List<int> idList) =>
+        ComputeListAsync(worldId, idList, CancellationToken.None);
+
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
-    public virtual Task<T> ComputeAsync(int worldId, int idList, ICraftingCalculator calc)
-        => throw new NotImplementedException();
-
-    public virtual int GetDataFreshnessInHours() => throw new NotImplementedException();
+    public virtual int GetDataFreshnessInHours() => 96;
 
     public virtual Task<List<int>> GetIdsToUpdate(int worldId) => Task.FromResult(new List<int>());
 }

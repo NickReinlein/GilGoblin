@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
@@ -17,22 +18,26 @@ public interface IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    Task FetchAsync(CancellationToken ct, int? worldId = null);
+    Task FetchAsync(int? worldId = null, CancellationToken ct = default);
 }
 
-public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
+[ExcludeFromCodeCoverage]
+public abstract class DataUpdater<T, U>(
+    IServiceProvider serviceProvider,
+    ILogger<DataUpdater<T, U>> logger)
+    : BackgroundService, IDataUpdater<T, U>
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
-    protected readonly IServiceScopeFactory ScopeFactory;
-    protected readonly ILogger<DataUpdater<T, U>> Logger;
+    protected readonly ILogger<DataUpdater<T, U>> Logger = logger;
 
-    protected DataUpdater(
-        IServiceScopeFactory scopeFactory,
-        ILogger<DataUpdater<T, U>> logger)
+    public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
     {
-        ScopeFactory = scopeFactory;
-        Logger = logger;
+        var idList = await GetIdsToUpdateAsync(worldId, ct);
+        if (!idList.Any())
+            return;
+
+        await FetchUpdatesAsync(worldId, idList, ct);
     }
 
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -54,30 +59,15 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         }
     }
 
-    protected virtual async Task ExecuteUpdateAsync(CancellationToken ct)
-    {
-        var worlds = GetWorlds();
-        var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
-        Logger.LogInformation($"Fetching updates of type {typeof(T)}{worldIdString}");
-        await FetchAsync(ct, worlds.FirstOrDefault()?.GetId());
-    }
+    protected abstract Task ExecuteUpdateAsync(CancellationToken ct);
 
-    protected virtual Task ConvertAndSaveToDbAsync(List<U> updated) => Task.CompletedTask;
-
-    public async Task FetchAsync(CancellationToken ct, int? worldId)
-    {
-        var idList = await GetIdsToUpdateAsync(worldId);
-        if (!idList.Any())
-            return;
-
-        await FetchUpdatesAsync(worldId, idList, ct);
-    }
+    protected abstract Task ConvertAndSaveToDbAsync(List<U> updated, int? worldId = null, CancellationToken ct = default);
 
     protected virtual async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
         var updated = await FetchUpdatesForIdsAsync(idList, worldId, ct);
         if (updated.Any())
-            await ConvertAndSaveToDbAsync(updated);
+            await ConvertAndSaveToDbAsync(updated, worldId, ct);
     }
 
     private async Task<List<U>> FetchUpdatesForIdsAsync(
@@ -89,29 +79,33 @@ public abstract class DataUpdater<T, U> : BackgroundService, IDataUpdater<T, U>
         {
             var idList = idsToUpdate.ToList();
 
-            using var scope = ScopeFactory.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
             var worldString = worldId > 0 ? $"for world id {worldId}" : string.Empty;
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
             var timer = new Stopwatch();
             timer.Start();
-            var updated = await fetcher.FetchByIdsAsync(ct, idList, worldId);
+            var updated = await fetcher.FetchByIdsAsync(idList, worldId, ct);
             timer.Stop();
             var callTime = timer.Elapsed.TotalMilliseconds;
 
-            Logger.LogInformation($"Received updates for {updated.Count} {nameof(T)} entries {worldString}");
-            Logger.LogInformation($"Total call time: {callTime}");
+            Logger.LogInformation(
+                "Received updates for {Count} {Name} entries {WorldString}, total call time: {CallTime}",
+                updated.Count,
+                nameof(T),
+                worldString,
+                callTime);
             return updated;
         }
         catch (Exception e)
         {
             Logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
-            return new List<U>();
+            return [];
         }
     }
 
-    protected virtual List<WorldPoco> GetWorlds() => new();
+    protected virtual List<WorldPoco> GetWorlds() => [];
 
-    protected virtual Task<List<int>> GetIdsToUpdateAsync(int? worldId) => Task.FromResult(new List<int>());
-    protected virtual int GetApiSpamDelayInMs() => 5000;
+    protected abstract Task<List<int>> GetIdsToUpdateAsync(int? worldId, CancellationToken ct);
+    protected virtual int GetApiSpamDelayInMs() => 60000;
 }

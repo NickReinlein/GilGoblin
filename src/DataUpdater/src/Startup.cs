@@ -3,6 +3,7 @@ using GilGoblin.Api.Cache;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database;
+using GilGoblin.Database.Converters;
 using GilGoblin.Fetcher;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
@@ -12,19 +13,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class Startup
+public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
-    public IConfiguration _configuration;
-    public IWebHostEnvironment _environment;
+    public IWebHostEnvironment Environment { get; } = environment;
+    public IConfiguration _configuration = configuration;
 
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
-    {
-        _configuration = configuration;
-        _environment = environment;
-    }
+    public const bool isDebug = false;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -44,23 +42,23 @@ public class Startup
     {
         services.AddHttpClient();
 
-        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new Exception("Failed to get connection string");
+        services
+            .AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>()
+            .AddScoped<IPriceFetcher, PriceFetcher>()
+            .AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>()
+            .AddScoped<IPriceSaver, PriceSaver>()
+            .AddScoped<IPriceConverter, PriceConverter>()
+            .AddScoped<IPriceDataDetailConverter, PriceDataDetailConverter>()
+            .AddScoped<IPriceDataPointConverter, PriceDataPointConverter>()
+            .AddScoped<IQualityPriceDataConverter, QualityPriceDataConverter>()
+            .AddScoped<IDailySaleVelocityConverter, DailySaleVelocityConverter>()
+            .AddScoped<IWorldFetcher, WorldFetcher>()
+            .AddScoped<IDataSaver<DailySaleVelocityPoco>, DailySaleVelocitySaver>()
+            .AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
 
-        services.AddScoped<IMarketableItemIdsFetcher, MarketableItemIdsFetcher>();
-
-        services.AddScoped<IPriceFetcher, PriceFetcher>();
-        services.AddScoped<IBulkDataFetcher<PriceWebPoco, PriceWebResponse>, PriceFetcher>();
-        services.AddScoped<IDataSaver<PricePoco>, PriceSaver>();
-        services.AddScoped<IDataUpdater<PricePoco, PriceWebPoco>, PriceUpdater>();
-
-        services.AddScoped<IWorldFetcher, WorldFetcher>();
-        services.AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
-        services.AddScoped<IWorldUpdater, WorldUpdater>();
-
-        services.AddHostedService<PriceUpdater>();
-        services.AddHostedService<WorldUpdater>();
+        services
+            .AddHostedService<WorldUpdater>()
+            .AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCrafting(IServiceCollection services)
@@ -72,18 +70,18 @@ public class Startup
 
     public static void AddGoblinCaches(IServiceCollection services)
     {
-        services.AddScoped<IItemCache, ItemCache>();
-        services.AddScoped<IPriceCache, PriceCache>();
-        services.AddScoped<IRecipeCache, RecipeCache>();
-        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
-        services.AddScoped<IWorldCache, WorldCache>();
-        services.AddScoped<ICraftCache, CraftCache>();
-        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
-        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
-
-        services.AddScoped<IRepositoryCache, ItemRepository>();
-        services.AddScoped<IRepositoryCache, PriceRepository>();
-        services.AddScoped<IRepositoryCache, RecipeRepository>();
+        services
+            .AddScoped<IItemCache, ItemCache>()
+            .AddScoped<IPriceCache, PriceCache>()
+            .AddScoped<IRecipeCache, RecipeCache>()
+            .AddScoped<IItemRecipeCache, ItemRecipeCache>()
+            .AddScoped<IWorldCache, WorldCache>()
+            .AddScoped<ICraftCache, CraftCache>()
+            .AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>()
+            .AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>()
+            .AddScoped<IRepositoryCache, ItemRepository>()
+            .AddScoped<IRepositoryCache, PriceRepository>()
+            .AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
     private void AddGoblinDatabases(IServiceCollection services)
@@ -92,11 +90,17 @@ public class Startup
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<GilGoblinDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString)
+                .EnableDetailedErrors(isDebug)
+                .EnableSensitiveDataLogging(isDebug)
+                .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
+        });
 
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
-        services.AddScoped<IItemRepository, ItemRepository>();
-        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
+            .AddScoped<IItemRepository, ItemRepository>()
+            .AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
         services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
         services.AddScoped<IWorldRepository, WorldRepository>();
@@ -119,7 +123,7 @@ public class Startup
 
     private void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
-        var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        using var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var canConnect = dbContextService.Database.CanConnect();
         if (canConnect != true)
             throw new Exception("Failed to connect to the database");

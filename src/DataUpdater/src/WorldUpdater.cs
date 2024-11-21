@@ -15,29 +15,17 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public interface IWorldUpdater
-{
-}
-
-public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdater> Logger)
-    : BackgroundService, IWorldUpdater
+public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater> logger)
+    : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
         {
-            try
-            {
-                await GetAllWorldsAsync();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("{Service}: An exception occured during the Api call: {ErrorMessage}",
-                    nameof(WorldUpdater), ex.Message);
-            }
+            await GetAllWorldsAsync();
 
             var delay = TimeSpan.FromMinutes(5);
-            Logger.LogInformation("{Service}: Awaiting delay of {Delay} seconds before performing next update",
+            logger.LogInformation("{Service}: Awaiting delay of {Delay} seconds before performing next update",
                 nameof(WorldUpdater), delay.TotalSeconds);
             await Task.Delay(delay, ct);
         }
@@ -45,46 +33,50 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdate
 
     public async Task GetAllWorldsAsync()
     {
-        var result = await FetchAllWorlds();
+        var result = await FetchAllWorldsAsync();
         await ConvertAndSaveToDbAsync(result);
     }
 
-    private async Task<List<WorldWebPoco>> FetchAllWorlds()
+    private async Task<List<WorldWebPoco>> FetchAllWorldsAsync()
     {
         try
         {
-            using var scope = ScopeFactory.CreateScope();
-            var fetcher = scope.ServiceProvider.GetService<IWorldFetcher>();
-            Logger.LogInformation("Fetching updates for all worlds");
+            await using var scope = serviceProvider.CreateAsyncScope();
+            var fetcher = scope.ServiceProvider.GetRequiredService<IWorldFetcher>();
+            logger.LogInformation("Fetching updates for all worlds");
             var timer = new Stopwatch();
             timer.Start();
             var updated = await fetcher.GetAllAsync();
             timer.Stop();
 
             if (updated.Count == 0)
-                Logger.LogError("Received empty list returned when fetching all worlds");
+                logger.LogError("Received empty list returned when fetching all worlds");
             else
-                Logger.LogInformation("Received updates for {Count} worlds", updated.Count);
+                logger.LogInformation("Received updates for {Count} worlds", updated.Count);
 
-            Logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
+            logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
+
+            //temporarily fetch less data while developing
+            updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
+            ///// 
             return updated;
         }
         catch (Exception e)
         {
-            Logger.LogError("Failed to fetch updates for worlds: {Message}", e.Message);
+            logger.LogError("Failed to fetch updates for worlds: {Message}", e.Message);
             return [];
         }
     }
 
     private async Task ConvertAndSaveToDbAsync(List<WorldWebPoco> webPocos)
     {
-        var updateList = webPocos.ToWorldPocoList();
+        var updateList = webPocos.ToDatabasePoco();
         if (!updateList.Any())
             return;
 
         try
         {
-            using var scope = ScopeFactory.CreateScope();
+            await using var scope = serviceProvider.CreateAsyncScope();
             var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<WorldPoco>>();
             var success = await saver.SaveAsync(updateList);
             if (!success)
@@ -92,7 +84,7 @@ public class WorldUpdater(IServiceScopeFactory ScopeFactory, ILogger<WorldUpdate
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(WorldPoco)}: {e.Message}");
+            logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(WorldPoco)}: {e.Message}");
         }
     }
 }

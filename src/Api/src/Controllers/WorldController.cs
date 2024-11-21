@@ -8,31 +8,23 @@ namespace GilGoblin.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WorldController : ControllerBase, IWorldController
+public class WorldController(IWorldRepository worldRepo, ILogger<WorldController> logger)
+    : ControllerBase, IWorldController
 {
-    private readonly IWorldRepository _worldRepo;
-    private readonly ILogger<WorldController> _logger;
-
-    public WorldController(IWorldRepository worldRepo, ILogger<WorldController> logger)
-    {
-        _worldRepo = worldRepo;
-        _logger = logger;
-    }
-
     [HttpGet("{id:int}")]
-    public ActionResult<WorldPoco> GetWorld(int id)
+    public ActionResult<WorldPoco?> GetWorld(int id)
     {
         if (id <= 0)
             return new BadRequestResult();
         
-        _logger.LogInformation($"Fetching world id: {id}");
-        return _worldRepo.Get(id);
+        logger.LogInformation($"Fetching world id: {id}");
+        return worldRepo.Get(id);
     }
 
     [HttpGet]
     public IEnumerable<WorldPoco> GetAllWorlds()
     {
-        _logger.LogInformation("Fetching all worlds");
-        return _worldRepo.GetAll();
+        logger.LogInformation("Fetching all worlds");
+        return worldRepo.GetAll();
     }
 }

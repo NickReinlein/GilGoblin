@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using NUnit.Framework;
 
@@ -20,7 +19,7 @@ public class ItemWebResponseTests
     [Test]
     public void GivenANewItemWebResponse_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
     {
-        var dict = _pocos.ToDictionary(l => l.Id);
+        var dict = _pocos.ToDictionary(l => l.GetId());
 
         var result = new ItemWebResponse(dict);
 
@@ -43,7 +42,7 @@ public class ItemWebResponseTests
         Assert.Multiple(() =>
         {
             Assert.That(result is not null);
-            Assert.That(result.Items is not null);
+            Assert.That(result!.Items is not null);
             Assert.That(result.Items, Is.Empty);
         });
     }
@@ -51,7 +50,7 @@ public class ItemWebResponseTests
     [Test]
     public void GivenGetContentAsList_WhenADictionaryIsProvided_ThenWeStoreEntriesCorrectly()
     {
-        var dict = _pocos.ToDictionary(l => l.Id);
+        var dict = _pocos.ToDictionary(l => l.GetId());
         var response = new ItemWebResponse(dict);
 
         var content = response.GetContentAsList();
@@ -89,7 +88,7 @@ public class ItemWebResponseTests
         Assert.Multiple(() =>
         {
             Assert.That(result is not null);
-            Assert.That(result.Items is not null);
+            Assert.That(result!.Items is not null);
             Assert.That(result.Items, Is.Empty);
         });
     }

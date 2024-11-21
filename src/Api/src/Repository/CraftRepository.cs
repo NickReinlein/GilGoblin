@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using GilGoblin.Api.Cache;
 using GilGoblin.Api.Pocos;
 using GilGoblin.Database.Pocos;
-using GilGoblin.Database.Pocos.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GilGoblin.Api.Repository;
@@ -14,7 +12,6 @@ namespace GilGoblin.Api.Repository;
 public interface ICraftRepository
 {
     Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId);
-    List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts);
 
     Task<List<CraftSummaryPoco>> CreateSummaryAsync(
         int worldId,
@@ -62,20 +59,21 @@ public class CraftRepository : ICraftRepository
             return new BadRequestResult();
 
         var profits =
-            _recipeProfitRepository
-                .GetAll(worldId)
-                .OrderByDescending(rp => rp.RecipeProfitVsSold)
-                .Take(100)
-                .ToList();
+            (await _recipeProfitRepository.GetAllAsync(worldId))
+            .OrderByDescending(rp => rp.Amount)
+            .Take(100)
+            .ToList();
         if (!profits.Any())
             return new NotFoundResult();
 
         var recipeIds = profits.Select(i => i.RecipeId).ToList();
-        var recipeCosts = _recipeCostRepository.GetMultiple(worldId, recipeIds);
+        var recipeCosts = await _recipeCostRepository.GetMultipleAsync(worldId, recipeIds);
         var recipes = _recipeRepository.GetMultiple(recipeIds).ToList();
 
         var items = _itemRepository.GetMultiple(recipes.Select(i => i.TargetItemId));
-        var prices = _priceRepository.GetMultiple(worldId, recipes.Select(i => i.TargetItemId));
+        var nqPrices = _priceRepository.GetMultiple(worldId, recipes.Select(i => i.TargetItemId), false);
+        var hqPrices = _priceRepository.GetMultiple(worldId, recipes.Select(i => i.TargetItemId), true);
+        var prices = nqPrices.Concat(hqPrices).ToList();
 
         var crafts = await CreateSummaryAsync(worldId, recipeCosts, recipes, items, prices, profits);
         return crafts.Any() ? new OkObjectResult(crafts) : new NotFoundResult();
@@ -98,7 +96,7 @@ public class CraftRepository : ICraftRepository
 
         foreach (var profit in profitList)
         {
-            var cached = _cache.Get((worldId, profit.RecipeId));
+            var cached = _cache.Get(new TripleKey(worldId, profit.RecipeId, profit.IsHq));
             if (cached is not null)
             {
                 craftSummaries.Add(cached);
@@ -106,53 +104,65 @@ public class CraftRepository : ICraftRepository
             }
 
             var recipe = recipeList.FirstOrDefault(i => i.Id == profit.RecipeId);
-            var price = priceList.FirstOrDefault(i => i.ItemId == recipe?.TargetItemId && i.WorldId == worldId);
+            var price = priceList.FirstOrDefault(i =>
+                i.ItemId == recipe?.TargetItemId &&
+                i.WorldId == worldId &&
+                i.IsHq == profit.IsHq);
             if (price is null)
             {
                 _logger.LogError($"Failed to find price for recipe {profit.RecipeId} for world {worldId}");
                 continue;
             }
 
-            var recipeCost = recipeCostList.FirstOrDefault(i => i.RecipeId == profit.RecipeId && i.WorldId == worldId)
-                ?.Cost ?? 0;
+            var recipeCost = recipeCostList.FirstOrDefault(i =>
+                i.RecipeId == profit.RecipeId &&
+                i.IsHq == profit.IsHq &&
+                i.WorldId == worldId)?.Amount;
+            if (recipeCost is null)
+            {
+                _logger.LogError(
+                    "Failed to find recipe cost or item to create craft summary for recipe {RecipeId}, world {WorldId}, hq: {IsHq}",
+                    profit.RecipeId,
+                    worldId,
+                    profit.IsHq);
+                continue;
+            }
+
+
             var item = itemList.FirstOrDefault(i =>
                 i.Id == recipeList.FirstOrDefault(r => r.Id == profit.RecipeId)?.TargetItemId);
-            var ingredients = recipe.GetActiveIngredients();
+            if (item is null)
+            {
+                _logger.LogError(
+                    "Failed to find target item {ItemId} to create craft summary for recipe {RecipeId}, world {WorldId}, hq: {IsHq}",
+                    recipe?.TargetItemId ?? 0,
+                    profit.RecipeId,
+                    worldId,
+                    profit.IsHq);
+                continue;
+            }
 
-            var summary = new CraftSummaryPoco(
-                price,
-                item,
-                recipeCost,
-                recipe,
-                ingredients);
+            var salePrice = (int)price.GetBestPriceAmount();
+            var craftingCost = recipeCost.Value;
+            var craftingProfit = salePrice - craftingCost;
+            var summary = new CraftSummaryPoco
+            {
+                RecipeId = profit.RecipeId,
+                WorldId = profit.WorldId,
+                IsHq = profit.IsHq,
+                ItemId = item.Id,
+                ItemInfo = item,
+                Recipe = recipe,
+                SalePrice = salePrice,
+                CraftingCost = craftingCost,
+                Profit = craftingProfit,
+                Updated = profit.LastUpdated
+            };
             craftSummaries.Add(summary);
-            _cache.Add((summary.WorldId, summary.Recipe.Id), summary);
+            _cache.Add(new TripleKey(summary.WorldId, summary.RecipeId, summary.IsHq), summary);
         }
 
         return Task.FromResult(craftSummaries);
-    }
-
-    public List<CraftSummaryPoco> SortByProfitability(IEnumerable<CraftSummaryPoco> crafts)
-    {
-        var craftsList = crafts.ToList();
-
-        try
-        {
-            var viableCrafts = craftsList
-                    .Where(i =>
-                        (i.AverageSold > 1 || i.AverageListingPrice > 1) &&
-                        i.RecipeCost > 1 &&
-                        i.Recipe.TargetItemId == i.ItemId)
-                    .ToList();
-            viableCrafts.Sort();
-            return viableCrafts;
-        }
-        catch (Exception e)
-        {
-            var message = $"Failed to sort crafts by profitability! Returning unsorted crafts list: {e.Message}";
-            _logger.LogError(message);
-            return craftsList;
-        }
     }
 
     private bool ValidateWorldInput(int worldId) => _worldRepository.Get(worldId) is not null;

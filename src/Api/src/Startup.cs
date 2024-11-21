@@ -8,19 +8,20 @@ using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 
 namespace GilGoblin.Api;
 
-public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
+public class Startup(IConfiguration configuration)
 {
-    public IConfiguration _configuration = configuration;
-    public IWebHostEnvironment _environment = environment;
+    public readonly IConfiguration Configuration = configuration;
+
+    public const bool isDebug = false;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -48,11 +49,11 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
     private void AddGoblinServices(IServiceCollection services)
     {
-        services = AddGoblinDatabases(services, _configuration);
+        services = AddGoblinDatabases(services, Configuration);
         services = AddGoblinCrafting(services);
         services = AddGoblinControllers(services);
         services = AddBasicBuilderServices(services);
-        _ = AddGoblinCaches(services); 
+        _ = AddGoblinCaches(services);
     }
 
     public static IServiceCollection AddGoblinCaches(IServiceCollection services)
@@ -60,12 +61,11 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         services.AddScoped<IItemCache, ItemCache>();
         services.AddScoped<IPriceCache, PriceCache>();
         services.AddScoped<IRecipeCache, RecipeCache>();
-        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
         services.AddScoped<IWorldCache, WorldCache>();
+        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
+        services.AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>();
+        services.AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>();
         services.AddScoped<ICraftCache, CraftCache>();
-        services.AddScoped<IRecipeCostCache, RecipeCostCache>();
-        services.AddScoped<IRecipeProfitCache, RecipeProfitCache>();
-
         services.AddScoped<IRepositoryCache, ItemRepository>();
         services.AddScoped<IRepositoryCache, PriceRepository>();
         services.AddScoped<IRepositoryCache, RecipeRepository>();
@@ -97,7 +97,13 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         if (string.IsNullOrEmpty(connectionString))
             throw new Exception("Failed to get connection string");
 
-        services.AddDbContext<GilGoblinDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<GilGoblinDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString)
+                .EnableDetailedErrors(isDebug)
+                .EnableSensitiveDataLogging(isDebug)
+                .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
+        });
 
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
         services.AddScoped<IItemRepository, ItemRepository>();
@@ -168,8 +174,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
         {
             var serviceProvider = services.BuildServiceProvider();
 
-            var dbContextService = serviceProvider.GetRequiredService<GilGoblinDbContext>();
-            if (await dbContextService.Database.CanConnectAsync() != true)
+            await using var dbContext = serviceProvider.GetRequiredService<GilGoblinDbContext>();
+            if (await dbContext.Database.CanConnectAsync() != true)
                 throw new Exception("Failed to connect to the database");
 
             var itemRepository = serviceProvider.GetRequiredService<IItemRepository>();

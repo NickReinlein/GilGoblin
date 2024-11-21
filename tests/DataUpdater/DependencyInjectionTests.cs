@@ -1,9 +1,10 @@
 using System;
+using GilGoblin.Api.Cache;
+using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
-using GilGoblin.Database;
+using GilGoblin.Database.Converters;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
-using GilGoblin.DataUpdater;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -38,9 +39,22 @@ public class DataUpdaterDependencyInjectionTests
     [TestCase(typeof(IPriceRepository<PricePoco>))]
     [TestCase(typeof(IRecipeRepository))]
     [TestCase(typeof(IMarketableItemIdsFetcher))]
-    [TestCase(typeof(IDataSaver<PricePoco>))]
-    [TestCase(typeof(IDataUpdater<PricePoco, PriceWebPoco>))]
-    [TestCase(typeof(IWorldUpdater))]
+    [TestCase(typeof(IPriceSaver))]
+    [TestCase(typeof(IPriceConverter))]
+    [TestCase(typeof(IRepositoryCache))]
+    [TestCase(typeof(IItemCache))]
+    [TestCase(typeof(IPriceCache))]
+    [TestCase(typeof(IRecipeCache))]
+    [TestCase(typeof(IItemRecipeCache))]
+    [TestCase(typeof(IWorldCache))]
+    [TestCase(typeof(IRecipeGrocer))]
+    [TestCase(typeof(IPriceDataDetailConverter))]
+    [TestCase(typeof(IPriceDataPointConverter))]
+    [TestCase(typeof(IQualityPriceDataConverter))]
+    [TestCase(typeof(IDailySaleVelocityConverter))]
+    [TestCase(typeof(IDataSaver<DailySaleVelocityPoco>))]
+    [TestCase(typeof(IDataSaver<WorldPoco>))]
+    [TestCase(typeof(ICraftingCalculator))]
     public void GivenAGoblinDataUpdater_WhenWeStartup_ThenEachServiceIsResolvedSuccessfully(Type serviceType)
     {
         using var scope = _factory.Services.CreateScope();

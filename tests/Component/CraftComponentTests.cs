@@ -29,22 +29,21 @@ public class CraftComponentTests : ComponentTests
         using var response = await _client.GetAsync(fullEndpoint);
 
         var craftsRaw = await response.Content.ReadFromJsonAsync<IEnumerable<CraftSummaryPoco>>(GetSerializerOptions());
-        
+
         Assert.Multiple(() =>
         {
             var crafts = craftsRaw?.ToList();
             Assert.That(crafts, Is.Not.Null);
-            Assert.That(crafts!, Has.Count.GreaterThan(5));
-            Assert.That(crafts.All(r => r.WorldId == 34));
-            Assert.That(crafts.All(r => r.ItemId > 0));
-            Assert.That(crafts.All(r => r.ItemInfo.IconId > 0));
-            Assert.That(crafts.All(r => r.ItemInfo.StackSize > 0));
-            Assert.That(crafts.All(r => r.ItemInfo.PriceMid >= 0));
-            Assert.That(crafts.All(r => r.ItemInfo.PriceLow >= 0));
-            Assert.That(crafts.All(r => r.Recipe.Id > 0));
-            Assert.That(crafts.All(r => r.Recipe.TargetItemId > 0));
-            Assert.That(crafts.All(r => r.Recipe.ResultQuantity > 0));
-            Assert.That(crafts.All(r => r.Ingredients.Any()));
+            Assert.That(crafts, Has.Count.GreaterThan(5));
+            Assert.That(crafts!.All(r => r.WorldId == 34));
+            Assert.That(crafts!.All(r => r.ItemId > 0));
+            Assert.That(crafts!.All(r => r.ItemInfo?.IconId > 0));
+            Assert.That(crafts!.All(r => r.ItemInfo?.StackSize > 0));
+            Assert.That(crafts!.All(r => r.ItemInfo?.PriceMid >= 0));
+            Assert.That(crafts!.All(r => r.ItemInfo?.PriceLow >= 0));
+            Assert.That(crafts!.All(r => r.Recipe?.Id > 0));
+            Assert.That(crafts!.All(r => r.Recipe?.TargetItemId > 0));
+            Assert.That(crafts!.All(r => r.Recipe?.ResultQuantity > 0));
         });
     }
 
@@ -58,6 +57,6 @@ public class CraftComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-         Assert.That(response.StatusCode, Is.EqualTo(expectedErrorCode));
+        Assert.That(response.StatusCode, Is.EqualTo(expectedErrorCode));
     }
 }

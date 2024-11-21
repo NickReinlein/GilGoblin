@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
@@ -35,7 +34,7 @@ public class ItemFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.Multiple(() =>
         {
@@ -50,22 +49,22 @@ public class ItemFetcherTests : FetcherTests
     public async Task
         GivenFetchByIdsAsync_WhenTheResponseIsStatusCodeIsUnsuccessful_ThenWeReturnAnEmptyList()
     {
-        var returnedList = GetMultipleWebPocos().ToList();
-        var idList = returnedList.Select(i => i.Id).ToList();
+        var idList = FilterOutNullIds(GetMultipleWebPocos());
         _handler
             .When(GetUrl(idList[0]))
-            .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
+            .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(idList));
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
     }
+
 
     [Test]
     public async Task GivenFetchByIdsAsync_WhenNoIdsAreProvided_ThenWeReturnAnEmptyList()
     {
         var result
-            = await _fetcher.FetchByIdsAsync(CancellationToken.None, Array.Empty<int>());
+            = await _fetcher.FetchByIdsAsync(Array.Empty<int>());
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.Empty);
@@ -74,7 +73,7 @@ public class ItemFetcherTests : FetcherTests
     [Test]
     public async Task GivenFetchByIdsAsync_WhenTheResponseIsInvalid_ThenWeReturnAnEmptyList()
     {
-        var idList = GetMultipleWebPocos().Select(i => i.Id).ToList();
+        var idList = FilterOutNullIds(GetMultipleWebPocos());
         _handler
             .When(GetUrl(idList[0]))
             .Respond(
@@ -83,7 +82,7 @@ public class ItemFetcherTests : FetcherTests
                 JsonSerializer.Serialize("{}")
             );
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -91,12 +90,12 @@ public class ItemFetcherTests : FetcherTests
     [Test]
     public async Task GivenFetchByIdsAsync_WhenTheResponseIsNull_ThenWeReturnAnEmptyList()
     {
-        var idList = GetMultipleWebPocos().Select(i => i.Id).ToList();
+        var idList = FilterOutNullIds(GetMultipleWebPocos());
         _handler
             .When(GetUrl(idList[0]))
             .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         Assert.That(result, Is.Empty);
     }
@@ -106,7 +105,7 @@ public class ItemFetcherTests : FetcherTests
     {
         var idList = SetupResponse();
 
-        var result = await _fetcher.FetchByIdsAsync(CancellationToken.None, idList);
+        var result = await _fetcher.FetchByIdsAsync(idList);
 
         foreach (var id in idList)
         {
@@ -167,6 +166,18 @@ public class ItemFetcherTests : FetcherTests
     private static int ItemId1 => 10972;
     private static int ItemId2 => 10973;
 
+    protected static List<ItemWebPoco> GetMultipleWebPocos()
+    {
+        var poco1 = new ItemWebPoco { Id = ItemId1 };
+        var poco2 = new ItemWebPoco { Id = ItemId2 };
+        return [poco1, poco2];
+    }
+
+    private static List<int> FilterOutNullIds(IEnumerable<ItemWebPoco> filterMe)
+    {
+        return filterMe.Where(w => w.GetId() > 0).Select(i => i.GetId()).ToList();
+    }
+
     private string GetUrl(int id) => $"https://xivapi.com/item/{id}";
 
     public static string GetItemJsonResponse1() =>
@@ -175,10 +186,4 @@ public class ItemFetcherTests : FetcherTests
     public static string GetItemJsonResponse2() =>
         """{"CanBeHq":1,"Description":"","ID":10973,"IconID":55732,"LevelItem":139,"Name":"Opal Bracelet of Fending","PriceLow":124,"PriceMid":21575,"StackSize":1}""";
 
-    protected static List<ItemWebPoco> GetMultipleWebPocos()
-    {
-        var poco1 = new ItemWebPoco { Id = ItemId1 };
-        var poco2 = new ItemWebPoco { Id = ItemId2 };
-        return new List<ItemWebPoco> { poco1, poco2 };
-    }
 }
