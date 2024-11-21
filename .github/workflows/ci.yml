@@ -23,9 +23,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        volumes:
-          - ./src/Database/db:/var/lib/postgresql/data
-          - ./src/Database/scripts:/docker-entrypoint-initdb.d
 
     steps:
       - uses: actions/checkout@v4
