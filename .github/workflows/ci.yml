@@ -41,9 +41,9 @@ jobs:
       - name: Set DB Connection String
         id: set-connection-string
         run: |
-          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
+          echo "DB_CONNECTION_STRING=Host=gilgoblin-database;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
 
       - name: Test
         env:
-          ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
+          ConnectionStrings__GilGoblinDbContext: ${{ env.DB_CONNECTION_STRING }}
         run: dotnet test --no-build --verbosity detailed --filter "Category!=Component"
