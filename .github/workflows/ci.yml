@@ -43,6 +43,12 @@ jobs:
         run: |
           echo "DB_CONNECTION_STRING=Host=gilgoblin-database;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
 
+      - name: Wait for Database
+        run: |
+          for i in {1..10}; do
+            pg_isready -h gilgoblin-database -p 5432 && break || sleep 5;
+          done
+
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ env.DB_CONNECTION_STRING }}
