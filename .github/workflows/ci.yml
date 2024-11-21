@@ -46,8 +46,16 @@ jobs:
       - name: Wait for Database
         run: |
           for i in {1..10}; do
-            pg_isready -h gilgoblin-database -p 5432 && break || sleep 5;
+            if pg_isready -h gilgoblin-database -p 5432; then
+              echo "Database is ready!"
+              exit 0
+            else
+              echo "Waiting for database... ($i/10)"
+              sleep 5
+            fi
           done
+          echo "Database did not become ready in time."
+          exit 1
 
       - name: Test
         env:
