@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      postgres:
+      gilgoblin-database:
         image: nickreinlein/gilgoblin-database
         env:
           POSTGRES_DB: gilgoblin_db
