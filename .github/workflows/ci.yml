@@ -96,10 +96,11 @@ jobs:
             for pkg in "$project_dir/nupkgs/"*.nupkg; do
               echo "Pushing package $pkg to NuGet..."
               dotnet nuget push "$pkg" \
-                --api-key ${{ secrets.NUGET_API_KEY }} \
-                --source https://api.nuget.org/v3/index.json
+                --source "https://api.nuget.org/v3/index.json" \
+                --api-key "${{ secrets.NUGET_API_KEY }}"
             done
           done
+      
 
   # publish-docker:
   #   runs-on: ubuntu-latest
