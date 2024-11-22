@@ -127,7 +127,7 @@ jobs:
             version_map["$key"]="$value"
           done
 
-          for project_dir in src/Api src/Database src/DataUpdater src/Accountant; do
+          for project_dir in src/Api src/Database src/DataUpdater src/Accountant src/Frontend; do
             if [ -f "$project_dir/Dockerfile" ]; then
               project=$(basename "$project_dir" | tr '[:upper:]' '[:lower:]') # Convert to lowercase
               prefixed_project="gilgoblin-$project" # Add 'gilgoblin-' prefix
