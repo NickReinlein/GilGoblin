@@ -96,6 +96,7 @@ jobs:
             for pkg in "$project_dir/nupkgs/"*.nupkg; do
               echo "Pushing package $pkg to NuGet..."
               dotnet nuget push "$pkg" \
+                --skip-duplicate \
                 --source "https://api.nuget.org/v3/index.json" \
                 --api-key "${{ secrets.NUGET_API_KEY }}"
             done
