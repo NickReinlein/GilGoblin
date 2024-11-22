@@ -59,7 +59,7 @@ jobs:
 
   publish-nuget:
     runs-on: ubuntu-latest
-    needs: build
+    # needs: build
     outputs:
       versions: ${{ steps.collect-versions.outputs.versions }}
     steps:
