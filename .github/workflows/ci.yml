@@ -130,8 +130,9 @@ jobs:
           for project_dir in src/Api src/Database src/DataUpdater src/Accountant; do
             if [ -f "$project_dir/Dockerfile" ]; then
               project=$(basename "$project_dir" | tr '[:upper:]' '[:lower:]') # Convert to lowercase
+              prefixed_project="gilgoblin-$project" # Add 'gilgoblin-' prefix
               tag="${version_map[$project]:-latest}"
-              image_name="${{ secrets.DOCKER_USERNAME }}/$project:$tag"
+              image_name="${{ secrets.DOCKER_USERNAME }}/$prefixed_project:$tag"
               echo "Building and pushing Docker image: $image_name"
               docker build -t "$image_name" "$project_dir"
               docker push "$image_name"
@@ -139,3 +140,4 @@ jobs:
               echo "No Dockerfile found in $project_dir, skipping..."
             fi
           done
+
