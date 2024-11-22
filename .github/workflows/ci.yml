@@ -70,9 +70,6 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Authenticate with NuGet
-        run: dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_API_KEY }}
-
       - id: collect-versions
         name: Collect NuGet Versions
         run: |
