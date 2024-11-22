@@ -70,6 +70,12 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Build Projects in Release Mode
+        run: |
+          for csproj in $(find ./src -name "*.csproj"); do
+            dotnet build "$csproj" --configuration Release
+          done
+
       - id: collect-versions
         name: Collect NuGet Versions
         run: |
@@ -86,7 +92,7 @@ jobs:
         run: |
           for csproj in $(find ./src -name "*.csproj"); do
             project_dir=$(dirname "$csproj")
-            dotnet pack "$csproj" -o "$project_dir/nupkgs"
+            dotnet pack "$csproj" --configuration Release -o "$project_dir/nupkgs"
             for pkg in "$project_dir/nupkgs/"*.nupkg; do
               dotnet nuget push "$pkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
             done
