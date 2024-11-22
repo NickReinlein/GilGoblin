@@ -55,7 +55,7 @@ jobs:
   #     - name: Test
   #       env:
   #         ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-  #       run: dotnet test --no-build --verbosity detailed --filter "Category!=Component"
+  #       run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
 
   publish-nuget:
     runs-on: ubuntu-latest
@@ -101,7 +101,6 @@ jobs:
                 --api-key "${{ secrets.NUGET_API_KEY }}"
             done
           done
-      
 
   publish-docker:
     runs-on: ubuntu-latest
@@ -130,9 +129,10 @@ jobs:
 
           for project_dir in src/Api src/Database src/DataUpdater src/Accountant; do
             if [ -f "$project_dir/Dockerfile" ]; then
-              project=$(basename "$project_dir")
+              project=$(basename "$project_dir" | tr '[:upper:]' '[:lower:]') # Convert to lowercase
               tag="${version_map[$project]:-latest}"
               image_name="${{ secrets.DOCKER_USERNAME }}/$project:$tag"
+              echo "Building and pushing Docker image: $image_name"
               docker build -t "$image_name" "$project_dir"
               docker push "$image_name"
             else
