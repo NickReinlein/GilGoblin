@@ -3,46 +3,49 @@ import {convertCraftToProfit} from "./CraftToProfitConverter";
 
 describe('convertCraftToProfit', () => {
     const mockCraft: Craft = {
-        itemId: 1,
+        recipeId: 301,
         worldId: 2,
-        averageListingPrice: 10,
-        averageSold: 8,
-        recipeCost: 5,
-        recipeProfitVsSold: 3,
-        recipeProfitVsListings: 2,
-        updated: '2022-01-01',
+        isHq: true,
+        itemId: 1,
+        salePrice: 10,
+        craftingCost: 8,
+        profit: 5,
+        updated: '2024-01-01',
         itemInfo: {
             id: 101,
             iconId: 201,
             name: 'CraftedItem',
+            canHq: true,
+            description: 'Description',
+            level: 10,
+            stackSize: 1,
+            priceMid: 10,
+            priceLow: 5
         },
         recipe: {
             id: 301,
             resultQuantity: 2,
             canHq: true,
-            targetItemId: 1
+            targetItemId: 1,
+            canQuickSynth: true
         },
-        ingredients: [],
     };
 
     it('should convert Craft to Profit correctly', () => {
         const result: Profit = convertCraftToProfit(mockCraft);
 
         expect(result).toEqual({
-            itemId: 1,
-            worldId: 2,
-            recipeId: 301,
-            profitSold: 3,
-            profitListings: 2,
-            cost: 5,
-            averageListing: 10,
-            averageSold: 8,
-            resultQuantity: 2,
-            name: 'CraftedItem',
-            iconId: 201,
-            canHq: true,
-            ingredients: [],
-            updated: '2022-01-01',
+            recipeId: mockCraft.recipeId,
+            worldId: mockCraft.worldId,
+            isHq: mockCraft.isHq,
+            itemId: mockCraft.itemId,
+            salePrice: mockCraft.salePrice,
+            craftingCost: mockCraft.craftingCost,
+            profit: mockCraft.profit,
+            resultQuantity: mockCraft.recipe?.resultQuantity,
+            name: mockCraft.itemInfo?.name,
+            iconId: mockCraft.itemInfo?.iconId,
+            updated: mockCraft.updated
         });
     });
 });

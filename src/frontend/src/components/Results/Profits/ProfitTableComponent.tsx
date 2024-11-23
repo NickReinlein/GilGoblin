@@ -11,11 +11,9 @@ interface ProfitTableProps {
 const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
     {field: 'id', headerName: '#', minWidth: 70, maxWidth: 100, type: 'number'},
     {field: 'name', headerName: 'Name', minWidth: 300, type: 'string', flex: 1},
-    {field: 'profitSold', headerName: 'Sold Profit', type: 'number', minWidth: 150, flex: 1},
-    {field: 'profitListings', headerName: 'Listings Profit', type: 'number', minWidth: 150, flex: 1},
-    {field: 'averageSold', headerName: 'Avg. Sold', type: 'number', minWidth: 150, flex: 1},
-    {field: 'averageListing', headerName: 'Avg. Listing', type: 'number', minWidth: 150, flex: 1},
-    {field: 'cost', headerName: 'Cost', type: 'number', minWidth: 150, flex: 1},
+    {field: 'salePrice', headerName: 'Sale Price', type: 'number', minWidth: 150, flex: 1},
+    {field: 'craftingCost', headerName: 'Craft Cost', type: 'number', minWidth: 150, flex: 1},
+    {field: 'profit', headerName: 'Profit', type: 'number', minWidth: 150, flex: 1},
     {field: 'resultQuantity', headerName: 'Qty', type: 'number', minWidth: 100, flex: 1},
     {
         field: 'updated',

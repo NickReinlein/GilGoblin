@@ -9,41 +9,34 @@ export function convertMultipleCraftsToProfits(crafts: Crafts): Profits {
         ? ([])
         : crafts.map((craft) => {
             const {
-                itemId,
+                recipeId,
                 worldId,
-                averageListingPrice,
-                averageSold,
-                recipeCost,
-                recipeProfitVsSold,
-                recipeProfitVsListings,
+                isHq,
+                itemId,
+                salePrice,
+                craftingCost,
+                profit,
                 updated,
                 itemInfo,
-                recipe,
-                ingredients,
+                recipe
             } = craft;
 
-            const recipeId = recipe?.id ?? 0;
             const resultQuantity = recipe?.resultQuantity ?? 0;
-            const canHq = recipe?.canHq ?? false;
-
             const iconId = itemInfo?.iconId ?? 0;
             const name = itemInfo?.name ?? '';
 
             return {
-                itemId,
-                worldId,
                 recipeId,
-                profitSold: recipeProfitVsSold,
-                profitListings: recipeProfitVsListings,
-                cost: recipeCost,
-                averageListing: averageListingPrice,
-                averageSold,
+                worldId,
+                isHq,
+                itemId,
+                salePrice,
+                craftingCost,
+                profit,
                 resultQuantity,
                 name,
                 iconId,
-                canHq,
-                ingredients,
-                updated,
+                updated
             };
         });
 }

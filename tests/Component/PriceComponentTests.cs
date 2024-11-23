@@ -33,7 +33,7 @@ public class PriceComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]

@@ -47,13 +47,15 @@ public class CraftComponentTests : ComponentTests
         });
     }
 
-    [TestCase("/34/1614654", HttpStatusCode.NotFound)]
-    [TestCase("/1614654/1614654", HttpStatusCode.NotFound)]
-    [TestCase("/1614654/100", HttpStatusCode.NotFound)]
-    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
+    [TestCase("/0", HttpStatusCode.NotFound)]
+    [TestCase("/", HttpStatusCode.NotFound)]
+    [TestCase("/abc", HttpStatusCode.NotFound)]
+    [TestCase("/_", HttpStatusCode.NotFound)]
+    [TestCase("34", HttpStatusCode.NotFound)]
+    public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string url,
         HttpStatusCode expectedErrorCode)
     {
-        var fullEndpoint = $"http://localhost:55448/craft{urlSuffix}";
+        var fullEndpoint = $"http://localhost:55448/craft{url}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
