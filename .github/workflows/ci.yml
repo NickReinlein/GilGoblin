@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
-          POSTGRES_PASSWORD: placeholder_password
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -38,12 +38,21 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Set DB Connection String
-        id: set-connection-string
+      - name: Wait for Database
         run: |
-          echo "DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }};" >> $GITHUB_ENV
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432; then
+              echo "Database is ready!"
+              exit 0
+            else
+              echo "Waiting for database... ($i/10)"
+              sleep 5
+            fi
+          done
+          echo "Database did not become ready in time."
+          exit 1
 
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity detailed --filter "Category!=Component"
+        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
