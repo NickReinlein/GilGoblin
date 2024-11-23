@@ -35,7 +35,7 @@ jobs:
             VERSIONS+="$project=$version;"
           done
           echo "versions=$VERSIONS" >> $GITHUB_ENV
-          echo "::set-output name=versions::$VERSIONS"
+          echo "versions=$VERSIONS" >> $GITHUB_OUTPUT
 
       - name: Publish Packages to NuGet
         run: |
