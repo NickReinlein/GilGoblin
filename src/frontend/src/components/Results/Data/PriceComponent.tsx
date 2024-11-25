@@ -15,7 +15,7 @@ const PriceComponent: React.FC<PriceProps> = ({price}) => {
 
 export function formatDate(date: Date): string {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -31,12 +31,10 @@ const priceContent = (price: Price | null | undefined) =>
             <span>World: {price?.worldId}</span>
         </Typography>
         <Typography className="MuiTypography-details">
-            <span> Average Listing Price: {price?.averageListingPrice}</span><br/>
-            <span>Average Listing Price NQ: {price?.averageListingPriceNQ}</span><br/>
-            <span>Average Listing Price HQ: {price?.averageListingPriceHQ}</span><br/>
-            <span>Average Sold: {price?.averageSold}</span><br/>
-            <span>Average Sold NQ: {price?.averageSoldNQ}</span><br/>
-            <span>Average Sold HQ: {price?.averageSoldHQ}</span><br/>
+            <span>Average Sale Price: {price?.averageSalePrice}</span><br/>
+            <span>Min Listing: {price?.minListing}</span><br/>
+            <span>Recent Purchase: {price?.recentPurchase}</span><br/>
+            <span>Daily Sale Velocity: {price?.dailySaleVelocity}</span><br/>
             <span>Last Uploaded: <br/>
                 <span>
                     {price?.lastUploadTime !== undefined
@@ -46,6 +44,37 @@ const priceContent = (price: Price | null | undefined) =>
             </span>
         </Typography>
     </Typography>
-;
+
+
+// const priceContent = (price: Price | null | undefined) => (
+//     <div className="price-content">
+//         <Typography className="MuiTypography-root">
+//             <div>
+//                 <div className="MuiTypography-ids">
+//                     <div>Item Id: {price?.itemId}</div>
+//                     <div>World: {price?.worldId}</div>
+//                     <div>IsHq: {price?.isHq ? 'Yes' : 'No'}</div>
+//                 </div>
+//                 <div>
+//                     <div className="MuiTypography-details">
+//                         <div>Average Sale Price: {price?.averageSalePrice}</div>
+//                         <div>Min Listing: {price?.minListing}</div>
+//                         <div>Recent Purchase: {price?.recentPurchase}</div>
+//                         <div>Daily Sale Velocity: {price?.dailySaleVelocity}</div>
+//                         <div>
+//                             Last Updated:
+//                             {price?.lastUploadTime !== undefined ? (
+//                                 <span>{formatDate(new Date(price.lastUploadTime))}</span>
+//                             ) : (
+//                                 <i>Missing last upload timestamp</i>
+//                             )}
+//                         </div>
+//                     </div>
+//                     </div>
+//                 </div>
+//         </Typography>
+//     </div>
+// );
+
 
 export default PriceComponent;

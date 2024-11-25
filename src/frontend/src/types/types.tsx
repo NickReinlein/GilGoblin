@@ -16,15 +16,42 @@ export interface Item {
 }
 
 export interface Price {
-    worldId: number,
     itemId: number,
+    worldId: number,
+    isHq: boolean,
     lastUploadTime?: number,
-    averageListingPrice: number;
-    averageListingPriceNQ?: number;
-    averageListingPriceHQ?: number;
-    averageSold: number;
-    averageSoldNQ?: number;
-    averageSoldHQ?: number;
+    minListing: PriceDataPointPoco,
+    recentPurchase: PriceDataPointPoco,
+    averageSalePrice: PriceDataPointPoco,
+    dailySaleVelocity: DailySaleVelocityPoco
+}
+
+export interface PriceDataPointPoco {
+    id: number,
+    itemId: number,
+    worldId: number,
+    isHq: boolean,
+    dcDataPoint: PriceDataPoco
+    regionDataPoint: PriceDataPoco
+    worldDataPoint: PriceDataPoco
+}
+
+export interface PriceDataPoco {
+    id: number,
+    priceType: string,
+    price: number,
+    worldId: number,
+    timestamp: number
+}
+
+export interface DailySaleVelocityPoco {
+    id: number,
+    itemId: number,
+    worldId: number,
+    isHq: boolean,
+    world: number,
+    dc: number,
+    region: number
 }
 
 export interface Recipe {
@@ -75,6 +102,7 @@ export interface Craft {
     recipeProfitVsListings: number;
     ingredients?: Ingredient[];
     updated: string;
+
     [key: string]: any;
 }
 
@@ -94,8 +122,12 @@ export interface Profit {
     canHq?: boolean;
     ingredients?: Ingredient[];
     updated: string;
+
     [key: string]: any;
 }
 
-export interface Profits extends Array<Profit>{}
-export interface Crafts extends Array<Craft>{}
+export interface Profits extends Array<Profit> {
+}
+
+export interface Crafts extends Array<Craft> {
+}
