@@ -20,10 +20,10 @@ export interface Price {
     worldId: number,
     isHq: boolean,
     lastUploadTime?: number,
-    minListing: PriceDataPointPoco,
-    recentPurchase: PriceDataPointPoco,
-    averageSalePrice: PriceDataPointPoco,
-    dailySaleVelocity: DailySaleVelocityPoco
+    minListing?: PriceDataPointPoco,
+    recentPurchase?: PriceDataPointPoco,
+    averageSalePrice?: PriceDataPointPoco,
+    dailySaleVelocity?: DailySaleVelocityPoco
 }
 
 export interface PriceDataPointPoco {
@@ -31,9 +31,9 @@ export interface PriceDataPointPoco {
     itemId: number,
     worldId: number,
     isHq: boolean,
-    dcDataPoint: PriceDataPoco
-    regionDataPoint: PriceDataPoco
-    worldDataPoint: PriceDataPoco
+    dcDataPoint?: PriceDataPoco
+    regionDataPoint?: PriceDataPoco
+    worldDataPoint?: PriceDataPoco
 }
 
 export interface PriceDataPoco {
@@ -102,7 +102,6 @@ export interface Craft {
     recipeProfitVsListings: number;
     ingredients?: Ingredient[];
     updated: string;
-
     [key: string]: any;
 }
 
@@ -122,7 +121,6 @@ export interface Profit {
     canHq?: boolean;
     ingredients?: Ingredient[];
     updated: string;
-
     [key: string]: any;
 }
 
