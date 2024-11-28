@@ -16,42 +16,43 @@ export interface Item {
 }
 
 export interface Price {
-    itemId: number,
-    worldId: number,
-    isHq: boolean,
-    lastUploadTime?: number,
-    minListing?: PriceDataPointPoco,
-    recentPurchase?: PriceDataPointPoco,
-    averageSalePrice?: PriceDataPointPoco,
-    dailySaleVelocity?: DailySaleVelocityPoco
+    id: number;
+    itemId: number;
+    worldId: number;
+    isHq: boolean;
+    updated: string;
+    minListing?: PriceDataPointPoco | null;
+    recentPurchase?: PriceDataPointPoco | null;
+    averageSalePrice?: PriceDataPointPoco | null;
+    dailySaleVelocity?: DailySaleVelocityPoco | null;
 }
 
 export interface PriceDataPointPoco {
-    id: number,
-    itemId: number,
-    worldId: number,
-    isHq: boolean,
-    dcDataPoint?: PriceDataPoco
-    regionDataPoint?: PriceDataPoco
-    worldDataPoint?: PriceDataPoco
+    id: number;
+    itemId: number;
+    worldId: number;
+    isHq: boolean;
+    worldDataPoint?: PriceDataPoco | null;
+    dcDataPoint?: PriceDataPoco | null;
+    regionDataPoint?: PriceDataPoco | null;
 }
 
 export interface PriceDataPoco {
-    id: number,
-    priceType: string,
-    price: number,
-    worldId: number,
-    timestamp: number
+    id: number;
+    priceType: string;
+    price: number;
+    worldId: number;
+    timestamp: number;
 }
 
 export interface DailySaleVelocityPoco {
-    id: number,
-    itemId: number,
-    worldId: number,
-    isHq: boolean,
-    world: number,
-    dc: number,
-    region: number
+    id: number;
+    itemId: number;
+    worldId: number;
+    isHq: boolean;
+    world: number;
+    dc: number;
+    region: number;
 }
 
 export interface Recipe {
