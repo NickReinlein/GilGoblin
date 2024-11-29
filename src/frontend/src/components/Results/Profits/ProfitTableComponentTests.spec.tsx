@@ -90,7 +90,7 @@ describe('ProfitTableComponent', () => {
                 "priceLow": 37,
                 "canHq": true
             },
-            "recipe": {
+            "recipeInfo": {
                 "id": 100,
                 "craftType": 1,
                 "recipeLevelTable": 29,
@@ -167,7 +167,7 @@ describe('ProfitTableComponent', () => {
                 "priceLow": 90,
                 "canHq": false
             },
-            "recipe": {
+            "recipeInfo": {
                 "id": 2041,
                 "craftType": 5,
                 "recipeLevelTable": 70,

@@ -92,35 +92,30 @@ export interface Ingredient {
 }
 
 export interface Craft {
-    itemId: number;
+    recipeId: number;
     worldId: number;
+    isHq: boolean;
+    itemId: number;
     itemInfo?: Item;
-    recipe?: Recipe;
-    averageListingPrice: number;
-    averageSold: number;
-    recipeCost: number;
-    recipeProfitVsSold: number;
-    recipeProfitVsListings: number;
-    ingredients?: Ingredient[];
+    recipeInfo?: Recipe;
+    salePrice: number;
+    craftingCost: number;
+    profit: number;
     updated: string;
     [key: string]: any;
 }
 
 export interface Profit {
-    itemId: number;
-    worldId: number;
     recipeId: number;
-    profitSold: number;
-    profitListings: number;
-    cost: number;
-    averageListing: number;
-    averageSold: number;
-    craftType?: number;
+    worldId: number;
+    isHq: boolean;
+    itemId: number;
+    salePrice: number;
+    craftingCost: number;
+    profit: number;
     resultQuantity: number;
     name?: string | null;
     iconId?: number;
-    canHq?: boolean;
-    ingredients?: Ingredient[];
     updated: string;
     [key: string]: any;
 }

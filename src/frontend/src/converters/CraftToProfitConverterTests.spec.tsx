@@ -16,7 +16,7 @@ describe('convertCraftToProfit', () => {
             iconId: 201,
             name: 'CraftedItem',
         },
-        recipe: {
+        recipeInfo: {
             id: 301,
             resultQuantity: 2,
             canHq: true,
