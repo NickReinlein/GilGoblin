@@ -110,7 +110,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         });
     }
 
-    [Test, Ignore("Fix later")]
+    [Test]
     public async Task
         GivenComputeListAsync_WhenSomeEntitiesHaveNoValidMatchingRecipe_ThenCalculationIsSkippedForThoseEntitiesAndWarningLogged()
     {
@@ -118,9 +118,15 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
 
         await _accountant.ComputeListAsync(_worldId, ValidRecipeIds);
 
-        // todo fix test later
         foreach (var recipeId in ValidRecipeIds)
-            _logger.Received().LogWarning($"Failed to find recipe {recipeId}");
+        {
+            _logger.Received().Log(
+                LogLevel.Warning,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString() == $"Failed to find recipe {recipeId}"),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
+        }
         await _saver.Received(1).SaveAsync(Arg.Is<IEnumerable<RecipeProfitPoco>>(p => !p.Any()));
     }
 

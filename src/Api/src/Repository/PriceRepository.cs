@@ -12,16 +12,16 @@ namespace GilGoblin.Api.Repository;
 
 public interface IPriceRepository<T> : IRepositoryCache where T : class
 {
-    T? Get(int worldId, int id, bool isHq);
-    List<T> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq = null);
+    T? Get(int worldId, int itemId, bool isHq);
+    List<T> GetMultiple(int worldId, IEnumerable<int> itemIds, bool? isHq = null);
     List<T> GetAll(int worldId);
 }
 
 public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache) : IPriceRepository<PricePoco>
 {
-    public PricePoco? Get(int worldId, int id, bool isHq)
+    public PricePoco? Get(int worldId, int itemId, bool isHq)
     {
-        var cached = cache.Get(new TripleKey(worldId, id, isHq));
+        var cached = cache.Get(new TripleKey(worldId, itemId, isHq));
         if (cached is not null)
             return cached;
 
@@ -51,11 +51,11 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
                 .ThenInclude(p => p.WorldDataPoint)
                 .Include(p => p.DailySaleVelocity)
                 .FirstOrDefault(p =>
-                    p.ItemId == id &&
+                    p.ItemId == itemId &&
                     p.WorldId == worldId &&
                     p.IsHq == isHq);
             if (price is not null)
-                cache.Add(new TripleKey(worldId, id, isHq), price);
+                cache.Add(new TripleKey(worldId, itemId, isHq), price);
 
             return price;
         }
@@ -65,7 +65,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
         }
     }
 
-    public List<PricePoco> GetMultiple(int worldId, IEnumerable<int> ids, bool? isHq)
+    public List<PricePoco> GetMultiple(int worldId, IEnumerable<int> itemIds, bool? isHq)
     {
         using var scope = serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
@@ -93,7 +93,7 @@ public class PriceRepository(IServiceProvider serviceProvider, IPriceCache cache
             .Where(p =>
                 p.WorldId == worldId &&
                 (isHq == null || p.IsHq == isHq.Value) &&
-                ids.Any(i => i == p.ItemId))
+                itemIds.Any(i => i == p.ItemId))
             .ToList();
     }
 
