@@ -1,5 +1,5 @@
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import {Crafts} from "../../../types/types";
 import ProfitTableComponent from "./ProfitTableComponent";
 
@@ -15,13 +15,7 @@ describe('ProfitTableComponent', () => {
 
         const columns = screen.getAllByRole('columnheader');
 
-        expect(columns.length).toBe(9);
-    });
-
-    test('maps the first column header to index field', () => {
-        const mapped = columnHeaderToFieldMapping('#');
-
-        expect(mapped).toBe('index')
+        expect(columns.length).toBe(11);
     });
 
     test('maps the age header to timestamp updated field', () => {
@@ -52,33 +46,12 @@ describe('ProfitTableComponent', () => {
         });
     });
 
-    test('renders table sorted by sold profit by default', () => {
-        render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-        const rows = screen.getAllByRole('row').slice(1); // remove header
-
-        expect(rows[0]).toHaveTextContent(mockCrafts[1].itemInfo!.name!.toString());
-        expect(rows[1]).toHaveTextContent(mockCrafts[0].itemInfo!.name!.toString());
-        expect(mockCrafts[1].recipeProfitVsSold).toBeGreaterThan(mockCrafts[0].recipeProfitVsSold);
-    });
-
-    test('renders table sorted by listing profit when clicked', () => {
-        render(<ProfitTableComponent crafts={mockCrafts}/>);
-
-        const listingProfitColumn = screen.getByRole('columnheader', {name: 'Listings Profit'});
-        fireEvent.click(listingProfitColumn);
-
-        const rows = screen.getAllByRole('row').slice(1); // remove header
-
-        expect(rows[0]).toHaveTextContent(mockCrafts[1].itemInfo!.name!.toString());
-        expect(rows[1]).toHaveTextContent(mockCrafts[0].itemInfo!.name!.toString());
-        expect(mockCrafts[1].recipeProfitVsSold).toBeGreaterThan(mockCrafts[0].recipeProfitVsSold);
-    });
-
     const mockCrafts: Crafts = [
         {
-            "itemId": 2551,
+            "recipeId": 100,
             "worldId": 34,
+            "isHq": true,
+            "itemId": 2551,
             "itemInfo": {
                 "id": 2551,
                 "name": "Plumed Iron Hatchet",
@@ -119,43 +92,18 @@ describe('ProfitTableComponent', () => {
                 "itemIngredient9TargetId": 5,
                 "amountIngredient9": 2
             },
-            "averageListingPrice": 22575,
-            "averageSold": 18909,
-            "recipeCost": 1518,
-            "recipeProfitVsSold": 17391,
-            "recipeProfitVsListings": 210057,
-            "ingredients": [
-                {
-                    "recipeId": 100,
-                    "itemId": 5057,
-                    "quantity": 1
-                },
-                {
-                    "recipeId": 100,
-                    "itemId": 5371,
-                    "quantity": 1
-                },
-                {
-                    "recipeId": 100,
-                    "itemId": 5359,
-                    "quantity": 1
-                },
-                {
-                    "recipeId": 100,
-                    "itemId": 222,
-                    "quantity": 3
-                },
-                {
-                    "recipeId": 100,
-                    "itemId": 567,
-                    "quantity": 2
-                }
-            ],
+            "salePrice": 10,
+            "craftingCost": 3,
+            "profit": 7,
+            "name": "Plumed Iron Hatchet",
+            "iconId": 38105,
             "updated": "2024-01-02T23:10:32.7760275+00:00"
         },
         {
-            "itemId": 7986,
+            "recipeId": 2041,
             "worldId": 34,
+            "isHq": false,
+            "itemId": 7986,
             "itemInfo": {
                 "id": 7986,
                 "name": "Riviera Cushion",
@@ -165,7 +113,7 @@ describe('ProfitTableComponent', () => {
                 "stackSize": 1,
                 "priceMid": 17424,
                 "priceLow": 90,
-                "canHq": false
+                "canHq": true
             },
             "recipeInfo": {
                 "id": 2041,
@@ -173,8 +121,8 @@ describe('ProfitTableComponent', () => {
                 "recipeLevelTable": 70,
                 "targetItemId": 7986,
                 "resultQuantity": 33,
-                "canHq": false,
-                "canQuickSynth": false,
+                "canHq": true,
+                "canQuickSynth": true,
                 "itemIngredient0TargetId": 8024,
                 "amountIngredient0": 3,
                 "itemIngredient1TargetId": 5328,
@@ -196,43 +144,11 @@ describe('ProfitTableComponent', () => {
                 "itemIngredient9TargetId": 16,
                 "amountIngredient9": 1
             },
-            "averageListingPrice": 83989,
-            "averageSold": 58897,
-            "recipeCost": 28405,
-            "recipeProfitVsSold": 30492,
-            "recipeProfitVsListings": 55584,
-            "ingredients": [
-                {
-                    "recipeId": 2041,
-                    "itemId": 8024,
-                    "quantity": 3
-                },
-                {
-                    "recipeId": 2041,
-                    "itemId": 5328,
-                    "quantity": 2
-                },
-                {
-                    "recipeId": 2041,
-                    "itemId": 5338,
-                    "quantity": 3
-                },
-                {
-                    "recipeId": 2041,
-                    "itemId": 8149,
-                    "quantity": 3
-                },
-                {
-                    "recipeId": 2041,
-                    "itemId": 18,
-                    "quantity": 1
-                },
-                {
-                    "recipeId": 2041,
-                    "itemId": 16,
-                    "quantity": 1
-                }
-            ],
+            "salePrice": 10,
+            "craftingCost": 3,
+            "profit": 7,
+            "name": "Riviera Cushion",
+            "iconId": 38657,
             "updated": "2024-01-02T23:10:40.4266199+00:00"
         }
     ];
@@ -240,22 +156,26 @@ describe('ProfitTableComponent', () => {
 
 const columnHeaderToFieldMapping = (header: string) => {
     switch (header) {
-        case '#':
-            return 'index';
+        case 'Recipe Id':
+            return 'recipeId';
+        case 'World Id':
+            return 'worldId';
+        case 'Is HQ':
+            return 'isHq';
+        case 'Item Id':
+            return 'itemId';
         case 'Name':
             return 'name'
-        case 'Sold Profit':
-            return 'profitSold';
-        case 'Listings Profit':
-            return 'profitListings';
-        case 'Avg. Sold':
-            return 'averageSold';
-        case 'Avg. Listing':
-            return 'averageListing';
-        case 'Cost':
-            return 'cost';
+        case 'Sale Price':
+            return 'salePrice'
+        case 'Crafting Cost':
+            return 'craftingCost';
+        case 'Profit':
+            return 'profit'
         case 'Qty':
             return 'resultQuantity';
+        case 'Icon Id':
+            return 'iconId'
         case 'Age':
             return 'updated';
         default:
