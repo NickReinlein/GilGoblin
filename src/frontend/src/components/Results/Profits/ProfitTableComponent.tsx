@@ -3,20 +3,31 @@ import {Crafts, Profit} from '../../../types/types';
 import {convertMultipleCraftsToProfits} from '../../../converters/CraftToProfitConverter';
 import {GridColDef} from "@mui/x-data-grid";
 import StripedDataGrid, {getRowClassName} from "../StripedDataGrid";
+import '../../../styles/ProfitTableComponent.css';
 
 interface ProfitTableProps {
     crafts: Crafts;
 }
 
 const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
-    {field: 'id', headerName: '#', minWidth: 70, maxWidth: 100, type: 'number'},
-    {field: 'name', headerName: 'Name', minWidth: 300, type: 'string', flex: 1},
-    {field: 'profitSold', headerName: 'Sold Profit', type: 'number', minWidth: 150, flex: 1},
-    {field: 'profitListings', headerName: 'Listings Profit', type: 'number', minWidth: 150, flex: 1},
-    {field: 'averageSold', headerName: 'Avg. Sold', type: 'number', minWidth: 150, flex: 1},
-    {field: 'averageListing', headerName: 'Avg. Listing', type: 'number', minWidth: 150, flex: 1},
-    {field: 'cost', headerName: 'Cost', type: 'number', minWidth: 150, flex: 1},
-    {field: 'resultQuantity', headerName: 'Qty', type: 'number', minWidth: 100, flex: 1},
+    {field: 'recipeId', headerName: 'Recipe Id', minWidth: 70, maxWidth: 100, type: 'number'},
+    {field: 'worldId', headerName: 'World Id', minWidth: 70, maxWidth: 100, type: 'number'},
+    {
+        field: 'isHq',
+        headerName: 'Is HQ',
+        minWidth: 70,
+        maxWidth: 100,
+        type: 'boolean',
+        cellClassName: () => 'whiteCheckmark'
+    },
+    {field: 'itemId', headerName: 'Item Id', minWidth: 70, maxWidth: 100, type: 'number'},
+    {field: 'name', headerName: 'Name', minWidth: 100, maxWidth: 250, type: 'string', flex: 1},
+    {field: 'salePrice', headerName: 'Sale Price', type: 'number', minWidth: 100, maxWidth: 150, flex: 1},
+    {field: 'craftingCost', headerName: 'Crafting Cost', type: 'number', minWidth: 100, maxWidth: 150, flex: 1},
+    {field: 'profit', headerName: 'Profit', type: 'number', minWidth: 150, maxWidth: 200, flex: 1,
+        cellClassName: (params) => params.value > 0 ? 'positiveProfit' : 'negativeProfit'},
+    {field: 'resultQuantity', headerName: 'Qty', type: 'number', width: 50, flex: 1},
+    {field: 'iconId', headerName: 'Icon Id', type: 'number', width: 50, flex: 1},
     {
         field: 'updated',
         headerName: 'Age',
@@ -51,9 +62,7 @@ const timeAgo = (ageInSeconds: number) => {
     }
 };
 
-const ProfitTableComponent: React.FC<ProfitTableProps> = ({
-                                                              crafts,
-                                                          }) => {
+const ProfitTableComponent: React.FC<ProfitTableProps> = ({crafts,}) => {
     if (!(crafts?.length > 0))
         return (<div>Press the search button to search for the World's best recipes to craft</div>);
 
@@ -78,7 +87,7 @@ const ProfitTableComponent: React.FC<ProfitTableProps> = ({
                         sorting: {
                             sortModel: [
                                 {
-                                    field: 'profitSold',
+                                    field: 'profit',
                                     sort: 'desc'
                                 }
                             ]
