@@ -31,7 +31,6 @@ public class AccountantDependencyInjectionTests
     }
 
     [TestCase(typeof(IAccountant))]
-    [TestCase(typeof(IAccountant))]
     [TestCase(typeof(IItemCache))]
     [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]
