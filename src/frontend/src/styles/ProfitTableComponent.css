@@ -1,0 +1,15 @@
+.MuiDataGrid-root .MuiDataGrid-cell.whiteCheckmark .MuiSvgIcon-root {
+    color: white;
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell.whiteCheckmark .MuiSvgIcon-root {
+    color: white;
+}
+
+.positiveProfit {
+    color: #32fa32;
+}
+
+.negativeProfit {
+    color: #fa6464;
+}

@@ -169,14 +169,6 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         _recipeRepo.Received(expectedNumberOfBatches).GetMultiple(Arg.Any<IEnumerable<int>>());
     }
 
-    [Test]
-    public void GivenGetDataFreshnessInHours_WhenCalled_ThenWeReturnTheValue()
-    {
-        var result = _accountant.GetDataFreshnessInHours();
-
-        Assert.That(result, Is.GreaterThanOrEqualTo(48));
-    }
-
     private async Task MakeCostsOutdated()
     {
         await using var dbContext = GetDbContext();

@@ -13,16 +13,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace GilGoblin.Accountant;
 
-// ReSharper disable once UnusedTypeParameter
-public interface IAccountant<T> where T : class
+public interface IAccountant
 {
     Task CalculateAsync(int worldId, CancellationToken ct);
     Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct);
 }
 
 [ExcludeFromCodeCoverage]
-public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<T>> logger)
-    : BackgroundService, IAccountant<T> where T : class
+public class Accountant(IServiceProvider serviceProvider, ILogger<Accountant> logger)
+    : BackgroundService, IAccountant
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -32,31 +31,41 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
             {
                 var worlds = GetWorlds();
                 if (!worlds.Any())
-                    throw new DataException("Failed to find any world Ids. This should never happen");
-
-                var accountingTasks = new List<Task>();
-                foreach (var world in worlds)
                 {
-                    logger.LogInformation("Opening ledger to update {Type} updates for world id/name: {Id}/{Name}",
-                        typeof(T), world.Id, world.Name);
-                    accountingTasks.Add(CalculateAsync(world.GetId(), ct));
+                    logger.LogCritical("Failed to find any world Ids. This should never happen.");
+                    throw new DataException("No world IDs found.");
                 }
 
-                await Task.WhenAll(accountingTasks);
+                var tasks = worlds.Select(world => 
+                {
+                    logger.LogInformation("Processing updates for {Type} in world: {Id}, name: {Name}",
+                        nameof(Accountant), world.Id, world.Name);
+
+                    return Task.Run(() => CalculateAsync(world.Id, ct), ct);
+                });
+
+                await Task.WhenAll(tasks);
             }
             catch (DataException ex)
             {
-                logger.LogCritical($"A critical error occured: {ex.Message}");
-                return;
+                logger.LogCritical("Critical error: {Message}", ex.Message);
+                break;
             }
             catch (Exception ex)
             {
-                logger.LogError($"An unexpected exception occured during the accounting process: {ex.Message}");
+                logger.LogError("Unexpected error during processing: {Message}", ex.Message);
             }
 
             var delay = TimeSpan.FromMinutes(5);
-            logger.LogInformation($"Awaiting delay of {delay}");
-            await Task.Delay(delay, ct);
+            logger.LogInformation("Delaying for {Delay}", delay);
+            try
+            {
+                await Task.Delay(delay, ct);
+            }
+            catch (TaskCanceledException)
+            {
+                break;
+            }
         }
     }
 
@@ -103,7 +112,7 @@ public class Accountant<T>(IServiceProvider serviceProvider, ILogger<Accountant<
     public virtual Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
         => throw new NotImplementedException();
 
-    public virtual int GetDataFreshnessInHours() => 96;
+    protected virtual int GetDataFreshnessInHours() => 96;
 
     public virtual Task<List<int>> GetIdsToUpdate(int worldId) => Task.FromResult(new List<int>());
 }
