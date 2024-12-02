@@ -30,8 +30,8 @@ public class AccountantDependencyInjectionTests
         Assert.That(client, Is.Not.Null);
     }
 
-    [TestCase(typeof(IAccountant<RecipeCostPoco>))]
-    [TestCase(typeof(IAccountant<RecipeProfitPoco>))]
+    [TestCase(typeof(IAccountant))]
+    [TestCase(typeof(IAccountant))]
     [TestCase(typeof(IItemCache))]
     [TestCase(typeof(IPriceCache))]
     [TestCase(typeof(IRecipeCache))]

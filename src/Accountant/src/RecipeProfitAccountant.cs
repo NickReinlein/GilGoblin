@@ -26,7 +26,7 @@ public class RecipeProfitAccountant(
     IServiceProvider serviceProvider,
     IDataSaver<RecipeProfitPoco> saver,
     ILogger<RecipeProfitAccountant> logger)
-    : Accountant<RecipeProfitPoco>(serviceProvider, logger), IRecipeProfitAccountant
+    : Accountant(serviceProvider, logger), IRecipeProfitAccountant
 {
     public override async Task ComputeListAsync(int worldId, List<int> idList, CancellationToken ct)
     {

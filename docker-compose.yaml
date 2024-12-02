@@ -2,8 +2,10 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    image: nickreinlein/gilgoblin-database
-    container_name: database
+    # image: nickreinlein/gilgoblin-database
+    # container_name: database
+    image: database
+    build: src/Database/
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -53,6 +55,8 @@ services:
   gilgoblin-dataupdater:
     image: nickreinlein/gilgoblin-dataupdater
     container_name: dataupdater
+    # image: dataupdater
+    # build: src/DataUpdater/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
@@ -74,6 +78,8 @@ services:
   gilgoblin-accountant:
     image: nickreinlein/gilgoblin-accountant
     container_name: accountant
+    # image: accountant
+    # build: src/Accountant/
     depends_on:
       - gilgoblin-database
       - gilgoblin-api
@@ -116,100 +122,100 @@ services:
         max-size: '50m'
     restart: unless-stopped
 
-  ### Alerts & Monitoring ###
+  # ### Alerts & Monitoring ###
 
-  gilgoblin-influxdb:
-    image: influxdb:1.8.10
-    container_name: influxdb
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '50m'
-    environment:
-      - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
-      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
-      - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
-      - DOCKER_INFLUXDB_DB=${DOCKER_INFLUXDB_DB}
-      - DOCKER_INFLUXDB_ADMIN_USER=${DOCKER_INFLUXDB_ADMIN_USER}
-      - DOCKER_INFLUXDB_ADMIN_PASSWORD=${DOCKER_INFLUXDB_ADMIN_PASSWORD}
-    networks:
-      - gilgoblin
-    ports:
-      - '8086:8086'
-    volumes:
-      - ./benchmarks/influxdb:/var/lib/influxdb
+  # gilgoblin-influxdb:
+  #   image: influxdb:1.8.10
+  #   container_name: influxdb
+  #   logging:
+  #     driver: 'json-file'
+  #     options:
+  #       max-size: '50m'
+  #   environment:
+  #     - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
+  #     - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
+  #     - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+  #     - DOCKER_INFLUXDB_DB=${DOCKER_INFLUXDB_DB}
+  #     - DOCKER_INFLUXDB_ADMIN_USER=${DOCKER_INFLUXDB_ADMIN_USER}
+  #     - DOCKER_INFLUXDB_ADMIN_PASSWORD=${DOCKER_INFLUXDB_ADMIN_PASSWORD}
+  #   networks:
+  #     - gilgoblin
+  #   ports:
+  #     - '8086:8086'
+  #   volumes:
+  #     - ./benchmarks/influxdb:/var/lib/influxdb
 
-  gilgoblin-prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    command:
-      - --web.enable-remote-write-receiver
-      - --enable-feature=native-histograms
-      - --config.file=/etc/prometheus/prometheus.yml
-    healthcheck:
-      test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - gilgoblin
-    ports:
-      - "9090:9090"
-    depends_on:
-      - gilgoblin-influxdb
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '50m'
-    volumes:
-      - ./benchmarks/prometheus:/etc/prometheus
-    restart: unless-stopped
+  # gilgoblin-prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   command:
+  #     - --web.enable-remote-write-receiver
+  #     - --enable-feature=native-histograms
+  #     - --config.file=/etc/prometheus/prometheus.yml
+  #   healthcheck:
+  #     test: [ "CMD-SHELL" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - gilgoblin
+  #   ports:
+  #     - "9090:9090"
+  #   depends_on:
+  #     - gilgoblin-influxdb
+  #   logging:
+  #     driver: 'json-file'
+  #     options:
+  #       max-size: '50m'
+  #   volumes:
+  #     - ./benchmarks/prometheus:/etc/prometheus
+  #   restart: unless-stopped
 
-  gilgoblin-node-exporter:
-    image: prom/node-exporter
-    container_name: node-exporter
-    healthcheck:
-      test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '50m'
-    depends_on:
-      - gilgoblin-prometheus        
-    networks:
-      - gilgoblin
-    ports:
-      - "9100:9100"
-    volumes:
-      - ./benchmarks:/etc/node-exporter
-    restart: unless-stopped
+  # gilgoblin-node-exporter:
+  #   image: prom/node-exporter
+  #   container_name: node-exporter
+  #   healthcheck:
+  #     test: [ "CMD-SHELL" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   logging:
+  #     driver: 'json-file'
+  #     options:
+  #       max-size: '50m'
+  #   depends_on:
+  #     - gilgoblin-prometheus        
+  #   networks:
+  #     - gilgoblin
+  #   ports:
+  #     - "9100:9100"
+  #   volumes:
+  #     - ./benchmarks:/etc/node-exporter
+  #   restart: unless-stopped
 
-  gilgoblin-grafana:
-    image: grafana/grafana
-    container_name: grafana
-    healthcheck:
-      test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '50m'
-    networks:
-      - gilgoblin
-    environment:
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
-      - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
-      - GF_AUTH_BASIC_ENABLED=${GF_AUTH_BASIC_ENABLED}
-    ports:
-      - "${PORT_GRAFANA}:3000"
-    volumes:
-      - ./benchmarks/grafana:/var/lib/grafana
-    restart: unless-stopped
+  # gilgoblin-grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   healthcheck:
+  #     test: [ "CMD-SHELL" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   logging:
+  #     driver: 'json-file'
+  #     options:
+  #       max-size: '50m'
+  #   networks:
+  #     - gilgoblin
+  #   environment:
+  #     - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
+  #     - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
+  #     - GF_AUTH_BASIC_ENABLED=${GF_AUTH_BASIC_ENABLED}
+  #   ports:
+  #     - "${PORT_GRAFANA}:3000"
+  #   volumes:
+  #     - ./benchmarks/grafana:/var/lib/grafana
+  #   restart: unless-stopped
 
   ### Benchmarks ###
 

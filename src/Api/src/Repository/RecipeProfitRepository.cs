@@ -53,7 +53,7 @@ public class RecipeProfitRepository(IServiceProvider serviceProvider, ICalculate
         return await dbContext.RecipeProfit
             .Where(p =>
                 p.WorldId == worldId &&
-                ids.Any(i => i == p.Id))
+                ids.Any(i => i == p.RecipeId))
             .ToListAsync();
     }
 

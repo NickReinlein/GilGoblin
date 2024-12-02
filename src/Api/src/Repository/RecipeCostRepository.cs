@@ -45,7 +45,7 @@ public class RecipeCostRepository(IServiceProvider serviceProvider, ICalculatedM
         var recipeCostPocos = dbContext.RecipeCost
             .Where(p =>
                 p.WorldId == worldId &&
-                ids.Contains(p.Id))
+                ids.Contains(p.RecipeId))
             .ToList();
         return recipeCostPocos;
     }

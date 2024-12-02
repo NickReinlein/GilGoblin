@@ -57,7 +57,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
             logger.LogInformation("Total call time: {CallTime}ms", timer.Elapsed.TotalMilliseconds);
 
             //temporarily fetch less data while developing
-            updated = new List<WorldWebPoco> { new(34, "Brynhildr"), new(35, "Famfrit"), new(36, "Lich") };
+            updated = new List<WorldWebPoco> { new (21, "Ravana"), new(22, "Bismarck"),  new(34, "Brynhildr") };
             ///// 
             return updated;
         }

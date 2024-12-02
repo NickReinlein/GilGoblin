@@ -27,12 +27,11 @@ public class Startup(IConfiguration configuration)
         Api.Startup.AddGoblinDatabases(services, configuration);
         Api.Startup.AddGoblinCaches(services);
 
-        services
-            .AddSingleton<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>()
+        services.AddSingleton<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>()
             .AddSingleton<IDataSaver<RecipeProfitPoco>, DataSaver<RecipeProfitPoco>>()
             .AddSingleton<IPriceSaver, PriceSaver>()
-            .AddSingleton<IAccountant<RecipeCostPoco>, RecipeCostAccountant>()
-            .AddSingleton<IAccountant<RecipeProfitPoco>, RecipeProfitAccountant>()
+            .AddSingleton<IAccountant, RecipeCostAccountant>()
+            .AddSingleton<IAccountant, RecipeProfitAccountant>()
             .AddHostedService<RecipeCostAccountant>()
             .AddHostedService<RecipeProfitAccountant>();
     }
