@@ -13,20 +13,34 @@ const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
     {field: 'recipeId', headerName: 'Recipe Id', minWidth: 70, maxWidth: 100, type: 'number'},
     {field: 'worldId', headerName: 'World Id', minWidth: 70, maxWidth: 100, type: 'number'},
     {
-        field: 'isHq',
-        headerName: 'Is HQ',
-        minWidth: 70,
-        maxWidth: 100,
-        type: 'boolean',
-        cellClassName: () => 'whiteCheckmark'
+        field: 'isHq', headerName: 'Is HQ', minWidth: 50, maxWidth: 75, type: 'boolean',
+        cellClassName: params => params.value ? 'checkMark' : 'xMark'
     },
     {field: 'itemId', headerName: 'Item Id', minWidth: 70, maxWidth: 100, type: 'number'},
     {field: 'name', headerName: 'Name', minWidth: 100, maxWidth: 250, type: 'string', flex: 1},
-    {field: 'salePrice', headerName: 'Sale Price', type: 'number', minWidth: 100, maxWidth: 150, flex: 1},
-    {field: 'craftingCost', headerName: 'Crafting Cost', type: 'number', minWidth: 100, maxWidth: 150, flex: 1},
-    {field: 'profit', headerName: 'Profit', type: 'number', minWidth: 150, maxWidth: 200, flex: 1,
-        cellClassName: (params) => params.value > 0 ? 'positiveProfit' : 'negativeProfit'},
-    {field: 'resultQuantity', headerName: 'Qty', type: 'number', width: 50, flex: 1},
+    {
+        field: 'salePrice',
+        headerName: 'Sale Price',
+        type: 'number',
+        minWidth: 100,
+        maxWidth: 150,
+        flex: 1,
+        display: 'text'
+    },
+    {
+        field: 'craftingCost',
+        headerName: 'Crafting Cost',
+        type: 'number',
+        minWidth: 100,
+        maxWidth: 150,
+        flex: 1,
+        display: 'text'
+    },
+    {
+        field: 'profit', headerName: 'Profit', type: 'number', minWidth: 100, maxWidth: 150, flex: 1, display: 'text',
+        cellClassName: params => params.value > 0 ? 'positiveValues' : 'negativeValues'
+    },
+    {field: 'resultQuantity', headerName: 'Qty', type: 'number', width: 50, flex: 1, display: 'text'},
     {field: 'iconId', headerName: 'Icon Id', type: 'number', width: 50, flex: 1},
     {
         field: 'updated',
@@ -35,6 +49,7 @@ const profitTableHeaders: GridColDef<(Profit)[number]>[] = [
         maxWidth: 400,
         flex: 1,
         type: 'string',
+        display: 'text',
         valueGetter: (value, row) => convertTimestampToAge(row.updated),
     },
 ];
