@@ -96,7 +96,8 @@ public class CraftRepository : ICraftRepository
 
         foreach (var profit in profitList)
         {
-            var cached = _cache.Get(new TripleKey(worldId, profit.RecipeId, profit.IsHq));
+            var key = new TripleKey(worldId, profit.RecipeId, profit.IsHq);
+            var cached = _cache.Get(key);
             if (cached is not null)
             {
                 craftSummaries.Add(cached);
@@ -128,7 +129,6 @@ public class CraftRepository : ICraftRepository
                 continue;
             }
 
-
             var item = itemList.FirstOrDefault(i =>
                 i.Id == recipeList.FirstOrDefault(r => r.Id == profit.RecipeId)?.TargetItemId);
             if (item is null)
@@ -159,7 +159,7 @@ public class CraftRepository : ICraftRepository
                 Updated = profit.LastUpdated
             };
             craftSummaries.Add(summary);
-            _cache.Add(new TripleKey(summary.WorldId, summary.RecipeId, summary.IsHq), summary);
+            _cache.Add(key, summary);
         }
 
         return Task.FromResult(craftSummaries);

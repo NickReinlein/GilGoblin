@@ -3,46 +3,43 @@ import {convertCraftToProfit} from "./CraftToProfitConverter";
 
 describe('convertCraftToProfit', () => {
     const mockCraft: Craft = {
-        itemId: 1,
+        recipeId: 301,
         worldId: 2,
-        averageListingPrice: 10,
-        averageSold: 8,
-        recipeCost: 5,
-        recipeProfitVsSold: 3,
-        recipeProfitVsListings: 2,
-        updated: '2022-01-01',
+        isHq: true,
+        itemId: 101,
+        salePrice: 10,
+        craftingCost: 3,
+        profit: 7,
+        updated: '2024-11-25T22:03:33.463499+00:00',
         itemInfo: {
             id: 101,
             iconId: 201,
             name: 'CraftedItem',
         },
-        recipe: {
+        recipeInfo: {
             id: 301,
             resultQuantity: 2,
             canHq: true,
-            targetItemId: 1
-        },
-        ingredients: [],
+            targetItemId: 101,
+            canQuickSynth: true
+        }
     };
 
     it('should convert Craft to Profit correctly', () => {
         const result: Profit = convertCraftToProfit(mockCraft);
 
         expect(result).toEqual({
-            itemId: 1,
-            worldId: 2,
             recipeId: 301,
-            profitSold: 3,
-            profitListings: 2,
-            cost: 5,
-            averageListing: 10,
-            averageSold: 8,
+            worldId: 2,
+            itemId: 101,
+            isHq: true,
+            salePrice: 10,
+            craftingCost: 3,
+            profit: 7,
             resultQuantity: 2,
             name: 'CraftedItem',
             iconId: 201,
-            canHq: true,
-            ingredients: [],
-            updated: '2022-01-01',
+            updated: '2024-11-25T22:03:33.463499+00:00'
         });
     });
 });

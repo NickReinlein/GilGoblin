@@ -7,8 +7,8 @@ interface SearchComponentProps {
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = ({onClick}) => {
-    const [id, setId] = useState(1639);
-    const [world, setWorld] = useState(34);
+    const [id, setId] = useState(2855);
+    const [world, setWorld] = useState(21);
 
     const handleIdChange = (newId: number) => {
         setId(newId);

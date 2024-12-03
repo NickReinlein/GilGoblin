@@ -23,7 +23,7 @@ const itemContent = (item: Item | null | undefined) =>
         <Typography className="MuiTypography-description">
             {item?.description ?? 'Description missing'}
         </Typography>
-        <Typography className="MuiTypography-details">
+        <Typography className="MuiTypography-price_details">
             <span>Level: {item?.level}</span><br/>
             <span>Icon Id: {item?.iconId}</span><br/>
             <span>Stack size: {item?.stackSize}</span><br/>

@@ -16,15 +16,43 @@ export interface Item {
 }
 
 export interface Price {
-    worldId: number,
-    itemId: number,
-    lastUploadTime?: number,
-    averageListingPrice: number;
-    averageListingPriceNQ?: number;
-    averageListingPriceHQ?: number;
-    averageSold: number;
-    averageSoldNQ?: number;
-    averageSoldHQ?: number;
+    id: number;
+    itemId: number;
+    worldId: number;
+    isHq: boolean;
+    updated: string;
+    minListing?: PriceDataPointPoco | null;
+    recentPurchase?: PriceDataPointPoco | null;
+    averageSalePrice?: PriceDataPointPoco | null;
+    dailySaleVelocity?: DailySaleVelocityPoco | null;
+}
+
+export interface PriceDataPointPoco {
+    id: number;
+    itemId: number;
+    worldId: number;
+    isHq: boolean;
+    worldDataPoint?: PriceDataPoco | null;
+    dcDataPoint?: PriceDataPoco | null;
+    regionDataPoint?: PriceDataPoco | null;
+}
+
+export interface PriceDataPoco {
+    id: number;
+    priceType: string;
+    price: number;
+    worldId: number;
+    timestamp: number;
+}
+
+export interface DailySaleVelocityPoco {
+    id: number;
+    itemId: number;
+    worldId: number;
+    isHq: boolean;
+    world: number;
+    dc: number;
+    region: number;
 }
 
 export interface Recipe {
@@ -64,38 +92,36 @@ export interface Ingredient {
 }
 
 export interface Craft {
-    itemId: number;
+    recipeId: number;
     worldId: number;
+    isHq: boolean;
+    itemId: number;
     itemInfo?: Item;
-    recipe?: Recipe;
-    averageListingPrice: number;
-    averageSold: number;
-    recipeCost: number;
-    recipeProfitVsSold: number;
-    recipeProfitVsListings: number;
-    ingredients?: Ingredient[];
+    recipeInfo?: Recipe;
+    salePrice: number;
+    craftingCost: number;
+    profit: number;
     updated: string;
     [key: string]: any;
 }
 
 export interface Profit {
-    itemId: number;
-    worldId: number;
     recipeId: number;
-    profitSold: number;
-    profitListings: number;
-    cost: number;
-    averageListing: number;
-    averageSold: number;
-    craftType?: number;
+    worldId: number;
+    isHq: boolean;
+    itemId: number;
+    salePrice: number;
+    craftingCost: number;
+    profit: number;
     resultQuantity: number;
     name?: string | null;
     iconId?: number;
-    canHq?: boolean;
-    ingredients?: Ingredient[];
     updated: string;
     [key: string]: any;
 }
 
-export interface Profits extends Array<Profit>{}
-export interface Crafts extends Array<Craft>{}
+export interface Profits extends Array<Profit> {
+}
+
+export interface Crafts extends Array<Craft> {
+}

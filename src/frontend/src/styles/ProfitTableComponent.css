@@ -1,15 +1,7 @@
-.MuiDataGrid-root .MuiDataGrid-cell.whiteCheckmark .MuiSvgIcon-root {
-    color: white;
-}
-
-.MuiDataGrid-root .MuiDataGrid-cell.whiteCheckmark .MuiSvgIcon-root {
-    color: white;
-}
-
-.positiveProfit {
-    color: #32fa32;
-}
-
-.negativeProfit {
+.MuiDataGrid-cell.xMark .MuiDataGrid-booleanCell[data-value="false"] {
     color: #fa6464;
+}
+
+.MuiDataGrid-cell.checkMark .MuiDataGrid-booleanCell[data-value="true"] {
+    color: #32fa32;
 }
