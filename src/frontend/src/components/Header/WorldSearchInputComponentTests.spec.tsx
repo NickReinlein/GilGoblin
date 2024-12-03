@@ -54,4 +54,31 @@ describe('WorldSearchInputComponent', () => {
         expect(DataFetcher.fetchData).toHaveBeenCalledWith('World', null, null);
         expect(console.error).toHaveBeenCalled();
     });
+
+    it('handles the world id being null gracefully', async () => {
+        expect(() => {
+            render(<WorldSearchInputComponent world={null} />);
+        }).not.toThrow();
+    });
+
+    test('invokes onWorldChange when a new option is selected', () => {
+        const mockOnWorldChange = jest.fn();
+        const worlds = [
+            { id: 1, name: 'World One' },
+            { id: 2, name: 'World Two' },
+        ];
+
+        render(
+            <WorldSearchInputComponent
+                world={null}
+                worlds={worlds}
+                onWorldChange={mockOnWorldChange}
+            />
+        );
+        const dropdown = screen.getByLabelText('World');
+        fireEvent.change(dropdown, { target: { value: '2' } });
+
+        expect(mockOnWorldChange).toHaveBeenCalledTimes(1);
+        expect(mockOnWorldChange).toHaveBeenCalledWith(2);
+    });
 });

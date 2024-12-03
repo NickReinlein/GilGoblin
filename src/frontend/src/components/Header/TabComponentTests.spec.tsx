@@ -45,7 +45,7 @@ describe('TabComponent', () => {
         fireEvent.click(screen.getByText(buttonTitles[2]));
         fireEvent.click(screen.getByText('Search'));
 
-        expect(DataFetcher.fetchData).toHaveBeenCalledWith(buttonTitles[2], 1639, 34);
+        expect(DataFetcher.fetchData).toHaveBeenCalledWith(buttonTitles[2], 2855, 21);
         expect(screen.getByText(buttonTitles[2])).toHaveClass('tab-active');
     });
 
@@ -57,7 +57,7 @@ describe('TabComponent', () => {
         fireEvent.click(screen.getByText(buttonTitles[3]));
         fireEvent.click(screen.getByText('Search'));
 
-        expect(DataFetcher.fetchData).toHaveBeenCalledWith(buttonTitles[3], 1639, 34);
+        expect(DataFetcher.fetchData).toHaveBeenCalledWith(buttonTitles[3], 2855, 21);
         expect(screen.getByText('Search')).toBeDefined();
     });
 });

@@ -11,17 +11,19 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Fetcher;
 
-public abstract class SingleDataFetcher<T> : DataFetcher<T>, ISingleDataFetcher<T>
+public interface ISingleDataFetcher<T> : IDataFetcher<T>
     where T : class, IIdentifiable
 {
-    protected SingleDataFetcher(
-        string basePath,
-        ILogger<SingleDataFetcher<T>> logger,
-        HttpClient? client = null)
-        : base(basePath, logger, client)
-    {
-    }
+    Task<T?> FetchByIdAsync(int id, int? world = null);
+}
 
+public abstract class SingleDataFetcher<T>(
+    string basePath,
+    ILogger<SingleDataFetcher<T>> logger,
+    HttpClient? client = null)
+    : DataFetcher<T>(basePath, logger, client), ISingleDataFetcher<T>
+    where T : class, IIdentifiable
+{
     public override async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null, CancellationToken ct = default)
     {
         var result = new List<T>();
@@ -53,18 +55,14 @@ public abstract class SingleDataFetcher<T> : DataFetcher<T>, ISingleDataFetcher<
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            return await ReadResponseContentAsync(response.Content);
+            var result = await response.Content.ReadFromJsonAsync<T>() ?? throw new InvalidOperationException();
+            return result;
         }
         catch
         {
             Logger.LogError($"Failed GET call for {typeof(T).Name} with path: {path}");
             return null;
         }
-    }
-
-    public virtual async Task<T> ReadResponseContentAsync(HttpContent content)
-    {
-        return await content.ReadFromJsonAsync<T>() ?? throw new InvalidOperationException();
     }
 
     protected virtual string GetUrlPathFromEntry(int id, int? worldId = null)

@@ -59,7 +59,7 @@ public class PriceFetcherTests : FetcherTests
         var idList = returnedList.Select(i => i.ItemId);
         _handler
             .When(FetchPricesAsyncUrl)
-            .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(returnedList));
+            .Respond(HttpStatusCode.NotFound, contentType, JsonSerializer.Serialize(returnedList));
 
         var result = await _fetcher.FetchByIdsAsync(idList, worldId);
 
@@ -83,7 +83,7 @@ public class PriceFetcherTests : FetcherTests
             .When(FetchPricesAsyncUrl)
             .Respond(
                 HttpStatusCode.OK,
-                ContentType,
+                contentType,
                 JsonSerializer.Serialize(GetPocoList())
             );
 
@@ -98,7 +98,7 @@ public class PriceFetcherTests : FetcherTests
         var idList = GetPocoList().Select(i => i.ItemId).ToList();
         _handler
             .When(FetchPricesAsyncUrl)
-            .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
+            .Respond(HttpStatusCode.OK, contentType, "{ alksdfjs }");
 
         var result = await _fetcher.FetchByIdsAsync(idList, worldId);
 
@@ -161,7 +161,7 @@ public class PriceFetcherTests : FetcherTests
 
         _handler
             .When(FetchPricesAsyncUrl)
-            .Respond(statusCode, ContentType, responseContent);
+            .Respond(statusCode, contentType, responseContent);
         return idList;
     }
 

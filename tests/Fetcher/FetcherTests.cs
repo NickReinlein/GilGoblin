@@ -9,7 +9,7 @@ public class FetcherTests
     protected HttpClient _client;
     protected MockHttpMessageHandler _handler;
 
-    protected static readonly string ContentType = "application/json";
+    protected const string contentType = "application/json";
 
     [SetUp]
     public virtual void SetUp()

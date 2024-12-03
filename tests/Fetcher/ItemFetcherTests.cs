@@ -52,7 +52,7 @@ public class ItemFetcherTests : FetcherTests
         var idList = FilterOutNullIds(GetMultipleWebPocos());
         _handler
             .When(GetUrl(idList[0]))
-            .Respond(HttpStatusCode.NotFound, ContentType, JsonSerializer.Serialize(idList));
+            .Respond(HttpStatusCode.NotFound, contentType, JsonSerializer.Serialize(idList));
 
         var result = await _fetcher.FetchByIdsAsync(idList);
 
@@ -78,7 +78,7 @@ public class ItemFetcherTests : FetcherTests
             .When(GetUrl(idList[0]))
             .Respond(
                 HttpStatusCode.OK,
-                ContentType,
+                contentType,
                 JsonSerializer.Serialize("{}")
             );
 
@@ -93,7 +93,7 @@ public class ItemFetcherTests : FetcherTests
         var idList = FilterOutNullIds(GetMultipleWebPocos());
         _handler
             .When(GetUrl(idList[0]))
-            .Respond(HttpStatusCode.OK, ContentType, "{ alksdfjs }");
+            .Respond(HttpStatusCode.OK, contentType, "{ alksdfjs }");
 
         var result = await _fetcher.FetchByIdsAsync(idList);
 
@@ -133,7 +133,7 @@ public class ItemFetcherTests : FetcherTests
     {
         _handler
             .When(GetUrl(ItemId1))
-            .Respond(HttpStatusCode.OK, ContentType, GetItemJsonResponse1());
+            .Respond(HttpStatusCode.OK, contentType, GetItemJsonResponse1());
 
         var result = await _fetcher.FetchByIdAsync(ItemId1);
 
@@ -153,11 +153,11 @@ public class ItemFetcherTests : FetcherTests
             if (id == ItemId1)
                 _handler
                     .When(url)
-                    .Respond(statusCode, ContentType, GetItemJsonResponse1());
+                    .Respond(statusCode, contentType, GetItemJsonResponse1());
             else if (id == ItemId2)
                 _handler
                     .When(url)
-                    .Respond(statusCode, ContentType, GetItemJsonResponse2());
+                    .Respond(statusCode, contentType, GetItemJsonResponse2());
         }
 
         return pocoList.Select(i => i.GetId()).ToList();
@@ -181,9 +181,33 @@ public class ItemFetcherTests : FetcherTests
     private string GetUrl(int id) => $"https://xivapi.com/item/{id}";
 
     public static string GetItemJsonResponse1() =>
-        """{"CanBeHq":1,"Description":"","ID":10972,"IconID":55724,"LevelItem":133,"Name":"Hardsilver Bangle of Fending","PriceLow":119,"PriceMid":20642,"StackSize":1}""";
+        """
+        {
+        	"name": "Steel Longsword",
+        	"description": null,
+        	"iconId": 30435,
+        	"level": 36,
+        	"stackSize": 1,
+        	"priceMid": 4795,
+        	"priceLow": 41,
+        	"canHq": true,
+        	"id": 10972
+        }
+        """;
 
     public static string GetItemJsonResponse2() =>
-        """{"CanBeHq":1,"Description":"","ID":10973,"IconID":55732,"LevelItem":139,"Name":"Opal Bracelet of Fending","PriceLow":124,"PriceMid":21575,"StackSize":1}""";
+        """
+        {
+        	"name": "Steel Axe",
+        	"description": null,
+        	"iconId": 30436,
+        	"level": 36,
+        	"stackSize": 1,
+        	"priceMid": 5544,
+        	"priceLow": 4354,
+        	"canHq": true,
+        	"id": 10973
+        }
+        """;
 
 }

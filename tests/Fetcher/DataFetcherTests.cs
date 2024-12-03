@@ -34,6 +34,16 @@ public class DataFetcherTests : FetcherTests
 
         Assert.That(result, Is.Empty);
     }
+    
+        
+    [TestCase(0)]
+    [TestCase(-1)]
+    public async Task GivenAFetchByIdsAsync_WhenReceivingAnInvalidId_ThenAnEmptyListIsReturned(int id)
+    {
+        var result = await _fetcher.FetchByIdsAsync(new List<int> { id });
+
+        Assert.That(result, Is.Empty);
+    }
 
     [Test]
     public async Task GivenAFetchByIdsAsync_WhenReceivingASingleValidEntry_ThenThatEntryIsReturned()
@@ -61,8 +71,30 @@ public class DataFetcherTests : FetcherTests
 
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.That(result, Has.Count.EqualTo(2));
-        Assert.That(result[0].Id, Is.EqualTo(appleId1));
-        Assert.That(result[1].Id, Is.EqualTo(appleId2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result[0].Id, Is.EqualTo(appleId1));
+            Assert.That(result[1].Id, Is.EqualTo(appleId2));
+        });
+    }
+    
+    [Test]
+    public async Task GivenAFetchByIdsAsync_WhenReceivingMultipleEntries_ThenEachEntryIsFetched()
+    {
+        const int appleId1 = 23;
+        const int appleId2 = 78;
+        SetupValidResponse(appleId1, appleId2);
+        var idList = new List<int> { appleId1, appleId2 };
+
+        var result = await _fetcher.FetchByIdsAsync(idList);
+
+        Assert.That(result, Is.Not.Null.Or.Empty);
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result[0].Id, Is.EqualTo(appleId1));
+            Assert.That(result[1].Id, Is.EqualTo(appleId2));
+        });
     }
 
     private void SetupValidResponse(int appleId1, int? appleId2 = null)
@@ -74,7 +106,7 @@ public class DataFetcherTests : FetcherTests
         var jsonObject = JsonSerializer.Serialize(responseObject);
         var expectedPath = $"{basePath}{appleId1}";
         expectedPath += appleId2 is not null ? $",{appleId2}" : "";
-        _handler.When(expectedPath).Respond(HttpStatusCode.OK, ContentType, jsonObject);
+        _handler.When(expectedPath).Respond(HttpStatusCode.OK, contentType, jsonObject);
     }
 }
 

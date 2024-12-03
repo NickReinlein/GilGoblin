@@ -100,7 +100,7 @@ public class WorldFetcherTests : FetcherTests
 
         _handler
             .When(FetchWorldsAsyncUrl)
-            .Respond(statusCode, ContentType, responseContent);
+            .Respond(statusCode, contentType, responseContent);
     }
 
     protected static IEnumerable<WorldWebPoco> GetMultipleNewPocos()

@@ -32,7 +32,7 @@ describe('SearchComponent', () => {
 
         fireEvent.click(searchButton);
 
-        expect(onClickMock).toHaveBeenCalledWith(1639, 34);
+        expect(onClickMock).toHaveBeenCalledWith(2855, 21);
     });
 
     it('calls onClick handler with selected values when Search button is clicked', async () => {

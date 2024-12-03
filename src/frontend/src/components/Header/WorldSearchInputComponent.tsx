@@ -30,6 +30,7 @@ const WorldSearchInputComponent: React.FC<WorldSearchInputProps> = ({world, onWo
             <label className="search-label" htmlFor="worldInput"> World </label>
             <select
                 className="search-dropdown"
+                aria-label="World Selector"
                 id="worldInput"
                 value={world === null ? '' : world}
                 onChange={(e) => {

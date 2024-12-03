@@ -31,7 +31,7 @@ public class MarketableItemIdsFetcherTests : FetcherTests
         var idList = GetIdList();
         _handler
             .When(GetUrl)
-            .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(idList));
+            .Respond(HttpStatusCode.OK, contentType, JsonSerializer.Serialize(idList));
 
         var result = await _fetcher.GetMarketableItemIdsAsync();
 
@@ -59,7 +59,7 @@ public class MarketableItemIdsFetcherTests : FetcherTests
         var idList = GetIdList();
         _handler
             .When(GetUrl)
-            .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize(idList));
+            .Respond(HttpStatusCode.OK, contentType, JsonSerializer.Serialize(idList));
 
         var result = await _fetcher.GetMarketableItemIdsAsync();
 
@@ -76,7 +76,7 @@ public class MarketableItemIdsFetcherTests : FetcherTests
     {
         _handler
             .When(GetUrl)
-            .Respond(HttpStatusCode.OK, ContentType, JsonSerializer.Serialize("{asdfasd}"));
+            .Respond(HttpStatusCode.OK, contentType, JsonSerializer.Serialize("{asdfasd}"));
 
         var result = await _fetcher.GetMarketableItemIdsAsync();
 
@@ -131,7 +131,7 @@ public class MarketableItemIdsFetcherTests : FetcherTests
 
         _handler
             .When(GetUrl)
-            .Respond(statusCode, ContentType, responseContent);
+            .Respond(statusCode, contentType, responseContent);
     }
 
     public static IEnumerable<ItemWebPoco> GetMultipleNewPocos()
