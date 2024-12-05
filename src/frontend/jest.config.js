@@ -12,6 +12,11 @@ module.exports = {
     coveragePathIgnorePatterns: [
         "/node_modules/",
         "index.tsx",
-        "reportWebVitals.ts"
+        "reportWebVitals.ts",
+        "src/index.tsx",
+        "src/reportWebVitals.ts",
+        "src/dev/index.tsx",
+        "src/dev/useInitial.ts",
+        "src/dev/previews.tsx",
     ],
 };

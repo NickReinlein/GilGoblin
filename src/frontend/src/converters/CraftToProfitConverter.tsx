@@ -5,19 +5,20 @@ export function convertCraftToProfit(craft: Craft): Profit {
 }
 
 export function convertMultipleCraftsToProfits(crafts: Crafts): Profits {
-    return crafts?.length
-        ? crafts.map((craft) => {
+    return crafts.length == 0
+        ? []
+        : crafts.map((craft) => {
             const {
                 recipeId,
                 worldId,
                 isHq,
                 itemId,
+                itemInfo,
+                recipeInfo,
                 salePrice,
                 craftingCost,
                 profit,
                 updated,
-                itemInfo,
-                recipeInfo,
             } = craft;
 
             const resultQuantity = recipeInfo?.resultQuantity ?? 0;
@@ -29,14 +30,13 @@ export function convertMultipleCraftsToProfits(crafts: Crafts): Profits {
                 worldId,
                 isHq,
                 itemId,
+                resultQuantity,
                 salePrice,
                 craftingCost,
                 profit,
-                resultQuantity,
                 name,
                 iconId,
                 updated
             };
-        })
-        : [];
+        });
 }

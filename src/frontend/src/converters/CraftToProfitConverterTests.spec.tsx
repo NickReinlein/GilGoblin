@@ -1,5 +1,5 @@
 import {Craft, Profit} from "../types/types";
-import {convertCraftToProfit} from "./CraftToProfitConverter";
+import {convertCraftToProfit, convertMultipleCraftsToProfits} from "./CraftToProfitConverter";
 
 describe('convertCraftToProfit', () => {
     const mockCraft: Craft = {
@@ -7,10 +7,6 @@ describe('convertCraftToProfit', () => {
         worldId: 2,
         isHq: true,
         itemId: 101,
-        salePrice: 10,
-        craftingCost: 3,
-        profit: 7,
-        updated: '2024-11-25T22:03:33.463499+00:00',
         itemInfo: {
             id: 101,
             iconId: 201,
@@ -22,7 +18,11 @@ describe('convertCraftToProfit', () => {
             canHq: true,
             targetItemId: 101,
             canQuickSynth: true
-        }
+        },
+        salePrice: 10,
+        craftingCost: 3,
+        profit: 7,
+        updated: '2024-11-25T22:03:33.463499+00:00'
     };
 
     it('should convert Craft to Profit correctly', () => {
@@ -41,5 +41,11 @@ describe('convertCraftToProfit', () => {
             iconId: 201,
             updated: '2024-11-25T22:03:33.463499+00:00'
         });
+    });
+
+    it('should handle an empty Crafts gracefully', () => {
+        const result = convertMultipleCraftsToProfits([]);
+
+        expect(result).toEqual([]);
     });
 });

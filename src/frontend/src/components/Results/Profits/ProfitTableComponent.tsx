@@ -61,7 +61,7 @@ export const convertTimestampToAge = (timestamp: string): string => {
     return timeAgo(ageInSeconds);
 }
 
-const timeAgo = (ageInSeconds: number) => {
+export const timeAgo = (ageInSeconds: number) => {
     switch (true) {
         case ageInSeconds < 60:
             return `${ageInSeconds} seconds ago`;

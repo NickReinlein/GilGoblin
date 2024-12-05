@@ -110,10 +110,10 @@ export interface Profit {
     worldId: number;
     isHq: boolean;
     itemId: number;
+    resultQuantity: number;
     salePrice: number;
     craftingCost: number;
     profit: number;
-    resultQuantity: number;
     name?: string | null;
     iconId?: number;
     updated: string;

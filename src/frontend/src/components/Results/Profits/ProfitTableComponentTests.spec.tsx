@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import {Crafts} from "../../../types/types";
-import ProfitTableComponent from "./ProfitTableComponent";
+import ProfitTableComponent, {timeAgo} from "./ProfitTableComponent";
 
 describe('ProfitTableComponent', () => {
     test('renders a message when crafts are empty', () => {
@@ -152,6 +152,19 @@ describe('ProfitTableComponent', () => {
             "updated": "2024-01-02T23:10:40.4266199+00:00"
         }
     ];
+});
+
+describe('timeAgo function', () => {
+    test.each([
+        [30, '30 seconds ago'],
+        [90, '1 minutes ago'],
+        [5400, '1 hours ago'],
+        [86400, '1 days ago'],
+        [172800, '2 days ago'],
+        [259200, '3 days ago'],
+    ])('converts %d seconds into "%s"', (input, expected) => {
+        expect(timeAgo(input)).toBe(expected);
+    });
 });
 
 const columnHeaderToFieldMapping = (header: string) => {
