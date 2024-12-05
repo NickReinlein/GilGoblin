@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using GilGoblin.Database.Pocos;
@@ -24,7 +25,8 @@ public abstract class SingleDataFetcher<T>(
     : DataFetcher<T>(basePath, logger, client), ISingleDataFetcher<T>
     where T : class, IIdentifiable
 {
-    public override async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null, CancellationToken ct = default)
+    public override async Task<List<T>> FetchByIdsAsync(IEnumerable<int> ids, int? world = null,
+        CancellationToken ct = default)
     {
         var result = new List<T>();
         foreach (var id in ids.ToList())
@@ -55,14 +57,18 @@ public abstract class SingleDataFetcher<T>(
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            var result = await response.Content.ReadFromJsonAsync<T>() ?? throw new InvalidOperationException();
-            return result;
+            return await ReadResponseContentAsync(response.Content);
         }
         catch
         {
             Logger.LogError($"Failed GET call for {typeof(T).Name} with path: {path}");
             return null;
         }
+    }
+
+    public virtual async Task<T> ReadResponseContentAsync(HttpContent content)
+    {
+        return await content.ReadFromJsonAsync<T>(GetSerializerOptions()) ?? throw new InvalidOperationException();
     }
 
     protected virtual string GetUrlPathFromEntry(int id, int? worldId = null)
@@ -77,4 +83,9 @@ public abstract class SingleDataFetcher<T>(
 
         return sb.ToString();
     }
+
+    public virtual JsonSerializerOptions GetSerializerOptions() => new()
+    {
+        PropertyNameCaseInsensitive = true, IncludeFields = true
+    };
 }
