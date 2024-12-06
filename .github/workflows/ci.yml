@@ -63,4 +63,4 @@ jobs:
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity normal --filter "Category!=Component" --parallel
+        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
