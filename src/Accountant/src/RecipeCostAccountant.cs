@@ -61,7 +61,7 @@ public class RecipeCostAccountant(
                         }
 
                         var result = await calc.CalculateCraftingCostForRecipe(worldId, recipeId, quality);
-                        if (result > CraftingCalculator.ErrorDefaultCost - 20000 || result < 0)
+                        if (result > CraftingCalculator.ErrorDefaultCost - 20000 || result < 1)
                         {
                             throw new Exception(
                                 $"Failed to calculate crafting cost of recipe {recipeId} for world {worldId}, quality {quality}");

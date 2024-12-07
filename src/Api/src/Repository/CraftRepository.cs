@@ -22,44 +22,24 @@ public interface ICraftRepository
         IEnumerable<RecipeProfitPoco> profits);
 }
 
-public class CraftRepository : ICraftRepository
+public class CraftRepository(
+    IPriceRepository<PricePoco> priceRepo,
+    IRecipeRepository recipeRepository,
+    IRecipeCostRepository recipeCostRepository,
+    IRecipeProfitRepository recipeProfitRepository,
+    IItemRepository itemRepository,
+    IWorldRepository worldRepository,
+    ICraftCache cache,
+    ILogger<CraftRepository> logger)
+    : ICraftRepository
 {
-    private readonly IPriceRepository<PricePoco> _priceRepository;
-    private readonly IRecipeRepository _recipeRepository;
-    private readonly IRecipeCostRepository _recipeCostRepository;
-    private readonly IRecipeProfitRepository _recipeProfitRepository;
-    private readonly IItemRepository _itemRepository;
-    private readonly IWorldRepository _worldRepository;
-    private readonly ICraftCache _cache;
-    private readonly ILogger<CraftRepository> _logger;
-
-    public CraftRepository(
-        IPriceRepository<PricePoco> priceRepo,
-        IRecipeRepository recipeRepository,
-        IRecipeCostRepository recipeCostRepository,
-        IRecipeProfitRepository recipeProfitRepository,
-        IItemRepository itemRepository,
-        IWorldRepository worldRepository,
-        ICraftCache cache,
-        ILogger<CraftRepository> logger)
-    {
-        _priceRepository = priceRepo;
-        _recipeRepository = recipeRepository;
-        _recipeCostRepository = recipeCostRepository;
-        _recipeProfitRepository = recipeProfitRepository;
-        _itemRepository = itemRepository;
-        _worldRepository = worldRepository;
-        _logger = logger;
-        _cache = cache;
-    }
-
     public async Task<ActionResult<List<CraftSummaryPoco>>> GetBestAsync(int worldId)
     {
         if (!ValidateWorldInput(worldId))
             return new BadRequestResult();
 
         var profits =
-            (await _recipeProfitRepository.GetAllAsync(worldId))
+            (await recipeProfitRepository.GetAllAsync(worldId))
             .OrderByDescending(rp => rp.Amount)
             .Take(100)
             .ToList();
@@ -67,12 +47,12 @@ public class CraftRepository : ICraftRepository
             return new NotFoundResult();
 
         var recipeIds = profits.Select(i => i.RecipeId).ToList();
-        var recipeCosts = await _recipeCostRepository.GetMultipleAsync(worldId, recipeIds);
-        var recipes = _recipeRepository.GetMultiple(recipeIds).ToList();
+        var recipeCosts = await recipeCostRepository.GetMultipleAsync(worldId, recipeIds);
+        var recipes = recipeRepository.GetMultiple(recipeIds).ToList();
 
-        var items = _itemRepository.GetMultiple(recipes.Select(i => i.TargetItemId));
-        var nqPrices = _priceRepository.GetMultiple(worldId, recipes.Select(i => i.TargetItemId), false);
-        var hqPrices = _priceRepository.GetMultiple(worldId, recipes.Select(i => i.TargetItemId), true);
+        var items = itemRepository.GetMultiple(recipes.Select(i => i.TargetItemId));
+        var nqPrices = priceRepo.GetMultiple(worldId, recipes.Select(i => i.TargetItemId), false);
+        var hqPrices = priceRepo.GetMultiple(worldId, recipes.Select(i => i.TargetItemId), true);
         var prices = nqPrices.Concat(hqPrices).ToList();
 
         var crafts = await CreateSummaryAsync(worldId, recipeCosts, recipes, items, prices, profits);
@@ -97,7 +77,7 @@ public class CraftRepository : ICraftRepository
         foreach (var profit in profitList)
         {
             var key = new TripleKey(worldId, profit.RecipeId, profit.IsHq);
-            var cached = _cache.Get(key);
+            var cached = cache.Get(key);
             if (cached is not null)
             {
                 craftSummaries.Add(cached);
@@ -111,7 +91,7 @@ public class CraftRepository : ICraftRepository
                 i.IsHq == profit.IsHq);
             if (price is null)
             {
-                _logger.LogError($"Failed to find price for recipe {profit.RecipeId} for world {worldId}");
+                logger.LogError($"Failed to find price for recipe {profit.RecipeId} for world {worldId}");
                 continue;
             }
 
@@ -121,7 +101,7 @@ public class CraftRepository : ICraftRepository
                 i.WorldId == worldId)?.Amount;
             if (recipeCost is null)
             {
-                _logger.LogError(
+                logger.LogError(
                     "Failed to find recipe cost or item to create craft summary for recipe {RecipeId}, world {WorldId}, hq: {IsHq}",
                     profit.RecipeId,
                     worldId,
@@ -133,7 +113,7 @@ public class CraftRepository : ICraftRepository
                 i.Id == recipeList.FirstOrDefault(r => r.Id == profit.RecipeId)?.TargetItemId);
             if (item is null)
             {
-                _logger.LogError(
+                logger.LogError(
                     "Failed to find target item {ItemId} to create craft summary for recipe {RecipeId}, world {WorldId}, hq: {IsHq}",
                     recipe?.TargetItemId ?? 0,
                     profit.RecipeId,
@@ -159,11 +139,11 @@ public class CraftRepository : ICraftRepository
                 Updated = profit.LastUpdated
             };
             craftSummaries.Add(summary);
-            _cache.Add(key, summary);
+            cache.Add(key, summary);
         }
 
         return Task.FromResult(craftSummaries);
     }
 
-    private bool ValidateWorldInput(int worldId) => _worldRepository.Get(worldId) is not null;
+    private bool ValidateWorldInput(int worldId) => worldRepository.Get(worldId) is not null;
 }
