@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>GilGoblin.Database</RootNamespace>
     <PackageId>GilGoblin.Database</PackageId>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.*" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />
-    <PackageReference Include="Serilog" Version="3.0.*"/>
+    <PackageReference Include="Serilog" Version="4.2.*" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.*"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>

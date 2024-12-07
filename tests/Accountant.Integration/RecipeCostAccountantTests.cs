@@ -99,6 +99,8 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         await using var dbContext = GetDbContext();
         var recipeIds = dbContext.Recipe.Select(r => r.Id).ToList();
         await MakeCostsOutdated();
+        _calc.CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>())
+            .ReturnsForAnyArgs(10);
 
         await _accountant.ComputeListAsync(WorldId, ValidRecipeIds);
 
