@@ -97,7 +97,7 @@ export interface Craft {
     isHq: boolean;
     itemId: number;
     itemInfo?: Item;
-    recipeInfo?: Recipe;
+    recipe?: Recipe;
     salePrice: number;
     craftingCost: number;
     profit: number;
