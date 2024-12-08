@@ -32,8 +32,8 @@ public class Startup(IConfiguration configuration)
             .AddSingleton<IPriceSaver, PriceSaver>()
             .AddSingleton<IAccountant, RecipeCostAccountant>()
             .AddSingleton<IAccountant, RecipeProfitAccountant>()
-            .AddHostedService<RecipeCostAccountant>();
-        // .AddHostedService<RecipeProfitAccountant>();
+            .AddHostedService<RecipeCostAccountant>()
+            .AddHostedService<RecipeProfitAccountant>();
     }
 
     private static void DatabaseValidation(IApplicationBuilder app)
