@@ -1,3 +1,3 @@
 Run this command and enter the DB password to pg_dump into this folder
 
-docker run --rm -it   -v $(pwd):/data   postgres:17   pg_dump --create --file=/data/pg_dump.sql --inserts --dbname=gilgoblin_db --username=gilgoblin --host=host.docker.internal --port=5432
+docker run --rm -it   -v $(pwd):/data   postgres:17   pg_dump --file=/data/pg_dump.sql --data-only --dbname=gilgoblin_db --username=gilgoblin --host=host.docker.internal --port=5432
