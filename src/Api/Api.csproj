@@ -6,7 +6,7 @@
     <RootNamespace>GilGoblin.Api</RootNamespace>
     <PackageId>GilGoblin.Api</PackageId>
     <OutputType>Exe</OutputType>
-    <Version>2.0.4</Version>
+    <Version>2.0.5</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GilGoblin.Database" Version="2.0.*"/>
+    <PackageReference Include="GilGoblin.Database" Version="3.0.*"/>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.*"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*"/>
