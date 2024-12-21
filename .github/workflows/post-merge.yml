@@ -1,10 +1,9 @@
 name: Post-Merge Workflow
 
 on:
-  workflow_run:
-    workflows: ["ci"]
-    types:
-      - completed
+  push:
+    branches:
+      - master
 
 jobs:
   publish-nuget:
