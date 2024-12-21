@@ -28,17 +28,17 @@ A webpage front-end is available with the resulting calculations. Filters are av
 * :heavy_check_mark: Add Gilgoblin favicon and title to header 📖
 * :heavy_check_mark: Add performance tests for high-traffic bottlenecks (top-crafts) 🚥
 * :heavy_check_mark: Improve performance for top-crafts endpoint ⏩
+* :heavy_check_mark: Fix breaking change in external API dependency 🔧📡
 
 *Work-in-progress*
-* :hatching_chick: Fix breaking change in external API dependency 🔧📡
-* :hatching_chick: Make everything *prettier* ✨
+* :hatching_chick: Launch and test website 🚀
 
 *Upcoming*
-* :egg: Launch and test website 🚀
 * :egg: (Expected) Live release bug fixes 🐛
 
 *Nice-to-have*
 * :question: Top things to gather 🌳🪓 🪨⛏️
+* :question: Make interface *prettier* ✨
 * :question: A link/recipe details for each profit result's items, ingredients, prices, etc. in the profit table row 🕵️
 * :question: A hover or clickable option to see the profit's ingredients & cost info ☁️
 * :question: Advanced filtering: Enter class levels to filter available recipes 🧰
