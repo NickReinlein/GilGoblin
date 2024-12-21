@@ -103,4 +103,3 @@ jobs:
               echo "No Dockerfile found in $project_dir, skipping..."
             fi
           done
-          
