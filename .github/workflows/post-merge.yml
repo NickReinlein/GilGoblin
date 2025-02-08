@@ -78,6 +78,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+
       - name: Build and Push Docker Images
         env:
           versions: ${{ needs.publish-nuget.outputs.versions }}
@@ -95,10 +106,21 @@ jobs:
               project=$(basename "$project_dir" | tr '[:upper:]' '[:lower:]') # Convert to lowercase
               prefixed_project="gilgoblin-$project" # Add 'gilgoblin-' prefix
               tag="${version_map[$project]:-latest}"
-              image_name="${{ secrets.DOCKER_USERNAME }}/$prefixed_project:$tag"
-              echo "Building and pushing Docker image: $image_name"
-              docker build -t "$image_name" "$project_dir"
-              docker push "$image_name"
+
+              dockerhub_image="${{ secrets.DOCKER_USERNAME }}/$prefixed_project:$tag"
+              ecr_image="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/$prefixed_project:$tag"
+
+              echo "Building Docker image: $dockerhub_image"
+              docker build -t "$dockerhub_image" "$project_dir"
+
+              echo "Pushing to Docker Hub: $dockerhub_image"
+              docker push "$dockerhub_image"
+
+              echo "Tagging image for ECR: $ecr_image"
+              docker tag "$dockerhub_image" "$ecr_image"
+
+              echo "Pushing to Amazon ECR: $ecr_image"
+              docker push "$ecr_image"
             else
               echo "No Dockerfile found in $project_dir, skipping..."
             fi
