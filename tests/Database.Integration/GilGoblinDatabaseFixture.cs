@@ -79,6 +79,8 @@ public class GilGoblinDatabaseFixture
                 options.UseNpgsql(connectionString)
                     .EnableDetailedErrors(isDebug)
                     .EnableSensitiveDataLogging(isDebug)
+                    // ReSharper disable once HeuristicUnreachableCode
+                    // Flag is changed to access "debugging mode"
                     .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
             });
         _serviceProvider = _serviceCollection.BuildServiceProvider();

@@ -35,7 +35,7 @@ public class RecipeProfitAccountant(
 
         try
         {
-            await using var scope = serviceProvider.CreateAsyncScope();
+            await using var scope = ServiceProvider.CreateAsyncScope();
             var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
             var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
@@ -150,7 +150,7 @@ public class RecipeProfitAccountant(
             if (worldId < 1)
                 throw new Exception("World Id is invalid");
 
-            await using var scope = serviceProvider.CreateAsyncScope();
+            await using var scope = ServiceProvider.CreateAsyncScope();
             var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
 

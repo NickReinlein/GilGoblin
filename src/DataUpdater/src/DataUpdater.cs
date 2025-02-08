@@ -29,6 +29,9 @@ public abstract class DataUpdater<T, U>(
     where T : class, IIdentifiable
     where U : class, IIdentifiable
 {
+    protected readonly IServiceProvider ServiceProvider =
+        serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
     protected readonly ILogger<DataUpdater<T, U>> Logger = logger;
 
     public async Task FetchAsync(int? worldId = null, CancellationToken ct = default)
@@ -79,7 +82,7 @@ public abstract class DataUpdater<T, U>(
         {
             var idList = idsToUpdate.ToList();
 
-            using var scope = serviceProvider.CreateScope();
+            using var scope = ServiceProvider.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
             var worldString = worldId > 0 ? $"for world id {worldId}" : string.Empty;
             Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");

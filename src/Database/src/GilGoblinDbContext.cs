@@ -32,6 +32,8 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
         optionsBuilder.UseNpgsql(connectionString)
             .EnableDetailedErrors(isDebug)
             .EnableSensitiveDataLogging(isDebug)
+            // ReSharper disable once HeuristicUnreachableCode
+            // Flag is changed to access "debugging mode"
             .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
 
         base.OnConfiguring(optionsBuilder);

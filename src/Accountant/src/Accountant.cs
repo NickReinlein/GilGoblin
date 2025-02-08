@@ -23,6 +23,9 @@ public interface IAccountant
 public class Accountant(IServiceProvider serviceProvider, ILogger<Accountant> logger)
     : BackgroundService, IAccountant
 {
+    protected readonly IServiceProvider ServiceProvider =
+        serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -101,7 +104,7 @@ public class Accountant(IServiceProvider serviceProvider, ILogger<Accountant> lo
 
     protected List<WorldPoco> GetWorlds()
     {
-        using var scope = serviceProvider.CreateScope();
+        using var scope = ServiceProvider.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
         return worldRepo.GetAll().ToList();
     }

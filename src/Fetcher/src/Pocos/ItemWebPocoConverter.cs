@@ -10,7 +10,6 @@ public class ItemWebPocoConverter : JsonConverter<ItemWebPoco>
     {
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
-        var id = root.GetProperty("ID").GetInt32();
         var name = root.GetProperty("Name").GetString();
         var description = root.GetProperty("Description").GetString();
         var iconId = root.GetProperty("IconId").GetInt32();

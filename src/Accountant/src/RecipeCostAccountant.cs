@@ -34,7 +34,7 @@ public class RecipeCostAccountant(
                 idList.Count);
             logger.LogDebug("Found {Count} costs for world {worldId}", recipeCosts.Count, worldId);
 
-            await using var scope = serviceProvider.CreateAsyncScope();
+            await using var scope = ServiceProvider.CreateAsyncScope();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
 
             var newCosts = new List<RecipeCostPoco>();
@@ -103,7 +103,7 @@ public class RecipeCostAccountant(
             if (worldId < 1)
                 throw new Exception("World Id is invalid");
 
-            await using var scope = serviceProvider.CreateAsyncScope();
+            await using var scope = ServiceProvider.CreateAsyncScope();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
             var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
             var recipes = recipeRepo.GetAll().ToList();
@@ -147,7 +147,7 @@ public class RecipeCostAccountant(
     private async Task<(List<RecipeCostPoco> existingRecipeCosts, List<RecipePoco> allRelevantRecipes)>
         GetRecipesAndCosts(int worldId, List<int> idList)
     {
-        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var scope = ServiceProvider.CreateAsyncScope();
         var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
         var existingRecipeCosts = await costRepo.GetMultipleAsync(worldId, idList);
 

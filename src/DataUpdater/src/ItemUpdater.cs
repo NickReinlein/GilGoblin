@@ -28,7 +28,7 @@ public class ItemUpdater(
     protected override async Task ConvertAndSaveToDbAsync(List<ItemWebPoco> updated, int? worldId = null,
         CancellationToken ct = default)
     {
-        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var scope = ServiceProvider.CreateAsyncScope();
         var saver = scope.ServiceProvider.GetRequiredService<IDataSaver<ItemPoco>>();
         var success = await saver.SaveAsync(updated.ToItemPocoList(), ct);
         if (!success)
