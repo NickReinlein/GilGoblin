@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2020-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Description: AWS Fargate deployment with ALB and private networking
 
 Parameters:
