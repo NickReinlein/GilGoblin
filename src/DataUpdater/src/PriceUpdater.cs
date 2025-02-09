@@ -19,6 +19,7 @@ public class PriceUpdater(
     ILogger<PriceUpdater> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
+    
     private List<int> AllItemIds { get; set; } = [];
     private DateTimeOffset LastUpdated { get; set; }
     private const int hoursBeforeDataExpiry = 96;
@@ -40,7 +41,7 @@ public class PriceUpdater(
 
     protected override async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
-        using var scope = serviceProvider.CreateScope();
+        using var scope = ServiceProvider.CreateScope();
         var fetcher = scope.ServiceProvider.GetRequiredService<IPriceFetcher>();
         var batcher = new Batcher.Batcher<int>(fetcher.GetEntriesPerPage());
         var batches = batcher.SplitIntoBatchJobs(idList);
@@ -78,7 +79,7 @@ public class PriceUpdater(
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null,
         CancellationToken ct = default)
     {
-        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var scope = ServiceProvider.CreateAsyncScope();
         var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
 
         var world = worldId ?? 0;
@@ -97,7 +98,7 @@ public class PriceUpdater(
 
     protected override List<WorldPoco> GetWorlds()
     {
-        using var scope = serviceProvider.CreateScope();
+        using var scope = ServiceProvider.CreateScope();
         var worldRepo = scope.ServiceProvider.GetRequiredService<IWorldRepository>();
         return worldRepo.GetAll().ToList();
     }
@@ -117,7 +118,7 @@ public class PriceUpdater(
 
                 await FillItemIdCache();
 
-                using var scope = serviceProvider.CreateScope();
+                using var scope = ServiceProvider.CreateScope();
                 var priceRepo = scope.ServiceProvider.GetRequiredService<IPriceRepository<PricePoco>>();
                 var currentPrices = priceRepo.GetAll(world).ToList();
                 var currentPriceIds = currentPrices.Select(c => c.GetId()).ToList();
@@ -155,7 +156,7 @@ public class PriceUpdater(
             return;
 
 
-        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var scope = ServiceProvider.CreateAsyncScope();
         var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();
         var recipeRepo = scope.ServiceProvider.GetRequiredService<IRecipeRepository>();
         AllItemIds.Clear();

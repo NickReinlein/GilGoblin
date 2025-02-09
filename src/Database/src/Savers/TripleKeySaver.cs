@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database.Savers;
 
-public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<DataSaver<T>> logger)
+public class TripleKeySaver<T>(IServiceProvider serviceProvider, ILogger<TripleKeySaver<T>> logger)
     : DataSaver<T>(serviceProvider, logger)
     where T : IdentifiableTripleKeyPoco
 {

@@ -8,7 +8,7 @@ namespace GilGoblin.Database.Savers;
 
 public interface IPriceSaver : IDataSaver<PricePoco>;
 
-public class PriceSaver(IServiceProvider serviceProvider, ILogger<DataSaver<PricePoco>> logger)
+public class PriceSaver(IServiceProvider serviceProvider, ILogger<PriceSaver> logger)
     : TripleKeySaver<PricePoco>(serviceProvider, logger), IPriceSaver
 {
     protected override List<PricePoco> FilterInvalidEntities(IEnumerable<PricePoco> entities)
