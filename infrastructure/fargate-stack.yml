@@ -1,21 +1,52 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Description: AWS Fargate deployment with ALB and private networking
+AWS_ACCOUNT_IDAWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  AWS Fargate deployment with ALB for 5 ECR repositories:
+  gilgoblin-accountant, gilgoblin-api, gilgoblin-database,
+  gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
-  EcrRepository:
+  AWS_ACCOUNT_ID:
     Type: String
-    Description: The ECR repository URI for the container image
+    Description: "Your AWS Account ID"
+  AWS_REGION:
+    Type: String
+    Default: "us-east-1"
+    Description: "AWS Region for deployment"
+
+  EcrRepositoryAccountant:
+    Type: String
+    Default: !Sub "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gilgoblin-accountant"
+    Description: "ECR repository URI for gilgoblin-accountant"
+  EcrRepositoryApi:
+    Type: String
+    Default: !Sub "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gilgoblin-api"
+    Description: "ECR repository URI for gilgoblin-api"
+  EcrRepositoryDatabase:
+    Type: String
+    Default: !Sub "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gilgoblin-database"
+    Description: "ECR repository URI for gilgoblin-database"
+  EcrRepositoryDataUpdater:
+    Type: String
+    Default: !Sub "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gilgoblin-dataupdater"
+    Description: "ECR repository URI for gilgoblin-dataupdater"
+  EcrRepositoryFrontend:
+    Type: String
+    Default: !Sub "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gilgoblin-frontend"
+    Description: "ECR repository URI for gilgoblin-frontend"
 
 Resources:
+  ######################
+  # VPC & Networking
+  ######################
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: 10.0.0.0/16
+      CidrBlock: "10.0.0.0/16"
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: MyVPC
+          Value: "MyVPC"
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -30,31 +61,31 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.1.0/24
+      CidrBlock: "10.0.1.0/24"
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [ 0, !GetAZs "" ]
       Tags:
         - Key: Name
-          Value: PublicSubnet
+          Value: "PublicSubnet"
 
   PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: 10.0.2.0/24
+      CidrBlock: "10.0.2.0/24"
       MapPublicIpOnLaunch: false
       AvailabilityZone: !Select [ 1, !GetAZs "" ]
       Tags:
         - Key: Name
-          Value: PrivateSubnet
+          Value: "PrivateSubnet"
 
-  NatGatewayEIP:
+  NatEIP:
     Type: AWS::EC2::EIP
 
   NatGateway:
     Type: AWS::EC2::NatGateway
     Properties:
-      AllocationId: !GetAtt NatGatewayEIP.AllocationId
+      AllocationId: !GetAtt NatEIP.AllocationId
       SubnetId: !Ref PublicSubnet
 
   PrivateRouteTable:
@@ -66,40 +97,34 @@ Resources:
     Type: AWS::EC2::Route
     Properties:
       RouteTableId: !Ref PrivateRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
+      DestinationCidrBlock: "0.0.0.0/0"
       NatGatewayId: !Ref NatGateway
 
-  ALB:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Name: my-alb
-      Scheme: internet-facing
-      Type: application
-      IpAddressType: ipv4
-      Subnets:
-        - !Ref PublicSubnet
-      SecurityGroups:
-        - !Ref ALBSecurityGroup
-
+  ######################
+  # ALB & Listener
+  ######################
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VPC
-      GroupDescription: ALB security group
+      GroupDescription: "ALB security group"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 0.0.0.0/0
+          CidrIp: "0.0.0.0/0"
 
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: my-target-group
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
+      Name: "my-alb"
+      Scheme: "internet-facing"
+      Type: "application"
+      IpAddressType: "ipv4"
+      Subnets:
+        - !Ref PublicSubnet
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
 
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -108,13 +133,126 @@ Resources:
       Port: 80
       Protocol: HTTP
       DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref TargetGroup
+        - Type: fixed-response
+          FixedResponseConfig:
+            ContentType: text/plain
+            MessageBody: "No matching rule"
+            StatusCode: "404"
 
+  # Target Groups for each service
+  AccountantTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: "accountant-tg"
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  ApiTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: "api-tg"
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  DatabaseTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: "database-tg"
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  DataUpdaterTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: "dataupdater-tg"
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  FrontendTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: "frontend-tg"
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  # Listener Rules based on path patterns
+  AccountantListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 1
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/accountant/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref AccountantTargetGroup
+
+  ApiListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 2
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/api/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiTargetGroup
+
+  DatabaseListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 3
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/database/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DatabaseTargetGroup
+
+  DataUpdaterListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 4
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/dataupdater/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DataUpdaterTargetGroup
+
+  FrontendListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 5
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/frontend/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref FrontendTargetGroup
+
+  ######################
+  # ECS Cluster & Execution Role
+  ######################
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: MyECSCluster
+      ClusterName: "MyECSCluster"
 
   ExecutionRole:
     Type: AWS::IAM::Role
@@ -129,7 +267,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: AmazonECSTaskExecutionRolePolicy
+        - PolicyName: "ECSExecutionPolicy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -143,29 +281,32 @@ Resources:
                   - logs:PutLogEvents
                 Resource: "*"
 
-  TaskDefinition:
+  ######################
+  # ECS Task Definitions & Services for each repository
+  ######################
+  AccountantTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: MyFargateTask
+      Family: "gilgoblin-accountant-task"
       RequiresCompatibilities:
         - FARGATE
-      Cpu: '256'
-      Memory: '512'
+      Cpu: "256"
+      Memory: "512"
       NetworkMode: awsvpc
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
-        - Name: MyContainer
-          Image: !Ref EcrRepository
+        - Name: "gilgoblin-accountant-container"
+          Image: !Ref EcrRepositoryAccountant
           PortMappings:
             - ContainerPort: 80
 
-  ECSService:
+  AccountantService:
     Type: AWS::ECS::Service
     Properties:
       Cluster: !Ref ECSCluster
-      TaskDefinition: !Ref TaskDefinition
+      TaskDefinition: !Ref AccountantTaskDefinition
       LaunchType: FARGATE
-      DesiredCount: 2
+      DesiredCount: 1
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
@@ -174,6 +315,151 @@ Resources:
           SecurityGroups:
             - !Ref ALBSecurityGroup
       LoadBalancers:
-        - TargetGroupArn: !Ref TargetGroup
-          ContainerName: MyContainer
+        - ContainerName: "gilgoblin-accountant-container"
           ContainerPort: 80
+          TargetGroupArn: !Ref AccountantTargetGroup
+
+  ApiTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-api-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-api-container"
+          Image: !Ref EcrRepositoryApi
+          PortMappings:
+            - ContainerPort: 80
+
+  ApiService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref ApiTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          Subnets:
+            - !Ref PrivateSubnet
+          SecurityGroups:
+            - !Ref ALBSecurityGroup
+      LoadBalancers:
+        - ContainerName: "gilgoblin-api-container"
+          ContainerPort: 80
+          TargetGroupArn: !Ref ApiTargetGroup
+
+  DatabaseTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-database-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-database-container"
+          Image: !Ref EcrRepositoryDatabase
+          PortMappings:
+            - ContainerPort: 80
+
+  DatabaseService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref DatabaseTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          Subnets:
+            - !Ref PrivateSubnet
+          SecurityGroups:
+            - !Ref ALBSecurityGroup
+      LoadBalancers:
+        - ContainerName: "gilgoblin-database-container"
+          ContainerPort: 80
+          TargetGroupArn: !Ref DatabaseTargetGroup
+
+  DataUpdaterTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-dataupdater-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-dataupdater-container"
+          Image: !Ref EcrRepositoryDataUpdater
+          PortMappings:
+            - ContainerPort: 80
+
+  DataUpdaterService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref DataUpdaterTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          Subnets:
+            - !Ref PrivateSubnet
+          SecurityGroups:
+            - !Ref ALBSecurityGroup
+      LoadBalancers:
+        - ContainerName: "gilgoblin-dataupdater-container"
+          ContainerPort: 80
+          TargetGroupArn: !Ref DataUpdaterTargetGroup
+
+  FrontendTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-frontend-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-frontend-container"
+          Image: !Ref EcrRepositoryFrontend
+          PortMappings:
+            - ContainerPort: 80
+
+  FrontendService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref FrontendTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          Subnets:
+            - !Ref PrivateSubnet
+          SecurityGroups:
+            - !Ref ALBSecurityGroup
+      LoadBalancers:
+        - ContainerName: "gilgoblin-frontend-container"
+          ContainerPort: 80
+          TargetGroupArn: !Ref FrontendTargetGroup
+
+Outputs:
+  ALBDNSName:
+    Description: "The DNS name of the ALB"
+    Value: !GetAtt ALB.DNSName
