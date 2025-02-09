@@ -61,6 +61,8 @@ jobs:
   publish-docker:
     runs-on: ubuntu-latest
     needs: [publish-nuget]
+    outputs:
+      latest_image_tag: "latest"
     steps:
       - uses: actions/checkout@v4
 
@@ -125,3 +127,26 @@ jobs:
               echo "No Dockerfile found in $project_dir, skipping..."
             fi
           done
+
+  deploy-fargate:
+    runs-on: ubuntu-latest
+    needs: [publish-docker]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy CloudFormation Stack
+        run: |
+          aws cloudformation deploy \
+            --stack-name gilgoblin-fargate \
+            --template-file infrastructure/fargate-stack.yml \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --no-fail-on-empty-changeset \
+            --region us-east-1        
