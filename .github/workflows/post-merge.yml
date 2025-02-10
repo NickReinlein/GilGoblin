@@ -151,6 +151,6 @@ jobs:
             --template-file infrastructure/fargate-stack.yml \
             --capabilities CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset \
-            --region ${{ secrets.AWS_REGION }} \
-            --parameter-overrides AWSAccountId=${{ secrets.AWS_ACCOUNT_ID }}
+            --region "${{ secrets.AWS_REGION }}" \
+            --parameter-overrides "AWSAccountId=${{ secrets.AWS_ACCOUNT_ID }}"
             
