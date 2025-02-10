@@ -85,11 +85,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Log in to Amazon ECR
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+          docker login --username AWS \
+          --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
       - name: Build and Push Docker Images
         env:
@@ -110,7 +112,7 @@ jobs:
               tag="${version_map[$project]:-latest}"
 
               dockerhub_image="${{ secrets.DOCKER_USERNAME }}/$prefixed_project:$tag"
-              ecr_image="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/$prefixed_project:$tag"
+              ecr_image="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$prefixed_project:$tag"
 
               echo "Building Docker image: $dockerhub_image"
               docker build -t "$dockerhub_image" "$project_dir"
@@ -140,7 +142,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy CloudFormation Stack
         run: |
@@ -149,4 +151,6 @@ jobs:
             --template-file infrastructure/fargate-stack.yml \
             --capabilities CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset \
-            --region us-east-1        
+            --region ${{ secrets.AWS_REGION }} \
+            --parameter-overrides AWSAccountId=${{ secrets.AWS_ACCOUNT_ID }}
+            
