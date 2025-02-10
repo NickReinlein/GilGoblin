@@ -12,27 +12,26 @@ Parameters:
     Type: String
     Default: "us-east-1"
     Description: "AWS Region for deployment"
-
-EcrRepositoryAccountant:
-  Type: String
-  Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-accountant"
-  Description: "ECR repository URI for gilgoblin-accountant"
-EcrRepositoryApi:
-  Type: String
-  Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-api"
-  Description: "ECR repository URI for gilgoblin-api"
-EcrRepositoryDatabase:
-  Type: String
-  Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-database"
-  Description: "ECR repository URI for gilgoblin-database"
-EcrRepositoryDataUpdater:
-  Type: String
-  Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-dataupdater"
-  Description: "ECR repository URI for gilgoblin-dataupdater"
-EcrRepositoryFrontend:
-  Type: String
-  Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-frontend"
-  Description: "ECR repository URI for gilgoblin-frontend"
+  EcrRepositoryAccountant:
+    Type: String
+    Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-accountant"
+    Description: "ECR repository URI for gilgoblin-accountant"
+  EcrRepositoryApi:
+    Type: String
+    Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-api"
+    Description: "ECR repository URI for gilgoblin-api"
+  EcrRepositoryDatabase:
+    Type: String
+    Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-database"
+    Description: "ECR repository URI for gilgoblin-database"
+  EcrRepositoryDataUpdater:
+    Type: String
+    Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-dataupdater"
+    Description: "ECR repository URI for gilgoblin-dataupdater"
+  EcrRepositoryFrontend:
+    Type: String
+    Default: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-frontend"
+    Description: "ECR repository URI for gilgoblin-frontend"
 
 Resources:
   ######################
