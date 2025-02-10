@@ -1,4 +1,4 @@
-AWS_ACCOUNT_IDAWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   AWS Fargate deployment with ALB for 5 ECR repositories:
   gilgoblin-accountant, gilgoblin-api, gilgoblin-database,
