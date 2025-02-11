@@ -47,6 +47,7 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
+  # Public Subnets
   PublicSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
@@ -62,44 +63,94 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "10.0.3.0/24"  # Different CIDR block
+      CidrBlock: "10.0.3.0/24"
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [ 1, !GetAZs "" ]
       Tags:
         - Key: Name
           Value: "PublicSubnetB"
 
-  PrivateSubnet:
+  # Private Subnets (one per AZ)
+  PrivateSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       CidrBlock: "10.0.2.0/24"
       MapPublicIpOnLaunch: false
+      AvailabilityZone: !Select [ 0, !GetAZs "" ]
+      Tags:
+        - Key: Name
+          Value: "PrivateSubnetA"
+
+  PrivateSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.0.4.0/24"
+      MapPublicIpOnLaunch: false
       AvailabilityZone: !Select [ 1, !GetAZs "" ]
       Tags:
         - Key: Name
-          Value: "PrivateSubnet"
+          Value: "PrivateSubnetB"
 
-  NatEIP:
+  # Elastic IPs for NAT Gateways
+  NatEIPA:
     Type: AWS::EC2::EIP
 
-  NatGateway:
+  NatEIPB:
+    Type: AWS::EC2::EIP
+
+  # NAT Gateways: one per public subnet
+  NatGatewayA:
     Type: AWS::EC2::NatGateway
     Properties:
-      AllocationId: !GetAtt NatEIP.AllocationId
-      SubnetId: !Ref PublicSubnet
+      AllocationId: !GetAtt NatEIPA.AllocationId
+      SubnetId: !Ref PublicSubnetA
 
-  PrivateRouteTable:
+  NatGatewayB:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatEIPB.AllocationId
+      SubnetId: !Ref PublicSubnetB
+
+  # Private Route Table for PrivateSubnetA (AZ0)
+  PrivateRouteTableA:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
 
-  PrivateRoute:
+  PrivateRouteA:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId: !Ref PrivateRouteTable
+      RouteTableId: !Ref PrivateRouteTableA
       DestinationCidrBlock: "0.0.0.0/0"
-      NatGatewayId: !Ref NatGateway
+      NatGatewayId: !Ref NatGatewayA
+
+  # Private Route Table for PrivateSubnetB (AZ1)
+  PrivateRouteTableB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  PrivateRouteB:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableB
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NatGatewayB
+
+  # Associate each private subnet with its route table
+  PrivateSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetA
+      RouteTableId: !Ref PrivateRouteTableA
+
+  PrivateSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetB
+      RouteTableId: !Ref PrivateRouteTableB
 
   ######################
   # ALB & Listener
@@ -313,7 +364,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
           Subnets:
-            - !Ref PrivateSubnet
+            - !Ref PrivateSubnetA
+            - !Ref PrivateSubnetB
           SecurityGroups:
             - !Ref ALBSecurityGroup
       LoadBalancers:
@@ -348,7 +400,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
           Subnets:
-            - !Ref PrivateSubnet
+            - !Ref PrivateSubnetA
+            - !Ref PrivateSubnetB
           SecurityGroups:
             - !Ref ALBSecurityGroup
       LoadBalancers:
@@ -383,7 +436,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
           Subnets:
-            - !Ref PrivateSubnet
+            - !Ref PrivateSubnetA
+            - !Ref PrivateSubnetB
           SecurityGroups:
             - !Ref ALBSecurityGroup
       LoadBalancers:
@@ -418,7 +472,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
           Subnets:
-            - !Ref PrivateSubnet
+            - !Ref PrivateSubnetA
+            - !Ref PrivateSubnetB
           SecurityGroups:
             - !Ref ALBSecurityGroup
       LoadBalancers:
@@ -453,7 +508,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
           Subnets:
-            - !Ref PrivateSubnet
+            - !Ref PrivateSubnetA
+            - !Ref PrivateSubnetB
           SecurityGroups:
             - !Ref ALBSecurityGroup
       LoadBalancers:
