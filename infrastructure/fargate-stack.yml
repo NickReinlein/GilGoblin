@@ -5,9 +5,6 @@ Description: >
   gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
-  AWSAccountId:
-    Type: String
-    Description: "AWS Account ID"
   EcrRepositoryAccountant:
     Type: String
     Description: "ECR repository URI for gilgoblin-accountant"
@@ -70,7 +67,7 @@ Resources:
         - Key: Name
           Value: "PublicSubnetB"
 
-  # Private Subnets (one per AZ)
+  # Private Subnets
   PrivateSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
@@ -93,14 +90,13 @@ Resources:
         - Key: Name
           Value: "PrivateSubnetB"
 
-  # Elastic IPs for NAT Gateways
+  # NAT Gateways & Elastic IPs
   NatEIPA:
     Type: AWS::EC2::EIP
 
   NatEIPB:
     Type: AWS::EC2::EIP
 
-  # NAT Gateways: one per public subnet
   NatGatewayA:
     Type: AWS::EC2::NatGateway
     Properties:
@@ -113,7 +109,7 @@ Resources:
       AllocationId: !GetAtt NatEIPB.AllocationId
       SubnetId: !Ref PublicSubnetB
 
-  # Private Route Table for PrivateSubnetA (AZ0)
+  # Private Route Tables & Routes
   PrivateRouteTableA:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -126,7 +122,6 @@ Resources:
       DestinationCidrBlock: "0.0.0.0/0"
       NatGatewayId: !Ref NatGatewayA
 
-  # Private Route Table for PrivateSubnetB (AZ1)
   PrivateRouteTableB:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -139,7 +134,6 @@ Resources:
       DestinationCidrBlock: "0.0.0.0/0"
       NatGatewayId: !Ref NatGatewayB
 
-  # Associate each private subnet with its route table
   PrivateSubnetARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -355,6 +349,9 @@ Resources:
 
   AccountantService:
     Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListener
+      - AccountantListenerRule
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref AccountantTaskDefinition
@@ -391,6 +388,9 @@ Resources:
 
   ApiService:
     Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListener
+      - ApiListenerRule
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref ApiTaskDefinition
@@ -427,6 +427,9 @@ Resources:
 
   DatabaseService:
     Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListener
+      - DatabaseListenerRule
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref DatabaseTaskDefinition
@@ -463,6 +466,9 @@ Resources:
 
   DataUpdaterService:
     Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListener
+      - DataUpdaterListenerRule
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref DataUpdaterTaskDefinition
@@ -499,6 +505,9 @@ Resources:
 
   FrontendService:
     Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListener
+      - FrontendListenerRule
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref FrontendTaskDefinition
