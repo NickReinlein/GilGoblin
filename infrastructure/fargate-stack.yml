@@ -7,11 +7,8 @@ Description: >
 Parameters:
   AWSAccountId:
     Type: String
-    Description: "Your AWS Account ID"
-  AWSRegion:
-    Type: String
-    Description: "AWS Region for deployment"
-  EcrRepositoryAccountant:
+    Description: "AWS Account ID"
+  EcrRepositor1Accountant:
     Type: String
     Description: "ECR repository URI for gilgoblin-accountant"
   EcrRepositoryApi:
@@ -50,7 +47,7 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
-  PublicSubnet:
+  PublicSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
@@ -59,7 +56,18 @@ Resources:
       AvailabilityZone: !Select [ 0, !GetAZs "" ]
       Tags:
         - Key: Name
-          Value: "PublicSubnet"
+          Value: "PublicSubnetA"
+
+  PublicSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.0.3.0/24"  # Different CIDR block
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select [ 1, !GetAZs "" ]
+      Tags:
+        - Key: Name
+          Value: "PublicSubnetB"
 
   PrivateSubnet:
     Type: AWS::EC2::Subnet
@@ -115,7 +123,8 @@ Resources:
       Type: "application"
       IpAddressType: "ipv4"
       Subnets:
-        - !Ref PublicSubnet
+        - !Ref PublicSubnetA
+        - !Ref PublicSubnetB
       SecurityGroups:
         - !Ref ALBSecurityGroup
 
