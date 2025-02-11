@@ -241,6 +241,7 @@ Resources:
     DependsOn:
       - ALB
       - ALBListener
+      - AccountantTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 1
@@ -256,6 +257,7 @@ Resources:
     DependsOn:
       - ALB
       - ALBListener
+      - ApiTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 2
@@ -271,6 +273,7 @@ Resources:
     DependsOn:
       - ALB
       - ALBListener
+      - DatabaseTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 3
@@ -286,6 +289,7 @@ Resources:
     DependsOn:
       - ALB
       - ALBListener
+      - DataUpdaterTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 4
@@ -301,6 +305,7 @@ Resources:
     DependsOn:
       - ALB
       - ALBListener
+      - FrontendTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 5
