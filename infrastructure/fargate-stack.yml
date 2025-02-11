@@ -5,6 +5,9 @@ Description: >
   gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
+  AWSAccountId:
+    Type: String
+    Description: "AWS Account ID"
   EcrRepositoryAccountant:
     Type: String
     Description: "ECR repository URI for gilgoblin-accountant"
@@ -235,6 +238,9 @@ Resources:
   # Listener Rules based on path patterns
   AccountantListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALB
+      - ALBListener
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 1
@@ -247,6 +253,9 @@ Resources:
 
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALB
+      - ALBListener
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 2
@@ -259,6 +268,9 @@ Resources:
 
   DatabaseListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALB
+      - ALBListener
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 3
@@ -271,6 +283,9 @@ Resources:
 
   DataUpdaterListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALB
+      - ALBListener
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 4
@@ -283,6 +298,9 @@ Resources:
 
   FrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALB
+      - ALBListener
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 5
