@@ -189,11 +189,10 @@ Resources:
             MessageBody: "No matching rule"
             StatusCode: "404"
 
-  # Target Groups for each service
+  # Target Groups (Names removed so CloudFormation generates them)
   AccountantTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: "accountant-tg"
       VpcId: !Ref VPC
       Port: 80
       Protocol: HTTP
@@ -202,7 +201,6 @@ Resources:
   ApiTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: "api-tg"
       VpcId: !Ref VPC
       Port: 80
       Protocol: HTTP
@@ -211,7 +209,6 @@ Resources:
   DatabaseTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: "database-tg"
       VpcId: !Ref VPC
       Port: 80
       Protocol: HTTP
@@ -220,7 +217,6 @@ Resources:
   DataUpdaterTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: "dataupdater-tg"
       VpcId: !Ref VPC
       Port: 80
       Protocol: HTTP
@@ -229,7 +225,6 @@ Resources:
   FrontendTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: "frontend-tg"
       VpcId: !Ref VPC
       Port: 80
       Protocol: HTTP
