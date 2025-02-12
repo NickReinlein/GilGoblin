@@ -184,9 +184,17 @@ ALBListener:
     Protocol: HTTP
     DefaultActions:
       - Type: forward
-        TargetGroupArn: !Ref ApiTargetGroup
+        TargetGroupArn: !Ref DefaultTargetGroup
 
   # Target Groups (Names removed so CloudFormation generates them)
+  DefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
   AccountantTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
