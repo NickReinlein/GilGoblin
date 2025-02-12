@@ -192,6 +192,9 @@ Resources:
   # Target Groups (Names removed so CloudFormation generates them)
   AccountantTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -200,6 +203,9 @@ Resources:
 
   ApiTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -208,6 +214,9 @@ Resources:
 
   DatabaseTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -216,6 +225,9 @@ Resources:
 
   DataUpdaterTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -224,6 +236,9 @@ Resources:
 
   FrontendTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -242,7 +257,7 @@ Resources:
       Priority: 1
       Conditions:
         - Field: path-pattern
-          Values: [ "/accountant/*" ]
+          Values: [ "/accountant*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref AccountantTargetGroup
@@ -258,7 +273,7 @@ Resources:
       Priority: 2
       Conditions:
         - Field: path-pattern
-          Values: [ "/api/*" ]
+          Values: [ "/api*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref ApiTargetGroup
@@ -274,7 +289,7 @@ Resources:
       Priority: 3
       Conditions:
         - Field: path-pattern
-          Values: [ "/database/*" ]
+          Values: [ "/database*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref DatabaseTargetGroup
@@ -290,7 +305,7 @@ Resources:
       Priority: 4
       Conditions:
         - Field: path-pattern
-          Values: [ "/dataupdater/*" ]
+          Values: [ "/dataupdater*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref DataUpdaterTargetGroup
@@ -306,7 +321,7 @@ Resources:
       Priority: 5
       Conditions:
         - Field: path-pattern
-          Values: [ "/frontend/*" ]
+          Values: [ "/frontend*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
