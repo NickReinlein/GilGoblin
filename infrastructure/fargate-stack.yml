@@ -182,12 +182,6 @@ Resources:
       LoadBalancerArn: !Ref ALB
       Port: 80
       Protocol: HTTP
-      DefaultActions:
-        - Type: fixed-response
-          FixedResponseConfig:
-            ContentType: text/plain
-            MessageBody: "No matching rule"
-            StatusCode: "404"
 
   # Target Groups (Names removed so CloudFormation generates them)
   AccountantTargetGroup:
