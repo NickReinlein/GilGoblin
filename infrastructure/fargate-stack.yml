@@ -5,9 +5,6 @@ Description: >
   gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
-  AWSAccountId:
-    Type: String
-    Description: "AWS Account ID"
   EcrRepositoryAccountant:
     Type: String
     Description: "ECR repository URI for gilgoblin-accountant"
@@ -36,7 +33,7 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: "MyVPC"
+          Value: "GilGoblinVPC"
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -166,7 +163,7 @@ Resources:
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: "my-alb"
+      Name: "gilgoblin-alb"
       Scheme: "internet-facing"
       Type: "application"
       IpAddressType: "ipv4"
@@ -176,15 +173,15 @@ Resources:
       SecurityGroups:
         - !Ref ALBSecurityGroup
 
-ALBListener:
-  Type: AWS::ElasticLoadBalancingV2::Listener
-  Properties:
-    LoadBalancerArn: !Ref ALB
-    Port: 80
-    Protocol: HTTP
-    DefaultActions:
-      - Type: forward
-        TargetGroupArn: !Ref DefaultTargetGroup
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
 
   # Target Groups (Names removed so CloudFormation generates them)
   DefaultTargetGroup:
@@ -199,7 +196,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
       - ALB
-      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -210,7 +206,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
       - ALB
-      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -221,7 +216,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
       - ALB
-      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -232,7 +226,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
       - ALB
-      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -243,7 +236,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
       - ALB
-      - VPC
     Properties:
       VpcId: !Ref VPC
       Port: 80
@@ -255,8 +247,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
       - ALB
-      - ALBListener
-      - AccountantTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 1
@@ -271,8 +261,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
       - ALB
-      - ALBListener
-      - ApiTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 2
@@ -287,8 +275,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
       - ALB
-      - ALBListener
-      - DatabaseTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 3
@@ -303,8 +289,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
       - ALB
-      - ALBListener
-      - DataUpdaterTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 4
@@ -319,8 +303,6 @@ ALBListener:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
       - ALB
-      - ALBListener
-      - FrontendTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 5
@@ -337,7 +319,7 @@ ALBListener:
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: "MyECSCluster"
+      ClusterName: "GilGoblinECSCluster"
 
   ExecutionRole:
     Type: AWS::IAM::Role
