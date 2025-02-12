@@ -176,12 +176,15 @@ Resources:
       SecurityGroups:
         - !Ref ALBSecurityGroup
 
-  ALBListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      LoadBalancerArn: !Ref ALB
-      Port: 80
-      Protocol: HTTP
+ALBListener:
+  Type: AWS::ElasticLoadBalancingV2::Listener
+  Properties:
+    LoadBalancerArn: !Ref ALB
+    Port: 80
+    Protocol: HTTP
+    DefaultActions:
+      - Type: forward
+        TargetGroupArn: !Ref ApiTargetGroup
 
   # Target Groups (Names removed so CloudFormation generates them)
   AccountantTargetGroup:
