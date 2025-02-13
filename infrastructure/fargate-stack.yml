@@ -245,6 +245,9 @@ Resources:
   # Listener Rules based on path patterns
   AccountantListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - AccountantTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 1
@@ -257,6 +260,9 @@ Resources:
 
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - ApiTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 2
@@ -269,6 +275,9 @@ Resources:
 
   DatabaseListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - DatabaseTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 3
@@ -281,6 +290,9 @@ Resources:
 
   DataUpdaterListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - DataUpdaterTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 4
@@ -293,6 +305,9 @@ Resources:
 
   FrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - FrontendTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 5
