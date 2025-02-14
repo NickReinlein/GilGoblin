@@ -246,10 +246,11 @@ Resources:
   AccountantListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - AccountantTargetGroup
     Properties:
-      ListenerArn: !Ref ALBListener
+      ListenerArn: !Ref ALBListenerHTTPS
       Priority: 1
       Conditions:
         - Field: path-pattern
@@ -261,10 +262,11 @@ Resources:
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - ApiTargetGroup
     Properties:
-      ListenerArn: !Ref ALBListener
+      ListenerArn: !Ref ALBListenerHTTPS
       Priority: 2
       Conditions:
         - Field: path-pattern
@@ -276,10 +278,11 @@ Resources:
   DatabaseListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - DatabaseTargetGroup
     Properties:
-      ListenerArn: !Ref ALBListener
+      ListenerArn: !Ref ALBListenerHTTPS
       Priority: 3
       Conditions:
         - Field: path-pattern
@@ -291,10 +294,11 @@ Resources:
   DataUpdaterListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS      
       - DataUpdaterTargetGroup
     Properties:
-      ListenerArn: !Ref ALBListener
+      ListenerArn: !Ref ALBListenerHTTPS
       Priority: 4
       Conditions:
         - Field: path-pattern
@@ -306,10 +310,11 @@ Resources:
   FrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS      
       - FrontendTargetGroup
     Properties:
-      ListenerArn: !Ref ALBListener
+      ListenerArn: !Ref ALBListenerHTTPS
       Priority: 5
       Conditions:
         - Field: path-pattern
@@ -379,7 +384,8 @@ Resources:
   AccountantService:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - AccountantListenerRule
     Properties:
       Cluster: !Ref ECSCluster
@@ -418,7 +424,8 @@ Resources:
   ApiService:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - ApiListenerRule
     Properties:
       Cluster: !Ref ECSCluster
@@ -457,7 +464,8 @@ Resources:
   DatabaseService:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - DatabaseListenerRule
     Properties:
       Cluster: !Ref ECSCluster
@@ -496,7 +504,8 @@ Resources:
   DataUpdaterService:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - DataUpdaterListenerRule
     Properties:
       Cluster: !Ref ECSCluster
@@ -535,7 +544,8 @@ Resources:
   FrontendService:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListener
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
       - FrontendListenerRule
     Properties:
       Cluster: !Ref ECSCluster
