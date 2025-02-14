@@ -242,17 +242,18 @@ Resources:
       Port: 80
       Protocol: HTTP
       TargetType: ip
-
-  # Define the ALB listener (which references the DefaultTargetGroup)
-  ALBListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      LoadBalancerArn: !Ref ALB
-      Port: 80
-      Protocol: HTTP
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref DefaultTargetGroup
+  
+  ALBListenerHTTPS:
+  Type: AWS::ElasticLoadBalancingV2::Listener
+  Properties:
+    LoadBalancerArn: !Ref ALB
+    Port: 443
+    Protocol: HTTPS
+    Certificates:
+      - CertificateArn: arn:aws:acm:us-east-1:381492080018:certificate/12517e67-1e27-4772-b5ec-fac8969dd2fb
+    DefaultActions:
+      - Type: forward
+        TargetGroupArn: !Ref DefaultTargetGroup
 
   AccountantListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
