@@ -155,10 +155,10 @@ jobs:
             --parameter-overrides \
               AWSAccountId="$AWS_ACCOUNT_ID" \
               AWSRegion="$AWS_REGION" \
-              EcrRepositoryAccountant="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-accountant" \
-              EcrRepositoryApi="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-api" \
-              EcrRepositoryDatabase="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-database" \
-              EcrRepositoryDataUpdater="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-dataupdater" \
-              EcrRepositoryFrontend="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-frontend"
+              EcrRepositoryAccountant="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-accountant" \
+              EcrRepositoryApi="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-api" \
+              EcrRepositoryDatabase="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-database" \
+              EcrRepositoryDataUpdater="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-dataupdater" \
+              EcrRepositoryFrontend="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-frontend"
 
             
