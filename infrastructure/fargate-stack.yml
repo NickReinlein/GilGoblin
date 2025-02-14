@@ -149,6 +149,32 @@ Resources:
   ######################
   # ALB & Listener
   ######################
+  # Define the ALB security group and ALB first
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "ALB security group"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: "gilgoblin-alb"
+      Scheme: "internet-facing"
+      Type: "application"
+      IpAddressType: "ipv4"
+      Subnets:
+        - !Ref PublicSubnetA
+        - !Ref PublicSubnetB
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+
+  # Next, define the target groups
   DefaultTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -207,30 +233,6 @@ Resources:
   #     Protocol: HTTP
   #     TargetType: ip
 
-  ALBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "ALB security group"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: "0.0.0.0/0"
-
-  ALB:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Name: "gilgoblin-alb"
-      Scheme: "internet-facing"
-      Type: "application"
-      IpAddressType: "ipv4"
-      Subnets:
-        - !Ref PublicSubnetA
-        - !Ref PublicSubnetB
-      SecurityGroups:
-        - !Ref ALBSecurityGroup
-
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -259,9 +261,6 @@ Resources:
 
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListener
-      - ApiTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 2
@@ -274,9 +273,6 @@ Resources:
 
   DatabaseListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListener
-      - DatabaseTargetGroup
     Properties:
       ListenerArn: !Ref ALBListener
       Priority: 3
@@ -286,36 +282,6 @@ Resources:
       Actions:
         - Type: forward
           TargetGroupArn: !Ref DatabaseTargetGroup
-
-  # DataUpdaterListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   DependsOn:
-  #     - ALBListener
-  #     - DataUpdaterTargetGroup
-  #   Properties:
-  #     ListenerArn: !Ref ALBListener
-  #     Priority: 4
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/dataupdater/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref DataUpdaterTargetGroup
-
-  # FrontendListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   DependsOn:
-  #     - ALBListener
-  #     - FrontendTargetGroup
-  #   Properties:
-  #     ListenerArn: !Ref ALBListener
-  #     Priority: 5
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/frontend/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref FrontendTargetGroup
 
   ######################
   # ECS Cluster & Execution Role
