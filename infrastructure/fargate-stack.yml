@@ -22,7 +22,9 @@ Parameters:
     Description: "ECR repository URI for gilgoblin-frontend"
 
 Resources:
+  ######################
   # VPC & Networking
+  ######################
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -144,7 +146,10 @@ Resources:
       SubnetId: !Ref PrivateSubnetB
       RouteTableId: !Ref PrivateRouteTableB
 
+  ######################
   # ALB & Listener
+  ######################
+  # ALB security group & ALB defined first
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -169,7 +174,7 @@ Resources:
       SecurityGroups:
         - !Ref ALBSecurityGroup
 
-  # Target groups
+  # Next, define target groups
   DefaultTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -177,7 +182,7 @@ Resources:
       Port: 80
       Protocol: HTTP
       TargetType: ip
-    
+
   AccountantTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
@@ -209,26 +214,26 @@ Resources:
       TargetType: ip
 
   DataUpdaterTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
+   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+   DependsOn:
+     - ALB
+   Properties:
+     VpcId: !Ref VPC
+     Port: 80
+     Protocol: HTTP
+     TargetType: ip
   
   FrontendTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
+   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+   DependsOn:
+     - ALB
+   Properties:
+     VpcId: !Ref VPC
+     Port: 80
+     Protocol: HTTP
+     TargetType: ip
 
-  # Define the ALB listener
+  # Define the ALB listener (which references the DefaultTargetGroup)
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -284,7 +289,39 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref DatabaseTargetGroup
 
+  DataUpdaterListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - DataUpdaterTargetGroup
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 4
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/dataupdater/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DataUpdaterTargetGroup
+
+  FrontendListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListener
+      - FrontendTargetGroup
+    Properties:
+      ListenerArn: !Ref ALBListener
+      Priority: 5
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/frontend/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref FrontendTargetGroup
+
+  ######################
   # ECS Cluster & Execution Role
+  ######################
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
@@ -450,6 +487,7 @@ Resources:
           Image: !Ref EcrRepositoryDataUpdater
           PortMappings:
             - ContainerPort: 80
+
   DataUpdaterService:
     Type: AWS::ECS::Service
     DependsOn:
@@ -488,6 +526,7 @@ Resources:
           Image: !Ref EcrRepositoryFrontend
           PortMappings:
             - ContainerPort: 80
+
   FrontendService:
     Type: AWS::ECS::Service
     DependsOn:
