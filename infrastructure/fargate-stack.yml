@@ -28,12 +28,12 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: "10.0.0.0/16"
+      CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: "GilGoblinVPC"
+          Value: GilGoblinVPC
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -44,51 +44,32 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
-  # Public Subnets
   PublicSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "10.0.1.0/24"
+      CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: !Select [ 0, !GetAZs "" ]
-      Tags:
-        - Key: Name
-          Value: "PublicSubnetA"
 
   PublicSubnetB:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "10.0.3.0/24"
+      CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: !Select [ 1, !GetAZs "" ]
-      Tags:
-        - Key: Name
-          Value: "PublicSubnetB"
 
   # Private Subnets
   PrivateSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "10.0.2.0/24"
-      MapPublicIpOnLaunch: false
-      AvailabilityZone: !Select [ 0, !GetAZs "" ]
-      Tags:
-        - Key: Name
-          Value: "PrivateSubnetA"
+      CidrBlock: 10.0.3.0/24
 
   PrivateSubnetB:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "10.0.4.0/24"
-      MapPublicIpOnLaunch: false
-      AvailabilityZone: !Select [ 1, !GetAZs "" ]
-      Tags:
-        - Key: Name
-          Value: "PrivateSubnetB"
+      CidrBlock: 10.0.4.0/24
 
   # NAT Gateways & Elastic IPs
   NatEIPA:
@@ -99,52 +80,43 @@ Resources:
 
   NatGatewayA:
     Type: AWS::EC2::NatGateway
+    DependsOn: NatEIPA
     Properties:
       AllocationId: !GetAtt NatEIPA.AllocationId
       SubnetId: !Ref PublicSubnetA
 
   NatGatewayB:
     Type: AWS::EC2::NatGateway
+    DependsOn: NatEIPB
     Properties:
       AllocationId: !GetAtt NatEIPB.AllocationId
       SubnetId: !Ref PublicSubnetB
 
   # Private Route Tables & Routes
-  PrivateRouteTableA:
+  PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
 
-  PrivateRouteA:
+  PublicRoute:
     Type: AWS::EC2::Route
+    DependsOn: AttachGateway
     Properties:
-      RouteTableId: !Ref PrivateRouteTableA
+      RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: "0.0.0.0/0"
-      NatGatewayId: !Ref NatGatewayA
+      GatewayId: !Ref InternetGateway
 
-  PrivateRouteTableB:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-
-  PrivateRouteB:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId: !Ref PrivateRouteTableB
-      DestinationCidrBlock: "0.0.0.0/0"
-      NatGatewayId: !Ref NatGatewayB
-
-  PrivateSubnetARouteTableAssociation:
+  PublicSubnetARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnetA
-      RouteTableId: !Ref PrivateRouteTableA
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
 
-  PrivateSubnetBRouteTableAssociation:
+  PublicSubnetBRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnetB
-      RouteTableId: !Ref PrivateRouteTableB
+      SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref PublicRouteTable
 
   ######################
   # ALB & Listener
@@ -160,19 +132,57 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
 
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: "gilgoblin-alb"
-      Scheme: "internet-facing"
-      Type: "application"
-      IpAddressType: "ipv4"
+      Name: GilGoblinALB
       Subnets:
         - !Ref PublicSubnetA
         - !Ref PublicSubnetB
       SecurityGroups:
         - !Ref ALBSecurityGroup
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: "60"
+
+  ALBListenerHTTP:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+
+  ALBListenerHTTPS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: <YourACMCertificateARN>
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+
+  ServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for ECS tasks"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
 
   # Next, define target groups
   DefaultTargetGroup:
@@ -214,24 +224,24 @@ Resources:
       TargetType: ip
 
   DataUpdaterTargetGroup:
-   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-   DependsOn:
-     - ALB
-   Properties:
-     VpcId: !Ref VPC
-     Port: 80
-     Protocol: HTTP
-     TargetType: ip
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
   
   FrontendTargetGroup:
-   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-   DependsOn:
-     - ALB
-   Properties:
-     VpcId: !Ref VPC
-     Port: 80
-     Protocol: HTTP
-     TargetType: ip
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
 
   # Define the ALB listener (which references the DefaultTargetGroup)
   ALBListener:
@@ -340,7 +350,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: "ECSExecutionPolicy"
+        - PolicyName: ECSExecutionPolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -349,9 +359,15 @@ Resources:
                   - ecr:GetAuthorizationToken
                   - ecr:BatchCheckLayerAvailability
                   - ecr:GetDownloadUrlForLayer
+                  - ecr:DescribeRepositories
+                  - ecr:ListImages
                   - ecr:BatchGetImage
                   - logs:CreateLogStream
                   - logs:PutLogEvents
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
                 Resource: "*"
 
   # ECS Task Definitions & Services for each repository
