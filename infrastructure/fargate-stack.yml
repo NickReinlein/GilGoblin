@@ -48,7 +48,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: us-east-1a
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
 
   PublicSubnetB:
     Type: AWS::EC2::Subnet
@@ -56,7 +56,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: us-east-1b
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
 
   # Private Subnets
   PrivateSubnetA:
