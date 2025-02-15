@@ -1,8 +1,4 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: >
-  AWS Fargate deployment with ALB for 5 ECR repositories:
-  gilgoblin-accountant, gilgoblin-api, gilgoblin-database,
-  gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
   EcrRepositoryAccountant:
@@ -93,6 +89,48 @@ Resources:
       SubnetId: !Ref PublicSubnetB
 
   # Private Route Tables & Routes
+  # Private Route Table for PrivateSubnetA
+  PrivateRouteTableA:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  PrivateRouteA:
+    Type: AWS::EC2::Route
+    DependsOn: NatGatewayA
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableA
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NatGatewayA
+
+  PrivateSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetA
+      RouteTableId: !Ref PrivateRouteTableA
+
+  # Private Route Table for PrivateSubnetB
+  PrivateRouteTableB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  PrivateRouteB:
+    Type: AWS::EC2::Route
+    DependsOn: NatGatewayB
+    Properties:
+      RouteTableId: !Ref PrivateRouteTableB
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NatGatewayB
+
+  PrivateSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetB
+      RouteTableId: !Ref PrivateRouteTableB
+
+
+  # Public Route Table & Routes
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
