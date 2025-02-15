@@ -1,4 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  AWS Fargate deployment with ALB for 5 ECR repositories: gilgoblin-accountant, gilgoblin-api, gilgoblin-database, gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
   EcrRepositoryAccountant:
@@ -46,6 +48,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
+      AvailabilityZone: us-east-1a
 
   PublicSubnetB:
     Type: AWS::EC2::Subnet
@@ -53,6 +56,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: true
+      AvailabilityZone: us-east-1b
 
   # Private Subnets
   PrivateSubnetA:
