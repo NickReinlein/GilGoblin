@@ -110,40 +110,24 @@ public class DataFetcherTests : FetcherTests
     }
 }
 
-public class MockBulkDataFetcher : BulkDataFetcher<Apple, AppleResponse>
+public class MockBulkDataFetcher(
+    string basePath,
+    ILogger<BulkDataFetcher<Apple, AppleResponse>> logger,
+    HttpClient client)
+    : BulkDataFetcher<Apple, AppleResponse>(basePath, logger, client);
+
+public class Apple(int id) : IIdentifiable
 
 {
-    public MockBulkDataFetcher(
-        string basePath,
-        ILogger<BulkDataFetcher<Apple, AppleResponse>> logger,
-        HttpClient client)
-        : base(basePath, logger, client)
-    {
-    }
-}
-
-public class Apple : IIdentifiable
-
-{
-    public int Id { get; set; }
-
-    public Apple(int id)
-    {
-        Id = id;
-    }
+    public int Id { get; set; } = id;
 
     public int GetId() => Id;
 }
 
-public class AppleResponse : IResponseToList<Apple>
+public class AppleResponse(List<Apple> apples) : IResponseToList<Apple>
 
 {
-    public List<Apple> Apples { get; set; }
-
-    public AppleResponse(List<Apple> apples)
-    {
-        Apples = apples;
-    }
+    public List<Apple> Apples { get; set; } = apples;
 
     public List<Apple> GetContentAsList() => Apples;
 }
