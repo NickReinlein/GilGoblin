@@ -26,16 +26,37 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddLogging();
+        services.AddLogging()
+            .AddHealthChecks();
+        services.AddControllers();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: "GilGoblinDataUpdater",
+                builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                });
+        });
+
         AddGoblinDatabases(services);
         AddGoblinCrafting(services);
         AddGoblinCaches(services);
         AddGoblinUpdaterServices(services);
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder builder)
     {
-        DatabaseValidation(app);
+        builder
+            .UseRouting()
+            .UseCors("GilGoblinDataUpdater")
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
+            });
+        DatabaseValidation(builder);
     }
 
     private void AddGoblinUpdaterServices(IServiceCollection services)

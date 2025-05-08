@@ -25,6 +25,7 @@ public class Startup(IConfiguration configuration)
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddHealthChecks();
         services.AddCors(options =>
         {
             options.AddPolicy(name: "GilGoblin",
@@ -41,8 +42,7 @@ public class Startup(IConfiguration configuration)
 
     public void Configure(IApplicationBuilder builder)
     {
-        builder.UseCors("GilGoblin");
-        AddAppGoblinServices(builder);
+        AddAppServices(builder);
         DatabaseValidation(builder);
     }
 
@@ -58,18 +58,17 @@ public class Startup(IConfiguration configuration)
 
     public static IServiceCollection AddGoblinCaches(IServiceCollection services)
     {
-        services.AddScoped<IItemCache, ItemCache>();
-        services.AddScoped<IPriceCache, PriceCache>();
-        services.AddScoped<IRecipeCache, RecipeCache>();
-        services.AddScoped<IWorldCache, WorldCache>();
-        services.AddScoped<IItemRecipeCache, ItemRecipeCache>();
-        services.AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>();
-        services.AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>();
-        services.AddScoped<ICraftCache, CraftCache>();
-        services.AddScoped<IRepositoryCache, ItemRepository>();
-        services.AddScoped<IRepositoryCache, PriceRepository>();
-        services.AddScoped<IRepositoryCache, RecipeRepository>();
-        return services;
+        return services.AddScoped<IItemCache, ItemCache>()
+            .AddScoped<IPriceCache, PriceCache>()
+            .AddScoped<IRecipeCache, RecipeCache>()
+            .AddScoped<IWorldCache, WorldCache>()
+            .AddScoped<IItemRecipeCache, ItemRecipeCache>()
+            .AddScoped<ICalculatedMetricCache<RecipeCostPoco>, RecipeCostCache>()
+            .AddScoped<ICalculatedMetricCache<RecipeProfitPoco>, RecipeProfitCache>()
+            .AddScoped<ICraftCache, CraftCache>()
+            .AddScoped<IRepositoryCache, ItemRepository>()
+            .AddScoped<IRepositoryCache, PriceRepository>()
+            .AddScoped<IRepositoryCache, RecipeRepository>();
     }
 
     private static IServiceCollection AddGoblinControllers(IServiceCollection services)
@@ -85,10 +84,9 @@ public class Startup(IConfiguration configuration)
 
     public static IServiceCollection AddGoblinCrafting(IServiceCollection services)
     {
-        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository, CraftRepository>();
-        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
-        return services;
+        return services.AddScoped<ICraftingCalculator, CraftingCalculator>()
+            .AddScoped<ICraftRepository, CraftRepository>()
+            .AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
     public static IServiceCollection AddGoblinDatabases(IServiceCollection services, IConfiguration configuration)
@@ -107,42 +105,44 @@ public class Startup(IConfiguration configuration)
                 .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
         });
 
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>();
-        services.AddScoped<IItemRepository, ItemRepository>();
-        services.AddScoped<IRecipeRepository, RecipeRepository>();
-        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
-        services.AddScoped<IWorldRepository, WorldRepository>();
+        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
+            .AddScoped<IItemRepository, ItemRepository>()
+            .AddScoped<IRecipeRepository, RecipeRepository>()
+            .AddScoped<IRecipeCostRepository, RecipeCostRepository>()
+            .AddScoped<IRecipeProfitRepository, RecipeProfitRepository>()
+            .AddScoped<IWorldRepository, WorldRepository>();
         return services;
     }
 
     private static IServiceCollection AddBasicBuilderServices(IServiceCollection services)
     {
-        services.AddEndpointsApiExplorer();
-        services.AddLogging();
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
-        });
+        services.AddEndpointsApiExplorer()
+            .AddLogging()
+            .AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
+            })
+            .AddHealthChecks();
         return services;
     }
 
-    private static void AddAppGoblinServices(IApplicationBuilder builder)
+    private static void AddAppServices(IApplicationBuilder builder)
     {
-        builder.UseSwagger();
-        builder.UseSwaggerUI();
-        builder.UseHttpMetrics();
-        builder.UseMetricServer();
-        builder.UseAuthorization();
-        builder.UseMiddleware<RequestInfoMiddleware>();
-
-        builder.UseRouting();
-        builder.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapSwagger();
-            endpoints.MapMetrics();
-        });
+        builder.UseSwagger()
+            .UseSwaggerUI()
+            .UseHttpMetrics()
+            .UseMetricServer()
+            .UseCors("GilGoblin")
+            .UseAuthorization()
+            .UseMiddleware<RequestInfoMiddleware>()
+            .UseRouting()
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapSwagger();
+                endpoints.MapMetrics();
+                endpoints.MapHealthChecks("/health");
+            });
     }
 
     private void DatabaseValidation(IApplicationBuilder builder)

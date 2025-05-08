@@ -12,13 +12,36 @@ public class Startup(IConfiguration configuration)
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddLogging();
+        services
+            .AddLogging()
+            .AddHealthChecks();
+
+        services.AddControllers();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: "GilGoblinAccountant",
+                builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                });
+        });
+
         AddGoblinAccountingServices(services);
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder builder)
     {
-        DatabaseValidation(app);
+        builder
+            .UseRouting()
+            .UseCors("GilGoblinAccountant")
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
+            });
+        DatabaseValidation(builder);
     }
 
     private void AddGoblinAccountingServices(IServiceCollection services)
@@ -27,7 +50,8 @@ public class Startup(IConfiguration configuration)
         Api.Startup.AddGoblinDatabases(services, configuration);
         Api.Startup.AddGoblinCaches(services);
 
-        services.AddSingleton<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>()
+        services
+            .AddSingleton<IDataSaver<RecipeCostPoco>, DataSaver<RecipeCostPoco>>()
             .AddSingleton<IDataSaver<RecipeProfitPoco>, DataSaver<RecipeProfitPoco>>()
             .AddSingleton<IPriceSaver, PriceSaver>()
             .AddSingleton<IAccountant, RecipeCostAccountant>()
