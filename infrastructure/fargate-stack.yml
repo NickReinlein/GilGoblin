@@ -215,11 +215,11 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref DefaultTargetGroup
 
-  ServiceSecurityGroup:
+  ECSServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VPC
-      GroupDescription: "Security group for ECS tasks"
+      GroupDescription: "Security group for ECS tasks, allow traffic from ALB to ECS services"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -441,7 +441,7 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ALBSecurityGroup
+            - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-accountant-container"
           ContainerPort: 80
@@ -481,7 +481,7 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ALBSecurityGroup
+            - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-api-container"
           ContainerPort: 80
@@ -521,7 +521,7 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ALBSecurityGroup
+            - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-database-container"
           ContainerPort: 80
@@ -561,7 +561,7 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ALBSecurityGroup
+            - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-dataupdater-container"
           ContainerPort: 80
@@ -601,7 +601,7 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ALBSecurityGroup
+            - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-frontend-container"
           ContainerPort: 80
