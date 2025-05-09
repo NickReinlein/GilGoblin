@@ -133,7 +133,6 @@ Resources:
       SubnetId: !Ref PrivateSubnetB
       RouteTableId: !Ref PrivateRouteTableB
 
-
   # Public Route Table & Routes
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -192,6 +191,69 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: "60"
+
+# Define target groups
+  DefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  AccountantTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  ApiTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  DatabaseTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  DataUpdaterTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+  
+  FrontendTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+
+  ######################            
 
   ALBListenerHTTP:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -347,67 +409,6 @@ Resources:
                 Action:
                   - secretsmanager:GetSecretValue
                 Resource: "*"
-
-# Define target groups
-  DefaultTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-
-  AccountantTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-
-  ApiTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-
-  DatabaseTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-
-  DataUpdaterTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-  
-  FrontendTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-
-  ######################  
 
   # ECS Task Definitions & Services for each repository
   AccountantTaskDefinition:
