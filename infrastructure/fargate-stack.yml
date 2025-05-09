@@ -604,7 +604,7 @@ Resources:
             - !Ref ALBSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-frontend-container"
-          ContainerPort: 3000
+          ContainerPort: 80
           TargetGroupArn: !Ref FrontendTargetGroup
 
 Outputs:
