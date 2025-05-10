@@ -453,7 +453,7 @@ Resources:
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
-  #             awslogs-group: !ref loggroup
+  #             awslogs-group: !Ref Loggroup
   #             awslogs-region: !Ref AWS::Region
   #             awslogs-stream-prefix: accountant
 
@@ -501,7 +501,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !ref loggroup
+              awslogs-group: !Ref Loggroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: api
 
@@ -549,7 +549,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !ref loggroup
+              awslogs-group: !Ref Loggroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: database
 
@@ -596,7 +596,7 @@ Resources:
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
-  #             awslogs-group: !ref loggroup
+  #             awslogs-group: !Ref Loggroup
   #             awslogs-region: !Ref AWS::Region
   #             awslogs-stream-prefix: dataupdater
 
@@ -644,7 +644,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !ref loggroup
+              awslogs-group: !Ref Loggroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: frontend
 
