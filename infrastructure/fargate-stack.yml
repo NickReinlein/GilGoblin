@@ -20,7 +20,9 @@ Parameters:
     Description: "ECR repository URI for gilgoblin-frontend"
 
 Resources:
-
+  ######################
+  ## LogGroup
+  ######################
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -45,6 +47,7 @@ Resources:
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
+    DependsOn: LogGroup
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
@@ -87,12 +90,14 @@ Resources:
 
   NatGatewayA:
     Type: AWS::EC2::NatGateway
+    DependsOn: LogGroup
     Properties:
       AllocationId: !GetAtt NatEIPA.AllocationId
       SubnetId: !Ref PublicSubnetA
 
   NatGatewayB:
     Type: AWS::EC2::NatGateway
+    DependsOn: LogGroup
     Properties:
       AllocationId: !GetAtt NatEIPB.AllocationId
       SubnetId: !Ref PublicSubnetB
@@ -414,6 +419,7 @@ Resources:
                   - ecr:ListImages
                   - ecr:BatchGetImage
                   - logs:CreateLogStream
+                  - logs:DescribeLogStreams
                   - logs:PutLogEvents
                   - logs:CreateLogGroup                  
                   - logs:DeleteLogGroup
