@@ -448,7 +448,7 @@ Resources:
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
-  #             awslogs-group: /ecs/gilgoblin
+  #             awslogs-group: !ref loggroup
   #             awslogs-region: !Ref AWS::Region
   #             awslogs-stream-prefix: accountant
 
@@ -458,6 +458,7 @@ Resources:
   #     - ALBListenerHTTP
   #     - ALBListenerHTTPS
   #     - AccountantListenerRule
+# - LogGroup  
   #   Properties:
   #     Cluster: !Ref ECSCluster
   #     TaskDefinition: !Ref AccountantTaskDefinition
@@ -495,7 +496,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/gilgoblin
+              awslogs-group: !ref loggroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: api
 
@@ -505,6 +506,7 @@ Resources:
       - ALBListenerHTTP
       - ALBListenerHTTPS
       - ApiListenerRule
+      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref ApiTaskDefinition
@@ -542,7 +544,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/gilgoblin
+              awslogs-group: !ref loggroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: database
 
@@ -552,6 +554,7 @@ Resources:
       - ALBListenerHTTP
       - ALBListenerHTTPS
       - DatabaseListenerRule
+      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref DatabaseTaskDefinition
@@ -588,7 +591,7 @@ Resources:
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
-  #             awslogs-group: /ecs/gilgoblin
+  #             awslogs-group: !ref loggroup
   #             awslogs-region: !Ref AWS::Region
   #             awslogs-stream-prefix: dataupdater
 
@@ -598,6 +601,7 @@ Resources:
   #     - ALBListenerHTTP
   #     - ALBListenerHTTPS
   #     - DataUpdaterListenerRule
+  # - LogGroup
   #   Properties:
   #     Cluster: !Ref ECSCluster
   #     TaskDefinition: !Ref DataUpdaterTaskDefinition
@@ -635,7 +639,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/gilgoblin
+              awslogs-group: !ref loggroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: frontend
 
@@ -645,6 +649,7 @@ Resources:
       - ALBListenerHTTP
       - ALBListenerHTTPS
       - FrontendListenerRule
+      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref FrontendTaskDefinition
