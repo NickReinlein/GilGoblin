@@ -34,6 +34,7 @@ Resources:
   ######################
   VPC:
     Type: AWS::EC2::VPC
+    DependsOn: LogGroup
     Properties:
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
@@ -44,6 +45,7 @@ Resources:
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
+    DependsOn: LogGroup
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -84,9 +86,11 @@ Resources:
   # NAT Gateways & Elastic IPs
   NatEIPA:
     Type: AWS::EC2::EIP
+    DependsOn: LogGroup
 
   NatEIPB:
     Type: AWS::EC2::EIP
+    DependsOn: LogGroup
 
   NatGatewayA:
     Type: AWS::EC2::NatGateway
@@ -395,6 +399,7 @@ Resources:
 
   ExecutionRole:
     Type: AWS::IAM::Role
+    DependsOn: LogGroup
     Properties:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
