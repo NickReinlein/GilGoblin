@@ -416,6 +416,7 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                   - logs:CreateLogGroup                  
+                  - logs:DeleteLogGroup
                 Resource: "*"
               - Effect: Allow
                 Action:
@@ -475,6 +476,7 @@ Resources:
       Family: "gilgoblin-api-task"
       RequiresCompatibilities:
         - FARGATE
+      DependsOn: LogGroup
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
@@ -524,6 +526,7 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
+      DependsOn: LogGroup
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-database-container"
@@ -616,6 +619,7 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
+      DependsOn: LogGroup
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-frontend-container"
