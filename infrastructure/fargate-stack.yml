@@ -472,11 +472,11 @@ Resources:
 
   ApiTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn: LogGroup
     Properties:
       Family: "gilgoblin-api-task"
       RequiresCompatibilities:
         - FARGATE
-      DependsOn: LogGroup
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
@@ -519,6 +519,7 @@ Resources:
 
   DatabaseTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn: LogGroup
     Properties:
       Family: "gilgoblin-database-task"
       RequiresCompatibilities:
@@ -526,7 +527,6 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
-      DependsOn: LogGroup
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-database-container"
@@ -612,6 +612,7 @@ Resources:
 
   FrontendTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn: LogGroup
     Properties:
       Family: "gilgoblin-frontend-task"
       RequiresCompatibilities:
@@ -619,7 +620,6 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
-      DependsOn: LogGroup
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-frontend-container"
