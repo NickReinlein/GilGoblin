@@ -18,6 +18,9 @@ Parameters:
   EcrRepositoryFrontend:
     Type: String
     Description: "ECR repository URI for gilgoblin-frontend"
+  DbSecretArn:
+    Type: AWS::SSM::Parameter::Value<AWS::SecretsManager::SecretArn>
+    Description: "ARN of the SecretsManager secret containing the database connection string"
 
 Resources:
   ######################
@@ -450,6 +453,9 @@ Resources:
   #         Image: !Ref EcrRepositoryAccountant
   #         PortMappings:
   #           - ContainerPort: 80
+          # Secrets:
+          #   - Name: ConnectionStrings__GilGoblinDbContext
+          #     ValueFrom: !Sub "${DbSecretArn}:SecretString:ConnectionStrings.GilGoblinDbContext"
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
@@ -498,6 +504,9 @@ Resources:
           Image: !Ref EcrRepositoryApi
           PortMappings:
             - ContainerPort: 80
+          Secrets:
+            - Name: ConnectionStrings__GilGoblinDbContext
+              ValueFrom: !Sub "${DbSecretArn}:SecretString:ConnectionStrings.GilGoblinDbContext"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -546,6 +555,9 @@ Resources:
           Image: !Ref EcrRepositoryDatabase
           PortMappings:
             - ContainerPort: 80
+          Secrets:
+            - Name: ConnectionStrings__GilGoblinDbContext
+              ValueFrom: !Sub "${DbSecretArn}:SecretString:ConnectionStrings.GilGoblinDbContext"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -593,6 +605,9 @@ Resources:
   #         Image: !Ref EcrRepositoryDataUpdater
   #         PortMappings:
   #           - ContainerPort: 80
+          # Secrets:
+          #   - Name: ConnectionStrings__GilGoblinDbContext
+          #     ValueFrom: !Sub "${DbSecretArn}:SecretString:ConnectionStrings.GilGoblinDbContext"
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
@@ -641,6 +656,9 @@ Resources:
           Image: !Ref EcrRepositoryFrontend
           PortMappings:
             - ContainerPort: 80
+          Secrets:
+            - Name: ConnectionStrings__GilGoblinDbContext
+              ValueFrom: !Sub "${DbSecretArn}:SecretString:ConnectionStrings.GilGoblinDbContext"            
           LogConfiguration:
             LogDriver: awslogs
             Options:
