@@ -19,7 +19,7 @@ Parameters:
     Type: String
     Description: "ECR repository URI for gilgoblin-frontend"
   DbSecretArn:
-    Type: AWS::SSM::Parameter::Value<AWS::SecretsManager::SecretArn>
+    Type: String
     Description: "ARN of the SecretsManager secret containing the database connection string"
 
 Resources:
