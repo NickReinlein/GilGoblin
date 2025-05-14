@@ -431,9 +431,6 @@ Resources:
                   - logs:PutLogEvents
                   - logs:CreateLogGroup                  
                   - logs:DeleteLogGroup
-                Resource: "*"
-              - Effect: Allow
-                Action:
                   - secretsmanager:GetSecretValue
                 Resource: "*"
 
