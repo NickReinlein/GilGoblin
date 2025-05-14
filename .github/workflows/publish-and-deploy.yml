@@ -155,6 +155,7 @@ jobs:
             --parameter-overrides \
               AWSAccountId="$AWS_ACCOUNT_ID" \
               AWSRegion="$AWS_REGION" \
+              DbSecretArn=${{ secrets.DB_SECRET_ARN }} \
               EcrRepositoryAccountant="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-accountant" \
               EcrRepositoryApi="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-api" \
               EcrRepositoryDatabase="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-database" \
