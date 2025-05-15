@@ -503,7 +503,7 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: ConnectionStrings__GilGoblinDbContext
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:ConnectionStrings__GilGoblinDbContext
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -559,6 +559,12 @@ Resources:
               ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:POSTGRES_USER
             - Name: POSTGRES_DB
               ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:POSTGRES_DB
+            - Name: PGUSER
+              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:PGUSER
+            - Name: PGDATA
+              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:PGDATA
+            - Name: PORT_DATABASE
+              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:PORT_DATABASE                                          
           LogConfiguration:
             LogDriver: awslogs
             Options:
