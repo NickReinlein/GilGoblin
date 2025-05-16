@@ -502,8 +502,8 @@ Resources:
           PortMappings:
             - ContainerPort: 80
           Secrets:
-            - Name: ConnectionStrings__GilGoblinDbContext
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
+            - Name: DB_CONNECTION_STRING
+              ValueFrom: !Ref DatabaseSecretArn
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -664,8 +664,8 @@ Resources:
           PortMappings:
             - ContainerPort: 80
           Secrets:
-            - Name: ConnectionStrings__GilGoblinDbContext
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
+            - Name: DB_CONNECTION_STRING
+              ValueFrom: !Ref DatabaseSecretArn
           LogConfiguration:
             LogDriver: awslogs
             Options:
