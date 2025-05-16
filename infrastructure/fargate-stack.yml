@@ -452,7 +452,7 @@ Resources:
   #           - ContainerPort: 80
           # Secrets:
           #   - Name: ConnectionStrings__GilGoblinDbContext
-          #     ValueFrom: !Ref DatabaseSecretArn
+          #     ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
@@ -503,7 +503,7 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: ConnectionStrings__GilGoblinDbContext
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:ConnectionStrings__GilGoblinDbContext
+              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -614,7 +614,7 @@ Resources:
   #           - ContainerPort: 80
           # Secrets:
           #   - Name: ConnectionStrings__GilGoblinDbContext
-          #     ValueFrom: !Ref DatabaseSecretArn
+          #     ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
   #         LogConfiguration:
   #           LogDriver: awslogs
   #           Options:
@@ -665,7 +665,7 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: ConnectionStrings__GilGoblinDbContext
-              ValueFrom: !Ref DatabaseSecretArn            
+              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
           LogConfiguration:
             LogDriver: awslogs
             Options:
