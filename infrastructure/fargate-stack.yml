@@ -554,17 +554,17 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: POSTGRES_PASSWORD
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:POSTGRES_PASSWORD
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: POSTGRES_USER
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:POSTGRES_USER
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: POSTGRES_DB
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:POSTGRES_DB
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: PGUSER
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:PGUSER
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: PGDATA
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:PGDATA
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: PORT_DATABASE
-              ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:PORT_DATABASE                                          
+              ValueFrom: !Ref DatabaseSecretArn
           LogConfiguration:
             LogDriver: awslogs
             Options:
