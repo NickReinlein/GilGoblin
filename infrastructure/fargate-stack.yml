@@ -117,7 +117,6 @@ Resources:
 
   PrivateRouteA:
     Type: AWS::EC2::Route
-    DependsOn: NatGatewayA
     Properties:
       RouteTableId: !Ref PrivateRouteTableA
       DestinationCidrBlock: "0.0.0.0/0"
@@ -136,7 +135,6 @@ Resources:
 
   PrivateRouteB:
     Type: AWS::EC2::Route
-    DependsOn: NatGatewayB
     Properties:
       RouteTableId: !Ref PrivateRouteTableB
       DestinationCidrBlock: "0.0.0.0/0"
@@ -206,6 +204,16 @@ Resources:
         - Key: idle_timeout.timeout_seconds
           Value: "60"
 
+  DatabaseNLB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: gilgoblin-database-nlb
+      Type: network
+      Scheme: internet-facing
+      Subnets:
+        - !Ref PublicSubnetA
+        - !Ref PublicSubnetB
+
 # Define target groups
   DefaultTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -239,13 +247,14 @@ Resources:
 
   DatabaseTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
     Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
+      Name: gilgoblin-db-tg
+      Port: 5432
+      Protocol: TCP
       TargetType: ip
+      VpcId: !Ref VPC
+      HealthCheckProtocol: TCP
+      HealthCheckPort: "5432"
 
   # DataUpdaterTargetGroup:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -293,6 +302,16 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref DefaultTargetGroup
 
+  DatabaseListenerTCP5432:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref DatabaseNLB
+      Port: 5432
+      Protocol: TCP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DatabaseTargetGroup
+
   ECSServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -303,6 +322,10 @@ Resources:
           FromPort: 80
           ToPort: 80
           SourceSecurityGroupId: !Ref ALBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: 10.0.0.0/16
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -338,22 +361,6 @@ Resources:
   #     Actions:
   #       - Type: forward
   #         TargetGroupArn: !Ref ApiTargetGroup
-
-  DatabaseListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - DatabaseTargetGroup
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 3
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/database/*" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref DatabaseTargetGroup
 
   # DataUpdaterListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -532,53 +539,57 @@ Resources:
   #         TargetGroupArn: !Ref ApiTargetGroup
 
   DatabaseTaskDefinition:
-  Type: AWS::ECS::TaskDefinition
-  DependsOn: LogGroup
-  Properties:
-    Family: "gilgoblin-database-task"
-    RequiresCompatibilities:
-      - FARGATE
-    Cpu: "256"
-    Memory: "512"
-    NetworkMode: awsvpc
-    ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-    ContainerDefinitions:
-      - Name: "gilgoblin-database-container"
-        Image: !Ref EcrRepositoryDatabase
-        PortMappings:
-          - ContainerPort: 80
-        Environment:
-          - Name: POSTGRES_DB
-            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_DB}}"
-          - Name: POSTGRES_USER
-            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_USER}}"
-          - Name: POSTGRES_PASSWORD
-            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_PASSWORD}}"
-          - Name: PGUSER
-            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGUSER}}"
-          - Name: PGDATA
-            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGDATA}}"
-          - Name: PORT_DATABASE
-            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PORT_DATABASE}}"
-        LogConfiguration:
-          LogDriver: awslogs
-          Options:
-            awslogs-group: !Ref LogGroup
-            awslogs-region: !Ref AWS::Region
-            awslogs-stream-prefix: database
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-database-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-database-container"
+          Image: !Ref EcrRepositoryDatabase
+          PortMappings:
+            - ContainerPort: 5432
+          Environment:
+            - Name: POSTGRES_DB
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_DB}}"
+            - Name: POSTGRES_USER
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_USER}}"
+            - Name: POSTGRES_PASSWORD
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_PASSWORD}}"
+            - Name: PGUSER
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGUSER}}"
+            - Name: PGDATA
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGDATA}}"
+            - Name: PORT_DATABASE
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PORT_DATABASE}}"
+          HealthCheck:
+            Command: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
+            Interval: 30
+            Timeout: 30
+            Retries: 3
+            StartPeriod: 60
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: database
 
   DatabaseService:
     Type: AWS::ECS::Service
     DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - DatabaseListenerRule
       - LogGroup
+      - DatabaseListenerTCP5432
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref DatabaseTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
+      HealthCheckGracePeriodSeconds: 60
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
@@ -589,7 +600,7 @@ Resources:
             - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-database-container"
-          ContainerPort: 80
+          ContainerPort: 5432
           TargetGroupArn: !Ref DatabaseTargetGroup
 
   # DataUpdaterTaskDefinition:

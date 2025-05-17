@@ -14,9 +14,10 @@ services:
       PGDATA: ${PGDATA}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
+      interval: 20s
+      timeout: 30s
       retries: 5
+      start_period: 60s
     networks:
       - gilgoblin
     ports:
