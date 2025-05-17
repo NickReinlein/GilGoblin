@@ -339,21 +339,21 @@ Resources:
   #       - Type: forward
   #         TargetGroupArn: !Ref ApiTargetGroup
 
-  # DatabaseListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   DependsOn:
-  #     - ALBListenerHTTP
-  #     - ALBListenerHTTPS
-  #     - DatabaseTargetGroup
-  #   Properties:
-  #     ListenerArn: !Ref ALBListenerHTTPS
-  #     Priority: 3
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/database/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref DatabaseTargetGroup
+  DatabaseListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
+      - DatabaseTargetGroup
+    Properties:
+      ListenerArn: !Ref ALBListenerHTTPS
+      Priority: 3
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/database/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DatabaseTargetGroup
 
   # DataUpdaterListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
