@@ -262,15 +262,15 @@ Resources:
   #     Protocol: HTTP
   #     TargetType: ip
   
-  FrontendTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
+  # FrontendTargetGroup:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   DependsOn:
+  #     - ALB
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     Port: 80
+  #     Protocol: HTTP
+  #     TargetType: ip
 
   ######################            
   # ALB & Listener
@@ -376,21 +376,21 @@ Resources:
   #       - Type: forward
   #         TargetGroupArn: !Ref DataUpdaterTargetGroup
 
-  FrontendListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS      
-      - FrontendTargetGroup
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 5
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/frontend/*" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref FrontendTargetGroup
+  # FrontendListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   DependsOn:
+  #     - ALBListenerHTTP
+  #     - ALBListenerHTTPS      
+  #     - FrontendTargetGroup
+  #   Properties:
+  #     ListenerArn: !Ref ALBListenerHTTPS
+  #     Priority: 5
+  #     Conditions:
+  #       - Field: path-pattern
+  #         Values: [ "/frontend/*" ]
+  #     Actions:
+  #       - Type: forward
+  #         TargetGroupArn: !Ref FrontendTargetGroup
 
   ######################
   # ECS Cluster & Execution Role
@@ -503,7 +503,7 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: DB_CONNECTION_STRING
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:DB_CONNECTION_STRING"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -554,17 +554,17 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: POSTGRES_PASSWORD
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:POSTGRES_PASSWORD"
             - Name: POSTGRES_USER
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:POSTGRES_USER"
             - Name: POSTGRES_DB
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:POSTGRES_DB"
             - Name: PGUSER
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:PGUSER"
             - Name: PGDATA
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:PGDATA"
             - Name: PORT_DATABASE
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:PORT_DATABASE"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -647,56 +647,56 @@ Resources:
   #         ContainerPort: 80
   #         TargetGroupArn: !Ref DataUpdaterTargetGroup
 
-  FrontendTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    DependsOn: LogGroup
-    Properties:
-      Family: "gilgoblin-frontend-task"
-      RequiresCompatibilities:
-        - FARGATE
-      Cpu: "256"
-      Memory: "512"
-      NetworkMode: awsvpc
-      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-      ContainerDefinitions:
-        - Name: "gilgoblin-frontend-container"
-          Image: !Ref EcrRepositoryFrontend
-          PortMappings:
-            - ContainerPort: 80
-          Secrets:
-            - Name: DB_CONNECTION_STRING
-              ValueFrom: !Ref DatabaseSecretArn
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group: !Ref LogGroup
-              awslogs-region: !Ref AWS::Region
-              awslogs-stream-prefix: frontend
+  # FrontendTaskDefinition:
+  #   Type: AWS::ECS::TaskDefinition
+  #   DependsOn: LogGroup
+  #   Properties:
+  #     Family: "gilgoblin-frontend-task"
+  #     RequiresCompatibilities:
+  #       - FARGATE
+  #     Cpu: "256"
+  #     Memory: "512"
+  #     NetworkMode: awsvpc
+  #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+  #     ContainerDefinitions:
+  #       - Name: "gilgoblin-frontend-container"
+  #         Image: !Ref EcrRepositoryFrontend
+  #         PortMappings:
+  #           - ContainerPort: 80
+  #         Secrets:
+  #           - Name: DB_CONNECTION_STRING
+  #             ValueFrom: !Ref DatabaseSecretArn
+  #         LogConfiguration:
+  #           LogDriver: awslogs
+  #           Options:
+  #             awslogs-group: !Ref LogGroup
+  #             awslogs-region: !Ref AWS::Region
+  #             awslogs-stream-prefix: frontend
 
-  FrontendService:
-    Type: AWS::ECS::Service
-    DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - FrontendListenerRule
-      - LogGroup
-    Properties:
-      Cluster: !Ref ECSCluster
-      TaskDefinition: !Ref FrontendTaskDefinition
-      LaunchType: FARGATE
-      DesiredCount: 1
-      NetworkConfiguration:
-        AwsvpcConfiguration:
-          AssignPublicIp: DISABLED
-          Subnets:
-            - !Ref PrivateSubnetA
-            - !Ref PrivateSubnetB
-          SecurityGroups:
-            - !Ref ECSServiceSecurityGroup
-      LoadBalancers:
-        - ContainerName: "gilgoblin-frontend-container"
-          ContainerPort: 80
-          TargetGroupArn: !Ref FrontendTargetGroup
+  # FrontendService:
+  #   Type: AWS::ECS::Service
+  #   DependsOn:
+  #     - ALBListenerHTTP
+  #     - ALBListenerHTTPS
+  #     - FrontendListenerRule
+  #     - LogGroup
+  #   Properties:
+  #     Cluster: !Ref ECSCluster
+  #     TaskDefinition: !Ref FrontendTaskDefinition
+  #     LaunchType: FARGATE
+  #     DesiredCount: 1
+  #     NetworkConfiguration:
+  #       AwsvpcConfiguration:
+  #         AssignPublicIp: DISABLED
+  #         Subnets:
+  #           - !Ref PrivateSubnetA
+  #           - !Ref PrivateSubnetB
+  #         SecurityGroups:
+  #           - !Ref ECSServiceSecurityGroup
+  #     LoadBalancers:
+  #       - ContainerName: "gilgoblin-frontend-container"
+  #         ContainerPort: 80
+  #         TargetGroupArn: !Ref FrontendTargetGroup
 
 Outputs:
   ALBDNSName:
