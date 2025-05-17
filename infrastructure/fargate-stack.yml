@@ -548,18 +548,18 @@ Resources:
           PortMappings:
             - ContainerPort: 80
           Secrets:
-            - Name: POSTGRES_PASSWORD
-              ValueFrom: !Ref DatabaseSecretArn
-            - Name: POSTGRES_USER
-              ValueFrom: !Ref DatabaseSecretArn
             - Name: POSTGRES_DB
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:POSTGRES_DB::AWSCURRENT"
+            - Name: POSTGRES_USER
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:POSTGRES_USER::AWSCURRENT"
+            - Name: POSTGRES_PASSWORD
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:POSTGRES_PASSWORD::AWSCURRENT"
             - Name: PGUSER
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:PGUSER::AWSCURRENT"
             - Name: PGDATA
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:PGDATA::AWSCURRENT"
             - Name: PORT_DATABASE
-              ValueFrom: !Ref DatabaseSecretArn
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:PORT_DATABASE::AWSCURRENT"
           LogConfiguration:
             LogDriver: awslogs
             Options:
