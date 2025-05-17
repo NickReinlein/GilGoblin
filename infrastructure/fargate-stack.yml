@@ -192,7 +192,6 @@ Resources:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
 
-
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -324,37 +323,37 @@ Resources:
   #       - Type: forward
   #         TargetGroupArn: !Ref AccountantTargetGroup
 
-  ApiListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - ApiTargetGroup
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 2
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/api/*" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref ApiTargetGroup
+  # ApiListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   DependsOn:
+  #     - ALBListenerHTTP
+  #     - ALBListenerHTTPS
+  #     - ApiTargetGroup
+  #   Properties:
+  #     ListenerArn: !Ref ALBListenerHTTPS
+  #     Priority: 2
+  #     Conditions:
+  #       - Field: path-pattern
+  #         Values: [ "/api/*" ]
+  #     Actions:
+  #       - Type: forward
+  #         TargetGroupArn: !Ref ApiTargetGroup
 
-  DatabaseListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - DatabaseTargetGroup
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 3
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/database/*" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref DatabaseTargetGroup
+  # DatabaseListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   DependsOn:
+  #     - ALBListenerHTTP
+  #     - ALBListenerHTTPS
+  #     - DatabaseTargetGroup
+  #   Properties:
+  #     ListenerArn: !Ref ALBListenerHTTPS
+  #     Priority: 3
+  #     Conditions:
+  #       - Field: path-pattern
+  #         Values: [ "/database/*" ]
+  #     Actions:
+  #       - Type: forward
+  #         TargetGroupArn: !Ref DatabaseTargetGroup
 
   # DataUpdaterListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -481,56 +480,56 @@ Resources:
   #         ContainerPort: 80
   #         TargetGroupArn: !Ref AccountantTargetGroup
 
-  ApiTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    DependsOn: LogGroup
-    Properties:
-      Family: "gilgoblin-api-task"
-      RequiresCompatibilities:
-        - FARGATE
-      Cpu: "256"
-      Memory: "512"
-      NetworkMode: awsvpc
-      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-      ContainerDefinitions:
-        - Name: "gilgoblin-api-container"
-          Image: !Ref EcrRepositoryApi
-          PortMappings:
-            - ContainerPort: 80
-          Secrets:
-            - Name: DB_CONNECTION_STRING
-              ValueFrom: !Sub "${DatabaseSecretArn}:DB_CONNECTION_STRING"
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group: !Ref LogGroup
-              awslogs-region: !Ref AWS::Region
-              awslogs-stream-prefix: api
+  # ApiTaskDefinition:
+  #   Type: AWS::ECS::TaskDefinition
+  #   DependsOn: LogGroup
+  #   Properties:
+  #     Family: "gilgoblin-api-task"
+  #     RequiresCompatibilities:
+  #       - FARGATE
+  #     Cpu: "256"
+  #     Memory: "512"
+  #     NetworkMode: awsvpc
+  #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+  #     ContainerDefinitions:
+  #       - Name: "gilgoblin-api-container"
+  #         Image: !Ref EcrRepositoryApi
+  #         PortMappings:
+  #           - ContainerPort: 80
+  #         Secrets:
+  #           - Name: DB_CONNECTION_STRING
+  #             ValueFrom: !Sub "${DatabaseSecretArn}:DB_CONNECTION_STRING"
+  #         LogConfiguration:
+  #           LogDriver: awslogs
+  #           Options:
+  #             awslogs-group: !Ref LogGroup
+  #             awslogs-region: !Ref AWS::Region
+  #             awslogs-stream-prefix: api
 
-  ApiService:
-    Type: AWS::ECS::Service
-    DependsOn:
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - ApiListenerRule
-      - LogGroup
-    Properties:
-      Cluster: !Ref ECSCluster
-      TaskDefinition: !Ref ApiTaskDefinition
-      LaunchType: FARGATE
-      DesiredCount: 1
-      NetworkConfiguration:
-        AwsvpcConfiguration:
-          AssignPublicIp: DISABLED
-          Subnets:
-            - !Ref PrivateSubnetA
-            - !Ref PrivateSubnetB
-          SecurityGroups:
-            - !Ref ECSServiceSecurityGroup
-      LoadBalancers:
-        - ContainerName: "gilgoblin-api-container"
-          ContainerPort: 80
-          TargetGroupArn: !Ref ApiTargetGroup
+  # ApiService:
+  #   Type: AWS::ECS::Service
+  #   DependsOn:
+  #     - ALBListenerHTTP
+  #     - ALBListenerHTTPS
+  #     - ApiListenerRule
+  #     - LogGroup
+  #   Properties:
+  #     Cluster: !Ref ECSCluster
+  #     TaskDefinition: !Ref ApiTaskDefinition
+  #     LaunchType: FARGATE
+  #     DesiredCount: 1
+  #     NetworkConfiguration:
+  #       AwsvpcConfiguration:
+  #         AssignPublicIp: DISABLED
+  #         Subnets:
+  #           - !Ref PrivateSubnetA
+  #           - !Ref PrivateSubnetB
+  #         SecurityGroups:
+  #           - !Ref ECSServiceSecurityGroup
+  #     LoadBalancers:
+  #       - ContainerName: "gilgoblin-api-container"
+  #         ContainerPort: 80
+  #         TargetGroupArn: !Ref ApiTargetGroup
 
   DatabaseTaskDefinition:
     Type: AWS::ECS::TaskDefinition
