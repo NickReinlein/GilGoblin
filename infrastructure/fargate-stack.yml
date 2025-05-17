@@ -227,15 +227,15 @@ Resources:
   #     Protocol: HTTP
   #     TargetType: ip
 
-  ApiTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
+  # ApiTargetGroup:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   DependsOn:
+  #     - ALB
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     Port: 80
+  #     Protocol: HTTP
+  #     TargetType: ip
 
   DatabaseTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -532,40 +532,40 @@ Resources:
   #         TargetGroupArn: !Ref ApiTargetGroup
 
   DatabaseTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    DependsOn: LogGroup
-    Properties:
-      Family: "gilgoblin-database-task"
-      RequiresCompatibilities:
-        - FARGATE
-      Cpu: "256"
-      Memory: "512"
-      NetworkMode: awsvpc
-      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-      ContainerDefinitions:
-        - Name: "gilgoblin-database-container"
-          Image: !Ref EcrRepositoryDatabase
-          PortMappings:
-            - ContainerPort: 80
-          Secrets:
-            - Name: POSTGRES_DB
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:POSTGRES_DB::AWSCURRENT"
-            - Name: POSTGRES_USER
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:POSTGRES_USER::AWSCURRENT"
-            - Name: POSTGRES_PASSWORD
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:POSTGRES_PASSWORD::AWSCURRENT"
-            - Name: PGUSER
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:PGUSER::AWSCURRENT"
-            - Name: PGDATA
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:PGDATA::AWSCURRENT"
-            - Name: PORT_DATABASE
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:PORT_DATABASE::AWSCURRENT"
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group: !Ref LogGroup
-              awslogs-region: !Ref AWS::Region
-              awslogs-stream-prefix: database
+  Type: AWS::ECS::TaskDefinition
+  DependsOn: LogGroup
+  Properties:
+    Family: "gilgoblin-database-task"
+    RequiresCompatibilities:
+      - FARGATE
+    Cpu: "256"
+    Memory: "512"
+    NetworkMode: awsvpc
+    ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+    ContainerDefinitions:
+      - Name: "gilgoblin-database-container"
+        Image: !Ref EcrRepositoryDatabase
+        PortMappings:
+          - ContainerPort: 80
+        Environment:
+          - Name: POSTGRES_DB
+            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_DB}}"
+          - Name: POSTGRES_USER
+            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_USER}}"
+          - Name: POSTGRES_PASSWORD
+            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:POSTGRES_PASSWORD}}"
+          - Name: PGUSER
+            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGUSER}}"
+          - Name: PGDATA
+            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGDATA}}"
+          - Name: PORT_DATABASE
+            Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PORT_DATABASE}}"
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref LogGroup
+            awslogs-region: !Ref AWS::Region
+            awslogs-stream-prefix: database
 
   DatabaseService:
     Type: AWS::ECS::Service
