@@ -110,7 +110,6 @@ Resources:
       SubnetId: !Ref PublicSubnetB
 
   # Private Route Tables & Routes
-  # Private Route Table for PrivateSubnetA
   PrivateRouteTableA:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -130,7 +129,6 @@ Resources:
       SubnetId: !Ref PrivateSubnetA
       RouteTableId: !Ref PrivateRouteTableA
 
-  # Private Route Table for PrivateSubnetB
   PrivateRouteTableB:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -150,7 +148,6 @@ Resources:
       SubnetId: !Ref PrivateSubnetB
       RouteTableId: !Ref PrivateRouteTableB
 
-  # Public Route Table & Routes
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -176,8 +173,7 @@ Resources:
       SubnetId: !Ref PublicSubnetB
       RouteTableId: !Ref PublicRouteTable
 
-  ######################
-  # ALB security group & ALB defined first
+  # ALB security group 
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -554,17 +550,17 @@ Resources:
             - ContainerPort: 80
           Secrets:
             - Name: POSTGRES_PASSWORD
-              ValueFrom: !Sub "${DatabaseSecretArn}:POSTGRES_PASSWORD"
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: POSTGRES_USER
-              ValueFrom: !Sub "${DatabaseSecretArn}:POSTGRES_USER"
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: POSTGRES_DB
-              ValueFrom: !Sub "${DatabaseSecretArn}:POSTGRES_DB"
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: PGUSER
-              ValueFrom: !Sub "${DatabaseSecretArn}:PGUSER"
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: PGDATA
-              ValueFrom: !Sub "${DatabaseSecretArn}:PGDATA"
+              ValueFrom: !Ref DatabaseSecretArn
             - Name: PORT_DATABASE
-              ValueFrom: !Sub "${DatabaseSecretArn}:PORT_DATABASE"
+              ValueFrom: !Ref DatabaseSecretArn
           LogConfiguration:
             LogDriver: awslogs
             Options:
