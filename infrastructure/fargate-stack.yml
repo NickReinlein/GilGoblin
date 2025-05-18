@@ -97,14 +97,12 @@ Resources:
 
   NatGatewayA:
     Type: AWS::EC2::NatGateway
-    DependsOn: LogGroup
     Properties:
       AllocationId: !GetAtt NatEIPA.AllocationId
       SubnetId: !Ref PublicSubnetA
 
   NatGatewayB:
     Type: AWS::EC2::NatGateway
-    DependsOn: LogGroup
     Properties:
       AllocationId: !GetAtt NatEIPB.AllocationId
       SubnetId: !Ref PublicSubnetB
@@ -193,13 +191,12 @@ Resources:
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: GilGoblinALB
+      Scheme: internet-facing
       Subnets:
         - !Ref PublicSubnetA
         - !Ref PublicSubnetB
       SecurityGroups:
         - !Ref ALBSecurityGroup
-      Scheme: internet-facing
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: "60"
@@ -207,7 +204,6 @@ Resources:
   DatabaseNLB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: gilgoblin-database-nlb
       Type: network
       Scheme: internet-facing
       Subnets:
@@ -248,7 +244,6 @@ Resources:
   DatabaseTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: gilgoblin-db-tg
       Port: 5432
       Protocol: TCP
       TargetType: ip
@@ -266,15 +261,22 @@ Resources:
   #     Protocol: HTTP
   #     TargetType: ip
   
-  # FrontendTargetGroup:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   DependsOn:
-  #     - ALB
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     Port: 80
-  #     Protocol: HTTP
-  #     TargetType: ip
+  FrontendTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Protocol: HTTP
+      TargetType: ip
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: traffic-port
+      HealthCheckPath: /health.html
+      Port: 3000
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 3
 
   ######################            
   # ALB & Listener
@@ -378,21 +380,19 @@ Resources:
   #       - Type: forward
   #         TargetGroupArn: !Ref DataUpdaterTargetGroup
 
-  # FrontendListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   DependsOn:
-  #     - ALBListenerHTTP
-  #     - ALBListenerHTTPS      
-  #     - FrontendTargetGroup
-  #   Properties:
-  #     ListenerArn: !Ref ALBListenerHTTPS
-  #     Priority: 5
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/frontend/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref FrontendTargetGroup
+  FrontendListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListenerHTTP
+    Properties:
+      ListenerArn: !Ref ALBListenerHTTPS
+      Priority: 5
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/frontend/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref FrontendTargetGroup
 
   ######################
   # ECS Cluster & Execution Role
@@ -653,56 +653,52 @@ Resources:
   #         ContainerPort: 80
   #         TargetGroupArn: !Ref DataUpdaterTargetGroup
 
-  # FrontendTaskDefinition:
-  #   Type: AWS::ECS::TaskDefinition
-  #   DependsOn: LogGroup
-  #   Properties:
-  #     Family: "gilgoblin-frontend-task"
-  #     RequiresCompatibilities:
-  #       - FARGATE
-  #     Cpu: "256"
-  #     Memory: "512"
-  #     NetworkMode: awsvpc
-  #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-  #     ContainerDefinitions:
-  #       - Name: "gilgoblin-frontend-container"
-  #         Image: !Ref EcrRepositoryFrontend
-  #         PortMappings:
-  #           - ContainerPort: 80
-  #         Secrets:
-  #           - Name: DB_CONNECTION_STRING
-  #             ValueFrom: !Ref DatabaseSecretArn
-  #         LogConfiguration:
-  #           LogDriver: awslogs
-  #           Options:
-  #             awslogs-group: !Ref LogGroup
-  #             awslogs-region: !Ref AWS::Region
-  #             awslogs-stream-prefix: frontend
+  FrontendTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-frontend-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-frontend-container"
+          Image: !Ref EcrRepositoryFrontend
+          PortMappings:
+            - ContainerPort: 3000
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: frontend
 
-  # FrontendService:
-  #   Type: AWS::ECS::Service
-  #   DependsOn:
-  #     - ALBListenerHTTP
-  #     - ALBListenerHTTPS
-  #     - FrontendListenerRule
-  #     - LogGroup
-  #   Properties:
-  #     Cluster: !Ref ECSCluster
-  #     TaskDefinition: !Ref FrontendTaskDefinition
-  #     LaunchType: FARGATE
-  #     DesiredCount: 1
-  #     NetworkConfiguration:
-  #       AwsvpcConfiguration:
-  #         AssignPublicIp: DISABLED
-  #         Subnets:
-  #           - !Ref PrivateSubnetA
-  #           - !Ref PrivateSubnetB
-  #         SecurityGroups:
-  #           - !Ref ECSServiceSecurityGroup
-  #     LoadBalancers:
-  #       - ContainerName: "gilgoblin-frontend-container"
-  #         ContainerPort: 80
-  #         TargetGroupArn: !Ref FrontendTargetGroup
+  FrontendService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
+      - FrontendListenerRule
+      - LogGroup
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref FrontendTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          Subnets:
+            - !Ref PrivateSubnetA
+            - !Ref PrivateSubnetB
+          SecurityGroups:
+            - !Ref ECSServiceSecurityGroup
+      LoadBalancers:
+        - ContainerName: "gilgoblin-frontend-container"
+          ContainerPort: 80
+          TargetGroupArn: !Ref FrontendTargetGroup
 
 Outputs:
   ALBDNSName:

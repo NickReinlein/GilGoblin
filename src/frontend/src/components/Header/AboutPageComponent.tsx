@@ -23,7 +23,7 @@ const AboutPageComponent = () => {
                 Nick Reinlein is a software developer from Montreal, Canada.
                 Nick has a passion for web development and automation, especially when it involves complexity.
                 He has a background in Computer Science and Financial Accounting. He is married and father of 3
-                children. Nick is a lifelong fan of Final Fantasy and video games.<br/>
+                children. Nick is a lifelong fan of Final Fantasy and other video games.<br/>
             </div>
             <div>
                 <h2> Contact </h2>
