@@ -697,7 +697,7 @@ Resources:
             - !Ref ECSServiceSecurityGroup
       LoadBalancers:
         - ContainerName: "gilgoblin-frontend-container"
-          ContainerPort: 80
+          ContainerPort: 3000
           TargetGroupArn: !Ref FrontendTargetGroup
 
 Outputs:
