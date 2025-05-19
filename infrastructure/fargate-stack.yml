@@ -3,21 +3,12 @@ Description: >
   AWS Fargate deployment with ALB for 5 ECR repositories: gilgoblin-accountant, gilgoblin-api, gilgoblin-database, gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
-  EcrRepositoryAccountant:
+  AWSAccountId:
     Type: String
-    Description: "ECR repository URI for gilgoblin-accountant"
-  EcrRepositoryApi:
+    Description: "AWS Account ID"
+  AWSRegion:
     Type: String
-    Description: "ECR repository URI for gilgoblin-api"
-  EcrRepositoryDatabase:
-    Type: String
-    Description: "ECR repository URI for gilgoblin-database"
-  EcrRepositoryDataUpdater:
-    Type: String
-    Description: "ECR repository URI for gilgoblin-dataupdater"
-  EcrRepositoryFrontend:
-    Type: String
-    Description: "ECR repository URI for gilgoblin-frontend"
+    Description: "AWS Region"
   DatabaseSecretArn:
     Type: String
     Description: "ARN of the SecretsManager secret"
@@ -443,6 +434,14 @@ Resources:
                 Resource: "*"
 
   # ECS Task Definitions & Services for each repository
+
+  ## delete later
+              # EcrRepositoryAccountant="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-accountant" \
+              # EcrRepositoryApi="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-api" \
+              # EcrRepositoryDatabase="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-database" \
+              # EcrRepositoryDataUpdater="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-dataupdater" \
+              # EcrRepositoryFrontend="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-frontend
+
   # AccountantTaskDefinition:
   #   Type: AWS::ECS::TaskDefinition
   #   Properties:
@@ -455,7 +454,7 @@ Resources:
   #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
   #     ContainerDefinitions:
   #       - Name: "gilgoblin-accountant-container"
-  #         Image: !Ref EcrRepositoryAccountant
+  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
   #         PortMappings:
   #           - ContainerPort: 80
           # Secrets:
@@ -505,12 +504,12 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-api-container"
-          Image: !Ref EcrRepositoryApi
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-api"
           PortMappings:
             - ContainerPort: 80
-          Environment:
-            - Name: DB_CONNECTION_STRING
-              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
+          Secrets:
+            - Name: ConnectionStrings__GilGoblinDbContext
+              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -556,7 +555,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-database-container"
-          Image: !Ref EcrRepositoryDatabase
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-database"
           PortMappings:
             - ContainerPort: 5432
           Environment:
@@ -621,7 +620,7 @@ Resources:
   #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
   #     ContainerDefinitions:
   #       - Name: "gilgoblin-dataupdater-container"
-  #         Image: !Ref EcrRepositoryDataUpdater
+  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-dataupdater"
   #         PortMappings:
   #           - ContainerPort: 80
           # Secrets:
@@ -671,7 +670,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-frontend-container"
-          Image: !Ref EcrRepositoryFrontend
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-frontend"
           PortMappings:
             - ContainerPort: 3000
           LogConfiguration:
