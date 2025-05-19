@@ -433,14 +433,9 @@ Resources:
                   - secretsmanager:GetSecretValue
                 Resource: "*"
 
+  ##############################
   # ECS Task Definitions & Services for each repository
-
-  ## delete later
-              # EcrRepositoryAccountant="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-accountant" \
-              # EcrRepositoryApi="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-api" \
-              # EcrRepositoryDatabase="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-database" \
-              # EcrRepositoryDataUpdater="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-dataupdater" \
-              # EcrRepositoryFrontend="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-frontend
+  ##############################
 
   # AccountantTaskDefinition:
   #   Type: AWS::ECS::TaskDefinition
@@ -507,9 +502,9 @@ Resources:
           Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-api"
           PortMappings:
             - ContainerPort: 80
-          Secrets:
+          Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
-              ValueFrom: !Sub "${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING"
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
           LogConfiguration:
             LogDriver: awslogs
             Options:
