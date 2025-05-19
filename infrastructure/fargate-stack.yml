@@ -328,6 +328,9 @@ Resources:
           FromPort: 5432
           ToPort: 5432
           CidrIp: 10.0.0.0/16
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort:   3000
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -687,6 +690,7 @@ Resources:
       TaskDefinition: !Ref FrontendTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
+      HealthCheckGracePeriodSeconds: 60
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
