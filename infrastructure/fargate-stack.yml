@@ -509,7 +509,7 @@ Resources:
           PortMappings:
             - ContainerPort: 80
           Environment:
-            - Name: POSTGRES_DB
+            - Name: DB_CONNECTION_STRING
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
           LogConfiguration:
             LogDriver: awslogs
