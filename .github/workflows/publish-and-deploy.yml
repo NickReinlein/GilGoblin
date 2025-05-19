@@ -153,6 +153,4 @@ jobs:
             --no-fail-on-empty-changeset \
             --region "$AWS_REGION" \
             --parameter-overrides \
-              AWSAccountId="$AWS_ACCOUNT_ID" \
-              AWSRegion=${{ secrets.AWS_REGION }} \
               DatabaseSecretArn="${{ secrets.DatabaseSecretArn }}"

@@ -3,12 +3,6 @@ Description: >
   AWS Fargate deployment with ALB for 5 ECR repositories: gilgoblin-accountant, gilgoblin-api, gilgoblin-database, gilgoblin-dataupdater, and gilgoblin-frontend.
 
 Parameters:
-  AWSAccountId:
-    Type: String
-    Description: "AWS Account ID"
-  AWSRegion:
-    Type: String
-    Description: "AWS Region"
   DatabaseSecretArn:
     Type: String
     Description: "ARN of the SecretsManager secret"
@@ -160,6 +154,50 @@ Resources:
       SubnetId: !Ref PublicSubnetB
       RouteTableId: !Ref PublicRouteTable
 
+  ######################
+  # Service Discovery
+  ######################
+
+  WebNamespace:
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties:
+      Name: gilgoblin.local
+      Vpc: !Ref VPC
+      Description: "Internal namespace"
+
+  ApiDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: api
+      NamespaceId: !Ref WebNamespace
+      DnsConfig:
+        RoutingPolicy: WEIGHTED
+        DnsRecords:
+          - Type: A
+            TTL: 60
+
+  DatabaseDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: database
+      NamespaceId: !Ref WebNamespace
+      DnsConfig:
+        RoutingPolicy: WEIGHTED
+        DnsRecords:
+          - Type: A
+            TTL: 60
+
+  FrontendDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: frontend
+      NamespaceId: !Ref WebNamespace
+      DnsConfig:
+        RoutingPolicy: WEIGHTED
+        DnsRecords:
+          - Type: A
+            TTL: 60
+
   # ALB security group 
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -196,7 +234,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Type: network
-      Scheme: internet-facing
+      Scheme: internal
       Subnets:
         - !Ref PublicSubnetA
         - !Ref PublicSubnetB
@@ -274,7 +312,7 @@ Resources:
       UnhealthyThresholdCount: 3
 
   ######################            
-  # ALB & Listener
+  # ALB & Listeners
   ######################            
 
   ALBListenerHTTP:
@@ -299,37 +337,10 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref DefaultTargetGroup
 
-  DatabaseListenerTCP5432:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      LoadBalancerArn: !Ref DatabaseNLB
-      Port: 5432
-      Protocol: TCP
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref DatabaseTargetGroup
 
-  ECSServiceSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for ECS tasks, allow traffic from ALB to ECS services"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 5432
-          ToPort: 5432
-          CidrIp: 10.0.0.0/16
-        - IpProtocol: tcp
-          FromPort: 3000
-          ToPort:   3000
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
+  ######################
+  # ALB Listener Rules
+  ######################
 
   # AccountantListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -349,8 +360,6 @@ Resources:
 
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
     Properties:
       ListenerArn: !Ref ALBListenerHTTPS
       Priority: 2
@@ -360,6 +369,16 @@ Resources:
       Actions:
         - Type: forward
           TargetGroupArn: !Ref ApiTargetGroup
+
+  DatabaseListenerTCP5432:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref DatabaseNLB
+      Port: 5432
+      Protocol: TCP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DatabaseTargetGroup
 
   # DataUpdaterListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -390,6 +409,56 @@ Resources:
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
+
+  ####################
+  # Security Groups  #
+  ####################
+
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for API"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref FrontendSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  DatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for database"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref ApiSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  FrontendSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for frontend"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort:   3000
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
 
   ######################
   # ECS Cluster & Execution Role
@@ -449,7 +518,7 @@ Resources:
   #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
   #     ContainerDefinitions:
   #       - Name: "gilgoblin-accountant-container"
-  #         Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-accountant"
+  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
   #         PortMappings:
   #           - ContainerPort: 80
           # Secrets:
@@ -499,12 +568,14 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-api-container"
-          Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-api"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-api"
           PortMappings:
             - ContainerPort: 80
           Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
+            - Name: FrontEndUrl
+              Value: !Join [ "", [ "https://", !GetAtt ALB.DNSName ] ]
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -532,9 +603,12 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ECSServiceSecurityGroup
+            - !Ref ApiSecurityGroup
+      ServiceRegistries:
+        - RegistryArn: !GetAtt ApiDiscoveryService.Arn
+          ContainerName: gilgoblin-api-container
       LoadBalancers:
-        - ContainerName: "gilgoblin-api-container"
+        - ContainerName: gilgoblin-api-container
           ContainerPort: 80
           TargetGroupArn: !Ref ApiTargetGroup
 
@@ -550,7 +624,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-database-container"
-          Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-database"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-database"
           PortMappings:
             - ContainerPort: 5432
           Environment:
@@ -583,13 +657,12 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn:
       - LogGroup
-      - DatabaseListenerTCP5432
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref DatabaseTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 60
+      HealthCheckGracePeriodSeconds: 80  
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
@@ -597,11 +670,14 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ECSServiceSecurityGroup
-      LoadBalancers:
-        - ContainerName: "gilgoblin-database-container"
-          ContainerPort: 5432
-          TargetGroupArn: !Ref DatabaseTargetGroup
+            - !Ref DatabaseSecurityGroup
+      ServiceRegistries:
+        - RegistryArn: !GetAtt DatabaseDiscoveryService.Arn
+          ContainerName: gilgoblin-database-container
+      # LoadBalancers:
+      #   - ContainerName: gilgoblin-database-container
+      #     ContainerPort: 5432
+      #     TargetGroupArn: !Ref DatabaseTargetGroup
 
   # DataUpdaterTaskDefinition:
   #   Type: AWS::ECS::TaskDefinition
@@ -615,7 +691,7 @@ Resources:
   #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
   #     ContainerDefinitions:
   #       - Name: "gilgoblin-dataupdater-container"
-  #         Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-dataupdater"
+  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-dataupdater"
   #         PortMappings:
   #           - ContainerPort: 80
           # Secrets:
@@ -664,8 +740,8 @@ Resources:
       NetworkMode: awsvpc
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
-        - Name: "gilgoblin-frontend-container"
-          Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-frontend"
+        - Name: gilgoblin-frontend-container
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-frontend"
           PortMappings:
             - ContainerPort: 3000
           LogConfiguration:
@@ -695,9 +771,12 @@ Resources:
             - !Ref PrivateSubnetA
             - !Ref PrivateSubnetB
           SecurityGroups:
-            - !Ref ECSServiceSecurityGroup
+            - !Ref FrontendSecurityGroup
+      ServiceRegistries:
+        - RegistryArn: !GetAtt FrontendDiscoveryService.Arn
+          ContainerName: gilgoblin-frontend-container
       LoadBalancers:
-        - ContainerName: "gilgoblin-frontend-container"
+        - ContainerName: gilgoblin-frontend-container
           ContainerPort: 3000
           TargetGroupArn: !Ref FrontendTargetGroup
 
