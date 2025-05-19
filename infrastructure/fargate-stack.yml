@@ -454,7 +454,7 @@ Resources:
   #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
   #     ContainerDefinitions:
   #       - Name: "gilgoblin-accountant-container"
-  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
+  #         Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-accountant"
   #         PortMappings:
   #           - ContainerPort: 80
           # Secrets:
@@ -504,7 +504,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-api-container"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-api"
+          Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-api"
           PortMappings:
             - ContainerPort: 80
           Secrets:
@@ -555,7 +555,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-database-container"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-database"
+          Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-database"
           PortMappings:
             - ContainerPort: 5432
           Environment:
@@ -620,7 +620,7 @@ Resources:
   #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
   #     ContainerDefinitions:
   #       - Name: "gilgoblin-dataupdater-container"
-  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-dataupdater"
+  #         Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-dataupdater"
   #         PortMappings:
   #           - ContainerPort: 80
           # Secrets:
@@ -670,7 +670,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: "gilgoblin-frontend-container"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-frontend"
+          Image: !Sub "${AWSAccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/gilgoblin-frontend"
           PortMappings:
             - ContainerPort: 3000
           LogConfiguration:
