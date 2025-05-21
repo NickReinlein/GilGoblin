@@ -42,6 +42,9 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
+  ################
+  # Public & Private Subnets
+  ################
   PublicSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
@@ -58,20 +61,23 @@ Resources:
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [ 1, !GetAZs '' ]
 
-  # Private Subnets
   PrivateSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.3.0/24
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
 
   PrivateSubnetB:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.4.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
 
+  ################
   # NAT Gateways & Elastic IPs
+  ################
   NatEIPA:
     Type: AWS::EC2::EIP
     DependsOn: LogGroup
@@ -198,7 +204,10 @@ Resources:
           - Type: A
             TTL: 60
 
-  # ALB security group 
+  ######################
+  # Security Groups
+  ######################
+
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -212,6 +221,10 @@ Resources:
         - IpProtocol: tcp
           FromPort: 443
           ToPort: 443
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
           CidrIp: "0.0.0.0/0"
       SecurityGroupEgress:
         - IpProtocol: -1
@@ -239,7 +252,10 @@ Resources:
         - !Ref PublicSubnetA
         - !Ref PublicSubnetB
 
-# Define target groups
+  ######################
+  # Target Groups
+  ######################
+
   DefaultTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
@@ -266,13 +282,14 @@ Resources:
       - ALB
     Properties:
       VpcId: !Ref VPC
-      Port: 80
+      Port: 55448
       Protocol: HTTP
       TargetType: ip
+      HealthCheckPath: /api/health
       HealthCheckIntervalSeconds: 30
-      HealthCheckTimeoutSeconds: 5
+      HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 3      
+      UnhealthyThresholdCount: 3
 
   DatabaseTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -307,7 +324,7 @@ Resources:
       HealthCheckPath: /health.html
       Port: 3000
       HealthCheckIntervalSeconds: 30
-      HealthCheckTimeoutSeconds: 5
+      HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 3
 
@@ -405,7 +422,9 @@ Resources:
       Priority: 5
       Conditions:
         - Field: path-pattern
-          Values: [ "/frontend/*" ]
+          Values:
+            - "/frontend/*"
+            - "/health.html"
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
@@ -570,7 +589,7 @@ Resources:
         - Name: "gilgoblin-api-container"
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-api"
           PortMappings:
-            - ContainerPort: 80
+            - ContainerPort: 55448
           Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
@@ -609,7 +628,7 @@ Resources:
           ContainerName: gilgoblin-api-container
       LoadBalancers:
         - ContainerName: gilgoblin-api-container
-          ContainerPort: 80
+          ContainerPort: 55448
           TargetGroupArn: !Ref ApiTargetGroup
 
   DatabaseTaskDefinition:
