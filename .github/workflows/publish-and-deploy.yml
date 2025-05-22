@@ -153,11 +153,4 @@ jobs:
             --no-fail-on-empty-changeset \
             --region "$AWS_REGION" \
             --parameter-overrides \
-              AWSAccountId="$AWS_ACCOUNT_ID" \
-              AWSRegion="$AWS_REGION" \
-              DatabaseSecretArn=${{ secrets.DatabaseSecretArn }} \
-              EcrRepositoryAccountant="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-accountant" \
-              EcrRepositoryApi="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-api" \
-              EcrRepositoryDatabase="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-database" \
-              EcrRepositoryDataUpdater="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-dataupdater" \
-              EcrRepositoryFrontend="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/gilgoblin-frontend"
+              DatabaseSecretArn="${{ secrets.DatabaseSecretArn }}"
