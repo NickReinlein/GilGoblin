@@ -46,7 +46,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "${PORT_API}:8080"
+      - "${PORT_API}:80"
     logging:
       driver: 'json-file'
       options:

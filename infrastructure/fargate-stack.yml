@@ -282,7 +282,7 @@ Resources:
       - ALB
     Properties:
       VpcId: !Ref VPC
-      Port: 55448
+      Port: 80
       Protocol: HTTP
       TargetType: ip
       HealthCheckPath: /api/health
@@ -589,7 +589,7 @@ Resources:
         - Name: "gilgoblin-api-container"
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-api"
           PortMappings:
-            - ContainerPort: 55448
+            - ContainerPort: 80
           Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
@@ -628,7 +628,7 @@ Resources:
           ContainerName: gilgoblin-api-container
       LoadBalancers:
         - ContainerName: gilgoblin-api-container
-          ContainerPort: 55448
+          ContainerPort: 80
           TargetGroupArn: !Ref ApiTargetGroup
 
   DatabaseTaskDefinition:
