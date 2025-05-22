@@ -234,6 +234,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Scheme: internet-facing
+      Scheme: internet-facing
       Subnets:
         - !Ref PublicSubnetA
         - !Ref PublicSubnetB
