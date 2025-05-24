@@ -69,7 +69,7 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -77,9 +77,9 @@ services:
     networks:
       - gilgoblin
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   gilgoblin-accountant:
@@ -93,7 +93,7 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: [ "CMD-SHELL" ]
+      test: ["CMD-SHELL"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -101,9 +101,9 @@ services:
     networks:
       - gilgoblin
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   gilgoblin-frontend:
@@ -129,9 +129,9 @@ services:
     ports:
       - "${PORT_FRONTEND}:3000"
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   # ### Alerts & Monitoring ###
@@ -196,7 +196,7 @@ services:
   #     options:
   #       max-size: '50m'
   #   depends_on:
-  #     - gilgoblin-prometheus        
+  #     - gilgoblin-prometheus
   #   networks:
   #     - gilgoblin
   #   ports:

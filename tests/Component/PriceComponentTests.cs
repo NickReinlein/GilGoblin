@@ -20,7 +20,8 @@ public class PriceComponentTests : ComponentTests
         var fullEndpoint = $"{_priceEndpoint}/{validItemId}/false";
         
         using var response = await _client.GetAsync(fullEndpoint);
-
+        
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         var price = await response.Content.ReadFromJsonAsync<PricePoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
@@ -47,9 +48,9 @@ public class PriceComponentTests : ComponentTests
 
         using var response = await _client.GetAsync(fullEndpoint);
 
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         var prices = (await response.Content.ReadFromJsonAsync<IEnumerable<PricePoco>>(
             GetSerializerOptions()) ?? []).ToList();
-
         Assert.Multiple(() =>
         {
             var priceCount = prices.Count;
