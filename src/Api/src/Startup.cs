@@ -46,7 +46,6 @@ public class Startup(IConfiguration configuration)
         DatabaseValidation(builder);
     }
 
-
     private void AddGoblinServices(IServiceCollection services)
     {
         services = AddGoblinDatabases(services, Configuration);
@@ -130,12 +129,12 @@ public class Startup(IConfiguration configuration)
     {
         builder.UseSwagger()
             .UseSwaggerUI()
-            .UseHttpMetrics()
-            .UseMetricServer()
+            .UseRouting()
             .UseCors("GilGoblin")
             .UseAuthorization()
             .UseMiddleware<RequestInfoMiddleware>()
-            .UseRouting()
+            .UseHttpMetrics()
+            .UseMetricServer()
             .UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -145,7 +144,7 @@ public class Startup(IConfiguration configuration)
             });
     }
 
-    private void DatabaseValidation(IApplicationBuilder builder)
+    private static void DatabaseValidation(IApplicationBuilder builder)
     {
         try
         {
@@ -165,8 +164,7 @@ public class Startup(IConfiguration configuration)
 
     private static void ValidateCanConnectToDatabase(DbContext dbContext)
     {
-        var canConnect = dbContext.Database.CanConnect();
-        if (canConnect != true)
+        if (dbContext.Database.CanConnect() != true)
             throw new Exception("Failed to connect to the database");
     }
 

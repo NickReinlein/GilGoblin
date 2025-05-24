@@ -21,7 +21,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "5432:${PORT_DATABASE}"
+      - "${PORT_DATABASE}:5432"
     logging:
       driver: 'json-file'
       options:
@@ -37,16 +37,21 @@ services:
       - gilgoblin-database
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
+      ASPNETCORE_URLS: "http://+:55448"
     healthcheck:
-      test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 20s
-      retries: 5
-      start_period: 20s
+      test:
+        - CMD-SHELL
+        - >
+          curl -f http://localhost:55448/health
+          || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     networks:
       - gilgoblin
     ports:
-      - "${PORT_API}:80"
+      - "${PORT_API}:55448"
     logging:
       driver: 'json-file'
       options:
@@ -65,10 +70,10 @@ services:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
       test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 20s
-      retries: 5
-      start_period: 20s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     networks:
       - gilgoblin
     logging:
@@ -89,10 +94,10 @@ services:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
       test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 20s
-      retries: 5
-      start_period: 20s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     networks:
       - gilgoblin
     logging:
@@ -110,15 +115,19 @@ services:
     depends_on:
       - gilgoblin-api
     healthcheck:
-      test: [ "CMD-SHELL" ]
-      interval: 10s
-      timeout: 20s
-      retries: 5
-      start_period: 20s
+      test:
+        - CMD-SHELL
+        - >
+          curl -f http://localhost:3000/health.html
+          || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     networks:
       - gilgoblin
     ports:
-      - "3000:${PORT_FRONTEND}"
+      - "${PORT_FRONTEND}:3000"
     logging:
       driver: 'json-file'
       options:
