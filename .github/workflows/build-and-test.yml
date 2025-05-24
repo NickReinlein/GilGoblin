@@ -16,14 +16,12 @@ jobs:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        ports:
-          - 5432:5432
         options: >-
-          --health-cmd "pg_isready -d gilgoblin_db -U gilgoblin"
+          --health-cmd "pg_isready -h gilgoblin-database -d gilgoblin_db -U gilgoblin"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --health-start-period 30s
+          --health-start-period 30s    
 
     steps:
       - uses: actions/checkout@v4
