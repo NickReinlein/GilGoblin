@@ -10,12 +10,12 @@ namespace GilGoblin.Tests.Component;
 
 public class WorldComponentTests : ComponentTests
 {
-    private const int testWorldId = 34;
+    private const string worldEndpoint = $"{baseUrl}world/";
 
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAWorld()
     {
-        var fullEndpoint = $"http://localhost:55448/world/{testWorldId}";
+        var fullEndpoint = $"{worldEndpoint}{34}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -23,7 +23,7 @@ public class WorldComponentTests : ComponentTests
         Assert.Multiple(() =>
         {
             Assert.That(world, Is.Not.Null);
-            Assert.That(world!.Id, Is.EqualTo(testWorldId));
+            Assert.That(world!.Id, Is.EqualTo(34));
             Assert.That(world.Name, Has.Length.GreaterThan(0));
         });
     }
@@ -34,7 +34,7 @@ public class WorldComponentTests : ComponentTests
         int? worldId,
         HttpStatusCode expectedErrorCode)
     {
-        var fullEndpoint = $"http://localhost:55448/world/{worldId}";
+        var fullEndpoint = $"{worldEndpoint}{worldId}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -44,13 +44,10 @@ public class WorldComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenReceivingAllWorlds_ThenWeReceiveValidWorlds()
     {
-        const string fullEndpoint = "http://localhost:55448/World/";
+        using var response = await _client.GetAsync(worldEndpoint);
 
-        using var response = await _client.GetAsync(fullEndpoint);
-
-        var worlds = (await response.Content.ReadFromJsonAsync<IEnumerable<WorldPoco>>(
-            GetSerializerOptions()
-        ))!.ToList();
+        var worlds = 
+            (await response.Content.ReadFromJsonAsync<IEnumerable<WorldPoco>>(GetSerializerOptions()) ?? []).ToList();
         Assert.Multiple(() =>
         {
             Assert.That(worlds, Has.Count.GreaterThan(0), "No worlds received");

@@ -10,11 +10,15 @@ namespace GilGoblin.Tests.Component;
 
 public class PriceComponentTests : ComponentTests
 {
+    private const int worldId = 21;
+    private const int validItemId = 1604;
+    private readonly string _priceEndpoint = $"{baseUrl}price/{worldId}";
+
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice()
     {
-        const string fullEndpoint = "http://localhost:55448/price/21/1604";
-
+        var fullEndpoint = $"{_priceEndpoint}/{validItemId}/false";
+        
         using var response = await _client.GetAsync(fullEndpoint);
 
         var price = await response.Content.ReadFromJsonAsync<PricePoco>(GetSerializerOptions());
@@ -22,24 +26,24 @@ public class PriceComponentTests : ComponentTests
         {
             Assert.That(price, Is.Not.Null);
             Assert.That(price!.ItemId, Is.EqualTo(1604));
-            Assert.That(price.WorldId, Is.EqualTo(34));
+            Assert.That(price.WorldId, Is.EqualTo(21));
         });
     }
 
     [Test]
-    public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenNotFoundIsReturned()
+    public async Task GivenACallToGet_WhenTheInputIsInvalid_TheNoContentIsReturned()
     {
-        const string fullEndpoint = "http://localhost:55448/price/21/103484654";
+        var fullEndpoint = $"{_priceEndpoint}/103484654/false";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
 
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsValid_ThenWeReceiveAllValidPrices()
     {
-        const string fullEndpoint = "http://localhost:55448/price/21";
+        var fullEndpoint = $"{_priceEndpoint}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -58,7 +62,7 @@ public class PriceComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        const string fullEndpoint = "http://localhost:55448/price/99999";
+        const string fullEndpoint =  $"{baseUrl}price/99999";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
