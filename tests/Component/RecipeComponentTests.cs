@@ -10,10 +10,12 @@ namespace GilGoblin.Tests.Component;
 
 public class RecipeComponentTests : ComponentTests
 {
+    private const string recipeEndpoint = $"{baseUrl}recipe/";
+
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveARecipe()
     {
-        const string fullEndpoint = "http://localhost:55448/recipe/32635";
+        var fullEndpoint = $"{recipeEndpoint}32635";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -42,7 +44,7 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = "http://localhost:55448/recipe/32655454";
+        var fullEndpoint = $"{recipeEndpoint}35454454";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -52,37 +54,36 @@ public class RecipeComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenReceivingAllRecipes_ThenWeReceiveValidRecipes()
     {
-        const string fullEndpoint = "http://localhost:55448/recipe/";
+        var fullEndpoint = $"{recipeEndpoint}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        var recipes = await response.Content.ReadFromJsonAsync<IEnumerable<RecipePoco>>(
+        var recipes = (await response.Content.ReadFromJsonAsync<IEnumerable<RecipePoco>>(
             GetSerializerOptions()
-        );
+        ) ?? []).ToList();
 
-        var recipeList = recipes?.ToList() ?? [];
-        var recipeCount = recipeList.Count;
+        var recipeCount = recipes.Count;
         Assert.Multiple(() =>
         {
             Assert.That(recipeCount, Is.GreaterThan(1000), "Not enough entries received");
-            Assert.That(recipeList.All(p => p.Id > 0), "ItemId is invalid");
+            Assert.That(recipes.All(p => p.Id > 0), "ItemId is invalid");
             Assert.That(
-                recipeList.Count(p => p.TargetItemId > 1),
+                recipes.Count(p => p.TargetItemId > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with TargetItemId"
             );
             Assert.That(
-                recipeList.Count(p => p.ItemIngredient0TargetId > 1),
+                recipes.Count(p => p.ItemIngredient0TargetId > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with more than 1 ingredient for ItemIngredient0TargetId"
             );
             Assert.That(
-                recipeList.Count(p => p.AmountIngredient0 > 1),
+                recipes.Count(p => p.AmountIngredient0 > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries with more than 1 ingredient for AmountIngredient0"
             );
             Assert.That(
-                recipeList.Count(p => (p.AmountIngredient0 + p.AmountIngredient1 + p.AmountIngredient2) > 1),
+                recipes.Count(p => (p.AmountIngredient0 + p.AmountIngredient1 + p.AmountIngredient2) > 1),
                 Is.GreaterThan(recipeCount * (1.0f - missingEntryPercentageThreshold)),
                 "Missing a suspicious number of entries for multiple ingredients"
             );

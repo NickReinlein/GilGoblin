@@ -7,7 +7,8 @@ namespace GilGoblin.Tests.Component;
 [Category("Component")]
 public class ComponentTests
 {
-    protected const string baseUrl = "http://localhost:55448";
+    protected const string baseUrl = "http://localhost:55448/";
+    protected const double missingEntryPercentageThreshold = 0.85;
     protected HttpClient _client;
 
     [OneTimeSetUp]
@@ -21,8 +22,6 @@ public class ComponentTests
     {
         _client.Dispose();
     }
-
-    protected const double missingEntryPercentageThreshold = 0.85;
 
     protected static JsonSerializerOptions GetSerializerOptions() =>
         new() { PropertyNameCaseInsensitive = true, IncludeFields = true };

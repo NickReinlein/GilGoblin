@@ -11,10 +11,12 @@ namespace GilGoblin.Tests.Component;
 [Timeout(20000)]
 public class CraftComponentTests : ComponentTests
 {
+    private const string craftEndpoint = $"{baseUrl}craft/";
+
     [Test]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenBadRequestIsReturned()
     {
-        const string fullEndpoint = "http://localhost:55448/craft/1614654";
+        var fullEndpoint = $"{craftEndpoint}1614654";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -24,7 +26,7 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned()
     {
-        const string fullEndpoint = "http://localhost:55448/craft/34";
+        var fullEndpoint = $"{craftEndpoint}34";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -47,13 +49,13 @@ public class CraftComponentTests : ComponentTests
         });
     }
 
-    [TestCase("/34/1614654", HttpStatusCode.NotFound)]
-    [TestCase("/1614654/1614654", HttpStatusCode.NotFound)]
-    [TestCase("/1614654/100", HttpStatusCode.NotFound)]
+    [TestCase("34/1614654", HttpStatusCode.NotFound)]
+    [TestCase("1614654/1614654", HttpStatusCode.NotFound)]
+    [TestCase("1614654/100", HttpStatusCode.NotFound)]
     public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
         HttpStatusCode expectedErrorCode)
     {
-        var fullEndpoint = $"http://localhost:55448/craft{urlSuffix}";
+        var fullEndpoint = $"{baseUrl}{urlSuffix}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

@@ -10,10 +10,12 @@ namespace GilGoblin.Tests.Component;
 
 public class ItemComponentTests : ComponentTests
 {
+    private const string priceEndpoint = $"{baseUrl}item/";
+
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItem()
     {
-        const string fullEndpoint = "http://localhost:55448/item/10348";
+        var fullEndpoint = $"{priceEndpoint}10348";
         const string expectedDescription =
             "Black-and-white floorboards and carpeting of the same design as those used to furnish the Manderville Gold Saucer.";
 
@@ -37,7 +39,7 @@ public class ItemComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = "http://localhost:55448/item/10348555";
+        var fullEndpoint = $"{priceEndpoint}10348555";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -47,9 +49,7 @@ public class ItemComponentTests : ComponentTests
     [Test]
     public async Task GivenACallToGetAll_WhenReceivingAllItems_ThenWeReceiveValidItems()
     {
-        const string fullEndpoint = "http://localhost:55448/item/";
-
-        using var response = await _client.GetAsync(fullEndpoint);
+        using var response = await _client.GetAsync(priceEndpoint);
 
         var items = (await response.Content.ReadFromJsonAsync<IEnumerable<ItemPoco>>(
             GetSerializerOptions()
@@ -74,19 +74,19 @@ public class ItemComponentTests : ComponentTests
                 items.All(p => p.StackSize is >= 0 and <= 999999999),
                 "StackSize is invalid"
             );
-            // Only a few currencies have huge stacksize
+            // Only a few currencies have huge stack size
             Assert.That(
                 items.Count(p => p.StackSize is >= 999999999),
                 Is.EqualTo(3),
                 "StackSize is above 999999999 invalid"
             );
-            // has higher proportion of missing data
+            // has a higher proportion of missing data
             Assert.That(
                 items.Count(p => p.PriceLow > 0),
                 Is.GreaterThan(missingEntryThreshold * 0.5),
                 "Missing PriceLow"
             );
-            // has higher proportion of missing data
+            // has a higher proportion of missing data
             Assert.That(
                 items.Count(p => p.PriceMid > 0),
                 Is.GreaterThan(missingEntryThreshold * 0.5),
