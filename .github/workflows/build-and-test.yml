@@ -48,7 +48,7 @@ jobs:
       - name: Wait for Database
         run: |
           for i in {1..20}; do
-            if pg_isready -h localhost -p 5432; then
+            if pg_isready -h gilgoblin-database -p 5432 -U gilgoblin; then
               echo "Database is ready!"
               exit 0
             else
