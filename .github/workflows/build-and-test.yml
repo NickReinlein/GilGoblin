@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/dotnet/sdk:8.0
+
     services:
       gilgoblin-database:
         image: nickreinlein/gilgoblin-database
@@ -17,16 +20,17 @@ jobs:
           POSTGRES_USER: gilgoblin
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         options: >-
-          --health-cmd "pg_isready -h gilgoblin-database -d gilgoblin_db -U gilgoblin"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 10
-          --health-start-period 20s
+          --health-cmd "pg_isready -h gilgoblin-database -U gilgoblin -d gilgoblin_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 10s
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Cache NuGet Packages
+      - name: Cache NuGet packages
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
@@ -45,42 +49,30 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Install Postgres client
+      - name: Install PostgreSQL client
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
-      - name: Wait for Database (with diagnostics)
-        env:
-          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      - name: Wait for Database
         run: |
-          echo "Checking DNS for gilgoblin-database…"
-          getent hosts gilgoblin-database || true
-          echo "Pinging gilgoblin-database…"
-          ping -c1 gilgoblin-database || true
-
-          echo "Now polling Postgres availability…"
           for i in {1..20}; do
-            # First try pg_isready
             if pg_isready -h gilgoblin-database -p 5432 -U gilgoblin; then
-              echo "pg_isready says it's up!"
+              echo "Database is ready!"
               exit 0
             fi
-
-            # Fallback to psql “\q” test
-            if psql -h gilgoblin-database -p 5432 -U gilgoblin -d gilgoblin_db -c '\q' 2>/dev/null; then
-              echo "psql was able to connect!"
-              exit 0
-            fi
-
-            echo "Still waiting for database… ($i/20)"
+            echo "Waiting for database… ($i/20)"
             sleep 3
           done
-
-          echo "Database did not become ready in time."
+          echo "Timed out waiting for database."
           exit 1
 
-      - name: Test
+      - name: Run Tests
         env:
-          ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
+          ConnectionStrings__GilGoblinDbContext: >
+            Host=gilgoblin-database;
+            Port=5432;
+            Database=gilgoblin_db;
+            Username=gilgoblin;
+            Password=${{ secrets.POSTGRES_PASSWORD }}
         run: dotnet test --no-build --verbosity normal
