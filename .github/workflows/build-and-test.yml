@@ -23,6 +23,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --health-start-period 30s
 
     steps:
       - uses: actions/checkout@v4
@@ -63,4 +64,4 @@ jobs:
       - name: Test
         env:
           ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
+        run: dotnet test --no-build --verbosity normal
