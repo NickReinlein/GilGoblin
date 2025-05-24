@@ -21,7 +21,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --health-start-period 30s    
+          --health-start-period 10s
 
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +53,7 @@ jobs:
       - name: Wait for Database
         run: |
           for i in {1..20}; do
-            if pg_isready -h gilgoblin-database -p 5432 -U gilgoblin; then
+            if pg_isready -h gilgoblin-database -d gilgoblin_db -p 5432 -U gilgoblin; then
               echo "Database is ready!"
               exit 0
             else
