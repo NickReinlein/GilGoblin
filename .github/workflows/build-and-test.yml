@@ -2,9 +2,9 @@ name: Build and Test
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -16,8 +16,8 @@ jobs:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          PGUSER: ${PGUSER}
-          PGDATA: ${PGDATA}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGDATA: ${{ secrets.PGDATA }}
         ports:
           - 5432:5432
         options: >-
