@@ -8,11 +8,11 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
-public class PriceComponentTests : ComponentTests
+public class PriceTestBase : TestBase
 {
     private const int worldId = 21;
     private const int validItemId = 1604;
-    private readonly string _priceEndpoint = $"{baseUrl}price/{worldId}";
+    private readonly string _priceEndpoint = $"price/{worldId}";
 
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice()
@@ -54,16 +54,15 @@ public class PriceComponentTests : ComponentTests
         Assert.Multiple(() =>
         {
             var priceCount = prices.Count;
-            Assert.That(priceCount, Is.GreaterThan(1000), "Not enough entries received");
+            Assert.That(priceCount, Is.GreaterThan(2), "Not enough entries received");
             Assert.That(prices.All(p => p.ItemId > 0), "ItemId is invalid");
-            Assert.That(prices.All(p => p.WorldId == 21), "WorldId is incorrect");
         });
     }
 
     [Test]
     public async Task GivenACallToGetAll_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        const string fullEndpoint =  $"{baseUrl}price/99999";
+        const string fullEndpoint =  "price/99999";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

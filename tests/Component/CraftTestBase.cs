@@ -9,9 +9,9 @@ using NUnit.Framework;
 namespace GilGoblin.Tests.Component;
 
 [Timeout(20000)]
-public class CraftComponentTests : ComponentTests
+public class CraftTestBase : TestBase
 {
-    private const string craftEndpoint = $"{baseUrl}craft/";
+    private const string craftEndpoint = "craft/";
 
     [Test]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenBadRequestIsReturned()
@@ -26,12 +26,12 @@ public class CraftComponentTests : ComponentTests
     [Test]
     public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned()
     {
-        var fullEndpoint = $"{craftEndpoint}34";
-
+        const string fullEndpoint = $"{craftEndpoint}34";
+    
         using var response = await _client.GetAsync(fullEndpoint);
-
+    
         var craftsRaw = await response.Content.ReadFromJsonAsync<IEnumerable<CraftSummaryPoco>>(GetSerializerOptions());
-
+    
         Assert.Multiple(() =>
         {
             var crafts = craftsRaw?.ToList();
@@ -55,7 +55,7 @@ public class CraftComponentTests : ComponentTests
     public async Task GivenACallToGetACraft_WhenTheInputIsInvalid_ThenFailureStatusCodeIsReturned(string urlSuffix,
         HttpStatusCode expectedErrorCode)
     {
-        var fullEndpoint = $"{baseUrl}{urlSuffix}";
+        var fullEndpoint = $"{craftEndpoint}{urlSuffix}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

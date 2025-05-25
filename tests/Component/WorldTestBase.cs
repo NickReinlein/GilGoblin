@@ -8,9 +8,9 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
-public class WorldComponentTests : ComponentTests
+public class WorldTestBase : TestBase
 {
-    private const string worldEndpoint = $"{baseUrl}world/";
+    private const string worldEndpoint = "world/";
 
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAWorld()

@@ -8,16 +8,18 @@ using GilGoblin.Api.Repository;
 using GilGoblin.Database;
 using GilGoblin.Database.Pocos;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 
 namespace GilGoblin.Api;
 
-public class Startup(IConfiguration configuration)
+public class Startup(IConfiguration configuration, IWebHostEnvironment env)
 {
     public readonly IConfiguration Configuration = configuration;
 
@@ -104,32 +106,36 @@ public class Startup(IConfiguration configuration)
                 .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
         });
 
-        services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
+        return services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
             .AddScoped<IItemRepository, ItemRepository>()
             .AddScoped<IRecipeRepository, RecipeRepository>()
             .AddScoped<IRecipeCostRepository, RecipeCostRepository>()
             .AddScoped<IRecipeProfitRepository, RecipeProfitRepository>()
             .AddScoped<IWorldRepository, WorldRepository>();
-        return services;
     }
 
-    private static IServiceCollection AddBasicBuilderServices(IServiceCollection services)
+    private IServiceCollection AddBasicBuilderServices(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer()
             .AddLogging()
-            .AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
-            })
             .AddHealthChecks();
-        return services;
+
+        if (IsTestingEnvironment() || isDebug)
+            return services;
+
+        return services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "SwaggerApi", Version = "v1" });
+        });
     }
 
-    private static void AddAppServices(IApplicationBuilder builder)
+    private void AddAppServices(IApplicationBuilder builder)
     {
-        builder.UseSwagger()
-            .UseSwaggerUI()
-            .UseRouting()
+        if (!IsTestingEnvironment() && !isDebug)
+            builder.UseSwagger()
+                .UseSwaggerUI();
+
+        builder.UseRouting()
             .UseCors("GilGoblin")
             .UseAuthorization()
             .UseMiddleware<RequestInfoMiddleware>()
@@ -197,5 +203,10 @@ public class Startup(IConfiguration configuration)
         {
             Console.WriteLine($"Failed to fill caches during startup: {e.Message}");
         }
+    }
+
+    public bool IsTestingEnvironment()
+    {
+        return env.IsEnvironment("Testing");
     }
 }

@@ -2,10 +2,10 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    image: nickreinlein/gilgoblin-database
-    container_name: database
-    # image: database
-    # build: src/Database/
+    # image: nickreinlein/gilgoblin-database
+    # container_name: database
+    image: database
+    build: src/Database/
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -31,10 +31,10 @@ services:
     restart: unless-stopped
 
   gilgoblin-api:
-    image: nickreinlein/gilgoblin-api
-    container_name: api
-    # image: api
-    # build: src/Api/
+    # image: nickreinlein/gilgoblin-api
+    # container_name: api
+    image: api
+    build: src/Api/
     depends_on:
       - gilgoblin-database
     environment:

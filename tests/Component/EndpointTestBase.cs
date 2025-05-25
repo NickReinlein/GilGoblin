@@ -4,12 +4,12 @@ using NUnit.Framework;
 
 namespace GilGoblin.Tests.Component;
 
-public class EndpointComponentTests : ComponentTests
+public class EndpointTestBase : TestBase
 {
     [Test]
     public async Task GivenAnApi_WhenHealthEndpointIsCalled_ThenWeReceiveOKResponse()
     {
-        const string fullEndpoint = $"{baseUrl}health";
+        const string fullEndpoint = "health";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -21,7 +21,7 @@ public class EndpointComponentTests : ComponentTests
         string endpoint
     )
     {
-        var fullEndpoint = $"{baseUrl}{endpoint}";
+        var fullEndpoint = $"{endpoint}";
 
         var response = await _client.GetAsync(fullEndpoint);
 
