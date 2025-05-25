@@ -21,15 +21,15 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
     protected IRecipeRepository _recipeRepo;
     protected IPriceRepository<PricePoco> _priceRepo;
     protected IRecipeProfitRepository _profitRepo;
+    protected IServiceCollection _serviceCollection;
 
     protected readonly int WorldId = ValidWorldIds[0];
     protected readonly int RecipeId = ValidRecipeIds[0];
+    protected IServiceScope _serviceScope;
 
     [SetUp]
-    public override async Task SetUp()
+    public virtual void SetUp()
     {
-        await base.SetUp();
-
         _calc = Substitute.For<ICraftingCalculator>();
         _costRepo = Substitute.For<IRecipeCostRepository>();
         _profitRepo = Substitute.For<IRecipeProfitRepository>();

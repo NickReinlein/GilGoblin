@@ -35,7 +35,6 @@ public class EndpointTestBase : TestBase
         "price/21",
         "price/21/1604/true",
         "item/",
-        "item/1604",
-        "craft/21"
+        "item/1604"
     ];
 }

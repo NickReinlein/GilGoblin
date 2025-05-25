@@ -21,12 +21,11 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
     private ItemRepository _itemRepo;
 
     [SetUp]
-    public override async Task SetUp()
+    public void SetUp()
     {
         _cache = Substitute.For<IItemCache>();
         _logger = Substitute.For<ILogger<ItemRepository>>();
 
-        await base.SetUp();
         _itemRepo = new ItemRepository(_serviceProvider, _cache, _logger);
     }
 

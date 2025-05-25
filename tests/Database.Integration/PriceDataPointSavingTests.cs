@@ -23,9 +23,8 @@ public class MinListingPocoSavingTests : PriceDataPointSavingTests<MinListingPoc
 public abstract class PriceDataPointSavingTests<T> : SaveEntityToDbTests<T> where T : PriceDataPointPoco
 {
     [SetUp]
-    public override async Task SetUp()
+    public async Task SetUp()
     {
-        await base.SetUp();
         await using var ctx = GetDbContext();
         ctx.AverageSalePrice.RemoveRange(ctx.AverageSalePrice);
         ctx.RecentPurchase.RemoveRange(ctx.RecentPurchase);

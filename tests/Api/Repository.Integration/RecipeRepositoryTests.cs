@@ -18,12 +18,11 @@ public class RecipeRepositoryTests : GilGoblinDatabaseFixture
     private RecipeRepository _recipeRepo;
 
     [SetUp]
-    public override async Task SetUp()
+    public void SetUp()
     {
         _recipeCache = Substitute.For<IRecipeCache>();
         _itemRecipeCache = Substitute.For<IItemRecipeCache>();
 
-        await base.SetUp();
         _recipeRepo = new RecipeRepository(_serviceProvider, _recipeCache, _itemRecipeCache);
     }
 

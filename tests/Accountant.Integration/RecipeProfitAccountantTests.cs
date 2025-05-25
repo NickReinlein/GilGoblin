@@ -25,9 +25,9 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     private static readonly int _targetItemId = ValidItemsIds[0];
 
     [SetUp]
-    public override async Task SetUp()
+    public override void SetUp()
     {
-        await base.SetUp();
+        base.SetUp();
 
         _logger = Substitute.For<ILogger<RecipeProfitAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeProfitPoco>>();

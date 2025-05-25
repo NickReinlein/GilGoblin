@@ -22,9 +22,9 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     private RecipeCostAccountant _accountant;
 
     [SetUp]
-    public override async Task SetUp()
+    public override void SetUp()
     {
-        await base.SetUp();
+        base.SetUp();
         _costLogger = Substitute.For<ILogger<RecipeCostAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeCostPoco>>();
         _saver.SaveAsync(default!).ReturnsForAnyArgs(true);

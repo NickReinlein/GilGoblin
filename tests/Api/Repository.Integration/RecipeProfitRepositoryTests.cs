@@ -16,10 +16,9 @@ public class RecipeProfitRepositoryTests : GilGoblinDatabaseFixture
     private RecipeProfitRepository _repo;
 
     [SetUp]
-    public override async Task SetUp()
+    public void SetUp()
     {
         _cache = Substitute.For<ICalculatedMetricCache<RecipeProfitPoco>>();
-        await base.SetUp();
 
         _repo = new RecipeProfitRepository(_serviceProvider, _cache);
     }
