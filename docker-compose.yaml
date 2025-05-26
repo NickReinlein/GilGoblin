@@ -20,6 +20,8 @@ services:
       start_period: 60s
     networks:
       - gilgoblin
+    extra_hosts:
+      - "host.docker.internal:host-gateway"      
     ports:
       - "${PORT_DATABASE}:5432"
     logging:

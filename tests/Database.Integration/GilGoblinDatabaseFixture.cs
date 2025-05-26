@@ -104,7 +104,7 @@ public class GilGoblinDatabaseFixture
             {
                 Console.WriteLine($"[DEBUG] EF attempt {i} failed: {ex.GetType().Name} – {ex.Message}");
                 if (i == attempts)
-                    throw new Exception($"EF couldn’t connect after {attempts} tries: {ex.Message}", ex);
+                    throw new Exception($"EF couldn't connect after {attempts} tries: {ex.Message}", ex);
                 await Task.Delay(500);
             }
         }

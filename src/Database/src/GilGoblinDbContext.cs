@@ -19,22 +19,6 @@ public class GilGoblinDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PriceDataPoco> PriceData { get; init; }
 
     public const bool isDebug = false;
-
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     var connectionString = Environment.GetEnvironmentVariable(nameof(GilGoblinDbContext))
-    //                            ?? throw new InvalidOperationException(
-    //                                "Connection string not found in environment variables or configuration.");
-    //     optionsBuilder.UseNpgsql(connectionString)
-    //         .EnableDetailedErrors(isDebug)
-    //         .EnableSensitiveDataLogging(isDebug)
-    //         // ReSharper disable once HeuristicUnreachableCode
-    //         // Flag is changed to access "debugging mode"
-    //         .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
-    //
-    //     base.OnConfiguring(optionsBuilder);
-    // }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<WorldPoco>().ToTable("world");
