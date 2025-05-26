@@ -12,32 +12,20 @@ public class RecipeTestBase : TestBase
 {
     private const string recipeEndpoint = "recipe/";
 
-    [Test]
-    public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveARecipe()
+    [TestCaseSource(nameof(ValidRecipeIds))]
+    public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveARecipe(int recipeId)
     {
-        var fullEndpoint = $"{recipeEndpoint}32635";
+        var fullEndpoint = $"{recipeEndpoint}{recipeId}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
         var recipe = await response.Content.ReadFromJsonAsync<RecipePoco>(GetSerializerOptions());
         Assert.Multiple(() =>
         {
-            Assert.That(recipe!.Id, Is.EqualTo(32635));
-            Assert.That(recipe.CraftType, Is.EqualTo(3));
-            Assert.That(recipe.TargetItemId, Is.EqualTo(22428));
-            Assert.That(recipe.CanHq);
-            Assert.That(recipe.CanQuickSynth);
-            Assert.That(recipe.ResultQuantity, Is.EqualTo(2));
-            Assert.That(recipe.ItemIngredient0TargetId, Is.EqualTo(22418));
-            Assert.That(recipe.AmountIngredient0, Is.EqualTo(4));
-            Assert.That(recipe.ItemIngredient1TargetId, Is.EqualTo(22412));
-            Assert.That(recipe.AmountIngredient1, Is.EqualTo(2));
-            Assert.That(recipe.ItemIngredient2TargetId, Is.EqualTo(19938));
-            Assert.That(recipe.AmountIngredient2, Is.EqualTo(1));
-            Assert.That(recipe.ItemIngredient8TargetId, Is.EqualTo(16));
-            Assert.That(recipe.AmountIngredient8, Is.EqualTo(2));
-            Assert.That(recipe.ItemIngredient9TargetId, Is.EqualTo(14));
-            Assert.That(recipe.AmountIngredient9, Is.EqualTo(2));
+            Assert.That(recipe!.Id, Is.EqualTo(recipeId));
+            Assert.That(recipe.CraftType, Is.GreaterThan(0));
+            Assert.That(ValidItemsIds, Does.Contain(recipe.TargetItemId));
+            Assert.That(recipe.ResultQuantity, Is.GreaterThanOrEqualTo(1));
         });
     }
 

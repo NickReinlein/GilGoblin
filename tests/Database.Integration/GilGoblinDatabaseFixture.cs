@@ -19,6 +19,8 @@ public class GilGoblinDatabaseFixture
     protected IContainer _postgresContainer = null!;
     protected IConfigurationRoot _configuration = null!;
     protected IServiceProvider _serviceProvider = null!;
+    private IServiceScopeFactory _scopeFactory = null!;
+    private uint _mappedPort;
 
     protected static readonly List<int> ValidWorldIds = [34, 99];
     protected static readonly List<int> ValidItemsIds = [134, 585, 654, 847];
@@ -27,22 +29,21 @@ public class GilGoblinDatabaseFixture
     private const string Username = "gilgoblin";
     private const string DatabaseName = "gilgoblin_db";
     private const string Password = "gilgoblin_password";
-    private const ushort HostPort = 52348;
 
     [OneTimeSetUp]
     public virtual async Task OneTimeSetUp()
     {
         _postgresContainer = new ContainerBuilder()
             .WithImage("nickreinlein/gilgoblin-database:latest")
-            .WithPortBinding(HostPort, 5432)
+            .WithPortBinding(5432, true)
             .WithEnvironment("POSTGRES_DB", DatabaseName)
             .WithEnvironment("POSTGRES_USER", Username)
             .WithEnvironment("POSTGRES_PASSWORD", Password)
-            .WithWaitStrategy(Wait.ForUnixContainer()
-                .UntilPortIsAvailable(5432))
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
 
         await _postgresContainer.StartAsync();
+        _mappedPort = _postgresContainer.GetMappedPublicPort(5432);
 
         _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -61,8 +62,10 @@ public class GilGoblinDatabaseFixture
             );
 
         _serviceProvider = services.BuildServiceProvider();
+        _scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
         await EnsureDatabaseIsCreatedAsync();
+        await CreateAllEntriesAsync();
     }
 
     [TearDown]
@@ -78,9 +81,6 @@ public class GilGoblinDatabaseFixture
         await _postgresContainer.StopAsync();
         await _postgresContainer.DisposeAsync();
     }
-
-    protected GilGoblinDbContext GetDbContext() =>
-        _serviceProvider.GetRequiredService<GilGoblinDbContext>();
 
     private async Task EnsureDatabaseIsCreatedAsync()
     {
@@ -107,8 +107,7 @@ public class GilGoblinDatabaseFixture
 
     private async Task DeleteAllEntriesAsync()
     {
-        using var scope = _serviceProvider.CreateScope();
-        await using var ctx = scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+        await using var ctx = GetDbContext();
         ctx.RecentPurchase.RemoveRange(ctx.RecentPurchase);
         ctx.AverageSalePrice.RemoveRange(ctx.AverageSalePrice);
         ctx.MinListing.RemoveRange(ctx.MinListing);
@@ -176,6 +175,12 @@ public class GilGoblinDatabaseFixture
 
     protected string GetConnectionString()
     {
-        return $"Host=localhost;Port={HostPort};Database={DatabaseName};Username={Username};Password={Password}";
+        return $"Host=localhost;Port={_mappedPort};Database={DatabaseName};Username={Username};Password={Password}";
+    }
+    
+    protected GilGoblinDbContext GetDbContext()
+    {
+        var scope = _scopeFactory.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
     }
 }
