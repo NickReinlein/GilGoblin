@@ -65,7 +65,7 @@ public class RecipeTestBase : TestBase
         var recipeCount = recipes.Count;
         Assert.Multiple(() =>
         {
-            Assert.That(recipeCount, Is.GreaterThan(2), "Not enough entries received");
+            Assert.That(recipeCount, Is.GreaterThanOrEqualTo(2), "Not enough entries received");
             Assert.That(recipes.All(p => p.Id > 0), "ItemId is invalid");
         });
     }

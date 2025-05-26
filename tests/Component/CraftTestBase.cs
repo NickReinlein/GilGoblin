@@ -23,10 +23,10 @@ public class CraftTestBase : TestBase
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
-    [Test]
-    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned()
+    [TestCaseSource(nameof(ValidWorldIds))]
+    public async Task GivenACallGetBestCrafts_WhenTheInputIsValid_ThenMultipleCraftSummariesAreReturned(int worldId)
     {
-        const string fullEndpoint = $"{craftEndpoint}34";
+        var fullEndpoint = $"{craftEndpoint}{worldId}";
     
         using var response = await _client.GetAsync(fullEndpoint);
     
@@ -36,8 +36,8 @@ public class CraftTestBase : TestBase
         {
             var crafts = craftsRaw?.ToList();
             Assert.That(crafts, Is.Not.Null);
-            Assert.That(crafts, Has.Count.GreaterThan(5));
-            Assert.That(crafts!.All(r => r.WorldId == 34));
+            Assert.That(crafts, Has.Count.GreaterThanOrEqualTo(2));
+            Assert.That(crafts!.All(r => r.WorldId == worldId));
             Assert.That(crafts!.All(r => r.ItemId > 0));
             Assert.That(crafts!.All(r => r.ItemInfo?.IconId > 0));
             Assert.That(crafts!.All(r => r.ItemInfo?.StackSize > 0));

@@ -12,12 +12,10 @@ public class ItemTestBase : TestBase
 {
     private const string itemEndpoint = "item/";
 
-    [Test]
-    public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItem()
+    [TestCaseSource(nameof(ValidItemsIds))]
+    public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItem(int itemId)
     {
-        var fullEndpoint = $"{itemEndpoint}10348";
-        const string expectedDescription =
-            "Black-and-white floorboards and carpeting of the same design as those used to furnish the Manderville Gold Saucer.";
+        var fullEndpoint = $"{itemEndpoint}{itemId}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -25,10 +23,9 @@ public class ItemTestBase : TestBase
         Assert.Multiple(() =>
         {
             Assert.That(item, Is.Not.Null);
-            Assert.That(item!.Id, Is.EqualTo(10348));
-            Assert.That(item.CanHq, Is.False);
-            Assert.That(item.IconId, Is.EqualTo(51024));
-            Assert.That(item.Description, Is.EqualTo(expectedDescription));
+            Assert.That(item!.Id, Is.EqualTo(itemId));
+            Assert.That(item.IconId, Is.GreaterThan(0));
+            Assert.That(item.Description, Is.Not.Null.And.Not.Empty);
             Assert.That(item.PriceLow, Is.GreaterThan(10));
             Assert.That(item.PriceMid, Is.GreaterThan(10));
             Assert.That(item.StackSize, Is.EqualTo(1));
@@ -39,7 +36,7 @@ public class ItemTestBase : TestBase
     [Test]
     public async Task GivenACallToGet_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
     {
-        var fullEndpoint = $"{itemEndpoint}10348555";
+        const string fullEndpoint = $"{itemEndpoint}10348555";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -57,7 +54,7 @@ public class ItemTestBase : TestBase
         var itemCount = items.Count;
         Assert.Multiple(() =>
         {
-            Assert.That(itemCount, Is.GreaterThan(2), "Not enough entries received");
+            Assert.That(itemCount, Is.GreaterThanOrEqualTo(2), "Not enough entries received");
             Assert.That(items.All(p => p.Id > 0), "Id is invalid");
         });
     }

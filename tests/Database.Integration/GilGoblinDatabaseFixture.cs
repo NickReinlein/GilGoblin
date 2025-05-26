@@ -44,15 +44,17 @@ public class GilGoblinDatabaseFixture
 
         await _postgresContainer.StartAsync();
 
-        var conn = $"Host=localhost;Port={HostPort};Database={DatabaseName};Username={Username};Password={Password}";
         _configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:GilGoblinDbContext"] = conn })
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:GilGoblinDbContext"] = GetConnectionString()
+            })
             .Build();
 
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(_configuration)
             .AddDbContext<GilGoblinDbContext>(opts =>
-                opts.UseNpgsql(conn)
+                opts.UseNpgsql(GetConnectionString())
                     .EnableDetailedErrors(false)
                     .EnableSensitiveDataLogging(false)
                     .LogTo(Console.WriteLine, LogLevel.Warning)
@@ -60,12 +62,15 @@ public class GilGoblinDatabaseFixture
 
         _serviceProvider = services.BuildServiceProvider();
 
-        await EnsureDatabaseIsCreated();
-        await CreateAllEntriesAsync();
+        await EnsureDatabaseIsCreatedAsync();
     }
 
     [TearDown]
-    public virtual Task TearDown() => DeleteAllEntriesAsync();
+    public virtual async Task TearDown()
+    {
+        await DeleteAllEntriesAsync();
+        await CreateAllEntriesAsync();
+    }
 
     [OneTimeTearDown]
     public virtual async Task OneTimeTearDown()
@@ -77,11 +82,11 @@ public class GilGoblinDatabaseFixture
     protected GilGoblinDbContext GetDbContext() =>
         _serviceProvider.GetRequiredService<GilGoblinDbContext>();
 
-    private async Task EnsureDatabaseIsCreated()
+    private async Task EnsureDatabaseIsCreatedAsync()
     {
-        await using var ctx = GetDbContext();
-        const int max = 5;
-        for (var i = 0; i < max; i++)
+        var ctx = GetDbContext();
+        const int attempts = 5;
+        for (var i = 1; i <= attempts; i++)
         {
             try
             {
@@ -89,15 +94,15 @@ public class GilGoblinDatabaseFixture
                 if (await ctx.Database.CanConnectAsync())
                     return;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"DB connect attempt {i + 1} failed: {ex.Message}");
+                // swallow
             }
 
-            await Task.Delay(1_000);
+            await Task.Delay(1000);
         }
 
-        throw new Exception($"Could not connect to Postgres after {max} attempts");
+        throw new Exception("Could not connect to Postgres after multiple attempts");
     }
 
     private async Task DeleteAllEntriesAsync()
