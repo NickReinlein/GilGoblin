@@ -113,7 +113,8 @@ public class RecipeCostAccountant(
             {
                 var existing = currentRecipeCosts.Where(c =>
                         c.RecipeId == recipe.Id &&
-                        c.WorldId == worldId)
+                        c.WorldId == worldId &&
+                        c.IsHq == recipe.CanHq)
                     .ToList();
 
                 if (!existing.Any())

@@ -10,11 +10,12 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
     private const int itemId = 13245;
     private AverageSalePricePoco _averageSalePrice;
 
-    [OneTimeSetUp]
-    public override async Task OneTimeSetUp()
+    [SetUp]
+    public async Task SetUp()
     {
-        await base.OneTimeSetUp();
         await using var ctx = GetDbContext();
+        ctx.Price.RemoveRange(ctx.Price);
+        await ctx.SaveChangesAsync();
         var dcDataPoint = new PriceDataPoco("DC", 311, ValidWorldIds[0]);
         ctx.Add(dcDataPoint);
         var saved = await ctx.SaveChangesAsync();
@@ -37,11 +38,12 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
     protected override PricePoco GetModifiedEntity(PricePoco entity) =>
         entity with
         {
+            Id = entity.Id,
             AverageSalePrice = _averageSalePrice with
             {
                 DcDataPoint = _averageSalePrice.DcDataPoint! with
                 {
-                    Price = _averageSalePrice.DcDataPoint.Price + 1
+                    Price = entity.AverageSalePrice?.DcDataPoint?.Price ?? 0 + 1
                 }
             }
         };
@@ -73,6 +75,8 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
     protected override async Task SaveEntityToDatabase(PricePoco entity, bool update = false)
     {
         await using var ctx = GetDbContext();
+        ctx.Entry(entity.AverageSalePrice!).State = EntityState.Unchanged;
+        ctx.Entry(entity.AverageSalePrice!.DcDataPoint!).State = EntityState.Unchanged;
         if (update)
         {
             var existing = await ctx.Price.FirstAsync(x =>
@@ -89,7 +93,6 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
         }
         else
             await ctx.AddAsync(entity);
-
 
         await ctx.SaveChangesAsync();
     }

@@ -84,25 +84,30 @@ public class GilGoblinDatabaseFixture
 
     private async Task EnsureDatabaseIsCreatedAsync()
     {
-        var ctx = GetDbContext();
-        const int attempts = 5;
+        var cs = GetConnectionString();
+        Console.WriteLine($"[DEBUG] EF using connection string: {cs}");
+
+        await using var ctx = GetDbContext();
+        const int attempts = 10;
         for (var i = 1; i <= attempts; i++)
         {
             try
             {
+                Console.WriteLine($"[DEBUG] EF try {i}: OpenConnectionAsync()");
+                await ctx.Database.OpenConnectionAsync();
                 await ctx.Database.EnsureCreatedAsync();
-                if (await ctx.Database.CanConnectAsync())
-                    return;
+                Console.WriteLine("[DEBUG] EF connection opened successfully");
+                await ctx.Database.CloseConnectionAsync();
+                return;
             }
-            catch
+            catch (Exception ex)
             {
-                // swallow
+                Console.WriteLine($"[DEBUG] EF attempt {i} failed: {ex.GetType().Name} – {ex.Message}");
+                if (i == attempts)
+                    throw new Exception($"EF couldn’t connect after {attempts} tries: {ex.Message}", ex);
+                await Task.Delay(500);
             }
-
-            await Task.Delay(1000);
         }
-
-        throw new Exception("Could not connect to Postgres after multiple attempts");
     }
 
     private async Task DeleteAllEntriesAsync()
@@ -171,6 +176,32 @@ public class GilGoblinDatabaseFixture
             select new PricePoco(it, w, q)).ToList();
         await ctx.Price.AddRangeAsync(prices);
 
+        var recipeCosts =
+            (from recipeId in ValidRecipeIds
+                from worldId in ValidWorldIds
+                from quality in qualities
+                select new RecipeCostPoco(
+                    recipeId,
+                    worldId,
+                    quality,
+                    Random.Shared.Next(120, 800),
+                    DateTimeOffset.UtcNow))
+            .ToList();
+        await ctx.RecipeCost.AddRangeAsync(recipeCosts);
+
+        var recipeProfits =
+            (from recipeId in ValidRecipeIds
+                from worldId in ValidWorldIds
+                from quality in qualities
+                select new RecipeProfitPoco(
+                    recipeId,
+                    worldId,
+                    quality,
+                    Random.Shared.Next(120, 800),
+                    DateTimeOffset.UtcNow))
+            .ToList();
+        await ctx.RecipeProfit.AddRangeAsync(recipeProfits);
+
         await ctx.SaveChangesAsync();
     }
 
@@ -178,7 +209,7 @@ public class GilGoblinDatabaseFixture
     {
         return $"Host=localhost;Port={_mappedPort};Database={DatabaseName};Username={Username};Password={Password}";
     }
-    
+
     protected GilGoblinDbContext GetDbContext()
     {
         var scope = _scopeFactory.CreateScope();

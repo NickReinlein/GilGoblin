@@ -27,7 +27,7 @@ public class TestBase : GilGoblinDatabaseFixture
 
         var builder = new WebHostBuilder()
             .UseEnvironment("Testing")
-            .ConfigureAppConfiguration((ctx, cfg) =>
+            .ConfigureAppConfiguration((_, cfg) =>
             {
                 var kvp = new KeyValuePair<string, string?>(
                     "ConnectionStrings:GilGoblinDbContext", 
@@ -38,8 +38,8 @@ public class TestBase : GilGoblinDatabaseFixture
             .ConfigureServices(services => {
                 services.AddDbContext<GilGoblinDbContext>(opts =>
                     opts.UseNpgsql(GetConnectionString())
-                        .EnableDetailedErrors(true)
-                        .EnableSensitiveDataLogging(true)
+                        .EnableDetailedErrors()
+                        .EnableSensitiveDataLogging()
                 );
             });
 

@@ -10,7 +10,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.*"/>
-    <PackageReference Include="Testcontainers" Version="4.4.*"/>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.*"/>
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.*"/>
@@ -34,7 +33,8 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.*"/>
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.*"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.*"/>
-    <PackageReference Include="Testcontainers.PostgreSql" Version="4.0.*"/>
+    <PackageReference Include="Testcontainers" Version="4.3.*"/>
+    <PackageReference Include="Testcontainers.PostgreSql" Version="4.3.*"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Accountant/Accountant.csproj"/>
