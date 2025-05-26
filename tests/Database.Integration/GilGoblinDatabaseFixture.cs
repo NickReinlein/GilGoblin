@@ -149,6 +149,7 @@ public class GilGoblinDatabaseFixture
             {
                 Id = i,
                 Name = $"Item {i}",
+                Description = $"Functions as an item with ID {i}",
                 IconId = i + 111,
                 StackSize = 1,
                 PriceLow = i * 3 + 11,

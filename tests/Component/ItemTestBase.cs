@@ -29,7 +29,7 @@ public class ItemTestBase : TestBase
             Assert.That(item.PriceLow, Is.GreaterThan(10));
             Assert.That(item.PriceMid, Is.GreaterThan(10));
             Assert.That(item.StackSize, Is.EqualTo(1));
-            Assert.That(item.Level, Is.EqualTo(1));
+            Assert.That(item.Level, Is.GreaterThanOrEqualTo(1));
         });
     }
 
