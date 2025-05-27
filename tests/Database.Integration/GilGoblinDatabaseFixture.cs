@@ -28,7 +28,7 @@ public class GilGoblinDatabaseFixture
 
     private const string Username = "gilgoblin";
     private const string DatabaseName = "gilgoblin_db";
-    private const string Password = "gilgoblin_password";
+    private static string Password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "gilgoblin_password";
 
     [OneTimeSetUp]
     public virtual async Task OneTimeSetUp()
