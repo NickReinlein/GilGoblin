@@ -9,22 +9,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:8.0
-
     services:
       gilgoblin-database:
-        image: nickreinlein/gilgoblin-database
+        image: nickreinlein/gilgoblin-database:ci   # <-- we'll build this tag below
         env:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
         options: >-
-          --health-cmd "pg_isready -h gilgoblin-database -U gilgoblin -d gilgoblin_db"
+          --health-cmd "pg_isready -h localhost -U gilgoblin -d gilgoblin_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --health-start-period 10s
+          --health-start-period 20s
 
     steps:
       - name: Checkout code
@@ -38,10 +37,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - name: Setup .NET8
+      - name: Set up .NET 8.0 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
+
+      - name: Build database Docker image
+        run: |
+          docker build \
+            --file src/Database/Dockerfile \
+            --tag nickreinlein/gilgoblin-database:ci \
+            src/Database/
 
       - name: Restore dependencies
         run: dotnet restore
@@ -57,22 +63,18 @@ jobs:
       - name: Wait for Database
         run: |
           for i in {1..20}; do
-            if pg_isready -h gilgoblin-database -p 5432 -U gilgoblin; then
-              echo "Database is ready!"
+            if pg_isready -h localhost -p 5432 -U gilgoblin -d gilgoblin_db; then
+              echo "✅ Database is ready!"
               exit 0
             fi
-            echo "Waiting for database… ($i/20)"
+            echo "⏳ Waiting for database… ($i/20)"
             sleep 3
           done
-          echo "Timed out waiting for database."
+          echo "❌ Timed out waiting for database."
           exit 1
 
       - name: Run Tests
         env:
-          ConnectionStrings__GilGoblinDbContext: >
-            Host=gilgoblin-database;
-            Port=5432;
-            Database=gilgoblin_db;
-            Username=gilgoblin;
-            Password=${{ secrets.POSTGRES_PASSWORD }}
+          DOTNET_ENVIRONMENT: Testing
+          ConnectionStrings__GilGoblinDbContext: "Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }}"
         run: dotnet test --no-build --verbosity normal
