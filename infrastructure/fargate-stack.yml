@@ -232,8 +232,12 @@ Resources:
 
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    DependsOn:
+      - AttachGateway
+      - PublicRoute
+      - PublicSubnetARouteTableAssociation
+      - PublicSubnetBRouteTableAssociation
     Properties:
-      Scheme: internet-facing
       Scheme: internet-facing
       Subnets:
         - !Ref PublicSubnetA
@@ -286,7 +290,7 @@ Resources:
       Port: 80
       Protocol: HTTP
       TargetType: ip
-      HealthCheckPath: /api/health
+      HealthCheckPath: /health
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 2
@@ -596,6 +600,16 @@ Resources:
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
             - Name: FrontEndUrl
               Value: !Join [ "", [ "https://", !GetAtt ALB.DNSName ] ]
+            - Name: ASPNETCORE_URLS
+              Value: "http://+:80"
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - curl -f http://localhost:55448/health || exit 1
+            Interval: 30   
+            Timeout: 5     
+            Retries: 3     
+            StartPeriod: 60
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -663,7 +677,7 @@ Resources:
           HealthCheck:
             Command: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
             Interval: 30
-            Timeout: 30
+            Timeout: 5
             Retries: 3
             StartPeriod: 60
           LogConfiguration:

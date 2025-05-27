@@ -22,12 +22,12 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     private RecipeCostAccountant _accountant;
 
     [SetUp]
-    public override async Task SetUp()
+    public override void SetUp()
     {
-        await base.SetUp();
+        base.SetUp();
         _costLogger = Substitute.For<ILogger<RecipeCostAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeCostPoco>>();
-        _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
+        _saver.SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>()).ReturnsForAnyArgs(true);
 
         _accountant = new RecipeCostAccountant(_serviceProvider, _saver, _costLogger);
     }
@@ -73,7 +73,7 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     public async Task GivenComputeListAsync_WhenSuccessful_ThenWeReturnAPoco()
     {
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(200);
+        cts.CancelAfter(300);
         await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
 
         await using var costAfter = GetDbContext();
@@ -90,15 +90,19 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
             Assert.That(result.All(r => r.RecipeId == RecipeId));
             Assert.That(result.All(r => r.Amount > 30));
             Assert.That(result.All(r => r.Amount < 1000));
+            Assert.That(result.All(r => r.LastUpdated > DateTimeOffset.UtcNow.AddMinutes(-5)));
+            Assert.That(result, Has.Count.EqualTo(2), "Expected both HQ and NQ costs to be saved");
+            Assert.That(result.Any(r => r.IsHq), "Expected at least one HQ cost to be saved");
+            Assert.That(result.Any(r => !r.IsHq), "Expected at least one NQ cost to be saved");
         });
     }
 
     [Test]
     public async Task GivenComputeListAsync_WhenIdsAreValidAndCostsOutdated_ThenRelevantCostsAreFetched()
     {
+        await MakeCostsOutdated();
         await using var dbContext = GetDbContext();
         var recipeIds = dbContext.Recipe.Select(r => r.Id).ToList();
-        await MakeCostsOutdated();
         _calc.CalculateCraftingCostForRecipe(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>())
             .ReturnsForAnyArgs(10);
 

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GilGoblin.Accountant;
 using GilGoblin.Api.Crafting;
 using GilGoblin.Api.Repository;
 using GilGoblin.Database.Pocos;
 using GilGoblin.Tests.Database.Integration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -21,15 +21,14 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
     protected IRecipeRepository _recipeRepo;
     protected IPriceRepository<PricePoco> _priceRepo;
     protected IRecipeProfitRepository _profitRepo;
+    protected IServiceCollection _serviceCollection;
 
     protected readonly int WorldId = ValidWorldIds[0];
     protected readonly int RecipeId = ValidRecipeIds[0];
 
     [SetUp]
-    public override async Task SetUp()
+    public virtual void SetUp()
     {
-        await base.SetUp();
-
         _calc = Substitute.For<ICraftingCalculator>();
         _costRepo = Substitute.For<IRecipeCostRepository>();
         _profitRepo = Substitute.For<IRecipeProfitRepository>();
@@ -77,18 +76,15 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
                     .ToList());
         }
 
+        _serviceCollection = new ServiceCollection();
         var startup = new Startup(_configuration);
-        _serviceProvider = new ServiceCollection().BuildServiceProvider();
         startup.ConfigureServices(_serviceCollection);
-
-        _serviceCollection.AddSingleton(_calc);
-        _serviceCollection.AddSingleton(_costRepo);
-        _serviceCollection.AddSingleton(_recipeRepo);
-        _serviceCollection.AddSingleton(_priceRepo);
-        _serviceCollection.AddSingleton(_profitRepo);
-
+        _serviceCollection.Replace(ServiceDescriptor.Singleton(_calc));
+        _serviceCollection.Replace(ServiceDescriptor.Singleton(_costRepo));
+        _serviceCollection.Replace(ServiceDescriptor.Singleton(_recipeRepo));
+        _serviceCollection.Replace(ServiceDescriptor.Singleton(_priceRepo));
+        _serviceCollection.Replace(ServiceDescriptor.Singleton(_profitRepo));
         _serviceProvider = _serviceCollection.BuildServiceProvider();
-        _serviceScope = _serviceProvider.CreateScope();
     }
 
     protected void SetupReposToReturnXEntities(int entityCount = 20)
@@ -129,6 +125,7 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
         removeExistingCtx.Recipe.RemoveRange(removeExistingCtx.Recipe);
         removeExistingCtx.Price.RemoveRange(removeExistingCtx.Price);
         removeExistingCtx.RecipeCost.RemoveRange(removeExistingCtx.RecipeCost);
+        removeExistingCtx.RecipeProfit.RemoveRange(removeExistingCtx.RecipeProfit);
         removeExistingCtx.SaveChanges();
     }
 }

@@ -2,13 +2,16 @@ name: Build and Test
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/dotnet/sdk:8.0
+
     services:
       gilgoblin-database:
         image: nickreinlein/gilgoblin-database
@@ -16,18 +19,18 @@ jobs:
           POSTGRES_DB: gilgoblin_db
           POSTGRES_USER: gilgoblin
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        ports:
-          - 5432:5432
         options: >-
-          --health-cmd "pg_isready -d gilgoblin_db -U gilgoblin"
+          --health-cmd "pg_isready -h gilgoblin-database -U gilgoblin -d gilgoblin_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --health-start-period 10s
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Cache NuGet Packages
+      - name: Cache NuGet packages
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
@@ -46,21 +49,30 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install -y postgresql-client
+
       - name: Wait for Database
         run: |
-          for i in {1..10}; do
-            if pg_isready -h localhost -p 5432; then
+          for i in {1..20}; do
+            if pg_isready -h gilgoblin-database -p 5432 -U gilgoblin; then
               echo "Database is ready!"
               exit 0
-            else
-              echo "Waiting for database... ($i/10)"
-              sleep 5
             fi
+            echo "Waiting for database… ($i/20)"
+            sleep 3
           done
-          echo "Database did not become ready in time."
+          echo "Timed out waiting for database."
           exit 1
 
-      - name: Test
+      - name: Run Tests
         env:
-          ConnectionStrings__GilGoblinDbContext: ${{ secrets.DB_CONNECTION_STRING }}
-        run: dotnet test --no-build --verbosity normal --filter "Category!=Component"
+          ConnectionStrings__GilGoblinDbContext: >
+            Host=gilgoblin-database;
+            Port=5432;
+            Database=gilgoblin_db;
+            Username=gilgoblin;
+            Password=${{ secrets.POSTGRES_PASSWORD }}
+        run: dotnet test --no-build --verbosity normal

@@ -99,17 +99,6 @@ public class WorldUpdaterTests : DataUpdaterTests
                  i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
     }
 
-    [Test, Ignore("While in development, hard-coded world Ids are used")]
-    public async Task GivenGetAllWorldsAsync_WhenThereAreNoValidEntriesToSave_ThenWeDoNotToSave()
-    {
-        _fetcher.GetAllAsync().Returns([]);
-
-        await _worldUpdater.GetAllWorldsAsync();
-
-        _scope.ServiceProvider.DidNotReceive().GetService(typeof(IDataSaver<WorldPoco>));
-        await _saver.DidNotReceive().SaveAsync(Arg.Any<IEnumerable<WorldPoco>>());
-    }
-
     [Test]
     public async Task GivenGetAllWorldsAsync_WhenSavingThrowsAnException_ThenWeExitGracefullyAndLogTheError()
     {

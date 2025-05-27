@@ -1,12 +1,9 @@
-using System;
 using GilGoblin.Database.Pocos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.Database;
 
-public class GilGoblinDbContext(DbContextOptions options, IConfiguration configuration) : DbContext(options)
+public class GilGoblinDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<ItemPoco> Item { get; init; }
     public DbSet<WorldPoco> World { get; init; }
@@ -22,23 +19,6 @@ public class GilGoblinDbContext(DbContextOptions options, IConfiguration configu
     public DbSet<PriceDataPoco> PriceData { get; init; }
 
     public const bool isDebug = false;
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var connectionString = Environment.GetEnvironmentVariable(nameof(GilGoblinDbContext))
-                               ?? configuration.GetConnectionString(nameof(GilGoblinDbContext))
-                               ?? throw new InvalidOperationException(
-                                   "Connection string not found in environment variables or configuration.");
-        optionsBuilder.UseNpgsql(connectionString)
-            .EnableDetailedErrors(isDebug)
-            .EnableSensitiveDataLogging(isDebug)
-            // ReSharper disable once HeuristicUnreachableCode
-            // Flag is changed to access "debugging mode"
-            .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
-
-        base.OnConfiguring(optionsBuilder);
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<WorldPoco>().ToTable("world");

@@ -19,6 +19,11 @@ public static class Program
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<Startup>();
+                webBuilder
+                    .UseKestrel(options =>
+                    {
+                        options.ListenAnyIP(55448);
+                    })
+                    .UseStartup<Startup>();
             });
 }
