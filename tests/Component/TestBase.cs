@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using EFCore.NamingConventions;
 
 namespace GilGoblin.Tests.Component;
 
@@ -39,6 +40,7 @@ public class TestBase : GilGoblinDatabaseFixture
             .ConfigureServices(services => {
                 services.AddDbContext<GilGoblinDbContext>(opts =>
                     opts.UseNpgsql(GetConnectionString())
+                        .UseSnakeCaseNamingConvention()
                         .EnableDetailedErrors()
                         .EnableSensitiveDataLogging()
                 );

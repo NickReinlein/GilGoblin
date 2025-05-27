@@ -56,6 +56,7 @@ public class GilGoblinDatabaseFixture
             .AddSingleton<IConfiguration>(_configuration)
             .AddDbContext<GilGoblinDbContext>(opts =>
                 opts.UseNpgsql(GetConnectionString())
+                    .UseSnakeCaseNamingConvention()
                     .EnableDetailedErrors(false)
                     .EnableSensitiveDataLogging(false)
                     .LogTo(Console.WriteLine, LogLevel.Warning)
