@@ -65,6 +65,7 @@ public class GilGoblinDatabaseFixture
         _scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
         await EnsureDatabaseIsCreatedAsync();
+        await DeleteAllEntriesAsync();
         await CreateAllEntriesAsync();
     }
 
