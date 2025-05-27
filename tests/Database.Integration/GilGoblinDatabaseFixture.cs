@@ -59,7 +59,7 @@ public class GilGoblinDatabaseFixture
                     .UseSnakeCaseNamingConvention()
                     .EnableDetailedErrors(false)
                     .EnableSensitiveDataLogging(false)
-                    .LogTo(Console.WriteLine, LogLevel.Warning)
+                    .LogTo(Console.WriteLine, LogLevel.Information)
             );
 
         _serviceProvider = services.BuildServiceProvider();
@@ -114,30 +114,49 @@ public class GilGoblinDatabaseFixture
 
     private async Task DeleteAllEntriesAsync()
     {
-        var tableNames = GetDbContext().Model
-            .GetEntityTypes()
-            .Select(t => t.GetTableName())
-            .Distinct()
-            .ToList();
-
-        var escaped = tableNames
-            .Select(n => $"\"{n}\"")
-            .ToArray();
-
-        var truncateSqlCommand = $@"
-            TRUNCATE {string.Join(", ", escaped)}
-            RESTART IDENTITY
-            CASCADE;
-        ";
+        var tableOrder = new[]
+        {
+            "recipe_profit", 
+            "recipe_cost", 
+            "world_upload_times",
+            "price", 
+            "recent_purchase", 
+            "average_sale_price", 
+            "min_listing",
+            "daily_sale_velocity", 
+            "price_data", 
+            "recipe", 
+            "item", 
+            "world" 
+        };
 
         await using var ctx = GetDbContext();
-        await ctx.Database.ExecuteSqlRawAsync(truncateSqlCommand);
+        foreach (var table in tableOrder)
+        {
+            var sql = $"DELETE FROM \"{table}\";";
+            await ctx.Database.ExecuteSqlRawAsync(sql);
+        }
     }
 
     protected async Task CreateAllEntriesAsync()
     {
         await using var ctx = GetDbContext();
         var qualities = new[] { true, false };
+        var items = ValidItemsIds.Select(i =>
+                new ItemPoco
+                {
+                    Id = i,
+                    Name = $"Item {i}",
+                    Description = $"Functions as an item with ID {i}",
+                    IconId = i + 111,
+                    StackSize = 1,
+                    PriceLow = i * 3 + 11,
+                    PriceMid = i * 3 + 12,
+                    Level = i + 13,
+                    CanHq = i % 2 == 0
+                })
+            .ToList();
+        await ctx.Item.AddRangeAsync(items);
 
         var recipes = ValidRecipeIds
             .Select(id => new RecipePoco
@@ -155,21 +174,6 @@ public class GilGoblinDatabaseFixture
             .ToList();
         await ctx.Recipe.AddRangeAsync(recipes);
 
-        var items = ValidItemsIds
-            .Select(i => new ItemPoco
-            {
-                Id = i,
-                Name = $"Item {i}",
-                Description = $"Functions as an item with ID {i}",
-                IconId = i + 111,
-                StackSize = 1,
-                PriceLow = i * 3 + 11,
-                PriceMid = i * 3 + 12,
-                Level = i + 13,
-                CanHq = i % 2 == 0
-            })
-            .ToList();
-        await ctx.Item.AddRangeAsync(items);
 
         var worlds = ValidWorldIds
             .Select(w => new WorldPoco { Id = w, Name = $"World {w}" })

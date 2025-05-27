@@ -26,26 +26,11 @@ public class TestBase : GilGoblinDatabaseFixture
     public override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();
-
+        
         var builder = new WebHostBuilder()
             .UseEnvironment("Testing")
-            .ConfigureAppConfiguration((_, cfg) =>
-            {
-                var kvp = new KeyValuePair<string, string?>(
-                    "ConnectionStrings:GilGoblinDbContext", 
-                    GetConnectionString());
-                cfg.AddInMemoryCollection([kvp]);
-            })
-            .UseStartup<Startup>()
-            .ConfigureServices(services => {
-                services.AddDbContext<GilGoblinDbContext>(opts =>
-                    opts.UseNpgsql(GetConnectionString())
-                        .UseSnakeCaseNamingConvention()
-                        .EnableDetailedErrors()
-                        .EnableSensitiveDataLogging()
-                );
-            });
-
+            .UseConfiguration(_configuration)
+            .UseStartup<Startup>();
         _server = new TestServer(builder);
         _client = _server.CreateClient();
     }
