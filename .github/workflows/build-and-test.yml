@@ -76,7 +76,12 @@ jobs:
       - name: Run Tests
         env:
           DOTNET_ENVIRONMENT: Testing
-          ConnectionStrings__GilGoblinDbContext: "Host=localhost;Port=5432;Database=$POSTGRES_DB;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD"
+          ConnectionStrings__GilGoblinDbContext: >-
+            Host=localhost;
+            Port=5432;
+            Database=${{ env.POSTGRES_DB }};
+            Username=${{ env.POSTGRES_USER }};
+            Password=${{ env.POSTGRES_PASSWORD }}
         run: dotnet test --no-build --verbosity normal
 
       - name: Tear down database container
