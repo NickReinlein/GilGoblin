@@ -114,20 +114,24 @@ public class GilGoblinDatabaseFixture
 
     private async Task DeleteAllEntriesAsync()
     {
+        var tableNames = GetDbContext().Model
+            .GetEntityTypes()
+            .Select(t => t.GetTableName())
+            .Distinct()
+            .ToList();
+
+        var escaped = tableNames
+            .Select(n => $"\"{n}\"")
+            .ToArray();
+
+        var truncateSqlCommand = $@"
+            TRUNCATE {string.Join(", ", escaped)}
+            RESTART IDENTITY
+            CASCADE;
+        ";
+
         await using var ctx = GetDbContext();
-        ctx.RecentPurchase.RemoveRange(ctx.RecentPurchase);
-        ctx.AverageSalePrice.RemoveRange(ctx.AverageSalePrice);
-        ctx.MinListing.RemoveRange(ctx.MinListing);
-        ctx.DailySaleVelocity.RemoveRange(ctx.DailySaleVelocity);
-        ctx.World.RemoveRange(ctx.World);
-        ctx.Item.RemoveRange(ctx.Item);
-        ctx.Recipe.RemoveRange(ctx.Recipe);
-        ctx.RecipeCost.RemoveRange(ctx.RecipeCost);
-        ctx.RecipeProfit.RemoveRange(ctx.RecipeProfit);
-        ctx.Price.RemoveRange(ctx.Price);
-        ctx.PriceData.RemoveRange(ctx.PriceData);
-        ctx.WorldUploadTime.RemoveRange(ctx.WorldUploadTime);
-        await ctx.SaveChangesAsync();
+        await ctx.Database.ExecuteSqlRawAsync(truncateSqlCommand);
     }
 
     protected async Task CreateAllEntriesAsync()
