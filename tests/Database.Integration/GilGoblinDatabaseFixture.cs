@@ -177,7 +177,6 @@ public class GilGoblinDatabaseFixture
             .ToList();
         await ctx.Recipe.AddRangeAsync(recipes);
 
-
         var worlds = ValidWorldIds
             .Select(w => new WorldPoco { Id = w, Name = $"World {w}" })
             .ToList();

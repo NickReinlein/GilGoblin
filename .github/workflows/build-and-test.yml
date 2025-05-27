@@ -46,19 +46,20 @@ jobs:
             -e POSTGRES_DB=$POSTGRES_DB \
             -e POSTGRES_USER=$POSTGRES_USER \
             -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-            -p 5432:5432 \
+            -p 0:5432 \
             gilgoblin-db-ci:latest
 
-      - name: Install PostgreSQL client
+      - name: Get mapped port
+        id: get_db_port
         run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+          PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "5432/tcp") 0).HostPort}}' gilgoblin-db-ci)
+          echo "DB_PORT=$PORT" >> $GITHUB_ENV
 
       - name: Wait for Database
         run: |
           sleep 20
           for i in {1..20}; do
-            if pg_isready -h localhost -p 5432 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; then
+            if pg_isready -h localhost -p $DB_PORT -U "$POSTGRES_USER" -d "$POSTGRES_DB"; then
               echo "✅ Database is ready!"
               exit 0
             fi
@@ -68,18 +69,12 @@ jobs:
           echo "❌ Timed out waiting for database."
           exit 1
 
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build solution
-        run: dotnet build --no-restore --verbosity minimal
-
       - name: Run Tests
         env:
           DOTNET_ENVIRONMENT: Testing
           ConnectionStrings__GilGoblinDbContext: >-
             Host=localhost;
-            Port=5432;
+            Port=${{ env.DB_PORT }};
             Database=${{ env.POSTGRES_DB }};
             Username=${{ env.POSTGRES_USER }};
             Password=${{ env.POSTGRES_PASSWORD }}
