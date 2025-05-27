@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
 
+[assembly: Parallelizable(ParallelScope.None)]
 namespace GilGoblin.Tests.Component;
 
 [Category("Component")]

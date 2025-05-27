@@ -86,25 +86,19 @@ public class GilGoblinDatabaseFixture
 
     private async Task EnsureDatabaseIsCreatedAsync()
     {
-        var cs = GetConnectionString();
-        Console.WriteLine($"[DEBUG] EF using connection string: {cs}");
-
         await using var ctx = GetDbContext();
         const int attempts = 10;
         for (var i = 1; i <= attempts; i++)
         {
             try
             {
-                Console.WriteLine($"[DEBUG] EF try {i}: OpenConnectionAsync()");
                 await ctx.Database.OpenConnectionAsync();
                 await ctx.Database.EnsureCreatedAsync();
-                Console.WriteLine("[DEBUG] EF connection opened successfully");
                 await ctx.Database.CloseConnectionAsync();
                 return;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[DEBUG] EF attempt {i} failed: {ex.GetType().Name} – {ex.Message}");
                 if (i == attempts)
                     throw new Exception($"EF couldn't connect after {attempts} tries: {ex.Message}", ex);
                 await Task.Delay(500);
@@ -114,7 +108,6 @@ public class GilGoblinDatabaseFixture
 
     private async Task DeleteAllEntriesAsync()
     {
-        Console.WriteLine("[DEBUG] Deleting all entries from the database");
         var tableOrder = new[]
         {
             "recipe_profit", 
@@ -138,7 +131,6 @@ public class GilGoblinDatabaseFixture
             var sql = $"DELETE FROM \"{table}\";";
             await ctx.Database.ExecuteSqlRawAsync(sql);
         }
-        Console.WriteLine("[DEBUG] All entries deleted successfully");
     }
 
     protected async Task CreateAllEntriesAsync()
@@ -221,7 +213,7 @@ public class GilGoblinDatabaseFixture
         // Use DB_PORT from environment if set (for CI), otherwise use _mappedPort (for local Testcontainers)
         var port = Environment.GetEnvironmentVariable("DB_PORT");
         var portToUse = !string.IsNullOrEmpty(port) ? port : _mappedPort.ToString();
-        return $"Host=localhost;Port={portToUse};Database={DatabaseName};Username={Username};Password={Password}";
+        return $"Host=localhost;Port={portToUse};Database={DatabaseName};Username={Username};Password={Password};MaxPoolSize=100;Pooling=true;Timeout=30;CommandTimeout=30;Include Error Detail=true;";
     }
 
     protected GilGoblinDbContext GetDbContext()
