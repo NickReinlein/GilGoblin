@@ -9,21 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      gilgoblin-database:
-        image: nickreinlein/gilgoblin-database:ci   # <-- we'll build this tag below
-        env:
-          POSTGRES_DB: gilgoblin_db
-          POSTGRES_USER: gilgoblin
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -h localhost -U gilgoblin -d gilgoblin_db"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --health-start-period 20s
+
+    env:
+      POSTGRES_DB: gilgoblin_db
+      POSTGRES_USER: gilgoblin
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
     steps:
       - name: Checkout code
@@ -46,14 +36,18 @@ jobs:
         run: |
           docker build \
             --file src/Database/Dockerfile \
-            --tag nickreinlein/gilgoblin-database:ci \
+            --tag gilgoblin-db-ci:latest \
             src/Database/
 
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --no-restore
+      - name: Start database container
+        run: |
+          docker run -d \
+            --name gilgoblin-db-ci \
+            -e POSTGRES_DB=$POSTGRES_DB \
+            -e POSTGRES_USER=$POSTGRES_USER \
+            -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+            -p 5432:5432 \
+            gilgoblin-db-ci:latest
 
       - name: Install PostgreSQL client
         run: |
@@ -63,7 +57,7 @@ jobs:
       - name: Wait for Database
         run: |
           for i in {1..20}; do
-            if pg_isready -h localhost -p 5432 -U gilgoblin -d gilgoblin_db; then
+            if pg_isready -h localhost -p 5432 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; then
               echo "✅ Database is ready!"
               exit 0
             fi
@@ -73,8 +67,20 @@ jobs:
           echo "❌ Timed out waiting for database."
           exit 1
 
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore --verbosity minimal
+
       - name: Run Tests
         env:
           DOTNET_ENVIRONMENT: Testing
-          ConnectionStrings__GilGoblinDbContext: "Host=localhost;Port=5432;Database=gilgoblin_db;Username=gilgoblin;Password=${{ secrets.POSTGRES_PASSWORD }}"
+          ConnectionStrings__GilGoblinDbContext: "Host=localhost;Port=5432;Database=$POSTGRES_DB;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD"
         run: dotnet test --no-build --verbosity normal
+
+      - name: Tear down database container
+        if: always()
+        run: |
+          docker stop gilgoblin-db-ci
+          docker rm gilgoblin-db-ci
