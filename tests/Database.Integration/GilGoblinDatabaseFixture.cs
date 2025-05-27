@@ -114,6 +114,7 @@ public class GilGoblinDatabaseFixture
 
     private async Task DeleteAllEntriesAsync()
     {
+        Console.WriteLine("[DEBUG] Deleting all entries from the database");
         var tableOrder = new[]
         {
             "recipe_profit", 
@@ -133,9 +134,11 @@ public class GilGoblinDatabaseFixture
         await using var ctx = GetDbContext();
         foreach (var table in tableOrder)
         {
+            Console.WriteLine($"[DEBUG] Deleting entries from table: {table}");
             var sql = $"DELETE FROM \"{table}\";";
             await ctx.Database.ExecuteSqlRawAsync(sql);
         }
+        Console.WriteLine("[DEBUG] All entries deleted successfully");
     }
 
     protected async Task CreateAllEntriesAsync()

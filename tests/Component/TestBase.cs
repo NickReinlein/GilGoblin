@@ -1,17 +1,11 @@
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GilGoblin.Tests.Database.Integration;
 using GilGoblin.Api;
-using GilGoblin.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using EFCore.NamingConventions;
 
 namespace GilGoblin.Tests.Component;
 
