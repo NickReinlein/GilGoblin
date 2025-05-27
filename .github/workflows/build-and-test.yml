@@ -68,6 +68,11 @@ jobs:
           done
           echo "❌ Timed out waiting for database."
           exit 1
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore --verbosity minimal
 
       - name: Run Tests
         env:
