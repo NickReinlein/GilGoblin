@@ -216,10 +216,12 @@ public class GilGoblinDatabaseFixture
 
         await ctx.SaveChangesAsync();
     }
-
     protected string GetConnectionString()
     {
-        return $"Host=localhost;Port={_mappedPort};Database={DatabaseName};Username={Username};Password={Password}";
+        // Use DB_PORT from environment if set (for CI), otherwise use _mappedPort (for local Testcontainers)
+        var port = Environment.GetEnvironmentVariable("DB_PORT");
+        var portToUse = !string.IsNullOrEmpty(port) ? port : _mappedPort.ToString();
+        return $"Host=localhost;Port={portToUse};Database={DatabaseName};Username={Username};Password={Password}";
     }
 
     protected GilGoblinDbContext GetDbContext()
