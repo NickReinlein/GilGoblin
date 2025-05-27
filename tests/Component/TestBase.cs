@@ -15,6 +15,7 @@ using NUnit.Framework;
 namespace GilGoblin.Tests.Component;
 
 [Category("Component")]
+[Timeout(10000)]
 public class TestBase : GilGoblinDatabaseFixture
 {
     private TestServer _server = null!;
