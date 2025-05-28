@@ -6,6 +6,13 @@ namespace GilGoblin.Tests.Database.Integration;
 [TestFixture]
 public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T : class
 {
+    [SetUp]
+    public async Task SetUp()
+    {
+        await ResetDatabaseAsync();
+        await CreateAllEntriesAsync();
+    }
+    
     [Test]
     public virtual async Task GivenValidNewEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {

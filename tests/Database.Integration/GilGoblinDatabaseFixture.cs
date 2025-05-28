@@ -40,6 +40,9 @@ public class GilGoblinDatabaseFixture
             .WithEnvironment("POSTGRES_USER", Username)
             .WithEnvironment("POSTGRES_PASSWORD", Password)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilMessageIsLogged("database system is ready to accept connections"))
+            .WithOutputConsumer(Consume.RedirectStdoutAndStderrToConsole())
             .Build();
 
         await _postgresContainer.StartAsync();
@@ -66,14 +69,7 @@ public class GilGoblinDatabaseFixture
         _scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
         await EnsureDatabaseIsCreatedAsync();
-        await DeleteAllEntriesAsync();
-        await CreateAllEntriesAsync();
-    }
-
-    [TearDown]
-    public virtual async Task TearDown()
-    {
-        await DeleteAllEntriesAsync();
+        await ResetDatabaseAsync();
         await CreateAllEntriesAsync();
     }
 
@@ -106,31 +102,12 @@ public class GilGoblinDatabaseFixture
         }
     }
 
-    private async Task DeleteAllEntriesAsync()
+    protected async Task ResetDatabaseAsync()
     {
-        var tableOrder = new[]
-        {
-            "recipe_profit", 
-            "recipe_cost", 
-            "world_upload_times",
-            "price", 
-            "recent_purchase", 
-            "average_sale_price", 
-            "min_listing",
-            "daily_sale_velocity", 
-            "price_data", 
-            "recipe", 
-            "item", 
-            "world" 
-        };
-
         await using var ctx = GetDbContext();
-        foreach (var table in tableOrder)
-        {
-            Console.WriteLine($"[DEBUG] Deleting entries from table: {table}");
-            var sql = $"DELETE FROM \"{table}\";";
-            await ctx.Database.ExecuteSqlRawAsync(sql);
-        }
+        await ctx.Database.EnsureDeletedAsync();
+        await Task.Delay(3000);
+        await ctx.Database.EnsureCreatedAsync();
     }
 
     protected async Task CreateAllEntriesAsync()
@@ -208,12 +185,14 @@ public class GilGoblinDatabaseFixture
 
         await ctx.SaveChangesAsync();
     }
+
     protected string GetConnectionString()
     {
         // Use DB_PORT from environment if set (for CI), otherwise use _mappedPort (for local Testcontainers)
         var port = Environment.GetEnvironmentVariable("DB_PORT");
         var portToUse = !string.IsNullOrEmpty(port) ? port : _mappedPort.ToString();
-        return $"Host=localhost;Port={portToUse};Database={DatabaseName};Username={Username};Password={Password};MaxPoolSize=100;Pooling=true;Timeout=30;CommandTimeout=30;Include Error Detail=true;";
+        return
+            $"Host=localhost;Port={portToUse};Database={DatabaseName};Username={Username};Password={Password};MaxPoolSize=100;Pooling=true;Timeout=30;CommandTimeout=30;Include Error Detail=true;";
     }
 
     protected GilGoblinDbContext GetDbContext()
