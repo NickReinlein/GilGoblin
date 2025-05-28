@@ -99,9 +99,9 @@ public class WorldUpdaterTests : DataUpdaterTests
         await _worldUpdater.GetAllWorldsAsync();
 
         _scope.ServiceProvider.Received(1).GetService(typeof(IDataSaver<WorldPoco>));
-        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(i => i.Count == _worldList.Count &&
-                                                                        i.All(w => _worldList.Any(wl =>
-                                                                            wl.Name == w.Name))));
+        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(
+            i => i.Count == _worldList.Count &&
+                 i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
     }
 
     [Test]
@@ -112,9 +112,9 @@ public class WorldUpdaterTests : DataUpdaterTests
         await _worldUpdater.GetAllWorldsAsync();
 
         _scope.ServiceProvider.Received(1).GetService(typeof(IDataSaver<WorldPoco>));
-        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(i => i.Count == _worldList.Count &&
-                                                                        i.All(w => _worldList.Any(wl =>
-                                                                            wl.Name == w.Name))));
+        await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(
+            i => i.Count == _worldList.Count &&
+                 i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
         _logger.LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
     }
 

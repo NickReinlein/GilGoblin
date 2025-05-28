@@ -75,7 +75,6 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
         await ResetAndRecreateDatabaseAsync();
 
         var cts = new CancellationTokenSource();
-
         cts.CancelAfter(300);
         await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
 

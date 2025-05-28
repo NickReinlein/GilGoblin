@@ -62,7 +62,7 @@ public class GilGoblinDatabaseFixture
                     .UseSnakeCaseNamingConvention()
                     .EnableDetailedErrors(false)
                     .EnableSensitiveDataLogging(false)
-                    .LogTo(Console.WriteLine, LogLevel.Information)
+                    .LogTo(Console.WriteLine, LogLevel.Warning)
             );
 
         _serviceProvider = services.BuildServiceProvider();
@@ -187,7 +187,7 @@ public class GilGoblinDatabaseFixture
     private async Task EnsureDatabaseIsCreatedAsync()
     {
         await using var ctx = GetDbContext();
-        const int attempts = 10;
+        const int attempts = 20;
         for (var i = 1; i <= attempts; i++)
         {
             try

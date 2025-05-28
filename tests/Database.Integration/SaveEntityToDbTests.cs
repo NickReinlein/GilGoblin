@@ -16,7 +16,7 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T 
 
         await ValidateResultSavedToDatabase(entity);
     }
-    
+
     [Test]
     public virtual async Task GivenValidExistingEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
