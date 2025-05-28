@@ -57,10 +57,10 @@ jobs:
 
       - name: Wait for successful database connection
         run: |
+          sleep 20
           for i in {1..20}; do
             if pg_isready -h localhost -p "$DB_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB"; then
               echo "✅ Database is ready!"
-              # Try connecting to the database to ensure it's accepting connections
               if psql "host=localhost port=$DB_PORT dbname=$POSTGRES_DB user=$POSTGRES_USER password=$POSTGRES_PASSWORD" -c '\q'; then
                 echo "✅ Successfully connected to the database!"
                 exit 0
