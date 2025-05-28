@@ -92,7 +92,10 @@ jobs:
             Database=${{ env.POSTGRES_DB }};
             Username=${{ env.POSTGRES_USER }};
             Password=${{ env.POSTGRES_PASSWORD }}
-        run: dotnet test --no-build --verbosity normal
+        run: 
+          echo "host=localhost port=$DB_PORT dbname=$POSTGRES_DB user=$POSTGRES_USER"
+          echo "host=localhost port=${{ env.DB_PORT }} dbname=${{ env.POSTGRES_DB }} user=${{ env.POSTGRES_USER }}"
+          dotnet test --no-build --verbosity normal
 
       - name: Tear down database container
         if: always()
