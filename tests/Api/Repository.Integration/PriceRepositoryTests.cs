@@ -17,8 +17,10 @@ public class PriceRepositoryTests : GilGoblinDatabaseFixture
     private PriceRepository _priceRepo;
 
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
+        await ResetDatabaseAsync();
+        await CreateAllEntriesAsync();
         _cache = Substitute.For<IPriceCache>();
 
         _priceRepo = new PriceRepository(_serviceProvider, _cache);

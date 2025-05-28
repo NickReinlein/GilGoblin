@@ -15,8 +15,9 @@ public class WorldRepositoryTests : GilGoblinDatabaseFixture
     private WorldRepository _worldRepo;
 
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
+        await ResetAndRecreateDatabaseAsync();
         _cache = Substitute.For<IWorldCache>();
 
         _worldRepo = new WorldRepository(_serviceProvider, _cache);

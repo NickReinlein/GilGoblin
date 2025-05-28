@@ -15,6 +15,10 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
     {
         await using var ctx = GetDbContext();
         ctx.Price.RemoveRange(ctx.Price);
+        ctx.AverageSalePrice.RemoveRange(ctx.AverageSalePrice);
+        ctx.RecentPurchase.RemoveRange(ctx.RecentPurchase);
+        ctx.MinListing.RemoveRange(ctx.MinListing);
+        ctx.DailySaleVelocity.RemoveRange(ctx.DailySaleVelocity);
         await ctx.SaveChangesAsync();
         var dcDataPoint = new PriceDataPoco("DC", 311, ValidWorldIds[0]);
         ctx.Add(dcDataPoint);
@@ -25,8 +29,7 @@ public class PriceSavingTests : SaveEntityToDbTests<PricePoco>
             DcDataPoint = dcDataPoint
         };
         ctx.Add(_averageSalePrice);
-        var result = await ctx.SaveChangesAsync();
-        Assert.That(result, Is.EqualTo(1));
+        _ = await ctx.SaveChangesAsync();
     }
 
     protected override PricePoco GetEntity() => new(

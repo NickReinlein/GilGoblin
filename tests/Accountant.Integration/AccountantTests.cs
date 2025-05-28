@@ -116,6 +116,18 @@ public abstract class AccountantTests<T> : GilGoblinDatabaseFixture where T : cl
         _recipeRepo.GetAll().Returns(GetDbContext().Recipe.ToList());
         _costRepo.GetAllAsync(WorldId).Returns(GetDbContext().RecipeCost.ToList());
         _costRepo.GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>()).Returns(GetDbContext().RecipeCost.ToList());
+        _profitRepo
+            .GetAllAsync(WorldId)
+            .Returns(GetDbContext().RecipeProfit
+                .Where(p => p.WorldId == WorldId)
+                .ToList());
+        _profitRepo
+            .GetMultipleAsync(WorldId, Arg.Any<IEnumerable<int>>())
+            .Returns(GetDbContext().RecipeProfit
+                .Where(p =>
+                    ValidRecipeIds.Contains(p.RecipeId) &&
+                    p.WorldId == WorldId)
+                .ToList());
         _priceRepo.GetAll(WorldId).Returns(GetDbContext().Price.ToList());
     }
 

@@ -28,7 +28,6 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     public override void SetUp()
     {
         base.SetUp();
-
         _logger = Substitute.For<ILogger<RecipeProfitAccountant>>();
         _saver = Substitute.For<IDataSaver<RecipeProfitPoco>>();
         _saver.SaveAsync(Arg.Any<IEnumerable<RecipeProfitPoco>>(), Arg.Any<CancellationToken>())
@@ -84,6 +83,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [TestCaseSource(nameof(ValidRecipeIds))]
     public async Task GivenComputeListAsync_WhenSuccessful_ThenProfitsAreReturned(int recipeId)
     {
+        await ResetAndRecreateDatabaseAsync();
         var cts = new CancellationTokenSource();
         cts.CancelAfter(200);
         await _accountant.ComputeListAsync(_worldId, [recipeId], cts.Token);

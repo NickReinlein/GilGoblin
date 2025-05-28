@@ -69,8 +69,7 @@ public class GilGoblinDatabaseFixture
         _scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
         await EnsureDatabaseIsCreatedAsync();
-        await ResetDatabaseAsync();
-        await CreateAllEntriesAsync();
+        await ResetAndRecreateDatabaseAsync();
     }
 
     [OneTimeTearDown]
@@ -80,33 +79,17 @@ public class GilGoblinDatabaseFixture
         await _postgresContainer.DisposeAsync();
     }
 
-    private async Task EnsureDatabaseIsCreatedAsync()
+
+    protected async Task ResetAndRecreateDatabaseAsync()
     {
-        await using var ctx = GetDbContext();
-        const int attempts = 10;
-        for (var i = 1; i <= attempts; i++)
-        {
-            try
-            {
-                await ctx.Database.OpenConnectionAsync();
-                await ctx.Database.EnsureCreatedAsync();
-                await ctx.Database.CloseConnectionAsync();
-                return;
-            }
-            catch (Exception ex)
-            {
-                if (i == attempts)
-                    throw new Exception($"EF couldn't connect after {attempts} tries: {ex.Message}", ex);
-                await Task.Delay(500);
-            }
-        }
+        await ResetDatabaseAsync();
+        await CreateAllEntriesAsync();
     }
 
     protected async Task ResetDatabaseAsync()
     {
         await using var ctx = GetDbContext();
         await ctx.Database.EnsureDeletedAsync();
-        await Task.Delay(3000);
         await ctx.Database.EnsureCreatedAsync();
     }
 
@@ -199,5 +182,27 @@ public class GilGoblinDatabaseFixture
     {
         var scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+    }
+
+    private async Task EnsureDatabaseIsCreatedAsync()
+    {
+        await using var ctx = GetDbContext();
+        const int attempts = 10;
+        for (var i = 1; i <= attempts; i++)
+        {
+            try
+            {
+                await ctx.Database.OpenConnectionAsync();
+                await ctx.Database.EnsureCreatedAsync();
+                await ctx.Database.CloseConnectionAsync();
+                return;
+            }
+            catch (Exception ex)
+            {
+                if (i == attempts)
+                    throw new Exception($"EF couldn't connect after {attempts} tries: {ex.Message}", ex);
+                await Task.Delay(500);
+            }
+        }
     }
 }

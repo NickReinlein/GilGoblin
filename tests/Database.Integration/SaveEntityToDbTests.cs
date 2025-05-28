@@ -6,23 +6,17 @@ namespace GilGoblin.Tests.Database.Integration;
 [TestFixture]
 public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T : class
 {
-    [SetUp]
-    public async Task SetUp()
-    {
-        await ResetDatabaseAsync();
-        await CreateAllEntriesAsync();
-    }
-    
     [Test]
     public virtual async Task GivenValidNewEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
+        await ClearDatabaseEntities();
         var entity = GetEntity();
 
         await SaveEntityToDatabase(entity);
 
         await ValidateResultSavedToDatabase(entity);
     }
-
+    
     [Test]
     public virtual async Task GivenValidExistingEntity_WhenSaving_ThenEntityIsSavedSuccessfully()
     {
@@ -45,6 +39,13 @@ public abstract class SaveEntityToDbTests<T> : GilGoblinDatabaseFixture where T 
 
         var savedCount = await ctx.SaveChangesAsync();
         Assert.That(savedCount, Is.EqualTo(1));
+    }
+    
+    private async Task ClearDatabaseEntities()
+    {
+        await using var ctx = GetDbContext();
+        ctx.Set<T>().RemoveRange(ctx.Set<T>());
+        await ctx.SaveChangesAsync();
     }
 
     protected abstract T GetEntity();
