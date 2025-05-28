@@ -87,15 +87,12 @@ jobs:
         env:
           DOTNET_ENVIRONMENT: Testing
           ConnectionStrings__GilGoblinDbContext: >-
-            Host=localhost;
-            Port=$DB_PORT;
+            "Host=localhost;
+            Port=${{ env.DB_PORT }};
             Database=${{ env.POSTGRES_DB }};
             Username=${{ env.POSTGRES_USER }};
-            Password=${{ env.POSTGRES_PASSWORD }}
-        run: |
-          echo "host=localhost port=$DB_PORT dbname=$POSTGRES_DB user=$POSTGRES_USER"
-          echo "host=localhost port=$DB_PORT dbname=$POSTGRES_DB user=$POSTGRES_USER"
-          dotnet test --no-build --verbosity normal
+            Password=${{ env.POSTGRES_PASSWORD }}"
+        run: dotnet test --no-build --verbosity normal
 
       - name: Tear down database container
         if: always()
