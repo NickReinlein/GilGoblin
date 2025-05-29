@@ -72,6 +72,8 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
     [Test]
     public async Task GivenComputeListAsync_WhenSuccessful_ThenWeReturnAPoco()
     {
+        await ResetAndRecreateDatabaseAsync();
+
         var cts = new CancellationTokenSource();
         cts.CancelAfter(300);
         await _accountant.ComputeListAsync(WorldId, [RecipeId], cts.Token);
@@ -82,24 +84,24 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
                 after.RecipeId == RecipeId &&
                 after.WorldId == WorldId)
             .ToList();
-
         Assert.That(result, Is.Not.Null.Or.Empty);
         Assert.Multiple(() =>
         {
+            Assert.That(result, Has.Count.EqualTo(2), "Expected both HQ and NQ costs to be saved");
+            Assert.That(result.Any(r => r.IsHq), "Expected at least one HQ cost to be saved");
+            Assert.That(result.Any(r => !r.IsHq), "Expected at least one NQ cost to be saved");
             Assert.That(result.All(r => r.WorldId == WorldId));
             Assert.That(result.All(r => r.RecipeId == RecipeId));
             Assert.That(result.All(r => r.Amount > 30));
             Assert.That(result.All(r => r.Amount < 1000));
             Assert.That(result.All(r => r.LastUpdated > DateTimeOffset.UtcNow.AddMinutes(-5)));
-            Assert.That(result, Has.Count.EqualTo(2), "Expected both HQ and NQ costs to be saved");
-            Assert.That(result.Any(r => r.IsHq), "Expected at least one HQ cost to be saved");
-            Assert.That(result.Any(r => !r.IsHq), "Expected at least one NQ cost to be saved");
         });
     }
 
     [Test]
     public async Task GivenComputeListAsync_WhenIdsAreValidAndCostsOutdated_ThenRelevantCostsAreFetched()
     {
+        await ResetAndRecreateDatabaseAsync();
         await MakeCostsOutdated();
         await using var dbContext = GetDbContext();
         var recipeIds = dbContext.Recipe.Select(r => r.Id).ToList();
@@ -124,7 +126,6 @@ public class RecipeCostAccountantTests : AccountantTests<RecipeCostPoco>
 
         await _saver.Received(1).SaveAsync(Arg.Any<IEnumerable<RecipeCostPoco>>(), Arg.Any<CancellationToken>());
     }
-
 
     [Test]
     public async Task GivenComputeListAsync_WhenTaskIsCanceledByUser_ThenWeHandleTheCancellationCorrectly()

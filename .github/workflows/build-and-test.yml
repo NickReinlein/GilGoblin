@@ -9,22 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:8.0
 
-    services:
-      gilgoblin-database:
-        image: nickreinlein/gilgoblin-database
-        env:
-          POSTGRES_DB: gilgoblin_db
-          POSTGRES_USER: gilgoblin
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        options: >-
-          --health-cmd "pg_isready -h gilgoblin-database -U gilgoblin -d gilgoblin_db"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --health-start-period 10s
+    env:
+      POSTGRES_DB: gilgoblin_db
+      POSTGRES_USER: gilgoblin
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
     steps:
       - name: Checkout code
@@ -38,41 +27,75 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - name: Setup .NET8
+      - name: Set up .NET 8.0 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
+
+      - name: Build database Docker image
+        run: |
+          docker build \
+            --file src/Database/Dockerfile \
+            --tag gilgoblin-db-ci:latest \
+            src/Database/
+
+      - name: Start database container
+        run: |
+          docker run -d \
+            --name gilgoblin-db-ci \
+            -e POSTGRES_DB=$POSTGRES_DB \
+            -e POSTGRES_USER=$POSTGRES_USER \
+            -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+            -p 0:5432 \
+            gilgoblin-db-ci:latest
+
+      - name: Get mapped port
+        id: get_db_port
+        run: |
+          PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "5432/tcp") 0).HostPort}}' gilgoblin-db-ci)
+          echo "DB_PORT=$PORT" >> $GITHUB_ENV
+
+      - name: Wait for successful database connection
+        run: |
+          sleep 20
+          for i in {1..20}; do
+            if pg_isready -h localhost -p "$DB_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB"; then
+              echo "✅ Database is ready!"
+              if psql "host=localhost port=$DB_PORT dbname=$POSTGRES_DB user=$POSTGRES_USER password=$POSTGRES_PASSWORD" -c '\q'; then
+                echo "✅ Successfully connected to the database!"
+                exit 0
+              else
+                echo "❌ Could not connect to the database, retrying…"
+              fi
+            else
+              echo "⏳ Waiting for database… ($i/20)"
+            fi
+
+            sleep 2
+          done
+
+          echo "❌ Timed out waiting for database."
+          exit 1
 
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --no-restore
-
-      - name: Install PostgreSQL client
-        run: |
-          apt-get update
-          apt-get install -y postgresql-client
-
-      - name: Wait for Database
-        run: |
-          for i in {1..20}; do
-            if pg_isready -h gilgoblin-database -p 5432 -U gilgoblin; then
-              echo "Database is ready!"
-              exit 0
-            fi
-            echo "Waiting for database… ($i/20)"
-            sleep 3
-          done
-          echo "Timed out waiting for database."
-          exit 1
+      - name: Build solution
+        run: dotnet build --no-restore --verbosity minimal
 
       - name: Run Tests
         env:
+          DOTNET_ENVIRONMENT: Testing
           ConnectionStrings__GilGoblinDbContext: >
-            Host=gilgoblin-database;
-            Port=5432;
-            Database=gilgoblin_db;
-            Username=gilgoblin;
-            Password=${{ secrets.POSTGRES_PASSWORD }}
+            Host=localhost;
+            Port=${{ env.DB_PORT }};
+            Database=${{ env.POSTGRES_DB }};
+            Username=${{ env.POSTGRES_USER }};
+            Password=${{ env.POSTGRES_PASSWORD }};
         run: dotnet test --no-build --verbosity normal
+
+      - name: Tear down database container
+        if: always()
+        run: |
+          docker stop gilgoblin-db-ci
+          docker rm gilgoblin-db-ci

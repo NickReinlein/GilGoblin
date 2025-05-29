@@ -28,7 +28,7 @@ public class GilGoblinDatabaseFixture
 
     private const string Username = "gilgoblin";
     private const string DatabaseName = "gilgoblin_db";
-    private const string Password = "gilgoblin_password";
+    private static string Password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "gilgoblin_password";
 
     [OneTimeSetUp]
     public virtual async Task OneTimeSetUp()
@@ -40,6 +40,9 @@ public class GilGoblinDatabaseFixture
             .WithEnvironment("POSTGRES_USER", Username)
             .WithEnvironment("POSTGRES_PASSWORD", Password)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilMessageIsLogged("database system is ready to accept connections"))
+            .WithOutputConsumer(Consume.RedirectStdoutAndStderrToConsole())
             .Build();
 
         await _postgresContainer.StartAsync();
@@ -56,6 +59,7 @@ public class GilGoblinDatabaseFixture
             .AddSingleton<IConfiguration>(_configuration)
             .AddDbContext<GilGoblinDbContext>(opts =>
                 opts.UseNpgsql(GetConnectionString())
+                    .UseSnakeCaseNamingConvention()
                     .EnableDetailedErrors(false)
                     .EnableSensitiveDataLogging(false)
                     .LogTo(Console.WriteLine, LogLevel.Warning)
@@ -65,14 +69,7 @@ public class GilGoblinDatabaseFixture
         _scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
         await EnsureDatabaseIsCreatedAsync();
-        await CreateAllEntriesAsync();
-    }
-
-    [TearDown]
-    public virtual async Task TearDown()
-    {
-        await DeleteAllEntriesAsync();
-        await CreateAllEntriesAsync();
+        await ResetAndRecreateDatabaseAsync();
     }
 
     [OneTimeTearDown]
@@ -82,56 +79,39 @@ public class GilGoblinDatabaseFixture
         await _postgresContainer.DisposeAsync();
     }
 
-    private async Task EnsureDatabaseIsCreatedAsync()
-    {
-        var cs = GetConnectionString();
-        Console.WriteLine($"[DEBUG] EF using connection string: {cs}");
 
-        await using var ctx = GetDbContext();
-        const int attempts = 10;
-        for (var i = 1; i <= attempts; i++)
-        {
-            try
-            {
-                Console.WriteLine($"[DEBUG] EF try {i}: OpenConnectionAsync()");
-                await ctx.Database.OpenConnectionAsync();
-                await ctx.Database.EnsureCreatedAsync();
-                Console.WriteLine("[DEBUG] EF connection opened successfully");
-                await ctx.Database.CloseConnectionAsync();
-                return;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[DEBUG] EF attempt {i} failed: {ex.GetType().Name} – {ex.Message}");
-                if (i == attempts)
-                    throw new Exception($"EF couldn't connect after {attempts} tries: {ex.Message}", ex);
-                await Task.Delay(500);
-            }
-        }
+    protected async Task ResetAndRecreateDatabaseAsync()
+    {
+        await ResetDatabaseAsync();
+        await CreateAllEntriesAsync();
     }
 
-    private async Task DeleteAllEntriesAsync()
+    protected async Task ResetDatabaseAsync()
     {
         await using var ctx = GetDbContext();
-        ctx.RecentPurchase.RemoveRange(ctx.RecentPurchase);
-        ctx.AverageSalePrice.RemoveRange(ctx.AverageSalePrice);
-        ctx.MinListing.RemoveRange(ctx.MinListing);
-        ctx.DailySaleVelocity.RemoveRange(ctx.DailySaleVelocity);
-        ctx.World.RemoveRange(ctx.World);
-        ctx.Item.RemoveRange(ctx.Item);
-        ctx.Recipe.RemoveRange(ctx.Recipe);
-        ctx.RecipeCost.RemoveRange(ctx.RecipeCost);
-        ctx.RecipeProfit.RemoveRange(ctx.RecipeProfit);
-        ctx.Price.RemoveRange(ctx.Price);
-        ctx.PriceData.RemoveRange(ctx.PriceData);
-        ctx.WorldUploadTime.RemoveRange(ctx.WorldUploadTime);
-        await ctx.SaveChangesAsync();
+        await ctx.Database.EnsureDeletedAsync();
+        await ctx.Database.EnsureCreatedAsync();
     }
 
     protected async Task CreateAllEntriesAsync()
     {
         await using var ctx = GetDbContext();
         var qualities = new[] { true, false };
+        var items = ValidItemsIds.Select(i =>
+                new ItemPoco
+                {
+                    Id = i,
+                    Name = $"Item {i}",
+                    Description = $"Functions as an item with ID {i}",
+                    IconId = i + 111,
+                    StackSize = 1,
+                    PriceLow = i * 3 + 11,
+                    PriceMid = i * 3 + 12,
+                    Level = i + 13,
+                    CanHq = i % 2 == 0
+                })
+            .ToList();
+        await ctx.Item.AddRangeAsync(items);
 
         var recipes = ValidRecipeIds
             .Select(id => new RecipePoco
@@ -148,22 +128,6 @@ public class GilGoblinDatabaseFixture
             })
             .ToList();
         await ctx.Recipe.AddRangeAsync(recipes);
-
-        var items = ValidItemsIds
-            .Select(i => new ItemPoco
-            {
-                Id = i,
-                Name = $"Item {i}",
-                Description = $"Functions as an item with ID {i}",
-                IconId = i + 111,
-                StackSize = 1,
-                PriceLow = i * 3 + 11,
-                PriceMid = i * 3 + 12,
-                Level = i + 13,
-                CanHq = i % 2 == 0
-            })
-            .ToList();
-        await ctx.Item.AddRangeAsync(items);
 
         var worlds = ValidWorldIds
             .Select(w => new WorldPoco { Id = w, Name = $"World {w}" })
@@ -207,12 +171,38 @@ public class GilGoblinDatabaseFixture
 
     protected string GetConnectionString()
     {
-        return $"Host=localhost;Port={_mappedPort};Database={DatabaseName};Username={Username};Password={Password}";
+        // Use DB_PORT from environment if set (for CI), otherwise use _mappedPort (for local Testcontainers)
+        var port = Environment.GetEnvironmentVariable("DB_PORT");
+        var portToUse = !string.IsNullOrEmpty(port) ? port : _mappedPort.ToString();
+        return
+            $"Host=localhost;Port={portToUse};Database={DatabaseName};Username={Username};Password={Password};MaxPoolSize=100;Pooling=true;Timeout=30;CommandTimeout=30;Include Error Detail=true;";
     }
 
     protected GilGoblinDbContext GetDbContext()
     {
         var scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
+    }
+
+    private async Task EnsureDatabaseIsCreatedAsync()
+    {
+        await using var ctx = GetDbContext();
+        const int attempts = 20;
+        for (var i = 1; i <= attempts; i++)
+        {
+            try
+            {
+                await ctx.Database.OpenConnectionAsync();
+                await ctx.Database.EnsureCreatedAsync();
+                await ctx.Database.CloseConnectionAsync();
+                return;
+            }
+            catch (Exception ex)
+            {
+                if (i == attempts)
+                    throw new Exception($"EF couldn't connect after {attempts} tries: {ex.Message}", ex);
+                await Task.Delay(500);
+            }
+        }
     }
 }

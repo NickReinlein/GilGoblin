@@ -19,10 +19,11 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
     private IItemCache _cache;
     private ILogger<ItemRepository> _logger;
     private ItemRepository _itemRepo;
-
+    
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
+        await ResetAndRecreateDatabaseAsync();
         _cache = Substitute.For<IItemCache>();
         _logger = Substitute.For<ILogger<ItemRepository>>();
 
@@ -49,7 +50,7 @@ public class ItemRepositoryTests : GilGoblinDatabaseFixture
     [TestCaseSource(nameof(ValidItemsIds))]
     public void GivenAGet_WhenTheIdIsValid_ThenTheRepositoryReturnsTheCorrectEntry(int id)
     {
-        var ctx = GetDbContext();
+        using var ctx = GetDbContext();
         var item = ctx.Item.First(i => i.Id > 0 && i.Id == id);
 
         var result = _itemRepo.Get(id);

@@ -36,9 +36,14 @@ public class WorldUpdaterTests : DataUpdaterTests
         _serviceProvider.GetService(typeof(IWorldFetcher)).Returns(_fetcher);
         _serviceProvider.GetService(typeof(IDataSaver<WorldPoco>)).Returns(_saver);
 
-        _worldList = [new(21, "Ravana"), new(22, "Bismarck"), new(34, "Brynhildr")];
+        _worldList =
+        [
+            new(21, "Ravana"),
+            new(22, "Bismarck"),
+            new(34, "Brynhildr")
+        ];
 
-        _saver.SaveAsync(default!).ReturnsForAnyArgs(true);
+        _saver.SaveAsync(null!).ReturnsForAnyArgs(true);
         _fetcher.GetAllAsync().Returns(_worldList);
 
         _worldUpdater = new WorldUpdater(_serviceProvider, _logger);
@@ -127,7 +132,7 @@ public class WorldUpdaterTests : DataUpdaterTests
     public async Task GivenConvertAndSaveToDbAsync_WhenSavingThrowsAnException_ThenWeLogTheError()
     {
         _saver.ClearSubstitute();
-        _saver.SaveAsync(default!).ThrowsAsyncForAnyArgs(new Exception("test"));
+        _saver.SaveAsync(null!).ThrowsAsyncForAnyArgs(new Exception("test"));
 
         await _worldUpdater.GetAllWorldsAsync();
 
