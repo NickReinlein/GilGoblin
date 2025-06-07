@@ -343,7 +343,7 @@ Resources:
       Port: 443
       Protocol: HTTPS
       Certificates:
-        - CertificateArn: arn:aws:acm:us-east-1:381492080018:certificate/12517e67-1e27-4772-b5ec-fac8969dd2fb
+        - CertificateArn: arn:aws:acm:us-east-1:381492080018:certificate/27fe90b2-0252-47bf-ad3a-24b6cf9753d7
       DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
