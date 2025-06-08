@@ -42,11 +42,11 @@ A webpage front-end is available with the resulting calculations. Filters are av
 * :question: A link/recipe details for each profit result's items, ingredients, prices, etc. in the profit table row 🕵️
 * :question: A hover or clickable option to see the profit's ingredients & cost info ☁️
 * :question: Advanced filtering: Enter class levels to filter available recipes 🧰
+* :question: Filter for HQ/NQ 🥇 🥈
 * :question: A website displaying the top crafts *for each profession* 🛠️
 
 *Not currently on the product roadmap*
-* :heavy_multiplication_x: Filter for HQ/NQ 
-* :heavy_multiplication_x: Any interactions with the market board or in-game
+* :heavy_multiplication_x: Any interactions with the market board or in-game 📋
 
 ## Technologies
 * The back-end REST API is written in C# (.NET 8)
