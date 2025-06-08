@@ -222,10 +222,6 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: "0.0.0.0/0"
-        - IpProtocol: tcp
-          FromPort: 3000
-          ToPort: 3000
-          CidrIp: "0.0.0.0/0"
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -254,22 +250,12 @@ Resources:
       Type: network
       Scheme: internal
       Subnets:
-        - !Ref PublicSubnetA
-        - !Ref PublicSubnetB
+        - !Ref PrivateSubnetA
+        - !Ref PrivateSubnetB
 
   ######################
   # Target Groups
   ######################
-
-  DefaultTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
 
   # AccountantTargetGroup:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -287,7 +273,7 @@ Resources:
       - ALB
     Properties:
       VpcId: !Ref VPC
-      Port: 80
+      Port: 55448
       Protocol: HTTP
       TargetType: ip
       HealthCheckPath: /health
@@ -344,8 +330,11 @@ Resources:
       Port: 80
       Protocol: HTTP
       DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref DefaultTargetGroup
+        - Type: redirect
+          RedirectConfig:
+            Protocol: HTTPS
+            Port: "443"
+            StatusCode: HTTP_301
 
   ALBListenerHTTPS:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -354,10 +343,10 @@ Resources:
       Port: 443
       Protocol: HTTPS
       Certificates:
-        - CertificateArn: arn:aws:acm:us-east-1:381492080018:certificate/12517e67-1e27-4772-b5ec-fac8969dd2fb
+        - CertificateArn: arn:aws:acm:us-east-1:381492080018:certificate/27fe90b2-0252-47bf-ad3a-24b6cf9753d7
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref DefaultTargetGroup
+          TargetGroupArn: !Ref FrontendTargetGroup
 
 
   ######################
@@ -427,9 +416,7 @@ Resources:
       Priority: 5
       Conditions:
         - Field: path-pattern
-          Values:
-            - "/frontend/*"
-            - "/health.html"
+          Values: [ "/*", "/frontend/*", "/health.html" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
@@ -445,12 +432,8 @@ Resources:
       GroupDescription: "Security group for API"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          SourceSecurityGroupId: !Ref FrontendSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 55448
+          ToPort:   55448
           SourceSecurityGroupId: !Ref ALBSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
@@ -594,22 +577,22 @@ Resources:
         - Name: "gilgoblin-api-container"
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-api"
           PortMappings:
-            - ContainerPort: 80
+            - ContainerPort: 55448
           Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
             - Name: FrontEndUrl
               Value: !Join [ "", [ "https://", !GetAtt ALB.DNSName ] ]
             - Name: ASPNETCORE_URLS
-              Value: "http://+:80"
-          HealthCheck:
-            Command:
-              - CMD-SHELL
-              - curl -f http://localhost:55448/health || exit 1
-            Interval: 30   
-            Timeout: 5     
-            Retries: 3     
-            StartPeriod: 60
+              Value: "http://+:55448"
+          # HealthCheck:
+          #   Command:
+          #     - CMD-SHELL
+          #     - curl -f http://localhost:55448/health || exit 1
+          #   Interval: 30
+          #   Timeout: 10
+          #   Retries: 3
+          #   StartPeriod: 90
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -624,12 +607,13 @@ Resources:
       - ALBListenerHTTPS
       - ApiListenerRule
       - LogGroup
+      - DatabaseService
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref ApiTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 60
+      HealthCheckGracePeriodSeconds: 90
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
@@ -643,7 +627,7 @@ Resources:
           ContainerName: gilgoblin-api-container
       LoadBalancers:
         - ContainerName: gilgoblin-api-container
-          ContainerPort: 80
+          ContainerPort: 55448
           TargetGroupArn: !Ref ApiTargetGroup
 
   DatabaseTaskDefinition:
@@ -674,12 +658,12 @@ Resources:
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGDATA}}"
             - Name: PORT_DATABASE
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PORT_DATABASE}}"
-          HealthCheck:
-            Command: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
-            Interval: 30
-            Timeout: 5
-            Retries: 3
-            StartPeriod: 60
+          # HealthCheck:
+          #   Command: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
+          #   Interval: 30
+          #   Timeout: 10
+          #   Retries: 3
+          #   StartPeriod: 90
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -696,7 +680,7 @@ Resources:
       TaskDefinition: !Ref DatabaseTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 80  
+      HealthCheckGracePeriodSeconds: 90
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
@@ -797,7 +781,7 @@ Resources:
       TaskDefinition: !Ref FrontendTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 60
+      HealthCheckGracePeriodSeconds: 90
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
