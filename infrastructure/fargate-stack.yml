@@ -290,7 +290,7 @@ Resources:
       TargetType: ip
       VpcId: !Ref VPC
       HealthCheckProtocol: TCP
-      HealthCheckPort: "5432"
+      HealthCheckPort: 5432
 
   # DataUpdaterTargetGroup:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -376,7 +376,7 @@ Resources:
       Priority: 2
       Conditions:
         - Field: path-pattern
-          Values: [ "/api/*" ]
+          Values: [ "/api/*", "/Craft*", "/Item*", "/Price*", "/Recipe*", "/World*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref ApiTargetGroup
