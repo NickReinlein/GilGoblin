@@ -376,7 +376,7 @@ Resources:
       Priority: 2
       Conditions:
         - Field: path-pattern
-          Values: [ "/api/*", "/Craft*", "/Item*", "/Price*", "/Recipe*", "/World*" ]
+          Values: [ "/api/*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref ApiTargetGroup
@@ -416,7 +416,7 @@ Resources:
       Priority: 5
       Conditions:
         - Field: path-pattern
-          Values: [ "/*", "/frontend/*", "/health.html" ]
+          Values: [ "/frontend/*", "/health.html" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
@@ -435,6 +435,10 @@ Resources:
           FromPort: 55448
           ToPort:   55448
           SourceSecurityGroupId: !Ref ALBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort: 55448
+          SourceSecurityGroupId: !Ref FrontendSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0

@@ -1,8 +1,8 @@
-const itemPath    = `item/`;
-const recipePath  = `recipe/`;
-const pricePath   = `price/`;
-const craftPath   = `craft/`;
-const worldPath   = `world/`;
+const itemPath    = `item`;
+const recipePath  = `recipe`;
+const pricePath   = `price`;
+const craftPath   = `craft`;
+const worldPath   = `world`;
 
 const ORIGIN = window.location.origin;  
 
@@ -40,7 +40,10 @@ export const fetchData = async (
   try {
     const url = buildUrl(tabName, id, world);
     console.log(`Fetching from URL: ${url}`);
-    const response = await fetch(url, {});
+    const response = await fetch(url, {
+      mode: "cors",
+      credentials: "same-origin",
+    });
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
