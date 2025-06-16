@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "GilGoblin Frontend",
+  "name": "GilGoblin Frontend: Delivering profitability metrics",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,14 +8,29 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "assets/gilgoblin_icon_128x128.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "128x128"
     },
     {
-      "src": "logo512.png",
+      "src": "assets/gilgoblin_icon_114x114.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "114x114"
+    },
+    {
+      "src": "assets/gilgoblin_icon_72x72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "assets/gilgoblin_icon_32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "assets/gilgoblin_icon_16x16.png",
+      "type": "image/png",
+      "sizes": "16x16"
     }
   ],
   "start_url": ".",

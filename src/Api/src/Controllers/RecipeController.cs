@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace GilGoblin.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class RecipeController : ControllerBase, IDataController<RecipePoco>
 {
     private readonly IRecipeRepository _recipeRepo;

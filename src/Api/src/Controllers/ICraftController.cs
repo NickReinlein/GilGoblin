@@ -6,6 +6,6 @@ namespace GilGoblin.Api.Controllers;
 
 public interface ICraftController<T> where T : class
 {
-    [HttpGet("")]
+    [HttpGet]
     Task<ActionResult<List<T>>> GetBestAsync(int worldId);
 }
