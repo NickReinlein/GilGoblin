@@ -10,7 +10,7 @@ namespace GilGoblin.Tests.Component;
 
 public class ItemTestBase : TestBase
 {
-    private const string itemEndpoint = "item/";
+    private const string itemEndpoint = "api/item/";
 
     [TestCaseSource(nameof(ValidItemsIds))]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAnItem(int itemId)

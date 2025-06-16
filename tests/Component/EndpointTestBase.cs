@@ -30,11 +30,11 @@ public class EndpointTestBase : TestBase
 
     private static string[] _allEndPoints =
     [
-        "recipe/",
-        "recipe/1604",
-        "price/21",
-        "price/21/1604/true",
-        "item/",
-        "item/1604"
+        "api/recipe/",
+        "api/recipe/1604",
+        "api/price/21",
+        "api/price/21/1604/true",
+        "api/item/",
+        "api/item/1604"
     ];
 }

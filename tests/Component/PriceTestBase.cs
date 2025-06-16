@@ -11,7 +11,7 @@ namespace GilGoblin.Tests.Component;
 
 public class PriceTestBase : TestBase
 {
-    private const string priceEndpoint = "price/";
+    private const string priceEndpoint = "api/price/";
 
     [TestCaseSource(nameof(PriceTestCases))]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAPrice(
@@ -19,7 +19,7 @@ public class PriceTestBase : TestBase
         int itemId,
         bool isHq)
     {
-        var fullEndpoint = $"price/{worldId}/{itemId}/{isHq}";
+        var fullEndpoint = $"{priceEndpoint}{worldId}/{itemId}/{isHq}";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
@@ -36,15 +36,35 @@ public class PriceTestBase : TestBase
     }
 
     [Test]
-    public async Task GivenACallToGet_WhenTheInputIsInvalid_TheNoContentIsReturned()
+    public async Task GivenACallToGet_WhenTheInputItemIsInvalid_TheNoContentIsReturned()
     {
-        const string fullEndpoint = $"{priceEndpoint}/103484654/false";
+        var fullEndpoint = $"{priceEndpoint}{ValidWorldIds[0]}/103484654/false";
 
         using var response = await _client.GetAsync(fullEndpoint);
 
-        Assert.That(response.IsSuccessStatusCode, Is.False);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
 
+    [Test]
+    public async Task GivenACallToGet_WhenTheInputWorldIsInvalid_TheNoContentIsReturned()
+    {
+        var fullEndpoint = $"{priceEndpoint}65456464/{ValidItemsIds[0]}/false";
+
+        using var response = await _client.GetAsync(fullEndpoint);
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+    }
+    
+    [Test]
+    public async Task GivenACallToGet_WhenTheInputQualityIsInvalid_TheNoContentIsReturned()
+    {
+        var fullEndpoint = $"{priceEndpoint}{ValidWorldIds[0]}/{ValidItemsIds[0]}/neither";
+
+        using var response = await _client.GetAsync(fullEndpoint);
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }    
+    
     [TestCaseSource(nameof(ValidWorldIds))]
     public async Task GivenACallToGetAll_WhenTheInputIsValid_ThenWeReceiveAllValidPrices(int worldId)
     {
@@ -67,9 +87,9 @@ public class PriceTestBase : TestBase
     }
 
     [Test]
-    public async Task GivenACallToGetAll_WhenTheInputIsInvalid_ThenWeReceiveNoContent()
+    public async Task GivenACallToGetAll_WhenTheInputWorldIsInvalid_ThenWeReceiveNoContent()
     {
-        const string fullEndpoint = "price/99999";
+        const string fullEndpoint = "api/price/99999";
 
         using var response = await _client.GetAsync(fullEndpoint);
 

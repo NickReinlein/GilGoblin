@@ -10,7 +10,7 @@ namespace GilGoblin.Tests.Component;
 
 public class WorldTestBase : TestBase
 {
-    private const string worldEndpoint = "world/";
+    private const string worldEndpoint = "api/world/";
 
     [TestCaseSource(nameof(ValidWorldIds))]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveAWorld(int worldId)
