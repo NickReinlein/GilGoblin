@@ -10,7 +10,7 @@ namespace GilGoblin.Tests.Component;
 
 public class RecipeTestBase : TestBase
 {
-    private const string recipeEndpoint = "recipe/";
+    private const string recipeEndpoint = "api/recipe/";
 
     [TestCaseSource(nameof(ValidRecipeIds))]
     public async Task GivenACallToGet_WhenTheInputIsValid_ThenWeReceiveARecipe(int recipeId)

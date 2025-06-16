@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace GilGoblin.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ItemController : ControllerBase, IDataController<ItemPoco>
 {
     private readonly IItemRepository _itemRepo;

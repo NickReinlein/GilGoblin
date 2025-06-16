@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace GilGoblin.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class WorldController(IWorldRepository worldRepo, ILogger<WorldController> logger)
     : ControllerBase, IWorldController
 {

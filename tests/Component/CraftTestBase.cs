@@ -11,7 +11,7 @@ namespace GilGoblin.Tests.Component;
 [Timeout(20000)]
 public class CraftTestBase : TestBase
 {
-    private const string craftEndpoint = "craft/";
+    private const string craftEndpoint = "api/craft/";
 
     [Test]
     public async Task GivenACallToGetBestCraft_WhenTheInputIsInvalid_ThenBadRequestIsReturned()
