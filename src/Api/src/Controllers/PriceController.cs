@@ -22,7 +22,7 @@ public class PriceController(IPriceRepository<PricePoco> priceRepo, ILogger<Pric
         return priceRepo.Get(worldId, id, isHq);
     }
 
-    [HttpGet()]
+    [HttpGet]
     public IEnumerable<PricePoco> GetAll(int worldId)
     {
         logger.LogInformation("Fetching all market data for world {WorldId}", worldId);
