@@ -193,7 +193,7 @@ Resources:
       - ALB
     Properties:
       VpcId: !Ref VPC
-      Port: 80
+      Port: 55450
       Protocol: HTTP
       TargetType: ip
       HealthCheckPath: /health
@@ -278,29 +278,43 @@ Resources:
   # ALB Listener Rules
   ######################
 
-  AccountantListenerRule:
+  ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
       ListenerArn: !Ref ALBListenerHTTPS
       Priority: 1
       Conditions:
         - Field: path-pattern
-          Values: [ "/accountant/*" ]
+          Values: [ "/api/*" ]
       Actions:
         - Type: forward
-          TargetGroupArn: !Ref AccountantTargetGroup
+          TargetGroupArn: !Ref ApiTargetGroup
 
-  ApiListenerRule:
+  FrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - ALBListenerHTTP
     Properties:
       ListenerArn: !Ref ALBListenerHTTPS
       Priority: 2
       Conditions:
         - Field: path-pattern
-          Values: [ "/api/*" ]
+          Values: [ "/frontend/*", "/health.html" ]
       Actions:
         - Type: forward
-          TargetGroupArn: !Ref ApiTargetGroup
+          TargetGroupArn: !Ref FrontendTargetGroup
+
+  AccountantListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListenerHTTPS
+      Priority: 3
+      Conditions:
+        - Field: path-pattern
+          Values: [ "/accountant/*" ]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref AccountantTargetGroup
 
   # DataUpdaterListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -316,21 +330,7 @@ Resources:
   #         Values: [ "/dataupdater/*" ]
   #     Actions:
   #       - Type: forward
-  #         TargetGroupArn: !Ref DataUpdaterTargetGroup
-
-  FrontendListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 5
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/frontend/*", "/health.html" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref FrontendTargetGroup
+  #         TargetGroupArn: !Ref DataUpdaterTargetGroup          
 
   ####################
   # Security Groups  #
@@ -340,11 +340,11 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VPC
-      GroupDescription: "Security group for Acountant"
+      GroupDescription: "Security group for Accountant"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort:   80
+          FromPort: 55450
+          ToPort:   55450
           SourceSecurityGroupId: !Ref ALBSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
@@ -356,6 +356,10 @@ Resources:
       VpcId: !Ref VPC
       GroupDescription: "Security group for API"
       SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 55450
+          ToPort:   55450
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
         - IpProtocol: tcp
           FromPort: 55448
           ToPort:   55448
@@ -456,7 +460,7 @@ Resources:
         - Name: "gilgoblin-accountant-container"
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
           PortMappings:
-            - ContainerPort: 80
+            - ContainerPort: 55450
           Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
@@ -519,14 +523,6 @@ Resources:
               Value: !Join [ "", [ "https://", !GetAtt ALB.DNSName ] ]
             - Name: ASPNETCORE_URLS
               Value: "http://+:55448"
-          # HealthCheck:
-          #   Command:
-          #     - CMD-SHELL
-          #     - curl -f http://localhost:55448/health || exit 1
-          #   Interval: 30
-          #   Timeout: 10
-          #   Retries: 3
-          #   StartPeriod: 90
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -592,12 +588,6 @@ Resources:
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PGDATA}}"
             - Name: PORT_DATABASE
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:PORT_DATABASE}}"
-          # HealthCheck:
-          #   Command: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
-          #   Interval: 30
-          #   Timeout: 10
-          #   Retries: 3
-          #   StartPeriod: 90
           LogConfiguration:
             LogDriver: awslogs
             Options:
