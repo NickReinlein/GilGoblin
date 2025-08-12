@@ -22,7 +22,7 @@ public static class Program
                 webBuilder
                     .UseKestrel(options =>
                     {
-                        options.ListenAnyIP(55450);
+                        options.ListenAnyIP(55452);
                     })
                     .UseStartup<Startup>();
             });
