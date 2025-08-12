@@ -12,6 +12,6 @@ WORKDIR /app
 
 COPY --from=build /app/out ./
 
-EXPOSE 55450
+EXPOSE 55452
 
 ENTRYPOINT ["dotnet", "Accountant.dll"]

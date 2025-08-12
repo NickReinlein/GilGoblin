@@ -193,7 +193,7 @@ Resources:
       - ALB
     Properties:
       VpcId: !Ref VPC
-      Port: 55450
+      Port: 55452
       Protocol: HTTP
       TargetType: ip
       HealthCheckPath: /health
@@ -343,8 +343,8 @@ Resources:
       GroupDescription: "Security group for Accountant"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 55450
-          ToPort:   55450
+          FromPort: 55452
+          ToPort:   55452
           SourceSecurityGroupId: !Ref ALBSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
@@ -357,8 +357,8 @@ Resources:
       GroupDescription: "Security group for API"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 55450
-          ToPort:   55450
+          FromPort: 55452
+          ToPort:   55452
           SourceSecurityGroupId: !Ref ALBSecurityGroup
         - IpProtocol: tcp
           FromPort: 55448
@@ -460,7 +460,7 @@ Resources:
         - Name: "gilgoblin-accountant-container"
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
           PortMappings:
-            - ContainerPort: 55450
+            - ContainerPort: 55452
           Environment:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
@@ -498,7 +498,7 @@ Resources:
           ContainerName: gilgoblin-accountant-container
       LoadBalancers:
         - ContainerName: gilgoblin-accountant-container
-          ContainerPort: 55450
+          ContainerPort: 55452
           TargetGroupArn: !Ref AccountantTargetGroup
 
   ApiTaskDefinition:
