@@ -55,7 +55,7 @@ services:
     networks:
       - gilgoblin
     ports:
-      - "${PORT_API}:55448"
+      - "55448:55448"
     logging:
       driver: 'json-file'
       options:
@@ -111,11 +111,11 @@ services:
     restart: unless-stopped
 
   gilgoblin-frontend:
-    image: nickreinlein/gilgoblin-frontend
-    container_name: frontend
+    # image: nickreinlein/gilgoblin-frontend
+    # container_name: frontend
     ## For local testing, replace with:
-    # image: frontend
-    # build: src/frontend/
+    image: frontend
+    build: src/frontend/
     depends_on:
       - gilgoblin-api
     healthcheck:
