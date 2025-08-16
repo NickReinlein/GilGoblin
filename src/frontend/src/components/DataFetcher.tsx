@@ -4,8 +4,6 @@ const pricePath   = `price/`;
 const craftPath   = `craft/`;
 const worldPath   = `world/`;
 
-const ORIGIN = window.location.origin;  
-
 const API_PREFIX = "/api/";
 
 function buildUrl(tabName: string, id: number | null, world: number | null) {
@@ -29,7 +27,7 @@ function buildUrl(tabName: string, id: number | null, world: number | null) {
     default:
       suffix = "";
   }
-  return `${ORIGIN}${API_PREFIX}${suffix}`;
+    return `${API_PREFIX}${suffix}`;
 }
 
 export const fetchData = async (
