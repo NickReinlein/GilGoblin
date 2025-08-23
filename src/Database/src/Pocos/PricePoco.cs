@@ -12,7 +12,7 @@ public record PricePoco(
     int? DailySaleVelocityId = null)
     : IdentifiableTripleKeyPoco(ItemId, WorldId, IsHq)
 {
-    public DateTimeOffset Updated { get; set; } = DateTimeOffset.UtcNow;
+    public DateTime Updated { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
     public MinListingPoco? MinListing { get; set; }

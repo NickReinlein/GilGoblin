@@ -108,9 +108,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     private void AddGoblinDatabases(IServiceCollection services)
     {
         var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new Exception("Failed to get connection string");
-
         services.AddDbContext<GilGoblinDbContext>(options =>
         {
             options.UseNpgsql(connectionString)
@@ -131,7 +128,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
     private void DatabaseValidation(IApplicationBuilder app)
     {
-        try
+        try     
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
             if (serviceScope == null)
@@ -148,7 +145,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     {
         using var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
         var canConnect = dbContextService.Database.CanConnect();
-        if (canConnect != true)
+        if (!canConnect)
             throw new Exception("Failed to connect to the database");
     }
 }
