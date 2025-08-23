@@ -108,9 +108,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
     private void AddGoblinDatabases(IServiceCollection services)
     {
         var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new Exception("Failed to get connection string");
-
         services.AddDbContext<GilGoblinDbContext>(options =>
         {
             options.UseNpgsql(connectionString)
