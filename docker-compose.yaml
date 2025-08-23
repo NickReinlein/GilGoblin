@@ -69,11 +69,17 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: ["CMD-SHELL"]
+      test:
+        - CMD-SHELL
+        - >
+          curl -f http://localhost:55449/health
+          || exit 1
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 60s
+    ports:
+      - "55449:55449"
     logging:
       driver: "json-file"
       options:
@@ -96,7 +102,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-
     ports:
       - "55452:55452"
     logging:
