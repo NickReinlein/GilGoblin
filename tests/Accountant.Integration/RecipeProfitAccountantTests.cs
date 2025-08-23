@@ -126,6 +126,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
                 Arg.Any<Exception>(),
                 Arg.Any<Func<object, Exception, string>>()!);
         }
+
         await _saver.Received(1).SaveAsync(Arg.Is<IEnumerable<RecipeProfitPoco>>(p => !p.Any()));
     }
 
@@ -264,7 +265,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [Test]
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenCostsIsEmpty_ThenReturnNull()
     {
-        var result = _accountant.CalculateCraftingProfitForRecipe(
+        var result = _accountant.CalculateProfit(
             recipeId: _recipeId,
             worldId: _worldId,
             isHq: false,
@@ -278,7 +279,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
     [Test]
     public void GivenCalculateCraftingProfitForQualityRecipe_WhenPricesIsEmpty_ThenReturnNull()
     {
-        var result = _accountant.CalculateCraftingProfitForRecipe(
+        var result = _accountant.CalculateProfit(
             recipeId: _recipeId,
             worldId: _worldId,
             isHq: false,
@@ -295,7 +296,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         var costs = new List<RecipeCostPoco> { new(_recipeId, _worldId, false, 100, DateTimeOffset.UtcNow) };
         var prices = new List<PricePoco> { new(_worldId, _recipeId + 1, false) };
 
-        var result = _accountant.CalculateCraftingProfitForRecipe(
+        var result = _accountant.CalculateProfit(
             recipeId: _recipeId,
             worldId: _worldId,
             isHq: false,
@@ -320,7 +321,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
         };
         var prices = new List<PricePoco> { price };
 
-        var result = _accountant.CalculateCraftingProfitForRecipe(
+        var result = _accountant.CalculateProfit(
             recipeId: _recipeId,
             worldId: _worldId,
             isHq: false,
@@ -335,7 +336,7 @@ public class RecipeProfitAccountantTests : AccountantTests<RecipeProfitPoco>
             Assert.That(itemSalePrice, Is.EqualTo(555));
             var expectedProfit = itemSalePrice - costs[0].Amount;
             Assert.That(expectedProfit, Is.EqualTo(422));
-            Assert.That(result!.Amount, Is.EqualTo(expectedProfit));
+            Assert.That(result!.Value, Is.EqualTo(expectedProfit));
         });
     }
 

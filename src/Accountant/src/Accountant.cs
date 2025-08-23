@@ -32,6 +32,7 @@ public class Accountant(IServiceProvider serviceProvider, ILogger<Accountant> lo
         {
             try
             {
+                logger.LogInformation("Starting accountant service. Fetching available worlds first.");
                 var worlds = GetWorlds();
                 if (!worlds.Any())
                 {
@@ -39,7 +40,9 @@ public class Accountant(IServiceProvider serviceProvider, ILogger<Accountant> lo
                     throw new DataException("No world IDs found.");
                 }
 
-                var tasks = worlds.Select(world => 
+                logger.LogInformation("Found {Count} worlds to process.", worlds.Count);
+
+                var tasks = worlds.Select(world =>
                 {
                     logger.LogInformation("Processing updates for {Type} in world: {Id}, name: {Name}",
                         nameof(Accountant), world.Id, world.Name);
@@ -91,6 +94,10 @@ public class Accountant(IServiceProvider serviceProvider, ILogger<Accountant> lo
         {
             var batcher = new Batcher.Batcher<int>();
             var batchesOfIds = batcher.SplitIntoBatchJobs(idList);
+            logger.LogInformation("Processing {Count} ids for world {WorldId} in {BatchCount} batches",
+                idList.Count,
+                worldId,
+                batchesOfIds.Count);
             foreach (var idBatch in batchesOfIds)
                 await ComputeListAsync(worldId, idBatch, ct);
 
