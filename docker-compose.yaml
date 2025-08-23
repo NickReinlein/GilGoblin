@@ -18,16 +18,14 @@ services:
       timeout: 30s
       retries: 5
       start_period: 60s
-    networks:
-      - gilgoblin
     extra_hosts:
-      - "host.docker.internal:host-gateway"      
+      - "host.docker.internal:host-gateway"
     ports:
       - "${PORT_DATABASE}:5432"
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -52,14 +50,12 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-    networks:
-      - gilgoblin
     ports:
       - "55448:55448"
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '50m'
+        max-size: "50m"
     restart: unless-stopped
 
   gilgoblin-dataupdater:
@@ -78,8 +74,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-    networks:
-      - gilgoblin
     logging:
       driver: "json-file"
       options:
@@ -102,8 +96,9 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-    networks:
-      - gilgoblin
+
+    ports:
+      - "55452:55452"
     logging:
       driver: "json-file"
       options:
@@ -111,11 +106,11 @@ services:
     restart: unless-stopped
 
   gilgoblin-frontend:
-    # image: nickreinlein/gilgoblin-frontend
-    # container_name: frontend
+    image: nickreinlein/gilgoblin-frontend
+    container_name: frontend
     ## For local testing, replace with:
-    image: frontend
-    build: src/frontend/
+    # image: frontend
+    # build: src/frontend/
     depends_on:
       - gilgoblin-api
     healthcheck:
@@ -128,8 +123,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
-    networks:
-      - gilgoblin
+
     ports:
       - "${PORT_FRONTEND}:3000"
     logging:
@@ -154,8 +148,6 @@ services:
   #     - DOCKER_INFLUXDB_DB=${DOCKER_INFLUXDB_DB}
   #     - DOCKER_INFLUXDB_ADMIN_USER=${DOCKER_INFLUXDB_ADMIN_USER}
   #     - DOCKER_INFLUXDB_ADMIN_PASSWORD=${DOCKER_INFLUXDB_ADMIN_PASSWORD}
-  #   networks:
-  #     - gilgoblin
   #   ports:
   #     - '8086:8086'
   #   volumes:
@@ -173,8 +165,6 @@ services:
   #     interval: 10s
   #     timeout: 5s
   #     retries: 5
-  #   networks:
-  #     - gilgoblin
   #   ports:
   #     - "9090:9090"
   #   depends_on:
@@ -201,8 +191,6 @@ services:
   #       max-size: '50m'
   #   depends_on:
   #     - gilgoblin-prometheus
-  #   networks:
-  #     - gilgoblin
   #   ports:
   #     - "9100:9100"
   #   volumes:
@@ -221,8 +209,6 @@ services:
   #     driver: 'json-file'
   #     options:
   #       max-size: '50m'
-  #   networks:
-  #     - gilgoblin
   #   environment:
   #     - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
   #     - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
@@ -249,16 +235,11 @@ services:
   #     - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max
   #     - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
   #   command: run -o experimental-prometheus-rw /scripts/crafts-benchmark.js --out influxdb=http://host.docker.internal:8086/gilgoblin_db
-  #   networks:
-  #     - gilgoblin
   #   ports:
   #     - "6565:6565"
   #   volumes:
   #     - ./benchmarks:/scripts
   #   restart: no
-
-networks:
-  gilgoblin:
 
 volumes:
   postgres_data:

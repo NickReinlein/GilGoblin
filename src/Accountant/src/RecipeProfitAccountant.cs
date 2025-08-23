@@ -13,9 +13,8 @@ namespace GilGoblin.Accountant;
 
 public interface IRecipeProfitAccountant
 {
-    public RecipeProfitPoco? CalculateCraftingProfitForRecipe(
+    int? CalculateProfit(int recipeId,
         int worldId,
-        int recipeId,
         bool isHq,
         int targetItemId,
         IEnumerable<RecipeCostPoco> costs,
@@ -41,8 +40,8 @@ public class RecipeProfitAccountant(
             var profitRepo = scope.ServiceProvider.GetRequiredService<IRecipeProfitRepository>();
             var costRepo = scope.ServiceProvider.GetRequiredService<IRecipeCostRepository>();
 
-            var currentCosts = await costRepo.GetMultipleAsync(worldId, idList);
-            if (!currentCosts.Any())
+            var costsList = await costRepo.GetMultipleAsync(worldId, idList);
+            if (!costsList.Any())
                 return;
 
             var currentProfits = await profitRepo.GetMultipleAsync(worldId, idList);
@@ -52,18 +51,17 @@ public class RecipeProfitAccountant(
             var prices = priceRepo.GetAll(worldId).ToList();
 
             var newProfits = new List<RecipeProfitPoco>();
-            foreach (var cost in currentCosts)
+            foreach (var cost in costsList)
             {
                 try
                 {
-                    var profit = currentProfits
-                        .FirstOrDefault(c =>
-                            c.RecipeId == cost.RecipeId &&
-                            c.WorldId == cost.WorldId &&
-                            c.IsHq == cost.IsHq);
-                    if (profit is not null)
+                    var currentProfit = currentProfits.FirstOrDefault(c =>
+                        c.RecipeId == cost.RecipeId &&
+                        c.WorldId == cost.WorldId &&
+                        c.IsHq == cost.IsHq);
+                    if (currentProfit is not null)
                     {
-                        var age = (DateTimeOffset.UtcNow - profit.LastUpdated).TotalHours;
+                        var age = (DateTimeOffset.UtcNow - currentProfit.LastUpdated).TotalHours;
                         if (age <= GetDataFreshnessInHours())
                             continue;
                     }
@@ -75,16 +73,18 @@ public class RecipeProfitAccountant(
                         continue;
                     }
 
-                    var calculatedProfit =
-                        CalculateCraftingProfitForRecipe(
-                            cost.RecipeId,
-                            cost.WorldId,
-                            cost.IsHq,
-                            recipe.TargetItemId,
-                            currentCosts,
-                            prices);
-                    if (calculatedProfit is not null)
-                        newProfits.Add(calculatedProfit);
+                    var calculatedProfit = CalculateProfit(
+                        cost.RecipeId,
+                        cost.WorldId,
+                        cost.IsHq,
+                        recipe.TargetItemId,
+                        costsList,
+                        prices);
+                    if (!calculatedProfit.HasValue)
+                        continue;
+
+                    var profitToUpdate = CalculateProfitToUpdate(currentProfit, calculatedProfit.Value, cost);
+                    newProfits.Add(profitToUpdate);
                 }
                 catch (Exception)
                 {
@@ -104,13 +104,18 @@ public class RecipeProfitAccountant(
         }
     }
 
-    public RecipeProfitPoco? CalculateCraftingProfitForRecipe(
-        int recipeId,
-        int worldId,
-        bool isHq,
-        int targetItemId,
-        IEnumerable<RecipeCostPoco> costs,
-        IEnumerable<PricePoco> prices)
+    private static RecipeProfitPoco CalculateProfitToUpdate(
+        RecipeProfitPoco? profitPoco,
+        int calculatedProfit,
+        RecipeCostPoco cost)
+    {
+        return profitPoco is not null
+            ? profitPoco with { Amount = calculatedProfit, LastUpdated = DateTimeOffset.UtcNow }
+            : new RecipeProfitPoco(cost.RecipeId, cost.WorldId, cost.IsHq, calculatedProfit, DateTimeOffset.UtcNow);
+    }
+
+    public int? CalculateProfit(int recipeId, int worldId, bool isHq, int targetItemId,
+        IEnumerable<RecipeCostPoco> costs, IEnumerable<PricePoco> prices)
     {
         var cost = costs.FirstOrDefault(c =>
             c.RecipeId == recipeId &&
@@ -137,9 +142,8 @@ public class RecipeProfitAccountant(
         }
 
         var salePrice = (int)price.GetBestPriceAmount();
-        var profitAmount = salePrice - cost.Amount;
 
-        return new RecipeProfitPoco(recipeId, worldId, isHq, profitAmount, DateTimeOffset.UtcNow);
+        return salePrice - cost.Amount;
     }
 
     public override async Task<List<int>> GetIdsToUpdate(int worldId)

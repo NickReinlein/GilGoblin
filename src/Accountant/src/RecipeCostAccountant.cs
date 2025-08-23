@@ -27,17 +27,17 @@ public class RecipeCostAccountant(
         {
             var (recipeCosts, relevantRecipes) = await GetRecipesAndCosts(worldId, idList);
 
-            logger.LogDebug(
+            logger.LogInformation(
                 "Found {Count} relevant recipes for world {WorldId}, compared to the {ParamCount} requested recipes",
                 relevantRecipes.Count,
                 worldId,
                 idList.Count);
-            logger.LogDebug("Found {Count} costs for world {worldId}", recipeCosts.Count, worldId);
+            logger.LogInformation("Found {Count} costs for world {worldId}", recipeCosts.Count, worldId);
 
             await using var scope = ServiceProvider.CreateAsyncScope();
             var calc = scope.ServiceProvider.GetRequiredService<ICraftingCalculator>();
 
-            var newCosts = new List<RecipeCostPoco>();
+            var allCostsToUpdate = new List<RecipeCostPoco>();
             foreach (var recipe in relevantRecipes)
             {
                 if (ct.IsCancellationRequested)
@@ -49,31 +49,27 @@ public class RecipeCostAccountant(
                     logger.LogDebug("Calculating new costs for {RecipeId} for world {WorldId}", recipeId, worldId);
                     foreach (var quality in new[] { true, false })
                     {
-                        var current = recipeCosts.FirstOrDefault(c =>
+                        var currentCost = recipeCosts.FirstOrDefault(c =>
                             c.RecipeId == recipeId &&
                             c.WorldId == worldId &&
                             c.IsHq == quality);
-                        if (current is not null)
+                        if (currentCost is not null)
                         {
-                            var age = (DateTimeOffset.UtcNow - current.LastUpdated).TotalHours;
+                            var age = (DateTimeOffset.UtcNow - currentCost.LastUpdated).TotalHours;
                             if (age <= GetDataFreshnessInHours())
                                 continue;
                         }
 
-                        var result = await calc.CalculateCraftingCostForRecipe(worldId, recipeId, quality);
-                        if (result > CraftingCalculator.ErrorDefaultCost - 20000 || result < 1)
+                        var calculateCost = await calc.CalculateCraftingCostForRecipe(worldId, recipeId, quality);
+                        if (calculateCost > CraftingCalculator.ErrorDefaultCost - 20000 || calculateCost < 1)
                         {
                             throw new Exception(
                                 $"Failed to calculate crafting cost of recipe {recipeId} for world {worldId}, quality {quality}");
                         }
 
-                        var newRecipeCost = new RecipeCostPoco(
-                            recipeId,
-                            worldId,
-                            quality,
-                            result,
-                            DateTimeOffset.UtcNow);
-                        newCosts.Add(newRecipeCost);
+                        var costToUpdate =
+                            CalculateCostToUpdate(currentCost, worldId, recipeId, quality, calculateCost);
+                        allCostsToUpdate.Add(costToUpdate);
                     }
                 }
                 catch (Exception)
@@ -84,7 +80,7 @@ public class RecipeCostAccountant(
                 }
             }
 
-            await saver.SaveAsync(newCosts, ct);
+            await saver.SaveAsync(allCostsToUpdate, ct);
         }
         catch (Exception ex)
         {
@@ -93,6 +89,18 @@ public class RecipeCostAccountant(
                 worldId,
                 ex.Message);
         }
+    }
+
+    private static RecipeCostPoco CalculateCostToUpdate(
+        RecipeCostPoco? currentCost,
+        int worldId,
+        int recipeId,
+        bool quality,
+        int result)
+    {
+        return currentCost is not null
+            ? currentCost with { Amount = result, LastUpdated = DateTimeOffset.UtcNow }
+            : new RecipeCostPoco(recipeId, worldId, quality, result, DateTimeOffset.UtcNow);
     }
 
     public override async Task<List<int>> GetIdsToUpdate(int worldId)
