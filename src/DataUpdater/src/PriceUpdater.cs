@@ -132,9 +132,7 @@ public class PriceUpdater(
                 }).ToList();
 
                 var outdatedPriceIdList = outdatedPrices.Select(o => o.GetId());
-                var idsToUpdate = outdatedPriceIdList.Concat(newPriceIds).ToList();
-
-                return idsToUpdate;
+                return outdatedPriceIdList.Concat(newPriceIds).ToList();
             }
             catch (TaskCanceledException)
             {
@@ -154,7 +152,6 @@ public class PriceUpdater(
         if (AllItemIds.Any() &&
             (DateTimeOffset.UtcNow - LastUpdated).TotalHours < hoursBeforeDataExpiry)
             return;
-
 
         await using var scope = ServiceProvider.CreateAsyncScope();
         var marketableIdsFetcher = scope.ServiceProvider.GetRequiredService<IMarketableItemIdsFetcher>();

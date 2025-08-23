@@ -264,7 +264,7 @@ public class PriceUpdaterTests : DataUpdaterTests
 
     private static PricePoco GetOldPrice()
     {
-        return new PricePoco(itemId1, worldId, true) { Updated = DateTimeOffset.UtcNow.AddDays(-7) };
+        return new PricePoco(itemId1, worldId, true) { Updated = DateTime.UtcNow.AddDays(-7) };
     }
 
     protected static List<PriceWebPoco> GetMultipleNewPocos()
