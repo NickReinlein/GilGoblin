@@ -53,11 +53,11 @@ public abstract class DataUpdater<T, U>(
             }
             catch (Exception ex)
             {
-                Logger.LogError($"An exception occured during the Api call: {ex.Message}");
+                Logger.LogError("An exception occured during the Api call: {ExMessage}", ex.Message);
             }
 
             var delay = TimeSpan.FromMinutes(5);
-            Logger.LogInformation($"Awaiting delay of {delay.TotalSeconds} seconds before performing next update");
+            Logger.LogInformation("Awaiting delay of {DelayTotalSeconds} seconds before performing next update", delay.TotalSeconds);
             await Task.Delay(delay, ct);
         }
     }
@@ -85,7 +85,7 @@ public abstract class DataUpdater<T, U>(
             using var scope = ServiceProvider.CreateScope();
             var fetcher = scope.ServiceProvider.GetRequiredService<IDataFetcher<U>>();
             var worldString = worldId > 0 ? $"for world id {worldId}" : string.Empty;
-            Logger.LogInformation($"Fetching updates for {idList.Count} {nameof(T)} {worldString}");
+            Logger.LogInformation("Fetching updates for {IdListCount} {IIdentifiableName} {WorldString}", idList.Count, nameof(T), worldString);
             var timer = new Stopwatch();
             timer.Start();
             var updated = await fetcher.FetchByIdsAsync(idList, worldId, ct);
@@ -102,7 +102,7 @@ public abstract class DataUpdater<T, U>(
         }
         catch (Exception e)
         {
-            Logger.LogError($"Failed to fetch updates for {nameof(T)}: {e.Message}");
+            Logger.LogError("Failed to fetch updates for {IIdentifiableName}: {EMessage}", nameof(T), e.Message);
             return [];
         }
     }

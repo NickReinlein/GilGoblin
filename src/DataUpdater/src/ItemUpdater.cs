@@ -21,7 +21,7 @@ public class ItemUpdater(
     {
         var worlds = GetWorlds();
         var worldIdString = !worlds.Any() ? string.Empty : $" for world {worlds}";
-        Logger.LogInformation($"Fetching updates of type {nameof(ItemPoco)}{worldIdString}");
+        Logger.LogInformation("Fetching updates of type {ItemPocoName}{WorldIdString}", nameof(ItemPoco), worldIdString);
         await FetchAsync(worlds.FirstOrDefault()?.GetId(), ct);
     }
 

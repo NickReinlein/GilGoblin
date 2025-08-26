@@ -19,7 +19,6 @@ public class PriceUpdater(
     ILogger<PriceUpdater> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
-    
     private List<int> AllItemIds { get; set; } = [];
     private DateTimeOffset LastUpdated { get; set; }
     private const int hoursBeforeDataExpiry = 96;
@@ -71,7 +70,7 @@ public class PriceUpdater(
             }
             catch (Exception e)
             {
-                logger.LogError($"Failed to get batch: {e.Message}");
+                logger.LogError("Failed to get batch: {EMessage}", e.Message);
             }
         }
     }
@@ -79,19 +78,19 @@ public class PriceUpdater(
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null,
         CancellationToken ct = default)
     {
-        await using var scope = ServiceProvider.CreateAsyncScope();
-        var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
-
         var world = worldId ?? 0;
         foreach (var webPoco in webPocos)
         {
             try
             {
+                await using var scope = ServiceProvider.CreateAsyncScope();
+                var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
+
                 await converter.ConvertAndSaveAsync(webPoco, world, ct);
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
+                logger.LogError(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
             }
         }
     }
@@ -140,7 +139,7 @@ public class PriceUpdater(
             }
             catch (Exception e)
             {
-                logger.LogError($"Failed to get the Ids to update for world {worldId}: {e.Message}");
+                logger.LogError("Failed to get the Ids to update for world {WorldId}: {EMessage}", worldId, e.Message);
             }
         }
 
@@ -160,7 +159,7 @@ public class PriceUpdater(
         LastUpdated = DateTimeOffset.UtcNow;
 
         var recipes = recipeRepo.GetAll().ToList();
-        logger.LogDebug($"Received {recipes.Count} recipes  from recipe repository");
+        logger.LogDebug("Received {RecipesCount} recipes  from recipe repository", recipes.Count);
         var ingredientItemIds =
             recipes
                 .SelectMany(r =>
@@ -171,7 +170,7 @@ public class PriceUpdater(
 
         var marketableItemIdList = await marketableIdsFetcher.GetMarketableItemIdsAsync();
         logger.LogDebug(
-            $"Received {marketableItemIdList.Count} marketable item Ids from ${typeof(MarketableItemIdsFetcher)}");
+            "Received {Count} marketable item Ids from ${Type}", marketableItemIdList.Count, typeof(MarketableItemIdsFetcher));
         if (!marketableItemIdList.Any())
             throw new WebException("Failed to fetch marketable item ids");
 
@@ -180,13 +179,13 @@ public class PriceUpdater(
                 .Concat(ingredientItemIds)
                 .Distinct()
                 .ToList();
-        logger.LogDebug($"Found {AllItemIds.Count} total item Ids for ${typeof(PriceUpdater)}");
+        logger.LogDebug("Found {Count} total item Ids for ${Type}", AllItemIds.Count, typeof(PriceUpdater));
     }
 
     private async Task AwaitDelay(CancellationToken ct)
     {
         var delay = GetApiSpamDelayInMs();
-        logger.LogInformation($"Awaiting delay of {delay}ms before next batch call (Spam prevention)");
+        logger.LogInformation("Awaiting delay of {Delay}ms before next batch call (Spam prevention)", delay);
         await Task.Delay(delay, ct);
     }
 }

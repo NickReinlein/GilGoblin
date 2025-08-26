@@ -9,7 +9,6 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,11 +16,8 @@ using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
-public class Startup(IConfiguration configuration, IWebHostEnvironment environment)
+public class Startup(IConfiguration configuration)
 {
-    public IWebHostEnvironment Environment { get; } = environment;
-    public IConfiguration _configuration = configuration;
-
     public const bool isDebug = false;
 
     public void ConfigureServices(IServiceCollection services)
@@ -107,7 +103,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
     private void AddGoblinDatabases(IServiceCollection services)
     {
-        var connectionString = _configuration.GetConnectionString("GilGoblinDbContext");
+        var connectionString = configuration.GetConnectionString("GilGoblinDbContext");
         services.AddDbContext<GilGoblinDbContext>(options =>
         {
             options.UseNpgsql(connectionString)
@@ -128,7 +124,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment environme
 
     private void DatabaseValidation(IApplicationBuilder app)
     {
-        try     
+        try
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
             if (serviceScope == null)
