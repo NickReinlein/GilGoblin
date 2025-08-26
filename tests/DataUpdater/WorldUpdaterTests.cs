@@ -105,7 +105,7 @@ public class WorldUpdaterTests : DataUpdaterTests
     }
 
     [Test]
-    public async Task GivenGetAllWorldsAsync_WhenSavingThrowsAnException_ThenWeExitGracefullyAndLogTheError()
+    public async Task GivenGetAllWorldsAsync_WhenSavingThrowsAnException_ThenWeExitGracefully()
     {
         _saver.SaveAsync(Arg.Any<IEnumerable<WorldPoco>>()).ThrowsForAnyArgs(new DataException("test"));
 
@@ -115,7 +115,6 @@ public class WorldUpdaterTests : DataUpdaterTests
         await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(
             i => i.Count == _worldList.Count &&
                  i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
-        _logger.LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
     }
 
     [Test]
