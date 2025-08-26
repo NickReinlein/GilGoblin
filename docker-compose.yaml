@@ -79,7 +79,7 @@ services:
       retries: 3
       start_period: 60s
     ports:
-      - "55449:55449"
+      - "55449:80"
     logging:
       driver: "json-file"
       options:
