@@ -152,13 +152,12 @@ public class PriceUpdaterTests : DataUpdaterTests
     }
 
     [Test]
-    public async Task GivenFetchAsync_WhenNoMarketableItemsAreReturned_ThenWeLogAnError()
+    public async Task GivenFetchAsync_WhenNoMarketableItemsAreReturned_ThenExceptionIsCaughtAndNoPricesFetched()
     {
-        var errorMessage = $"Failed to get the Ids to update for world {worldId}: Failed to fetch marketable item ids";
         _marketableIdsFetcher.GetMarketableItemIdsAsync().Returns([]);
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(25);
+        cts.CancelAfter(100);
         await _priceUpdater.FetchAsync(34, cts.Token);
 
         await _marketableIdsFetcher.Received().GetMarketableItemIdsAsync();
@@ -167,20 +166,24 @@ public class PriceUpdaterTests : DataUpdaterTests
                 Arg.Any<IEnumerable<int>>(),
                 Arg.Any<int?>(),
                 Arg.Any<CancellationToken>());
-        _logger.Received().LogError(errorMessage);
     }
 
     [TestCase(0)]
     [TestCase(-1)]
     [TestCase(null)]
-    public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenWeLogAnError(int? worldIdString)
+    public async Task GivenFetchAsync_WhenTheWorldIdIsInvalid_ThenNoExceptionIsThrownAndNothingIsCalled(
+        int? worldIdString)
     {
         var cts = new CancellationTokenSource();
         cts.CancelAfter(25);
         await _priceUpdater.FetchAsync(worldIdString, cts.Token);
 
-        var message = $"Failed to get the Ids to update for world {worldIdString}: World Id is invalid";
-        _logger.Received().LogError(message);
+        await _marketableIdsFetcher.DidNotReceive().GetMarketableItemIdsAsync();
+        await _priceFetcher.DidNotReceive()
+            .FetchByIdsAsync(
+                Arg.Any<IEnumerable<int>>(),
+                Arg.Any<int?>(),
+                Arg.Any<CancellationToken>());
     }
 
     [Test]
