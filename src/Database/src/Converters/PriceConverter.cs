@@ -73,19 +73,23 @@ public class PriceConverter(
         }
     }
 
-    private static PricePoco? GetPricePocoFromQualityPrices(QualityPriceDataPoco? quality, int worldId, int itemId,
+    private static PricePoco? GetPricePocoFromQualityPrices(
+        QualityPriceDataPoco? quality, 
+        int worldId, 
+        int itemId,
         bool isHq)
     {
-        return quality is null
-            ? null
-            : new PricePoco(
-                ItemId: itemId,
-                WorldId: worldId,
-                IsHq: isHq,
-                AverageSalePriceId: quality.AverageSalePrice?.Id,
-                MinListingId: quality.MinListing?.Id,
-                RecentPurchaseId: quality.RecentPurchase?.Id,
-                DailySaleVelocityId: quality.DailySaleVelocity?.Id
-            );
+        if (quality is null)
+            return null;
+
+        return new PricePoco(
+            ItemId: itemId,
+            WorldId: worldId,
+            IsHq: isHq,
+            AverageSalePriceId: quality.AverageSalePrice?.Id,
+            MinListingId: quality.MinListing?.Id,
+            RecentPurchaseId: quality.RecentPurchase?.Id,
+            DailySaleVelocityId: quality.DailySaleVelocity?.Id
+        );
     }
 }

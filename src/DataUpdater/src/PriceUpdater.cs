@@ -19,7 +19,6 @@ public class PriceUpdater(
     ILogger<PriceUpdater> logger)
     : DataUpdater<PricePoco, PriceWebPoco>(serviceProvider, logger)
 {
-    
     private List<int> AllItemIds { get; set; } = [];
     private DateTimeOffset LastUpdated { get; set; }
     private const int hoursBeforeDataExpiry = 96;
@@ -79,19 +78,19 @@ public class PriceUpdater(
     protected override async Task ConvertAndSaveToDbAsync(List<PriceWebPoco> webPocos, int? worldId = null,
         CancellationToken ct = default)
     {
-        await using var scope = ServiceProvider.CreateAsyncScope();
-        var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
-
         var world = worldId ?? 0;
         foreach (var webPoco in webPocos)
         {
             try
             {
+                await using var scope = ServiceProvider.CreateAsyncScope();
+                var converter = scope.ServiceProvider.GetRequiredService<IPriceConverter>();
+
                 await converter.ConvertAndSaveAsync(webPoco, world, ct);
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
+                logger.LogError(e, $"Failed to convert {nameof(PriceWebPoco)} to db format");
             }
         }
     }
