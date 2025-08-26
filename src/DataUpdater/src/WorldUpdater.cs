@@ -84,7 +84,7 @@ public class WorldUpdater(IServiceProvider serviceProvider, ILogger<WorldUpdater
         }
         catch (Exception e)
         {
-            logger.LogError($"Failed to save {webPocos.Count} entries for {nameof(WorldPoco)}: {e.Message}");
+            logger.LogError("Failed to save {WebPocosCount} entries for {WorldPocoName}: {EMessage}", webPocos.Count, nameof(WorldPoco), e.Message);
         }
     }
 }
