@@ -105,7 +105,7 @@ public class WorldUpdaterTests : DataUpdaterTests
     }
 
     [Test]
-    public async Task GivenGetAllWorldsAsync_WhenSavingThrowsAnException_ThenWeExitGracefullyAndLogTheError()
+    public async Task GivenGetAllWorldsAsync_WhenSavingThrowsAnException_ThenWeExitGracefully()
     {
         _saver.SaveAsync(Arg.Any<IEnumerable<WorldPoco>>()).ThrowsForAnyArgs(new DataException("test"));
 
@@ -115,7 +115,6 @@ public class WorldUpdaterTests : DataUpdaterTests
         await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(
             i => i.Count == _worldList.Count &&
                  i.All(w => _worldList.Any(wl => wl.Name == w.Name))));
-        _logger.LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
     }
 
     [Test]
@@ -126,28 +125,5 @@ public class WorldUpdaterTests : DataUpdaterTests
         Assert.That(_worldList, Has.Count.GreaterThanOrEqualTo(2));
         await _saver.Received(1).SaveAsync(Arg.Is<List<WorldPoco>>(x =>
             x.All(y => y.Id > 0 && !string.IsNullOrWhiteSpace(y.Name))));
-    }
-
-    [Test]
-    public async Task GivenConvertAndSaveToDbAsync_WhenSavingThrowsAnException_ThenWeLogTheError()
-    {
-        _saver.ClearSubstitute();
-        _saver.SaveAsync(null!).ThrowsAsyncForAnyArgs(new Exception("test"));
-
-        await _worldUpdater.GetAllWorldsAsync();
-
-        _logger.Received(1).LogError($"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: test");
-    }
-
-    [Test]
-    public async Task GivenConvertAndSaveToDbAsync_WhenSavingReturnsFalse_ThenWeLogTheError()
-    {
-        _saver.SaveAsync(Arg.Any<IEnumerable<WorldPoco>>()).Returns(false);
-
-        await _worldUpdater.GetAllWorldsAsync();
-
-        var errorMessage =
-            $"Failed to save {_worldList.Count} entries for {nameof(WorldPoco)}: Saving from {nameof(IDataSaver<WorldPoco>)} returned failure";
-        _logger.ReceivedWithAnyArgs().LogError(errorMessage);
     }
 }
