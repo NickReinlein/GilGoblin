@@ -17,7 +17,7 @@ namespace GilGoblin.DataUpdater;
 
 public class Startup(IConfiguration configuration)
 {
-    public const bool isDebug = true;
+    public const bool isDebug = false;
 
     public void ConfigureServices(IServiceCollection services)
     {
