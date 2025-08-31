@@ -15,9 +15,13 @@ public static class Program
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .UseSerilog()
-            .ConfigureAppConfiguration(config =>
+            .ConfigureAppConfiguration((hostingContext, config) =>
             {
-                config.AddEnvironmentVariables();
+                var env = hostingContext.HostingEnvironment;
+                config
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables();
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

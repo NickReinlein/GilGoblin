@@ -2,10 +2,10 @@ name: gilgoblin
 
 services:
   gilgoblin-database:
-    image: nickreinlein/gilgoblin-database
-    container_name: database
-    # image: database
-    # build: src/Database/
+    # image: nickreinlein/gilgoblin-database
+    # container_name: database
+    image: database
+    build: src/Database/
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -13,7 +13,7 @@ services:
       PGUSER: ${PGUSER}
       PGDATA: ${PGDATA}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB}"]
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB}" ]
       interval: 20s
       timeout: 30s
       retries: 5
@@ -97,7 +97,7 @@ services:
     environment:
       ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
     healthcheck:
-      test: ["CMD-SHELL"]
+      test: [ "CMD-SHELL" ]
       interval: 30s
       timeout: 5s
       retries: 3

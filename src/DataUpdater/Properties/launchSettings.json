@@ -11,7 +11,8 @@
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "dev"
+        "DOTNET_ENVIRONMENT": "dev",
+        "ASPNETCORE_ENVIRONMENT": "dev"
       }
     },
     "https": {
@@ -19,7 +20,8 @@
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "dev"
+        "DOTNET_ENVIRONMENT": "dev",
+        "ASPNETCORE_ENVIRONMENT": "dev"
       }
     }
   }

@@ -20,7 +20,7 @@ public class PriceDataDetailConverter(ILogger<PriceDataDetailConverter> logger)
             if (dataPoint is null || string.IsNullOrEmpty(priceType) || !dataPoint.HasValidPrice())
                 throw new ArgumentException("Invalid price data", nameof(dataPoint));
 
-            return new PriceDataPoco(priceType, dataPoint.Price, worldId, dataPoint.Timestamp ?? DateTime.UtcNow.Ticks);
+            return new PriceDataPoco(priceType, dataPoint.Price, worldId, dataPoint.Timestamp);
         }
         catch (Exception e)
         {

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-<!--    <IsPackable>true</IsPackable>-->
     <OutputType>Library</OutputType>
     <RootNamespace>GilGoblin.Tests.DataUpdater.Integration</RootNamespace>
   </PropertyGroup>
@@ -10,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="6.0.*"/>
     <PackageReference Include="BenchmarkDotNet" Version="0.14.*"/>
-    <PackageReference Include="GilGoblin.DataUpdater" Version="1.2.*"/>
+    <PackageReference Include="GilGoblin.DataUpdater" Version="2.1.*"/>
     <PackageReference Include="GilGoblin.Database" Version="1.1.*"/>
     <PackageReference Include="BenchmarkDotNet" Version="0.14.*"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.*"/>
