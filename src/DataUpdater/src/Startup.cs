@@ -9,10 +9,8 @@ using GilGoblin.Database.Pocos;
 using GilGoblin.Database.Savers;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace GilGoblin.DataUpdater;
 
@@ -24,6 +22,7 @@ public class Startup(IConfiguration configuration)
     {
         services.AddLogging()
             .AddHealthChecks();
+
         services.AddControllers();
         services.AddCors(options =>
         {
@@ -55,7 +54,7 @@ public class Startup(IConfiguration configuration)
         DatabaseValidation(builder);
     }
 
-    private void AddGoblinUpdaterServices(IServiceCollection services)
+    private static void AddGoblinUpdaterServices(IServiceCollection services)
     {
         services.AddHttpClient();
 
@@ -71,18 +70,16 @@ public class Startup(IConfiguration configuration)
             .AddScoped<IDailySaleVelocityConverter, DailySaleVelocityConverter>()
             .AddScoped<IWorldFetcher, WorldFetcher>()
             .AddScoped<IDataSaver<DailySaleVelocityPoco>, DailySaleVelocitySaver>()
-            .AddScoped<IDataSaver<WorldPoco>, WorldSaver>();
-
-        services
+            .AddScoped<IDataSaver<WorldPoco>, WorldSaver>()
             .AddHostedService<WorldUpdater>()
             .AddHostedService<PriceUpdater>();
     }
 
     private static void AddGoblinCrafting(IServiceCollection services)
     {
-        services.AddScoped<ICraftingCalculator, CraftingCalculator>();
-        services.AddScoped<ICraftRepository, CraftRepository>();
-        services.AddScoped<IRecipeGrocer, RecipeGrocer>();
+        services.AddScoped<ICraftingCalculator, CraftingCalculator>()
+            .AddScoped<ICraftRepository, CraftRepository>()
+            .AddScoped<IRecipeGrocer, RecipeGrocer>();
     }
 
     public static void AddGoblinCaches(IServiceCollection services)
@@ -103,26 +100,16 @@ public class Startup(IConfiguration configuration)
 
     private void AddGoblinDatabases(IServiceCollection services)
     {
-        var connectionString = configuration.GetConnectionString("GilGoblinDbContext");
-        services.AddDbContext<GilGoblinDbContext>(options =>
-        {
-            options.UseNpgsql(connectionString)
-                .EnableDetailedErrors(isDebug)
-                .EnableSensitiveDataLogging(isDebug)
-                // ReSharper disable once HeuristicUnreachableCode
-                // Flag is changed to access "debugging mode"
-                .LogTo(Console.WriteLine, isDebug ? LogLevel.Information : LogLevel.Warning);
-        });
-
+        Api.Startup.AddGoblinDatabases(services, configuration);
         services.AddScoped<IPriceRepository<PricePoco>, PriceRepository>()
             .AddScoped<IItemRepository, ItemRepository>()
-            .AddScoped<IRecipeRepository, RecipeRepository>();
-        services.AddScoped<IRecipeCostRepository, RecipeCostRepository>();
-        services.AddScoped<IRecipeProfitRepository, RecipeProfitRepository>();
-        services.AddScoped<IWorldRepository, WorldRepository>();
+            .AddScoped<IRecipeRepository, RecipeRepository>()
+            .AddScoped<IRecipeCostRepository, RecipeCostRepository>()
+            .AddScoped<IRecipeProfitRepository, RecipeProfitRepository>()
+            .AddScoped<IWorldRepository, WorldRepository>();
     }
 
-    private void DatabaseValidation(IApplicationBuilder app)
+    private static void DatabaseValidation(IApplicationBuilder app)
     {
         try
         {
@@ -137,11 +124,10 @@ public class Startup(IConfiguration configuration)
         }
     }
 
-    private void ValidateCanConnectToDatabase(IServiceScope serviceScope)
+    private static void ValidateCanConnectToDatabase(IServiceScope serviceScope)
     {
         using var dbContextService = serviceScope.ServiceProvider.GetRequiredService<GilGoblinDbContext>();
-        var canConnect = dbContextService.Database.CanConnect();
-        if (!canConnect)
+        if (!dbContextService.Database.CanConnect())
             throw new Exception("Failed to connect to the database");
     }
 }

@@ -79,7 +79,6 @@ public class GilGoblinDatabaseFixture
         await _postgresContainer.DisposeAsync();
     }
 
-
     protected async Task ResetAndRecreateDatabaseAsync()
     {
         await ResetDatabaseAsync();

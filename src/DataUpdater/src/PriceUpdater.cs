@@ -25,9 +25,15 @@ public class PriceUpdater(
 
     protected override async Task ExecuteUpdateAsync(CancellationToken ct)
     {
+        logger.LogInformation("Starting price update. Fetching worlds");
         var worlds = GetWorlds();
-        var fetchTasks = new List<Task>();
+        if (!worlds.Any())
+        {
+            logger.LogError("No worlds found, aborting price update");
+            return;
+        }
 
+        var fetchTasks = new List<Task>();
         foreach (var world in worlds)
         {
             logger.LogInformation("Fetching price updates for world id/name: {Id}/{Name}", world.Id, world.Name);
@@ -35,8 +41,8 @@ public class PriceUpdater(
         }
 
         await Task.WhenAll(fetchTasks);
+        logger.LogInformation("Finished price update for {Count} worlds", worlds.Count);
     }
-
 
     protected override async Task FetchUpdatesAsync(int? worldId, List<int> idList, CancellationToken ct)
     {
