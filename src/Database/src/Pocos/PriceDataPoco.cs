@@ -5,4 +5,8 @@ public record PriceDataPoco(
     decimal Price,
     int WorldId,
     long? Timestamp = null)
-    : IdentifiablePoco;
+    : IdentifiablePoco
+{
+    public decimal Price { get; set; } = Price;
+    public long? Timestamp { get; set; } = Timestamp;
+}

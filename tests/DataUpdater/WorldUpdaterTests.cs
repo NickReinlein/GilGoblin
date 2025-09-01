@@ -11,7 +11,6 @@ using GilGoblin.Fetcher;
 using GilGoblin.Fetcher.Pocos;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ClearExtensions;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
