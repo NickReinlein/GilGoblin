@@ -32,7 +32,6 @@ public class DataUpdaterDependencyInjectionTests
         Assert.That(client, Is.Not.Null);
     }
 
-
     [TestCase(typeof(IBulkDataFetcher<PriceWebPoco, PriceWebResponse>))]
     [TestCase(typeof(IPriceFetcher))]
     [TestCase(typeof(IWorldFetcher))]
