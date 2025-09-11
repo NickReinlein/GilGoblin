@@ -95,13 +95,7 @@ services:
       - gilgoblin-database
       - gilgoblin-api
     environment:
-      ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}
-    healthcheck:
-      test: ["CMD-SHELL"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 60s
+      ConnectionStrings__GilGoblinDbContext: ${DB_CONNECTION_STRING}   
     ports:
       - "55452:55452"
     logging:
@@ -118,19 +112,10 @@ services:
     # build: src/frontend/
     depends_on:
       - gilgoblin-api
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - >
-          curl -f http://localhost:3000/health.html
-          || exit 1
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 60s
-
     ports:
       - "${PORT_FRONTEND}:3000"
+    environment:
+      API_HOSTNAME: ${API_HOSTNAME}
     logging:
       driver: "json-file"
       options:
