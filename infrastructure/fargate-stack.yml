@@ -23,7 +23,6 @@ Resources:
   ######################
   VPC:
     Type: AWS::EC2::VPC
-    DependsOn: LogGroup
     Properties:
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
@@ -34,11 +33,9 @@ Resources:
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
-    DependsOn: LogGroup
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
-    DependsOn: LogGroup
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
@@ -161,6 +158,69 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: "0.0.0.0/0"
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  AccountantSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for Accountant"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 55452
+          ToPort:   55452
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for API"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort:   55448
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  FrontendSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for frontend"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort:   3000
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  DatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - ApiSecurityGroup
+      - AccountantSecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for database"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref ApiSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref AccountantSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -292,14 +352,12 @@ Resources:
 
   FrontendListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn:
-      - ALBListenerHTTP
     Properties:
       ListenerArn: !Ref ALBListenerHTTPS
       Priority: 2
       Conditions:
         - Field: path-pattern
-          Values: [ "/frontend/*", "/health.html" ]
+          Values: [ "/frontend/*", "*/health.html*", "/health.html/*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
@@ -332,74 +390,6 @@ Resources:
   #       - Type: forward
   #         TargetGroupArn: !Ref DataUpdaterTargetGroup          
 
-  ####################
-  # Security Groups  #
-  ####################
-
-  AccountantSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for Accountant"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 55452
-          ToPort:   55452
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-
-  ApiSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for API"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 55452
-          ToPort:   55452
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 55448
-          ToPort:   55448
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-
-  DatabaseSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for database"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 5432
-          ToPort: 5432
-          SourceSecurityGroupId: !Ref ApiSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 5432
-          ToPort: 5432
-          SourceSecurityGroupId: !Ref AccountantSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-
-  FrontendSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for frontend"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 3000
-          ToPort:   3000
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-
   ######################
   # ECS Cluster & Execution Role
   ######################
@@ -410,7 +400,6 @@ Resources:
 
   ExecutionRole:
     Type: AWS::IAM::Role
-    DependsOn: LogGroup
     Properties:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -478,7 +467,6 @@ Resources:
       - ALBListenerHTTP
       - ALBListenerHTTPS
       - DatabaseService
-      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref AccountantTaskDefinition
@@ -537,7 +525,6 @@ Resources:
       - ALBListenerHTTPS
       - ApiListenerRule
       - DatabaseService
-      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref ApiTaskDefinition
@@ -597,8 +584,6 @@ Resources:
 
   DatabaseService:
     Type: AWS::ECS::Service
-    DependsOn:
-      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref DatabaseTaskDefinition
@@ -682,6 +667,9 @@ Resources:
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-frontend"
           PortMappings:
             - ContainerPort: 3000
+          Environment:
+            - Name: API_HOSTNAME
+              Value: "api.gilgoblin.local"
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -695,7 +683,6 @@ Resources:
       - ALBListenerHTTP
       - ALBListenerHTTPS
       - FrontendListenerRule
-      - LogGroup
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref FrontendTaskDefinition
