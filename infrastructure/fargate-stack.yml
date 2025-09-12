@@ -661,6 +661,9 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
+      DnsConfig:
+        Nameservers:
+          - !Sub "${VPC.CidrBlock}.2"
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: gilgoblin-frontend-container
