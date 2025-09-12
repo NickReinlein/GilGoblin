@@ -2,4 +2,4 @@
 
 envsubst '${API_HOSTNAME}' < /etc/nginx/nginx.template.conf > /etc/nginx/conf.d/default.conf
 
-exec nginx -g "daemon off;"
+/wait-for-nginx.sh "$API_HOSTNAME" 55448 -- nginx -g "daemon off;"
