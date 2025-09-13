@@ -186,6 +186,10 @@ Resources:
           FromPort: 55448
           ToPort:   55448
           SourceSecurityGroupId: !Ref ALBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort:   55448
+          SourceSecurityGroupId: !Ref FrontendSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -661,9 +665,6 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
-      DnsConfig:
-        Nameservers:
-          - !Sub "${VPC.CidrBlock}.2"
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: gilgoblin-frontend-container
