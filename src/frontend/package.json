@@ -36,8 +36,8 @@
     "ts-jest": "^29.2.4"
   },
   "scripts": {
+    "build": "react-scripts build && cp health.html build/",
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
