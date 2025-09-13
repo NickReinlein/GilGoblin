@@ -1,11 +1,20 @@
 #!/bin/sh
-# Wait for the host to be available
+set -e
+
 host="$1"
 port="$2"
-shift 2
+shift
+shift
 
-while ! nc -z "$host" "$port"; do
-  echo "Waiting for host $host on port $port..."
+echo "Waiting for DNS resolution of $host..."
+until getent hosts "$host"; do
+  echo "DNS resolution failed, retrying..."
+  sleep 1
+done
+
+echo "DNS resolution successful. Waiting for host $host to be available on port $port..."
+until nc -z "$host" "$port"; do
+  echo "Host $host not available on port $port, retrying..."
   sleep 1
 done
 

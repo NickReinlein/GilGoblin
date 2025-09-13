@@ -186,6 +186,10 @@ Resources:
           FromPort: 55448
           ToPort:   55448
           SourceSecurityGroupId: !Ref ALBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort:   55448
+          SourceSecurityGroupId: !Ref FrontendSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
