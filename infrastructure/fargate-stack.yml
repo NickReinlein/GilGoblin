@@ -207,6 +207,10 @@ Resources:
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort: 55448
+          DestinationSecurityGroupId: !Ref ApiSecurityGroup
 
   DatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -351,17 +355,17 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref ApiTargetGroup
 
-  FrontendListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 2
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/frontend/*" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref FrontendTargetGroup
+  # FrontendListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     ListenerArn: !Ref ALBListenerHTTPS
+  #     Priority: 2
+  #     Conditions:
+  #       - Field: path-pattern
+  #         Values: [ "/frontend/*" ]
+  #     Actions:
+  #       - Type: forward
+  #         TargetGroupArn: !Ref FrontendTargetGroup
 
   # AccountantListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -473,7 +477,7 @@ Resources:
   #     TaskDefinition: !Ref AccountantTaskDefinition
   #     LaunchType: FARGATE
   #     DesiredCount: 1
-  #     HealthCheckGracePeriodSeconds: 90
+  #     HealthCheckGracePeriodSeconds: 120
   #     NetworkConfiguration:
   #       AwsvpcConfiguration:
   #         AssignPublicIp: ENABLED
@@ -531,7 +535,7 @@ Resources:
       TaskDefinition: !Ref ApiTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 90
+      HealthCheckGracePeriodSeconds: 120
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
@@ -590,7 +594,7 @@ Resources:
       TaskDefinition: !Ref DatabaseTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 90
+      HealthCheckGracePeriodSeconds: 120
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
@@ -683,13 +687,12 @@ Resources:
     DependsOn:
       - ALBListenerHTTP
       - ALBListenerHTTPS
-      - FrontendListenerRule
     Properties:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref FrontendTaskDefinition
       LaunchType: FARGATE
       DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 90
+      HealthCheckGracePeriodSeconds: 120
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
