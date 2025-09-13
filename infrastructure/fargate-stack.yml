@@ -176,6 +176,12 @@ Resources:
   #       - IpProtocol: -1
   #         CidrIp: 0.0.0.0/0
 
+  InternalCommSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for internal communications between frontend and API"
+
   ApiSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -189,7 +195,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 55448
           ToPort:   55448
-          SourceSecurityGroupId: !Ref FrontendSecurityGroup
+          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -204,13 +210,13 @@ Resources:
           FromPort: 3000
           ToPort:   3000
           SourceSecurityGroupId: !Ref ALBSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 55448
           ToPort: 55448
-          DestinationSecurityGroupId: !Ref ApiSecurityGroup
+          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
 
   DatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
