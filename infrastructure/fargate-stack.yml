@@ -96,16 +96,16 @@ Resources:
       Vpc: !Ref VPC
       Description: "Internal namespace"
 
-  AccountantDiscoveryService:
-    Type: AWS::ServiceDiscovery::Service
-    Properties:
-      Name: accountant
-      NamespaceId: !Ref WebNamespace
-      DnsConfig:
-        RoutingPolicy: WEIGHTED
-        DnsRecords:
-          - Type: A
-            TTL: 60      
+  # AccountantDiscoveryService:
+  #   Type: AWS::ServiceDiscovery::Service
+  #   Properties:
+  #     Name: accountant
+  #     NamespaceId: !Ref WebNamespace
+  #     DnsConfig:
+  #       RoutingPolicy: WEIGHTED
+  #       DnsRecords:
+  #         - Type: A
+  #           TTL: 60      
 
   ApiDiscoveryService:
     Type: AWS::ServiceDiscovery::Service
@@ -162,19 +162,19 @@ Resources:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
 
-  AccountantSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for Accountant"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 55452
-          ToPort:   55452
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
+  # AccountantSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     GroupDescription: "Security group for Accountant"
+  #     SecurityGroupIngress:
+  #       - IpProtocol: tcp
+  #         FromPort: 55452
+  #         ToPort:   55452
+  #         SourceSecurityGroupId: !Ref ALBSecurityGroup
+  #     SecurityGroupEgress:
+  #       - IpProtocol: -1
+  #         CidrIp: 0.0.0.0/0
 
   ApiSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -210,9 +210,6 @@ Resources:
 
   DatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    DependsOn:
-      - ApiSecurityGroup
-      - AccountantSecurityGroup
     Properties:
       VpcId: !Ref VPC
       GroupDescription: "Security group for database"
@@ -221,10 +218,10 @@ Resources:
           FromPort: 5432
           ToPort: 5432
           SourceSecurityGroupId: !Ref ApiSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 5432
-          ToPort: 5432
-          SourceSecurityGroupId: !Ref AccountantSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: 5432
+        #   ToPort: 5432
+        #   SourceSecurityGroupId: !Ref AccountantSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -251,20 +248,20 @@ Resources:
   # Target Groups
   ######################
 
-  AccountantTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn:
-      - ALB
-    Properties:
-      VpcId: !Ref VPC
-      Port: 55452
-      Protocol: HTTP
-      TargetType: ip
-      HealthCheckPath: /health
-      HealthCheckIntervalSeconds: 30
-      HealthCheckTimeoutSeconds: 10
-      HealthyThresholdCount: 2
-      UnhealthyThresholdCount: 3      
+  # AccountantTargetGroup:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   DependsOn:
+  #     - ALB
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     Port: 55452
+  #     Protocol: HTTP
+  #     TargetType: ip
+  #     HealthCheckPath: /health
+  #     HealthCheckIntervalSeconds: 30
+  #     HealthCheckTimeoutSeconds: 10
+  #     HealthyThresholdCount: 2
+  #     UnhealthyThresholdCount: 3      
 
   ApiTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -361,22 +358,22 @@ Resources:
       Priority: 2
       Conditions:
         - Field: path-pattern
-          Values: [ "/frontend/*", "*/health.html*", "/health.html/*" ]
+          Values: [ "/frontend/*" ]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
 
-  AccountantListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      ListenerArn: !Ref ALBListenerHTTPS
-      Priority: 3
-      Conditions:
-        - Field: path-pattern
-          Values: [ "/accountant/*" ]
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref AccountantTargetGroup
+  # AccountantListenerRule:
+  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
+  #   Properties:
+  #     ListenerArn: !Ref ALBListenerHTTPS
+  #     Priority: 3
+  #     Conditions:
+  #       - Field: path-pattern
+  #         Values: [ "/accountant/*" ]
+  #     Actions:
+  #       - Type: forward
+  #         TargetGroupArn: !Ref AccountantTargetGroup
 
   # DataUpdaterListenerRule:
   #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -439,59 +436,59 @@ Resources:
   # ECS Task Definitions & Services
   ##############################
 
-  AccountantTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    Properties:
-      Family: "gilgoblin-accountant-task"
-      RequiresCompatibilities:
-        - FARGATE
-      Cpu: "256"
-      Memory: "512"
-      NetworkMode: awsvpc
-      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-      ContainerDefinitions:
-        - Name: "gilgoblin-accountant-container"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
-          PortMappings:
-            - ContainerPort: 55452
-          Environment:
-            - Name: ConnectionStrings__GilGoblinDbContext
-              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group: !Ref LogGroup
-              awslogs-region: !Ref AWS::Region
-              awslogs-stream-prefix: accountant
+  # AccountantTaskDefinition:
+  #   Type: AWS::ECS::TaskDefinition
+  #   Properties:
+  #     Family: "gilgoblin-accountant-task"
+  #     RequiresCompatibilities:
+  #       - FARGATE
+  #     Cpu: "256"
+  #     Memory: "512"
+  #     NetworkMode: awsvpc
+  #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+  #     ContainerDefinitions:
+  #       - Name: "gilgoblin-accountant-container"
+  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
+  #         PortMappings:
+  #           - ContainerPort: 55452
+  #         Environment:
+  #           - Name: ConnectionStrings__GilGoblinDbContext
+  #             Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
+  #         LogConfiguration:
+  #           LogDriver: awslogs
+  #           Options:
+  #             awslogs-group: !Ref LogGroup
+  #             awslogs-region: !Ref AWS::Region
+  #             awslogs-stream-prefix: accountant
 
-  AccountantService:
-    Type: AWS::ECS::Service
-    DependsOn:
-      - AccountantListenerRule
-      - ALBListenerHTTP
-      - ALBListenerHTTPS
-      - DatabaseService
-    Properties:
-      Cluster: !Ref ECSCluster
-      TaskDefinition: !Ref AccountantTaskDefinition
-      LaunchType: FARGATE
-      DesiredCount: 1
-      HealthCheckGracePeriodSeconds: 90
-      NetworkConfiguration:
-        AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
-          Subnets:
-            - !Ref PublicSubnet
-            - !Ref PublicSubnetB
-          SecurityGroups:
-            - !Ref AccountantSecurityGroup
-      ServiceRegistries:
-        - RegistryArn: !GetAtt AccountantDiscoveryService.Arn
-          ContainerName: gilgoblin-accountant-container
-      LoadBalancers:
-        - ContainerName: gilgoblin-accountant-container
-          ContainerPort: 55452
-          TargetGroupArn: !Ref AccountantTargetGroup
+  # AccountantService:
+  #   Type: AWS::ECS::Service
+  #   DependsOn:
+  #     - AccountantListenerRule
+  #     - ALBListenerHTTP
+  #     - ALBListenerHTTPS
+  #     - DatabaseService
+  #   Properties:
+  #     Cluster: !Ref ECSCluster
+  #     TaskDefinition: !Ref AccountantTaskDefinition
+  #     LaunchType: FARGATE
+  #     DesiredCount: 1
+  #     HealthCheckGracePeriodSeconds: 90
+  #     NetworkConfiguration:
+  #       AwsvpcConfiguration:
+  #         AssignPublicIp: ENABLED
+  #         Subnets:
+  #           - !Ref PublicSubnet
+  #           - !Ref PublicSubnetB
+  #         SecurityGroups:
+  #           - !Ref AccountantSecurityGroup
+  #     ServiceRegistries:
+  #       - RegistryArn: !GetAtt AccountantDiscoveryService.Arn
+  #         ContainerName: gilgoblin-accountant-container
+  #     LoadBalancers:
+  #       - ContainerName: gilgoblin-accountant-container
+  #         ContainerPort: 55452
+  #         TargetGroupArn: !Ref AccountantTargetGroup
 
   ApiTaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -663,11 +660,8 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
       Cpu: "256"
-      Memory: "512"
+      Memory: "1024"
       NetworkMode: awsvpc
-      DnsConfig:
-        Nameservers:
-          - !Sub "${VPC.CidrBlock}.2"
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
         - Name: gilgoblin-frontend-container
