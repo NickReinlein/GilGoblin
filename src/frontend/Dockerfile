@@ -19,9 +19,8 @@ COPY --from=builder /app/build /usr/share/nginx/html
 
 COPY nginx.template.conf /etc/nginx/
 COPY docker-entrypoint.sh /
-COPY wait-for-nginx.sh /
 
-RUN chmod +x /docker-entrypoint.sh /wait-for-nginx.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 3000
 
