@@ -49,7 +49,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      AvailabilityZone: !Select [0, !GetAZs ""]
 
   PublicSubnetB:
     Type: AWS::EC2::Subnet
@@ -57,7 +57,7 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      AvailabilityZone: !Select [1, !GetAZs ""]
 
   # Public Route Tables & Route
   PublicRouteTable:
@@ -96,16 +96,16 @@ Resources:
       Vpc: !Ref VPC
       Description: "Internal namespace"
 
-  # AccountantDiscoveryService:
-  #   Type: AWS::ServiceDiscovery::Service
-  #   Properties:
-  #     Name: accountant
-  #     NamespaceId: !Ref WebNamespace
-  #     DnsConfig:
-  #       RoutingPolicy: WEIGHTED
-  #       DnsRecords:
-  #         - Type: A
-  #           TTL: 60      
+  AccountantDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: accountant
+      NamespaceId: !Ref WebNamespace
+      DnsConfig:
+        RoutingPolicy: WEIGHTED
+        DnsRecords:
+          - Type: A
+            TTL: 60
 
   ApiDiscoveryService:
     Type: AWS::ServiceDiscovery::Service
@@ -140,6 +140,18 @@ Resources:
           - Type: A
             TTL: 60
 
+  DataUpdaterDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: dataupdater
+      NamespaceId: !Ref WebNamespace
+      DnsConfig:
+        RoutingPolicy: WEIGHTED
+        DnsRecords:
+          - Type: A
+            TTL: 60
+
+
   ######################
   # Security Groups
   ######################
@@ -162,58 +174,14 @@ Resources:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
 
-  # AccountantSecurityGroup:
-  #   Type: AWS::EC2::SecurityGroup
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     GroupDescription: "Security group for Accountant"
-  #     SecurityGroupIngress:
-  #       - IpProtocol: tcp
-  #         FromPort: 55452
-  #         ToPort:   55452
-  #         SourceSecurityGroupId: !Ref ALBSecurityGroup
-  #     SecurityGroupEgress:
-  #       - IpProtocol: -1
-  #         CidrIp: 0.0.0.0/0
-
   InternalCommSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VPC
-      GroupDescription: "Security group for internal communications between frontend and API"
-
-  ApiSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for API"
+      GroupDescription: "Security group for internal communications between services"
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 55448
-          ToPort:   55448
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 55448
-          ToPort:   55448
-          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
-      SecurityGroupEgress:
         - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-
-  FrontendSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: "Security group for frontend"
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 3000
-          ToPort:   3000
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: 55448
-          ToPort: 55448
-          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
+          CidrIp: 10.0.0.0/16
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -227,11 +195,71 @@ Resources:
         - IpProtocol: tcp
           FromPort: 5432
           ToPort: 5432
-          SourceSecurityGroupId: !Ref ApiSecurityGroup
-        # - IpProtocol: tcp
-        #   FromPort: 5432
-        #   ToPort: 5432
-        #   SourceSecurityGroupId: !Ref AccountantSecurityGroup
+          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for API"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort: 55448
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 55448
+          ToPort: 55448
+          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          DestinationSecurityGroupId: !Ref DatabaseSecurityGroup
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  FrontendSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for frontend"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  AccountantSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for Accountant"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 55452
+          ToPort: 55452
+          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  DataUpdaterSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for Data Updater"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 55449
+          ToPort: 55449
+          SourceSecurityGroupId: !Ref InternalCommSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -258,21 +286,6 @@ Resources:
   # Target Groups
   ######################
 
-  # AccountantTargetGroup:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   DependsOn:
-  #     - ALB
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     Port: 55452
-  #     Protocol: HTTP
-  #     TargetType: ip
-  #     HealthCheckPath: /health
-  #     HealthCheckIntervalSeconds: 30
-  #     HealthCheckTimeoutSeconds: 10
-  #     HealthyThresholdCount: 2
-  #     UnhealthyThresholdCount: 3      
-
   ApiTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
@@ -288,16 +301,36 @@ Resources:
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 3
 
-  # DataUpdaterTargetGroup:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   DependsOn:
-  #     - ALB
-  #   Properties:
-  #     VpcId: !Ref VPC
-  #     Port: 80
-  #     Protocol: HTTP
-  #     TargetType: ip
-  
+  AccountantTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 55452
+      Protocol: HTTP
+      TargetType: ip
+      HealthCheckPath: /health
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 3
+
+  DataUpdaterTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ALB
+    Properties:
+      VpcId: !Ref VPC
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+      HealthCheckPath: /health
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 3
+
   FrontendTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
@@ -315,9 +348,9 @@ Resources:
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 3
 
-  ######################            
+  ######################
   # ALB & Listeners
-  ######################            
+  ######################
 
   ALBListenerHTTP:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -344,11 +377,6 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref FrontendTargetGroup
 
-
-  ######################
-  # ALB Listener Rules
-  ######################
-
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties:
@@ -356,50 +384,34 @@ Resources:
       Priority: 1
       Conditions:
         - Field: path-pattern
-          Values: [ "/api/*" ]
+          Values: ["/api/*"]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref ApiTargetGroup
 
-  # FrontendListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     ListenerArn: !Ref ALBListenerHTTPS
-  #     Priority: 2
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/frontend/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref FrontendTargetGroup
+  AccountantListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListenerHTTPS
+      Priority: 3
+      Conditions:
+        - Field: path-pattern
+          Values: ["/accountant/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref AccountantTargetGroup
 
-  # AccountantListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   Properties:
-  #     ListenerArn: !Ref ALBListenerHTTPS
-  #     Priority: 3
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/accountant/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref AccountantTargetGroup
-
-  # DataUpdaterListenerRule:
-  #   Type: AWS::ElasticLoadBalancingV2::ListenerRule
-  #   DependsOn:
-  #     - ALBListenerHTTP
-  #     - ALBListenerHTTPS      
-  #     - DataUpdaterTargetGroup
-  #   Properties:
-  #     ListenerArn: !Ref ALBListenerHTTPS
-  #     Priority: 4
-  #     Conditions:
-  #       - Field: path-pattern
-  #         Values: [ "/dataupdater/*" ]
-  #     Actions:
-  #       - Type: forward
-  #         TargetGroupArn: !Ref DataUpdaterTargetGroup          
+  DataUpdaterListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref ALBListenerHTTPS
+      Priority: 4
+      Conditions:
+        - Field: path-pattern
+          Values: ["/dataupdater/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DataUpdaterTargetGroup
 
   ######################
   # ECS Cluster & Execution Role
@@ -437,7 +449,7 @@ Resources:
                   - logs:CreateLogStream
                   - logs:DescribeLogStreams
                   - logs:PutLogEvents
-                  - logs:CreateLogGroup                  
+                  - logs:CreateLogGroup
                   - logs:DeleteLogGroup
                   - secretsmanager:GetSecretValue
                 Resource: "*"
@@ -445,60 +457,6 @@ Resources:
   ##############################
   # ECS Task Definitions & Services
   ##############################
-
-  # AccountantTaskDefinition:
-  #   Type: AWS::ECS::TaskDefinition
-  #   Properties:
-  #     Family: "gilgoblin-accountant-task"
-  #     RequiresCompatibilities:
-  #       - FARGATE
-  #     Cpu: "256"
-  #     Memory: "512"
-  #     NetworkMode: awsvpc
-  #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-  #     ContainerDefinitions:
-  #       - Name: "gilgoblin-accountant-container"
-  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
-  #         PortMappings:
-  #           - ContainerPort: 55452
-  #         Environment:
-  #           - Name: ConnectionStrings__GilGoblinDbContext
-  #             Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
-  #         LogConfiguration:
-  #           LogDriver: awslogs
-  #           Options:
-  #             awslogs-group: !Ref LogGroup
-  #             awslogs-region: !Ref AWS::Region
-  #             awslogs-stream-prefix: accountant
-
-  # AccountantService:
-  #   Type: AWS::ECS::Service
-  #   DependsOn:
-  #     - AccountantListenerRule
-  #     - ALBListenerHTTP
-  #     - ALBListenerHTTPS
-  #     - DatabaseService
-  #   Properties:
-  #     Cluster: !Ref ECSCluster
-  #     TaskDefinition: !Ref AccountantTaskDefinition
-  #     LaunchType: FARGATE
-  #     DesiredCount: 1
-  #     HealthCheckGracePeriodSeconds: 120
-  #     NetworkConfiguration:
-  #       AwsvpcConfiguration:
-  #         AssignPublicIp: ENABLED
-  #         Subnets:
-  #           - !Ref PublicSubnet
-  #           - !Ref PublicSubnetB
-  #         SecurityGroups:
-  #           - !Ref AccountantSecurityGroup
-  #     ServiceRegistries:
-  #       - RegistryArn: !GetAtt AccountantDiscoveryService.Arn
-  #         ContainerName: gilgoblin-accountant-container
-  #     LoadBalancers:
-  #       - ContainerName: gilgoblin-accountant-container
-  #         ContainerPort: 55452
-  #         TargetGroupArn: !Ref AccountantTargetGroup
 
   ApiTaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -519,7 +477,7 @@ Resources:
             - Name: ConnectionStrings__GilGoblinDbContext
               Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
             - Name: FrontEndUrl
-              Value: !Join [ "", [ "https://", !GetAtt ALB.DNSName ] ]
+              Value: !Join ["", ["https://", !GetAtt ALB.DNSName]]
             - Name: ASPNETCORE_URLS
               Value: "http://+:55448"
           LogConfiguration:
@@ -550,6 +508,7 @@ Resources:
             - !Ref PublicSubnetB
           SecurityGroups:
             - !Ref ApiSecurityGroup
+            - !Ref InternalCommSecurityGroup
       ServiceRegistries:
         - RegistryArn: !GetAtt ApiDiscoveryService.Arn
           ContainerName: gilgoblin-api-container
@@ -609,59 +568,60 @@ Resources:
             - !Ref PublicSubnetB
           SecurityGroups:
             - !Ref DatabaseSecurityGroup
+            - !Ref InternalCommSecurityGroup
       ServiceRegistries:
         - RegistryArn: !GetAtt DatabaseDiscoveryService.Arn
           ContainerName: gilgoblin-database-container
 
-  # DataUpdaterTaskDefinition:
-  #   Type: AWS::ECS::TaskDefinition
-  #   Properties:
-  #     Family: "gilgoblin-dataupdater-task"
-  #     RequiresCompatibilities:
-  #       - FARGATE
-  #     Cpu: "256"
-  #     Memory: "512"
-  #     NetworkMode: awsvpc
-  #     ExecutionRoleArn: !GetAtt ExecutionRole.Arn
-  #     ContainerDefinitions:
-  #       - Name: "gilgoblin-dataupdater-container"
-  #         Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-dataupdater"
-  #         PortMappings:
-  #           - ContainerPort: 80
-          # Secrets:
-          #   - Name: ConnectionStrings__GilGoblinDbContext
-          #     ValueFrom: !Sub ${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING
-  #         LogConfiguration:
-  #           LogDriver: awslogs
-  #           Options:
-  #             awslogs-group: !Ref LogGroup
-  #             awslogs-region: !Ref AWS::Region
-  #             awslogs-stream-prefix: dataupdater
+  DataUpdaterTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-dataupdater-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-dataupdater-container"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-dataupdater"
+          PortMappings:
+            - ContainerPort: 55449
+          Environment:
+            - Name: ConnectionStrings__GilGoblinDbContext
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: dataupdater
 
-  # DataUpdaterService:
-  #   Type: AWS::ECS::Service
-  #   DependsOn:
-  #     - ALBListenerHTTP
-  #     - ALBListenerHTTPS
-  #     - DataUpdaterListenerRule
-  # - LogGroup
-  #   Properties:
-  #     Cluster: !Ref ECSCluster
-  #     TaskDefinition: !Ref DataUpdaterTaskDefinition
-  #     LaunchType: FARGATE
-  #     DesiredCount: 1
-  #     NetworkConfiguration:
-  #       AwsvpcConfiguration:
-  #         AssignPublicIp: ENABLED
-            # Subnets:
-            # - !Ref PublicSubnet
-            # - !Ref PublicSubnetB
-  #         SecurityGroups:
-  #           - !Ref ECSServiceSecurityGroup
-  #     LoadBalancers:
-  #       - ContainerName: "gilgoblin-dataupdater-container"
-  #         ContainerPort: 80
-  #         TargetGroupArn: !Ref DataUpdaterTargetGroup
+  DataUpdaterService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
+      - DataUpdaterListenerRule
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref DataUpdaterTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      HealthCheckGracePeriodSeconds: 120
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref PublicSubnet
+            - !Ref PublicSubnetB
+          SecurityGroups:
+            - !Ref DataUpdaterSecurityGroup
+            - !Ref InternalCommSecurityGroup
+      ServiceRegistries:
+        - RegistryArn: !GetAtt DataUpdaterDiscoveryService.Arn
+          ContainerName: gilgoblin-dataupdater-container
 
   FrontendTaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -670,7 +630,7 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
       Cpu: "256"
-      Memory: "1024"
+      Memory: "512"
       NetworkMode: awsvpc
       ExecutionRoleArn: !GetAtt ExecutionRole.Arn
       ContainerDefinitions:
@@ -707,6 +667,7 @@ Resources:
             - !Ref PublicSubnetB
           SecurityGroups:
             - !Ref FrontendSecurityGroup
+            - !Ref InternalCommSecurityGroup
       ServiceRegistries:
         - RegistryArn: !GetAtt FrontendDiscoveryService.Arn
           ContainerName: gilgoblin-frontend-container
@@ -714,6 +675,56 @@ Resources:
         - ContainerName: gilgoblin-frontend-container
           ContainerPort: 3000
           TargetGroupArn: !Ref FrontendTargetGroup
+
+  AccountantTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: "gilgoblin-accountant-task"
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "256"
+      Memory: "512"
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: "gilgoblin-accountant-container"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/gilgoblin-accountant"
+          PortMappings:
+            - ContainerPort: 55452
+          Environment:
+            - Name: ConnectionStrings__GilGoblinDbContext
+              Value: !Sub "{{resolve:secretsmanager:${DatabaseSecretArn}:SecretString:DB_CONNECTION_STRING}}"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: accountant
+
+  AccountantService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - ALBListenerHTTP
+      - ALBListenerHTTPS
+      - DatabaseService
+    Properties:
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref AccountantTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      HealthCheckGracePeriodSeconds: 120
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref PublicSubnet
+            - !Ref PublicSubnetB
+          SecurityGroups:
+            - !Ref AccountantSecurityGroup
+            - !Ref InternalCommSecurityGroup
+      ServiceRegistries:
+        - RegistryArn: !GetAtt AccountantDiscoveryService.Arn
+          ContainerName: gilgoblin-accountant-container
 
 Outputs:
   ALBDNSName:
