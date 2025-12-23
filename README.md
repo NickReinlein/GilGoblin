@@ -1,4 +1,13 @@
-# GilGoblin
+### Update 2025-12-23
+
+This project is on hold indefinitely. Between real-life demands and the high cost of storage that would be required on an on-going basis for this to be realized, I don't see it as feasible at the moment. 
+
+Feel free to fork.
+
+##################################
+### Deprecated ###
+##################################
+# GilGoblin (deprecrated)
 
 ## Summary
 
@@ -80,9 +89,6 @@ The docker containers need to be running and healthy for the component tests to 
   * A background service that will verify every 5 minutes for costs and profits to calculate in `gilgoblin-database`
 
 ## Special Thanks & References
-Support:
-* Jetbrains IDEs ( https://www.jetbrains.com/ )
-
 Other Projects:
 * XIVAPI: A FINAL FANTASY XIV: Online REST API ( https://xivapi.com/ )
 * Universalis: A crowdsourced market board aggregator for the game FFXIV ( https://github.com/Universalis-FFXIV/Universalis )
